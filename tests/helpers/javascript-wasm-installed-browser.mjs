@@ -20,7 +20,7 @@ const serve = async (consumer, names, isolated) => {
 			if(request.url === "/")
 { response.writeHead(200, {"Content-Type": "text/html"}); response.end('<script type="importmap">' + JSON.stringify(importMap) + '</script>'); return; }
 			let file;
-			if(["/calls.mjs", "/fault.wasm"].includes(request.url)) file = join(consumer, request.url.slice(1));
+			if(["/calls.mjs", "/fault.wasm", "/fault-pthread.mjs"].includes(request.url)) file = join(consumer, request.url.slice(1));
 			else
 			{
 				if(!request.url.startsWith("/installed/")) throw new Error("Not installed");
@@ -81,6 +81,14 @@ export const runInstalledChromium = async options => {
 		});
 		browser = await chromium.connectOverCDP(endpoint);
 		const page = await browser.contexts()[0].newPage();
+		const diagnostics=[];
+		page.on("console",message => {
+			if(["warning","error"].includes(message.type()))
+{
+				if(diagnostics.length===8) diagnostics.shift();
+				diagnostics.push(message.text().slice(-500));
+}
+		});
 		await page.route("**/*", route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
 		await page.goto(address);
 		const result = page.evaluate(evaluate, argument);
@@ -92,6 +100,10 @@ export const runInstalledChromium = async options => {
 				timer = setTimeout(() => reject(new Error("Installed Chromium consumer timed out")), options.timeoutMs);
 			});
 			return await Promise.race([result, deadline]);
+		} catch(error)
+		{
+			if(diagnostics.length) throw new Error(error.message+"\n"+diagnostics.join("\n"),{cause: error});
+			throw error;
 		} finally
 		{ clearTimeout(timer); }
 	}

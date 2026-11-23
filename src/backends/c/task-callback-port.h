@@ -11,14 +11,18 @@ typedef struct {
     lean_object **pins;
     uint32_t count, capacity;
 } lb_retained;
-static void lb_retained_clear(lb_retained *r) {
+static void lb_retained_stop(lb_retained *r) {
     if (!r->token) return;
     lb_cb_stop(lean_get_external_data(r->token));
     if (r->active) {
         lean_dec(r->active->arg);
         lb_cb_reject(r->active->promise, "retained callback has expired");
-        free(r->active);
+        free(r->active); r->active = NULL;
     }
+}
+static void lb_retained_clear(lb_retained *r) {
+    if (!r->token) return;
+    lb_retained_stop(r);
     for (uint32_t i = 0; i < r->count; i++) lean_dec(r->pins[i]);
     free(r->pins); lean_dec(r->token);
 }
@@ -26,10 +30,14 @@ static LB(status) lb_retained_next(lb_retained *r, uint32_t *slot) {
     if (!r->token || !slot) return LB(INVALID);
     if (r->active) return LB(BUSY);
     lb_port *p = lean_get_external_data(r->token);
+#ifdef LB_WASM_CALLBACK_PORT
+    if (!(r->active = lb_cb_pop(p))) return LB(PENDING);
+#else
     uint64_t token; ssize_t n;
     do { n = read(p->fd, &token, sizeof(token)); } while (n < 0 && errno == EINTR);
     if (n < 0 && errno == EAGAIN) return LB(PENDING);
     if (n != sizeof(token) || !(r->active = lb_cb_pop(p))) return LB(UNAVAILABLE);
+#endif
     *slot = r->active->slot; return LB(OK);
 }
 static void lb_retained_reply(lb_retained *r, int ok, lean_object *v) {

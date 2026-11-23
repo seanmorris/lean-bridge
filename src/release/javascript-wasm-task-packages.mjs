@@ -27,6 +27,7 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 	const assets=["runtime/wasm-task-loader"
 		, "runtime/wasm-task-leases"
 		, "runtime/wasm-task-bindings"
+		, "runtime/wasm-task-callbacks"
 		, "runtime/wasm-task-frames"
 		, "runtime/wasm-task-notifications"
 		, "runtime/pending-operations"

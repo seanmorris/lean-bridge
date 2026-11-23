@@ -74,3 +74,38 @@ test("public error identities and delivery phases cannot be interchanged", () =>
 	Object.assign(optional.declarations[0].parameters[0],{optional: true,default: {kind: "integer",value: "7"}});
 	assert.throws(() => javaScriptTaskAbi(optional,id),/Inconsistent copied/u);
 });
+
+test("the retained Wasm callback ABI binds the owner, slot, reply and failure contract",() => {
+	const type={kind: "io-callback",argument: t,reply: t}, name="Job.work";
+	const component={name: "job",id: "job@1.0.0",version: "1.0.0"};
+	const selection={exports: [name],exportModules: ["Job"],taskExports: [name]
+		, taskIOErrors: [name], members: [], javascriptTaskCallbacks: true};
+	const entry={...entries[0],module: "Job",hostMembers: []
+		, effect: "BaseIO",taskIO: true
+		, parameters: [{name: "n",type: t},{name: "transform",type}]};
+	const metadata={kind: "lean-bridge-host-export-metadata",schemaVersion: 1,leanVersion: "4.32.2",entries: [entry]};
+	const {api,entries: checked}=reconcileHostExports({component,selection,metadata});
+	const abi=javaScriptTaskAbi(api,config.componentIdentity);
+	const wire=generateSyncWire("lbc_job",checked,{tasks: true,wasmTasks: true,wasmCallbacks: true});
+	assert.deepEqual(abi.methods[0].callbacks,[[1,"uint32","uint32"]]);
+	assert.deepEqual(abi.methods[0].callbacks,wire.methods[0].callbacks);
+	const gen=generateCTaskExports({...config,entries: checked,wasmTasks: true,wasmCallbacks: true});
+	assert.match(gen.entryLean,/return outer\.bind id \(sync := true\)/u);
+	assert.doesNotMatch(gen.entryLean,/IO\.wait inner/u);
+	assert.doesNotMatch(wire.source,/eventfd|epoll|_poll\(/u);
+	assert.match(api.errors.find(e => e.id==="error:JavaScriptCallbackError").documentation.summary,/JavaScript/u);
+	for(const mutate of [
+		ir => { ir.types[0].callable.invocation="once"; }
+		, ir => { ir.types[0].callable.selfDisposal="reject"; }
+		, ir => { ir.types[0].callable.resultMode="value"; }
+		, ir => { ir.types[0].source.declaration="Foreign"; }
+		, ir => { ir.types[0].source.extensions["lean-bridge.dev/callback-scheduler"]="owner-event-loop"; }
+		, ir => { ir.errors.find(e => e.id==="error:JavaScriptCallbackError").payload=t; }
+		, ir => { ir.declarations[0].failure.errors=ir.declarations[0].failure.errors.filter(e => e!=="error:JavaScriptCallbackError"); }
+		, ir => { ir.declarations[0].parameters.pop(); }
+		, ir => { ir.declarations[0].parameters[1].lifetime.scope="call"; }
+	]) {
+		const wrong=structuredClone(api); mutate(wrong);
+		assert.throws(() => javaScriptTaskAbi(wrong,config.componentIdentity));
+	}
+});

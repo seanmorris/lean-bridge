@@ -11,13 +11,20 @@ import { taskCallbackLean } from "../native/task-callback.mjs";
  * @param entry - Authenticated task export.
  */
 export const retainedTask = entry => entry.parameters.some(x => x.type.kind === "io-callback");
-export const retainedLean = taskCallbackLean("lb_c_cb") + `
+const outcome = `
 inductive Outcome (ε α : Type) where
   | value (v : α)
   | startError (e : ε)
   | startIO (e : IO.Error)
   | taskIO (e : IO.Error)
 `;
+export const retainedLean = taskCallbackLean("lb_c_cb") + outcome;
+/**
+ * Assemble the worker protocol using the component's private native names.
+ *
+ * @param prefix - Namespaced Wasm request and cancellation hooks.
+ */
+export const wasmRetainedLean = prefix => taskCallbackLean(prefix,true) + outcome;
 export const retainedPrototypes = ["extern lean_object *lb_c_cb_request(lean_object *, uint32_t, lean_object *, lean_object *);"
 	, "extern lean_object *lb_c_cb_track(lean_object *, lean_object *);"];
 
@@ -33,13 +40,27 @@ export const emitRetainedTask = options => {
 		? { j, input: values.codec(type.argument), reply: values.codec(type.reply) } : { j, c: values.codec(type) });
 	const args = ps.filter(x => x.c), callbacks = ps.filter(x => !x.c);
 	const value = values.codec(e.result), error = e.effect === "EIO" && values.codec(e.error);
-	const entry = "lb_c_invoke_" + i, call = `(_root_.${e.declaration} ${ps.map(x => x.c ? "v" + x.j : "(cbInvoke port " + x.j + ")").join(" ")})`;
+	const entry = (options.entryPrefix ?? "lb_c") + "_invoke_" + i, call = `(_root_.${e.declaration} ${ps.map(x => x.c ? "v" + x.j : "(cbInvoke port " + x.j + ")").join(" ")})`;
 	const factory = error ? "_root_.EIO.toIO' " + call : e.effect === "pure" ? "pure " + call : e.effect === "BaseIO" ? "liftM " + call : call;
 	const payload = e.taskIO ? `(_root_.Except _root_.IO.Error ${value.lean})` : value.lean;
 	const task = `(_root_.Task ${payload})`, start = error ? `(_root_.Except ${error.lean} ${task})` : task;
 	// Even a factory that calls the host before returning its Task has to run
 	// off the owner. cbTrack also cancels a late inner task after owner disposal.
-	lean.push(`@[export ${entry}] def invoke${i} (port : CallbackPort) ${args.map(x => "(v" + x.j + " : " + x.c.lean + ")").join(" ")} : BaseIO (Task (Outcome ${error?.lean || "Unit"} ${value.lean})) := BaseIO.asTask do
+	const head=`@[export ${entry}] def invoke${i} (port : CallbackPort) ${args.map(x => "(v" + x.j + " : " + x.c.lean + ")").join(" ")} : BaseIO (Task (Outcome ${error?.lean || "Unit"} ${value.lean})) :=`;
+	// A fixed Wasm pthread pool cannot park an extra worker just to join the
+	// application's inner task. These continuations only tag or forward results.
+	if(options.wasm) lean.push(`${head} do
+  let factory : IO ${start} := ${factory}
+  let outer ← BaseIO.asTask do
+    let finish (inner : ${task}) : BaseIO (Task (Outcome ${error?.lean || "Unit"} ${value.lean})) := do
+      cbTrack port inner
+      return inner.map (${e.taskIO ? "fun result => match result with | .ok v => .value v | .error e => .taskIO e" : "fun v => .value v"}) (sync := true)
+    match ← factory.toBaseIO with
+    | .error e => return Task.pure (.startIO e)
+    ${error ? "| .ok (.error e) => return Task.pure (.startError e)\n    | .ok (.ok inner) => finish inner" : "| .ok inner => finish inner"}
+  cbTrackFactory port outer
+  return outer.bind id (sync := true)`);
+	else lean.push(`${head} BaseIO.asTask do
   let factory : IO ${start} := ${factory}
   let finish (inner : ${task}) : BaseIO (Outcome ${error?.lean || "Unit"} ${value.lean}) := do
     cbTrack port inner
@@ -64,7 +85,7 @@ export const emitRetainedTask = options => {
     LB(status) s = lb_prepare(); if (s != LB(OK)) return s;
     ${args.filter(x => x.c.bind).map(x => x.c.bind("v" + x.j)).join("\n    ")}
     lb_entry *e; s = lb_reserve(${i}, &e); if (s != LB(OK)) return s;
-    int err = lb_cb_new(0, EFD_SEMAPHORE, &e->retained.token);
+    int err = lb_cb_new(0, ${options.wasm ? "0" : "EFD_SEMAPHORE"}, &e->retained.token);
     if (err) { lb_drop(e); return err == ENOMEM ? LB(NO_MEMORY) : LB(UNAVAILABLE); }
     lean_inc(e->retained.token);
     /* BaseIO, unlike IO, returns the value directly at this ABI. All
@@ -76,12 +97,18 @@ export const emitRetainedTask = options => {
 	const get = `lb_entry *e; LB(status) s = lb_lookup(h.id, h.domain, ${i}, &e, 0); if (s != LB(OK)) return s;`;
 	if(!options.publicC)
 	{
-		fn(n + "_poll", [h + " h", "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
+		if(!options.wasm) fn(n + "_poll", [h + " h", "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
 		fn(n + "_close", [h + " *h"], `return h ? lb_close(&h->id, h->domain, ${i}) : LB(INVALID);`);
 	}
 	if(!options.publicC && callbacks.length)
 	{
-		fn(n + "_callbacks", [h + " h", "int *fd"], `${get}
+		if(options.wasm)
+		{
+			fn(n+"_arm",[h+" h","uint32_t token"],get+" return lb_cb_arm(lean_get_external_data(e->retained.token),token) ? LB(OK) : LB(INVALID);");
+			fn(n+"_listen",[h+" h","uint32_t token"],get+" if (!token || e->watch.listening) return LB(INVALID); e->watch.listening=1; lean_bridge_wasm_task_subscribe_v1(e->watch.source,token); return LB(OK);");
+			fn(n+"_cancel",[h+" h"],get+" lb_retained_stop(&e->retained); lean_io_cancel_core(e->watch.source); return LB(OK);");
+		}
+		else fn(n + "_callbacks", [h + " h", "int *fd"], `${get}
     if (!fd) return LB(INVALID); *fd = ((lb_port *)lean_get_external_data(e->retained.token))->fd; return LB(OK);`);
 		fn(n + "_next", [h + " h", "uint32_t *slot"], get + " if (lb_watch_ready(&e->watch)) return LB(PENDING); return lb_retained_next(&e->retained, slot);");
 		fn(n + "_fail", [h + " h", p + "_view msg", "uint32_t *id"], get + " return lb_retained_failure(&e->retained, msg, id);");

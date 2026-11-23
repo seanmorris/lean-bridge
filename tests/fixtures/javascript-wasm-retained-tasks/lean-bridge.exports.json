@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Relay"],
+  "exports": ["Relay.add","Relay.worker","Relay.factory","Relay.twice","Relay.recover","Relay.text","Relay.laterError","Relay.replace","Relay.propagate","Relay.checked"],
+  "taskExports": ["Relay.worker","Relay.factory","Relay.twice","Relay.recover","Relay.text","Relay.laterError","Relay.replace","Relay.propagate","Relay.checked"],
+  "taskIOErrors": ["Relay.worker","Relay.twice","Relay.recover","Relay.text","Relay.laterError","Relay.replace","Relay.propagate"],
+  "targets": {"npm":{"name":"@example/lean-relay","version":"1.0.0"}}
+}

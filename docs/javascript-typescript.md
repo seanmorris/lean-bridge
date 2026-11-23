@@ -128,6 +128,38 @@ retry on the same heap. A Node worker or a dedicated browser module worker
 has its own runtime. Retiring the worker's instance leaves the parent’s
 runtime and its existing objects usable. See the [worker isolation checks](evidence/javascript-wasm-callback-io-retirement-20261123.md).
 
+### Answer a callback from a Lean task
+
+A threaded npm package can ask your application for a value while its Lean
+task is running. Pass a function; it runs on the JavaScript event loop that
+started the task and can return either the value or a Promise for it.
+For example, with the [Relay package](publish/npm.md#build-a-threaded-npm-handoff):
+
+```js
+import { worker, JavaScriptCallbackError } from "@example/lean-relay";
+
+const job = worker(21, n => n * 2);
+try {
+  console.log(await job); // 42
+} catch (error) {
+  if (!(error instanceof JavaScriptCallbackError)) throw error;
+  console.error(error.phase, error.cause);
+}
+```
+
+If a callback throws or rejects and Lean propagates that error, `cause` is
+the original JavaScript value. `phase` distinguishes the task factory from
+the worker. Lean can instead catch the error and return a normal result.
+To stop waiting, call `job.cancel()`. A successful cancellation rejects the
+job and discards late callback replies; it does not cancel unrelated work
+started by your JavaScript function. Browser pages using this pthread profile
+require cross-origin isolation.
+
+Two Lean workers on the same runtime can wait for JavaScript replies at once,
+including calls from different packages. A third callback attempt raises a
+Lean IO error before invoking JavaScript. The two outstanding calls can
+still finish; the slot becomes available when a worker receives its reply.
+
 ## TypeScript
 
 Create a separate Node.js application and install the compiler:
@@ -272,8 +304,9 @@ thrown value survives cleanup, including `throw undefined`.
 
 Primitive and structured exports can share a package and runtime. Callables and
 resource identities cannot be fields or elements of copied values. A callback
-borrow expires when its enclosing call returns; Promise results and retained
-host callbacks remain unsupported.
+borrow expires when its enclosing synchronous call returns. A [threaded
+task](#answer-a-callback-from-a-lean-task) uses a different contract: it
+retains its callback and can await a JavaScript reply.
 
 [Installed structured-callback checks](evidence/npm-structured-callables-20260925.md)
 cover both source paths in Node, strict TypeScript and three browser engines,

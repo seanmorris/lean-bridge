@@ -15,9 +15,18 @@ export const generateTaskControl = (symbol, wire) => {
 		, take: "uint64_t *,uint64_t *,uint8_t *"
 		, listen: "uint64_t *,uint32_t"
 		, cancel: "uint64_t *"
+		, arm: "uint64_t *,uint32_t"
+		, next: "uint64_t *,uint32_t *"
+		, arg: "uint64_t *,uint32_t,uint64_t *"
+		, reply: "uint64_t *,uint32_t,const uint64_t *"
+		, fail: "uint64_t *,const uint64_t *,uint32_t *"
 		, close: "uint64_t *"
 		, pull: "uint64_t *"};
-	const pass = {start: "args,h,out,tags", take: "h,out,tags", listen: "h,f[4]", cancel: "h", close: "h", pull: "h"};
+	const pass = {start: "args,h,out,tags"
+		, take: "h,out,tags", listen: "h,f[4]", cancel: "h"
+		, close: "h", pull: "h", arm: "h,f[4]"
+		, next: "h,(uint32_t*)out", arg: "h,f[4],out"
+		, reply: "h,f[4],args", fail: "h,args,(uint32_t*)out"};
 	const prototypes = [], cases = wire.methods.map((m,index) => {
 		const size = taskFrame.args + 24*m.args.length + m.tagBytes;
 		const branch = [];
@@ -59,7 +68,7 @@ __attribute__((visibility("default"))) int ${symbol}(uint32_t *f) {
   uintptr_t base = (uintptr_t)f;
   uint64_t end = (uint64_t)__builtin_wasm_memory_size(0) * 65536;
   if (!base || base % 8 || base + UINT64_C(72) > end || f[0] != ${taskFrame.magic}u ||
-      base + (uint64_t)f[1] > end || f[5] || (f[3] != ${taskFrame.listen} && f[4])) return 5;
+      base + (uint64_t)f[1] > end || f[5] || (f[3] != ${taskFrame.listen} && f[3] != ${taskFrame.arm} && f[3] != ${taskFrame.arg} && f[3] != ${taskFrame.reply} && f[4])) return 5;
   uint64_t *h = (uint64_t *)(f + 6), *out = h + 2, *args = out + 4;
   switch(f[2]) { ${cases.join("\n  ")} default: return 5; }
 }

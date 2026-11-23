@@ -5,7 +5,7 @@
  */
 import { nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
 import { cTaskValues } from "./task-values.mjs";
-import { emitRetainedTask, retainedLean, retainedPrototypes, retainedTask } from "./task-callback-exports.mjs";
+import { emitRetainedTask, retainedLean, retainedPrototypes, retainedTask, wasmRetainedLean } from "./task-callback-exports.mjs";
 import { cResourceApi, cResourceSupport, taskResourceTypes } from "./task-resources.mjs";
 import { cHostCallbacks } from "./task-host-callback.mjs";
 
@@ -29,9 +29,9 @@ export const generateCTaskExports = options => {
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
-	if(wasm && (synchronous || gmp || retained
+	if(wasm && (synchronous || gmp || (retained && !options.wasmCallbacks)
 		|| [options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].some(Boolean)))
-		throw new TypeError("Threaded Wasm tasks require word carriers and the Wasm delivery profile; retained host callbacks are not supported");
+		throw new TypeError("Threaded Wasm tasks require word carriers, the Wasm delivery profile and an explicit retained callback adapter");
 	if(!wasm && (retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
 		throw new TypeError(options.phpDelivery ? "The PHP task ABI requires word carriers; select exactly one host"
 			: options.perlDelivery ? "The Perl task ABI requires word carriers; select exactly one host"
@@ -47,14 +47,17 @@ export const generateCTaskExports = options => {
 	const names = new Set(), declarations = [
 		`extern lean_object *initialize_${module}(uint8_t);`
 		, `extern lean_object *${entryPrefix}_error_text(lean_object *);`
-		, ...retained ? retainedPrototypes : []];
+		, ...retained ? retainedPrototypes.map(x => wasm ? x.replaceAll("lb_c_cb",entryPrefix+"_cb") : x) : []
+		, ...wasm && retained ? [`extern lean_object *${entryPrefix}_cb_factory(lean_object *,lean_object *);`] : []];
 	const lean = [...wasm ? ["prelude", "import Init.System.Promise"] : []
 		, ...modules.map(m => `import ${m}`)
 		, ...retained ? ["import Init.System.Promise"] : []
 		, "set_option autoImplicit false"
 		, "namespace " + namespace
 		, `@[export ${entryPrefix}_error_text] def errorText (e : IO.Error) : String := toString e`
-		, ...synchronous ? [] : [streamEntryLean], ...retained ? [retainedLean] : []];
+		, ...synchronous ? [] : [streamEntryLean]
+		, ...retained ? [wasm ? wasmRetainedLean(entryPrefix+"_cb") : retainedLean] : []
+		, ...wasm && retained ? [`@[extern "${entryPrefix}_cb_factory"] opaque cbTrackFactory {α : Type} (port : @& CallbackPort) (task : @& Task α) : BaseIO Unit`] : []];
 	const fn = (name, args, body) => {
 		const signature = `${p}_status ${name}(${args.join(", ") || "void"})`;
 		symbols.push(name); prototypes.push(signature + ";"); functions.push(`${signature} {\n    ${body}\n}`);
@@ -74,7 +77,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wordAliases: options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
@@ -186,7 +189,7 @@ ${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...host ? host.he
 `;
 	const source = `#include "${p}.h"
 #include <lean/lean.h>${wasm ? `\n#define initialize_BridgeCAsync initialize_${module}\n#define lb_c_error_text ${entryPrefix}_error_text` : ""}
-${declarations.join("\n")}
+${wasm && retained ? "#include <pthread.h>\n#define LB_WASM_CALLBACK_PORT 1\n#define LB_CB_FACTORY "+entryPrefix+"_cb_factory\n#define lb_c_cb_request "+entryPrefix+"_cb_request\n#define lb_c_cb_track "+entryPrefix+"_cb_track\n" : ""}${declarations.join("\n")}
 #define LB(x) ${p}_##x
 #define LB_SYNC_ONLY ${Number(synchronous)}
 #define LB_COMPONENT "ctask:${componentIdentity}"

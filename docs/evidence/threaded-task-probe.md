@@ -143,8 +143,32 @@ Both Depot routes passed strict TypeScript and 43 public checks in each of Node,
 
 The copied-value Jobs and Totals regression used the same runtime archive. Jobs again passed 47 checks per source route in both Node and Chromium. Totals returned 29 while Jobs still held a pending worker; after release, Jobs returned 71 and the native owner count was zero on both hosts.
 
+## Retained callbacks on the JavaScript owner
+
+The [Relay source](../../tests/fixtures/javascript-wasm-retained-tasks/Relay.lean) invokes a JavaScript callback either while constructing a task or from its inner worker. The worker sends its argument to the owner and waits for a Lean promise. The JavaScript function can reply immediately or later. The owner can still call another package, cancel the task or close the runtime. Native results, requests and JS errors do not share an identity just because their text matches.
+
+The [installed consumer](../../tests/fixtures/javascript-wasm-retained-tasks/calls.mjs) uses two independently compiled components. It checks the original thrown JS value, the factory/task distinction, caught and replaced errors, returned `Except`, deferred `EIO`, copy budgets and shutdown before a late reply. A fresh consumer runs for each ordinary and reviewed release.
+
+```sh
+LEAN_BRIDGE_TEST_TASK_INPUTS="$scratch/task-sdk" npm run test:javascript-task-callbacks
+```
+
+The adapter chains Lean tasks instead of parking a second worker to join the inner task. This matters on Chromium: the pinned Emscripten build can grow its pool in Node but cannot do so in a browser. A Node-only run passed before the browser exposed this difference.
+
+Two independent SDK links produced manifest SHA-256 `337dfdbd5bec8bfada345c6a4c83016bff96e72298ae69af6b53770b044d006f`. The three local handoffs include the same 764,239-byte runtime archive, SHA-256 `c66ea9d2fdd55563d61ee48cc531cd0449d5af1bcca0f0925826bc6d28e6c412`. Set `LEAN_BRIDGE_JS_TASK_CALLBACK_EVIDENCE` to a new directory to keep the verified archives; a receipt verifies the files, not the outcome of the subsequent host tests.
+
+| Callback package | Top-level package-set receipt SHA-256 |
+|---|---|
+| Relay, ordinary | `dddfc660c78bde4d42569073cc6fd18e72b84d37985c4f7de995392d07783010` |
+| Relay, reviewed | `e47e43059360e2e3306a75d0693f116399d553aca9400b8bb1c0add006bd537f` |
+| Echo, independent | `8e847abcd4ce939a1e937a0b25c0d1a9695b353ec7c1187225d132be79cae961` |
+
+Both Relay routes passed strict TypeScript and 78 public checks in each of Node, a Node module worker, and isolated Chromium (468 checks). Two packages could nest an awaited callback; with two replies already outstanding, the third attempt raised a Lean IO error without invoking JavaScript, and both earlier calls completed. Replacing the reviewed invocation count with `once` failed compiler reconciliation and produced no release.
+
+In a separate Chromium realm for each route, the test injected an uncaught error into a real pthread while the factory awaited JavaScript. The public call, shutdown and subsequent admission observed the same failure. Frames, allocations, pending operations and notifications returned to zero without calling cleanup through the failed heap. This is a fatal worker failure, distinct from an application's rejected callback.
+
 ## What this does not ship
 
-The three-package wire experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated npm application instead imports ordinary package functions and uses the compiled component's own contract. The low-level wire test still creates a fixture-specific runtime; the author SDK is linked independently. Direct nominal resource arguments, returns, items and error payloads use the runtime's lease table; this does not extend to arbitrary nested resource containers or retained host callbacks. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
+The three-package wire experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated npm application instead imports ordinary package functions and uses the compiled component's own contract. The low-level wire test still creates a fixture-specific runtime; the author SDK is linked independently. Direct nominal resource arguments, returns, items and error payloads use the runtime's lease table. Threaded callbacks accept one copied scalar and return one copied scalar; they do not transport nested resources or returned functions. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
 
 The pthread archives use a distinct profile and content-addressed runtime version. The single-threaded runtime remains separate; no native binding or language-neutral IR changed. These are local installations, not a published, signed or Nix-built release.

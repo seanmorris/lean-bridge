@@ -4,4 +4,5 @@ export const taskFrame = Object.freeze({magic: 0x4c425431
 	, out: 40
 	, args: 72
 	, start: 0, listen: 1, take: 2, cancel: 3, close: 4, pull: 5, clear: 6
-	, leaseClose: 7, leaseRetain: 8, leaseSame: 9, leaseSize: 104});
+	, leaseClose: 7, leaseRetain: 8, leaseSame: 9, leaseSize: 104
+	, arm: 10, next: 11, arg: 12, reply: 13, fail: 14});

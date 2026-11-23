@@ -51,7 +51,13 @@ export const compileJavaScriptTaskComponent = async options => {
 		, "task-owner-policy.h": owner
 		, "lean_bridge_native_runtime.h": generateOwnedWasmBroker().header};
 	const headers = {}, include = join(app,"include/lean");
-	if(api.types.length) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
+	const resources=api.types.filter(t => t.kind==="resource"), wasmCallbacks=api.types.some(t => t.kind==="callback");
+	if(resources.length) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
+	if(wasmCallbacks)
+	{
+		assets["task-callback-port.h"]=await sourceAsset("c/task-callback-port.h");
+		assets["task-callback-queue.h"]=await sourceAsset("native/task-callback-queue.h");
+	}
 	await mkdir(include,{recursive: true});
 	for(const name of javascriptWasmTargetHeaders)
 	{
@@ -60,9 +66,9 @@ export const compileJavaScriptTaskComponent = async options => {
 			throw new Error("Expected threaded wasm32 headers, not host headers");
 		headers[name] = sha256(bytes); await writeFile(join(include,name),bytes,{flag: "wx"});
 	}
-	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources: api.types, wasmTasks: true, integerMode: "words"};
+	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources, wasmTasks: true, wasmCallbacks,integerMode: "words"};
 	const skeleton = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources: api.types});
+	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources,wasmCallbacks});
 	const componentIdentity = sha256(canonicalJson({evidence
 		, compiler
 		, stamp
@@ -78,7 +84,8 @@ export const compileJavaScriptTaskComponent = async options => {
 		throw new Error("Generated Wasm resource layout differs from the public lease contract");
 	if(abi.methods.length !== wire.methods.length || abi.methods.some((m,i) =>
 		["name","declaration","effect","delivery","args","result","error","terminal","stepDeclaration","tagBytes"].some(k =>
-			canonicalJson(m[k]) !== canonicalJson(wire.methods[i][k] ?? null))))
+			canonicalJson(m[k]) !== canonicalJson(wire.methods[i][k] ?? null))
+			|| canonicalJson(m.callbacks ?? [])!==canonicalJson(wire.methods[i].callbacks ?? [])))
 		throw new Error("Generated Wasm wire differs from the public task contract");
 	const save = (name,bytes) => writeFile(join(app,name),bytes,{flag: "wx"});
 	for(const [file, bytes] of Object.entries(assets)) await save(file,bytes);

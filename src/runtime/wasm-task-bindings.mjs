@@ -2,6 +2,7 @@
 import {PendingOperationRegistry} from "./pending-operations.mjs";
 import {openWasmTaskFrame} from "./wasm-task-frames.mjs";
 import {createWasmTaskLeases} from "./wasm-task-leases.mjs";
+import {createWasmTaskCallbacks} from "./wasm-task-callbacks.mjs";
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
 
 /**
@@ -30,6 +31,7 @@ export const createWasmTaskSession = options => {
 			for(const row of rows)
 			{
 				row.work?.sub.detach();
+				row.callbacks?.close();
 				if(row.work) settle(row.work,"reject",failure);
 				row.work=null; row.ending=true; row.frame.dispose(); row.drained();
 			}
@@ -41,6 +43,7 @@ export const createWasmTaskSession = options => {
 	const leases=createWasmTaskLeases(context);
 	const drop = row => {
 		if(!rows.delete(row)) return;
+		row.callbacks?.close();
 		row.ending=true;
 		try
 		{ if(live() && row.frame.hasOwner()) row.frame.call(op.close); }
@@ -75,11 +78,12 @@ export const createWasmTaskSession = options => {
 			// Reserve the notification before admitting native work: a capacity
 			// failure must not leave an unobservable worker running.
 			p.sub=notifications.subscribe(done);
+			row.callbacks?.reserve();
 			const pending=domain.begin({kind: "pending-operation-v1",abiVersion: 1,declarationId: row.method.id},{
-				cancel: () => { if(live()) row.frame.call(op.cancel); }
+				cancel: () => { row.callbacks?.close(); if(live()) row.frame.call(op.cancel); }
 			});
 			p.token=pending.token; p.promise=pending.promise; row.work=p;
-			start(); row.frame.call(op.listen,p.sub.token);
+			start(); row.frame.call(op.listen,p.sub.token); row.callbacks?.arm();
 		}
 		catch(error)
 		{
@@ -101,6 +105,14 @@ export const createWasmTaskSession = options => {
 			{ frame.dispose(); }
 		}
 		const row={frame,method,mapError,ending: false,work: null};
+		if(method.callbacks?.length)
+		{
+			const abort=error => {
+			// Reject this task only; retain its completion notification until native drain.
+				row.ending=true; row.callbacks.close(); frame.call(op.cancel); settle(row.work,"reject",error);
+			};
+			row.callbacks=createWasmTaskCallbacks({method,args,frame,notifications,retire,abort});
+		}
 		row.drain=new Promise(resolve => { row.drained=resolve; }); rows.add(row);
 		if(method.delivery==="task") return observe(row,() => frame.call(op.start),false);
 		try

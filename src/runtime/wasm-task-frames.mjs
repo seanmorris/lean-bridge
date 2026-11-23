@@ -4,6 +4,8 @@ import {taskFrame as layout} from "../abi/wasm-task-frame.mjs";
 import {encodeWasmWord,decodeWasmWord} from "../release/wasm-word-codecs.mjs";
 
 const invalid = () => new Error("Malformed Lean task frame");
+/** A valid callback request exceeded the bounded resources of its task. */
+export class WasmTaskCallbackLimit extends RangeError {}
 const knownIO = id => id === "error:IO.Error" || id === "error:TaskIO.Error";
 const failed = (id,phase,value) => Object.assign(new Error(knownIO(id) ? value : "Lean raised "+id),{
 	code: "declared-error",details: {errorId: id,phase,payload: value}
@@ -23,7 +25,14 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 	const {module: m,ledger,retire,isLive} = context;
 	if(args.length !== method.args.length) throw new TypeError("Wrong arity for "+method.id);
 	const lease=t => typeof t==="string" && t.startsWith("lease:");
-	const inputs=method.args.map((type,i) => lease(type) ? context.leases.live(args[i],type) : (validateComponentScalar(type,args[i]),null));
+	const inputs=method.args.map((type,i) => {
+		if(type==="callback")
+{
+			if(typeof args[i]!=="function") throw new TypeError("Expected a JavaScript callback for "+method.id);
+			return null;
+}
+		return lease(type) ? context.leases.live(args[i],type) : (validateComponentScalar(type,args[i]),null);
+	});
 	const view = () => new DataView(m.HEAP8.buffer);
 	const native = fn => {
 		if(!isLive()) throw new Error("Lean task runtime is retired");
@@ -65,7 +74,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			const pos=f+layout.args+24*i, row=inputs[i];
 			if(row)
 			{ view().setBigUint64(pos,row.id,true); view().setBigUint64(pos+8,row.domain,true); }
-			else encodeWasmWord(m,pos,t,args[i],alloc);
+			else if(t!=="callback") encodeWasmWord(m,pos,t,args[i],alloc);
 		}
 	} catch(error)
 	{ dispose(); throw error; }
@@ -75,8 +84,77 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		const s = native(() => invoke(f)), h = view();
 		if(h.getUint32(f,true)!==layout.magic || h.getUint32(f+4,true)!==size || h.getUint32(f+8,true)!==index
 			|| h.getUint32(f+12,true)!==op || h.getUint32(f+16,true)!==token || h.getUint32(f+20,true)
-			|| !Number.isInteger(s) || s<0 || s>12) retire(invalid());
+			|| !Number.isInteger(s) || s<0 || s>(method.callbacks && op===layout.take ? 14 : 12)) retire(invalid());
 		return s;
+	};
+	const hostFailures=new Map(), slots=new Map((method.callbacks ?? []).map(([i,arg,reply]) => [i,{arg,reply}]));
+	const callbackOp=(op,token=0) => {
+		const status=raw(op,token), d=view();
+		if(!handle || d.getBigUint64(f+24,true)!==handle || d.getBigUint64(f+32,true)!==domain
+			|| m.HEAP8.subarray(f+tags,f+size).some(Boolean)) return retire(invalid());
+		return status;
+	};
+	const blankOut=() => m.HEAP8.fill(0,f+layout.out,f+layout.args);
+	const checkedOut=(offset=0) => {
+		if(m.HEAP8.subarray(f+layout.out+offset,f+layout.args).some(Boolean)) retire(invalid());
+	};
+	const request=() => {
+		checkedOut(); const status=callbackOp(layout.next);
+		if(status===1)
+		{ checkedOut(); return null; }
+		if(status) return retire(invalid());
+		checkedOut(4); const slot=view().getUint32(f+layout.out,true), type=slots.get(slot); blankOut();
+		if(!type) return retire(invalid());
+		const statusArg=callbackOp(layout.arg,slot);
+		if([11,12].includes(statusArg))
+		{ checkedOut(); throw new WasmTaskCallbackLimit("Lean callback argument exceeds task resources"); }
+		if(statusArg) return retire(invalid());
+		let value;
+		let over=false;
+		try
+		{ value=decodeWasmWord(m,f+layout.out,type.arg,{some},n => { if(n>scalarCopyLimit-used) over=true; charge(n); }); }
+		catch(error)
+		{
+			if(!over) return retire(error);
+			if(callbackOp(layout.clear)) return retire(invalid());
+			checkedOut(); used=size; throw new WasmTaskCallbackLimit("Lean callback argument exceeds copy budget");
+		}
+		if(callbackOp(layout.clear)) return retire(invalid());
+		checkedOut(); used=size; return {slot,value};
+	};
+	const answer=(slot,ok,value) => {
+		const type=slots.get(slot); if(!type) return retire(invalid());
+		const pos=f+layout.args; checkedOut(); m.HEAP8.fill(0,pos,pos+24);
+		try
+		{
+			if(ok)
+			{
+				try
+				{ encodeWasmWord(m,pos,type.reply,value,alloc); }
+				catch(error)
+				{
+					// A bad JS value or oversized reply fails this callback, not the heap.
+					if(!isLive() || !(error instanceof RangeError || error instanceof TypeError)) throw error;
+					freeTo(1); used=size; ok=false; value=error;
+					m.HEAP8.fill(0,pos,pos+24);
+				}
+			}
+			if(ok)
+			{
+				if(callbackOp(layout.reply,slot)) return retire(invalid()); checkedOut();
+			} else
+			{
+				encodeWasmWord(m,pos,"string","JavaScript callback failed",alloc);
+				const status=callbackOp(layout.fail);
+				if([11,12].includes(status))
+				{ checkedOut(); throw new WasmTaskCallbackLimit("Lean callback failure retention limit reached"); }
+				if(status) return retire(invalid());
+				checkedOut(4); const id=view().getUint32(f+layout.out,true); blankOut();
+				if(!id || id>4096 || hostFailures.has(id)) return retire(invalid());
+				hostFailures.set(id,value);
+			}
+		} finally
+		{ freeTo(1); used=size; }
 	};
 	const call = (op,token=0,discard=false) => {
 		// The generated C calls emit only active result tags. Never reuse a tag
@@ -89,11 +167,20 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		if(start ? (method.delivery && !s ? !id || !dom : id!==0n || dom!==0n)
 			: dom!==domain || id!==(consumed ? 0n : handle)) retire(invalid());
 		handle=id; domain=dom;
-		const errorId = start ? method.startId : take ? method.terminalId : null;
-		const declared = errorId && s === (knownIO(errorId)?4:3);
+		const factory=start || (take && method.callbacks && [3,13].includes(s));
+		const errorId = factory ? method.startId : take ? method.terminalId : null;
+		const declared = errorId && s === (knownIO(errorId)?(take && factory ? 13 : 4):3);
 		const value = !s && (take || (start && !method.delivery));
 		try
 		{
+			if(take && method.callbacks && s===14)
+			{
+				const key=d.getBigUint64(f+layout.out,true), phase=d.getBigUint64(f+layout.out+8,true);
+				if(key<1n || key>4096n || ![2n,3n].includes(phase) || (!discard && !hostFailures.has(Number(key)))) return retire(invalid());
+				checkedOut(16); blankOut();
+				if(discard) return {done: true};
+				throw failed("error:JavaScriptCallbackError",phase===2n ? "factory" : "task",hostFailures.get(Number(key)));
+			}
 			if(!declared && !value)
 			{
 				if(m.HEAP8.subarray(f+layout.out,f+layout.args).some(Boolean) || m.HEAP8.subarray(f+tags,f+size).some(Boolean)) retire(invalid());
@@ -101,7 +188,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 				if((start || take) && [11,12].includes(s)) throw new RangeError("Lean task resource limit ("+s+")");
 				return retire(new Error("Unexpected Lean task control status "+s+" for "+method.id));
 			}
-			let type = declared ? start ? method.error : method.terminal : method.result;
+			let type = declared ? factory ? method.error : method.terminal : method.result;
 			const wrap = []; let k=0;
 			while(Array.isArray(type))
 			{
@@ -131,7 +218,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			catch(error)
 			{ if(!over) return retire(error); clear(); throw error; }
 			clear(); for(const key of wrap.reverse()) result={[key]: result};
-			if(declared) throw failed(errorId,start ? method.delivery ? "factory" : "call" : cursor ? "step" : "task",result);
+			if(declared) throw failed(errorId,factory ? method.delivery ? "factory" : "call" : cursor ? "step" : "task",result);
 			return {value: result,done: false};
 		}
 		finally
@@ -140,5 +227,5 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			used=size; // The return budget is per call/pull, not per iterator lifetime.
 		}
 	};
-	return {call,dispose,hasOwner: () => Boolean(handle)};
+	return {call,request,answer,forgetFailures: () => hostFailures.clear(),dispose,hasOwner: () => Boolean(handle)};
 };

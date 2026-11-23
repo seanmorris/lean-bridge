@@ -12,6 +12,30 @@ const componentBytes = async url => {
 const digest = async bytes => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",bytes)),v => v.toString(16).padStart(2,"0")).join("");
 
 /**
+ * Route failures from the pinned Emscripten pthread runtime into the session.
+ * Its default handler throws on the parent event loop and strands pending tasks.
+ * Node may load additional workers after startup; browsers use the fixed pool.
+ *
+ * @param pool - The installed SDK's PThread object.
+ * @param failed - Retire only the heap that owns the failed worker.
+ */
+export const observeTaskWorkerFailures=(pool,failed) => {
+	const observe=worker => {
+		worker.onerror=event => {
+			event?.preventDefault?.();
+			const reason=event?.error ?? event;
+			failed(new Error("Lean Wasm worker failed"+(event?.message ? ": "+event.message : ""),{cause: reason}));
+		};
+	};
+	for(const worker of [...pool.unusedWorkers,...Object.values(pool.pthreads)]) observe(worker);
+	const load=pool.loadWasmModuleToWorker;
+	pool.loadWasmModuleToWorker=worker => {
+		const loaded=load.call(pool,worker); // Emscripten installs onerror synchronously.
+		observe(worker); return loaded;
+	};
+};
+
+/**
  * Load generated descriptors without exposing the heap or native slots.
  *
  * @param createModule - Package-local Emscripten module factory.
@@ -22,8 +46,14 @@ export const createWasmTaskLoader = createModule => {
 	const start = () => engine ??= (async () => {
 		if(typeof SharedArrayBuffer === "undefined" || globalThis.crossOriginIsolated === false)
 			throw new Error("Lean tasks require a shared WebAssembly heap (cross-origin isolation in browsers)");
-		module=await createModule({onLeanTaskReady: notifications.notify});
+		const failed=error => {
+			if(!session || !["open","closing"].includes(session.snapshot().state)) return;
+			try
+{ session.retire(error); } catch { /* The session delivered this error to all public operations. */ }
+		};
+		module=await createModule({onLeanTaskReady: notifications.notify,onAbort: reason => failed(new Error("Lean Wasm runtime aborted",{cause: reason}))});
 		session=createWasmTaskSession({module,notifications,nativeOwners: () => finalOwners=module._bridge_owned_runtime_identities(),terminate: () => module.PThread.terminateAllThreads()});
+		observeTaskWorkerFailures(module.PThread,failed);
 		return session;
 	})();
 	const load = async ({bindingIr,componentIdentity,bindingIrSha256,integrity,sideModule}) => {

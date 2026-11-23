@@ -58,11 +58,12 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.phpWasm - Check inputs for the synchronous wasm32 Zend transport.
  * @param options.wasm32 - Check inputs for a single-threaded wasm32 synchronous transport.
  * @param options.wasmTasks - Use owner notifications for threaded wasm32 task and pull handles.
+ * @param options.wasmCallbacks - Enable owner-agent requests only for checked pthread task declarations.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
-	if(wasmTasks && (!tasks || phpWasm || wasm32 || entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
+	if(wasmTasks && (!tasks || phpWasm || wasm32 || !wasmCallbacks && entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
 		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources), values = cTaskValues(p, false, kinds);
@@ -80,7 +81,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
 			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
-			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move });
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		const args = e.parameters.map(a => wireShape(a.type));

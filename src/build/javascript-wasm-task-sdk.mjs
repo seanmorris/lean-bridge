@@ -26,7 +26,7 @@ const flags = ["-O2"
 	, "-sDEFAULT_TO_CXX=1"
 	, "-sMODULARIZE=1"
 	, "-sEXPORT_ES6=1"
-	, "-sPTHREAD_POOL_SIZE=3"
+	, "-sPTHREAD_POOL_SIZE=4"
 	, "-sPTHREAD_POOL_SIZE_STRICT=2"
 	, "-sENVIRONMENT=node,web,worker"
 	, "-sINITIAL_MEMORY=67108864"
@@ -79,6 +79,8 @@ export const prepareTaskSdk=async options => {
 		const valueNames=await symbolNames(nm,init,(n,t) => ["T","D"].includes(t) && (scalar.test(n) || initValues.test(n)) && !n.includes("___at"));
 		const roots=[...new Set([...names,...valueNames,...broker.exports,...broker.supportExports,"lean_bridge_wasm_task_subscribe_v1","emscripten_is_main_runtime_thread","emscripten_builtin_memalign","realloc","memmove","memcmp"])].sort();
 		for(const op of ["create","borrow","release"]) roots.push(wasmLeasePrefix+op);
+		roots.push("lean_bridge_wasm_task_ready_v1","lean_register_external_class","pthread_mutex_init","pthread_mutex_destroy","pthread_mutex_lock","pthread_mutex_unlock","pthread_once");
+		roots.push("lean_bridge_wasm_callback_acquire_v1","lean_bridge_wasm_callback_release_v1");
 		roots.sort();
 		await writeFile(join(work,"roots.json"),JSON.stringify(roots.map(name => "_"+name)),{flag: "wx"});
 		await run(join(sdk,"upstream/emscripten/emcc"),[...flags

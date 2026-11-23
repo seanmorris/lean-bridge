@@ -172,7 +172,7 @@ const emitTypeDeclarations = (ir, typeMap) => {
         .join(", ");
 			const result = typeScriptType(type.callable.result.type, typeMap);
 			const delivered
-        = type.callable.resultMode === "promise" ? `Promise<${result}>` : result;
+        = type.source?.extensions?.["lean-bridge.dev/callback-scheduler"]==="javascript-owner-agent" && type.callable.resultMode==="promise" ? `${result} | PromiseLike<${result}>` : type.callable.resultMode === "promise" ? `Promise<${result}>` : result;
 			output.push(
 				`export type ${type.name} = (${parameters}) => ${delivered};`,
 				"",
@@ -334,7 +334,7 @@ const emitDeclarations = (ir, typeMap, threaded = false) => {
 		);
 		for(const error of errors)
 		{
-			const construction = error.payload === null ? `new ${error.name}({ cause: error })` : `new ${error.name}(error.details.payload, { cause: error })`;
+			const construction = threaded && error.id==="error:JavaScriptCallbackError" ? `Object.assign(new ${error.name}({cause:error.details.payload}),{phase:error.details.phase})` : error.payload === null ? `new ${error.name}({ cause: error })` : `new ${error.name}(error.details.payload, { cause: error })`;
 			output.push(`    case ${quote(error.id)}: return ${construction};`);
 		}
 		output.push("    default: throw error;", "  }", "};", "");
@@ -790,6 +790,7 @@ const emitTypeScript = (ir, typeMap, threaded = false) => {
 	{
 		lines.push(docComment(error.documentation), `export declare class ${error.name} extends Error {`);
 		lines.push(`  readonly code: ${quote(error.id)};`);
+		if(threaded && error.id==="error:JavaScriptCallbackError") lines.push('  readonly phase: "factory" | "task";');
 		if(error.payload !== null)
 		{
 			lines.push(`  readonly payload: ${typeScriptType(error.payload, typeMap)};`);

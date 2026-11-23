@@ -76,6 +76,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "maven" && projectContract.taskExports?.length ? { jvmTaskCallbacks: true } : {})
 		, ...(options.target === "cpan" && projectContract.taskExports?.length ? { perlTaskCallbacks: true } : {})
 		, ...(options.target === "php-native" && projectContract.taskExports?.length ? { phpTaskCallbacks: true } : {})
+		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []

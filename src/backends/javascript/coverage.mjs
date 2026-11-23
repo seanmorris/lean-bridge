@@ -31,6 +31,12 @@ const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefine
  */
 export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 	const taskContracts = new Map(taskMethods.map(m => [m.id,m]));
+	const retainedTypes=new Set();
+	for(const d of ir.declarations) for(const [slot] of taskContracts.get(d.id)?.callbacks ?? [])
+	{
+		const p=d.parameters[slot]; if(p?.type?.kind==="named") retainedTypes.add(p.type.id);
+	}
+	const retainedType=t => retainedTypes.has(t.id) && t.callable.resultMode==="promise" && t.source?.extensions?.["lean-bridge.dev/callback-scheduler"]==="javascript-owner-agent";
 	if(ir.schemaVersion === 4)
 	{
 		try
@@ -129,7 +135,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 		}
 	};
 
-	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null, taskMethod } = {}) => {
+	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null, taskMethod, retained=false } = {}) => {
 		if(failure.mode !== "declared") return;
 		for(const errorId of failure.errors)
 		{
@@ -139,7 +145,8 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
         = errorEnvelope && error && (supportsErrorEnvelopeValue(error.payload)
 					|| (error.id === syncIOError && error.category === "domain" && supportsJavaScriptIOPayload(error.payload)));
 			const taskError = taskMethod && error?.category === "domain" && [taskMethod.startId,taskMethod.terminalId].includes(errorId);
-			if(!boundaryOnly && !envelopeSupported && !taskError)
+			const callbackError=(retained || taskMethod?.callbacks?.length) && errorId==="error:JavaScriptCallbackError" && error?.category==="domain" && error.payload===null;
+			if(!boundaryOnly && !envelopeSupported && !taskError && !callbackError)
 			{
 				report(
 					"unsupported-error-envelope",
@@ -170,7 +177,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 				type: type.id
 			});
 		}
-		if(type.callable.resultMode !== "value")
+		if(type.callable.resultMode !== "value" && !retainedType(type))
 		{
 			report(
 				"unsupported-callback-delivery",
@@ -207,7 +214,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 			);
 		}
 		inspectTypeRef(type.callable.result.type, `${type.id}.result`);
-		inspectFailure(type.callable.failure, `${type.id}.failure`);
+		inspectFailure(type.callable.failure, `${type.id}.failure`,{retained: retainedType(type)});
 	}
 
 	for(const type of ir.types)
@@ -287,8 +294,8 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 			if(parameterType?.kind === "callback")
 			{
 				if(
-					parameter.ownership !== "borrow"
-          || parameter.lifetime?.scope !== "call"
+					!(taskContracts.get(declaration.id)?.callbacks?.some(([slot]) => slot===parameterIndex) && parameter.ownership==="lease" && parameter.lifetime?.scope==="explicit")
+					&& (parameter.ownership !== "borrow" || parameter.lifetime?.scope !== "call")
 				) {
 					report(
 						"unsupported-callback-lifecycle",

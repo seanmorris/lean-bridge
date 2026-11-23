@@ -62,7 +62,7 @@ ${stream ? `int ${names.pull}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owne
 export const retainedWireEntry = a => {
 	const { p, n, symbol, e, values, shape, depth, input, emit } = a;
 	const callbacks = [], args = [], checked = [], pass = [];
-	const valid = (type, word) => ["unit", "bool"].includes(type)
+	const valid = (type, word) => a.wasmTasks ? `if (${a.wasmArgument(type,word/3)}${["unit","bool"].includes(type) ? " || args["+word+"] > "+(type==="bool" ? 1 : 0)+"u" : ""}) return ${p}_INVALID;` : ["unit", "bool"].includes(type)
 		? `if (args[${word}] > ${type === "bool" ? 1 : 0}u) return ${p}_INVALID;` : "";
 	for(const [j, { type }] of e.parameters.entries())
 	{
@@ -71,6 +71,7 @@ export const retainedWireEntry = a => {
 			if(type.argument.kind !== "primitive" || type.reply.kind !== "primitive") throw new TypeError("Retained callbacks require copied scalars");
 			callbacks.push({ j, arg: shape(type.argument), reply: shape(type.reply), from: values.codec(type.argument), to: values.codec(type.reply) });
 			args.push("callback");
+			if(a.wasmTasks) checked.push(`if (args[${j*3}] || args[${j*3+1}] || args[${j*3+2}]) return ${p}_INVALID;`);
 		}
 		else
 		{
@@ -80,16 +81,18 @@ export const retainedWireEntry = a => {
 	}
 	const result = shape(e.result), value = values.codec(e.result);
 	const err = e.effect === "EIO" ? shape(e.error) : null, ec = err && values.codec(e.error);
-	const names = Object.fromEntries("start poll close take callbacks next arg reply fail trap".split(" ").map(k => [k, symbol + "_" + k]));
+	const names = Object.fromEntries((a.wasmTasks ? "start listen cancel arm close take next arg reply fail" : "start poll close take callbacks next arg reply fail trap").split(" ").map(k => [k, symbol + "_" + k]));
 	const owner = `${n}_handle o = {h[0], h[1]};`, save = "h[0] = o.id; h[1] = o.domain;";
 	const source = `#include "lean_bridge_native_runtime.h"
 int ${names.start}(const uint64_t *args, uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (!args || !h || h[0] || !out || !tags) return ${p}_INVALID;
     ${checked.join(" ")} ${n}_handle o = {0}; int s = ${n}_start(${[...pass, "&o"].join(", ")}); ${save} return s;
 }
-int ${names.poll}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_poll(o, fd); }
+${a.wasmTasks ? `int ${names.listen}(uint64_t *h,uint32_t t) { ${owner} return ${n}_listen(o,t); }
+int ${names.arm}(uint64_t *h,uint32_t t) { ${owner} return ${n}_arm(o,t); }
+int ${names.cancel}(uint64_t *h) { ${owner} return ${n}_cancel(o); }` : `int ${names.poll}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_poll(o, fd); }`}
 int ${names.close}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} int s = ${n}_close(&o); ${save} return s; }
-int ${names.callbacks}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_callbacks(o, fd); }
+${a.wasmTasks ? "" : `int ${names.callbacks}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_callbacks(o, fd); }`}
 int ${names.next}(uint64_t *h, uint32_t *slot) { if (!h) return ${p}_INVALID; ${owner} return ${n}_next(o, slot); }
 int ${names.arg}(uint64_t *h, uint32_t slot, uint64_t *out) {
     if (!h || !out) return ${p}_INVALID; ${owner} memset(out, 0, 4 * sizeof(*out));
@@ -104,9 +107,9 @@ int ${names.reply}(uint64_t *h, uint32_t slot, const uint64_t *args) {
     default: return ${p}_INVALID; }
 }
 int ${names.fail}(uint64_t *h, const uint64_t *args, uint32_t *id) {
-    if (!h || !args || !id) return ${p}_INVALID; ${owner} return ${n}_fail(o, (${p}_view){(const uint8_t *)(uintptr_t)args[0],args[1]}, id);
+    if (!h || !args || !id) return ${p}_INVALID; ${a.wasmTasks ? valid("string",0) : ""} ${owner} return ${n}_fail(o, (${p}_view){(const uint8_t *)(uintptr_t)args[0],args[1]}, id);
 }
-void ${names.trap}(void) { lean_bridge_native_runtime_retire(); }
+${a.wasmTasks ? "" : `void ${names.trap}(void) { lean_bridge_native_runtime_retire(); }`}
 int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (!h || !out || !tags) return ${p}_INVALID;
     ${owner} memset(out, 0, 4 * sizeof(*out)); ${n}_value v = {0}; ${ec ? n + "_start_error er = {0};" : ""}
@@ -115,13 +118,18 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (s == ${p}_OK) { ${emit(result, "v", p)} }
     ${ec ? `else if (s == ${p}_TYPED_ERROR) { ${emit(err, "er", p)} }` : ""}
     else if (s == ${p}_IO_ERROR) {
-        if (origin) { out[0] = origin; s = 14; }
+        if (origin) { out[0] = origin; ${a.wasmTasks ? "out[1] = phase; " : ""}s = 14; }
         else { ${emit("string", "msg", p)} if (phase == 2) s = 13; }
     }
     ${value.dispose ? n + "_value_dispose(&v);" : ""} ${ec?.dispose ? n + "_start_error_dispose(&er);" : ""} ${p}_buffer_dispose(&msg); return s;
 }`;
 	const method = { name: e.name, declaration: e.declaration, symbol, names
-		, args, result, error: err, effect: e.effect, delivery: e.delivery
+		, args
+		, result
+		, error: err ?? (a.wasmTasks && e.effect==="IO" ? "string" : null)
+		, effect: e.effect
+		, delivery: e.delivery
+		, ...a.wasmTasks ? {terminal: e.taskIO ? "string" : null} : {}
 		, callbacks: callbacks.map(({ j, arg, reply }) => [j, arg, reply])
 		, tagBytes: Math.max(1, depth(err), depth(result)) };
 	return { source, names, method };
