@@ -17,22 +17,26 @@ const reject = (code, message) => { throw Object.assign(new Error(message), { co
  * @param assets - Statically declared URLs for bundlers and native ESM consumers.
  */
 export const createPhpWasmCopiedDescriptor = (runtime, component, assets) => {
+	const io = typeof component?.library === "string" && /^php8\.4-lb_wasm_io_[a-f0-9]{64}\.so$(?![\s\S])/.test(component.library);
 	if(!hash(runtime?.identity) || !hash(runtime?.loaderIdentity)
 		|| !/^liblean_bridge_php_wasm_copied_[a-f0-9]{20}\.so$/.test(runtime.library)
 		|| !hash(component?.identity) || !hash(component?.runtimeIdentity)
 		|| typeof component.id !== "string" || !component.id.length
 		|| !/^Lean[A-Za-z0-9_]+$/.test(component.namespace)
-		|| !/^php8\.4-lb_(?:[a-z0-9_]+_[a-f0-9]{16}|owned_[a-f0-9]{20})\.so$/.test(component.library)
+		|| (!io && !/^php8\.4-lb_(?:[a-z0-9_]+_[a-f0-9]{16}|owned_[a-f0-9]{20})\.so$/.test(component.library))
 		|| !/^[a-z][a-z0-9_-]*\/[a-z][a-z0-9_-]*$/.test(component.composer)
 		|| ![assets?.library, assets?.api, assets?.native, assets?.registration].every(url => url instanceof URL))
 		reject("invalid-php-wasm-descriptor", "Invalid generated PHP-Wasm copied descriptor");
 	if(runtime.identity !== component.runtimeIdentity) reject("php-wasm-runtime-conflict", "Component requires another PHP-Wasm runtime");
 	const definition = Object.freeze({ ...component });
 	const fingerprint = JSON.stringify([definition.id, definition.identity, definition.namespace, definition.library, definition.composer]);
+	if(io && !(assets.php?.["src/Internal/WireValues.php"] instanceof URL))
+		reject("invalid-php-wasm-descriptor", "Missing synchronous PHP-Wasm IO codec");
 	if(assets.php !== undefined && (!assets.php || typeof assets.php !== "object"
 		|| !(assets.php["bootstrap.php"] instanceof URL)
 		|| Object.entries(assets.php).some(([path, url]) => !(url instanceof URL)
 			|| path !== "bootstrap.php" && path !== "lean-bridge/aliases.json"
+				&& !(io && path === "src/Internal/WireValues.php")
 				&& !/^src\/Internal\/(?:Values|GraphTypes|Wire)\.php$/.test(path)
 				&& !/^dependencies\/brick-math\/(?:autoload\.php|LICENSE|composer\.json|src\/[A-Za-z0-9_/]+\.php)$/.test(path))))
 		reject("invalid-php-wasm-descriptor", "Invalid bundled PHP dependencies");

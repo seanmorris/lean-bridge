@@ -12,6 +12,7 @@ import { generateSyncWire } from "../backends/c/sync-wire.mjs";
 import { compileHostSources } from "./host-elaboration.mjs";
 import { readVerifiedPhpWasmCopiedRuntime } from "./php-wasm-copied-artifacts.mjs";
 import { phpWasmToolchain } from "./php-wasm-copied-component.mjs";
+import { linkPhpWasmIOExtension } from "./php-wasm-io-extension.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 
 const asset = path => readFile(new URL("../backends/c/" + path, import.meta.url), "utf8");
@@ -78,10 +79,12 @@ static int lb_context(void) { return lean_bridge_native_process_valid(); }
 		const object = join(app, file.slice(0, -2) + ".o");
 		await compiler.run(compiler.emcc, [...flags, "-c", join(app, file), "-o", object]); objects.push(object);
 	}
-	await compiler.verify();
-	if((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity !== runtime.identity) throw new Error("PHP-Wasm IO runtime changed during build");
-	return { objects
+	const core = { objects
 		, wire, api: built.api, evidence: built.evidence, componentIdentity
 		, runtimeIdentity: runtime.identity
 		, runtimeLibrary: join(runtimeRoot, runtime.manifest.library) };
+	if(options.zend) core.zend = await linkPhpWasmIOExtension({ ...options.zend, app, core, compiler, flags });
+	await compiler.verify();
+	if((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity !== runtime.identity) throw new Error("PHP-Wasm IO runtime changed during build");
+	return core;
 };

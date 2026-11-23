@@ -10,6 +10,7 @@ import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { compilePhpWasmIOCore } from "../../src/build/php-wasm-io-core.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
+import { exercisePhpWasmIOPublic } from "./php-wasm-io-public.mjs";
 
 const environment = process.env, runtimeRoot = environment.LEAN_BRIDGE_PHP_WASM_IO_RUNTIME;
 test("PHP-Wasm IO core rejects unsupported effects and scheduling before compiling", async () => {
@@ -47,6 +48,7 @@ test("PHP-Wasm IO core runs state and distinct typed failures in installed PHP 8
 	const core = await compilePhpWasmIOCore({ app
 		, runtimeRoot, emsdkRoot, projectContract
 		, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
+		, zend: environment.LEAN_BRIDGE_PHP_WASM_IO_HEADERS && { ...config.targets["php-wasm"].composer, phpSource: environment.LEAN_BRIDGE_PHP_WASM_IO_HEADERS }
 		, sources: [{ module: "Ledger", source }], runner });
 	const macros = core.wire.methods.map(m => {
 		const name = m.declaration.split(".").pop().toUpperCase();
@@ -74,6 +76,33 @@ test("PHP-Wasm IO core runs state and distinct typed failures in installed PHP 8
 	assert.equal(await php.run('<?php echo PHP_VERSION, ":", PHP_INT_SIZE, ":", file_get_contents("/ledger-check.txt");'), 0);
 	assert.equal(stderr, ""); assert.equal(stdout, "8.4.1:4:ok 27");
 	t.diagnostic(`${stdout} (runtime ${core.runtimeIdentity}, component ${core.componentIdentity})`);
+	if(core.zend)
+	{
+		const { model, library, transport } = core.zend;
+		const methods = Object.fromEntries(model.methods.map((m, i) => [m.declaration, { ...m, entry: "\\"+transport+"\\call"+i }]));
+		assert.equal(methods["Ledger.add"].returnType, "\\Brick\\Math\\BigInteger");
+		assert.equal(methods["Ledger.signed"].returnType, "int");
+		const zend = new PhpNode({ version: "8.4", autoTransaction: false, sharedLibs: [libs[0], { name: library.split("/").pop(), url: pathToFileURL(library).href, ini: true }] });
+		let result = "", errors = "";
+		zend.addEventListener("output", e => { result += e.detail.join(""); });
+		zend.addEventListener("error", e => { errors += e.detail.join(""); });
+		await zend.binary;
+		const call = d => methods["Ledger."+d].entry;
+		assert.equal(await zend.run(`<?php
+$word = pack("V2", 15, 0);
+if (${call("add")}($word) !== "\\0\\0".$word) throw new Exception("stateful IO");
+if (${call("add")}(pack("V2", 1, 1))[0] !== chr(5)) throw new Exception("narrowing");
+if (${call("readTotal")}() !== "\\0\\0".$word) throw new Exception("state changed");
+foreach ([0,1] as $fail) {
+    if (${call("choose")}(pack("V2",$fail,0),pack("V2",1,0),"a\\0b") !== chr($fail ? 3 : 0)."\\1a\\0b") throw new Exception("EIO vs Except");
+}
+try { ${call("add")}(15); throw new Exception("accepted number as bytes"); } catch (TypeError $e) {}
+echo PHP_VERSION, ":", PHP_INT_SIZE, ":zend";
+`), 0, errors);
+		assert.equal(errors, ""); assert.equal(result, "8.4.1:4:zend");
+		t.diagnostic(`${result} (extension ${core.zend.sha256}, headers ${core.zend.phpHeadersSha256})`);
+		await exercisePhpWasmIOPublic({ PhpNode, core, app, t });
+	}
 	const forbidden = await mkdtemp(join(app, "effect-policy-"));
 	const fileIO = source.replace("def add (amount : USize) : IO USize := do", 'def add (amount : USize) : IO USize := do\n  IO.FS.writeFile "unwanted" "effect"');
 	await assert.rejects(compilePhpWasmIOCore({ app: forbidden

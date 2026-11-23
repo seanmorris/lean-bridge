@@ -13,6 +13,20 @@ const component = { id: "willow@1.0.0", identity: "4".repeat(64), runtimeIdentit
 const base = { library: new URL("file:///installed/willow/api.so"), api: new URL("file:///installed/willow/Api.php"), native: new URL("file:///installed/willow/Native.php"), registration: new URL("file:///installed/willow/lazy-library.txt") };
 const host = () => ({ phpVersion: "8.4", phpVariant: "", phpArgs: {} });
 
+test("the synchronous IO descriptor requires its codec and shares the copied runtime", () => {
+	const io = { ...component, id: "ledger@1", namespace: "LeanLedger", composer: "example/ledger", library: `php8.4-lb_wasm_io_${"a".repeat(64)}.so` };
+	const php = host(), key = "src/Internal/WireValues.php";
+	const assets = { ...base, php: { "bootstrap.php": base.api, [key]: base.native } };
+	assert.equal(descriptor(runtime, component, base).getLibs(php).length,2);
+	const next = descriptor(runtime,io,assets).lazy;
+	assert.deepEqual(next.getLibs(php), [{ name: io.library, url: base.library, ini: false }]);
+	assert.ok(next.getFiles(php).some(f => f.path.endsWith("/"+key)));
+	assert.throws(() => descriptor(runtime,io,base), /Missing synchronous/);
+	assert.throws(() => descriptor(runtime,component,assets), /Invalid bundled/);
+	for(const library of [io.library.replace("a.so",".so"), "../"+io.library, io.library+"\n"])
+		assert.throws(() => descriptor(runtime,{ ...io, library },assets), /Invalid generated/);
+});
+
 test("owned and copied descriptors share one runtime with exact extension names", () => {
 	const owned = { ...component, id: "owned@1.0.0", namespace: "LeanOwned"
 		, composer: "example/owned"

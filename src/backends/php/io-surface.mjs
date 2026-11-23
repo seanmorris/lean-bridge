@@ -17,17 +17,18 @@ const scalarTypes = Object.freeze({ unit: "null", bool: "bool", char: "string"
 	, uint8: "int", uint16: "int", uint32: "int", int8: "int", int16: "int"
 	, int32: "int", int64: "int", isize: "int", uint64: bigInteger
 	, usize: bigInteger, nat: bigInteger, int: bigInteger });
+const wasmTypes = Object.freeze({ ...scalarTypes, uint32: bigInteger, int64: bigInteger });
 const fail=message=>{throw new TypeError("PHP synchronous IO: "+message);};
 const hex=x=>typeof x==="string"&&/^[0-9a-f]{64}$/u.test(x);
-const checkType=(t,leases)=>{
+const checkType=(t,leases,types)=>{
 	if(Array.isArray(t))
 	{
 		if(t.length!==2) fail("malformed returned Except");
-		t.forEach(branch => checkType(branch,leases)); return "Ok|Err";
+		t.forEach(branch => checkType(branch,leases,types)); return "Ok|Err";
 	}
 	if(leases.has(t)) return leases.get(t).publicName;
-	if(!Object.hasOwn(scalarTypes,t)) fail("unsupported copied value: "+t);
-	return scalarTypes[t];
+	if(!Object.hasOwn(types,t)) fail("unsupported copied value: "+t);
+	return types[t];
 };
 const pascal=s=>s.split(/[-_]+/u).filter(Boolean).map(w=>w[0].toUpperCase()+w.slice(1)).join("");
 
@@ -42,11 +43,14 @@ const pascal=s=>s.split(/[-_]+/u).filter(Boolean).map(w=>w[0].toUpperCase()+w.sl
  * @param input.bindingIrSha256 - Native adapter's pinned public IR hash.
  * @param input.evidence - Compiler interface, source and selection evidence.
  * @param tasks - Require genuine asynchronous declarations in the selection.
+ * @param phpWasm - Generate synchronous signatures for 32-bit Zend instead of native FFI.
  */
-const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
+const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=false)=>{
 	if(typeof name!=="string"||typeof version!=="string") fail("missing Composer coordinates");
 	validateOrdinaryPhpSettings({name,version});
 	const s=evidence?.selection;
+	if(phpWasm && (tasks || !Array.isArray(s?.nativeEffects) || s.nativeEffects.length || s.leanResources?.length))
+		fail("expected an in-memory PHP-Wasm selection without leases or scheduled operations");
 	const async = Boolean(s?.taskExports?.length || s?.asyncIterators?.length);
 	if(!s || async!==tasks || (s.synchronousIO===true)===tasks
 		||evidence.hostImportsSourceSha256!==null||!evidence.interfaces?.length
@@ -57,11 +61,12 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 	const {api: actual,entries}=reconcileHostExports({...evidence,ir: null,component: api.component,review: {source: canonicalJson(api)},owned});
 	if(canonicalJson(actual)!==canonicalJson(api)) fail("review differs from the compiler surface");
 	if(!/^[A-Za-z][A-Za-z0-9]*(?:[-_][A-Za-z0-9]+)*$/u.test(api.component.name)) fail("invalid component namespace");
-	const namespace="Lean"+pascal(api.component.name),prefix="lbc_php_"+sha256(name);
+	const namespace="Lean"+pascal(api.component.name),prefix=phpWasm ? "lbc_php_wasm_"+sha256(api.component.id) : "lbc_php_"+sha256(name);
 	const resources = api.types.filter(type => type.kind === "resource");
-	const wire=generateSyncWire(prefix,entries,{ tasks, resources });
+	const wire=generateSyncWire(prefix,entries,{ tasks, resources, phpWasm });
 	const publicNames=new Set(),errorClasses=new Set(["ioerror","declaredfailure","leanbridgeerror","bytes","ok","err"]);
 	const leases = new Map();
+	const typeOf = t => checkType(t, leases, phpWasm ? wasmTypes : scalarTypes);
 	if(tasks) for(const n of ["taskioerror","pullstream"]) errorClasses.add(n);
 	if(wire.methods.some(m=>m.callbacks)) for(const n of ["retainedcallback","callbackclosed"]) errorClasses.add(n);
 	for(const r of wire.leases ?? [])
@@ -89,12 +94,12 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 					|| c.reentry!=="same-agent" || c.selfDisposal!=="defer" || c.resultMode!=="value" || c.parameters.length!==1
 					|| c.parameters[0].ownership!=="copy" || c.result.ownership!=="copy" || c.parameters[0].type.name!==slot[1] || c.result.type.name!==slot[2]
 					|| c.failure.unexpected!=="poison-runtime" || c.failure.errors.join()!=="error:PhpCallbackException") fail("unverified retained callback");
-				return {name: phpFieldName(p.name,fail),type: "callable("+checkType(slot[1],leases)+"): "+checkType(slot[2],leases)};
+				return {name: phpFieldName(p.name,fail),type: "callable("+typeOf(slot[1])+"): "+typeOf(slot[2])};
 			}
 			const borrowed = leases.has(w.args[j]);
 			if(Array.isArray(w.args[j])||p.ownership!==(borrowed ? "borrow" : "copy")||p.optional||p.default!==null
 				|| (borrowed && (p.lifetime?.scope!=="call" || p.lifetime.anchor!==null))) fail("expected a copied argument or call-scoped resource");
-			return {name: phpFieldName(p.name,fail),type: checkType(w.args[j],leases)};
+			return {name: phpFieldName(p.name,fail),type: typeOf(w.args[j])};
 		});
 		const leased = leases.has(w.result);
 		if(d.result.ownership!==(leased ? "lease" : "copy") || (leased && (d.result.lifetime?.scope!=="explicit" || d.result.lifetime.anchor!==null)))
@@ -113,13 +118,13 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 			if(errorClasses.has(terminalFailure.toLowerCase())) fail("typed step error class collision");
 			errorClasses.add(terminalFailure.toLowerCase());
 		}
-		const returnType=checkType(w.result,leases), errorType=error===null?null:checkType(error,leases);
-		const terminalType=terminal ? checkType(terminal,leases) : null;
+		const returnType=typeOf(w.result), errorType=error===null?null:typeOf(error);
+		const terminalType=terminal ? typeOf(terminal) : null;
 		const step=w.delivery ? {terminalFailure,terminalType} : {};
 		const phases=w.callbacks ? {error,terminal} : {};
 		return {...w,...phases,publicName: raw,parameters,returnType,failure,errorType,...step};
 	});
-	return {namespace,prefix,methods,wire,leases};
+	return {namespace,prefix,methods,wire,leases,...phpWasm ? { phpWasm: true } : {}};
 };
 
 /**
@@ -128,6 +133,13 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
  * @param input - Public coordinates, Binding IR and compiler evidence.
  */
 export const compilePhpSyncSurface=input=>compileSurface(input,false);
+
+/**
+ * Reconstruct the wasm32 signatures and symbols from independently checked Lean evidence.
+ *
+ * @param input - Composer coordinates, public IR and compiler evidence.
+ */
+export const compilePhpWasmSyncSurface=input=>compileSurface(input,false,true);
 
 /**
  * Reconcile a compiler-selected native PHP task or pull component.

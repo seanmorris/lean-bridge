@@ -4,6 +4,8 @@ PHP 8.4.1 in the installed `php-wasm@0.1.0` Node host ran 27 checks against
 compiled Lean declarations using the shared wasm32 runtime. This tests the
 private transport that a Zend extension can call. It does not qualify a
 Composer package, PHP exceptions, Chromium, callbacks, or a task scheduler.
+The [Zend follow-up](php-wasm-sync-io-zend-20261123.md) checks the public
+PHP functions and exceptions in the same host.
 
 | Observation | Result |
 | --- | --- |

@@ -45,6 +45,7 @@ import "./helpers/perl-lease-consumers.mjs";
 import "./helpers/perl-lease-pin.mjs";
 import "./helpers/php-sync-installed.mjs";
 import "./helpers/php-wasm-io-core.mjs";
+import "./helpers/php-wasm-io-codec.mjs";
 import "./helpers/php-sync-consumers.mjs";
 import "./helpers/php-sync-reproduction.mjs";
 import "./helpers/php-sync-evidence.mjs";

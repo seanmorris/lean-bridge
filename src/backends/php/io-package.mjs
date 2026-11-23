@@ -25,6 +25,29 @@ function ${m.publicName}(${[...params,"?\\Amp\\Cancellation "+token+"=null"].joi
     return Internal\\Native::call${i}([${args.join(", ")}],${token});
 }`;
 };
+/**
+ * Emit the language-level values, failures and functions independent of the ABI.
+ *
+ * @param methods - Compiler-reconciled public methods.
+ * @param branches - Required PHP wrappers for returned sums.
+ */
+export const phpIOPublicDeclarations = (methods, branches) => `${copiedPhpValues}
+${branches.map(c=>`final readonly class ${c} {
+    public function __construct(public mixed $value) { if (func_num_args()!==1) throw new \\ArgumentCountError('Expected one payload'); }
+${phpValueMethods}
+}`).join("\n")}
+abstract class DeclaredFailure extends \\RuntimeException {
+    final public function __construct(public readonly string $declaration, public readonly mixed $payload) {
+        parent::__construct(is_string($payload)?$payload:$declaration.': '.static::class);
+    }
+}
+${[...new Set(methods.flatMap(exceptions))].map(f=>"final class "+f+" extends DeclaredFailure {}").join("\n")}
+${methods.map((m,i)=>m.delivery ? taskPublic(m,i) : `/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${m.returnType} */
+function ${m.publicName}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): ${m.returnType} {
+    if (func_num_args()!==${m.args.length}) throw new \\ArgumentCountError('Expected ${m.args.length} arguments');
+    return Internal\\Native::call${i}(${m.parameters.map(p=>"$"+p.name).join(", ")});
+}`).join("\n")}`;
+
 const taskNative=(m,i,model,port,decode)=>{
 	const {namespace: ns,wire}=model, fn=port.symbols[i+1], stream=m.delivery==="async-iterator";
 	const ops={ poll: m.names.poll, close: m.names.close, watch: wire.wait.open, unwatch: wire.wait.close, ...stream ? {pull: m.names.pull} : {} };
@@ -104,22 +127,7 @@ namespace ${ns};
 require_once __DIR__ . '/Internal/Loader.php';${leased ? "\nrequire_once __DIR__ . '/Internal/Leases.php';\nrequire_once __DIR__ . '/Internal/LeaseCodec.php';" : ""}
 require_once __DIR__ . '/Internal/Native.php';
 require_once __DIR__ . '/Internal/WireValues.php';${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}${retained ? "\nrequire_once __DIR__ . '/Internal/Callbacks.php';" : ""}
-${copiedPhpValues}
-${branches.map(c=>`final readonly class ${c} {
-    public function __construct(public mixed $value) { if (func_num_args()!==1) throw new \\ArgumentCountError('Expected one payload'); }
-${phpValueMethods}
-}`).join("\n")}
-abstract class DeclaredFailure extends \\RuntimeException {
-    final public function __construct(public readonly string $declaration, public readonly mixed $payload) {
-        parent::__construct(is_string($payload)?$payload:$declaration.': '.static::class);
-    }
-}
-${[...new Set(methods.flatMap(exceptions))].map(f=>"final class "+f+" extends DeclaredFailure {}").join("\n")}
-${methods.map((m,i)=>m.delivery ? taskPublic(m,i) : `/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${m.returnType} */
-function ${m.publicName}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): ${m.returnType} {
-    if (func_num_args()!==${m.args.length}) throw new \\ArgumentCountError('Expected ${m.args.length} arguments');
-    return Internal\\Native::call${i}(${m.parameters.map(p=>"$"+p.name).join(", ")});
-}`).join("\n")}
+${phpIOPublicDeclarations(methods,branches)}
 `;
 	const native=`<?php
 declare(strict_types=1);

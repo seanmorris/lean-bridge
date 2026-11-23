@@ -30,9 +30,11 @@ const max=16*1024*1024;
  * @param model.prefix - Coordinate-bound C symbol prefix.
  * @param model.methods - Reconciled method shapes in wire order.
  * @param model.wire - Underlying generated C calls and result disposer.
+ * @param model.phpWasm - Require the synchronous wasm32 symbol family.
  */
-export const generatePhpIOPort=({prefix,methods,wire})=>{
-	if(!/^lbc_php_[0-9a-f]{64}$/u.test(prefix)||wire.clear!=="lbwire_"+prefix+"_v1_clear"||!methods.length)
+export const generatePhpIOPort=({prefix,methods,wire,phpWasm=false})=>{
+	if(!(phpWasm ? /^lbc_php_wasm_[0-9a-f]{64}$/u : /^lbc_php_[0-9a-f]{64}$/u).test(prefix)
+		|| (phpWasm && (wire.wait || wire.leases)) || wire.clear!=="lbwire_"+prefix+"_v1_clear" || !methods.length)
 		throw new TypeError("Expected checked PHP IO wire");
 	const stem="lbphp_"+prefix.slice(8), dispose=stem+"_dispose";
 	const symbols=[dispose], type="lbphp_buffer";
@@ -58,7 +60,7 @@ export const generatePhpIOPort=({prefix,methods,wire})=>{
 #include "php-io-port.h"
 #include "${prefix}.h"
 #define LIMIT ${max}u
-_Static_assert(sizeof(void*)==8 && sizeof(size_t)==8,"native PHP needs a 64-bit target");
+${phpWasm ? '_Static_assert(sizeof(void*)==4 && sizeof(size_t)==4,"PHP-Wasm needs a 32-bit target");' : '_Static_assert(sizeof(void*)==8 && sizeof(size_t)==8,"native PHP needs a 64-bit target");'}
 extern void ${wire.clear}(uint64_t *);
 void ${dispose}(${type} *out) { if (out) {${has ? " "+wire.clear+"(out->lease);" : ""} free(out->data); out->data=NULL; out->length=0; } }
 static int lbphp_pack(int kind, ${has ? "" : "const "}uint64_t *words, ${type} *out) {
