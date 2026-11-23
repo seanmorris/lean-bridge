@@ -21,6 +21,7 @@ const buffer = s => s === "string" || s === "bytes", wide = s => s === "nat" || 
 // can silently change a value, pointer or length and before Lean runs any IO.
 const wasmArgument = (v, k) => {
 	const [a, b, c] = [0, 1, 2].map(i => `args[${3 * k + i}]`);
+	if(v.startsWith("lease:")) return `!${a} || !${b} || ${c}`;
 	if(buffer(v) || wide(v)) return `!lb_wire_span(${a}, ${b}, ${wide(v) ? 8 : 1}) || ${c} > ${v === "int" ? 1 : 0}u`;
 	const bits = { char: 32, usize: 32, float32: 32, uint8: 8, uint16: 16, uint32: 32 }[v];
 	const signed = { isize: 32, int8: 8, int16: 16, int32: 32 }[v];
@@ -61,8 +62,8 @@ const emit = (v, expr, p, index = 0) => {
 export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
-	if(wasmTasks && (!tasks || phpWasm || wasm32 || resources.length || entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
-		throw new TypeError("Threaded Wasm requires task delivery without unimplemented callback or resource ownership");
+	if(wasmTasks && (!tasks || phpWasm || wasm32 || entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
+		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources), values = cTaskValues(p, false, kinds);
 	const leases = kinds.map((r, i) => ({ ...r, type: "lease:" + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));

@@ -1,6 +1,7 @@
 /** @file Idiomatic Promise and async-iterator delivery over a runtime-owned, notification-driven Wasm scheduler. */
 import {PendingOperationRegistry} from "./pending-operations.mjs";
 import {openWasmTaskFrame} from "./wasm-task-frames.mjs";
+import {createWasmTaskLeases} from "./wasm-task-leases.mjs";
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
 
 /**
@@ -32,11 +33,12 @@ export const createWasmTaskSession = options => {
 				if(row.work) settle(row.work,"reject",failure);
 				row.work=null; row.ending=true; row.frame.dispose(); row.drained();
 			}
-			rows.clear(); ledger.clear(); stop();
+			rows.clear(); ledger.clear(); leases.finish(); stop();
 		}
 		throw cause ?? failure;
 	};
-	const context={module,ledger,retire,isLive: live};
+	const context={module,ledger,retire,isLive: live,assertOpen};
+	const leases=createWasmTaskLeases(context);
 	const drop = row => {
 		if(!rows.delete(row)) return;
 		row.ending=true;
@@ -55,7 +57,7 @@ export const createWasmTaskSession = options => {
 		const p={settled: false}, done = () => {
 			try
 			{
-				const result=row.frame.call(op.take);
+				const result=row.frame.call(op.take,0,p.settled || row.ending);
 				if(!cursor || result.done || row.ending) drop(row);
 				settle(p,"resolve",cursor ? result : result.value);
 			}
@@ -63,7 +65,7 @@ export const createWasmTaskSession = options => {
 			{
 				try
 				{ drop(row); } finally
-				{ settle(p,"reject",row.mapError(error)); }
+				{ if(!p.settled) settle(p,"reject",row.mapError(error)); }
 			}
 			finally
 			{ row.work=null; }
@@ -90,8 +92,8 @@ export const createWasmTaskSession = options => {
 		if(!cursor) Object.defineProperty(p.promise,"cancel",{value: () => cancel(p)});
 		return p.promise;
 	};
-	const dispatch = (method,index,invoke,args,mapError) => {
-		assertOpen(); const frame=openWasmTaskFrame(context,invoke,method,index,args);
+	const dispatch = (method,index,invoke,args,mapError,leaseTypes) => {
+		assertOpen(); const frame=openWasmTaskFrame({...context,leases,leaseTypes},invoke,method,index,args);
 		if(!method.delivery)
 		{
 			try
@@ -124,6 +126,9 @@ export const createWasmTaskSession = options => {
 	const bind = (abi,invoke) => {
 		assertOpen();
 		const entries=new Map(abi.methods.map((m,i) => [m.id,{m,i}]));
+		const leaseTypes=new Map();
+		for(const [i,r] of (abi.leases ?? []).entries())
+		{ leases.register(r,abi.methods.length+i,invoke); leaseTypes.set(r.type,r); }
 		const invokePublic=(id,args,translate) => {
 			const entry=entries.get(id); if(!entry) throw new TypeError("Unknown Lean task method");
 			const mapError = e => {
@@ -133,10 +138,10 @@ export const createWasmTaskSession = options => {
 				{ return error; }
 			};
 			try
-			{ return dispatch(entry.m,entry.i,invoke,args,mapError); } catch(error)
+			{ return dispatch(entry.m,entry.i,invoke,args,mapError,leaseTypes); } catch(error)
 			{ throw mapError(error); }
 		};
-		return Object.freeze({invoke: invokePublic});
+		return Object.freeze({invoke: invokePublic,resourceClass: type => leaseTypes.has(type) ? leases.resourceClass(type) : undefined});
 	};
 	const close = () => {
 		if(closing) return closing;
@@ -150,6 +155,7 @@ export const createWasmTaskSession = options => {
 				if(state==="poisoned") throw cause;
 				try
 {
+					leases.finish();
 					if(rows.size || ledger.size || domain.snapshot().live || options.nativeOwners?.())
 						throw new Error("Lean task runtime did not drain");
 } catch(error)

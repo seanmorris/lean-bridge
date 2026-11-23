@@ -34,6 +34,28 @@ test("threaded task generation refuses incompatible host and ownership contracts
 	assert.throws(() => generateSyncWire("lbc_job",callback,{tasks: true,wasmTasks: true}),TypeError);
 });
 
+test("the pthread wire authenticates nominal kind and borrowing separately from the result lease", () => {
+	const declaration="Shared.Ticket", hash="b".repeat(64), named={kind: "named",id: "lean:"+declaration};
+	const component={name: "jobs",id: "jobs@1.0.0",version: "1.0.0"};
+	const owned=[{declaration,module: "Shared",identity: hash}];
+	const selection={exports: ["Job.work"],exportModules: ["Job"],modules: ["Shared","Job"],taskExports: ["Job.work"],leanResources: [declaration],members: []};
+	const entry={...entries[0],module: "Job",hostMembers: [],effect: "EIO",result: named,error: named,parameters: [{name: "ticket",type: named}]};
+	const metadata={kind: "lean-bridge-host-export-metadata",schemaVersion: 1,leanVersion: "4.32.2",entries: [entry]};
+	const {api,entries: checked}=reconcileHostExports({component,owned,selection,metadata});
+	const abi=javaScriptTaskAbi(api,config.componentIdentity);
+	const wire=generateSyncWire("lbc_job",checked,{tasks: true,wasmTasks: true,resources: api.types});
+	assert.equal(abi.leases[0].type,"lease:"+hash);
+	assert.equal(abi.leases[0].tag,wire.leases[0].tag);
+	assert.deepEqual(abi.methods[0].args,["lease:"+hash]); assert.equal(abi.methods[0].error,abi.methods[0].result);
+	const refused=(mutate,reason) => {
+		const wrong=structuredClone(api); mutate(wrong); assert.throws(() => javaScriptTaskAbi(wrong,config.componentIdentity),reason);
+	};
+	refused(ir => {ir.declarations[0].parameters[0].ownership="lease";},/lease|ownership/u);
+	refused(ir => {ir.declarations[0].result.lifetime.scope="call";},/lease|lifetime/u);
+	refused(ir => {ir.types[0].resource.disposal="optional";},/disposal|nominal/u);
+	refused(ir => {ir.types[0].source.extensions["lean-bridge.dev/resource-identity"]="a".repeat(64);},/nominal/u);
+});
+
 test("public error identities and delivery phases cannot be interchanged", () => {
 	const name = "Job.work", id = "c".repeat(64);
 	const {api} = reconcileHostExports({component: {name: "jobs",id: "jobs@1.0.0",version: "1.0.0"}

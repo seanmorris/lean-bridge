@@ -22,7 +22,8 @@ const failed = (id,phase,value) => Object.assign(new Error(knownIO(id) ? value :
 export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 	const {module: m,ledger,retire,isLive} = context;
 	if(args.length !== method.args.length) throw new TypeError("Wrong arity for "+method.id);
-	for(const [k,type] of method.args.entries()) validateComponentScalar(type,args[k]);
+	const lease=t => typeof t==="string" && t.startsWith("lease:");
+	const inputs=method.args.map((type,i) => lease(type) ? context.leases.live(args[i],type) : (validateComponentScalar(type,args[i]),null));
 	const view = () => new DataView(m.HEAP8.buffer);
 	const native = fn => {
 		if(!isLive()) throw new Error("Lean task runtime is retired");
@@ -59,7 +60,13 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 	{
 		f = alloc(size); m.HEAP8.fill(0,f,f+size);
 		view().setUint32(f,layout.magic,true); view().setUint32(f+4,size,true); view().setUint32(f+8,index,true);
-		for(const [i,t] of method.args.entries()) encodeWasmWord(m,f+layout.args+24*i,t,args[i],alloc);
+		for(const [i,t] of method.args.entries())
+		{
+			const pos=f+layout.args+24*i, row=inputs[i];
+			if(row)
+			{ view().setBigUint64(pos,row.id,true); view().setBigUint64(pos+8,row.domain,true); }
+			else encodeWasmWord(m,pos,t,args[i],alloc);
+		}
 	} catch(error)
 	{ dispose(); throw error; }
 	const raw = (op,token) => {
@@ -71,7 +78,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			|| !Number.isInteger(s) || s<0 || s>12) retire(invalid());
 		return s;
 	};
-	const call = (op,token=0) => {
+	const call = (op,token=0,discard=false) => {
 		// The generated C calls emit only active result tags. Never reuse a tag
 		// left by a previous cursor element, especially for nested Except.
 		if(disposed || !isLive()) throw new Error("Lean task frame is closed");
@@ -107,7 +114,20 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 					|| m.HEAP8.subarray(f+layout.out,f+layout.args).some(Boolean)) retire(invalid());
 			};
 			try
-			{ result=decodeWasmWord(m,f+layout.out,type,{some},n => { if(n>scalarCopyLimit-used) over=true; charge(n); }); }
+			{
+				if(lease(type))
+				{
+					const pos=f+layout.out, def=context.leaseTypes.get(type);
+					const id=d.getBigUint64(pos,true), dom=d.getBigUint64(pos+8,true);
+					if(!def || !id || !dom || d.getBigUint64(pos+16,true) || d.getBigUint64(pos+24,true)!==BigInt(def.tag)) return retire(invalid());
+					if(!discard)
+					{
+						result=context.leases.adopt(type,id,dom);
+						// The wrapper now owns the native token. Otherwise clear releases it.
+						m.HEAP8.fill(0,pos,pos+32);
+					}
+				} else result=decodeWasmWord(m,f+layout.out,type,{some},n => { if(n>scalarCopyLimit-used) over=true; charge(n); });
+			}
 			catch(error)
 			{ if(!over) return retire(error); clear(); throw error; }
 			clear(); for(const key of wrap.reverse()) result={[key]: result};

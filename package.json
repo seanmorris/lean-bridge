@@ -689,6 +689,7 @@
     "src/build/javascript-wasm-owned-project.mjs",
     "src/build/javascript-wasm-owned-sources.mjs",
     "src/build/javascript-wasm-task-component.mjs",
+    "src/build/javascript-wasm-task-ledger.mjs",
     "src/build/javascript-wasm-toolchain.mjs",
     "src/build/jvm-io-owner.mjs",
     "src/build/lake-build-workspace.mjs",
@@ -869,6 +870,7 @@
     "src/runtime/pending-operations.mjs",
     "src/runtime/wasm-task-bindings.mjs",
     "src/runtime/wasm-task-frames.mjs",
+    "src/runtime/wasm-task-leases.mjs",
     "src/runtime/wasm-task-loader.mjs",
     "src/runtime/wasm-task-notifications.mjs"
   ],
@@ -1125,6 +1127,7 @@
     "test:javascript-shared-task-probe": "LEAN_BRIDGE_JS_TASK_PLUGINS=1 npm run test:javascript-threaded-task-probe",
     "test:javascript-generated-tasks": "LEAN_BRIDGE_JS_GENERATED_TASK_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-generated-tasks.mjs",
     "test:javascript-task-author-cli": "LEAN_BRIDGE_JS_TASK_CLI_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-task-cli.mjs",
+    "test:javascript-task-resources": "LEAN_BRIDGE_JS_RESOURCE_CLI_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-task-resource-cli.mjs",
     "test:wit-sync-io-package": "LEAN_BRIDGE_WIT_IO_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-sync-io-package-flow.mjs",
     "test:profile": "bash scripts/run-test-profile.sh",
     "test:managed-generators": "node --test tests/managed-generators.test.mjs",

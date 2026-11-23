@@ -119,8 +119,32 @@ Two independent links in different directories produced byte-identical SDK files
 
 All three contain the same 757,897-byte runtime archive (SHA-256 `cc275ed105a05ec5af1cde689445904dd0a9ca2208cdb4331cb3eba412919ece`). Both Jobs routes passed strict TypeScript plus 47 public checks per host in Node and isolated Chromium. On each host, Totals returned 29 while Jobs still owned a pending worker; Jobs then returned 71, leaving zero native owners. The CLI refused an absent or mismatched SDK, external effects, and a scalar declaration selected as a task, without emitting a handoff. Set `LEAN_BRIDGE_JS_TASK_EVIDENCE` to a new directory to retain all three releases from a replay.
 
+## Share a Lean resource between task packages
+
+[Depot](../../tests/fixtures/javascript-wasm-resource-tasks/Depot.lean) lends a ticket to a worker, raises it in a typed factory error, and yields it from a cursor. [Peer](../../tests/fixtures/javascript-wasm-resource-tasks/Peer.lean) is compiled as a separate package. Both import the [same Lean type](../../tests/fixtures/javascript-wasm-resource-tasks/Shared.lean). Each package checks its own ABI; one owner-thread table in the shared Wasm runtime holds the live leases. Workers own ordinary Lean references, not JavaScript handles.
+
+Run the installed acceptance test with a freshly prepared SDK that contains this shared lease table:
+
+```sh
+LEAN_BRIDGE_TEST_TASK_INPUTS="$scratch/task-sdk" npm run test:javascript-task-resources
+```
+
+The [consumer](../../tests/fixtures/javascript-wasm-resource-tasks/calls.mjs) disposes the original ticket while a worker is pending, then mutates the returned ticket through Peer and reads the new value through Depot. Factory and iterator errors carry independently disposable tickets. Cancellation rejects the caller before a gated worker completes; when that worker returns a ticket anyway, the native owner count drops from one to zero without creating a JavaScript handle. Returning from a cursor with a pull outstanding closes it exactly once. The strict TypeScript consumer also rejects a similarly shaped badge. Set `LEAN_BRIDGE_JS_TASK_RESOURCE_EVIDENCE` to a new directory to retain the three release handoffs.
+
+Two independent links produced byte-identical lease-capable SDKs (manifest SHA-256 `589f84e1575d1efb220e0df20a28a8ce246b814de70330f91fd215c8b748b0d9`). Each component below uses the same 761,487-byte runtime archive, SHA-256 `0989af1879891c06b1ee069e31f2f3037ff00edd81e2a2f0e3eaa740aec7788d`.
+
+| Resource package | Top-level package-set receipt SHA-256 |
+|---|---|
+| Depot, ordinary | `f99c27b12c3d0b06841e9bd3f33478f27c9d8455e0cba1c1e8b389197488253f` |
+| Depot, reviewed | `ea430a97ace556ad81134dd47b0df1eea7ca35289259c4e17294fcb7270c09ee` |
+| Peer, independent | `f239f40052f29a68de96d6158cec180c8fc7c479ec643a0e5dc8927464badb1f` |
+
+Both Depot routes passed strict TypeScript and 43 public checks in each of Node, a Node module worker, and isolated Chromium (258 checks). While the worker shut its own runtime down, the parent retained, read and disposed its original ticket. A review that substituted a different nominal identity failed the compiler-contract comparison and produced no release directory.
+
+The copied-value Jobs and Totals regression used the same runtime archive. Jobs again passed 47 checks per source route in both Node and Chromium. Totals returned 29 while Jobs still held a pending worker; after release, Jobs returned 71 and the native owner count was zero on both hosts.
+
 ## What this does not ship
 
-The three-package wire experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated npm application instead imports ordinary package functions and uses the compiled component's own contract. The low-level wire test still creates a fixture-specific runtime; the author SDK is linked independently. The copied-value task profile does not admit retained callbacks or captured resources. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
+The three-package wire experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated npm application instead imports ordinary package functions and uses the compiled component's own contract. The low-level wire test still creates a fixture-specific runtime; the author SDK is linked independently. Direct nominal resource arguments, returns, items and error payloads use the runtime's lease table; this does not extend to arbitrary nested resource containers or retained host callbacks. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
 
 The pthread archives use a distinct profile and content-addressed runtime version. The single-threaded runtime remains separate; no native binding or language-neutral IR changed. These are local installations, not a published, signed or Nix-built release.

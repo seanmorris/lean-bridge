@@ -46,6 +46,8 @@ Installing both archives together satisfies the component's runtime dependency. 
 
 For a local threaded-task release, install the component and runtime archives together as above. Import the component by its package name. A task call returns a native Promise with a `cancel()` method; an iterator supports `for await…of` and closes on `break`. Synchronous companion functions still return synchronously. Node and cross-origin-isolated browsers can run the package. On the web, serve the page with `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` and serve the worker and Wasm assets under that isolation policy. The application needs no compiler or scheduler setup. See the [installed consumer example](../tests/fixtures/javascript-wasm-task-runtime/public-consumer.mjs).
 
+When a threaded package returns a Lean resource, call `dispose()` when you're finished with that handle. Passing it to a task does not give up your handle: the worker keeps its own reference. Use `retain()` for a second independently disposable handle and `same(other)` to compare the underlying Lean objects. A resource received in an iterator element or typed error payload is yours to dispose, too. The [two-package consumer](../tests/fixtures/javascript-wasm-resource-tasks/calls.mjs) shows the complete lifetime, including cancellation.
+
 Create a Node.js application:
 
 ```sh

@@ -301,7 +301,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 				});
 			} else if(!genericPlan)
 			{
-				inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`);
+				inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`, {allowResource: taskContracts.has(declaration.id)});
 			}
 			if(
 				new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
@@ -319,7 +319,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 		if(resultType?.kind === "resource")
 		{
 			inspectTypeRef(declaration.result.type, `${declaration.id}.result`, {
-				allowResource: declaration.kind === "constructor" || declaration.kind === "method"
+				allowResource: declaration.kind === "constructor" || declaration.kind === "method" || taskContracts.has(declaration.id)
 			});
 		} else if(resultType?.kind === "callback")
 		{

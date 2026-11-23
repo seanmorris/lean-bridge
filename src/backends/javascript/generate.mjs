@@ -369,6 +369,12 @@ const emitDeclarations = (ir, typeMap, threaded = false) => {
 	for(const type of ir.types.filter(item => item.kind === "resource"))
 	{
 		const { constructors, methods, properties, staticMethods } = declarationsForResource(ir, type.id);
+		if(threaded)
+		{
+			const kind="lease:"+type.source.extensions["lean-bridge.dev/resource-identity"];
+			output.push(docComment(type.documentation),`export const ${type.name} = runtime.resourceClass(${quote(kind)});`,"");
+			exports.push(type.name); continue;
+		}
 		if(constructors.length !== 1)
 		{
 			fail("resource-constructor-count", `${type.id} requires exactly one constructor`, {
@@ -800,6 +806,14 @@ const emitTypeScript = (ir, typeMap, threaded = false) => {
 	for(const type of ir.types.filter(item => item.kind === "resource"))
 	{
 		const { constructors, methods, properties, staticMethods } = declarationsForResource(ir, type.id);
+		if(threaded)
+		{
+			const hash=type.source.extensions["lean-bridge.dev/resource-identity"];
+			lines.push(docComment(type.documentation)
+				, `export type ${type.name} = import("@lean-bridge/runtime").LeanTaskLease<${quote(hash)}>;`
+				, `export declare const ${type.name}: { readonly prototype: ${type.name}; [Symbol.hasInstance](value: unknown): value is ${type.name} };`,"");
+			continue;
+		}
 		const constructor = constructors[0];
 		lines.push(docComment(type.documentation), `export declare class ${type.name} {`);
 		lines.push(`  constructor(${constructor.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")});`);

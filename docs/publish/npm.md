@@ -81,7 +81,9 @@ See [calling synchronous IO from JavaScript](../javascript-typescript.md#synchro
 
 ## Build a threaded npm handoff
 
-Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures. This profile supports in-memory operations and copied values; do not select host callbacks, captured resources, or filesystem effects.
+Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures.
+
+For a task that uses an application-owned Lean object, list its fully qualified type in `resources`, as in the [Depot configuration](../../tests/fixtures/javascript-wasm-resource-tasks/lean-bridge.exports.json). The type must compile to a heap object. A worker may capture a borrowed argument; a returned object, yielded item, or typed error payload gives the caller an independent lease. Two components can exchange the type if they use the same runtime, compiler and defining Lean source, including its application imports. Host callbacks and external effects such as filesystem access are not supported by this profile.
 
 Use an author CLI containing the threaded SDK, or set `LEAN_BRIDGE_JS_TASK_INPUTS` to the prepared SDK directory. Set `LEAN_BRIDGE_LEAN_PREFIX` to Lean 4.32.2 and `LEAN_BRIDGE_JS_EMSDK` to the matching pinned Emscripten 6.0.6 installation. A separately supplied `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` pins the SDK manifest to an identity from a trusted source. A single-threaded browser runtime cannot substitute for this kit.
 

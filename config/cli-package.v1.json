@@ -691,6 +691,7 @@
     "src/build/javascript-wasm-owned-project.mjs",
     "src/build/javascript-wasm-owned-sources.mjs",
     "src/build/javascript-wasm-task-component.mjs",
+    "src/build/javascript-wasm-task-ledger.mjs",
     "src/build/javascript-wasm-toolchain.mjs",
     "src/build/jvm-io-owner.mjs",
     "src/build/lake-build-workspace.mjs",
@@ -871,6 +872,7 @@
     "src/runtime/pending-operations.mjs",
     "src/runtime/wasm-task-bindings.mjs",
     "src/runtime/wasm-task-frames.mjs",
+    "src/runtime/wasm-task-leases.mjs",
     "src/runtime/wasm-task-loader.mjs",
     "src/runtime/wasm-task-notifications.mjs"
   ]

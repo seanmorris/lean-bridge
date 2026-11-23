@@ -4,6 +4,7 @@ import {join} from "node:path";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
 import {reconcileHostExports} from "../analyze/host-export-model.mjs";
+import {heapResourceIdentities} from "../analyze/heap-resource-identity.mjs";
 import {npmPackageMetadata} from "../analyze/package-metadata.mjs";
 import {assertExportConfigurationCapabilities} from "../analyze/export-configuration.mjs";
 import {generateJavaScriptPackage} from "../backends/javascript/generate.mjs";
@@ -24,6 +25,7 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, ["internal/task.wasm",mainWasm]
 		, ["LICENSE",await readFile(new URL("../../LICENSE",import.meta.url))]]);
 	const assets=["runtime/wasm-task-loader"
+		, "runtime/wasm-task-leases"
 		, "runtime/wasm-task-bindings"
 		, "runtime/wasm-task-frames"
 		, "runtime/wasm-task-notifications"
@@ -37,6 +39,21 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, "binding-ir/default-value"
 		, "binding-ir/sha256"];
 	for(const path of assets) files.set("internal/"+path+".mjs",await readFile(new URL("../"+path+".mjs",import.meta.url)));
+	files.set("index.d.mts",`declare const kind: unique symbol;
+export interface LeanTaskLease<Hash extends string> {
+  readonly [kind]: Hash;
+  readonly disposed: boolean;
+  dispose(): boolean;
+  retain(): this;
+  same(other: LeanTaskLease<Hash>): boolean;
+}
+export declare function waitTaskRuntimeIdle(): Promise<void>;
+export declare function closeTaskRuntime(): Promise<void>;
+export declare function taskRuntimeStats(): {
+  state?: "open" | "closing" | "closed" | "poisoned";
+  frames?: number; allocations?: number; pending?: number; nativeOwners: number | null; notifications: number;
+};
+`);
 	const notices=new URL("../../notices/runtime/",import.meta.url);
 	for(const name of (await readdir(notices)).sort()) files.set("notices/"+name,await readFile(new URL(name,notices)));
 	const metadata={name: "@lean-bridge/runtime"
@@ -63,7 +80,7 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
  */
 export const assertJavaScriptTaskConfiguration=configuration => {
 	assertExportConfigurationCapabilities(configuration,{target: "npm"
-		, fields: ["package","modules","exports","nativeEffects","asyncIterators","taskExports","taskIOErrors"]
+		, fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors"]
 		, targetFields: ["name","version"]});
 	if(configuration.nativeEffects?.length) throw new Error("Threaded JavaScript tasks support only in-memory effects");
 };
@@ -82,12 +99,15 @@ export const writeJavaScriptTaskPackages = async options => {
 		|| canonicalJson(evidence.lake)!==canonicalJson(projectContract.lake) || canonicalJson(evidence.selection.exports)!==canonicalJson(projectContract.exports)
 		|| sha256(binary)!==integrity || canonicalJson(abi)!==canonicalJson(compilation.abi))
 		throw new Error("Task package differs from checked Lean project");
-	const reconstructed=reconcileHostExports({ir: null
+	const resources=evidence.metadata.leanResources ?? [];
+	if(canonicalJson(resources.map(r => r.declaration).sort())!==canonicalJson([...(configuration.resources ?? [])].sort()))
+		throw new Error("Task resource selection differs from the compiler metadata");
+	const owned=resources.length ? heapResourceIdentities({...evidence,resources}) : [];
+	const reconstructed=reconcileHostExports({ir: null, owned
 		, selection: evidence.selection
 		, metadata: evidence.metadata
 		, component: projectContract.component
-		, review: projectContract.review
-		, owned: []});
+		, review: projectContract.review});
 	if(canonicalJson(reconstructed.api)!==canonicalJson(api)) throw new Error("Task package differs from observed Lean interfaces");
 	const main=new WebAssembly.Module(mainWasm), side=new WebAssembly.Module(binary);
 	const exportsOf=m => new Set(WebAssembly.Module.exports(m).map(e => e.kind+":"+e.name));

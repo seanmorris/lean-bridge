@@ -6,7 +6,7 @@ import {createWasmTaskNotifications} from "../src/runtime/wasm-task-notification
 import {createWasmTaskSession} from "../src/runtime/wasm-task-bindings.mjs";
 
 const method=(id,result,delivery=null,args=[]) => ({id,args,result,delivery,tagBytes: 1,startId: null,terminalId: null});
-const harness=(methods,control) => {
+const harness=(methods,control,leases=[]) => {
 	const notifications=createWasmTaskNotifications(), events=[], tokens=[], heap=new Uint8Array(4096), d=new DataView(heap.buffer);
 	let top=16, failAt=0, allocations=0, stops=0;
 	const allocate=n => {
@@ -15,7 +15,7 @@ const harness=(methods,control) => {
 	};
 	const module={HEAP8: heap,_malloc: allocate,_free: p => events.push("free:"+p)};
 	const session=createWasmTaskSession({module,notifications,terminate: () => {stops++;}});
-	const api=session.bind({methods},f => {
+	const api=session.bind({methods,leases},f => {
 		const code=d.getUint32(f+12,true); events.push("call:"+code);
 		if(code===op.listen) tokens.push(d.getUint32(f+16,true));
 		return control({code,f,d,index: d.getUint32(f+8,true)});
@@ -82,4 +82,28 @@ test("closing with an empty JS registry still checks the native ownership broker
 	const closing=session.close(); assert.equal(session.close(),closing);
 	await assert.rejects(closing,/did not drain/u);
 	assert.equal(session.snapshot().state,"poisoned"); assert.equal(reads,1); assert.equal(stops,1);
+});
+
+test("leases from separate heaps never authenticate each other, even when both native token words match",async () => {
+	const type="lease:"+"a".repeat(64), contract=[{type,name: "Ticket",tag: 3}];
+	const control=({code,f,d}) => {
+		if(code===op.start)
+		{d.setBigUint64(f+40,19n,true); d.setBigUint64(f+48,23n,true); d.setBigUint64(f+64,3n,true);}
+		if(code===op.leaseSame) d.setBigUint64(f+40,1n,true);
+		if(code===op.leaseClose)
+		{d.setBigUint64(f+72,0n,true); d.setBigUint64(f+80,0n,true);}
+		return 0;
+	};
+	const methods=[method("make",type),method("use","unit",null,[type])];
+	const a=harness(methods,control,contract), b=harness(methods,control,contract);
+	const first=a.api.invoke("make",[]), second=b.api.invoke("make",[]);
+	const seen=b.events.length;
+	assert.equal(first instanceof b.api.resourceClass(type),false); assert.equal(second instanceof b.api.resourceClass(type),true);
+	assert.throws(() => b.api.invoke("use",[first]),TypeError); assert.throws(() => second.same(first),TypeError);
+	assert.equal(b.events.length,seen);
+	assert.throws(() => a.api.invoke("make",[]),/Malformed Lean resource lease/u);
+	assert.equal(a.session.snapshot().state,"poisoned"); assert.equal(first.disposed,true);
+	assert.ok(!a.events.includes("call:"+op.leaseClose)); assert.equal(first.dispose(),false);
+	assert.equal(second.same(second),true); await b.session.close(); assert.equal(second.disposed,true);
+	assert.equal(b.events.filter(x => x==="call:"+op.leaseClose).length,1);
 });

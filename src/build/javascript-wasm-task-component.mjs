@@ -11,6 +11,7 @@ import {compileHostSources} from "./host-elaboration.mjs";
 import {identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders} from "./javascript-wasm-toolchain.mjs";
 import {processBuildRunner} from "./process-runner.mjs";
 import {taskStamp} from "../release/javascript-wasm-task-inputs.mjs";
+import {wasmTaskLedgerHeader} from "./javascript-wasm-task-ledger.mjs";
 export {threadedTaskPatch} from "../release/javascript-wasm-task-inputs.mjs";
 
 const owner = `#include <emscripten/threading.h>
@@ -27,8 +28,8 @@ const sourceAsset = path => readFile(new URL("../backends/" + path, import.meta.
 export const compileJavaScriptTaskComponent = async options => {
 	const {app, projectContract: contract, leanPrefix, emsdkRoot: sdk, leanRuntimeRoot: target, environment, signal} = options;
 	if(!contract?.taskExports?.length && !contract?.asyncIterators?.length) throw new TypeError("Expected a selected task or iterator");
-	if(contract.nativeEffects?.length || contract.ir || contract.hostImportsSourceSha256 !== null || contract.leanResources?.length)
-		throw new TypeError("Threaded Wasm copied task components require in-memory effects without imported hosts or leases");
+	if(contract.nativeEffects?.length || contract.ir || contract.hostImportsSourceSha256 !== null)
+		throw new TypeError("Threaded Wasm task components require in-memory effects without imported hosts");
 	const env = {...environment, EMSDK: sdk, EM_CONFIG: join(sdk,".emscripten"), LANG: "C.UTF-8", LC_ALL: "C.UTF-8"};
 	for(const key of ["CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","COMPILER_PATH","GCC_EXEC_PREFIX","LIBRARY_PATH","CFLAGS","CPPFLAGS","LDFLAGS","EMCC_CFLAGS","CCC_OVERRIDE_OPTIONS","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES_OUTPUT"]) delete env[key];
 	const run = (command,args,cwd=app,vars=env) => processBuildRunner.capture({command,args,cwd,env: vars,signal});
@@ -50,6 +51,7 @@ export const compileJavaScriptTaskComponent = async options => {
 		, "task-owner-policy.h": owner
 		, "lean_bridge_native_runtime.h": generateOwnedWasmBroker().header};
 	const headers = {}, include = join(app,"include/lean");
+	if(api.types.length) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
 	await mkdir(include,{recursive: true});
 	for(const name of javascriptWasmTargetHeaders)
 	{
@@ -58,9 +60,9 @@ export const compileJavaScriptTaskComponent = async options => {
 			throw new Error("Expected threaded wasm32 headers, not host headers");
 		headers[name] = sha256(bytes); await writeFile(join(include,name),bytes,{flag: "wx"});
 	}
-	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, wasmTasks: true, integerMode: "words"};
+	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources: api.types, wasmTasks: true, integerMode: "words"};
 	const skeleton = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true});
+	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources: api.types});
 	const componentIdentity = sha256(canonicalJson({evidence
 		, compiler
 		, stamp
@@ -70,6 +72,10 @@ export const compileJavaScriptTaskComponent = async options => {
 		, control: sha256(generateTaskControl("lb_js_task_"+"0".repeat(64),wire))
 		, assets: Object.fromEntries(Object.entries(assets).map(([k,v]) => [k,sha256(v)]))}));
 	const abi = javaScriptTaskAbi(api,componentIdentity), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
+	const leases = abi.leases ?? [], nativeLeases = wire.leases ?? [];
+	if(leases.length !== nativeLeases.length || leases.some((lease,i) =>
+		["name","type","hash","tag"].some(k => lease[k] !== nativeLeases[i][k])))
+		throw new Error("Generated Wasm resource layout differs from the public lease contract");
 	if(abi.methods.length !== wire.methods.length || abi.methods.some((m,i) =>
 		["name","declaration","effect","delivery","args","result","error","terminal","stepDeclaration","tagBytes"].some(k =>
 			canonicalJson(m[k]) !== canonicalJson(wire.methods[i][k] ?? null))))

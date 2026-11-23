@@ -6,6 +6,7 @@ import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {generateOwnedWasmBroker} from "../backends/javascript/owned-wasm-broker.mjs";
 import {readTaskInputs,taskInputsName,taskInputPaths,taskStamp,taskProfile} from "../release/javascript-wasm-task-inputs.mjs";
 import {processBuildRunner} from "./process-runner.mjs";
+import {wasmLeasePrefix,wasmTaskLedgerHeader,wasmTaskLedgerSource} from "./javascript-wasm-task-ledger.mjs";
 import {identifyJavaScriptWasmCompiler,javascriptWasmTargetHeaders,javascriptWasmOwnedPins} from "./javascript-wasm-toolchain.mjs";
 
 const backend=fileURLToPath(new URL("../backends/javascript/",import.meta.url));
@@ -67,6 +68,9 @@ export const prepareTaskSdk=async options => {
 		for(const [n,b] of [["owner.c",main],["notify.c",notify],["task-notification.h",header],["broker.c",broker.source],["lean_bridge_native_runtime.h",broker.header]])
 			await writeFile(join(work,n),b,{flag: "wx"});
 		const symbolTool=join(sdk,"upstream/bin/llvm-nm");
+		const leaseHeader=await wasmTaskLedgerHeader(), leaseSource=await wasmTaskLedgerSource();
+		await writeFile(join(work,"task-resource-ledger.h"),leaseHeader,{flag: "wx"});
+		await writeFile(join(work,"task-resource-ledger.c"),leaseSource,{flag: "wx"});
 		const nm=archive => run(symbolTool,["-g","--defined-only","--format=posix",archive]);
 		const names=await symbolNames(nm,rt,(name,type) => type==="T" && scalar.test(name));
 		// Export value operations and initializers from the pinned archive, not
@@ -74,6 +78,8 @@ export const prepareTaskSdk=async options => {
 		// Init also implements public C ABI externs such as lean_io_error_to_string.
 		const valueNames=await symbolNames(nm,init,(n,t) => ["T","D"].includes(t) && (scalar.test(n) || initValues.test(n)) && !n.includes("___at"));
 		const roots=[...new Set([...names,...valueNames,...broker.exports,...broker.supportExports,"lean_bridge_wasm_task_subscribe_v1","emscripten_is_main_runtime_thread","emscripten_builtin_memalign","realloc","memmove","memcmp"])].sort();
+		for(const op of ["create","borrow","release"]) roots.push(wasmLeasePrefix+op);
+		roots.sort();
 		await writeFile(join(work,"roots.json"),JSON.stringify(roots.map(name => "_"+name)),{flag: "wx"});
 		await run(join(sdk,"upstream/emscripten/emcc"),[...flags
 			, "-I."
@@ -83,6 +89,7 @@ export const prepareTaskSdk=async options => {
 			, "owner.c"
 			, "notify.c"
 			, "broker.c"
+			, "task-resource-ledger.c"
 			, rt,uv,init
 			, "-sEXPORTED_FUNCTIONS=@roots.json"
 			, "-o","task.mjs"]);
@@ -92,6 +99,8 @@ export const prepareTaskSdk=async options => {
 		for(const name of ["task.mjs","task.wasm"]) files.set(name,await readFile(join(work,name)));
 		const recipe=sha256(canonicalJson({flags
 			, roots
+			, leaseHeader: sha256(leaseHeader)
+			, leaseSource: sha256(leaseSource)
 			, owner: sha256(main)
 			, notification: sha256(notify)
 			, header: sha256(header)

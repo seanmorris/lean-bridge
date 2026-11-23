@@ -38,6 +38,20 @@ export const generateTaskControl = (symbol, wire) => {
     switch (f[3]) { ${branch.join(" ")} case ${taskFrame.clear}: ${wire.clear}(out); return 0; default: return 5; }
   }`;
 	});
+	for(const [i,r] of (wire.leases ?? []).entries())
+	{
+		const fn=r.symbol;
+		prototypes.push(`extern int ${fn}_close(uint64_t *), ${fn}_retain(const uint64_t *,uint64_t *), ${fn}_same(const uint64_t *,const uint64_t *,uint8_t *);`);
+		cases.push(`case ${wire.methods.length+i}: {
+    if (f[1] != ${taskFrame.leaseSize} || h[0] || h[1] || out[0] || out[1] || out[2] || out[3] || !args[0] || !args[1]) return 5;
+    switch (f[3]) {
+      case ${taskFrame.leaseClose}: return args[2] || args[3] ? 5 : ${fn}_close(args);
+      case ${taskFrame.leaseRetain}: return args[2] || args[3] ? 5 : ${fn}_retain(args,out);
+      case ${taskFrame.leaseSame}: return !args[2] || !args[3] ? 5 : ${fn}_same(args,args+2,(uint8_t*)out);
+      default: return 5;
+    }
+  }`);
+	}
 	return `#include <stdint.h>
 extern void ${wire.clear}(uint64_t *);
 ${prototypes.join("\n")}

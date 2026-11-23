@@ -29,9 +29,9 @@ export const generateCTaskExports = options => {
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
-	if(wasm && (synchronous || gmp || retained || resources.length
+	if(wasm && (synchronous || gmp || retained
 		|| [options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].some(Boolean)))
-		throw new TypeError("Threaded Wasm tasks require word carriers and a dedicated delivery profile; retained callbacks and resource captures need an ownership adapter");
+		throw new TypeError("Threaded Wasm tasks require word carriers and the Wasm delivery profile; retained host callbacks are not supported");
 	if(!wasm && (retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
 		throw new TypeError(options.phpDelivery ? "The PHP task ABI requires word carriers; select exactly one host"
 			: options.perlDelivery ? "The Perl task ABI requires word carriers; select exactly one host"

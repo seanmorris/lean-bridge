@@ -623,6 +623,8 @@ select the same resource declaration and the task or iterator protocol.
 A started worker keeps the object alive; a cold stream borrows it on first
 demand. A discarded result or step failure must not leak a lease.
 
+For [threaded npm packages](../publish/npm.md#build-a-threaded-npm-handoff), select the Lean type in `resources` alongside `taskExports` or `asyncIterators`. A parameter borrows the caller's handle, while a returned value, iterator item, or typed error payload gives the JavaScript caller a new lease. The defining Lean module and compiler determine whether another package can accept that type; matching JavaScript fields do not.
+
 For Perl, [select synchronous IO explicitly](../publish/cpan.md#export-synchronous-io). A returned `Except` stays a Perl `Ok` or `Err` value; an `EIO` failure throws a declaration-specific exception with a typed payload. The prepared component depends on the ordinary shared CPAN runtime.
 
 The same distinction holds when a module also exports a task. In the
