@@ -7,6 +7,7 @@
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOwnedJavaScriptPackageModel } from "./owned-package.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
+import { supportsJavaScriptIOPayload } from "../../abi/component-sync-io.mjs";
 import { supportsIteratorValue } from "../../abi/iterator.mjs";
 import {
 	OverloadGenerationError,
@@ -126,14 +127,15 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 	};
 
-	const inspectFailure = (failure, path, { errorEnvelope = false } = {}) => {
+	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null } = {}) => {
 		if(failure.mode !== "declared") return;
 		for(const errorId of failure.errors)
 		{
 			const error = errorMap.get(errorId);
 			const boundaryOnly = error?.category === "boundary" && error.payload === null;
 			const envelopeSupported
-        = errorEnvelope && error && supportsErrorEnvelopeValue(error.payload);
+        = errorEnvelope && error && (supportsErrorEnvelopeValue(error.payload)
+					|| (error.id === syncIOError && error.category === "domain" && supportsJavaScriptIOPayload(error.payload)));
 			if(!boundaryOnly && !envelopeSupported)
 			{
 				report(
@@ -347,6 +349,8 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		inspectFailure(declaration.failure, `${declaration.id}.failure`, {
 			errorEnvelope: declaration.kind === "function" && declaration.resultMode === "value"
+			, syncIOError: declaration.source?.extensions?.["lean-lang.org/effect"] === "EIO"
+				? "error:EIO." + declaration.source.declaration : null
 		});
 	}
 

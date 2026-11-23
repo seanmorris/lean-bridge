@@ -118,6 +118,8 @@ export const runtime = await loadComponent(descriptor);
 export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtimeRequirement }) => {
 	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs").replaceAll("../abi/component-structured-callables.mjs", "./component-structured-callables.mjs")
 		.replaceAll("../abi/component-owned-wasm.mjs", "./component-owned-wasm.mjs")
+		.replaceAll("../abi/component-sync-io.mjs", "./component-sync-io.mjs")
+		.replaceAll("../abi/component-wasm-control.mjs", "./component-wasm-control.mjs")
 		.replaceAll("../abi/owned-wasm-control.mjs", "./owned-wasm-control.mjs")
 		.replaceAll("../binding-ir/", "./binding-ir/");
 	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
@@ -129,6 +131,9 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, ["internal/main.wasm", mainWasm]
 		, ["internal/component-runtime.mjs", runtimeSource]
 		, ["internal/component-scalars.mjs", scalarSource]
+		, ["internal/component-sync-io.mjs", relocate(await readFile(new URL("../abi/component-sync-io.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-wasm-control.mjs", await readFile(new URL("../abi/component-wasm-control.mjs", import.meta.url))]
+		, ["internal/component-sync-io-runtime.mjs", relocate(await readFile(new URL("./component-sync-io-runtime.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-scalar-codec.mjs", codecSource]
 		, ["internal/component-callables.mjs", relocate(await readFile(new URL("../abi/component-callables.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]

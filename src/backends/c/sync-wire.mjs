@@ -55,9 +55,11 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.tasks - Include task handles and scheduler wait operations.
  * @param options.resources - Nominal resource definitions authenticated by elaboration.
  * @param options.phpWasm - Check inputs for the synchronous wasm32 Zend transport.
+ * @param options.wasm32 - Check inputs for a single-threaded wasm32 synchronous transport.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false } = {}) => {
-	if(phpWasm && (tasks || resources.length)) throw new TypeError("The PHP-Wasm sync wire does not admit task or resource handles");
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false } = {}) => {
+	const checkedWasm = phpWasm || wasm32, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
+	if(checkedWasm && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources), values = cTaskValues(p, false, kinds);
 	const leases = kinds.map((r, i) => ({ ...r, type: "lease:" + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
@@ -83,7 +85,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		const err = e.effect === "EIO" ? wireShape(e.error) : e.effect === "IO" ? "string" : null;
 		const ec = e.effect === "EIO" ? values.codec(e.error) : null;
 		const checks = args.map((v, k) => (v === "bool" || v === "unit") ? `if (args[${3 * k}] > ${v === "bool" ? 1 : 0}u) return ${p}_INVALID;` : "").filter(Boolean);
-		if(phpWasm) for(const [k, v] of args.entries()) checks.push(`if (${wasmArgument(v, k)}) return ${p}_INVALID;`);
+		if(checkedWasm) for(const [k, v] of args.entries()) checks.push(`if (${wasmArgument(v, k)}) return ${p}_INVALID;`);
 		if(e.delivery)
 		{
 			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape: wireShape, depth, input, emit: move, checks });
@@ -126,10 +128,10 @@ int ${sym}_same(const uint64_t *a, const uint64_t *b, uint8_t *out) {
 	const source = `#include "${p}.h"
 #include <string.h>
 #include <limits.h>
-${phpWasm ? `#if !defined(__wasm32__) || !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
-#error Expected the single-threaded PHP-Wasm host
+${checkedWasm ? `#if !defined(__wasm32__) || !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
+#error Expected the single-threaded ${host} host
 #endif
-_Static_assert(sizeof(uintptr_t) == 4 && sizeof(size_t) == 4 && sizeof(float) == 4 && sizeof(double) == 8 && CHAR_BIT == 8, "PHP wasm32 host wire");
+_Static_assert(sizeof(uintptr_t) == 4 && sizeof(size_t) == 4 && sizeof(float) == 4 && sizeof(double) == 8 && CHAR_BIT == 8, "${phpWasm ? "PHP" : "JavaScript"} wasm32 host wire");
 static inline int lb_wire_span(uint64_t ptr, uint64_t count, unsigned stride) {
     uint64_t size = (uint64_t)__builtin_wasm_memory_size(0) * 65536u;
     return ptr <= UINT32_MAX && count <= UINT32_MAX && ptr <= size &&

@@ -565,6 +565,10 @@ changing the process working directory, terminating the host, networking, and
 unclassified native operations are not grantable on this route. A reviewed API
 cannot override a refusal.
 
+For `--target npm`, [synchronous in-memory IO](../publish/npm.md#export-synchronous-lean-io)
+uses `"nativeEffects": []`. Generated JavaScript functions return immediately;
+thrown `EIO` payloads and returned `Except` values remain distinct.
+
 For `--target php-wasm`, the [synchronous IO package](../publish/php.md#build-an-ordinary-php-wasm-package)
 supports `"nativeEffects": []` only. Select it for state held in the PHP-Wasm
 instance, not for applications that need filesystem access.

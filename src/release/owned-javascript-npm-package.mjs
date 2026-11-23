@@ -19,7 +19,7 @@ import { compiledPackageMetadata, npmPackageMetadata } from "../analyze/package-
 import { assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
 
-const runtimeRequirement = Object.freeze({ kind: "content-addressed-peer"
+export const javascriptSharedRuntimeRequirement = Object.freeze({ kind: "content-addressed-peer"
 	, artifactIncluded: false, abiVersion: 1
 	, leanCommit: pins.leanCommit, patchSetSha256: pins.patchSetSha256
 	, profile: "side-lazy", shared: true
@@ -84,7 +84,7 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 		, readFile(join(root, receipt.library))
 	]);
 	assertOwnedJavaScriptRuntime({ mainModule, mainWasm, sideWasm, privateAbi });
-	const runtime = await assembleComponentNpmRuntime({ mainModule, mainWasm, runtimeRequirement });
+	const runtime = await assembleComponentNpmRuntime({ mainModule, mainWasm, runtimeRequirement: javascriptSharedRuntimeRequirement });
 	const generated = generateJavaScriptPackage(model.bindingIr), files = new Map(Object.entries(generated));
 	const metadata = compiledPackageMetadata(receipt.sourceIdentity), packageJson = JSON.parse(generated["package.json"]);
 	files.set("package.json", canonicalJson({ ...packageJson
@@ -110,6 +110,18 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 	for(const [path, bytes] of (await readVerifiedSourceNotices(root, receipt.sourceIdentity)).files) files.set(`notices/${path}`, bytes);
 	files.set("notices/lean-bridge.txt", await readFile(new URL("../../LICENSE", import.meta.url)));
 	if((await readVerifiedOwnedJavaScriptWasmComponent(root)).identity !== verified.identity) throw new Error("Owned JavaScript compilation changed during packaging");
+	const delivery = archiveSharedJavaScriptPackages({ runtime, files, coordinate, profile });
+	signal?.throwIfAborted();
+	return { verified, runtime, files, coordinate, ...delivery };
+};
+
+/**
+ * Pack the runtime and component together, binding the exact dependency to both receipts.
+ *
+ * @param options - Runtime build, component contents, exact npm coordinate and profile.
+ */
+export const archiveSharedJavaScriptPackages = options => {
+	const {runtime, files, coordinate, profile} = options;
 	const runtimeArchive = archive(runtime.files), componentArchive = archive(files);
 	const runtimeName = `lean-bridge-runtime-${runtime.version}.tgz`;
 	const archiveName = `${coordinate.name.replaceAll("/", "-")}-${coordinate.version}.tgz`;
@@ -122,8 +134,7 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 		, requires: role === "runtime" ? [] : [runtimeRef]
 		, artifacts: [{ path, bytes: bytes.length, sha256: sha256(bytes) }] });
 	const packages = [entry(runtimeRef, "runtime", runtimeName, runtimeArchive), entry(coordinate, "component", componentName, componentArchive)];
-	signal?.throwIfAborted();
-	return { verified, runtime, files, coordinate, runtimeName, runtimeArchive, componentName, componentArchive, packages };
+	return {runtimeName, runtimeArchive, componentName, componentArchive, packages};
 };
 
 /**

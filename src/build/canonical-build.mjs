@@ -48,6 +48,8 @@ import { buildNativeProject } from "./native-project.mjs";
 import { buildMultiProfileProject } from "./multi-profile-project.mjs";
 import { buildPhpWasmProject } from "./php-wasm-project.mjs";
 import { buildOwnedJavaScriptProject, usesOwnedJavaScript } from "./javascript-wasm-owned-project.mjs";
+import { readExportConfiguration } from "../analyze/export-configuration.mjs";
+import { buildJavaScriptIOProject } from "./javascript-wasm-io-project.mjs";
 import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
@@ -990,7 +992,19 @@ export const buildCanonicalProject = async ({
 	const mixed = phpWasm || sourceC || targets.includes("cpan") || targets.includes("perl");
 	if(mixed && normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 		fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
-	const ownedNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm")) && await usesOwnedJavaScript(root, signal);
+	const selectsNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm"));
+	if(selectsNpm)
+	{
+		const record = await readExportConfiguration(root, {signal}).catch(error => {
+			signal?.throwIfAborted(); throw new CanonicalBuildError(error.code ?? "invalid-export-configuration", error.message);
+		});
+		if(Object.hasOwn(record.configuration, "nativeEffects"))
+		{
+			if(mixed || normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Build synchronous JavaScript IO as a separate npm handoff");
+			return buildJavaScriptIOProject({projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot, record});
+		}
+	}
+	const ownedNpm = selectsNpm && await usesOwnedJavaScript(root, signal);
 	if(mixed)
 	{
 		// Both PHP-Wasm frontends check the review against their own source

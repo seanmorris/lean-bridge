@@ -345,7 +345,8 @@ const emitDeclarations = (ir, typeMap) => {
 		output.push(`export class ${error.name} extends Error {`);
 		if(error.payload === null)
 		{
-			output.push(`  constructor(options) {`, `    super(${quote(error.documentation.summary)}, options);`);
+			const message = error.id === "error:IO.Error" ? `options?.cause?.message ?? ${quote(error.documentation.summary)}` : quote(error.documentation.summary);
+			output.push(`  constructor(options) {`, `    super(${message}, options);`);
 		} else
 		{
 			output.push(

@@ -85,6 +85,36 @@ The import initializes the runtime and loads the component before the module bod
 
 Both functions return copied primitives, so no disposal step is required. Imports in one JavaScript realm share the runtime module.
 
+### Synchronous Lean IO
+
+Install the component normally. Its declared dependency loads the shared
+runtime; application code imports only the component. Once the module is
+loaded, calls return immediately. A returned Lean `Except` is data
+(`{ ok: value }` or `{ error: value }`); a thrown `EIO` is a generated error
+class whose `payload` preserves that same shape. Catching a declared error
+does not discard previously updated Lean state.
+
+For example, the [Ledger package](publish/npm.md#export-synchronous-lean-io)
+can either return or throw a decision with identical contents:
+
+```js
+import { add, read_total, choose, EIO_Ledger_choose } from "@example/ledger-io";
+
+add(2);
+console.log(choose(false, false, "retry")); // { error: 4000000000 }
+try {
+  choose(true, false, "retry");
+} catch (error) {
+  if (!(error instanceof EIO_Ledger_choose)) throw error;
+  console.log(error.payload);              // { error: 4000000000 }
+}
+console.log(read_total());                 // 2
+```
+
+An ordinary `IO.Error` throws `IOError` with Lean's message. Invalid arguments
+are rejected before the call changes state. An unexpected Wasm trap retires
+the shared runtime; don't retry a call on that instance.
+
 ## TypeScript
 
 Create a separate Node.js application and install the compiler:
@@ -582,6 +612,11 @@ nominal acceptance. Callback, owned, recursive and dependent Subtype
 combinations, plus generic Subtypes beyond the closed `GenericNat` alias, need their own checks.
 
 The [hosted generic-Subtype matrix](evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
+
+For the separate [synchronous IO package profile](#synchronous-lean-io), see
+the [ordinary and reviewed npm install checks](evidence/javascript-wasm-sync-io-20261123.md).
+They cover Node and Chromium; the cross-profile table below does not include
+these local IO results.
 
 ### Type conversions
 

@@ -17,6 +17,9 @@ import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/
 import { componentStructuredCallableAbi, assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
 import { componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi, assertComponentOwnedWasmBindings } from "../abi/component-owned-wasm.mjs";
 import { createOwnedWasmComponentRuntime } from "./owned-wasm-component-runtime.mjs";
+import { assertJavaScriptIOAbi, componentSyncIOAbi } from "../abi/component-sync-io.mjs";
+import { validateJavaScriptWasmControl } from "../abi/component-wasm-control.mjs";
+import { bindJavaScriptIO } from "./component-sync-io-runtime.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -186,7 +189,15 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			const owned = [componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi].includes(descriptor.privateAbi.version);
 			const structured = descriptor.privateAbi.version === componentStructuredCallableAbi;
 			const callable = structured || descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
-			if(owned)
+			const io = descriptor.privateAbi.version === componentSyncIOAbi;
+			if(io)
+			{
+				assertJavaScriptIOAbi(descriptor.privateAbi, descriptor.bindingIr);
+				if(descriptor.id !== descriptor.bindingIr.component.id || descriptor.buildHash !== descriptor.privateAbi.componentIdentity
+					|| descriptor.initializer !== null) throw new Error("Synchronous IO component identity mismatch");
+				if(module._bridge_owned_runtime_abi?.() !== 1) throw new Error("Shared runtime lacks the component initialization broker");
+			}
+			else if(owned)
 			{
 				if(!module._bridge_owned_runtime_abi || module._bridge_owned_runtime_abi() !== 1)
 					throw new Error("Shared runtime lacks the owned component ABI; rebuild it");
@@ -232,8 +243,8 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			}
 			const symbols = new Set();
 			const bindings = new Set();
-			if(!owned && descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
-			for(const declaration of owned ? [] : descriptor.bindingIr.declarations)
+			if(!owned && !io && descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
+			for(const declaration of owned || io ? [] : descriptor.bindingIr.declarations)
 			{
 				if(!callable && !copied) assertComponentSignature(declaration);
 				const abi = descriptor.privateAbi.exports.find(item => item.bindingId === declaration.id);
@@ -245,6 +256,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			}
 			const bytes = await readArtifact(descriptor.sideModule);
 			if(await digest(bytes) !== descriptor.integrity) throw new Error(`Lean component integrity mismatch for ${descriptor.id}`);
+			if(io) await validateJavaScriptWasmControl(bytes, descriptor.privateAbi.controlSymbol, false);
 			const link = async () => {
 				assertOpen();
 				record.linking = true;
@@ -252,8 +264,16 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 				module.FS.writeFile(filename, bytes);
 				try
 { await module.loadDynamicLibrary(filename, { global: true, loadAsync: true, nodelete: true }); }
+				catch(error)
+				{
+					// Linking can run Wasm constructors before failing. A partially
+					// initialized IO component must not share later calls' heap.
+					if(io) poison();
+					throw error;
+				}
 				finally
 { module.FS.unlink(filename); }
+				if(io) return bindJavaScriptIO(module, descriptor.privateAbi, operationFor(descriptor.privateAbi.controlSymbol, 11), { assertOpen, poison });
 				if(owned) return createOwnedWasmComponentRuntime(module, descriptor
 					, operationFor(descriptor.privateAbi.controlSymbol, 3), { assertOpen, poison });
 				const symbolBytes = encoder.encode(`${descriptor.initializer}\0`);

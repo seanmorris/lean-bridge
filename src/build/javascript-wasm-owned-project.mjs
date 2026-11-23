@@ -93,7 +93,7 @@ export const buildOwnedJavaScriptProject = async options => {
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "owned-javascript", ownedGraphs: true });
 	const engineIdentity = await identifyBuildEngine(engineRoot);
 	const compilerOptions = { project, engineRoot, environment, runner, intent, cache, signal };
-	const compiler = await (isolated ? prepareIsolatedOwnedJavaScriptCompiler(compilerOptions) : prepareHostCompiler(compilerOptions));
+	const compiler = await (isolated ? prepareIsolatedOwnedJavaScriptCompiler(compilerOptions) : prepareHostJavaScriptCompiler(compilerOptions));
 	const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot, environment });
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-owned-javascript-project-"));
@@ -140,7 +140,14 @@ export const buildOwnedJavaScriptProject = async options => {
 	}
 };
 
-const prepareHostCompiler = async ({ project, engineRoot, environment, runner, intent, signal }) => {
+/**
+ * Resolve pinned host tools and optionally stage a verified target header package.
+ *
+ * @param options - Author environment, source root and immutable Lake capture.
+ * @param buildComponent - Compiler for the selected JavaScript profile.
+ */
+export const prepareHostJavaScriptCompiler = async (options, buildComponent = buildOwnedJavaScriptWasmComponent) => {
+	const { project, engineRoot, environment, runner, intent, signal } = options;
 	const emsdkRoot = await directory(environment.LEAN_BRIDGE_JS_EMSDK ?? join(engineRoot, ".toolchains/emsdk"), "LEAN_BRIDGE_JS_EMSDK");
 	if(environment.LEAN_BRIDGE_JS_INPUTS !== undefined && environment.LEAN_BRIDGE_JS_TARGET_RUNTIME !== undefined)
 		throw new CanonicalBuildError("conflicting-javascript-wasm-inputs", "Select prepared JavaScript compiler inputs or a raw target tree, not both");
@@ -170,7 +177,7 @@ const prepareHostCompiler = async ({ project, engineRoot, environment, runner, i
 			}
 			if((await readVerifiedJavaScriptWasmCompilerInputs(target, { signal })).identity !== inputs.identity) throw new Error("JavaScript compiler inputs changed while staging");
 		}
-		const built = await buildOwnedJavaScriptWasmComponent({ projectRoot: project
+		const built = await buildComponent({ projectRoot: project
 			, outputRoot: componentRoot
 			, leanPrefix, leanRuntimeRoot: target, emsdkRoot
 			, environment, runner, signal

@@ -34,6 +34,49 @@ Optional [export contracts](../lean/existing-package.md#declare-export-contracts
 
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
+## Export synchronous Lean IO
+
+Use this profile when a JavaScript or TypeScript caller needs an immediate
+answer from state held in Lean. An `IO.Ref` counter can change without
+turning the caller's result into a `Promise`. The package can export `IO`,
+`BaseIO`, `EIO`, and pure companion functions. Select the declarations and
+make the in-memory effect boundary explicit:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Ledger"],
+  "exports": ["Ledger.add", "Ledger.readTotal", "Ledger.choose"],
+  "nativeEffects": [],
+  "targets": { "npm": { "name": "@example/ledger-io", "version": "1.0.2" } }
+}
+```
+
+Alternatively, select the functions in one `.binding-ir.json` review and
+omit `exports`. The build checks the review against fresh Lean interfaces.
+Arguments may use the 19 copied scalar types; returns and declared `EIO`
+errors may also use nested `Except`. `USize` and `ISize` are 32-bit on this
+target. Filesystem access, host imports, tasks, and resource handles are not
+part of this profile.
+
+Use the [local author SDK](../contributing/author-toolchain.md#package-javascript-wasm-compiler-inputs)
+with Lean 4.32.2, Emscripten 6.0.6, and a prepared CLI containing the target
+headers and shared runtime. From the Lean project:
+
+```sh
+export LEAN_BRIDGE_BUILD_BACKEND=auto
+export LEAN_BRIDGE_LEAN_PREFIX=/absolute/path/to/lean-4.32.2
+export LEAN_BRIDGE_JS_EMSDK=/absolute/path/to/emsdk-6.0.6
+lean-bridge build --project . --target npm --output build/ledger-release
+lean-bridge verify --receipt build/ledger-release/package-set-receipt.json
+```
+
+The `packages/npm/` directory contains the component archive, its exact
+shared-runtime dependency, and their receipt. Install both archives for a
+local handoff. This profile currently builds npm separately with the local
+SDK; an explicit Nix or Docker request does not fall back to a host build.
+See [calling synchronous IO from JavaScript](../javascript-typescript.md#synchronous-lean-io).
+
 ## Build owned-value npm packages
 
 An explicit `ownedAggregates` policy selects the ownership-aware npm compiler.
