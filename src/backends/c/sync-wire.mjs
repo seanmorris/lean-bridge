@@ -17,6 +17,17 @@ const shape = t => {
 };
 const depth = v => Array.isArray(v) ? 1 + Math.max(...v.map(depth)) : 0;
 const buffer = s => s === "string" || s === "bytes", wide = s => s === "nat" || s === "int";
+// On wasm32 the transport words are still 64-bit. Validate before a C cast
+// can silently change a value, pointer or length and before Lean runs any IO.
+const wasmArgument = (v, k) => {
+	const [a, b, c] = [0, 1, 2].map(i => `args[${3 * k + i}]`);
+	if(buffer(v) || wide(v)) return `!lb_wire_span(${a}, ${b}, ${wide(v) ? 8 : 1}) || ${c} > ${v === "int" ? 1 : 0}u`;
+	const bits = { char: 32, usize: 32, float32: 32, uint8: 8, uint16: 16, uint32: 32 }[v];
+	const signed = { isize: 32, int8: 8, int16: 16, int32: 32 }[v];
+	const value = bits ? ` || ${a} > UINT${bits}_MAX`
+		: signed ? ` || (${a} > INT${signed}_MAX && ${a} < (uint64_t)INT${signed}_MIN)` : "";
+	return `${b} || ${c}${value}`;
+};
 const input = (c, v, i) => {
 	const a = n => `args[${3 * i + n}]`;
 	if(c.resource) return `(${c.arg}){{${a(0)},${a(1)}}}`;
@@ -43,8 +54,10 @@ const emit = (v, expr, p, index = 0) => {
  * @param options - Enable native Task and pull descriptors for a task package.
  * @param options.tasks - Include task handles and scheduler wait operations.
  * @param options.resources - Nominal resource definitions authenticated by elaboration.
+ * @param options.phpWasm - Check inputs for the synchronous wasm32 Zend transport.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [] } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false } = {}) => {
+	if(phpWasm && (tasks || resources.length)) throw new TypeError("The PHP-Wasm sync wire does not admit task or resource handles");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources), values = cTaskValues(p, false, kinds);
 	const leases = kinds.map((r, i) => ({ ...r, type: "lease:" + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
@@ -70,6 +83,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		const err = e.effect === "EIO" ? wireShape(e.error) : e.effect === "IO" ? "string" : null;
 		const ec = e.effect === "EIO" ? values.codec(e.error) : null;
 		const checks = args.map((v, k) => (v === "bool" || v === "unit") ? `if (args[${3 * k}] > ${v === "bool" ? 1 : 0}u) return ${p}_INVALID;` : "").filter(Boolean);
+		if(phpWasm) for(const [k, v] of args.entries()) checks.push(`if (${wasmArgument(v, k)}) return ${p}_INVALID;`);
 		if(e.delivery)
 		{
 			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape: wireShape, depth, input, emit: move, checks });
@@ -112,7 +126,15 @@ int ${sym}_same(const uint64_t *a, const uint64_t *b, uint8_t *out) {
 	const source = `#include "${p}.h"
 #include <string.h>
 #include <limits.h>
-_Static_assert(sizeof(uintptr_t) == 8 && sizeof(size_t) == 8 && sizeof(float) == 4 && sizeof(double) == 8 && CHAR_BIT == 8, "Linux x86-64 host wire");
+${phpWasm ? `#if !defined(__wasm32__) || !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
+#error Expected the single-threaded PHP-Wasm host
+#endif
+_Static_assert(sizeof(uintptr_t) == 4 && sizeof(size_t) == 4 && sizeof(float) == 4 && sizeof(double) == 8 && CHAR_BIT == 8, "PHP wasm32 host wire");
+static inline int lb_wire_span(uint64_t ptr, uint64_t count, unsigned stride) {
+    uint64_t size = (uint64_t)__builtin_wasm_memory_size(0) * 65536u;
+    return ptr <= UINT32_MAX && count <= UINT32_MAX && ptr <= size &&
+        (!count || (ptr && ptr % stride == 0)) && count <= (size - ptr) / stride;
+}` : '_Static_assert(sizeof(uintptr_t) == 8 && sizeof(size_t) == 8 && sizeof(float) == 4 && sizeof(double) == 8 && CHAR_BIT == 8, "Linux x86-64 host wire");'}
 static inline float lb_wire_float32(uint64_t bits) { uint32_t u = (uint32_t)bits; float f; memcpy(&f, &u, 4); return f; }
 static inline double lb_wire_float64(uint64_t bits) { double f; memcpy(&f, &bits, 8); return f; }${leaseHelpers && "\n" + leaseHelpers}
 void ${stem}_clear(uint64_t *out) {

@@ -104,6 +104,9 @@ declarations in `resources`, as below. Callbacks, tasks, and PHP-Wasm are
 separate from this synchronous profile. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
 and the [independently reproduced archive](../evidence/php-sync-io-20261123.json).
 
+PHP-Wasm has a [tested 32-bit IO transport](../evidence/php-wasm-sync-io-core-20261123.md),
+but the Wasm package builder does not yet expose these synchronous IO methods.
+
 ### Export tasks and pull streams
 
 Select functions with a real Lean `Task` result in `taskExports`; do not mark
