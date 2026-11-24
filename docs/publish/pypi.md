@@ -68,6 +68,12 @@ receiver and copied `UInt32` result. Select the application's own public
 functions with `modules` and `exports`. Lean Bridge generates the import
 module; don't add your own `LeanBridge/Host/Python.lean`.
 
+Choose `host.identity` per nominal kind. Use `weak-canonical` to share the
+same Python object without holding it for the whole binding. Use
+`strong-canonical` when a successful host-member result or a fully validated
+call should pin the instance until the last compatible binding closes.
+Neither mode uses the object's `__hash__` or `__eq__` to establish identity.
+
 Build the Lake package on Linux x86-64 with Lean 4.32.2, a C compiler, and CPython 3.11 or 3.12
 with its shared library and development headers. From the repository root:
 

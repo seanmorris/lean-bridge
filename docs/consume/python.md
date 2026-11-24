@@ -92,6 +92,15 @@ with lean_meter.bind_hosts(Box=Meter):
 inherit from a generated base class. The call into Lean returns the value
 from your Python method. pip installs the matching runtime automatically.
 
+The package declares whether a host-object kind is `weak-canonical` or
+`strong-canonical`. A weak import releases its reference when Lean no
+longer needs the object. A strong import keeps the exact Python instance
+until the last matching binding exits, including a binding in another
+component. A call rejected during argument validation does not start that
+retention. An exception raised after Lean has entered the call does not
+undo it. The [installed-wheel checks](../evidence/python-host-kinds-20261124.md)
+exercise both binding orders on CPython 3.11 and 3.12.
+
 For components that export a Lean `Except`, inspect the result as a value:
 `Ok.value` holds a success and `Err.error` holds a rejection. A function
 declared with Lean's `EIO` instead raises the component's `LeanEIOError`:

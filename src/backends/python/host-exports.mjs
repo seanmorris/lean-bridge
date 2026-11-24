@@ -66,7 +66,7 @@ const carrier = (resources, type) => {
 	};
 	return {
 		lean: `_root_.LeanBridge.Host.Python.${resources[i].name}`
-		, c: "lean_object *", fromPython: arg => `lb_host_result(${i}, ${arg}, NULL)`
+		, c: "lean_object *", hostIndex: i
 		, toPython: arg => `lb_host_arg(${i}, ${arg})`
 	};
 };
@@ -163,6 +163,17 @@ const emit = (resources, entry, i, codecs, synchronous, immediate) => {
 		: task ? taskCodec(i, returned(resources, entry.result, codecs), startError, entry.taskIO) : null;
 	const out = asyncOut ?? returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
 	const symbol = `lb_python_host_invoke_${i}`;
+	const hostArgs = args.flatMap((a, j) => a.hostIndex === undefined ? [] : [{ index: a.hostIndex, j }]);
+	const conversions = args.map((a, j) => a.hostIndex === undefined
+		? `if (!(v[${j}] = ${a.fromPython(`PyTuple_GET_ITEM(args, ${j})`)})) goto done;`
+		: `if (!lb_check_host(${a.hostIndex}, PyTuple_GET_ITEM(args, ${j}))) goto done;`);
+	if(hostArgs.length)
+	{
+		conversions.unshift("lb_value *pending_hosts = NULL;");
+		for(const { index, j } of hostArgs)
+			conversions.push(`if (!(v[${j}] = lb_stage_argument(${index}, PyTuple_GET_ITEM(args, ${j}), &pending_hosts))) goto done;`);
+		conversions.push("lb_finish_hosts(&pending_hosts, 1);");
+	}
 	const values = args.map((a, j) => a.unbox ? `${a.unbox}(v[${j}])` : `v[${j}]`).join(", ");
 	const call = `(_root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")})`;
 	const application = stream ? asyncOut.application(call) : call;
@@ -183,7 +194,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     lb_sync_started = 1;` : ""}
     ${bound ? "lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; lb_sweep();" : ""}
     lean_object *v[${Math.max(1, args.length)}] = {0}, *io = NULL; PyObject *result = NULL;
-    ${args.map((a, j) => `if (!(v[${j}] = ${a.fromPython(`PyTuple_GET_ITEM(args, ${j})`)})) goto done;`).join("\n    ")}
+    ${conversions.join("\n    ")}
     io = ${symbol}(${values});
     ${args.flatMap((a, j) => a.unbox ? [] : [`v[${j}] = NULL;`]).join(" ")}
     if (lean_io_result_is_ok(io)) {
@@ -210,7 +221,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     if (!result) PyErr_Fetch(&et, &ev, &tb);
     if (io) lean_dec(io);
     ${args.map((_, j) => `if (v[${j}]) lean_dec(v[${j}]);`).join(" ")}
-    ${bound ? "lb_frame_close(&frame); lb_sweep(); lb_current->depth--;" : ""}
+    ${hostArgs.length ? "lb_finish_hosts(&pending_hosts, 0);\n    " : ""}${bound ? "lb_frame_close(&frame); lb_sweep(); lb_current->depth--;" : ""}
     if (!result) PyErr_Restore(et, ev, tb);
     return result;
 }`;

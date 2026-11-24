@@ -190,24 +190,61 @@ static PyObject *lb_host_arg(size_t i, lean_object *wrapper) {
     }
     PyErr_SetString(PyExc_TypeError, "wrong, stale or foreign host object"); return NULL;
 }
-static lean_object *lb_host_result(size_t i, PyObject *object, PyObject *anchor) {
+static int lb_check_host(size_t i, PyObject *object) {
     lb_kind *k = lb_current->kinds[i];
-    if (!PyType_IsSubtype(Py_TYPE(object), (PyTypeObject *)k->type)) {
-        PyErr_SetString(PyExc_TypeError, "host member returned the wrong nominal type"); return NULL;
-    }
+    if (PyType_IsSubtype(Py_TYPE(object), (PyTypeObject *)k->type)) return 1;
+    PyErr_SetString(PyExc_TypeError, "wrong nominal type for host object"); return 0;
+}
+/* Keep unadmitted registry references in a call-local list. The v1 shared
+   structs and capsule stay compatible with independently compiled providers. */
+static lb_value *lb_stage_host(size_t i, PyObject *object, lb_value **pending) {
+    lb_kind *k = lb_current->kinds[i];
     lb_value *v = k->values;
     while (v && v->object != object) v = v->next;
+    if (!v) {
+        v = *pending;
+        while (v && (v->kind != k || v->object != object)) v = v->next;
+    }
     if (!v) {
         v = calloc(1, sizeof(*v));
         if (!v) { PyErr_NoMemory(); return NULL; }
         v->object = Py_NewRef(object); v->kind = k;
-        v->wrapper = lean_alloc_external(lb_current->domain->cls, v); v->next = k->values; k->values = v;
+        v->wrapper = lean_alloc_external(lb_current->domain->cls, v); v->next = *pending; *pending = v;
     }
+    return v;
+}
+static void lb_finish_hosts(lb_value **pending, int publish) {
+    while (*pending) {
+        lb_value *v = *pending; *pending = v->next;
+        if (publish) { v->next = v->kind->values; v->kind->values = v; }
+        else { v->kind = NULL; Py_CLEAR(v->object); Py_CLEAR(v->anchors); lean_dec(v->wrapper); }
+    }
+}
+static lean_object *lb_stage_argument(size_t i, PyObject *object, lb_value **pending) {
+    lb_value *v = lb_stage_host(i, object, pending);
+    if (!v) return NULL;
+    lean_inc(v->wrapper); return v->wrapper;
+}
+static lean_object *lb_host_result(size_t i, PyObject *object, PyObject *anchor) {
+    if (!lb_check_host(i,object)) return NULL;
+    /* A tracked Python list allocation can run GC. Do it before choosing the
+       canonical row so a nested call cannot publish a competing wrapper. */
+    PyObject *one = NULL;
     if (anchor && anchor != object) {
-        if (!v->anchors && !(v->anchors = PyList_New(0))) return NULL;
+        one = PyList_New(1);
+        if (!one) return NULL;
+        PyList_SET_ITEM(one, 0, Py_NewRef(anchor));
+    }
+    lb_value *pending = NULL, *v = lb_stage_host(i, object, &pending);
+    if (!v) { Py_XDECREF(one); return NULL; }
+    if (one && !v->anchors) { v->anchors = one; one = NULL; }
+    if (one) {
         Py_ssize_t j = 0;
         while (j < PyList_GET_SIZE(v->anchors) && PyList_GET_ITEM(v->anchors, j) != anchor) j++;
-        if (j == PyList_GET_SIZE(v->anchors) && PyList_Append(v->anchors, anchor)) return NULL;
+        int failed = j == PyList_GET_SIZE(v->anchors) && PyList_Append(v->anchors, anchor) < 0;
+        Py_DECREF(one);
+        if (failed) { lb_finish_hosts(&pending, 0); return NULL; }
     }
+    lb_finish_hosts(&pending, 1);
     lean_inc(v->wrapper); return v->wrapper;
 }
