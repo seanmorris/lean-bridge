@@ -65,7 +65,8 @@ export const prepareTaskSdk=async options => {
 			if(receipt.commit!==javascriptWasmOwnedPins.leanCommit || canonicalJson(receipt.identity)!==canonicalJson(expected)) throw new Error("Init input differs from its pinned archive receipt");
 		}
 		const broker=generateOwnedWasmBroker(), main=await readFile(join(backend,"threaded-task-runtime.c")), notify=await readFile(join(backend,"task-notification.c")), header=await readFile(join(backend,"task-notification.h"));
-		for(const [n,b] of [["owner.c",main],["notify.c",notify],["task-notification.h",header],["broker.c",broker.source],["lean_bridge_native_runtime.h",broker.header]])
+		const hostIdentity=await readFile(join(backend,"threaded-host-identity.c"));
+		for(const [n,b] of [["owner.c",main],["notify.c",notify],["task-notification.h",header],["host-identity.c",hostIdentity],["broker.c",broker.source],["lean_bridge_native_runtime.h",broker.header]])
 			await writeFile(join(work,n),b,{flag: "wx"});
 		const symbolTool=join(sdk,"upstream/bin/llvm-nm");
 		const leaseHeader=await wasmTaskLedgerHeader(), leaseSource=await wasmTaskLedgerSource();
@@ -81,6 +82,7 @@ export const prepareTaskSdk=async options => {
 		for(const op of ["create","borrow","release"]) roots.push(wasmLeasePrefix+op);
 		roots.push("lean_bridge_wasm_task_ready_v1","lean_register_external_class","pthread_mutex_init","pthread_mutex_destroy","pthread_mutex_lock","pthread_mutex_unlock","pthread_once");
 		roots.push("lean_bridge_wasm_callback_acquire_v1","lean_bridge_wasm_callback_release_v1");
+		for(const op of ["wrap","token","admit","collect","retire"]) roots.push("lb_jst_"+op+"_v1");
 		roots.sort();
 		await writeFile(join(work,"roots.json"),JSON.stringify(roots.map(name => "_"+name)),{flag: "wx"});
 		await run(join(sdk,"upstream/emscripten/emcc"),[...flags
@@ -90,6 +92,7 @@ export const prepareTaskSdk=async options => {
 			, "-ffile-prefix-map="+core+"=/lean-target"
 			, "owner.c"
 			, "notify.c"
+			, "host-identity.c"
 			, "broker.c"
 			, "task-resource-ledger.c"
 			, rt,uv,init
@@ -104,6 +107,7 @@ export const prepareTaskSdk=async options => {
 			, leaseHeader: sha256(leaseHeader)
 			, leaseSource: sha256(leaseSource)
 			, owner: sha256(main)
+			, hostIdentity: sha256(hostIdentity)
 			, notification: sha256(notify)
 			, header: sha256(header)
 			, broker: sha256(broker.source)

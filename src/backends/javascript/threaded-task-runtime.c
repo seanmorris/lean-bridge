@@ -8,12 +8,14 @@
 
 extern void lean_initialize_runtime_module(void);
 extern lean_object *initialize_Init_System_Promise(uint8_t);
+extern void lb_jst_collect_v1(void);
+extern void lb_jst_retire_all_v1(void);
 static uint32_t state, runs;
 static int (*controls[256])(uint32_t *);
 static uint32_t count;
 uint32_t bridge_lean_runtime_status(void) { return state; }
 uint32_t bridge_lean_runtime_init_runs(void) { return runs; }
-void bridge_lean_runtime_retire(void) { state = 3; }
+void bridge_lean_runtime_retire(void) { state = 3; lb_jst_retire_all_v1(); }
 uint32_t bridge_lean_runtime_init(void) {
   if (state) return state == 2;
   ++runs; state = 1;
@@ -43,5 +45,6 @@ EMSCRIPTEN_KEEPALIVE uint32_t lb_js_task_load(const char *path, const char *name
 }
 EMSCRIPTEN_KEEPALIVE int lb_js_task_call(uint32_t slot, uint32_t *frame) {
   if (!emscripten_is_main_runtime_thread() || state == 3 || !slot || slot > count) return 10;
-  return controls[slot-1](frame);
+  int rc=controls[slot-1](frame);
+  lb_jst_collect_v1(); return rc;
 }

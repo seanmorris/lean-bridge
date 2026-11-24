@@ -76,6 +76,7 @@ test("compiler-generated task, error and iterator controls execute on an install
 			, "-I"
 			, backend
 			, join(backend,"threaded-task-runtime.c")
+			, join(backend,"threaded-host-identity.c")
 			, join(backend,"task-notification.c")
 			, join(root,"broker.c")
 			, join(core,"lib/lean/libleanrt.a")

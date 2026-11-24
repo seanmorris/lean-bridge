@@ -28,10 +28,18 @@ void lean_bridge_wasm_task_ready_v1(uint32_t id) {
     queueMicrotask(() => Module['onLeanTaskReady'](token));
   }, id);
 }
-static lean_obj_res notify(lean_obj_arg token, lean_obj_arg value) {
+/* A non-exclusive map closure retains its source task until lean_apply_1
+   returns. Signalling from that closure can expose a result before the worker
+   releases its last reference to the source. Use a Unit completion fence:
+   the notifying closure can now retain only Unit, never the typed result. */
+static lean_obj_res drop_result(lean_obj_arg value) {
+  lean_dec(value);
+  return lean_box(0);
+}
+static lean_obj_res notify(lean_obj_arg token, lean_obj_arg unit) {
   uint32_t id = lean_unbox_uint32(token);
   lean_dec(token);
-  lean_dec(value);
+  lean_dec(unit);
   lean_bridge_wasm_task_ready_v1(id);
   return lean_box(0);
 }
@@ -41,5 +49,6 @@ void lean_bridge_wasm_task_subscribe_v1(b_lean_obj_arg task, uint32_t token) {
   lean_closure_set(f, 0, lean_box_uint32(token));
   lean_mark_mt(task);
   lean_inc(task);
-  lean_dec(lean_task_map_core(f, task, 0, true, true));
+  lean_object *fence = lean_task_map_core(lean_alloc_closure((void *)drop_result, 1, 0), task, 0, true, true);
+  lean_dec(lean_task_map_core(f, fence, 0, true, true));
 }

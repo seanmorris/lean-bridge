@@ -115,3 +115,33 @@ object on their respective paths. A conflicting live class was rejected.
 Disposing one binding left its peer usable. Strict TypeScript retained the
 consumer class's extra method and rejected a wrong instance or integer type.
 No package was published to a registry.
+
+### Host identity while a Lean worker holds the object
+
+`npm run test:javascript-threaded-host-identity` compiles a Lean task and
+links two separate Wasm components against the pthread SDK. Set
+`LEAN_BRIDGE_LEAN_PREFIX` and `LEAN_BRIDGE_JS_EMSDK`. Supply a freshly
+built SDK with `LEAN_BRIDGE_TEST_TASK_INPUTS`, or set
+`LEAN_BRIDGE_JS_THREAD_CORE` (and `LEAN_BRIDGE_JS_THREAD_INIT` for a
+separate Init archive) to build it during the test.
+
+One component parks a real worker holding an application object. The other
+component gets the same Lean wrapper when given the same JS object. Across
+65 runs, dropping the completed task or closing the last binding leaves no
+host pins. The test also checks 128 short-lived weak wrappers, strong
+retention until retirement, wrong-kind lookups, rejected worker-side host
+access, and cooperative cancellation. The worker confirms the cancellation
+flag and can return a late result after the nominal kind has been rebound.
+
+The private index owns one multithreaded Lean reference per wrapper. Only
+the runtime owner touches the index and JS domain; the worker finalizer
+frees native storage. The owner evicts a weak row when its reference is the
+last one (MT count -1 on pinned Lean 4.32.2). Before announcing completion,
+the notification adapter maps the typed result to `Unit`. Without that
+step Lean's map closure can still retain the original task when JS handles
+readiness: the previous adapter failed the zero-pin assertion on this test.
+
+This verifies wrapper identity and retirement on Node with actual Wasm
+pthreads. It does not yet expose host-object tasks or execute JS methods on
+workers. Those exports remain rejected until generated owner-side dispatch
+and per-operation exception handling are in place.

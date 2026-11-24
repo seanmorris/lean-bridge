@@ -1245,6 +1245,7 @@
     "test:javascript-host-public": "node --test --test-concurrency=1 tests/helpers/javascript-host-public.mjs",
     "test:javascript-host-package": "node --test --test-concurrency=1 tests/helpers/javascript-host-package-flow.mjs",
     "test:javascript-host-wasm": "node --test --test-concurrency=1 tests/helpers/javascript-host-wasm.mjs",
+    "test:javascript-threaded-host-identity": "node --test --test-concurrency=1 tests/helpers/javascript-threaded-host-identity.mjs",
     "test:perl-host-frame": "node --test --test-concurrency=1 tests/helpers/perl-host-frame.mjs",
     "test:perl-host-domain": "node --test --test-concurrency=1 tests/helpers/perl-host-domain.mjs",
     "test:perl-host-exports": "node --test --test-concurrency=1 tests/helpers/perl-host-exports.mjs",
