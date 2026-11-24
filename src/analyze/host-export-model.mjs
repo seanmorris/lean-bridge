@@ -124,8 +124,8 @@ export const reconcileHostExports = options => {
 		if([e.result, e.error, e.stepError].some(isOwned)) effects.push("allocates");
 		return effects;
 	};
-	const hostRef = t => ["dotnet", "jvm", "ruby", "python", "perl"].includes(hostTarget) && (t?.kind === "named" ? types.some(kind => kind.id === t.id)
-		: t?.kind === "apply" && t.constructor === "result" && t.arguments.some(hostRef));
+	const hostRef = t => t?.kind === "named" ? types.some(kind => kind.id === t.id)
+		: t?.kind === "apply" && t.constructor === "result" && t.arguments.some(hostRef);
 	const leased = type => ({ type, ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	const site = (t, input = false) => isOwned(t) && input
 		? { type: t, ownership: "borrow", lifetime: { scope: "call", anchor: null } } : !input && hostRef(t) ? leased(t) : signature(t);
@@ -139,10 +139,16 @@ export const reconcileHostExports = options => {
 	const js=selection.javascriptTaskCallbacks===true, wit=selection.witTaskCallbacks===true;
 	const schedulerCount = [rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length;
 	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
+	if(ir && hostTarget === "javascript" && (js || selection.taskExports?.length || selection.asyncIterators?.length))
+		fail("Synchronous JavaScript host objects must run on their owning agent");
 	const matchingScheduler = { ruby, jvm, dotnet, perl, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
-	const importedError = { jvm: ["JvmHostException", "JVM"], ruby: ["RubyHostException", "Ruby"], dotnet: ["DotNetHostException", ".NET"], perl: ["PerlHostException", "Perl"] }[hostTarget];
+	const importedError = { jvm: ["JvmHostException", "JVM"]
+		, ruby: ["RubyHostException", "Ruby"]
+		, dotnet: ["DotNetHostException", ".NET"]
+		, perl: ["PerlHostException", "Perl"]
+		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {

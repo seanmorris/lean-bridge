@@ -21,6 +21,7 @@ const hosts = {
 	, jvm: { target: "maven", label: "Jvm", error: "JvmHostException", coordinates: {name: "org.leanbridge:workshop", version: "1.0.0"} }
 	, dotnet: { target: "nuget", label: "Dotnet", error: "DotNetHostException", coordinates: {name: "Workshop.Host", version: "1.0.0"} }
 	, perl: { target: "cpan", label: "Perl", error: "PerlHostException", coordinates: {module: "LeanBridge::Workshop", version: "0.001"} }
+	, javascript: { target: "npm", label: "Javascript", error: "JavaScriptHostException" }
 };
 
 /**
@@ -30,9 +31,10 @@ const hosts = {
  * @param backend - Compiler host target.
  */
 export const prepareNativeHostFixture = async (project, backend) => {
-	if(backend === "perl")
+	if(backend === "perl" || backend === "javascript")
 	{
-		await cp(resolve("tests/fixtures/perl-host-project"),project,{recursive: true});
+		const path=backend==="perl"?"perl-host-project":"javascript-host-meter";
+		await cp(resolve("tests/fixtures",path),project,{recursive: true});
 		return;
 	}
 	await cp(fixture, project, { recursive: true });
@@ -95,12 +97,19 @@ export const checkNativeHostImports = backend => {
 		assert.ok(entry("update").effects.includes("writes-resource"));
 		assert.deepEqual(entry("read").failure.errors, ["error:IO.Error", "error:" + error]);
 		assert.deepEqual(entry("mapped").failure.errors, ["error:EIO.Workshop.mapped"]);
+		if(backend==="javascript")
+		{
+			assert.equal(entry("read").resultMode,"value");
+			assert.ok(!entry("read").effects.includes("async"));
+		}
 		const leaves = evidence.metadata.nativeEffectAudit.roots.flatMap(r => r.leaves).filter(l => l.module === host);
 		assert.ok(leaves.some(l => l.name === box + "setLevel" && l.symbol === "lean_bridge_host_" + backend + "_box_set_level"));
 		assert.equal(evidence.reviewedSourceSha256, null);
 		const replay = (selection, metadata) => reconcileHostExports({ selection, metadata, ir, component: api.component });
 		assert.throws(() => replay({ ...evidence.selection, hostModule: "LeanBridge.Host.Python" }, evidence.metadata), /host import/i);
 		assert.throws(() => replay({ ...evidence.selection, pythonTaskCallbacks: true }, evidence.metadata), /same runtime/u);
+		if(backend==="javascript")
+			assert.throws(() => replay({ ...evidence.selection, javascriptTaskCallbacks: true }, evidence.metadata), /owning agent/u);
 		const wrongSymbol = structuredClone(evidence.metadata);
 		wrongSymbol.nativeEffectAudit.roots.flatMap(r => r.leaves).find(l => l.module === host).symbol = "lean_bridge_host_python_box_read";
 		assert.throws(() => replay(evidence.selection, wrongSymbol), /unclassified native operation/u);
