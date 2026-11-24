@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace __LB_PUBLIC__;
+use LeanBridge\Internal\PhpWasmTasksV1\MemberStack;
 
 final class TaskCancelled extends \RuntimeException {}
 
@@ -34,6 +35,7 @@ abstract class Awaitable {
     final public function awaitCleanup(): void {
         if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Cannot wait for an active callback on this task');
         if ($this->cleanup===null) return;
+        MemberStack::assertCanWait();
         if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->cleanup)!=='["end"]')
             throw new LeanBridgeError('Failed to drain Lean task owner');
         $this->cleanup=null;
@@ -44,6 +46,7 @@ abstract class Awaitable {
     final protected function take(): mixed {
         if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Reentrant observation of the same Lean task');
         if (!$this->observed) {
+            MemberStack::assertCanWait();
             $this->observing=true;
             try {
                 $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner);
@@ -74,6 +77,7 @@ final class PullStream implements \IteratorAggregate {
     public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean cursor'); }
     public function close(): void {
         if ($this->owner===null) return;
+        MemberStack::assertCanWait();
         $owner=$this->owner; $this->owner=null;
         $failed=true;
         try {
@@ -81,16 +85,26 @@ final class PullStream implements \IteratorAggregate {
             $failed=false;
         } finally { $this->objects?->close($failed); }
     }
-    public function __destruct() { try {$this->owner?->dispose();} finally {$this->objects?->close(true);} }
+    private function abandon(): void {
+        $owner=$this->owner;$this->owner=null;
+        try {$owner?->dispose();} finally {$this->objects?->close(true);}
+    }
+    public function __destruct() {$this->abandon();}
     public function getIterator(): \Traversable {
         if ($this->started || $this->owner===null) throw new \LogicException('Lean cursor is closed or already in use');
+        MemberStack::assertCanWait();
         $this->started=true;
         try {
             while ($this->owner!==null) {
+                MemberStack::assertCanWait();
                 $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner->pull());
                 if ($packet==='["end"]') break;
                 yield ($this->decode)($packet);
             }
-        } finally { $this->close(); }
+        } finally {
+            // A suspended generator may be resumed or destroyed by a PHP
+            // member. Leave the already-owned native close to the scheduler.
+            if (MemberStack::active()) $this->abandon(); else $this->close();
+        }
     }
 }

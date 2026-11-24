@@ -46,7 +46,7 @@ export const runZendAuthorWorkers=async options=>{
 			assert.equal(descriptor.integrity,sha256(await readFile(file)));
 			await copyFile(file,join(dir,route+".wasm"));
 			const input={sources,brick,descriptor},node=await exerciseZendAuthor({...input,Php: PhpNode,factory,side: pathToFileURL(file).href});
-			assert.equal(node.checks.length,34);console.log(JSON.stringify({route,host: "node",sdk: verified.identity,...node}));
+			assert.equal(node.checks.length,42);console.log(JSON.stringify({route,host: "node",sdk: verified.identity,...node}));
 			const browser=await runInstalledChromium({root: dir
 				, consumer: dir
 				, assembledDirectory: dir

@@ -30,3 +30,22 @@ This tests the internal PHP owner adapter. It does not yet establish that a
 consumer can install a matching host-object package from npm and Composer.
 The compiler still rejects worker-side direct PHP calls and blocking the PHP
 owner on `Task.get`.
+
+## Waiting inside an immediate member
+
+A PHP member can re-enter an immediate Lean export. It cannot suspend that
+synchronous call stack. In a separate PHP-Wasm 8.4.1 process, awaiting even an
+already fulfilled JavaScript promise from a re-entered PHP function trapped
+the interpreter. Do not call raw `vrzno_await` from a synchronous member.
+
+Lean Bridge guards its own wait operations. A pending `await()`,
+`awaitCleanup()`, iterator pull, or explicit cursor close from a member
+throws `LogicException` **before** it starts a wait. The caller can still
+await the task or use an unopened cursor after the member returns. Reading a
+previously observed task value needs no wait and works from a member. A
+generator already suspended at a yield closes without blocking if a member
+tries to advance it. Retained callbacks still run through the ordinary PHP
+callback pump and can await another task.
+
+The [wait-guard execution record](php-wasm-zend-member-waits-20261124.json)
+adds these eight checks to each of the four executions above.

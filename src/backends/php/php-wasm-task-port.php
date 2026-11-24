@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace __LB_PUBLIC__\Internal;
+use LeanBridge\Internal\PhpWasmTasksV1\MemberStack;
 
 /** @internal Per-declaration functions supply the shape and the private owner key. */
 final class Port {
@@ -77,7 +78,9 @@ final class Port {
             try {
                 // VRZNO calls a plain closure; a first-class PHP method callable
                 // is not interchangeable with a closure at this Wasm boundary.
-                $reply=$submit(static fn(...$args)=>$frame->invoke(...$args),...$encoded);
+                MemberStack::enter();
+                try {$reply=$submit(static fn(...$args)=>$frame->invoke(...$args),...$encoded);}
+                finally {MemberStack::leave();}
                 $frame->check($reply);$value=$decode($reply);$failed=false;return $value;
             } finally {
                 try {$frame->close();} catch (\Throwable $cleanup) {if (!$failed) {$failed=true;throw $cleanup;}}

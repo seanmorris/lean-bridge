@@ -59,6 +59,18 @@ catch (\UnexpectedValueException $e) {check($e===$marker,'nested member frames p
 try {work('read',new HookBox(fn()=>new \stdClass()));throw new \LogicException('invalid member return succeeded');}
 catch (\TypeError $e) {check(true,'invalid member result is a PHP validation error');}
 check(work('read',$a)->isEqualTo(8),'valid call after member validation or application error');
+$pending=work('project',$a,fn($v)=>$max);$stream=work('open_cursor',$a);
+foreach (['await'=>fn()=>$pending->await(),'drain'=>fn()=>$pending->awaitCleanup(),
+          'cursor close'=>fn()=>$stream->close(),'cursor pull'=>fn()=>$stream->getIterator()->rewind()] as $label=>$wait) {
+    try {work('read',new HookBox($wait));throw new \RuntimeException('suspended a synchronous PHP member');}
+    catch (\LogicException $e) {check(str_contains($e->getMessage(),'Cannot suspend'),'reject member wait: '.$label);}
+}
+check($pending->await()->isEqualTo($max),'rejected member wait leaves task usable');$pending->awaitCleanup();
+check(work('read',new HookBox(fn()=>$pending->await()))->isEqualTo($max),'cached value can be read without suspending');
+$iterator=$stream->getIterator();$iterator->rewind();check($iterator->current()===$a,'rejected initial pull leaves cursor usable');
+try {work('read',new HookBox(fn()=>$iterator->next()));throw new \RuntimeException('resumed a cursor on a synchronous stack');}
+catch (\LogicException $e) {check(str_contains($e->getMessage(),'Cannot suspend'),'resumed cursor closes without blocking the member');}
+$stream->close();
 $job=work('relay',$a,function($v) use($a,$b,$max) {
     check($v===$a,'incoming Zend identity');
     $num=work('project',$v,fn($w)=>$w===$a?$max:null);

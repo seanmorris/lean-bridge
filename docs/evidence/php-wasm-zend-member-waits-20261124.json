@@ -1,0 +1,95 @@
+{
+  "scope": "PHP owner may synchronously reenter but cannot Asyncify-wait inside an immediate member",
+  "baseline": "php-wasm-zend-members-20261124.json",
+  "sdkSha256": "9f9b2c252f457e4f77b1efb81a85cbd47eddee4ddfa312f68f8f8afc019ef2c1",
+  "sourceSha256": {
+    "src/backends/php/php-wasm-task-pump.php": "0f4ade567dd1765a7f94fa878dcf5e289b4d97d4402fb2ce2f156d0800a11add",
+    "src/backends/php/php-wasm-task-port.php": "e5c49ba72c09bf9230952ae28a25076af4d2e52d5c3a8be0741c106b979bcb0d",
+    "src/backends/php/php-wasm-task-delivery.php": "b1706119f67561f1073d0b4dc333e74f72cae666fb1dd17ad931912a0a7a2a1a",
+    "tests/fixtures/php-wasm-task-owner/zend-author.php": "dcc3539e5dc7ce4713f4a41f18152bd556ded5cb73e0eec603798868098cb107"
+  },
+  "additionalChecks": [
+    "reject member wait: await",
+    "reject member wait: drain",
+    "reject member wait: cursor close",
+    "reject member wait: cursor pull",
+    "rejected member wait leaves task usable",
+    "cached value can be read without suspending",
+    "rejected initial pull leaves cursor usable",
+    "resumed cursor closes without blocking the member"
+  ],
+  "runs": [
+    {
+      "route": "ordinary",
+      "host": "node",
+      "php": "8.4.1",
+      "wasmSha256": "946aa6243b806363c8b9a1c4eac8675277fea1f197ed8363a797b5815e1cd540",
+      "checksPassed": 42,
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    },
+    {
+      "route": "ordinary",
+      "host": "chromium",
+      "php": "8.4.1",
+      "wasmSha256": "946aa6243b806363c8b9a1c4eac8675277fea1f197ed8363a797b5815e1cd540",
+      "checksPassed": 42,
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    },
+    {
+      "route": "reviewed",
+      "host": "node",
+      "php": "8.4.1",
+      "wasmSha256": "1ffdc893b301420006938a0d7dc62e92f611f6b34e448cf765d8bc52664ad530",
+      "checksPassed": 42,
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    },
+    {
+      "route": "reviewed",
+      "host": "chromium",
+      "php": "8.4.1",
+      "wasmSha256": "1ffdc893b301420006938a0d7dc62e92f611f6b34e448cf765d8bc52664ad530",
+      "checksPassed": 42,
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    }
+  ]
+}
