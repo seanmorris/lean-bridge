@@ -20,6 +20,22 @@ XS, worker headers, ledger bytes, an absent compiler selection, and a
 provider copied from another handoff. The peer's scalar worker adds 37;
 Workshop's adds one, so a swapped implementation is visible to callers.
 
+The installed-consumer run passed all **16 fresh, relocated installations**:
+ordinary and reviewed Workshop × Perl 5.36.3 and 5.38.2 (threaded and
+unthreaded) × prebuilt-only and locally compiled generated XS. Each prefix
+contained Workshop, Peer and the common prebuilt runtime. All three installed
+XS files matched the digest in their individual install receipts. Building XS
+required a C compiler but not Lean; the prebuilt-only installs required neither.
+
+Each prefix ran three independent Perl applications with no tools on their
+execution path: Workshop then Peer, Peer then Workshop, and the public
+Future/cursor consumer. All **48 application runs** passed. The two components
+observed the same mutable Perl object; closing one component's scope did not
+cancel its sibling's outstanding task. The public consumer exercised returned
+versus raised failures, callback re-entry, pull demand and cancellation.
+The full publishing-and-install test took 27 minutes 2 seconds at a local
+limit of 25% of one logical CPU. No registry or hosted CI run was involved.
+
 Run `npm run test:perl-worker-packages` with the interpreter and dependency
 settings in the [transport check](perl-worker-transport-20261124.md).
 Set `LEAN_BRIDGE_PERL_WORKER_HANDOFFS` to an existing private directory
