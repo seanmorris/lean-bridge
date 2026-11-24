@@ -67,10 +67,22 @@ failure. After `dispose()`, subsequent calls fail. This eight-function test's
 public IR SHA-256 is
 `ddd893093c382f5ebf8c3da754fcfc115dfb7d65c010b1018fe13fd6a2c6cbe7`.
 
-The ordinary IO error in this fixture uses a fixed message. Formatting its
-unsigned argument into the message reached `Array.mk` (`lean_array_mk`),
-which the current effect checker does not admit on that call path. The test
-does not establish support for that formatting path.
+The original fixed-message fixture hid two dependencies of `s!"reading {value} refused"`.
+In pinned Lean 4.32.2, [`Array.mk`](https://github.com/leanprover/lean4/blob/f3b06c705e6c85f5314019d5d3baab0fec5b580c/src/runtime/object.cpp#L490)
+delegates to [list-to-array conversion](https://github.com/leanprover/lean4/blob/f3b06c705e6c85f5314019d5d3baab0fec5b580c/src/Init/Data/List/ToArrayImpl.lean#L35).
+[`System.Platform.getNumBits`](https://github.com/leanprover/lean4/blob/f3b06c705e6c85f5314019d5d3baab0fec5b580c/src/runtime/platform.cpp#L12)
+returns the target pointer width. The checker recognizes each exact Lean
+declaration, defining module, and external symbol. Neither grants OS access
+or admits other array or platform operations by name.
+
+Workshop's packaged compiler audit identifies 18 native leaves for this
+function, with no OS grants. Inputs `7` and `4294967295` produce
+`IOError` messages containing their decimal values. The next call, with
+input `9`, succeeds on the same heap. Node (both load orders), the Chromium
+page and its module worker all observed these results. A separate source
+export combined the same formatting with `IO.getEnv` and `IO.FS.readFile`.
+The packed CLI reported both undeclared capabilities in one build and
+created no release directory.
 
 The shared loader reconstructs the public ABI from both IR documents and
 checks both Wasm binaries before linking either. The public-entry test counts
@@ -90,7 +102,7 @@ The 2026-11-24 local handoffs contain these npm archive bytes:
 | Archive | Bytes | SHA-256 |
 | --- | ---: | --- |
 | Shared runtime (identical across all three builds) | 1,662,308 | `d6bbf3f381933da59c6033f45d0b97b6681667cce1abfd63193fbd4cc95c43fe` |
-| Workshop, ordinary | 16,801 | `fcb9d772fcc85a8cc2b41f968bb6ebec266e5be4fbdb1749e11e827e37905808` |
+| Workshop, ordinary | 17,137 | `73a2b29b77468ae2b8efe2b8c286e42e0a1e70cd8addbd41d6417fd4be0f73cf` |
 | Peer, ordinary | 14,462 | `f83fa2354420d2aa9e70f36f48383ffddc0905f0226a4246b552b21c6b0055ea` |
 | Peer, reviewed | 15,671 | `29cdbf0504b45fcb81dcb9932e8f7934e738a933f2dab94f64b5b7ba9e2de4ab` |
 

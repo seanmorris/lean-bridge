@@ -102,7 +102,8 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 		assert.throws(()=>api.read({}),/wrong host class/);assert.throws(()=>api.make(),/expects/);
 		assert.deepEqual(api.branch(false,b),{ok: {ok: 42}});assert.equal(api.branch(true,b).ok.error,b);
 		assert.throws(()=>api.typed(b),e=>e.code==="declared-error" && e.details.errorId==="error:EIO.Outcomes.typed" && e.details.payload.ok===b);
-		assert.throws(()=>api.ordinary_failure(7),e=>e.code==="declared-error" && e.details.errorId==="error:IO.Error" && e.details.payload==="reading refused");
+		for(const n of [7,0xffff_ffff]) assert.throws(()=>api.ordinary_failure(n),
+			e=>e.code==="declared-error" && e.details.errorId==="error:IO.Error" && e.details.payload==="reading "+n+" refused");
 		assert.equal(api.ordinary_failure(9),9);
 		const original=Object.freeze({code: "declared-error",details: {errorId: "not a Lean error"}});
 		b.read=()=>{throw original;};assert.throws(()=>api.read(b),e=>e===original);

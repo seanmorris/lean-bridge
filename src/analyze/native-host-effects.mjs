@@ -17,11 +17,19 @@ const ambient = {
 export const nativeEffects = Object.freeze(Object.keys(ambient).sort());
 const fail = message => { throw Object.assign(new TypeError(`Native effect policy: ${message}`), { code: "native-effect-policy" }); };
 const catalog = new Map();
+// Lean 4.32.2: runtime/object.cpp dispatches this constructor to
+// Init/Data/List/ToArrayImpl.lean (allocate, then push each element).
+// Authenticate both ends of the shim; a similar symbol is not a grant.
+// runtime/platform.cpp returns 32 or 64 from sizeof(void*), not a host OS query.
+const exactInMemory = new Map([
+	["lean_array_mk", ["Init.Prelude", "Array.mk"]]
+	, ["lean_system_platform_nbits", ["Init.Prelude", "System.Platform.getNumBits"]]
+]);
 const group = (capability, prefix, words) => {
 	for(const w of words.trim().split(/\s+/u))
 	{
 		const symbol = prefix + w;
-		if(catalog.has(symbol)) throw new Error("Duplicate native effect classification: " + symbol);
+		if(catalog.has(symbol) || exactInMemory.has(symbol)) throw new Error("Duplicate native effect classification: " + symbol);
 		catalog.set(symbol, capability);
 	}
 };
@@ -81,6 +89,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const names = audit.roots.map(r => r?.declaration);
 	if(!strings(names) || names.length !== roots.length || roots.some(k => !names.includes(k))) fail("compiled roots do not match the export, startup and pull selection");
 	const byRoot = new Map();
+	const violations = new Set();
 	for(const { declaration, leaves } of audit.roots)
 	{
 		if(!Array.isArray(leaves) || !strings(leaves.map(l => l?.name))) fail(`invalid compiler leaves for ${declaration}`);
@@ -90,19 +99,26 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 			if(typeof module !== "string" || typeof symbol !== "string" || !symbol) fail(`unidentified native leaf in ${declaration}`);
 			if(module === (selection.hostModule ?? "LeanBridge.Host.Python") && selection.members.includes(name) && hostSymbols.get(name) === symbol)
 			{
-				if(audit.initializers.includes(declaration)) fail(`initializer ${declaration} reaches host member ${name} before it is bound`);
-				if(asyncRoots.has(declaration)) fail(`async entry ${declaration} reaches host member ${name} outside its owner`);
+				if(audit.initializers.includes(declaration)) violations.add(`initializer ${declaration} reaches host member ${name} before it is bound`);
+				if(asyncRoots.has(declaration)) violations.add(`async entry ${declaration} reaches host member ${name} outside its owner`);
 				continue;
 			}
-			if(selection.modules.includes(module) || !/^(?:Init|Std)(?:\.|$)/u.test(module) || !catalog.has(symbol))
-				fail(`${declaration} reaches unclassified native operation ${name} (${module}: ${symbol}); it cannot be granted`);
-			const cap = catalog.get(symbol);
+			const exact = exactInMemory.get(symbol);
+			if(selection.modules.includes(module) || !/^(?:Init|Std)(?:\.|$)/u.test(module)
+				|| (exact ? module !== exact[0] || name !== exact[1] : !catalog.has(symbol))){
+				violations.add(`${declaration} reaches unclassified native operation ${name} (${module}: ${symbol}); it cannot be granted`);
+				continue;
+				}
+			const cap = exact ? null : catalog.get(symbol);
 			if(cap === null) continue;
-			if(!allowed.includes(cap)) fail(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);
+			if(!allowed.includes(cap)) violations.add(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);
 			found.add(cap);
 		}
 		byRoot.set(declaration, [...found].sort());
 	}
+	// Collect every policy violation from this intact compiler audit before
+	// rejecting it. Never emit a partial capability list or package.
+	if(violations.size) fail([...violations].sort().join("\n"));
 	const startup = distinct(audit.initializers.flatMap(n => byRoot.get(n)));
 	const phases = new Map();
 	for(const name of selection.exports)

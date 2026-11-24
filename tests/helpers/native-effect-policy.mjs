@@ -23,6 +23,37 @@ const policy = { modules: ["Demo"], exports: ["Demo.f"], members: [], asyncItera
 const resolveLeaf = (leaf, change = {}, hostSymbols) => resolveNativeHostEffects({ ...policy, ...change },
 	{ policy: nativeEffectPolicy, initializers: [], roots: [{ declaration: "Demo.f", leaves: [leaf] }] }, hostSymbols);
 const cfg = "lean-bridge.exports.json";
+test("the exact list-to-array and target word-width leaves require no OS grant",()=>{
+	const mk={name: "Array.mk",module: "Init.Prelude",symbol: "lean_array_mk"};
+	const bits={name: "System.Platform.getNumBits",module: "Init.Prelude",symbol: "lean_system_platform_nbits"};
+	const noGrants={nativeEffects: []};
+	assert.deepEqual(resolveLeaf(mk,noGrants).capabilities,[]);
+	assert.deepEqual(resolveLeaf(bits,noGrants).capabilities,[]);
+	for(const bad of [{...mk,name: "Other.mk"},{...mk,module: "Std.Shadow"}
+		, {...mk,symbol: "lean_array_unknown"}
+		, {...bits,name: "System.Platform.forged"}
+		, {...bits,symbol: "lean_system_platform_windows"}])
+		assert.throws(()=>resolveLeaf(bad,noGrants),/unclassified native operation/);
+	assert.throws(()=>resolveLeaf(mk,{...noGrants,modules: ["Demo","Init.Prelude"]}),/unclassified native operation/);
+	assert.throws(()=>resolveLeaf({name: "IO.getEnv",module: "Init.System.IO",symbol: "lean_io_getenv"},noGrants),/requires nativeEffects "environment"/);
+});
+test("one complete audit reports all denied and unclassified leaves and emits no partial contract",()=>{
+	const selection={...policy,exports: ["Demo.f","Demo.g"],nativeEffects: []};
+	const audit={policy: nativeEffectPolicy,initializers: []
+	, roots: [
+		{declaration: "Demo.g",leaves: [{name: "read",module: "Init.System.IO",symbol: "lean_io_metadata"}]}
+		, {declaration: "Demo.f"
+		, leaves: [{name: "unknown",module: "Std.Test",symbol: "lean_array_unknown"}
+			, {name: "Array.mk",module: "Init.Prelude",symbol: "lean_array_mk"}]}
+	]};
+	const reject=()=>assert.throws(()=>resolveNativeHostEffects(selection,audit),e=>{
+		assert.equal(e.code,"native-effect-policy");
+		assert.match(e.message,/Demo\.f reaches unclassified native operation unknown/);
+		assert.match(e.message,/Demo\.g requires nativeEffects "filesystem"/);
+		assert.doesNotMatch(e.message,/Array\.mk/);return true;
+	});
+	reject();audit.roots.reverse();reject();
+});
 test("native effect author grants, compiled leaves and packaged policy are closed sets", async () => {
 	const config = JSON.parse(await readFile(join(fixture, cfg)));
 	await assertJsonSchema("lean-export-configuration", config);

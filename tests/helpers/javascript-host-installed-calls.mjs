@@ -41,10 +41,14 @@ export const exercise = (first,second) => {
 			{outcomes.typed(box);} catch(e)
 			{failed=e;}
 			check(failed instanceof pkg.EIO_Outcomes_typed && failed.payload.ok===box,"typed EIO object payload");
-			failed=null;try
-			{outcomes.ordinary_failure(7);} catch(e)
-			{failed=e;}
-			check(failed instanceof pkg.IOError && failed.message==="reading refused","ordinary Lean IO error");
+			for(const n of [7,0xffff_ffff])
+			{
+				failed=null;try
+				{outcomes.ordinary_failure(n);} catch(e)
+				{failed=e;}
+				check(failed instanceof pkg.IOError && failed.message==="reading "+n+" refused","ordinary formatted Lean IO error");
+			}
+			check(outcomes.ordinary_failure(9)===9,"success after formatted errors");
 		}
 		box.read=()=>b.update(box,31);
 		check(a.read(box)===31,"synchronous reentry into another package");

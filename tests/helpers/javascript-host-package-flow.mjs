@@ -1,7 +1,7 @@
 /** @file Build and use independent source-checked npm host-object packages without a registry. */
 import assert from "node:assert/strict";
 import {createRequire} from "node:module";
-import {appendFile,cp,copyFile,mkdir,mkdtemp,readFile,rename,rm,writeFile} from "node:fs/promises";
+import {access,appendFile,cp,copyFile,mkdir,mkdtemp,readFile,rename,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
@@ -28,6 +28,15 @@ test("packed author CLI and offline installed independent npm host classes",asyn
 		assert.equal(component.profile,"javascript-wasm-host-io-v1");assert.equal(component.requires[0].version,runtime.version);
 		const tar=join(dir,component.artifacts[0].path),member=p=>run("tar",["-xzOf",tar,"package/metadata/"+p]).then(r=>r.stdout);
 		assert.equal(await member("host-imports.json"),await readFile(join(project,"lean-bridge.hosts.json"),"utf8"));
+		if(component.name===names[0])
+		{
+			const evidence=JSON.parse(await member("compiler.json"));
+			const leaves=evidence.metadata.nativeEffectAudit.roots.find(r=>r.declaration==="Outcomes.ordinaryFailure").leaves;
+			assert.deepEqual(evidence.selection.nativeEffects,[]);
+			assert.ok(leaves.some(l=>l.module==="Init.Prelude" && l.name==="Array.mk" && l.symbol==="lean_array_mk"));
+			assert.ok(leaves.some(l=>l.module==="Init.Prelude" && l.name==="System.Platform.getNumBits" && l.symbol==="lean_system_platform_nbits"));
+			assert.deepEqual(JSON.parse(await member("binding-ir.json")).capabilities,[]);
+		}
 		return {tar,member,runtime: join(dir,runtime.artifacts[0].path),digest: runtime.artifacts[0].sha256};
 	};
 	try
@@ -93,6 +102,23 @@ worker.onmessage=e=>{worker.terminate();ok(e.data)};worker.onerror=e=>{worker.te
 			, evaluate: ()=>globalThis.replay()});
 		assert.deepEqual(browser,{page: node,worker: node});
 		t.diagnostic("Packed CLI; ordinary and reviewed releases; shared runtime "+a.digest+"; Node, strict TypeScript, Chromium page and module worker.");
+		await t.test("an in-memory formatting grant cannot hide environment and filesystem access", async ()=>{
+			await appendFile(join(source,"Outcomes.lean"),`
+def Outcomes.forbidden (n : UInt32) : IO String := do
+  let env ← IO.getEnv "LEAN_BRIDGE_EFFECT_PROBE"
+  let text ← IO.FS.readFile "never-opened.txt"
+  pure (toString n ++ env.getD "" ++ text)
+`);
+			workshop.exports.push("Outcomes.forbidden");await writeFile(join(source,cfg),canonicalJson(workshop));
+			const output=join(root,"refused");
+			await assert.rejects(call(["build","--project",source,"--target","npm","--output",output,"--json","--progress","none"]),err=>{
+				const report=JSON.parse(err.details.stdout),d=report.diagnostics.find(e=>e.code==="native-effect-policy");
+				assert.equal(report.status,"failed");assert.ok(d);
+				for(const cap of ["environment","filesystem"]) assert.ok(d.message.includes('Outcomes.forbidden requires nativeEffects "'+cap+'"'));
+				return true;
+			});
+			await assert.rejects(access(output),{code: "ENOENT"});
+		});
 	} catch(error)
 	{t.diagnostic([error.message,error.details?.stderr,error.details?.stdout].filter(Boolean).join("\n").slice(-4500));throw error;}
 });

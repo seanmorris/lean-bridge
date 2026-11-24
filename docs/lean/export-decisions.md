@@ -564,7 +564,12 @@ startup, and its worker reads a file:
 
 On task, iterator and host-import packages, omitting `nativeEffects` grants
 no ambient access. In-memory references, task scheduling,
-waiting, cancellation, and mutexes do not need a grant. Spawning processes,
+waiting, cancellation, and mutexes do not need a grant. Formatting a
+`UInt32` into an error message doesn't need one either: the runtime builds
+the digits in memory and uses the target's word width. Reading a filename or
+an environment variable to compose that message still needs its own grant.
+The checker reports all denied operations in a complete compiler audit before
+packaging. Spawning processes,
 changing the process working directory, terminating the host, networking, and
 unclassified native operations are not grantable on this route. A reviewed API
 cannot override a refusal.
