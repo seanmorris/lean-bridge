@@ -63,7 +63,20 @@ test("current managed task and stream scheduler replays pinned callback-free Lea
 		const dir = join(src, assembly); await mkdir(dir);
 		generated[assembly] = Object.fromEntries(Object.entries(files).map(([f, data]) => [f, sha256(data)]));
 		for(const [f, data] of Object.entries(files)) await writeFile(join(dir, f), data, { flag: "wx" });
-		await writeFile(join(dir, assembly + ".csproj"), '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableNETAnalyzers>false</EnableNETAnalyzers></PropertyGroup></Project>');
+		const scoped = assembly === "LeanBridge.Pulse";
+		if(scoped)
+		{
+			const port = declaration => {
+				const i = wire.methods.findIndex(m => m.declaration === declaration);
+				assert.notEqual(i, -1); return "Port" + i;
+			};
+			const probe = await readFile(resolve("tests/fixtures/dotnet-host-workers/ScopeProbe.cs"), "utf8");
+			await writeFile(join(dir, "ScopeProbe.cs"), probe.replaceAll("__LatePort__", port("Pulse.late")).replaceAll("__SeriesPort__", port("Pulse.series")), { flag: "wx" });
+			const scope = await readFile(resolve("src/backends/dotnet/host-task-scope.cs"), "utf8");
+			await writeFile(join(dir, "HostTaskScope.cs"), scope.replace("namespace LeanBridge.GeneratedIO;", "namespace " + assembly + ";"), { flag: "wx" });
+		}
+		const entry = scoped ? "<OutputType>Exe</OutputType><UseAppHost>false</UseAppHost>" : "";
+		await writeFile(join(dir, assembly + ".csproj"), '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>' + entry + '<TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><TreatWarningsAsErrors>true</TreatWarningsAsErrors><EnableNETAnalyzers>false</EnableNETAnalyzers></PropertyGroup></Project>');
 		projects.push(assembly + "/" + assembly + ".csproj");
 	}
 	for(const [file, hash] of Object.entries(record.clients))
@@ -81,10 +94,13 @@ test("current managed task and stream scheduler replays pinned callback-free Lea
 	await mkdir(join(app, "runtimes/linux-x64"), { recursive: true });
 	await rename(native, join(app, "runtimes/linux-x64/native"));
 	await rm(src, { recursive: true });
-	const calls = [];
+	const calls = [], consumerEnv = { PATH: "/unavailable", LANG: "C.UTF-8", LEAN_NUM_THREADS: "1", DOTNET_PROCESSOR_COUNT: "1", DOTNET_EnableDiagnostics: "0", TMPDIR: work };
 	for(const order of ["pulse-first", "peer-first"])
-		calls.push(await run(dotnet, [join(app, "Client.dll"), order], work, { PATH: "/unavailable", LANG: "C.UTF-8", LEAN_NUM_THREADS: "1", DOTNET_PROCESSOR_COUNT: "1", DOTNET_EnableDiagnostics: "0", TMPDIR: work }, 120_000));
+		calls.push(await run(dotnet, [join(app, "Client.dll"), order], work, consumerEnv, 120_000));
 	assert.deepEqual(calls, row.calls);
+	const scoped = await run(dotnet, ["exec", "--runtimeconfig", join(app, "Client.runtimeconfig.json"), join(app, "LeanBridge.Pulse.dll")], work, consumerEnv, 120_000);
+	assert.equal(scoped, "binding isolation: task, pending pull, cold captures, cleanup faults and owner thread");
+	t.diagnostic(scoped);
 	if(env.LEAN_BRIDGE_DOTNET_MANAGED_RECORD) await writeFile(resolve(env.LEAN_BRIDGE_DOTNET_MANAGED_RECORD)
-		, canonicalJson({ pinnedAcceptance: pin.acceptanceSha256, generated, sdk, calls }), { flag: "wx" });
+		, canonicalJson({ pinnedAcceptance: pin.acceptanceSha256, generated, sdk, calls, scoped }), { flag: "wx" });
 });

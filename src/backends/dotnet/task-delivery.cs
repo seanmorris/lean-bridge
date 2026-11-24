@@ -74,30 +74,31 @@ internal sealed class Delivery<T> : IDisposable
     private CancellationTokenRegistration registration;
     private TaskCompletionSource<(bool, T)>? pending;
     private TaskCompletionSource<T>? value;
-    private Action? untrack, unwatch;
+    private Action? untrack, unwatch, detachBinding;
     private bool ended;
-    private Delivery(Func<Wire.Port<T>> make, CancellationToken token, bool single)
+    private Delivery(Func<Wire.Port<T>> make, CancellationToken token, bool single, Func<Action,Action>? trackBinding)
     {
         owner = LeanRuntime.Current();
         token.ThrowIfCancellationRequested();
         this.token = token;
         this.single = single;
         port = make();
-        untrack = owner.Item3(Dispose);
         try
         {
+            untrack = owner.Item3(Dispose);
+            detachBinding = trackBinding?.Invoke(Dispose);
             registration = token.UnsafeRegister(_ => owner.Item1(Dispose), null);
             token.ThrowIfCancellationRequested();
             port.Open();
         }
         catch { Dispose(); throw; }
     }
-    internal static Task<T> Value(Func<Wire.Port<T>> make, CancellationToken token)
+    internal static Task<T> Value(Func<Wire.Port<T>> make, CancellationToken token, Func<Action,Action>? trackBinding = null)
     {
         try
         {
-            var d = new Delivery<T>(make, token, true);
             var completion = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var d = new Delivery<T>(make, token, true, trackBinding);
             d.value = completion;
             d.Begin();
             return completion.Task;
@@ -106,12 +107,12 @@ internal sealed class Delivery<T> : IDisposable
         { return Task.FromCanceled<T>(e.CancellationToken); }
         catch (Exception e) { return Task.FromException<T>(e); }
     }
-    internal static IAsyncEnumerable<T> Sequence(Func<Wire.Port<T>> make) => new SequenceImpl(make);
-    private sealed class SequenceImpl(Func<Wire.Port<T>> make) : IAsyncEnumerable<T>
+    internal static IAsyncEnumerable<T> Sequence(Func<Wire.Port<T>> make, Func<Action,Action>? trackBinding = null) => new SequenceImpl(make, trackBinding);
+    private sealed class SequenceImpl(Func<Wire.Port<T>> make, Func<Action,Action>? trackBinding) : IAsyncEnumerable<T>
     {
-        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default) => new Cursor(make, token);
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default) => new Cursor(make, token, trackBinding);
     }
-    private sealed class Cursor(Func<Wire.Port<T>> make, CancellationToken token) : IAsyncEnumerator<T>
+    private sealed class Cursor(Func<Wire.Port<T>> make, CancellationToken token, Func<Action,Action>? trackBinding) : IAsyncEnumerator<T>
     {
         private Delivery<T>? delivery;
         private int busy;
@@ -124,7 +125,7 @@ internal sealed class Delivery<T> : IDisposable
             try
             {
                 if (ended) return false;
-                delivery ??= new Delivery<T>(make, token, false);
+                delivery ??= new Delivery<T>(make, token, false, trackBinding);
                 var (present, value) = await delivery.Next().ConfigureAwait(false);
                 if (!present) ended = true;
                 Current = value;
@@ -205,8 +206,12 @@ internal sealed class Delivery<T> : IDisposable
     {
         if (ended) return;
         ended = true;
-        registration.Dispose(); Unwatch(); port.Close();
-        untrack?.Invoke(); untrack = null;
+        try { registration.Dispose(); Unwatch(); port.Close(); }
+        finally
+        {
+            detachBinding?.Invoke(); detachBinding = null;
+            untrack?.Invoke(); untrack = null;
+        }
         var done = pending; pending = null;
         var canceled = value; value = null;
         var reason = token.IsCancellationRequested ? token : new CancellationToken(true);
