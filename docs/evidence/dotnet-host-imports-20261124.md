@@ -1,0 +1,31 @@
+# Checking CLR-owned members against Lean source
+
+Lean 4.32.2 checked an application that imports `LeanBridge.Host.Dotnet`. Its
+`Box` contract declares a constructor, a read method, a mutable property,
+and a method returning the receiver. The application's public functions
+select those members as dependencies; an `EIO String` version maps the
+failure of the read method.
+
+Run `npm run test:dotnet-host-imports` with `LEAN_BRIDGE_LEAN_PREFIX` set to
+the Lean installation. The [compiler test](../../tests/helpers/native-host-import-check.mjs)
+captures the Lake graph, generates the target-specific import module, and
+compiles both that module and the application. It builds again with a reviewed
+public binding IR. Both routes produced the same public IR SHA-256
+(`390ec160341bbf0aacc880dd579eb7daa4b085592e48801051969aca315b5762`) and
+generated import-module C SHA-256
+(`782426ece57e05bcb0ea4ffed3636440c5c71fecb3baac3a5ac74c972c6c08ae`).
+
+The public interface distinguishes an escaping `DotNetHostException` from a
+Lean `IO.Error` and from the mapped, declaration-specific `EIO` error.
+The compiler checks the exact imported member names and native symbols.
+The negative cases reject a foreign host module or external symbol, a
+mismatched callback scheduler, a stale reviewed member, and application
+source shadowing the generated module.
+
+The JVM and Ruby source checks were rerun against the same compiler change.
+Each reproduced its previously recorded public IR and generated host C digests:
+[JVM](jvm-host-imports-20261124.md) and [Ruby](ruby-host-imports-20261124.md).
+
+This is a source check, not a CLR runtime test. The NuGet publisher still
+rejects host imports. No installed C# class, exception round trip or
+cross-assembly object identity is claimed by this check.

@@ -1193,6 +1193,7 @@
     "test:wit-canonical-cancel": "node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",
     "test:ruby-host-imports": "node --test --test-concurrency=1 tests/helpers/ruby-host-imports.mjs",
     "test:jvm-host-imports": "node --test --test-concurrency=1 tests/helpers/jvm-host-imports.mjs",
+    "test:dotnet-host-imports": "node --test --test-concurrency=1 tests/helpers/dotnet-host-imports.mjs",
     "test:jvm-host-members": "node --test --test-concurrency=1 tests/helpers/jvm-host-members.mjs",
     "test:jvm-host-domain": "node --test --test-concurrency=1 tests/helpers/jvm-host-domain.mjs",
     "test:jvm-host-packages": "node --test --test-concurrency=1 tests/helpers/jvm-host-packages.mjs",

@@ -136,10 +136,11 @@ export const reconcileHostExports = options => {
 	const js=selection.javascriptTaskCallbacks===true, wit=selection.witTaskCallbacks===true;
 	const schedulerCount = [rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length;
 	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
-	const matchingScheduler = { ruby, jvm, python: selection.pythonTaskCallbacks === true }[hostTarget];
+	const matchingScheduler = { ruby, jvm, dotnet, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
-	const publicErrorName = hostTarget === "jvm" ? "JvmHostException" : hostTarget === "ruby" ? "RubyHostException" : wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
+	const importedError = { jvm: ["JvmHostException", "JVM"], ruby: ["RubyHostException", "Ruby"], dotnet: ["DotNetHostException", ".NET"] }[hostTarget];
+	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {
 		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
@@ -170,7 +171,7 @@ export const reconcileHostExports = options => {
 		, name: publicErrorName
 		, category: "domain"
 		, payload: null
-		, documentation: doc(hostTarget === "jvm" ? "An exception raised by a bound JVM object and propagated through the original Lean IO error." : hostTarget === "ruby" ? "An exception raised by a bound Ruby object and propagated through the original Lean IO error." : wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through its original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+		, documentation: doc(importedError ? "An exception raised by a bound " + importedError[1] + " object and propagated through the original Lean IO error." : wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through the original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];

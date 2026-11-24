@@ -245,7 +245,7 @@ private partial def nativeLeaves (env : Environment) (root : Name) (pending : Li
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
   if let some m := r.hostModule then
-    unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm"].contains m &&
+    unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet"].contains m &&
         r.modules.contains m && !r.exportModules.contains m && !r.resources.isEmpty &&
         r.resources.all (fun t => t.lean.startsWith (m ++ ".")) &&
         r.members.all (fun n => n.startsWith (m ++ ".")) do

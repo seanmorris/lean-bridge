@@ -16,9 +16,14 @@ const fixture = resolve("tests/fixtures/ruby-host-meter");
 const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env });
 const diagnostic = e => [e.message, e.details?.stderr, e.details?.stdout].join("\n");
+const hosts = {
+	ruby: { target: "rubygems", label: "Ruby", error: "RubyHostException" }
+	, jvm: { target: "maven", label: "Jvm", error: "JvmHostException" }
+	, dotnet: { target: "nuget", label: "Dotnet", error: "DotNetHostException" }
+};
 
 /**
- * Prepare the same host contract for the two native source-review gates.
+ * Prepare the same host contract for each native source-review gate.
  *
  * @param project - New directory for the test input.
  * @param backend - Compiler host target.
@@ -26,16 +31,16 @@ const diagnostic = e => [e.message, e.details?.stderr, e.details?.stdout].join("
 export const prepareNativeHostFixture = async (project, backend) => {
 	await cp(fixture, project, { recursive: true });
 	if(backend === "ruby") return;
-	assert.equal(backend, "jvm");
+	assert.ok(Object.hasOwn(hosts, backend)); const { label, target } = hosts[backend];
 	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(file, "utf8"));
 	contract.types[0].host.targets = [backend];
-	contract.types[0].documentation.summary = "A JVM object with a read method.";
+	contract.types[0].documentation.summary = backend === "jvm" ? "A JVM object with a read method." : "A .NET object with a read method.";
 	await writeFile(file, canonicalJson(contract));
 	const cfg = join(project, "lean-bridge.exports.json"), config = JSON.parse(await readFile(cfg, "utf8"));
-	config.targets = { maven: { name: "org.leanbridge:workshop", version: "1.0.0" } };
+	config.targets = { [target]: { name: backend === "jvm" ? "org.leanbridge:workshop" : "Workshop.Host", version: "1.0.0" } };
 	await writeFile(cfg, canonicalJson(config));
 	const lean = join(project, "Workshop.lean");
-	await writeFile(lean, (await readFile(lean, "utf8")).replaceAll("LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm"));
+	await writeFile(lean, (await readFile(lean, "utf8")).replaceAll("LeanBridge.Host.Ruby", "LeanBridge.Host." + label));
 };
 
 /**
@@ -44,8 +49,8 @@ export const prepareNativeHostFixture = async (project, backend) => {
  * @param backend - Compiler host target.
  */
 export const checkNativeHostImports = backend => {
-	const jvm = backend === "jvm", target = jvm ? "maven" : "rubygems";
-	const label = jvm ? "Jvm" : "Ruby", host = "LeanBridge.Host." + label, box = host + ".Box.";
+	assert.ok(Object.hasOwn(hosts, backend)); const { label, target, error } = hosts[backend];
+	const host = "LeanBridge.Host." + label, box = host + ".Box.";
 	test(label + " host imports bind the generated module, actual native symbols and both source routes", { timeout: 360_000 }, async t => {
 		const root = await mkdtemp(join(tmpdir(), backend + "-host-imports-"));
 		t.after(() => rm(root, { recursive: true, force: true }));
@@ -82,7 +87,7 @@ export const checkNativeHostImports = backend => {
 		}
 		assert.deepEqual(entry("update").source.extensions["lean-bridge.dev/host-members"], [box + "getLevel", box + "setLevel"]);
 		assert.ok(entry("update").effects.includes("writes-resource"));
-		assert.deepEqual(entry("read").failure.errors, ["error:IO.Error", "error:" + label + "HostException"]);
+		assert.deepEqual(entry("read").failure.errors, ["error:IO.Error", "error:" + error]);
 		assert.deepEqual(entry("mapped").failure.errors, ["error:EIO.Workshop.mapped"]);
 		const leaves = evidence.metadata.nativeEffectAudit.roots.flatMap(r => r.leaves).filter(l => l.module === host);
 		assert.ok(leaves.some(l => l.name === box + "setLevel" && l.symbol === "lean_bridge_host_" + backend + "_box_set_level"));

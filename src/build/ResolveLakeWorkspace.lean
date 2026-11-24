@@ -141,7 +141,7 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
   let candidates := ws.findModules name
   -- Only the selected host provider supplies this exact module, in private staging.
   if request.generatedHostModule == some name.toString then
-    unless #[`LeanBridge.Host.Python, `LeanBridge.Host.Ruby, `LeanBridge.Host.Jvm].contains name && candidates.isEmpty do
+    unless #[`LeanBridge.Host.Python, `LeanBridge.Host.Ruby, `LeanBridge.Host.Jvm, `LeanBridge.Host.Dotnet].contains name && candidates.isEmpty do
       fail s!"Unsupported or shadowed generated host module: {name}"
     modify fun state => { state with external := state.external.insert name }
     return
