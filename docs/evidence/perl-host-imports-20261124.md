@@ -176,3 +176,11 @@ The [documented client](../../tests/fixtures/perl-host-meter/meter.pl) printed
 `42` from the moved installation with no build tools on its path.
 The single-ABI Workshop archive was 75,147 bytes, SHA-256
 `20898de41967c7e7eb3dd0e8fdbde266c68d3acbcd6f66e434f0a6be45f3cb77`.
+
+The compiler checks were repeated against the standalone Perl source fixture
+after the package handoff. The ordinary and reviewed interfaces agreed:
+public IR `be9af06a99df7ffe2a37ab24b2bc667e81288ebad3f71c1cc3e535f24c30a24b`;
+the generated host C hash remained `381d63a7…cb7499`. The compiler rejected
+a stale review, a cross-host symbol and a shadowed provider. The public API
+fixture, which adds the nested result and error examples, ran on all four
+interpreters against library `0ae88bc2f656234daf721e169017260f320332b84dcaad2c0c236515cbf8a8b7`.
