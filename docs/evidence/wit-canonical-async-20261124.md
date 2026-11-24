@@ -155,3 +155,5 @@ Run `npm run test:wit-canonical-future-cancel` with the [publisher toolchain](..
 To replay the same guest on existing packages, set `LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_ORDINARY` and `LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_REVIEWED` to their handoff directories.
 
 The [fallible-future guest](../../tests/fixtures/wit-canonical-effects/application.wat) also passed with this producer. Each fresh install survived 96 rejected factories and 96 read/drop rounds. Factory errors, worker errors and ordinary `Except` values remained distinct, and simultaneously pending strings retained their own bytes. Archive SHA-256: ordinary `43d6a6c1d6109fb0bc5c5191faefe77500a8faad33fc7f57c5f0ce5940e9457b`; reviewed `512777c9edbd10e4270d35ef20c01d6baf0eb8803c6e69d277b565fe6005bd05`.
+
+The separate stream worker test also returned `423` on both routes after the future change: ordinary archive `515531cdfe1c96776c4cb43638e037583783aecb5bf91e8bcffa1d68f1423409`, reviewed archive `7576208c800bab93bb1cb8acc173b01d6a7985e5bd1a239b1c40ddc80e0e17dc`. The stream owner still closed before the worker's gate opened.

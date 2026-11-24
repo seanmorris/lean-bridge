@@ -146,7 +146,7 @@ With commit `2c0e01c`, the [Java consumer](../../tests/fixtures/jvm-host-meter/C
 
 ## Leased Java objects in returned and thrown values
 
-From both ordinary Lean and reviewed Binding IR, installed Java and Kotlin consumers got the original application object back from returned results and typed `EIO` failures, including nested sums. They closed the binding before inspecting the saved values. The reviewed build also rejected a copied ownership annotation for a leased payload. Each pair ran with either Maven component loaded first; the classloader, reentry and terminal-fault checks above still passed. These checks used the generated public API, not a fixture entry.
+From both ordinary Lean and reviewed Binding IR, installed Java and Kotlin consumers got the original application object back from returned results and typed `EIO` failures, including nested sums. They closed the binding before inspecting the saved values. The reviewed build also rejected a review that omitted the lease on a nested declared-error payload. Each pair ran with either Maven component loaded first; the classloader, reentry and terminal-fault checks above still passed. These checks used the generated public API, not a fixture entry.
 
 | Source | Component | Receipt SHA-256 | JAR SHA-256 |
 | --- | --- | --- | --- |
