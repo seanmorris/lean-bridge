@@ -40,6 +40,38 @@ Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact 
 
 Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
 
+### Supply a Ruby object to Lean
+
+When a gem imports a Ruby class, pass the class to its `bind_hosts` block.
+Use ordinary Ruby objects inside the block. For example, this component calls
+the public `level=` and `level` methods on the exact instance you give it:
+
+```ruby
+require "lean_bridge/workshop"
+
+class Box
+  attr_accessor :level
+  def initialize(level) = (@level = level)
+  def read = level
+  def identity = self
+end
+
+api = LeanBridge::Workshop
+api.bind_hosts(box: Box) do
+  box = api.make(4)
+  api.update(box, 17)
+  puts box.level                 # 17
+  puts api.identity(box).equal?(box) # true
+end
+```
+
+Call on the original process's main thread, on the fiber that entered the
+block. Independently installed components with the same host contract can
+share the object while both are bound. Leaving the last binding invalidates
+the references Lean retained, not the Ruby object itself. If the Ruby method
+raises and Lean propagates that failure unchanged, the caller gets the original
+Ruby exception, including its identity. Lean can also catch or replace it.
+
 ### Call synchronous IO
 
 Install the prepared platform gem as above. For a package marked
@@ -999,7 +1031,7 @@ Profiles: Ruby. Installed checks apply only to the named positions and package p
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-For a compiled Ruby gem, check its package receipt: `native-ruby-io-v1` supports [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` supports [tasks and pull streams](#await-a-task-or-read-a-stream). Those profiles have separate installed checks; the general audit rows below do not describe their delivery APIs.
+The package receipt identifies the native Ruby profile: `native-ruby-host-v1` lets [Lean call Ruby-owned objects](#supply-a-ruby-object-to-lean), `native-ruby-io-v1` exposes [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` exposes [tasks and pull streams](#await-a-task-or-read-a-stream). These profiles have their own installed checks, separate from the general audit rows below.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Ruby in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

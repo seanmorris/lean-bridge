@@ -44,9 +44,10 @@ Aggregates with explicit resource ownership remain part of the same task.
 
 Host objects travel in the opposite direction from Lean-owned resources: Lean
 calls methods implemented by a consumer's class. [Python host imports](../publish/pypi.md#call-python-objects-from-lean)
-run in installed wheels. For Ruby, the [compiler check](../evidence/ruby-host-imports-20261124.md)
-verifies the imported constructor, property and method against fresh Lean
-interfaces on both author routes. It does not yet supply a RubyGems runtime provider.
+run in installed wheels. [Ruby host imports](../publish/rubygems.md#call-ruby-objects-from-lean)
+run in installed gems: two independent Lean components can call methods on the
+same Ruby instance without exposing a native handle. The [compiler check](../evidence/ruby-host-imports-20261124.md)
+checks which constructor, property and method each Lean function actually reaches.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),

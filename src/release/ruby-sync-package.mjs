@@ -17,7 +17,7 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writeRubySyncRelease = async o => {
 	const { workRoot, name, version, prefix, wire, files, api, evidence, manifest, runtimeIdentity, componentIdentity, bindingIrSha256, floor, projectContract } = o;
-	const async = Boolean(wire.wait), profile = async ? "native-ruby-task-v1" : "native-ruby-io-v1", library = "lib" + prefix + ".so", libraries = {};
+	const async = Boolean(wire?.wait), profile = o.host ? "native-ruby-host-v1" : async ? "native-ruby-task-v1" : "native-ruby-io-v1", library = "lib" + prefix + ".so", libraries = {};
 	for(const path of [library, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const file = "lib/" + path, bytes = files.get(file);
@@ -25,7 +25,8 @@ export const writeRubySyncRelease = async o => {
 		libraries[path] = sha256(bytes);
 	}
 	let resourceLedger;
-	if(wire.leases?.length)
+	if(o.host) libraries[o.host.domain] = sha256(files.get("lib/" + o.host.domain));
+	if(wire?.leases?.length)
 	{
 		if(!/^[a-f0-9]{64}$/u.test(o.ledgerId)) throw new Error("Missing Ruby resource ledger identity");
 		const path = "liblb_task_resources_" + o.ledgerId + ".so", bytes = files.get("lib/" + path);
@@ -33,7 +34,7 @@ export const writeRubySyncRelease = async o => {
 		libraries[path] = sha256(bytes); resourceLedger = { id: o.ledgerId, library: path, sha256: libraries[path] };
 	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected Ruby synchronous native payload");
-	const source = await generateRubySyncSources({ name, wire, ledgerId: o.ledgerId, evidence: { componentId: api.component.id, library, libraries, runtimeIdentity } });
+	const source = o.host?.source ?? await generateRubySyncSources({ name, wire, ledgerId: o.ledgerId, evidence: { componentId: api.component.id, library, libraries, runtimeIdentity } });
 	const root = await mkdtemp(join(workRoot, ".ruby-io-"));
 	try
 	{
@@ -51,9 +52,13 @@ export const writeRubySyncRelease = async o => {
 		await save("lean-bridge/licenses/LeanBridge-LICENSE", await readFile(new URL("../../LICENSE", import.meta.url)));
 		for(const f of ["LICENSE", "LICENSES"]) await save("lean-bridge/licenses/Lean-" + f, await readFile(join(o.leanPrefix, f)));
 		for(const [path, b] of Object.entries(projectContract.notices)) await save("lean-bridge/licenses/" + path, b);
-		await save("README.md", `# ${name}\n\nRequire \`${source.requirePath}\` and call \`${source.namespace}\` methods on the original process main thread. ${async ? "Tasks provide await and cancel. Pull streams provide next, each and close. Pending operations park through Ruby IO and honor a fiber scheduler. Close abandoned work or use with/each for deterministic cleanup." : "No compiler or event loop is needed."} An IO failure raises IOError with its declaration; a thrown EIO raises DeclaredError with its declaration and payload. An Except returned normally is an Ok or Err value. MRI Ruby 3.3 on Linux x86-64, glibc ${floor}+. The matching Lean runtime is included.\n`);
+		const requirements = `MRI Ruby 3.3 on Linux x86-64, glibc ${floor}+. The matching Lean runtime is included.`;
+		const usage = o.host
+			? `Require \`${source.requirePath}\`. Bind your Ruby classes on the original main thread:\n\n\`\`\`ruby\n${source.namespace}.bind_hosts(${o.ir.types.map(r => r.name.replace(/([a-z0-9])([A-Z])/gu, "$1_$2").toLowerCase() + ": " + r.name).join(", ")}) do\n  # Call the component's methods on this fiber.\nend\n\`\`\`\n\nLean calls the public methods of the supplied classes. Matching components share identity while bound; objects retained in Lean become stale after the last binding ends. An unchanged Ruby exception is raised as the original exception. A new Lean IO failure raises the component's IOError; a thrown EIO raises DeclaredError with its declaration and payload.`
+			: `Require \`${source.requirePath}\` and call \`${source.namespace}\` methods on the original process main thread. ${async ? "Tasks provide await and cancel. Pull streams provide next, each and close. Pending operations park through Ruby IO and honor a fiber scheduler. Close abandoned work or use with/each for deterministic cleanup." : "No compiler or event loop is needed."} An IO failure raises IOError with its declaration; a thrown EIO raises DeclaredError with its declaration and payload. An Except returned normally is an Ok or Err value.`;
+		await save("README.md", `# ${name}\n\n${usage}\n\n${requirements}\n`);
 		await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1
-			, kind: async ? "lean-bridge-native-ruby-task" : "lean-bridge-native-ruby-io"
+			, kind: o.host ? "lean-bridge-native-ruby-host" : async ? "lean-bridge-native-ruby-task" : "lean-bridge-native-ruby-io"
 			, profile, name, version
 			, component: api.component, componentIdentity, bindingIrSha256
 			, sourceTreeSha256: projectContract.sourceTreeSha256

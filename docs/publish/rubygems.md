@@ -10,6 +10,31 @@ release version before publishing.
 
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
 
+## Call Ruby objects from Lean
+
+Use a host import when the application owns an object and Lean needs to call
+its methods. Declare `"hostImports": "lean-bridge.hosts.json"` alongside
+`modules`, `exports` and `targets.rubygems` in your export configuration.
+The [box contract](../../tests/fixtures/ruby-host-meter/lean-bridge.hosts.json)
+declares a Ruby class with a constructor, methods and a read/write property.
+Lean Bridge supplies the module; do not add a copy to your Lake package.
+
+```lean
+import LeanBridge.Host.Ruby
+open LeanBridge.Host.Ruby
+
+def update (box : Box) (value : UInt32) : IO UInt32 := do
+  box.setLevel value
+  box.getLevel
+```
+
+Build with `lean-bridge build --project . --target rubygems --output release`.
+The publisher needs Ruby 3.3 development headers; the consumer only needs the
+matching Ruby runtime. For a reviewed build, keep the import contract and Lean
+sources: the build checks the review against freshly compiled members. This
+profile is synchronous; it does not schedule Ruby method calls on Lean workers.
+See [how the Ruby application supplies the class](../consume/ruby.md#supply-a-ruby-object-to-lean).
+
 ## Build an ordinary Lean project
 
 Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler and MRI Ruby 3.3 with RubyGems. Set `LEAN_BRIDGE_RUBY` to the Ruby executable if it is not on PATH. The current native profile is Linux x86-64 with glibc 2.38 or newer.

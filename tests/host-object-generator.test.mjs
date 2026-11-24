@@ -25,6 +25,7 @@ import "./helpers/native-effect-policy.mjs";
 import "./helpers/native-sync-io.mjs";
 import "./helpers/native-sync-peer.mjs";
 import "./helpers/ruby-sync-installed.mjs";
+import "./helpers/ruby-host-provider.mjs";
 import "./helpers/ruby-task-installed.mjs";
 import "./helpers/ruby-retained-task-installed.mjs";
 import "./helpers/ruby-resource-installed.mjs";
