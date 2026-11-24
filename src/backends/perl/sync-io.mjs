@@ -59,14 +59,16 @@ export const validatePerlIOSettings = ({ name, version }) => {
  * @param library - Exact component SONAME.
  * @param tasks - Install the Perl event-loop dependency only for task/cursor packages.
  * @param ledger - Optional source-addressed resource library linked by the XS.
+ * @param hosts - Select the synchronous host-import manifest field.
  */
-export const renderPerlIOBuild = (base, name, library, tasks = false, ledger = null) => {
+export const renderPerlIOBuild = (base, name, library, tasks = false, ledger = null, hosts = false) => {
 	projectPerlNames(name, []); if(library !== libraryFor(name)) throw new TypeError("Invalid CPAN IO library");
 	const dir = name.replaceAll("::", "/"), tag = "my @link_flags = ('-Wl,--build-id=none');";
 	if(ledger && (!digest(ledger.id) || ledger.library !== "liblb_task_resources_"+ledger.id+".so" || !digest(ledger.sha256)))
 		throw new TypeError("Invalid CPAN resource ledger library");
 	let s = hook(base, tag, tag + `\n  push @link_flags, '-L', 'lib/${dir}/native', '-l:${library}'${ledger?", '-l:"+ledger.library+"'":""};`);
-	const field = tasks ? "taskDelivery" : "syncIO";
+	if(hosts && (tasks || ledger)) throw new TypeError("Ambiguous Perl host installer");
+	const field = hosts ? "hostImports" : tasks ? "taskDelivery" : "syncIO";
 	s = hook(s, "if owned_values($manifest);", "if $manifest->{"+field+"};");
 	s = hook(s, "return unless owned_values($manifest);", "return unless $manifest->{"+field+"};");
 	return tasks ? hook(s,"PREREQ_PM => { 'Math::BigInt'","PREREQ_PM => { 'IO::Async::Loop' => '0.805', 'Future' => '0.54', 'Math::BigInt'") : s;
@@ -175,14 +177,14 @@ sub new { die "Expected one payload\\n" unless @_ == 2; bless {value => $_[1]}, 
 sub value { $_[0]->{value} }`).join("\n");
 };
 
-const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evidence, methods, assets, kinds, ledger) => {
+const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evidence, methods, assets, kinds, ledger, hosts="") => {
 	const relative = name.replaceAll("::","/"), stem = name.split("::").at(-1);
 	const sources = evidence.interfaces.map(i => {
 		if(!digest(i.sourceSha256)) throw new TypeError("Unverified Perl component source");
 		return q(i.module) + " => " + q(i.sourceSha256);
 	}).join(", ");
 	const args = `${q(runtime)}, { ${sources} }, ${q(api.component.id)}, ${q(libHash)}`;
-	return `${perlEffectClasses(name,methods)}${perlLeaseModules(kinds,name)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
+	return `${hosts}${perlEffectClasses(name,methods)}${perlLeaseModules(kinds,name)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
 package ${name};
 use strict;
 use warnings;
@@ -224,7 +226,7 @@ __END__
 
 ${name} - ${assets ? "Compiled Lean futures and demand-driven cursors" : "Compiled synchronous Lean functions"}
 
-=head1 CALLS
+=head1 CALLS${hosts?"\n\nRegister the declared host classes with C<with_hosts(\\%classes, sub { ... })>. Call the exported functions inside that block. The binding closes on return or exception.":""}
 
 ${methods.map(m => `=head2 ${m.name}\n\nCalls C<${m.declaration}> (${m.effect}).${m.delivery==="task"?" Returns a Future.":m.delivery==="async-iterator"?" Returns a cursor; next yields a Future with one item or an empty list at end.":""}`).join("\n\n")}
 
@@ -235,6 +237,15 @@ is an Ok or Err object with a C<value> method, not an exception.
 =cut
 `;
 };
+
+/**
+ * Load the pinned shared runtime, component and installed XS before exposing host calls.
+ *
+ * @param o - Compiler-derived entries, sources and package coordinates.
+ * @param pins - Exact CPAN runtime version and binding identity.
+ */
+export const renderPerlHostLoader = (o,pins) => loader(o.name,o.version,pins.runtimeVersion,pins.runtimeIdentity,o.library,o.librarySha256,
+	o.api,o.evidence,o.entries,null,new Map(),null,o.generated.implementation);
 
 const xsSource = (wire, methods, name, kinds) => {
 	const encode=(t,i)=>kinds.has(t)?`lbs_in_${kinds.get(t).index}(aTHX_ v${i},a+${i*3});`:input(t,i);

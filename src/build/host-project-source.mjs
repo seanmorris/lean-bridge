@@ -26,7 +26,8 @@ const capturedText = async (root, record, path = record?.path) => {
 const captureContracts = async (project, inventory, target) => {
 	const config = inventory.configurationRecord.configuration;
 	const input = inventory.inputs.find(f => f.path === config.hostImports);
-	const ir = config.hostImports ? parseBindingIr(await capturedText(project, input)) : null;
+	const hostImportsSource = config.hostImports ? await capturedText(project, input) : null;
+	const ir = hostImportsSource === null ? null : parseBindingIr(hostImportsSource);
 	const generatedHostModule = ir ? nativeHostSelection(ir, compiledHostTargets[target]).hostModule : null;
 	const reviews = inventory.inputs.filter(f => f.path.endsWith(".binding-ir.json"));
 	if(reviews.length > 1) fail("Expected at most one reviewed public .binding-ir.json file");
@@ -49,6 +50,7 @@ const captureContracts = async (project, inventory, target) => {
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
 	return { ir, review, exports, taskExports, asyncIterators, generatedHostModule
+		, ...(target==="cpan" && ir ? {hostImportsSource} : {})
 		, ...(!ir && !selected.length ? { synchronousIO: true } : {})
 		, nativeEffects: config.nativeEffects?.toSorted() ?? []
 		, ...(config.taskIOErrors ? { taskIOErrors: config.taskIOErrors.toSorted() } : {})

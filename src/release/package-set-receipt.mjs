@@ -34,7 +34,7 @@ const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1
 	, rubygems: ["native-library-v1", "native-ruby-io-v1", "native-ruby-task-v1", "native-ruby-host-v1"]
 	, nuget: ["native-library-v1", "native-dotnet-io-v1", "native-dotnet-task-v1"]
 	, maven: ["native-library-v1", "native-jvm-io-v1", "native-jvm-task-v1"]
-	, cpan: ["native-library-v1", "native-perl-io-v1", "native-perl-task-v1"]
+	, cpan: ["native-library-v1", "native-perl-io-v1", "native-perl-task-v1", "native-perl-host-v1"]
 	, "wit-wasi": ["native-library-v1", "native-wit-io-v1", "native-wit-task-v1", "native-wit-canonical-task-v1"]
 	, "php-native": ["native-library-v1", "native-php-io-v1", "native-php-task-v1"] };
 const ecosystemFor = target => target === "php-native" ? ["composer"] : target === "php-wasm" ? ["npm", "composer"] : [target];

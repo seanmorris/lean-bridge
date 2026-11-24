@@ -42,7 +42,7 @@ export const writeNpmPackageSet = async options => {
 export const writeNativePackageSet = async options => {
 	const { root, model, runtimeIdentity, projections, signal } = options;
 	const perlProfile = options.perlProfile;
-	if(perlProfile && (!["native-perl-io-v1","native-perl-task-v1"].includes(perlProfile) || projections.length !== 1 || projections[0].ecosystem !== "cpan")) throw new TypeError("Standalone Perl IO requires one CPAN projection");
+	if(perlProfile && (!["native-perl-io-v1","native-perl-task-v1","native-perl-host-v1"].includes(perlProfile) || projections.length !== 1 || projections[0].ecosystem !== "cpan")) throw new TypeError("Compiled Perl packages require one CPAN projection");
 	const abi = profile(perlProfile ?? "native-library-v1", model.bindingIrSha256, runtimeIdentity), packages = [];
 	for(const projection of projections)
 	{
@@ -52,7 +52,7 @@ export const writeNativePackageSet = async options => {
 			const component = await read(join(root, "packages/component/lean-bridge-package.json"));
 			if([runtime, component].some(item => item.nativeRuntimeIdentity !== runtimeIdentity || item.runtimeIdentity !== projection.runtimeIdentity)) throw new Error("CPAN runtime differs from native package set");
 			if(component.runtimeVersion !== runtime.version) throw new Error("CPAN component dependency differs from runtime package version");
-			const io = component.syncIO ?? component.taskDelivery;
+			const io = component.syncIO ?? component.taskDelivery ?? component.hostImports;
 			if(io?.profile !== perlProfile || io && io.bindingIrSha256 !== model.bindingIrSha256)
 				throw new Error("CPAN standalone IO profile differs from the compiled interface");
 			const runtimeRef = { ecosystem: "cpan", name: runtime.distribution, version: runtime.version };

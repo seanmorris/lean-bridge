@@ -31,7 +31,7 @@ export const compileCpanXsVariant = async ({ packageRoot, perl = "perl", environ
 			, `LeanBridgeBuild::verify(LeanBridgeBuild::read_json('lean-bridge-package.json')); LeanBridgeBuild::compile_xs(LeanBridgeBuild::read_json('lean-bridge-package.json'), 'prebuilt/${key}');`]
 		, cwd: directory, env: environment });
 	const path = `prebuilt/${key}/${manifest.module.split("::").at(-1)}.so`;
-	const io = manifest.syncIO ?? manifest.taskDelivery;
+	const io = manifest.syncIO ?? manifest.taskDelivery ?? manifest.hostImports;
 	if(io)
 	{
 		const bytes = await readFile(join(directory,path)); validateNativeElf(bytes);

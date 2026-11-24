@@ -3,11 +3,32 @@
  *
  * @file
  */
-import { rm } from "node:fs/promises";
-import { join } from "node:path";
+import { copyFile, link, mkdir, mkdtemp, rm } from "node:fs/promises";
+import { dirname, join } from "node:path";
 import { compileCpanXsVariant } from "./perl-xs.mjs";
-import { stageCpanPackage, archiveCpanPackage } from "../release/cpan-package.mjs";
+import { stageCpanPackage, archiveCpanPackage, readVerifiedCpanPackage } from "../release/cpan-package.mjs";
+import {processBuildRunner} from "./process-runner.mjs";
 import { installCpanArchive } from "../release/cpan-install.mjs";
+
+// XS compilation only needs the matching loader, headers and native runtime.
+// Configure an isolated prebuilt-only copy (which performs the real load
+// check). Only the two immutable SDK libraries share storage with the stage.
+// No full runtime installation is left behind by the publisher.
+const compileHostVariant = async ({working,runtimePackage,componentPackage,perl,environment,signal}) => {
+	const {manifest}=await readVerifiedCpanPackage(runtimePackage);
+	const view=await mkdtemp(join(working,".cpan-compiler-runtime-"));
+	try {
+		for(const file of [...Object.keys(manifest.files),"lean-bridge-package.json"]) {
+			const to=join(view,file), from=join(runtimePackage,file);
+			await mkdir(dirname(to),{recursive:true});
+			if(["lib/LeanBridge/Runtime/native/libleanshared.so","lib/LeanBridge/Runtime/native/liblean_bridge_native.so"].includes(file)) await link(from,to);
+			else await copyFile(from,to);
+		}
+		await processBuildRunner.capture({command:perl,args:["Makefile.PL"],cwd:view,env:{...environment,LEAN_BRIDGE_PERL_INSTALL_MODE:"prebuilt-only"},signal});
+		const PERL5LIB=[join(view,"lib"),environment.PERL5LIB].filter(Boolean).join(":");
+		await compileCpanXsVariant({packageRoot:componentPackage,perl,environment:{...environment,PERL5LIB}});
+	} finally { await rm(view,{recursive:true,force:true}); }
+};
 
 /**
  * Project checked native inputs into the selected Perl ABIs without rebuilding Lean.
@@ -24,11 +45,12 @@ import { installCpanArchive } from "../release/cpan-install.mjs";
  * @param options.ownedGmpRoot - Verified private GMP root for an owned component.
  * @param options.ownedModuleName - Owned package namespace, separate from Lean IR.
  * @param options.syncIO - Compiler-authenticated standalone synchronous Perl projection.
+ * @param options.hostImports - Verified synchronous Perl host component.
  */
 export const projectCpanPackages = async ({
 	working, runtimeRoot, nativeRoot, leanPrefix
 	, settings = {}, environment = process.env, signal, onProgress
-	, ownedGmpRoot = null, ownedModuleName = null, syncIO = null
+	, ownedGmpRoot = null, ownedModuleName = null, syncIO = null, hostImports = null
 }) => {
 	const perls = environment.LEAN_BRIDGE_PERLS ? JSON.parse(environment.LEAN_BRIDGE_PERLS) : ["perl"];
 	if(!Array.isArray(perls) || !perls.length || perls.some(perl => typeof perl !== "string" || !perl))
@@ -47,10 +69,14 @@ export const projectCpanPackages = async ({
 	await stageCpanPackage({ outputRoot: componentPackage
 		, componentRoot: nativeRoot
 		, runtimePackageRoot: runtimePackage, runtimeRoot, leanPrefix, version
-		, glibcMinimumVersion: floor, ownedGmpRoot, ownedModuleName, syncIO });
+		, glibcMinimumVersion: floor, ownedGmpRoot, ownedModuleName, syncIO, hostImports });
 	for(const perl of perls)
 	{
 		signal?.throwIfAborted();
+		if(hostImports) {
+			await compileHostVariant({working,runtimePackage,componentPackage,perl,environment,signal});
+			continue;
+		}
 		const installed = await installCpanArchive({ archive: runtimeArchive.path, workingRoot: working, prefix: installRoot, perl, mode: "prebuilt-only", environment });
 		await compileCpanXsVariant({ packageRoot: componentPackage, perl, environment: { ...environment, PERL5LIB: installed.perl5lib } });
 	}
