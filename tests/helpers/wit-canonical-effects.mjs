@@ -47,7 +47,8 @@ test("a relocated component distinguishes factory failure, worker failure and a 
             await copyFile(resolve("tests/fixtures/wit-task-package/effects.lean"),join(src,"Meter.lean"));
             await copyFile(resolve("tests/fixtures/wit-canonical-latches/lean-toolchain"),join(src,"lean-toolchain"));
             if(ordinary) await writeFile(join(src,"meter.binding-ir.json"),canonicalJson(ordinary),{flag: "wx"});
-            await exec(process.execPath,[resolve("scripts/lean-bridge.mjs"),"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"]);
+            await exec(process.execPath,[resolve("scripts/lean-bridge.mjs"),"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"])
+                .catch(e=>{throw new Error(route+" WIT package: "+e.stdout+"\n"+e.stderr,{cause: e});});
             await rm(src,{recursive: true});
 }
         const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(out,"package-set-receipt.json")});

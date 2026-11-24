@@ -153,3 +153,5 @@ ran the same guest with no build tools on its path and printed **423**.
 
 Run `npm run test:wit-canonical-future-cancel` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks).
 To replay the same guest on existing packages, set `LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_ORDINARY` and `LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_REVIEWED` to their handoff directories.
+
+The [fallible-future guest](../../tests/fixtures/wit-canonical-effects/application.wat) also passed with this producer. Each fresh install survived 96 rejected factories and 96 read/drop rounds. Factory errors, worker errors and ordinary `Except` values remained distinct, and simultaneously pending strings retained their own bytes. Archive SHA-256: ordinary `43d6a6c1d6109fb0bc5c5191faefe77500a8faad33fc7f57c5f0ce5940e9457b`; reviewed `512777c9edbd10e4270d35ef20c01d6baf0eb8803c6e69d277b565fe6005bd05`.
