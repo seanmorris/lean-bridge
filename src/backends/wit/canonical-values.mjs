@@ -9,6 +9,7 @@ for(const [lean,wit] of [["uint","u"],["int","s"]]) for(const bits of [8,16,32,6
 	primitives[lean+bits]=[name,bits===64?"i64":"i32",bits/8,name.toUpperCase(),name];
 }
 export const canonicalString={wit: "string",wat: "string",flat: ["i32","i32"],size: 8,align: 4,dynamic: true,tag: "STRING"};
+export const canonicalBytes={wit: "list<u8>",wat: "(list u8)",flat: ["i32","i32"],size: 8,align: 4,dynamic: true,tag: "LIST"};
 const alignTo=(n,a)=>Math.ceil(n/a)*a;
 /**
  * Lay out the discriminant followed by the aligned active payload.
@@ -34,6 +35,7 @@ export const canonicalResult=(ok,err)=>{
 export const canonicalValue=t=>{
 	if(t?.kind==="apply" && t.constructor==="result" && t.arguments?.length===2) return canonicalResult(...t.arguments.map(canonicalValue));
 	if(t?.kind==="primitive" && t.name==="string") return canonicalString;
+	if(t?.kind==="primitive" && t.name==="bytes") return canonicalBytes;
 	if(t?.kind!=="primitive" || !Object.hasOwn(primitives,t.name)) throw new TypeError("Unsupported copied canonical value");
 	const [wat,core,size,tag,member]=primitives[t.name];return {wit: wat,wat,flat: [core],size,align: size,tag,member};
 };
@@ -52,5 +54,30 @@ export const canonicalEncode=(shape,source,dest,depth=0)=>{
         else { ${canonicalEncode(shape.err,source+".as.error",child,depth+1)} } }`;
 	if(shape===canonicalString) return `(${dest})->kind=WASMTIME_COMPONENT_STRING;
         wasm_name_new(&(${dest})->of.string,${source}.len,${source}.len?(const char*)${source}.data:"");`;
+	if(shape===canonicalBytes) return `lb_write_bytes(${dest},${source}.data,${source}.len);`;
 	return `(${dest})->kind=WASMTIME_COMPONENT_${shape.tag}; (${dest})->of.${shape.member}=${source};`;
+};
+
+/**
+ * Copy SDK list elements into temporary packed buffers for the native call.
+ * The provider makes its own Lean copy before returning a pending operation.
+ *
+ * @param params - Checked argument layouts.
+ * @param p - Provider symbol prefix.
+ */
+export const canonicalArguments=(params,p)=>{
+	const bytes=params.flatMap((a,i)=>a.t===canonicalBytes?[i]:[]);
+	const values=params.map((a,i)=>a.t===canonicalString?`(${p}_view){.data=(const uint8_t*)args[${i}].of.string.data,.len=args[${i}].of.string.size}`
+		:a.t===canonicalBytes?`(${p}_view){.data=b${i},.len=args[${i}].of.list.size}`:`args[${i}].of.${a.t.member}`);
+	if(!bytes.length) return {values,setup: "",cleanup: ""};
+	const checks=params.flatMap((a,i)=>a.t===canonicalString||a.t===canonicalBytes?[`!lb_charge_bytes(args[${i}].of.${a.t===canonicalBytes?"list":"string"}.size,&total)`]:[]);
+	return {values
+		, setup: `size_t total=0;
+    if (${checks.join(" || ")}) return wasmtime_error_new("canonical argument byte limit exceeded");
+    uint8_t *scratch=malloc(total?total:1);
+    if (!scratch) return wasmtime_error_new("could not allocate canonical byte arguments");
+    uint8_t *next=scratch;
+    ${bytes.map(i=>`uint8_t *b${i}=next;
+    if (!lb_read_bytes(&args[${i}],&next)) {free(scratch);return wasmtime_error_new("expected list<u8>");}`).join("\n    ")}`
+		, cleanup: "free(scratch);"};
 };

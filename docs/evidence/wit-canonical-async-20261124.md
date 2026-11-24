@@ -157,3 +157,16 @@ To replay the same guest on existing packages, set `LEAN_BRIDGE_CANONICAL_FUTURE
 The [fallible-future guest](../../tests/fixtures/wit-canonical-effects/application.wat) also passed with this producer. Each fresh install survived 96 rejected factories and 96 read/drop rounds. Factory errors, worker errors and ordinary `Except` values remained distinct, and simultaneously pending strings retained their own bytes. Archive SHA-256: ordinary `43d6a6c1d6109fb0bc5c5191faefe77500a8faad33fc7f57c5f0ce5940e9457b`; reviewed `512777c9edbd10e4270d35ef20c01d6baf0eb8803c6e69d277b565fe6005bd05`.
 
 The separate stream worker test also returned `423` on both routes after the future change: ordinary archive `515531cdfe1c96776c4cb43638e037583783aecb5bf91e8bcffa1d68f1423409`, reviewed archive `7576208c800bab93bb1cb8acc173b01d6a7985e5bd1a239b1c40ddc80e0e17dc`. The stream owner still closed before the worker's gate opened.
+
+## Carry binary values through futures and streams
+
+The [Packet factory](../../tests/fixtures/wit-canonical-bytes/Packet.lean) accepts two Lean `ByteArray` arguments. Its WIT result is `result<future<result<list<u8>, list<u8>>>, list<u8>>`. A rejected factory returns the outer error immediately. A successful factory parks on a Lean promise; when released it returns an ordinary `Except` with one of the original buffers.
+
+The [guest](../../tests/fixtures/wit-canonical-bytes/application.wat) overwrites its input memory before opening the gates. It reads two tasks in reverse order, checks their distinct NUL and non-UTF-8 bytes, and checks a third, empty result. A fourth reader is dropped before the guest releases its worker. In the same process, a cursor yields a binary item, then an empty item, then a typed binary error and closure. The guest checks the tags, lengths and bytes. Its return value of `2` is Lean’s close count: one unused cursor was dropped and the other terminated after its error.
+
+Run `npm run test:wit-canonical-bytes` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks). The [install test](../../tests/helpers/wit-canonical-bytes.mjs) verifies each package-set receipt, moves the extracted tree, checks the guest against its published world, and runs it with no author tools on its search path. Set `LEAN_BRIDGE_CANONICAL_BYTES_ORDINARY` or `LEAN_BRIDGE_CANONICAL_BYTES_REVIEWED` to replay a prepared handoff. This test exercises Wasmtime’s canonical async profile; it is not evidence for the separate pollable-resource profile.
+
+| Verified Packet archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 60,916,951 | `1377e65ae78927ebff63d0c644bf5420eaaac412eaaff8f4d9d05ae0a5e4e32b` |
+| Reviewed | 60,918,065 | `cc1494e6a184a0461d4bd595994c14d10bc94d0d704644f78c9687406dd36df1` |

@@ -1231,6 +1231,7 @@
     "test:wit-canonical-scheduled": "node --test --test-concurrency=1 tests/helpers/wit-canonical-scheduled.mjs",
     "test:wit-canonical-package": "node --test --test-concurrency=1 tests/helpers/wit-canonical-command-package.mjs",
     "test:wit-canonical-effects": "node --test --test-concurrency=1 tests/helpers/wit-canonical-effects.mjs",
+    "test:wit-canonical-bytes": "node --test --test-concurrency=1 tests/helpers/wit-canonical-bytes.mjs",
     "test:wit-canonical-stream": "node --test --test-concurrency=1 tests/helpers/wit-canonical-stream.mjs",
     "test:wit-canonical-cancel": "node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",
     "test:wit-canonical-future-cancel": "LEAN_BRIDGE_CANONICAL_CANCEL_KIND=future node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",

@@ -220,6 +220,8 @@ The command prints the signed 64-bit result of `run`. A trap or incompatible com
 
 ### Read a canonical stream from a Wasm application
 
+Lean `ByteArray` appears as `list<u8>` in a canonical world. Pass and receive bytes directly, including empty lists, NULs and non-UTF-8 data. Once a factory returns, you can reuse the input buffer: a pending future or stream retains its own bytes. In `stream<result<list<u8>, list<u8>>>`, the tag distinguishes a binary item from a binary step error. An empty item is not end-of-stream.
+
 Use the same `bin/<name>-run` launcher. Call the factory and check its outer result, if it has one. Opening a stream creates a cursor; it does not request the first item. Read with your guest’s Component Model stream API. The launcher calls Lean’s `next` on demand, with at most one outstanding pull per reader.
 
 For example, `feed` returns `result<stream<result<result<s64, string>, u16>>, u32>`:

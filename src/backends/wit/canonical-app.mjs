@@ -1,6 +1,6 @@
 /** @file Generate a reactor and application world from the compiler-selected Lean declarations. */
 import {isDeepStrictEqual as equal} from "node:util";
-import {canonicalValue,canonicalResult,canonicalString,canonicalEncode} from "./canonical-values.mjs";
+import {canonicalValue,canonicalResult,canonicalString,canonicalEncode,canonicalArguments} from "./canonical-values.mjs";
 import {renderCanonicalFutureProducer,richCanonicalFuture} from "./canonical-future.mjs";
 import {canonicalStream,streamAction} from "./canonical-stream.mjs";
 import {canonicalSupervisor} from "./canonical-supervisor.mjs";
@@ -134,18 +134,20 @@ static bool take_${id}(void *ptr,wasmtime_component_val_t *v) {
     ${terminal?"v=lb_child(v,true);":""} ${encoded(out,"x","v",n+"_value_dispose")} return true;
 }`);
 		if(m.stream) lines.push(streamAction(m,p,n,encoded));
-		const args=m.args.map((a,i)=>a.t===canonicalString?`(${p}_view){.data=(const uint8_t*)args[${i}].of.string.data,.len=args[${i}].of.string.size}`:`args[${i}].of.${a.t.member}`);
+		const {values: args,setup,cleanup}=canonicalArguments(m.args,p);
 		const typed=m.effect==="EIO",dispose=typed?n+"_start_error_dispose":p+"_buffer_dispose";
 		lines.push(`static wasmtime_error_t *hook_${id}(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *type,
     wasmtime_component_val_t *args,size_t argc,wasmtime_component_val_t *out,size_t retc) {
     (void)ctx;(void)type;(void)args;(void)data;
     if (!accepting) return wasmtime_error_new("native calls require a running guest");
     if (argc!=${args.length} || retc!=1${m.args.map((a,i)=>" || args["+i+"].kind!=WASMTIME_COMPONENT_"+a.t.tag).join("")}) return wasmtime_error_new("unexpected canonical argument");
+    ${setup}
     ${failure?(typed?n+"_start_error":p+"_buffer")+" error={0};":""}
     ${m.asynchronous?`lb_cf_reactor *r=&drivers[${idx}]; unsigned key=lb_cf_reserve(r);
-    if (!key) return wasmtime_error_new("canonical future capacity exhausted");
+    if (!key) { ${cleanup} return wasmtime_error_new("canonical future capacity exhausted"); }
     ${n}_handle *owner=&owners_${id}[key-1]; *owner=(${n}_handle){0};`:`${n}_value value={0};`}
     ${p}_status rc=${n}_${m.asynchronous?"start":"call"}(${[...args,m.asynchronous?"owner":"&value",...failure?["&error"]:[]].join(",")});
+    ${cleanup}
     if (rc!=${p}_OK) {
         ${m.asynchronous?"r->rows[key-1]=(lb_cf_row){0};":""}
         ${failure?`if (rc==${p}_${typed?"TYPED_ERROR":"IO_ERROR"}) { wasmtime_component_val_t *err=lb_child(out,false);

@@ -27,6 +27,25 @@ static inline wasmtime_component_val_t *lb_child(wasmtime_component_val_t *paren
     parent->kind=WASMTIME_COMPONENT_RESULT; parent->of.result.is_ok=ok; parent->of.result.val=child;
     return child;
 }
+/* The SDK represents list<u8> as tagged values, not as a contiguous byte span.
+ * Use the same aggregate input limit as the private native provider. */
+static inline bool lb_charge_bytes(size_t n,size_t *total) {
+    if (n>16u*1024u*1024u-*total) return false;
+    *total+=n;return true;
+}
+static inline bool lb_read_bytes(const wasmtime_component_val_t *v,uint8_t **next) {
+    if (v->of.list.size && !v->of.list.data) return false;
+    for (size_t i=0;i<v->of.list.size;++i) {
+        if (v->of.list.data[i].kind!=WASMTIME_COMPONENT_U8) return false;
+        *(*next)++=v->of.list.data[i].of.u8;
+    }
+    return true;
+}
+static inline void lb_write_bytes(wasmtime_component_val_t *v,const uint8_t *data,size_t size) {
+    v->kind=WASMTIME_COMPONENT_LIST;wasmtime_component_vallist_new_uninit(&v->of.list,size);
+    for (size_t i=0;i<size;++i)
+        v->of.list.data[i]=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U8,.of.u8=data[i]};
+}
 static inline wasmtime_error_t *lb_peek(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *type,
     wasmtime_component_val_t *args,size_t argc,wasmtime_component_val_t *out,size_t retc) {
     (void)type; lb_cf_reactor *r=data;
