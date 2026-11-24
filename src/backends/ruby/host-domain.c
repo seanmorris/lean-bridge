@@ -14,12 +14,13 @@ typedef struct lb_value {
     lb_kind *kind;
     lean_object *wrapper; /* registry reference; every Lean caller gets its own */
     VALUE object, anchors;
+    int pinned;
 } lb_value;
 struct lb_kind {
     lb_kind *next;
     const char *id;
     VALUE klass;
-    size_t users;
+    size_t users, provisional;
     int strong;
     lb_value *values;
 };
@@ -41,12 +42,14 @@ static void bound(lb_rh_session *s) {
     if (!s || s->fiber!=rb_fiber_current()) rb_raise(rb_eRuntimeError,"enter bind_hosts on this fiber first");
 }
 static void sweep(lb_kind *k,int all) {
-    if (!all && k->strong) return;
+    if (!all && k->strong && !k->provisional) return;
     lb_value **p=&k->values;
     while (*p) {
         lb_value *v=*p;
+        if (!all && v->pinned) { p=&v->next; continue; }
         int rc=atomic_load_explicit(lean_get_rc_mt_addr(v->wrapper),memory_order_acquire);
         if (!all && rc!=1 && rc!=-1) { p=&v->next; continue; }
+        if (k->strong && !v->pinned) --k->provisional;
         *p=v->next; v->kind=NULL; --live;
         rb_gc_unregister_address(&v->object); rb_gc_unregister_address(&v->anchors);
         v->object=Qnil; v->anchors=Qnil; lean_dec(v->wrapper);
@@ -126,6 +129,7 @@ lean_object *lb_rh_wrap(lb_rh_session *s,unsigned i,VALUE obj,VALUE anchor) {
         v->object=obj; v->anchors=Qnil; v->kind=k;
         rb_gc_register_address(&v->object); rb_gc_register_address(&v->anchors);
         v->wrapper=lean_alloc_external(tag,v); v->next=k->values; k->values=v; ++live;
+        if (k->strong) ++k->provisional;
     }
     if (!NIL_P(anchor) && anchor!=obj) {
         if (NIL_P(v->anchors)) v->anchors=rb_ary_new();
@@ -133,6 +137,16 @@ lean_object *lb_rh_wrap(lb_rh_session *s,unsigned i,VALUE obj,VALUE anchor) {
         if (j==RARRAY_LEN(v->anchors)) rb_ary_push(v->anchors,anchor);
     }
     lean_inc(v->wrapper); return v->wrapper;
+}
+/* A partially converted Ruby argument list has not entered Lean. Do not turn
+ * its temporary reference into a binding-lifetime root until it actually does.
+ * Reentry may already have admitted this canonical wrapper in another call. */
+lean_object *lb_rh_admit(lean_object *wrapper) {
+    lb_value *v=lean_get_external_data(wrapper);
+    if (v->kind->strong && !v->pinned) {
+        v->pinned=1; --v->kind->provisional;
+    }
+    return wrapper;
 }
 static VALUE message_text(VALUE e) {
     VALUE msg=rb_str_export_to_enc(rb_obj_as_string(e),rb_utf8_encoding());

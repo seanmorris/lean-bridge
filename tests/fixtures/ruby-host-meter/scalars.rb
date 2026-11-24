@@ -30,8 +30,8 @@ samples.each_key do |tag|
 end
 check(A::UNIT.frozen? && A::UNIT.equal?(B::UNIT), "incompatible Unit sentinels")
 box = Box.new(0)
-A.bind_hosts(box: Box) do
-  B.bind_hosts(box: Box) do
+A.bind_hosts(box: Box, token: Token) do
+  B.bind_hosts(box: Box, token: Token) do
     samples.each_pair do |tag, values|
       values.each do |v|
         # Observe the actual Ruby member argument independently of the returned value.

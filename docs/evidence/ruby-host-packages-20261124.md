@@ -38,6 +38,6 @@ verified gem archives from this run were:
 | reviewed | `workshop-peer` | 50,098,688 | `2ff522d2975adc06ca8c5860249afc27f96f8cd5c1a288a09cba4a87aa0c1ab7` |
 
 This is the synchronous, statically declared Ruby host-object profile. It does
-not establish that a Lean worker may call arbitrary Ruby methods. The GC and
-cross-component checks here use a weak-canonical import contract; they do not
-measure strong-canonical retention or claim support for other host runtimes.
+not establish that a Lean worker may call arbitrary Ruby methods. The archive
+set above uses a weak-canonical import. The [mixed-kind follow-up](ruby-host-kinds-20261124.md)
+checks strong-canonical retention as well.

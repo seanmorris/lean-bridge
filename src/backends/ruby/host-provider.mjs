@@ -71,13 +71,15 @@ const member = (resources, r, d, i) => {
 	}
 	const name = d.kind === "constructor" ? "new" : snake(d.name) + (d.kind === "property" && params.length ? "=" : "");
 	const sym = hostMemberSymbol("ruby", r, d), n = Number(self);
+	const result = out.from("answer", anchor);
+	const admitted = out.i === undefined ? result : "lb_rh_admit(" + result + ")";
 	return {
 		proto: "extern lean_object *" + sym + "(" + (kinds.map(k => k.c).join(",") || "void") + ");"
 		, c: `static VALUE lb_member_${i}(VALUE arg) {
     lb_call *a=(lb_call *)arg; VALUE v[${Math.max(1, sites.length)}];
     ${kinds.map((k, j) => "v[" + j + "]=" + k.to("a->values[" + j + "]") + ";").join("\n    ")}
     VALUE answer=rb_funcallv_public(${self ? "v[0]" : "lb_rh_type(session," + owner + ")"},rb_intern(${text(name)}),${params.length},${params.length ? "v+" + n : "NULL"});
-    ${d.kind === "property" && params.length ? "(void)answer; a->io=lean_io_result_mk_ok(lean_box(0));" : "a->io=lean_io_result_mk_ok(" + out.from("answer", anchor) + ");"} return Qnil;
+    ${d.kind === "property" && params.length ? "(void)answer; a->io=lean_io_result_mk_ok(lean_box(0));" : "a->io=lean_io_result_mk_ok(" + admitted + ");"} return Qnil;
 }
 lean_object *${sym}(${kinds.map((k, j) => k.c + " p" + j).join(",") || "void"}) {
     lb_call a={0}; int state=0;
@@ -108,6 +110,7 @@ const entry = (resources, e, i) => {
 		, c: `static VALUE lb_entry_${i}(VALUE data) {
     lb_call *a=(lb_call *)data;
     ${args.map((k, j) => "a->values[" + j + "]=" + k.from("a->args[" + j + "]") + ";").join("\n    ")}
+    ${args.flatMap((k, j) => k.i === undefined ? [] : ["lb_rh_admit(a->values[" + j + "]);"]).join(" ")}
     ${args.flatMap((k, j) => k.c === "lean_object *" ? ["lean_inc(a->values[" + j + "]);"] : []).join(" ")}
     a->io=${symbol}(${args.map((k, j) => k.unbox("a->values[" + j + "]")).join(",")});
     lean_object *v=lean_ctor_get(a->io,0);

@@ -72,6 +72,13 @@ the references Lean retained, not the Ruby object itself. If the Ruby method
 raises and Lean propagates that failure unchanged, the caller gets the original
 Ruby exception, including its identity. Lean can also catch or replace it.
 
+The package declares how long it keeps each kind of Ruby object. A
+`weak-canonical` import does not keep an object alive once Lean releases
+its last reference. A `strong-canonical` import keeps the same Ruby instance
+until the last matching binding closes. Passing an object to a call that
+fails argument validation does not pin it. Once the call enters Lean, a
+later exception does not undo that admission.
+
 ### Call synchronous IO
 
 Install the prepared platform gem as above. For a package marked

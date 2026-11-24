@@ -16,6 +16,7 @@ void lb_rh_leave(lb_rh_frame *);
 VALUE lb_rh_type(lb_rh_session *, unsigned);
 VALUE lb_rh_object(lb_rh_session *, unsigned, lean_object *);
 lean_object *lb_rh_wrap(lb_rh_session *, unsigned, VALUE, VALUE anchor);
+lean_object *lb_rh_admit(lean_object *wrapper);
 lean_object *lb_rh_fault_result(lb_rh_frame *, int state);
 VALUE lb_rh_original(lb_rh_frame *, lean_object *error);
 size_t lb_rh_live(void);

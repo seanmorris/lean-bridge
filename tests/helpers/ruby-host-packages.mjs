@@ -21,6 +21,17 @@ def forget : IO Unit := saved.set none
 def retainChild (parent : Box) : IO Unit := do keep (← parent.child)
 def retainFrom (receiver parent : Box) : IO Unit := do keep (← receiver.from_parent parent)
 def consume (box : Box) : IO UInt32 := box.finish
+def tokenIdentity (token : Token) : IO Token := token.identity
+def lookupToken (box : Box) : IO Token := box.lookup
+def checkPair (token : Token) (other : Box) (_limit : UInt8) : IO UInt32 := do
+  let _ ← other.read
+  token.read
+initialize tokenSlot : IO.Ref (Option Token) ← IO.mkRef none
+def rememberToken (token : Token) : IO Unit := tokenSlot.set (some token)
+def recalledToken : IO Token := do
+  let some v ← tokenSlot.get | throw (IO.userError "no token")
+  return v
+def forgetToken : IO Unit := tokenSlot.set none
 def caught (box : Box) : IO String := do
   try
     let _ ← box.read
@@ -53,6 +64,24 @@ const scalars = {
 const installEchoes = async project => {
 	const path = join(project, "lean-bridge.hosts.json"), ir = await json(path);
 	const read = ir.declarations.find(d => d.name === "read"), arg = ir.declarations.find(d => d.kind === "constructor").parameters[0];
+	const box = ir.types[0], tokenId = "host:meter.Token", token = { kind: "named", id: tokenId };
+	ir.types.push({ ...box, id: tokenId, name: "Token"
+		, resource: { ...box.resource, kindId: "resource:meter.Token" }
+		, host: { ...box.host, identity: "strong-canonical" }
+		, source: { ...box.source, declaration: "Token" } });
+	const identity = ir.declarations.find(d => d.name === "identity");
+	for(const d of [read, identity])
+	{
+		const decl = "Token." + d.name;
+		ir.declarations.push({ ...d, owner: tokenId, id: tokenId + "." + d.name
+			, overloadKey: decl, receiver: { ...d.receiver, type: token }
+			, result: d === read ? d.result : { ...d.result, type: token }
+			, source: { ...d.source, declaration: decl } });
+	}
+	ir.declarations.push({ ...identity, id: read.owner + ".lookup", name: "lookup"
+		, overloadKey: "Box.lookup"
+		, result: { ...identity.result, type: token }
+		, source: { ...identity.source, declaration: "Box.lookup" } });
 	for(const [name, scope, anchor] of [["child", "receiver", "receiver"], ["from_parent", "parameter", "parent"]])
 	{
 		const parameters = scope === "parameter" ? [{ ...arg, ...read.receiver, name: anchor }] : [];
@@ -92,7 +121,7 @@ test("ordinary and reviewed installed gems call real Ruby-owned objects across i
 			await writeFile(join(project, mod + ".lean"), src);
 			await writeFile(join(project, "lakefile.toml"), 'name = "' + name + '"\nversion = "1.0.0"\n[[lean_lib]]\nname = "' + mod + '"\n');
 			const cfg = await json(join(project, "lean-bridge.exports.json")); cfg.modules = [mod]; cfg.targets.rubygems.name = name;
-			cfg.exports = [...cfg.exports.map(n => n.replace("Workshop", mod)), ...["keep", "held", "forget", "caught", "replaced", "verdict", "layered", "retainChild", "retainFrom", "consume", ...Object.keys(scalars).map(tag => "test_" + tag)].map(n => mod + "." + n)];
+			cfg.exports = [...cfg.exports.map(n => n.replace("Workshop", mod)), ...["keep", "held", "forget", "caught", "replaced", "verdict", "layered", "retainChild", "retainFrom", "consume", "tokenIdentity", "lookupToken", "checkPair", "rememberToken", "recalledToken", "forgetToken", ...Object.keys(scalars).map(tag => "test_" + tag)].map(n => mod + "." + n)];
 			await writeFile(join(project, "lean-bridge.exports.json"), canonicalJson(cfg));
 			if(route === "reviewed") await writeFile(join(project, "workshop.binding-ir.json"), canonicalJson(reviews.get(name)));
 			try
@@ -102,6 +131,8 @@ test("ordinary and reviewed installed gems call real Ruby-owned objects across i
 			const { receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(out, "package-set-receipt.json") });
 			assert.equal(receipt.profiles[0].id, "native-ruby-host-v1");
 			const [a] = receipt.packages[0].artifacts, api = await json(join(out, "binding-ir.json")), ev = await json(join(out, "host-export-evidence.json"));
+			assert.equal(api.types.find(t => t.id === "host:meter.Box").host.identity, "weak-canonical");
+			assert.equal(api.types.find(t => t.id === "host:meter.Token").host.identity, "strong-canonical");
 			assert.equal(ev.reviewedSourceSha256, route === "ordinary" ? null : sha256(canonicalJson(reviews.get(name))));
 			if(route === "ordinary") reviews.set(name, api); else assert.deepEqual(api, reviews.get(name));
 			assert.ok(!seen.has(a.sha256)); seen.add(a.sha256);
@@ -118,7 +149,9 @@ test("ordinary and reviewed installed gems call real Ruby-owned objects across i
 		}
 		await rename(gems, relocated); const app = join(root, "consumer.rb"); await copyFile(join(fixture, "consumer.rb"), app);
 		const scalarApp = join(root, "scalars.rb"); await copyFile(join(fixture, "scalars.rb"), scalarApp);
-		const scalarResult = await exec(ruby, [scalarApp], { cwd: root, env: { PATH: "/no-consumer-tools", GEM_HOME: relocated, GEM_PATH: relocated, LEAN_NUM_THREADS: "1" }, timeout: 20000 });
+		const kindApp = join(root, "nominals.rb"); await copyFile(join(fixture, "nominals.rb"), kindApp);
+		const scalarResult = await exec(ruby, [kindApp], { cwd: root, env: { PATH: "/no-consumer-tools", GEM_HOME: relocated, GEM_PATH: relocated, LEAN_NUM_THREADS: "1" }, timeout: 30000 });
+		assert.match(scalarResult.stdout, /strong and weak kinds; both binding orders; live=0/u);
 		assert.match(scalarResult.stdout, /two installed gems: .*live=0/u);
 		assert.match(scalarResult.stdout, /19 primitive types; live=0/u); t.diagnostic(route + " " + scalarResult.stdout.trim()); await rm(relocated, { recursive: true });
 	}

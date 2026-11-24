@@ -22,11 +22,16 @@ class Box
   def identity = self
 end
 class OtherBox < Box; end
+class Token
+  attr_accessor :on_read
+  def identity = self
+  def read = (@on_read ? @on_read.call : 19)
+end
 box = Box.new(4)
 refused(RuntimeError) { A.read(box) }
-A.bind_hosts(box: Box) do
-  refused(TypeError) { B.bind_hosts(box: OtherBox) { raise "wrong binding admitted" } }
-  B.bind_hosts(box: Box) do
+A.bind_hosts(box: Box, token: Token) do
+  refused(TypeError) { B.bind_hosts(box: OtherBox, token: Token) { raise "wrong binding admitted" } }
+  B.bind_hosts(box: Box, token: Token) do
     x = A.make(11)
     check(x.instance_of?(Box) && B.identity(x).equal?(x), "constructor or identity")
     check(B.update(x, 42) == 42 && A.read(x) == 42 && x.level == 42, "shared mutable property")
@@ -75,7 +80,7 @@ A.bind_hosts(box: Box) do
   check(A.held.equal?(box), "unbinding peer invalidated other session")
 end
 check(A.send(:__live).zero?, "leak at unbind")
-A.bind_hosts(box: Box) do
+A.bind_hosts(box: Box, token: Token) do
   refused(TypeError) { A.held } # Stored in Lean before the previous scope ended.
   A.forget
   check(A.read(box) == 4, "new scope failed")
