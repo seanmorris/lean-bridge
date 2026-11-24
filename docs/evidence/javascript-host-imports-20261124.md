@@ -229,6 +229,12 @@ separately bundled Chromium module worker use the same application code.
 The browser build checks both import graphs and compares the deployed Wasm
 bytes with the binaries in the verified packages.
 
+The [local replay record](javascript-threaded-host-installed-20261124.json)
+contains the SDK identity, three verified receipt digests, all archive hashes,
+and per-consumer results from commit `f260e47`. Both Workshop source routes
+passed 36 checks in each execution; the deployed page and module worker each
+closed with zero frames, allocations, pending calls, native owners and notifications.
+
 To keep the three verified handoffs after the test, set
 `LEAN_BRIDGE_JS_THREADED_HOST_EVIDENCE` to a new directory. Without it,
 the test removes its temporary packages and browser profiles.
