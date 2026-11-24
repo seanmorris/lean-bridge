@@ -23,3 +23,25 @@ Run `npm run test:perl-host-imports` with the pinned Lean producer and
 `npm run test:perl-host-members` with `LEAN_BRIDGE_PERL` set to each
 interpreter. These are compiler and dispatch checks, not an installed CPAN
 host-object package.
+
+## Compiled Lean to Perl and back
+
+On the same four Perl profiles, `npm run test:perl-host-frame` built the
+generated Lean import and a real application module, linked their C output
+to an XS fixture, and loaded it in a new Perl process. A call to a real
+Perl method re-entered Lean and returned to its original invocation. The
+test checked the caller's existing `$@` scalar through an alias.
+
+An unchanged Lean `IO.Error` restored the original Perl exception object,
+even after Lean had caught a second distinct exception. A replacement Lean
+error with the same message did not restore it. Mapping the error to
+`EIO String` delivered the mapped string. A malformed Perl method reply
+failed inside the protected conversion. Weak observation showed that the
+original exception was collectible after the outer call unwound.
+
+After 64 distinct caught failures, the frame refused further host calls
+before executing another method. Lean catching that refusal did not turn
+the outer call into a success. A fresh invocation succeeded. The fixture
+also refused inherited calls after fork and, on threaded Perl, calls from
+a cloned interpreter. This is a native frame check with a scalar member;
+it does not exercise an installed CPAN host-object pair.
