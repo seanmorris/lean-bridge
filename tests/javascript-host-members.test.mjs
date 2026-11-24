@@ -5,10 +5,54 @@ import {readFile} from "node:fs/promises";
 import {componentScalarTypes} from "../src/abi/component-scalars.mjs";
 import {javaScriptHostMembers} from "../src/backends/javascript/host-members.mjs";
 import {bindWasmHostMembers} from "../src/runtime/wasm-host-members.mjs";
+import {installWasmHostDomain} from "../src/runtime/wasm-host-loader.mjs";
+import {createWasmHostWire} from "../src/runtime/wasm-host-wire.mjs";
+import {canonicalJson,sha256} from "../src/capsule/node.mjs";
+import {assertJavaScriptIOConfiguration} from "../src/release/javascript-wasm-io-package.mjs";
 
 const ir=JSON.parse(await readFile(new URL("./fixtures/javascript-host-meter/lean-bridge.hosts.json",import.meta.url)));
 const clone=()=>structuredClone(ir);
 const slot=(m,op,name)=>m.members.findIndex(s=>s.op===op && s.name===name);
+test("host configuration selects synchronous classes without granting other capabilities",async ()=>{
+	const configuration=JSON.parse(await readFile(new URL("./fixtures/javascript-host-meter/lean-bridge.exports.json",import.meta.url)));
+	assert.doesNotThrow(()=>assertJavaScriptIOConfiguration(configuration));
+	assert.doesNotThrow(()=>assertJavaScriptIOConfiguration({...configuration,nativeEffects: []}));
+	assert.throws(()=>assertJavaScriptIOConfiguration({...configuration,nativeEffects: ["filesystem"]}),/only in-memory/);
+	assert.throws(()=>assertJavaScriptIOConfiguration({...configuration,taskExports: ["Workshop.make"]}),/taskExports/);
+	const {hostImports,...ordinary}=configuration;
+	assert.equal(typeof hostImports,"string");assert.throws(()=>assertJavaScriptIOConfiguration(ordinary),/only in-memory/);
+});
+test("browser-safe nominal keys preserve the original producer identity",()=>{
+	const {kinds}=javaScriptHostMembers(ir);
+	for(const [i,t] of ir.types.entries())
+		assert.equal(kinds[i].key,sha256(canonicalJson([ir.component.id,t.id,t.resource.kindId])));
+});
+test("a host callback cannot return to Wasm or allocate a reply after nested retirement",()=>{
+	const model=javaScriptHostMembers(ir),op=slot(model,"method","read"),heap=new Uint8Array(1024);
+	model.members[op].result="string";
+	let retired=false,allocations=0;
+	/** Simulate a callback catching the nested heap failure and returning a value anyway. */
+	class Box
+{ /** Retire before a copyable reply can be stored. */
+		read(){retired=true;return "no native allocation";} }
+	const wire=createWasmHostWire({HEAP8: heap,_malloc: ()=>{allocations++;return 512;}},model,{Box},{resolve: ()=>new Box()}
+		,{assertOpen: ()=>{if(retired) throw new Error("retired");},poison: ()=>{retired=true;}});
+	const v=new DataView(heap.buffer);v.setUint32(32,64,true);v.setUint32(40,1,true);
+	assert.throws(()=>wire.call(op,1,32,64),/retired/);assert.equal(allocations,0);assert.equal(wire.observed(64),null);
+});
+test("native retirement failure poisons its shared heap without reentering the allocator",async ()=>{
+	const trap=new WebAssembly.RuntimeError("retire failed"),heap=new Uint8Array(2048);
+	let retired=false,frees=0;
+	const noop=()=>{};
+	const wasm={HEAP8: heap,FS: {writeFile: noop,unlink: noop}
+		, loadDynamicLibrary: async()=>{}
+		, _bridge_lean_runtime_status: ()=>2,_malloc: ()=>32,_free: ()=>{frees++;}
+		, _bridge_scalar_call: ()=>{throw trap;}};
+	const domain=await installWasmHostDomain(wasm,Uint8Array.of(1),{assertOpen: ()=>assert.equal(retired,false),poison: ()=>{retired=true;}});
+	const session=domain.bind("1".repeat(64),javaScriptHostMembers(ir),{Box: Object});
+	assert.throws(()=>session.close(),e=>e===trap);
+	assert.equal(retired,true);assert.equal(frees,0);
+});
 test("checked member dispatch calls the real class, property and subclass and preserves thrown values",()=>{
 	const model=javaScriptHostMembers(ir);
 	let binds=0,gets=0,sets=0,reads=0;

@@ -31,9 +31,16 @@ export const createWasmHostErrorStore = () => {
  * @param model - Generated member table of this component.
  * @param supplied - Application-supplied nominal constructors.
  * @param domain - Internal resolve/pin/release operations of this heap's nominal domain.
+ * @param lifecycle - Shared-heap guard, including retirement during an application callback.
  */
-export const createWasmHostWire = (wasm, model, supplied, domain) => {
+export const createWasmHostWire = (wasm, model, supplied, domain, lifecycle) => {
 	const frames = new Map(), faults = new WeakMap();
+	const native=fn=>{
+		try
+		{lifecycle?.assertOpen();const result=fn();lifecycle?.assertOpen();return result;}
+		catch(error)
+		{lifecycle?.poison();throw error;}
+	};
 	const send = bindWasmHostMembers(model, supplied, error => {
 		// Do not brand the public error itself. The application can subsequently
 		// throw that same error, which is then an application exception.
@@ -42,6 +49,7 @@ export const createWasmHostWire = (wasm, model, supplied, domain) => {
 	const span = (p, size) => u32(p) && p % 8 === 0 && p + size <= wasm.HEAP8.length;
 	const overlap = (p, size, q, bytes) => size && bytes && p < q + bytes && q < p + size;
 	const call = (slot, n, args, reply) => {
+		lifecycle?.assertOpen();
 		const m = Number.isInteger(slot) && slot >= 0 && model.members[slot];
 		// Never acquire a pre-existing frame or let an inner call finish it.
 		if(!span(reply, 16) || frames.has(reply)) throw new Error("Invalid or overlapping active host reply");
@@ -65,10 +73,12 @@ export const createWasmHostWire = (wasm, model, supplied, domain) => {
 			{ result = send(slot, values); }
 			catch(error)
 			{
+				lifecycle?.assertOpen();
 				const invalid = faults.has(error);
 				frame.status = invalid ? 3 : 1;
 				frame.error = invalid ? faults.get(error) : error; return frame.status;
 			}
+			lifecycle?.assertOpen(); // A nested call can retire the heap even if the application caught the trap.
 			if(typeof m.result === "number")
 			{
 				const token = domain.pin(m.result,result,m.anchor === null ? null : values[m.anchor]);
@@ -79,7 +89,7 @@ export const createWasmHostWire = (wasm, model, supplied, domain) => {
 			}
 			else writeComponentScalarSlot(wasm, reply, m.result, result, size => {
 				charge(size);
-				const p = wasm._malloc(Math.max(1,size)) >>> 0;
+				const p = native(()=>wasm._malloc(Math.max(1,size))) >>> 0;
 				if(!span(p,Math.max(1,size))) malformed();
 				frame.allocations.push(p); return p;
 			});
@@ -87,6 +97,10 @@ export const createWasmHostWire = (wasm, model, supplied, domain) => {
 		}
 		catch(error)
 		{ frame.error = error; }
+		try
+		{ lifecycle?.assertOpen(); }
+		catch(error)
+		{ frames.delete(reply);throw error; }
 		return frame.status;
 	};
 	const failure = reply => {
@@ -95,13 +109,14 @@ export const createWasmHostWire = (wasm, model, supplied, domain) => {
 		return {application: frame.status === 1, error: frame.error};
 	};
 	const finish = reply => {
+		lifecycle?.assertOpen();
 		const f = frames.get(reply);
 		if(!f) malformed();
 		frames.delete(reply);
 		try
 		{ if(f.pin) domain.release(f.pin); }
 		finally
-		{ for(const p of f.allocations) wasm._free(p); }
+		{ for(const p of f.allocations) native(()=>wasm._free(p)); }
 	};
 	return Object.freeze({call,failure,finish,observed: reply => frames.get(reply)?.status ? failure(reply) : null});
 };

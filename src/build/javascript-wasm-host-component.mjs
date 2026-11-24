@@ -6,9 +6,24 @@ import { javaScriptHostBrokerSymbols as brokerSymbols, validateJavaScriptHostMod
 import { generateJavaScriptHostExports } from "../backends/javascript/host-wasm-exports.mjs";
 import { compileHostSources } from "./host-elaboration.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-import { identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders } from "./javascript-wasm-toolchain.mjs";
+import { identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders, validJavaScriptWasmCompilerIdentity } from "./javascript-wasm-toolchain.mjs";
 
 const sources=["host-wasm-domain.c","host-wasm-domain.h","host-wasm-errors.h","host-wasm-public.h","host-wasm-wire.h"];
+const flags=["-O2","-g0","-fPIC","-fvisibility=hidden","-fwasm-exceptions","-DLEAN_EMSCRIPTEN","-ffp-contract=off","-I.","-Iinclude"];
+const link=["-O2","-g0","-fwasm-exceptions","-sSIDE_MODULE=2","-Wl,--no-entry"];
+/**
+ * Bind source and tool evidence to the exact input files, flags and generated code.
+ *
+ * @param o - Captured tool identities, exact inputs, public and host contracts.
+ */
+export const javaScriptHostBuildIdentity = o => {
+	const {api,ir,compiler,evidence,inputs}=o;
+	const keys=[...sources,"component_scalar.h",...javascriptWasmTargetHeaders.map(n=>"include/lean/"+n)];
+	if(!validJavaScriptWasmCompilerIdentity(compiler) || Object.keys(inputs).length!==keys.length
+		|| keys.some(k=>typeof inputs[k]!=="string" || !/^[a-f0-9]{64}$/u.test(inputs[k]))) throw new Error("Incomplete JavaScript host compiler inputs");
+	const skeleton=generateJavaScriptHostExports({api,hosts: ir,identity: "0".repeat(64),modules: evidence.selection.exportModules});
+	return sha256(canonicalJson({compiler,evidence,inputs,skeleton,flags,link,brokerSymbols}));
+};
 /**
  * Use fresh host Lean elaboration and checked target headers. No native host
  * program or local compiler is ever shipped to a consumer.
@@ -42,9 +57,7 @@ export const compileJavaScriptHostComponent = async o => {
 	const built=await compileHostSources({...o,ir: c.ir,run,environment: env,target: "npm"});
 	const {api,evidence}=built, modules=evidence.selection.exportModules;
 	const emit=identity=>generateJavaScriptHostExports({api,hosts: c.ir,identity,modules});
-	const flags=["-O2","-g0","-fPIC","-fvisibility=hidden","-fwasm-exceptions","-DLEAN_EMSCRIPTEN","-ffp-contract=off","-I.","-Iinclude"];
-	const link=["-O2","-g0","-fwasm-exceptions","-sSIDE_MODULE=2","-Wl,--no-entry"];
-	const identity=sha256(canonicalJson({compiler,evidence,inputs,skeleton: emit("0".repeat(64)),flags,link,brokerSymbols}));
+	const identity=javaScriptHostBuildIdentity({api,ir: c.ir,compiler,evidence,inputs});
 	const gen=emit(identity), iface=evidence.interfaces.findIndex(f=>f.module===c.generatedHostModule);
 	if(iface<0 || sha256(await readFile(join(app,built.objects[iface])))!==evidence.interfaces[iface].cSha256) throw new Error("Checked JavaScript host C module missing");
 	await save(gen.module+".lean",gen.entryLean);await run(lean,["-j1","-c","entry.c",gen.module+".lean"],app,built.env);

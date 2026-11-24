@@ -1,10 +1,9 @@
 # JavaScript host objects: compiler and WebAssembly checks
 
 Lean called a JavaScript constructor, instance method, getter and setter from
-compiled WebAssembly. This is a producer integration check, not an installed
-npm example. Three checks exercise the import boundary: a hand-written C
-provider, generated member calls, and two separately compiled components that
-share the runtime's object registry.
+compiled WebAssembly. The producer probes isolate the import and ownership
+rules. A separate package check builds with an offline-installed author CLI
+and exercises the generated public API from a downstream npm install.
 
 | Check | What it establishes |
 | --- | --- |
@@ -12,6 +11,7 @@ share the runtime's object registry.
 | `node --test tests/javascript-host-members.test.mjs` | The host dispatcher calls the supplied class, respects the receiver, and rejects invalid member arguments and results. |
 | `npm run test:javascript-host-wasm` | Lean 4.32.2 and Emscripten 6.0.6 compile the providers and a shared identity broker. Node runs the probes in the prepared single-threaded runtime, including two independent components loaded in both orders. |
 | `npm run test:javascript-host-public` | Capture a Lake project, elaborate its public functions and generate the caller-facing entry. Call all eight source-derived methods from JavaScript on the prepared Wasm heap. |
+| `npm run test:javascript-host-package` | Build ordinary Workshop, ordinary Peer, and separately reviewed Peer. Verify their handoffs and install Workshop and reviewed Peer with the same runtime. Exercise the installed exports in Node and Chromium; type-check a downstream program. |
 
 In the hand-written check, Lean writes through an alias, reads through the original
 object and gets **42**. On the second call the JavaScript method throws; the
@@ -72,6 +72,34 @@ unsigned argument into the message reached `Array.mk` (`lean_array_mk`),
 which the current effect checker does not admit on that call path. The test
 does not establish support for that formatting path.
 
-These are compiled side modules loaded directly, not installed npm packages.
-The npm release writer, shared package loader and installed Node, browser
-and Worker checks remain.
+The shared loader reconstructs the public ABI from both IR documents and
+checks both Wasm binaries before linking either. The public-entry test counts
+links: bad integrity, a modified control symbol and a broker substituted for
+the component all leave the count at zero. The valid descriptor links exactly
+one broker and one component, even with simultaneous requests for the package.
+
+For the installed check, supply the same SDK variables as for the public-entry
+test. Set `LEAN_BRIDGE_CHROMIUM` to an installed Chromium binary if Playwright's
+default is unavailable. The test verifies the separately reviewed interface
+and the original host contract from the archives. It installs the exact
+runtime dependency offline. Only the producer sees the author toolchain;
+the consumer imports its package and supplies its own `Box` class.
+
+The 2026-11-24 local handoffs contain these npm archive bytes:
+
+| Archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Shared runtime (identical across all three builds) | 1,662,308 | `d6bbf3f381933da59c6033f45d0b97b6681667cce1abfd63193fbd4cc95c43fe` |
+| Workshop, ordinary | 16,801 | `fcb9d772fcc85a8cc2b41f968bb6ebec266e5be4fbdb1749e11e827e37905808` |
+| Peer, ordinary | 14,462 | `f83fa2354420d2aa9e70f36f48383ffddc0905f0226a4246b552b21c6b0055ea` |
+| Peer, reviewed | 15,671 | `29cdbf0504b45fcb81dcb9932e8f7934e738a933f2dab94f64b5b7ba9e2de4ab` |
+
+Node passed in both load orders. The Chromium page (Workshop first) and a
+separate module worker (Peer first) returned the same observations. An object
+created in one package remained the same object in the other; nested calls
+observed the same mutation. The consumer caught the original JavaScript
+throw, the declared Lean IO error, and the typed EIO carrying the original
+object on their respective paths. A conflicting live class was rejected.
+Disposing one binding left its peer usable. Strict TypeScript retained the
+consumer class's extra method and rejected a wrong instance or integer type.
+No package was published to a registry.

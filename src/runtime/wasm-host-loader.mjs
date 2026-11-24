@@ -3,23 +3,25 @@ import { createWasmHostDomain } from "./wasm-host-domain.mjs";
 import { createWasmHostErrorStore, createWasmHostWire } from "./wasm-host-wire.mjs";
 
 const installations=new WeakMap(), name=new TextEncoder().encode("lb_jsh_domain_control_v1\0");
-const init = async (wasm,bytes) => {
+const init = async (wasm,bytes,lifecycle) => {
 	if(!wasm._bridge_lean_runtime_status || wasm._bridge_lean_runtime_status()!==2 || Object.hasOwn(wasm,"lbJshDomainV1"))
 		throw new Error("JavaScript host domain requires a fresh, initialized owner heap");
 	const view=()=>new DataView(wasm.HEAP8.buffer);
 	const retire=kind=>{
-		const p=wasm._malloc(32+name.length)>>>0;
-		if(!p) throw new Error("Cannot allocate JavaScript domain retirement frame");
-		let trapped=true;
+		lifecycle?.assertOpen();
 		try
 		{
+			const p=wasm._malloc(32+name.length)>>>0;
+			if(!p) throw new Error("Cannot allocate JavaScript domain retirement frame");
 			wasm.HEAP8.fill(0,p,p+32); wasm.HEAP8.set(name,p+32);
 			const v=view(); v.setUint32(p,0x4a484431,true);v.setUint32(p+4,32,true);
 			v.setUint32(p+12,1,true);v.setUint32(p+16,kind,true);
 			const status=wasm._bridge_scalar_call(p+32,p);
-			trapped=false; if(status) throw new Error("JavaScript domain could not retire its native wrappers");
-		} finally
-		{ if(!trapped) wasm._free(p); }
+			lifecycle?.assertOpen();
+			if(status) throw new Error("JavaScript domain could not retire its native wrappers");
+			wasm._free(p);
+		} catch(error)
+		{ lifecycle?.poison(); throw error; }
 	};
 	const arena=createWasmHostDomain(retire), errors=createWasmHostErrorStore(), stack=[];
 	const current=id=>{
@@ -31,7 +33,11 @@ const init = async (wasm,bytes) => {
 		, kind: (id,i)=>current(id).session.kind(i)
 		, send: (id,...args)=>current(id).wire.call(...args)
 		, finish: (id,out)=>current(id).wire.finish(out)
-		, deliver: (id,...args)=>current(id).deliver(...args)
+		, deliver: (id,...args)=>{
+			lifecycle?.assertOpen();
+			const status=current(id).deliver(...args);
+			lifecycle?.assertOpen();return status;
+		}
 		, record: (id,status,out)=>{
 			const {wire}=current(id);
 			const failure=out?wire.observed(out):null;
@@ -52,7 +58,7 @@ const init = async (wasm,bytes) => {
 		const session=arena.bind(model,supplied);
 		let wire;
 		try
-		{ wire=createWasmHostWire(wasm,model,session.classes,session); }
+		{ wire=createWasmHostWire(wasm,model,session.classes,session,lifecycle); }
 		catch(error)
 		{ session.close(); throw error; }
 		const during=(fn,deliver)=>{
@@ -74,8 +80,9 @@ const init = async (wasm,bytes) => {
  *
  * @param wasm - Initialized shared Emscripten runtime.
  * @param binary - Authenticated bytes from the matching prepared runtime release.
+ * @param lifecycle - Optional shared loader retirement guard and quarantine.
  */
-export const installWasmHostDomain = (wasm,binary) => {
+export const installWasmHostDomain = (wasm,binary,lifecycle) => {
 	if(!(binary instanceof Uint8Array) || !binary.length) throw new TypeError("Expected JavaScript host broker Wasm");
 	const old=installations.get(wasm);
 	if(old)
@@ -84,6 +91,6 @@ export const installWasmHostDomain = (wasm,binary) => {
 		return old.promise;
 	}
 	const bytes=new Uint8Array(binary);
-	const promise=Promise.resolve().then(()=>init(wasm,bytes));
+	const promise=Promise.resolve().then(()=>init(wasm,bytes,lifecycle));
 	installations.set(wasm,{bytes,promise});return promise;
 };

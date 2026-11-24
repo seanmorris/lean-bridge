@@ -79,6 +79,40 @@ local handoff. This profile currently builds npm separately with the local
 SDK; an explicit Nix or Docker request does not fall back to a host build.
 See [calling synchronous IO from JavaScript](../javascript-typescript.md#synchronous-lean-io).
 
+## Export functions that call JavaScript objects
+
+Use `hostImports` when your Lean code accepts an application-owned object,
+calls its members, or returns it to JavaScript. The Workshop project includes the
+[host contract](../../tests/fixtures/javascript-host-meter/lean-bridge.hosts.json),
+[export configuration](../../tests/fixtures/javascript-host-meter/lean-bridge.exports.json),
+and [Lean source](../../tests/fixtures/javascript-host-meter/Workshop.lean).
+The host contract declares `Box`; it does not implement the class.
+
+```lean
+import LeanBridge.Host.Javascript
+
+open LeanBridge.Host.Javascript
+
+def readBox (box : Box) : IO UInt32 := box.read
+```
+
+Select the qualified Lean functions in `exports`, or supply a reviewed
+`.binding-ir.json` public interface. Lean Bridge checks either selection
+against the compiled source. With the pinned local author SDK and prepared
+shared runtime used for synchronous IO, run:
+
+```sh
+lean-bridge build --project . --target npm --output build/workshop-release
+lean-bridge verify --receipt build/workshop-release/package-set-receipt.json
+```
+
+The `packages/npm/` handoff contains a component archive and its exact
+shared-runtime dependency. The component includes a checked identity broker
+so packages using the same host contract can preserve object identity on one
+heap. The application supplies its classes via [`withHosts`](../javascript-typescript.md#pass-application-objects-to-lean).
+This profile is for synchronous, in-memory calls. It does not grant filesystem
+access or move application objects onto a Lean task thread.
+
 ## Build a threaded npm handoff
 
 Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures.

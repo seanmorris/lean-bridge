@@ -44,7 +44,7 @@ static inline int lb_jsh_errors_remember(lb_jsh_error_domain *d, b_lean_obj_arg 
 /* Remove the frame before dropping pins. Return ownership of at most one
    token to the caller, which consumes it after Wasm has unwound. */
 static inline uint32_t lb_jsh_errors_leave(lb_jsh_error_domain *d, lb_jsh_error_scope *scope, b_lean_obj_arg escaped) {
-    if (d->active!=scope) abort();
+    if (d->active!=scope) __builtin_trap();
     d->active=scope->parent;
     uint32_t matched=0;
     while (scope->rows) {

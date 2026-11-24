@@ -999,7 +999,7 @@ export const buildCanonicalProject = async ({
 			signal?.throwIfAborted(); throw new CanonicalBuildError(error.code ?? "invalid-export-configuration", error.message);
 		});
 		const threaded=Boolean(record.configuration.taskExports?.length || record.configuration.asyncIterators?.length);
-		if(threaded || Object.hasOwn(record.configuration, "nativeEffects"))
+		if(threaded || record.configuration.hostImports || Object.hasOwn(record.configuration, "nativeEffects"))
 		{
 			if(mixed || normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Build JavaScript effects as a separate npm handoff");
 			return buildJavaScriptIOProject({projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot, record,threaded});

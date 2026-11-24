@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import {appendFile,copyFile,cp,mkdir,mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
-import {join,resolve} from "node:path";
+import {dirname,join,resolve} from "node:path";
 import test from "node:test";
 import {pathToFileURL} from "node:url";
 import {inspectLeanProject} from "../../src/analyze/lean-project.mjs";
@@ -10,8 +10,8 @@ import {elaboratedComponent} from "../../src/analyze/semantic-model.mjs";
 import {openHostProjectSource} from "../../src/build/host-project-source.mjs";
 import {compileJavaScriptHostComponent} from "../../src/build/javascript-wasm-host-component.mjs";
 import {canonicalJson} from "../../src/capsule/node.mjs";
-import {bindJavaScriptHostExports} from "../../src/runtime/wasm-host-exports.mjs";
-import {installWasmHostDomain} from "../../src/runtime/wasm-host-loader.mjs";
+import {assembleComponentNpmRuntime} from "../../src/release/component-npm-package.mjs";
+import {javascriptSharedRuntimeRequirement} from "../../src/release/owned-javascript-npm-package.mjs";
 
 test("source-checked Wasm public calls separate object identity, nested Except, EIO, IO.Error and original JavaScript throws", {timeout: 480_000}, async t=>{
 	const root=await mkdtemp(join(tmpdir(),"js-host-public-"));t.after(()=>rm(root,{recursive: true,force: true}));
@@ -23,10 +23,11 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 	config.modules.push("Outcomes");config.exports.push("Outcomes.branch","Outcomes.typed","Outcomes.ordinaryFailure");
 	await writeFile(cfg,canonicalJson(config));
 	const inventory=await inspectLeanProject(project), component=elaboratedComponent(inventory.project);
-	let source,compiled;
+	let source,compiled,hostImports;
 	try
 	{
 		source=await openHostProjectSource({project,inventory,component,targets: ["npm"],leanPrefix: prefix});
+		hostImports=source.projectContract.ir;
 		const app=join(root,"objects");await mkdir(app);
 		compiled=await compileJavaScriptHostComponent({...source
 			, app, leanPrefix: prefix
@@ -38,15 +39,46 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 	{t.diagnostic([error.message,error.details?.stderr,error.details?.stdout,error.details?.exports && JSON.stringify(error.details)].filter(Boolean).join("\n"));throw error;}
 	finally
 	{await source?.dispose();}
-	const main=process.env.LEAN_BRIDGE_RUNTIME_ROOT,{default: create}=await import(pathToFileURL(join(main,"main.mjs")));
-	const wasm=await create({wasmBinary: await readFile(join(main,"main.wasm"))});assert.equal(wasm._bridge_lean_runtime_init(),1);
-	const domain=await installWasmHostDomain(wasm,compiled.broker), file="/public.wasm";
-	wasm.FS.writeFile(file,compiled.binary);
-	try
-	{await wasm.loadDynamicLibrary(file,{global: true,loadAsync: true,nodelete: true});} finally
-	{wasm.FS.unlink(file);}
-	const symbol=wasm._malloc(128);wasm.HEAP8.set(new TextEncoder().encode(compiled.abi.controlSymbol+"\0"),symbol);
-	let poisoned=false,creates=0;
+	const main=process.env.LEAN_BRIDGE_RUNTIME_ROOT, target=join(root,"runtime");
+	const runtime=await assembleComponentNpmRuntime({mainModule: await readFile(join(main,"main.mjs"))
+		, mainWasm: await readFile(join(main,"main.wasm"))
+		, runtimeRequirement: javascriptSharedRuntimeRequirement});
+	for(const [path,bytes] of runtime.files)
+	{const out=join(target,path);await mkdir(dirname(out),{recursive: true});await writeFile(out,bytes);}
+	const internal=join(target,"internal");
+	const {default: create}=await import(pathToFileURL(join(internal,"main.mjs")));
+	const {createComponentRuntime}=await import(pathToFileURL(join(internal,"component-runtime.mjs")));
+	let wasm;const links=[];
+	const {loadComponent}=await createComponentRuntime(async o=>{
+		wasm=await create(o);
+		const link=wasm.loadDynamicLibrary.bind(wasm);
+		wasm.loadDynamicLibrary=(path,options)=>{links.push(path);return link(path,options);};
+		return wasm;
+	},pathToFileURL(join(internal,"main.wasm")));
+	const componentPath=join(root,"component.wasm"),brokerPath=join(root,"host-domain.wasm");
+	await writeFile(componentPath,compiled.binary);await writeFile(brokerPath,compiled.broker);
+	const desc={id: compiled.api.component.id
+		, buildHash: compiled.abi.componentIdentity
+		, sideModule: pathToFileURL(componentPath)
+		, integrity: compiled.integrity
+		, privateAbi: compiled.abi
+		, bindingIr: compiled.api
+		, initializer: null
+		, hostImports
+		, broker: {url: pathToFileURL(brokerPath),integrity: compiled.brokerIntegrity}};
+	await assert.rejects(loadComponent({...desc,broker: {...desc.broker,integrity: "0".repeat(64)}}),/broker integrity/);
+	await assert.rejects(loadComponent({...desc,privateAbi: {...desc.privateAbi,controlSymbol: "wrong"}}),/descriptor mismatch/);
+	await assert.rejects(loadComponent({...desc,sideModule: desc.broker.url,integrity: desc.broker.integrity}),/Wasm interface/);
+	assert.deepEqual(links,[]);
+	const pending=loadComponent(desc);
+	assert.equal(loadComponent(desc),pending);
+	const factory=await pending;
+	assert.equal(links.length,2);
+	const {installWasmHostDomain}=await import(pathToFileURL(join(internal,"wasm-host-loader.mjs")));
+	const domain=await installWasmHostDomain(wasm,compiled.broker);
+	assert.equal(links.length,2);
+	await assert.rejects(loadComponent({...desc,broker: {...desc.broker,integrity: "0".repeat(64)}}),/identity conflict/);
+	let creates=0;
 	/** Application-owned implementation of the checked Box contract. */
 	class Box
 	{
@@ -61,9 +93,6 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 		/** Return the same nominal instance. */
 		identity() {return this;}
 	}
-	const factory=bindJavaScriptHostExports({wasm,domain,abi: compiled.abi
-		, model: compiled.model,operation: p=>wasm._bridge_scalar_call(symbol,p)
-		, assertOpen: ()=>assert.equal(poisoned,false),poison: ()=>{poisoned=true;}});
 	const api=factory.withHosts({Box});
 	try
 	{
@@ -84,9 +113,9 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 		assert.throws(()=>api.mapped(b),e=>e.code==="declared-error" && e.details.errorId==="error:EIO.Workshop.mapped" && e.details.payload==="host read failed");
 		b.read=()=>-1;assert.throws(()=>api.read(b),RangeError);
 		b.read=()=>api.update(b,51);assert.equal(api.read(b),51);
-		assert.equal(domain.live(),0);assert.equal(domain.heldErrors(),0);assert.equal(poisoned,false);
+		assert.equal(domain.live(),0);assert.equal(domain.heldErrors(),0);
 		assert.equal(api.dispose(),true);assert.equal(api.dispose(),false);assert.throws(()=>api.read(b),/closed/);
 		t.diagnostic("Compiled public IR "+compiled.abi.bindingIrSha256+"; "+compiled.abi.methods.length+" source-derived methods.");
 	} finally
-	{wasm._free(symbol);}
+	{api.dispose();}
 });

@@ -37,14 +37,25 @@ const archive = files => createDeterministicTarGzFromFiles({ sourceDateEpoch: 1
  * @param options.mainWasm - Prepared shared runtime WebAssembly bytes.
  * @param options.sideWasm - Verified ownership side module bytes.
  * @param options.privateAbi - Compiler-authenticated component descriptor.
+ * @param options.hostBroker - Optional previously checked host-domain side module.
  */
-export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, privateAbi }) => {
+export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, privateAbi, hostBroker }) => {
 	const main = new WebAssembly.Module(mainWasm), side = new WebAssembly.Module(sideWasm);
 	const exportsOf = module => new Set(WebAssembly.Module.exports(module).map(item => `${item.kind}:${item.name}`));
 	const runtimeExports = exportsOf(main), sideExports = exportsOf(side);
 	const required = [...generateOwnedWasmBroker().exports, "bridge_scalar_call", "bridge_scalar_frame_clear", "bridge_lean_runtime_status"];
 	for(const name of required)
 		if(!runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name))) throw new Error(`Prepared runtime lacks owned JavaScript support: ${name}`);
+	if(hostBroker)
+	{
+		const domain = new WebAssembly.Module(hostBroker), services = exportsOf(domain);
+		// Both export surfaces were checked against the source-derived ABI before
+		// this check. Embedded EM_JS hooks must be supplied by their own module.
+		const callbacksOf = exports => new Set([...exports].filter(s => s.startsWith("global:__em_js__")).map(s => s.slice("global:__em_js__".length)));
+		assertWasmSideImports({side: domain, runtimeExports, sideExports: services, callbacks: callbacksOf(services), profile: "host domain"});
+		assertWasmSideImports({side, runtimeExports: new Set([...runtimeExports,...[...services].filter(s=>s.startsWith("function:lb_jsh_domain_"))]), sideExports, callbacks: callbacksOf(sideExports), profile: "host component"});
+		return;
+	}
 	const suffix = privateAbi.controlSymbol.slice("lbjs_component_".length, -"_control".length);
 	const callbacks = new Set([`lbjs_${suffix}_dispatch_js`, `lbjs_${suffix}_finish_js`]);
 	assertWasmSideImports({side,runtimeExports,sideExports,callbacks,profile: "owned"});
@@ -58,6 +69,7 @@ export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, p
  */
 export const assertWasmSideImports = options => {
 	const {side,runtimeExports,sideExports,callbacks=new Set(),profile}=options;
+	const missing=[];
 	for(const item of WebAssembly.Module.imports(side))
 	{
 		const provided = item.kind === "function" ? item.module === "env" && (runtimeExports.has(`function:${item.name}`)
@@ -67,8 +79,9 @@ export const assertWasmSideImports = options => {
 					: item.module === "GOT.func" ? sideExports.has(`function:${item.name}`) || runtimeExports.has(`function:${item.name}`)
 						: item.module === "GOT.mem" ? sideExports.has(`global:${item.name}`) || runtimeExports.has(`global:${item.name}`)
 							: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
-		if(!provided) throw new Error(`Prepared runtime cannot resolve ${profile} import ${item.module}.${item.name}`);
+		if(!provided) missing.push(`${item.module}.${item.name}`);
 	}
+	if(missing.length) throw new Error(`Prepared runtime cannot resolve ${profile} import ${missing.join(", ")}`);
 };
 
 /**

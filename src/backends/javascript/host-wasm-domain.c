@@ -25,7 +25,7 @@ LB_DOMAIN_EXPORT uint32_t lb_jsh_domain_leave_v1(lb_jsh_error_scope *scope,b_lea
 }
 LB_DOMAIN_EXPORT lean_obj_res lb_jsh_domain_error_v1(uint32_t status,uint32_t key) {
     lean_object *e=lean_mk_io_user_error(lean_mk_string(status==1?"JavaScript host exception":"JavaScript host contract failure"));
-    if (!lb_jsh_errors_remember(&errors,e,key)) { if (key) lb_jsh_discard_js(key); abort(); }
+    if (!lb_jsh_errors_remember(&errors,e,key)) { if (key) lb_jsh_discard_js(key); __builtin_trap(); }
     return e;
 }
 typedef struct lb_jsh_handle {

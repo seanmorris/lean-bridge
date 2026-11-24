@@ -128,6 +128,42 @@ retry on the same heap. A Node worker or a dedicated browser module worker
 has its own runtime. Retiring the worker's instance leaves the parent’s
 runtime and its existing objects usable. See the [worker isolation checks](evidence/javascript-wasm-callback-io-retirement-20261123.md).
 
+### Pass application objects to Lean
+
+Some packages export `withHosts` because their Lean functions call methods on
+objects that your application owns. Supply the classes once, then call the
+bound functions. The package loads its runtime; you do not pass it a Wasm
+module, a pointer, or a table of handles.
+
+```js
+import { withHosts } from "@lean-bridge/workshop-host-example";
+
+class Box {
+  constructor(level) { this.level = level; }
+  read() { return this.level; }
+  identity() { return this; }
+}
+
+const workshop = withHosts({ Box });
+try {
+  const box = workshop.make(7);            // an actual Box
+  workshop.update(box, 12);
+  console.log(box.read());                 // 12
+  console.log(workshop.identity(box) === box); // true
+} finally {
+  workshop.dispose();
+}
+```
+
+The example uses the [Workshop handoff](publish/npm.md#export-functions-that-call-javascript-objects).
+In TypeScript, `make` and `identity` return your class's instance type.
+If a method throws and Lean propagates the same error unchanged, the caller
+catches the original JavaScript value. If Lean maps it to a declared `EIO`
+failure, the caller catches the package's error class with its typed payload.
+A returned Lean `Except` is a value (`{ok: …}` or `{error: …}`), not a throw.
+Bindings are synchronous and belong to their JavaScript agent. Create a new
+binding with worker-local classes when using a module worker.
+
 ### Answer a callback from a Lean task
 
 A threaded npm package can ask your application for a value while its Lean

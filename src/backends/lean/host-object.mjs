@@ -6,6 +6,8 @@
 
 import { canonicalizeJsonValue, hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { hostPascalName as pascal, hostDeclarationName, hostMemberSymbol } from "../../abi/host-member-names.mjs";
+export { hostDeclarationName, hostMemberSymbol };
 
 /**
  * Reports Lean host object generation failures with stable machine-readable codes and structured diagnostic context.
@@ -32,7 +34,6 @@ const fail = (code, message, details = {}) => {
 	throw new LeanHostObjectGenerationError(code, message, details);
 };
 
-const pascal = value => value.replace(/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/g, (_, __, letter) => letter.toUpperCase());
 /** Generated modules accepted by the native host-object compiler (not a package support list). */
 export const compiledHostModules = Object.freeze({ python: "LeanBridge.Host.Python"
 	, ruby: "LeanBridge.Host.Ruby", jvm: "LeanBridge.Host.Jvm"
@@ -40,11 +41,6 @@ export const compiledHostModules = Object.freeze({ python: "LeanBridge.Host.Pyth
 	, javascript: "LeanBridge.Host.Javascript" });
 /** Package coordinates select their own checked host namespace. */
 export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript" });
-const snake = value => value
-  .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
-  .replace(/[^A-Za-z0-9]+/g, "_")
-  .replace(/^_+|_+$/g, "")
-  .toLowerCase();
 
 const primitive = Object.freeze({
 	unit: "Unit", bool: "Bool", char: "Char", bytes: "ByteArray", string: "String"
@@ -82,25 +78,6 @@ const ownershipNote = site => {
 		: `${site.lifetime.scope}${site.lifetime.anchor === null ? "" : `:${site.lifetime.anchor}`}`;
 	return `${site.ownership}, lifetime ${lifetime}`;
 };
-
-/**
- * Resolve an imported member's Lean name, including the two sides of a property.
- *
- * @param declaration - Validated host member.
- */
-export const hostDeclarationName = declaration => declaration.kind === "property"
-	? `${declaration.parameters.length === 0 ? "get" : "set"}${pascal(declaration.name)}`
-	: declaration.name;
-
-/**
- * Resolve the same external name on the Lean importer and native provider.
- *
- * @param target - Host language.
- * @param type - Nominal resource declaration.
- * @param declaration - Operation whose kind distinguishes reads and writes of the same property.
- */
-export const hostMemberSymbol = (target, type, declaration) =>
-	`lean_bridge_host_${snake(target)}_${snake(type.name)}_${snake(hostDeclarationName(declaration))}`;
 
 const emitTarget = (ir, target, resources) => {
 	const namespace = `LeanBridge.Host.${pascal(target)}`;

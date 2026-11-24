@@ -186,8 +186,9 @@ instead when Lean needs to call an object supplied by
 [Python](../publish/pypi.md#call-python-objects-from-lean),
 [Ruby](../publish/rubygems.md#call-ruby-objects-from-lean),
 [Java/Kotlin](../publish/maven.md#import-an-application-owned-jvm-class),
-[C#](../publish/nuget.md#import-an-application-owned-c-class), or
-[Perl](../publish/cpan.md#call-a-perl-object-from-lean).
+[C#](../publish/nuget.md#import-an-application-owned-c-class),
+[Perl](../publish/cpan.md#call-a-perl-object-from-lean), or
+[JavaScript](../publish/npm.md#export-functions-that-call-javascript-objects).
 
 The [Maven task profile](../publish/maven.md#export-tasks-and-streams) turns
 selected Lean tasks into Java `CompletableFuture` or Kotlin suspend functions.

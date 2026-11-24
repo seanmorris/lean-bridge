@@ -1,8 +1,8 @@
 /** @file Derive the owner-agent dispatch table from an authored JavaScript host contract. */
 import {componentScalarTypes} from "../../abi/component-scalars.mjs";
 import {validateBindingIr} from "../../binding-ir/contract.mjs";
-import {canonicalJson,sha256} from "../../capsule/node.mjs";
-import {hostMemberSymbol} from "../lean/host-object.mjs";
+import {sha256Text} from "../../binding-ir/sha256.mjs";
+import {hostMemberSymbol} from "../../abi/host-member-names.mjs";
 
 const identifier=/^[A-Za-z][A-Za-z0-9_]*$/u;
 const fail=message=>{ throw new TypeError("JavaScript host members: "+message); };
@@ -22,7 +22,9 @@ export const javaScriptHostMembers = ir => {
 		fail("expected statically declared host classes");
 	if(new Set(types.map(t=>t.name)).size!==types.length || new Set(types.map(t=>t.resource.kindId)).size!==types.length)
 		fail("duplicate class name or nominal kind");
-	const kinds=types.map(t=>({name: t.name,policy: t.host.identity,key: sha256(canonicalJson([ir.component.id,t.id,t.resource.kindId]))}));
+	// This array contains only strings. Keep the original pretty JSON + LF
+	// hash so browser consumers and already compiled nominal keys agree.
+	const kinds=types.map(t=>({name: t.name,policy: t.host.identity,key: sha256Text(JSON.stringify([ir.component.id,t.id,t.resource.kindId],null,2)+"\n")}));
 	const carrier=site=>{
 		const type=site.type;
 		if(type.kind==="primitive" && componentScalarTypes.includes(type.name) && site.ownership==="copy" && site.lifetime===null) return type.name;

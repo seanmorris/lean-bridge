@@ -25,7 +25,7 @@ const token = value => typeof value === "string" && value.length <= 256 && /^[A-
 const componentId = /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)*@[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$(?![\s\S])/;
 const pathIsSafe = value => typeof value === "string" && value.length <= 1024 && /^[A-Za-z0-9_@.+/-]+$(?![\s\S])/.test(value)
 	&& value.split("/").every(part => part && part !== "." && part !== "..");
-const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1", "javascript-wasm-sync-io-v1", "javascript-wasm-threaded-task-v1"]
+const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1", "javascript-wasm-sync-io-v1", "javascript-wasm-host-io-v1", "javascript-wasm-threaded-task-v1"]
 	, "php-wasm": ["php-wasm-copied-v1", "php-wasm-sync-io-v1", "php-wasm-threaded-task-v1"]
 	, pypi: ["native-library-v1", "native-python-host-v1", "native-python-task-v1", "native-python-io-v1"]
 	, c: ["native-library-v1", "native-c-task-v1", "native-c-io-v1"]
