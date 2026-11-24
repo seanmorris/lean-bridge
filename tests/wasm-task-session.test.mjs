@@ -24,6 +24,23 @@ const harness=(methods,control,leases=[],capacity) => {
 	return {api,session,events,tokens,notifications,failAllocationAt: n => {failAt=n;},stops: () => stops};
 };
 
+test("JS rejects its promise and PHP throws before returning an owner for the same failed Lean factory",async () => {
+	const m={...method("factory","uint32","task"),startId: "error:EIO.factory",error: "uint32"};
+	const h=harness([m],({code,d,f})=>{
+		if(code===op.start)
+{d.setBigUint64(f+op.out,413n,true);return 3;}
+		if(code===op.clear) d.setBigUint64(f+op.out,0n,true);
+		return 0;
+	});
+	const typed=new Error("factory"), calls=[];
+	const translate=e=>{calls.push(e.details.payload);return typed;};
+	const pending=h.api.invoke("factory",[],translate);
+	assert.ok(pending instanceof Promise);await assert.rejects(pending,e=>e===typed);
+	assert.throws(()=>h.api.invokeWithSynchronousStart("factory",[],translate),e=>e===typed);
+	assert.deepEqual(calls,[413,413]);
+	assert.deepEqual(h.session.snapshot(),{state: "open",frames: 0,allocations: 0,pending: 0});await h.session.close();
+});
+
 test("a malformed owned result retires the shared heap and all pending siblings without freeing through it",async () => {
 	const h=harness([method("a","string","task"),method("b","uint32","task")],({code,f,d}) => {
 		if(code===op.start)

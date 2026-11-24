@@ -21,4 +21,4 @@ In a separate negative check, passing a rejected JavaScript promise directly to 
 
 The ordinary component archive had SHA-256 `d38b0bd6c9c6dd35eeeca5630e548066746f6c118275322103ac1fe7acbf5e72`; the reviewed archive had SHA-256 `80844eed23bd6c5d4a4996e6db00a507609bd3811e2d822b0336f7501af3b581`. Both used runtime archive `5289ef2c9c3435f259b1bb2e15b934bf65b08a6dd12bd8d95065bf302884ead3`.
 
-The installed task packages in this experiment target JavaScript. A prepared PHP-Wasm release still needs to supply the owner adapter, the typed PHP awaitable, and its failure and disposal behavior. This test passes scalar values between heaps; it does not exchange a live Lean object with the [in-process PHP-Wasm extension](php-wasm-sync-io-zend-20261123.md) or exercise a browser host.
+The installed task packages in this experiment target JavaScript. The later [prepared PHP-Wasm task releases](php-wasm-task-packages-20261124.md) supply the owner adapter and typed PHP awaitable and exercise both Node and Chromium. Neither test exchanges a live Lean object with the [in-process PHP-Wasm extension](php-wasm-sync-io-zend-20261123.md).

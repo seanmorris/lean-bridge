@@ -56,7 +56,7 @@ export const createWasmTaskSession = options => {
 		if(row.work) cancel(row.work); else drop(row);
 		return row.drain;
 	};
-	const observe = (row,start,cursor) => {
+	const observe = (row,start,cursor,syncStart=false) => {
 		const p={settled: false}, done = () => {
 			try
 			{
@@ -88,15 +88,18 @@ export const createWasmTaskSession = options => {
 		catch(error)
 		{
 			p.sub?.detach(); row.work=null;
+			// PHP throws a failed factory before handing the caller an awaitable.
+			// Drain the already reserved private Promise; JS callers still receive it.
+			if(syncStart && p.promise) p.promise.catch(() => {});
 			try
 			{ drop(row); } finally
-			{ if(p.promise) settle(p,"reject",row.mapError(error)); }
-			if(!p.promise) throw error;
+			{ if(p.promise) settle(p,"reject",syncStart ? error : row.mapError(error)); }
+			if(!p.promise || syncStart) throw error;
 		}
 		if(!cursor) Object.defineProperty(p.promise,"cancel",{value: () => cancel(p)});
 		return p.promise;
 	};
-	const dispatch = (method,index,invoke,args,mapError,leaseTypes) => {
+	const dispatch = (method,index,invoke,args,mapError,leaseTypes,syncStart) => {
 		assertOpen(); const frame=openWasmTaskFrame({...context,leases,leaseTypes},invoke,method,index,args);
 		if(!method.delivery)
 		{
@@ -114,7 +117,7 @@ export const createWasmTaskSession = options => {
 			row.callbacks=createWasmTaskCallbacks({method,args,frame,notifications,retire,abort});
 		}
 		row.drain=new Promise(resolve => { row.drained=resolve; }); rows.add(row);
-		if(method.delivery==="task") return observe(row,() => frame.call(op.start),false);
+		if(method.delivery==="task") return observe(row,() => frame.call(op.start),false,syncStart);
 		try
 		{ frame.call(op.start); } catch(error)
 		{ drop(row); throw error; }
@@ -141,7 +144,7 @@ export const createWasmTaskSession = options => {
 		const leaseTypes=new Map();
 		for(const [i,r] of (abi.leases ?? []).entries())
 		{ leases.register(r,abi.methods.length+i,invoke); leaseTypes.set(r.type,r); }
-		const invokePublic=(id,args,translate) => {
+		const invokePublic=(id,args,translate,syncStart) => {
 			const entry=entries.get(id); if(!entry) throw new TypeError("Unknown Lean task method");
 			const mapError = e => {
 				if(!translate || e?.code!=="declared-error") return e;
@@ -150,10 +153,12 @@ export const createWasmTaskSession = options => {
 				{ return error; }
 			};
 			try
-			{ return dispatch(entry.m,entry.i,invoke,args,mapError,leaseTypes); } catch(error)
+			{ return dispatch(entry.m,entry.i,invoke,args,mapError,leaseTypes,syncStart); } catch(error)
 			{ throw mapError(error); }
 		};
-		return Object.freeze({invoke: invokePublic,resourceClass: type => leaseTypes.has(type) ? leases.resourceClass(type) : undefined});
+		return Object.freeze({invoke: (id,args,translate)=>invokePublic(id,args,translate,false)
+			, invokeWithSynchronousStart: (id,args,translate)=>invokePublic(id,args,translate,true)
+			, resourceClass: type => leaseTypes.has(type) ? leases.resourceClass(type) : undefined});
 	};
 	const close = () => {
 		if(closing) return closing;

@@ -18,6 +18,12 @@ const scalarTypes = Object.freeze({ unit: "null", bool: "bool", char: "string"
 	, int32: "int", int64: "int", isize: "int", uint64: bigInteger
 	, usize: bigInteger, nat: bigInteger, int: bigInteger });
 const wasmTypes = Object.freeze({ ...scalarTypes, uint32: bigInteger, int64: bigInteger });
+/**
+ * Resolve the public return type on the 32-bit Zend target.
+ *
+ * @param kind - Checked scalar or returned sum.
+ */
+export const phpWasmCopiedType=kind=>checkType(kind,new Map(),wasmTypes);
 const fail=message=>{throw new TypeError("PHP synchronous IO: "+message);};
 const hex=x=>typeof x==="string"&&/^[0-9a-f]{64}$/u.test(x);
 const checkType=(t,leases,types)=>{

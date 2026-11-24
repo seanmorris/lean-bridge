@@ -14,6 +14,7 @@ import { prepareHostJavaScriptCompiler } from "./javascript-wasm-owned-project.m
 import { compileJavaScriptTaskComponent } from "./javascript-wasm-task-component.mjs";
 import { assertJavaScriptTaskConfiguration,writeJavaScriptTaskPackages } from "../release/javascript-wasm-task-packages.mjs";
 import { readTaskInputs,taskProfile } from "../release/javascript-wasm-task-inputs.mjs";
+import { assertPhpWasmTaskConfiguration,phpWasmTaskProfile } from "../release/php-wasm-task-packages.mjs";
 
 const absent = async path => {
 	if(await lstat(path).catch(error => { if(error.code === "ENOENT") return null; throw error; }))
@@ -26,12 +27,13 @@ const absent = async path => {
  * @param options - Canonical build options and observed export configuration.
  */
 export const buildJavaScriptIOProject = async options => {
-	const {engineRoot, environment, runner, cache, signal, lakeSnapshot, onProgress, record, threaded=false} = options;
+	const {engineRoot, environment, runner, cache, signal, lakeSnapshot, onProgress, record, threaded=false, phpWasm=false} = options;
+	const target=phpWasm?"php-wasm":"npm", handoff="packages/"+target;
 	const project = await realpath(options.projectRoot), output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-release"));
 	let staging, work, source;
 	try
 	{
-		(threaded ? assertJavaScriptTaskConfiguration : assertJavaScriptIOConfiguration)(record.configuration);
+		(phpWasm?assertPhpWasmTaskConfiguration:threaded ? assertJavaScriptTaskConfiguration : assertJavaScriptIOConfiguration)(record.configuration);
 		if(environment.LEAN_BRIDGE_BUILD_BACKEND !== undefined && environment.LEAN_BRIDGE_BUILD_BACKEND !== "auto")
 			throw new CanonicalBuildError("unsupported-build-backend", "In-memory npm exports require the pinned local author SDK; an explicit isolated backend cannot fall back to it");
 		if(!cache || !["use", "refresh", "off"].includes(cache.policy)) throw new CanonicalBuildError("invalid-cache-policy", "Expected use, refresh or off");
@@ -51,9 +53,9 @@ export const buildJavaScriptIOProject = async options => {
 		const compiler = await prepareHostJavaScriptCompiler({project, engineRoot, environment, runner, intent: {lakeSnapshot}, signal,taskInputs}, async tools => {
 			source = await openHostProjectSource({...tools, project, inventory, component});
 			const compilation = await compile({...tools, ...source, app: work});
-			const root = join(staging, "packages/npm");
+			const root = join(staging, handoff);
 			await mkdir(root, {recursive: true});
-			const receipt = await packages({root
+			const receipt = await packages({root,phpWasm
 				, ...source
 				, compilation
 				, signal
@@ -68,7 +70,7 @@ export const buildJavaScriptIOProject = async options => {
 		onProgress?.({phase: "build", state: "info", message: threaded ? "Compiling Lean tasks for the shared pthread runtime" : "Compiling synchronous Lean IO for the JavaScript shared runtime"});
 		const {compilation, receipt} = await compiler.compile({staging, configurationSha256: record.sha256});
 		const manifest = {schemaVersion: 1
-			, profile: threaded ? taskProfile : javaScriptIOProfile
+			, profile: phpWasm?phpWasmTaskProfile:threaded ? taskProfile : javaScriptIOProfile
 			, ...(threaded ? {taskInputsSha256: taskInputs.identity} : {})
 			, backend: compiler.backend
 			, component
@@ -80,13 +82,13 @@ export const buildJavaScriptIOProject = async options => {
 			, lakeSnapshotSha256: source.snapshot.sha256
 			, reviewedSourceSha256: compilation.evidence.reviewedSourceSha256
 			, packages: receipt.packages
-			, packageSet: "packages/npm/package-set-receipt.json"};
-		await writeFile(join(staging, threaded ? "javascript-wasm-task-release.json" : "javascript-wasm-io-release.json"), canonicalJson(manifest), {flag: "wx"});
-		await writeCombinedPackageSet({root: staging, roots: ["packages/npm"], component, source: receipt.source, signal});
+			, packageSet: handoff+"/package-set-receipt.json"};
+		await writeFile(join(staging, phpWasm?"php-wasm-task-release.json":threaded ? "javascript-wasm-task-release.json" : "javascript-wasm-io-release.json"), canonicalJson(manifest), {flag: "wx"});
+		await writeCombinedPackageSet({root: staging, roots: [handoff], component, source: receipt.source, signal});
 		await source.verify();
 		if(threaded) await readTaskInputs(sdkRoot, {signal, expectedIdentity: taskInputs.identity});
 		signal?.throwIfAborted(); await absent(output); await rename(staging, output); staging = null;
-		return {...manifest, output, targets: ["npm"]};
+		return {...manifest, output, targets: [target]};
 	} catch(error)
 	{
 		signal?.throwIfAborted();

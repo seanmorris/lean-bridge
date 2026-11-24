@@ -12,6 +12,7 @@ import {componentNpmIdentity} from "./component-package-receipt.mjs";
 import {tarGzipPackingIdentity} from "./deterministic-archive.mjs";
 import {archiveSharedJavaScriptPackages,assertWasmSideImports} from "./owned-javascript-npm-package.mjs";
 import {writePackageSetReceipt} from "./package-set-receipt.mjs";
+import {assertPhpWasmTaskConfiguration,attachPhpTaskPackages,phpTaskCoordinates,phpWasmTaskProfile} from "./php-wasm-task-packages.mjs";
 
 const index = `import createModule from "./internal/task.mjs";
 import {createWasmTaskLoader} from "./internal/runtime/wasm-task-loader.mjs";
@@ -93,7 +94,8 @@ export const assertJavaScriptTaskConfiguration=configuration => {
  */
 export const writeJavaScriptTaskPackages = async options => {
 	const {root,compilation,configuration,projectContract,captured,mainModule,mainWasm,signal}=options;
-	signal?.throwIfAborted(); assertJavaScriptTaskConfiguration(configuration);
+	const php=options.phpWasm===true;
+	signal?.throwIfAborted(); (php?assertPhpWasmTaskConfiguration:assertJavaScriptTaskConfiguration)(configuration);
 	const {api,evidence,componentIdentity,binary,integrity}=compilation, abi=javaScriptTaskAbi(api,componentIdentity);
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
 		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null) || evidence.hostImportsSourceSha256!==null
@@ -122,7 +124,8 @@ export const writeJavaScriptTaskPackages = async options => {
 		throw new Error("Invalid separation of compiled component and task runtime");
 	assertWasmSideImports({side,runtimeExports,sideExports,profile: "task"});
 	const profile=abi.profile, runtime=await taskRuntime(mainModule,mainWasm,profile);
-	const coordinate=componentNpmIdentity(api.component,configuration.targets?.npm);
+	const coordinate=php?phpTaskCoordinates(api,configuration).npm:componentNpmIdentity(api.component,configuration.targets?.npm);
+	if(coordinate.name==="@lean-bridge/runtime") throw new TypeError("Component cannot replace its shared task runtime");
 	const files=new Map(Object.entries(generateJavaScriptPackage(api,componentIdentity)));
 	const pkg=JSON.parse(files.get("package.json")), metadata=configuration.package ?? {};
 	files.set("package.json",canonicalJson({...pkg
@@ -141,20 +144,35 @@ export const writeJavaScriptTaskPackages = async options => {
 			, runtimeIdentity: runtime.runtimeIdentity}}));
 	const descriptor={bindingIr: api,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity};
 	files.set("internal/runtime.mjs",`import {loadTaskComponent} from "@lean-bridge/runtime";
-export const runtime=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});
+${php ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart});" : ""}
 `);
 	files.set("internal/component.wasm",binary);
 	files.set("metadata/compiler.json",canonicalJson(evidence)); files.set("metadata/binding-ir.json",canonicalJson(api));
 	if(projectContract.review) files.set("metadata/review.binding-ir.json",projectContract.review.source);
 	for(const [path,bytes] of captured.files) files.set("notices/"+path,bytes);
 	files.set("notices/lean-bridge.txt",await readFile(new URL("../../LICENSE",import.meta.url)));
-	const delivery=archiveSharedJavaScriptPackages({runtime,files,coordinate,profile});
+	const composer=php?await attachPhpTaskPackages({api,componentIdentity,configuration,files,coordinate,root,runtimeIdentity: runtime.runtimeIdentity}):null;
+	const outputProfile=php?phpWasmTaskProfile:profile;
+	const delivery=archiveSharedJavaScriptPackages({runtime,files,coordinate,profile: outputProfile});
+	const packages=delivery.packages;
+	if(php)
+	{
+		for(const p of packages) p.target="php-wasm";
+		const requires=packages.map(({ecosystem,name,version})=>({ecosystem,name,version}));
+		packages.push({target: "php-wasm",ecosystem: "composer"
+			, name: composer.name,version: composer.version
+			, profile: outputProfile,role: "api"
+			, runtimeIdentity: runtime.runtimeIdentity
+			, runtimeDelivery: "dependency"
+			, requires
+			, artifacts: [composer.artifact]});
+	}
 	for(const [path,bytes] of [[delivery.componentName,delivery.componentArchive],[delivery.runtimeName,delivery.runtimeArchive]])
 		await writeFile(join(root,path),bytes,{flag: "wx",signal});
 	const receipt={component: api.component
 		, source: {treeSha256: evidence.sourceTreeSha256}
-		, profiles: [{id: profile,bindingIrSha256: abi.bindingIrSha256,runtimeIdentity: runtime.runtimeIdentity}]
-		, packages: delivery.packages};
+		, profiles: [{id: outputProfile,bindingIrSha256: abi.bindingIrSha256,runtimeIdentity: runtime.runtimeIdentity}]
+		, packages};
 	await writePackageSetReceipt({root,...receipt,signal});
 	return receipt;
 };

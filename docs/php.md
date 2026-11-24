@@ -1329,6 +1329,31 @@ recursive result. Refined callbacks and owned graph values remain unsupported.
 
 ### Ordinary PHP-Wasm packages
 
+#### Await a task in PHP-Wasm
+
+A release with profile `php-wasm-threaded-task-v1` provides an npm host module and an optional Composer library. Install the npm component and its matching runtime from the release. Pass the component's default export to `sharedLibs` when constructing `PhpNode` or `PhpWeb`. Require the path in its `autoload` property from PHP. If your application mounts a Composer vendor directory, install the matching Composer ZIP, pass the host module's `extensions` descriptor instead, and require `/vendor/autoload.php`.
+
+The [Jobs example](../tests/fixtures/javascript-wasm-generated-tasks/Jobs.lean) parks a worker until another call releases it:
+
+```php
+use Brick\Math\BigInteger;
+use function LeanJobs\{hold, release, series};
+
+$pending = hold();
+release(BigInteger::of('4294967295'));
+echo $pending->await(); // 4294967295 on 32-bit PHP
+
+foreach (series(BigInteger::of(12)) as $number) {
+    if ($number->isEqualTo(3)) break; // closes the cursor
+}
+```
+
+`cancel()` returns true once if cancellation wins. A later `await()` then throws `TaskCancelled`. Cancellation stops delivery to PHP; a Lean worker waiting on application input may still need that input before it can exit. A factory failure throws from the function call, a worker failure throws from `await()`, and a returned Lean `Except` remains an `Ok` or `Err` value.
+
+The Lean workers run in a separate, shared Wasm heap. In a browser, serve the app in a cross-origin-isolated context. This profile copies values across heaps; it does not accept PHP callables or pass object leases to an in-process Zend extension. [Installed task package checks](evidence/php-wasm-task-packages-20261124.md).
+
+#### Call synchronous IO in PHP-Wasm
+
 A package whose receipt names `php-wasm-sync-io-v1` exposes synchronous
 Lean effects. Install its npm descriptor (and its Composer ZIP if you use
 Composer) the same way as a copied-value package. Once the PHP autoloader

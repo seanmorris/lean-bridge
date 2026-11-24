@@ -104,9 +104,7 @@ declarations in `resources`, as below. Callbacks, tasks, and PHP-Wasm are
 separate from this synchronous profile. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
 and the [independently reproduced archive](../evidence/php-sync-io-20261123.json).
 
-The [32-bit PHP-Wasm IO API](../evidence/php-wasm-sync-io-zend-20261123.md)
-has been tested with startup and lazy loading in Node. The public package
-builder does not yet distribute this IO profile.
+The [installed PHP-Wasm IO packages](../evidence/php-wasm-installed-sync-io-20261123.md) provide synchronous calls with startup or lazy loading. A project that selects tasks instead uses the threaded package described below.
 
 ### Export tasks and pull streams
 
@@ -137,6 +135,17 @@ For a `Task (Except IO.Error α)`, additionally select the function in
 returned `Except` is data, not a thrown error. To invoke PHP during the
 factory or worker, [export a task that calls PHP](#export-a-task-that-calls-php).
 See the [installed consumer example](../php.md#await-a-lean-task-or-iterate-a-stream).
+
+#### Build tasks for PHP-Wasm
+
+Use the same `taskExports`, `taskIOErrors`, and `asyncIterators` selections for copied values. Set `targets.php-wasm.npm` and `targets.php-wasm.composer` to the host module and Composer coordinates. Use a CLI containing the verified JavaScript task SDK, or supply that SDK directory in `LEAN_BRIDGE_JS_TASK_INPUTS` on the build machine.
+
+```sh
+lean-bridge build --project ./jobs --target php-wasm --output ./release
+lean-bridge verify --receipt ./release/package-set-receipt.json
+```
+
+The `php-wasm-threaded-task-v1` receipt identifies three archives in `release/packages/php-wasm/`: the npm host component, its exact pthread runtime, and the matching Composer API. Distribute that set together. The installed application needs no compiler or author SDK. The [PHP consumer example](../php.md#await-a-task-in-php-wasm) shows awaiting, cancelling, and early iterator exit. Retained PHP callbacks and cross-heap resources are not part of this copied task profile.
 
 ### Export a task that calls PHP
 

@@ -1011,7 +1011,12 @@ export const buildCanonicalProject = async ({
 		// Both PHP-Wasm frontends check the review against their own source
 		// contract. A synchronous effectful review is not a pure copied API.
 		if(normalized.length === 1 && phpWasm)
+		{
+			const record=await readExportConfiguration(root,{signal});
+			if(record.configuration.taskExports?.length || record.configuration.asyncIterators?.length)
+				return buildJavaScriptIOProject({projectRoot: root,engineRoot: engine,outputRoot,environment,runner,cache,signal,onProgress,lakeSnapshot,record,threaded: true,phpWasm: true});
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
+		}
 		if(normalized.includes("npm") || phpWasm)
 			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", "wit-wasi", ...(ownedNpm ? ["npm"] : [])].includes(target)));
 		if(!normalized.includes("npm") && !phpWasm)
