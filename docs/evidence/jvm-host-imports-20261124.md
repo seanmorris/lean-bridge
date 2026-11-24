@@ -143,3 +143,14 @@ With commit `2c0e01c`, the [Java consumer](../../tests/fixtures/jvm-host-meter/C
 | ordinary | workshop-peer | `86e170557e8edf5e7bb3a3289a91d067cb15aea09350da4351d424b141cc4d45` | `00a7f514fbacfa403c37cc89fdfbdf4b51f94d65c9e0eece5a4d07a7bbec97d8` |
 | reviewed | workshop | `3c7e92ee93d9d61ffca016999c231efe2ff7bcac349f2d8c75c3903826643d9b` | `706874d171364795c8341fac939ccf1cfc957e77090044d0af6772300efaaf04` |
 | reviewed | workshop-peer | `0419bb9f7b8cd19528c21e6df33f626fbb32f594e43f14e2c9c6834e9aa832f1` | `4180d7736e44740472697b8a2664d6d9cddd3e4e4a088fb415fae6e37af0bff0` |
+
+## Leased Java objects in returned and thrown values
+
+From both ordinary Lean and reviewed Binding IR, installed Java and Kotlin consumers got the original application object back from returned results and typed `EIO` failures, including nested sums. They closed the binding before inspecting the saved values. The reviewed build also rejected a copied ownership annotation for a leased payload. Each pair ran with either Maven component loaded first; the classloader, reentry and terminal-fault checks above still passed. These checks used the generated public API, not a fixture entry.
+
+| Source | Component | Receipt SHA-256 | JAR SHA-256 |
+| --- | --- | --- | --- |
+| ordinary | workshop | `507906883b1d1aeb80b1352f2bb104a5f623ac66a945d89a7e4592b47825fc03` | `4f1c82f9f14a26b90cb78318bc71a961f9728bedb337630c74cfe14c44c2957c` |
+| ordinary | workshop-peer | `14c3485bd9b327210c62c6a50254df002019f92969b8b3e6c6d4441b6c50f2a4` | `1ffefc69aa4e6849984cb942c54dfaf0aefe4ed9f6b69119eed085c0a8d265c0` |
+| reviewed | workshop | `3d3054bbd547f7713506a720f17662e21169a67121799f6e747f23d10625281b` | `788fe7be97503fbe10e6bb86de1b13a991420d42ff57053c420b8022d98408f5` |
+| reviewed | workshop-peer | `a9bf81201aba09c13d5632cef707c98c88f6f25eb7242d50515c3ea231c796e6` | `63589ef189665e84894c62f554f2c0a88103dc112de97b6614534dedf98b3424` |
