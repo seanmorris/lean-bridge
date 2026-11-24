@@ -30,7 +30,7 @@ declarations of the host methods they call.
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
-For WIT tasks, choose the API your caller uses. A native host can use the default [typed task-resource API](../consume/wit-wasi.md#await-a-lean-task). A Wasm guest can await [canonical futures](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application) when the author selects `targets.wit-wasi.asyncAbi: "canonical"`.
+For WIT tasks, choose the API your caller uses. A native host can use the default [typed task-resource API](../consume/wit-wasi.md#await-a-lean-task). A Wasm guest can await [canonical futures](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application) or read a [canonical stream](../consume/wit-wasi.md#read-a-canonical-stream-from-a-wasm-application) when the author selects `targets.wit-wasi.asyncAbi: "canonical"`.
 
 Choose where an error belongs in the Lean signature. `EIO ε (Task α)` can fail before a task exists. `Task (Except ε α)` completes with an ordinary tagged value. To declare an `IO.Error` from inside the worker, select its export in `taskIOErrors`. The generated WIT preserves these layers; callers do not have to infer the failure phase from message text.
 

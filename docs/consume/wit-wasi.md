@@ -216,6 +216,21 @@ Read nested results from the outside in. For the [`phase` example](../../tests/f
 
 The command prints the signed 64-bit result of `run`. A trap or incompatible component exits nonzero. Keep `bin/` and `lib/` together when moving the package. You do not need Lean, a Wasmtime installation, or a custom host adapter. This is a Linux x86-64 runner, not a browser or standalone WASI command. See the [application and installed-package checks](../evidence/wit-canonical-async-20261124.md#run-a-prepared-wit-package).
 
+### Read a canonical stream from a Wasm application
+
+Use the same `bin/<name>-run` launcher. Call the factory and check its outer result, if it has one. Opening a stream creates a cursor; it does not request the first item. Read with your guest’s Component Model stream API. The launcher calls Lean’s `next` on demand, with at most one outstanding pull per reader.
+
+For example, `feed` returns `result<stream<result<result<s64, string>, u16>>, u32>`:
+
+| Outcome | Meaning |
+| --- | --- |
+| Factory error (`u32`) | No stream was opened. |
+| Item (`result<s64, string>`) | Lean returned an ordinary item. Its string error variant does not end the stream. |
+| Step error (`u16`) | The cursor failed while advancing. This is the last element. |
+| End without an element | The cursor was exhausted normally. |
+
+Cancel a pending **read** to stop waiting; you can read again later. Drop the **reader** to close the cursor on early exit and discard outstanding delivery. A read that already reached Lean may have started work; cancelling the read does not roll it back. The [installed stream checks](../evidence/wit-canonical-async-20261124.md#consume-a-compiled-pull-cursor-as-a-stream) exercise both cases.
+
 ### Give a task a host callback
 
 [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean) takes a Lean function of type `UInt32 → IO UInt32`. In the installed C package, register a function with that signature and pass its handle to the task. The function runs on the store's main thread, during `poll` or `await`. The Lean worker never calls into your C context from a worker thread.
@@ -1299,7 +1314,7 @@ Profiles: WIT/WASI. Installed checks apply only to the named positions and packa
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [typed task resources](#await-a-lean-task), [canonical futures](#await-a-canonical-future-from-a-wasm-application), [pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows do not describe these async profiles.
+Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [typed task resources](#await-a-lean-task), [canonical futures](#await-a-canonical-future-from-a-wasm-application), [canonical streams](#read-a-canonical-stream-from-a-wasm-application), [native pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows do not describe these async profiles.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

@@ -54,7 +54,7 @@ export const writeCanonicalWitRelease=async o=>{
 	const template=await readFile(join(app,"canonical.wasm")),[head,tail]=splitCanonicalTemplate(template);
 	const embed=(name,b)=>"static const uint8_t "+name+"[]={"+[...b].join(",")+"};\n";
 	const hooks=canonicalNativeHooks(model),driver=await asset("../backends/wit/canonical-command.c"),reactor=await asset("../backends/wit/canonical-future-reactor.h");
-	await save("package.h",'#include "'+prefix+'.h"\n#define LB_SLOTS 64\n#define LB_METHODS '+model.tasks.length+"\n"+embed("template_head",head)+embed("template_tail",tail));
+	await save("package.h",'#include "'+prefix+'.h"\n#define LB_SLOTS 64\n#define LB_METHODS '+model.channels.length+"\n"+embed("template_head",head)+embed("template_tail",tail));
 	await save("canonical-hooks.h",hooks);await save("canonical-command.c",driver);await save("canonical-future-reactor.h",reactor);
 	const binary=name+"-run";
 	await run(environment.CC??"cc",["-std=c11","-O1","-g0"
@@ -92,7 +92,7 @@ export const writeCanonicalWitRelease=async o=>{
 		files.set(share+"/reviewed.binding-ir.json",review.source);
 	}
 	files.set("package-metadata.json",canonicalJson(projectContract.metadata??{}));
-	files.set("README.md","# "+name+" "+version+"\n\nExtract the whole archive. Build a Wasm component for wit/application.wit, then run `bin/"+binary+" /path/to/application.wasm`. The command prints the signed 64-bit result of the guest’s async run export. The guest imports Lean functions by their WIT names and awaits canonical futures. No SDK, scheduler hooks or Lean compiler are needed at runtime. Linux x86-64, glibc "+floor+" or later.\n\nEach task factory permits 64 outstanding operations. Results remain pinned until read or abandoned. Exiting the application closes remaining Lean owners; it does not promise to stop Lean worker computation. Factory failure is the outer WIT result; selected worker IO failures are inside the future. An ordinary returned Except is a value. Copied strings use UTF-8; numeric, Boolean, Char and nested result values are supported. No WASI or host capabilities are linked.\n");
+	files.set("README.md","# "+name+" "+version+"\n\nExtract the whole archive. Build a Wasm component for wit/application.wit, then run `bin/"+binary+" /path/to/application.wasm`. The command prints the signed 64-bit result of the guest’s async run export. The guest imports Lean functions by their WIT names and uses canonical futures and streams. No SDK, scheduler hooks or Lean compiler are needed at runtime. Linux x86-64, glibc "+floor+" or later.\n\nEach factory permits 64 outstanding operations. Results remain pinned until read or abandoned. A cursor pulls only on stream demand; dropping its reader closes the cursor. If next fails, the stream sends one typed error frame and ends. A returned Except is an ordinary item. Exiting the application closes remaining Lean owners; it does not promise to stop Lean worker computation. Factory failure is the outer WIT result; selected worker IO failures are inside the future. An ordinary returned Except is a value. Copied strings use UTF-8; numeric, Boolean, Char and nested result values are supported. No WASI or host capabilities are linked.\n");
 	const records=[...files].map(([path,v])=>({path,bytes: Buffer.from(v),mode: path==="bin/"+binary?0o755:0o644}));
 	const componentIdentity=sha256(canonicalJson({nativeIdentity: o.nativeIdentity
 		, template: sha256(template)

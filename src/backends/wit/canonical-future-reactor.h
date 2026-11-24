@@ -8,12 +8,13 @@
 #include <stdint.h>
 #include <wasmtime/component.h>
 
-typedef enum { LB_CF_FREE, LB_CF_RESERVED, LB_CF_NATIVE, LB_CF_WRITER } lb_cf_phase;
+typedef enum { LB_CF_FREE, LB_CF_RESERVED, LB_CF_NATIVE, LB_CF_WRITER, LB_CF_STREAM } lb_cf_phase;
 typedef bool (*lb_cf_take_fn)(void *, wasmtime_component_val_t *);
 typedef void (*lb_cf_close_fn)(void *);
 typedef struct {
     lb_cf_phase phase;
     int fd;
+    bool requested, wait_native;
     void *owner;
     lb_cf_take_fn take;
     lb_cf_close_fn close;
@@ -25,7 +26,8 @@ typedef struct {
     struct pollfd *fds;
     unsigned capacity;
     wasmtime_context_t *ctx;
-    wasmtime_component_func_t deliver, reap;
+    wasmtime_component_func_t deliver, reap, pump;
+    wasmtime_component_val_t stream_value;
     bool poisoned, pull_payload;
     unsigned staged_key;
     wasmtime_component_val_t *staged;
@@ -51,7 +53,7 @@ static inline void lb_cf_shutdown(lb_cf_reactor *r) {
     r->poisoned=true;
     for (unsigned i=0; i<r->capacity; ++i) {
         lb_cf_row row=r->rows[i]; r->rows[i]=(lb_cf_row){0};
-        if (row.phase==LB_CF_NATIVE) row.close(row.owner);
+        if (row.phase==LB_CF_NATIVE || (row.phase==LB_CF_STREAM && row.owner)) row.close(row.owner);
     }
 }
 static inline wasmtime_error_t *lb_cf_fail(lb_cf_reactor *r, const char *reason) {

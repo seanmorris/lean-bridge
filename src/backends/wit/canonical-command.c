@@ -71,6 +71,18 @@ static wasmtime_component_t *compose(wasm_engine_t *engine,const char *path) {
     wasmtime_component_t *component=NULL; wasmtime_error_t *err=wasmtime_component_new(engine,buf,pos,&component);
     free(buf);check(err);return component;
 }
+/* Readiness can arise in the guest while Lean is still parked. Probe each
+ * stream once per guest turn, before waiting on unrelated native fds. */
+static unsigned pump_stream(lb_cf_reactor *r,unsigned key) {
+    wasmtime_component_val_t arg={.kind=WASMTIME_COMPONENT_U32,.of.u32=key},out={0};
+    wasmtime_error_t *err=wasmtime_component_func_call(&r->pump,r->ctx,&arg,1,&out,1);
+    bool missed=r->staged!=NULL;
+    if (missed) {wasmtime_component_val_delete(&r->stream_value);r->staged=NULL;}
+    r->staged_key=0;check(err);
+    if (missed || out.kind!=WASMTIME_COMPONENT_U32 || out.of.u32>2) fail("invalid cursor pump");
+    r->rows[key-1].wait_native=out.of.u32==1;
+    return out.of.u32;
+}
 int main(int argc,char **argv) {
     if (argc!=2) fail("usage: package-run <application.wasm>");
     wasm_config_t *cfg=wasm_config_new();if(!cfg) fail("could not allocate Wasmtime config");
@@ -88,7 +100,9 @@ int main(int argc,char **argv) {
     for (unsigned i=0;i<LB_METHODS;++i) {
         char d[48],r[48];snprintf(d,sizeof(d),"deliver-%s",methods[i]);snprintf(r,sizeof(r),"reap-%s",methods[i]);
         drivers[i]=(lb_cf_reactor){.rows=rows[i],.fds=local_fds[i],.capacity=LB_SLOTS,.ctx=ctx,
-            .pull_payload=pull_methods[i],.deliver=port(&inst,ctx,d),.reap=port(&inst,ctx,r)};
+            .pull_payload=pull_methods[i]};
+        if (stream_methods[i]) {snprintf(d,sizeof(d),"pump-%s",methods[i]); drivers[i].pump=port(&inst,ctx,d);}
+        else {drivers[i].deliver=port(&inst,ctx,d);drivers[i].reap=port(&inst,ctx,r);}
     }
     if (atexit(shutdown_owners)) fail("could not install owner cleanup");
     wasmtime_component_func_t launch=port(&inst,ctx,"launch"),tick=port(&inst,ctx,"tick"),done=port(&inst,ctx,"done"),take=port(&inst,ctx,"take");
@@ -98,13 +112,18 @@ int main(int argc,char **argv) {
         if (result.kind!=WASMTIME_COMPONENT_BOOL) fail("invalid application status");
         if (result.of.boolean) break;
         unsigned count=0;bool immediate=false;
-        for (unsigned i=0;i<LB_METHODS;++i) for (unsigned j=0;j<LB_SLOTS;++j) if (rows[i][j].phase==LB_CF_NATIVE) {
+        for (unsigned i=0;i<LB_METHODS;++i) {
+            if (!stream_methods[i]) continue;
+            for (unsigned j=0;j<LB_SLOTS;++j) if (rows[i][j].phase==LB_CF_STREAM)
+                immediate |= pump_stream(&drivers[i],j+1)==2;
+        }
+        for (unsigned i=0;i<LB_METHODS;++i) for (unsigned j=0;j<LB_SLOTS;++j) if (rows[i][j].phase==LB_CF_NATIVE || (rows[i][j].phase==LB_CF_STREAM && rows[i][j].wait_native)) {
             int fd=rows[i][j].fd; if (fd<0) immediate=true; else fds[count++]=(struct pollfd){fd,POLLIN,0};
         }
         /* One aggregate wait: an earlier pending method cannot starve a later
          * one. A bounded timeout also admits independent guest continuations. */
         if (!immediate && poll(fds,count,count?100:1)<0 && errno!=EINTR) fail("could not wait for native tasks");
-        for (unsigned i=0;i<LB_METHODS;++i) check(lb_cf_advance(&drivers[i],0));
+        for (unsigned i=0;i<LB_METHODS;++i) if (!stream_methods[i]) check(lb_cf_advance(&drivers[i],0));
     }
     wasmtime_component_val_t value={0};check(wasmtime_component_func_call(&take,ctx,NULL,0,&value,1));
     if (value.kind!=WASMTIME_COMPONENT_S64) fail("invalid application result");

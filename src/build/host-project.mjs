@@ -47,8 +47,8 @@ export const buildHostProject = async options => {
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
 	const canonical=wit && config.targets?.[target]?.asyncAbi==="canonical";
-	if(canonical && (!config.taskExports?.length || config.asyncIterators?.length || config.resources?.length))
-		fail("Canonical WIT requires selected Task exports; cursor and resource profiles are not yet supported");
+	if(canonical && (!witTasks || config.resources?.length))
+		fail("Canonical WIT requires selected Task or cursor exports without resources");
 	if(wit && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
 		|| (!witTasks && (config.resources?.length || config.taskIOErrors?.length))))
 		fail("WIT IO requires standalone synchronous exports without leases and explicit nativeEffects, or tasks and cursors without external capabilities");

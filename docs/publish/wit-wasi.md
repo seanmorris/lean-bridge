@@ -79,7 +79,7 @@ for the ordinary and reviewed builds.
 
 ## Export asynchronous tasks
 
-For a Wasm guest that awaits ordinary Component Model futures, opt in with `targets.wit-wasi.asyncAbi`. Omit it for the typed task-resource profile, which also supports cursors and retained callbacks.
+For a Wasm guest that consumes Component Model futures or streams, select `targets.wit-wasi.asyncAbi: "canonical"`. Omit it for the native host’s typed task-resource profile, which also supports retained callbacks.
 
 ```json
 {
@@ -95,7 +95,25 @@ For a Wasm guest that awaits ordinary Component Model futures, opt in with `targ
 
 Use the normal native Lean author toolchain and wasm-tools 1.245.1. Set `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the extracted [Wasmtime 51.0.0 Linux x86-64 C SDK](https://github.com/bytecodealliance/wasmtime/releases/tag/v51.0.0), then build with `lean-bridge build --project . --target wit-wasi --output release/wit`. The builder verifies the SDK headers, shared library and license before compiling the launcher. The default profile’s Wasmtime 42 SDK is unchanged.
 
-The canonical profile accepts `pure`, `BaseIO`, `IO` and `EIO` task factories and synchronous companion functions. Use `Bool`, `Char`, `String`, fixed-width integers and floats for inputs. Results and typed errors may also contain nested `Except` values. Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. This profile does not accept streams, resources, external capabilities or retained callbacks. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
+The canonical profile accepts `pure`, `BaseIO`, `IO` and `EIO` task factories and synchronous companion functions. Use `Bool`, `Char`, `String`, fixed-width integers and floats for inputs. Results and typed errors may also contain nested `Except` values. Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. This profile does not accept resources, external capabilities or retained callbacks. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
+
+### Publish a canonical stream
+
+Select the cursor implementation with `asyncIterators`. You can publish a cursor without any `taskExports`, or include tasks in the same world. For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "exports": ["Meter.feed"],
+  "asyncIterators": [
+    {"open": "Meter.feed", "next": "Meter.advance", "close": "Meter.finish"}
+  ],
+  "targets": {"wit-wasi": {"name": "meter", "version": "1.0.0", "asyncAbi": "canonical"}}
+}
+```
+
+Only the factory is public. The [Lean source](../../tests/fixtures/wit-task-package/cursors.lean) supplies the pull and cleanup functions. A factory failure is outside the stream. A declared step failure is one final error element; normal exhaustion emits no element. An `Except` inside an item remains an ordinary value. Reviewed builds check the identities of all three functions, including cleanup.
 
 ### Typed task resources
 

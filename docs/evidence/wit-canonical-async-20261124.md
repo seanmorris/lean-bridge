@@ -65,3 +65,32 @@ Two same-method string futures delivered separate NUL-containing Unicode strings
 | Reviewed Binding IR and Lean source | 60,918,316 | `5ef1e2b8c842fe5616b8db96bb015c3ede7ad0a953cd7370cdcb044274195c56` |
 
 Run `npm run test:wit-canonical-effects` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks) to build and test both packages. To replay existing handoffs, set `LEAN_BRIDGE_CANONICAL_EFFECTS_RELEASES` to the directory containing `ordinary/` and `reviewed/`. Dropping a future in this check releases delivery storage; it does **not** demonstrate that a running Lean worker stopped. Canonical streams are a separate gate.
+
+## Consume a compiled pull cursor as a stream
+
+The [Lean cursor](../../tests/fixtures/wit-task-package/cursors.lean) increments one counter in `advance` and another in `finish`. The [guest](../../tests/fixtures/wit-canonical-stream/application.wat) observes these through a synchronous Lean export. Its only other imports are two public stream factories. No hand-written host invokes `next`, reports demand or supplies items.
+
+| Guest operation | Observation |
+| --- | --- |
+| Reject 96 factories, then open two cursors and drop one unread | No pulls. Only the successfully opened, discarded cursor closed. |
+| Request a read and immediately withdraw it | No extra pull. The same reader subsequently received items 0 and 1, then end. |
+| Receive an ordinary `Except.error "item"` | It arrived as an item; an early break closed that cursor. |
+| Fail a step with `UInt16.max` | One typed terminal error, distinct from an item and from the factory's `UInt32` error. Cleanup ran once. |
+| Cancel a read while its Lean step is parked, then discard the reader | The cursor closed **before** the Lean gate was released. Its late value did not reach the guest. |
+| Hold a zero-length read open, advance a second reader, then consume or drop the first writer's buffered item | The two cursors retained their own position and payload storage. Discarding a buffered terminal error did not close its cursor twice. |
+
+The final result encodes **11 pulls and 89 closes**: `(11 << 32) + 89 = 47244640345`. Eighty of those closes came from repeatedly dropping an unread cursor, beyond the per-method slot count. These counters measure Lean activity, not host wrapper calls.
+
+The [Canonical ABI stream readiness rules](https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md#stream-and-future-state) allow a zero-length write to wait for a reader without sending data. On Wasmtime 51.0.0, a readiness notification can survive a cancelled read. The producer checks readiness again before requesting the next Lean item. Omitting that check advanced the test cursor once after the guest had withdrawn demand.
+
+| Installed stream archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary Lean source | 60,916,851 | `5b4d026ff315d8b48b572fbfbdad0c9f963689076403c335020caffae0027df9` |
+| Reviewed Binding IR and Lean source | 60,917,939 | `eeb1bc64eee8550881ddab1316e9ed21a09dd659cfff535cb590840cebd090fa` |
+| Lean source exporting both streams and a future | 60,924,439 | `eaad6ea34388a536c593cc8123954afee0c41aa8d57882a35f4d00057b1f731f` |
+
+All three relocated packages ran the same guest with no build tools on its search path. The mixed package also ran a [second guest](../../tests/fixtures/wit-canonical-stream/mixed.wat): it starts a parked Lean task, receives a stream item, then releases the task and reads its result, `-700000000000000029`. The review test changed the cursor's cleanup declaration while keeping the original reviewed IR; the build rejected the mismatch without writing a package receipt.
+
+Run `npm run test:wit-canonical-stream` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks). To replay a prepared archive, set `LEAN_BRIDGE_CANONICAL_STREAM_ORDINARY`, `LEAN_BRIDGE_CANONICAL_STREAM_REVIEWED`, or `LEAN_BRIDGE_CANONICAL_STREAM_MIXED` to its handoff directory. The test builds any missing handoff and always runs the stale-review check.
+
+After adding streams, the fallible-future regression above also passed from fresh builds of both source routes (SHA-256 `0b0caa0d0624bcc16a84037f283ce9a409d60d27d059bb1f1160412c77ea651f` and `9a539a82b8826e0fa3e112c350f0689f293d5176da88c6ce7da96a2184f78e0f`, respectively).
