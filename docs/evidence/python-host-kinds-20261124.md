@@ -41,3 +41,27 @@ Set `LEAN_BRIDGE_HOST_PYTHON` to the interpreter and
 Run `npm run test:python-host-kinds` once per interpreter. This check covers
 the synchronous CPython host provider, not dispatch of Python methods from
 Lean worker threads.
+
+## Returned objects and typed exception payloads
+
+The installed wheel pairs built from `0ffe23b` preserved the original Python
+object in both arms of a returned `Except`, a direct `EIO` error, and both
+object arms of a nested `EIO` error. The ordinary component and reviewed peer
+ran in both binding orders. The client cleared exception tracebacks before
+leaving both bindings: only the saved results and payloads kept the objects
+alive. Discarding those values made both weak references go dead. Trying to
+return a stale Lean-held reference failed; a subsequent valid call succeeded.
+The installed type stubs described the same nested results and error payloads.
+
+| CPython / component | Wheel bytes | Wheel SHA-256 | Verified package-set receipt SHA-256 |
+| --- | ---: | --- | --- |
+| 3.11 ordinary | 98,929 | `13bf117d91f45683a1b706a804fb4069e1d88a0e852c17816d4add2d4fcf3971` | `71e1d37d85502a6879faed81b9d15960c80937f5d196908d828504d63f413143` |
+| 3.11 reviewed peer | 99,141 | `9e6a069a9e339f103bcf058b3a4440f96ae47a38d07dd31b5fcaab5857b352d4` | `e65ddce89fe2802a954bcc081ac7dec906b1a809216dc8571fd4eca3bfc80d85` |
+| 3.12 ordinary | 101,977 | `c284c1eed4e398604d63ffd3a494ad3aafdd65dae8f0b7ec172186c4a18f11d1` | `32571d05a3968dace829e63fc3bfc2f61d59c8dbe897459307635af3747eaa5e` |
+| 3.12 reviewed peer | 102,195 | `198d3b8be912d44866408687bc14f904654bf693d2fa18fa648011308d05098a` | `ae580c70985c82a6babb1f63a8292da46c6c2b27f1cc74968500497d3f291d65` |
+
+Both pairs used the same 51,310,803-byte runtime wheel listed above. A review
+that changed the declared error payload from a lease to a copy failed before
+producing a receipt. Separately, the fresh-source compiler test rejected an
+omitted lease, and the generator refused asynchronous host-object payloads.
+These checks do not establish that Python objects can cross Lean worker threads.
