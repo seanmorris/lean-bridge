@@ -4,9 +4,12 @@ import {execFile} from "node:child_process";
 import {mkdir,mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {dirname,join} from "node:path";
+import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {promisify} from "node:util";
 import {generateLeanHostObjectAdapters} from "../../src/backends/lean/host-object.mjs";
+import {staticHostMembers} from "../../src/backends/native/static-host-members.mjs";
+import {emitWordHostMembers} from "../../src/backends/native/word-host-members.mjs";
 
 const exec=promisify(execFile);
 test("Lean compiles each native host namespace and rejects an object from its neighbor",async t=>{
@@ -40,6 +43,16 @@ test("Lean compiles each native host namespace and rejects an object from its ne
 		for(const member of ["get_level","set_level"])
 			assert.ok(c.includes("lean_bridge_host_"+language.replaceAll("-","_")+"_box_"+member),name+"."+member);
 	}
+	// The provider and Lean compiler must agree in the *same* translation
+	// unit, including borrowed receivers, scalar widths and IO results.
+	const model=staticHostMembers(ir,"c"), impl=emitWordHostMembers(ir,model,"c");
+	const sdk=(await lean("--print-prefix")).stdout.trim();
+	const backend=dir=>fileURLToPath(new URL("../../src/backends/"+dir+"/",import.meta.url));
+	await writeFile(join(root,"Provider.c"),'#include "LeanBridge/Host/C.c"\n'+impl.header+"\n"+impl.native);
+	await exec(process.env.CC??"cc",["-std=gnu11","-Werror=incompatible-pointer-types","-DLB_DN_DOMAIN_PREFIX=checked_domain_",
+		"-I"+join(sdk,"include"),"-I"+backend("dotnet"),"-I"+backend("c"),"-c","Provider.c","-o","Provider.o"],{cwd: root});
+	const symbols=(await exec("nm",["-g","--defined-only","Provider.o"],{cwd: root})).stdout;
+	for(const m of model.members) assert.ok(symbols.split("\n").some(s=>s.endsWith(" T "+m.symbol)),m.symbol);
 	for(const [i,name] of names.entries())
 	{
 		const other=names[(i+1)%names.length];
