@@ -38,6 +38,8 @@ export const emitRetainedTask = options => {
 	if(e.delivery !== "task") throw new TypeError("Retained callbacks require a compiled Task");
 	const ps = e.parameters.map(({ type }, j) => type.kind === "io-callback"
 		? { j, input: values.codec(type.argument), reply: values.codec(type.reply) } : { j, c: values.codec(type) });
+	for(const {type} of e.parameters) if(type.kind==="io-callback" && ![type.argument,type.reply].every(t=>t.kind==="primitive" || options.wasmHost && t.kind==="named" && values.codec(t).host))
+		throw new TypeError("Retained callbacks require copied scalars or checked JavaScript host objects");
 	const args = ps.filter(x => x.c), callbacks = ps.filter(x => !x.c);
 	const value = values.codec(e.result), error = e.effect === "EIO" && values.codec(e.error);
 	const entry = (options.entryPrefix ?? "lb_c") + "_invoke_" + i, call = `(_root_.${e.declaration} ${ps.map(x => x.c ? "v" + x.j : "(cbInvoke port " + x.j + ")").join(" ")})`;
@@ -118,7 +120,7 @@ export const emitRetainedTask = options => {
 			const active = `${get} lb_req *q = e->retained.active; if (!q || q->slot != ${j}) return LB(INVALID);`;
 			fn(n + "_arg_" + j, [h + " h", values.out(input, "out")], `${active} return out ? ${input.read}(q->arg, out) : LB(INVALID);`);
 			fn(n + "_reply_" + j, [h + " h", reply.arg + " v"], `${active}
-    ${reply.buffer ? "size_t budget = 0;" : ""} ${checked(reply, "v")}
+    ${reply.buffer ? "size_t budget = 0;" : ""} ${checked(reply, "v")}${reply.bind ? "\n    "+reply.bind("v") : ""}
     lb_retained_reply(&e->retained, 1, ${(reply.boxed ?? reply.argument)("v")}); return LB(OK);`);
 		}
 	}

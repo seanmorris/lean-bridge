@@ -8,6 +8,16 @@ const phpFailureMessages=new WeakMap();
 // An arbitrary thrown JS value may have hostile getters (or be undefined).
 // Unwrap only at the public boundary, before inspecting ordinary error codes.
 export const wasmHostThrown=new WeakMap();
+// Only a decoded failure frame may invoke the package's declared-error
+// translator. An application exception (or native trap) may itself expose
+// a "code" property with the same spelling or an observable getter.
+const declaredFailures=new WeakSet();
+/**
+ * Check a failure's private identity without consulting application properties.
+ *
+ * @param value - A caught value from either side of the boundary.
+ */
+export const isWasmTaskDeclaredFailure=value=>declaredFailures.has(value);
 /**
  * Brand a copied message without inspecting arbitrary JS exceptions or their getters.
  *
@@ -21,9 +31,12 @@ export const phpTaskCallbackFailure=message=>{
 /** A valid callback request exceeded the bounded resources of its task. */
 export class WasmTaskCallbackLimit extends RangeError {}
 const knownIO = id => id === "error:IO.Error" || id === "error:TaskIO.Error";
-const failed = (id,phase,value,io=knownIO(id)) => Object.assign(new Error(io ? value : "Lean raised "+id),{
-	code: "declared-error",details: {errorId: id,phase,payload: value}
-});
+const failed = (id,phase,value,io=knownIO(id)) => {
+	const error=Object.assign(new Error(io ? value : "Lean raised "+id),{
+		code: "declared-error",details: {errorId: id,phase,payload: value}
+	});
+	declaredFailures.add(error);return error;
+};
 
 /**
  * Allocate and use an authenticated declaration's frame. Every JS-owned
@@ -121,6 +134,14 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 	const checkedOut=(offset=0) => {
 		if(m.HEAP8.subarray(f+layout.out+offset,f+layout.args).some(Boolean)) retire(invalid());
 	};
+	const readHost=(type,discard=false)=>{
+		const d=view(),pos=f+layout.out,def=context.host.defs.get(type);
+		const key=d.getBigUint64(pos,true),dom=d.getBigUint64(pos+8,true);
+		if(!def || !key || !dom || d.getBigUint64(pos+16,true) || d.getBigUint64(pos+24,true)!==BigInt(def.tag)) return retire(invalid());
+		if(!discard) return context.leases.resolveHost(def,context.host.session,key,dom,blankOut,error=>{
+			const marker=new Error("Application object no longer matches the declared class");wasmHostThrown.set(marker,{error});throw marker;
+		});
+	};
 	const request=() => {
 		checkedOut(); const status=callbackOp(layout.next);
 		if(status===1)
@@ -135,33 +156,45 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		let value;
 		let over=false;
 		try
-		{ value=decodeWasmWord(m,f+layout.out,type.arg,{some},n => { if(n>scalarCopyLimit-used) over=true; charge(n); }); }
+		{ value=host(type.arg)?readHost(type.arg):decodeWasmWord(m,f+layout.out,type.arg,{some},n => { if(n>scalarCopyLimit-used) over=true; charge(n); }); }
 		catch(error)
 		{
-			if(!over) return retire(error);
+			if(!over && !wasmHostThrown.has(error)) return retire(error);
 			if(callbackOp(layout.clear)) return retire(invalid());
-			checkedOut(); used=size; throw new WasmTaskCallbackLimit("Lean callback argument exceeds copy budget");
+			checkedOut(); used=size;
+			if(wasmHostThrown.has(error)) throw error;
+			throw new WasmTaskCallbackLimit("Lean callback argument exceeds copy budget");
 		}
 		if(callbackOp(layout.clear)) return retire(invalid());
 		checkedOut(); used=size; return {slot,value};
 	};
-	const answer=(slot,ok,value) => {
+	const answer=(slot,ok,value,accept=()=>true) => {
 		const type=slots.get(slot); if(!type) return retire(invalid());
 		const pos=f+layout.args; checkedOut(); m.HEAP8.fill(0,pos,pos+24);
+		let pinned;
 		try
 		{
 			if(ok)
 			{
 				try
-				{ encodeWasmWord(m,pos,type.reply,value,alloc); }
+				{
+					if(host(type.reply))
+					{
+						pinned=context.leases.pinHost(context.host.defs.get(type.reply),context.host.session,value);
+						view().setBigUint64(pos,pinned.id,true);view().setBigUint64(pos+8,pinned.domain,true);
+					} else encodeWasmWord(m,pos,type.reply,value,alloc);
+				}
 				catch(error)
 				{
 					// A bad JS value or oversized reply fails this callback, not the heap.
-					if(!isLive() || !(error instanceof RangeError || error instanceof TypeError)) throw error;
+					if(!isLive() || !host(type.reply) && !(error instanceof RangeError || error instanceof TypeError)) throw error;
 					freeTo(1); used=size; ok=false; value=error;
 					m.HEAP8.fill(0,pos,pos+24);
 				}
 			}
+			// A proxy's prototype trap may have cancelled the callback while
+			// validating its reply. Never send a reply to a retired request.
+			if(!accept()) return;
 			if(ok)
 			{
 				if(callbackOp(layout.reply,slot)) return retire(invalid()); checkedOut();
@@ -177,7 +210,9 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 				hostFailures.set(id,value);
 			}
 		} finally
-		{ freeTo(1); used=size; }
+		{ try
+		{if(pinned) context.leases.releaseHost(pinned);} finally
+		{freeTo(1);used=size;} }
 	};
 	const call = (op,token=0,discard=false) => {
 		// The generated C calls emit only active result tags. Never reuse a tag
@@ -241,11 +276,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			try
 			{
 				if(host(type))
-				{
-					const pos=f+layout.out,def=context.host.defs.get(type),key=d.getBigUint64(pos,true),dom=d.getBigUint64(pos+8,true);
-					if(!key || !dom || d.getBigUint64(pos+16,true) || d.getBigUint64(pos+24,true)!==BigInt(def.tag)) return retire(invalid());
-					if(!discard) result=context.leases.resolveHost(def,context.host.session,key,dom);
-				} else if(lease(type))
+				{result=readHost(type,discard);} else if(lease(type))
 				{
 					const pos=f+layout.out, def=context.leaseTypes.get(type);
 					const id=d.getBigUint64(pos,true), dom=d.getBigUint64(pos+8,true);
@@ -259,7 +290,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 				} else result=decodeWasmWord(m,f+layout.out,type,{some},n => { if(n>scalarCopyLimit-used) over=true; charge(n); });
 			}
 			catch(error)
-			{ if(!over) return retire(error); clear(); throw error; }
+			{ if(!over && !wasmHostThrown.has(error)) return retire(error); clear(); throw error; }
 			clear(); for(const key of wrap.reverse()) result={[key]: result};
 			if(declared) throw failed(errorId,factory ? method.delivery ? "factory" : "call" : cursor ? "step" : "task",result,io);
 			return {value: result,done: false};

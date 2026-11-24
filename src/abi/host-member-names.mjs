@@ -1,5 +1,12 @@
 /** @file Stable names shared by authored Lean host imports and their target runtime. */
 /**
+ * Length-prefix a class name so two callback signatures cannot collide even
+ * if the authored identifier contains the signature's "_to_" separator.
+ *
+ * @param name - Authenticated class name from the selected import contract.
+ */
+export const callbackHostName=name=>"host"+name.length+"_"+name;
+/**
  * Capitalize the components of a generated Lean identifier.
  *
  * @param value - Authored target or member name.

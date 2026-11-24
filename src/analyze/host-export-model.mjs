@@ -9,6 +9,7 @@ import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { compiledHostModules, hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
 import { hasJavaScriptHostOwner, nativeEffectPolicy, resolveNativeHostEffects } from "./native-host-effects.mjs";
 import { heapResourceIdentities } from "./heap-resource-identity.mjs";
+import {callbackHostName} from "../abi/host-member-names.mjs";
 
 const doc = summary => ({ summary, details: "" });
 const fail = message => { throw Object.assign(new TypeError(message), { code: "host-export-contract-mismatch" }); };
@@ -174,8 +175,15 @@ export const reconcileHostExports = options => {
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
 	const callbackError=owner?"error:JavaScriptCallbackError":hostError;
+	const callbackCarrier=t=>{
+		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};
+		const kind=owner && js && t?.kind==="named" && types.find(k=>k.id===t.id);
+		if(!kind) fail("Unauthenticated retained callback carrier");
+		return {label: callbackHostName(kind.name),mutability: kind.mutability};
+	};
 	const callbackRef = t => {
-		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
+		const arg=callbackCarrier(t.argument),reply=callbackCarrier(t.reply);
+		const name = `Retained_${arg.label}_to_${reply.label}`, id = "bridge:" + name;
 		if(!callbacks.has(id)) callbacks.set(id, {
 			id, name, kind: "callback", representation: "identity"
 			, mutability: "immutable"
@@ -183,7 +191,7 @@ export const reconcileHostExports = options => {
 			, target: null, host: null, resource: null
 			, callable: { invocation: "many", reentry: "same-agent"
 				, selfDisposal: "defer", resultMode: js ? "promise" : "value"
-				, parameters: [{ ...signature(t.argument), name: "value", mutability: "immutable", optional: false, default: null }]
+				, parameters: [{ ...signature(t.argument), name: "value", mutability: arg.mutability, optional: false, default: null }]
 				, result: signature(t.reply)
 				, effects: [...js ? ["async"] : [], "fails", "host-call"]
 				, failure: { mode: "declared", errors: [callbackError], unexpected: "poison-runtime" } }

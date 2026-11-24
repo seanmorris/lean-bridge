@@ -1,6 +1,6 @@
 /** @file Idiomatic Promise and async-iterator delivery over a runtime-owned, notification-driven Wasm scheduler. */
 import {PendingOperationRegistry} from "./pending-operations.mjs";
-import {openWasmTaskFrame,phpTaskCallbackFailure,wasmHostThrown} from "./wasm-task-frames.mjs";
+import {isWasmTaskDeclaredFailure,openWasmTaskFrame,phpTaskCallbackFailure,wasmHostThrown} from "./wasm-task-frames.mjs";
 import {createWasmTaskLeases} from "./wasm-task-leases.mjs";
 import {createWasmTaskCallbacks} from "./wasm-task-callbacks.mjs";
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
@@ -52,7 +52,7 @@ export const createWasmTaskSession = options => {
 		finally
 		{ row.frame.dispose(); row.drained(state!=="poisoned"); }
 	};
-	const cancel = p => !p.settled && settle(p,"cancel","Lean operation cancelled");
+	const cancel = p => !p.settled && !p.taking && settle(p,"cancel","Lean operation cancelled");
 	const end = row => {
 		row.ending=true;
 		if(row.work) cancel(row.work); else drop(row);
@@ -63,6 +63,9 @@ export const createWasmTaskSession = options => {
 			try
 			{
 				if(row.host && !row.host.open && !p.settled) cancel(p);
+				// Taking terminal ownership wins before lifting an application
+				// object can run a reentrant prototype check on this agent.
+				p.taking=true;
 				const result=row.frame.call(op.take,0,p.settled || row.ending);
 				if(!cursor || result.done || row.ending) drop(row);
 				settle(p,"resolve",cursor ? result : result.value);
@@ -130,7 +133,7 @@ export const createWasmTaskSession = options => {
 			// Reject this task only; retain its completion notification until native drain.
 				row.ending=true; row.callbacks.close(); frame.call(op.cancel); settle(row.work,"reject",error);
 			};
-			row.callbacks=createWasmTaskCallbacks({method,args,frame,notifications,retire,abort});
+			row.callbacks=createWasmTaskCallbacks({method,args,frame,notifications,retire,abort,admitted: ()=>!host || host.open});
 		}
 		row.drain=new Promise(resolve => { row.drained=resolve; }); rows.add(row);
 		if(method.delivery==="task") return observe(row,() => frame.call(op.start),false,syncStart);
@@ -164,7 +167,7 @@ export const createWasmTaskSession = options => {
 			const entry=entries.get(id); if(!entry) throw new TypeError("Unknown Lean task method");
 			const mapError = e => {
 				if(wasmHostThrown.has(e)) return wasmHostThrown.get(e).error;
-				if(!translate || e?.code!=="declared-error") return e;
+				if(!translate || !isWasmTaskDeclaredFailure(e)) return e;
 				try
 				{ return translate(e); } catch(error)
 				{ return error; }
@@ -177,8 +180,14 @@ export const createWasmTaskSession = options => {
 		{
 			hostRuntime??=options.installHost({assertOpen,poison: retire});
 			const defs=new Map(abi.hostKinds.map(r=>[r.type,{...r,local: r.index,index: abi.methods.length+(abi.leases?.length??0)+r.index,invoke}]));
+			let prepared=false;
 			const withHosts=(classes,translate)=>{
-				assertOpen();const session=hostRuntime.bind(abi.componentIdentity,model,classes);
+				assertOpen();
+				// The first public call may pin a JS argument before Lean has run,
+				// or the application may dispose without ever invoking an export.
+				if(!prepared && defs.size)
+				{leases.prepareHost(defs.values().next().value);prepared=true;}
+				const session=hostRuntime.bind(abi.componentIdentity,model,classes);
 				const host={session,defs,takeError: hostRuntime.takeError,open: true
 					, assertOpen: ()=>{if(!host.open)throw new Error("JavaScript task host binding is closed");}};
 				let disposing;

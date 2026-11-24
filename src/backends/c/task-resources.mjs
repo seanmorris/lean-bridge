@@ -42,6 +42,7 @@ export const taskResourceTypes = (definitions = [],hostKinds=[]) => {
  */
 export const cResourceApi = (p, resources, fn) => resources.map(r => {
 	const base = `${p}_resource_${r.slug}`, h = base + "_t", key = JSON.stringify(r.hash);
+	if(r.host) fn(base+"_prepare",[],"return lb_prepare();");
 	fn(base + "_release", [`${h} *v`], `if (!lb_context()) return LB(WRONG_CONTEXT);
     return v ? lb_lease_status(LB_LEASE(release)(${key}, v->_private)) : LB(INVALID);`);
 	fn(base + "_retain", [`${h} v`, `${h} *out`], `if (!out || out->_private[0] || out->_private[1]) return LB(INVALID);

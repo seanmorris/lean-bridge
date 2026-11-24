@@ -66,12 +66,13 @@ export const installedTaskHarness=async (t,fixtures) => {
 		});
 		await assert.rejects(access(refused),{code: "ENOENT"});
 	};
-	const exercise=async (r,other,names,checks) => {
+	const exercise=async (r,other,names,checks,workerFixture=fixtures) => {
 		assert.deepEqual(await readFile(r.artifact("runtime")),await readFile(other.artifact("runtime")));
 		const consumer=join(root,r.label+"-consumer"); await mkdir(consumer);
 		await writeFile(join(consumer,"package.json"),'{"private":true,"type":"module"}');
 		await install(consumer,[r.artifact("runtime"),r.artifact("component"),other.artifact("component")]);
-		for(const name of ["calls.mjs","calls.mts","worker.mjs"]) await copyFile(join(fixtures,name),join(consumer,name));
+		for(const name of ["calls.mjs","calls.mts"]) await copyFile(join(fixtures,name),join(consumer,name));
+		await copyFile(join(workerFixture,"worker.mjs"),join(consumer,"worker.mjs"));
 		await writeFile(join(consumer,"tsconfig.json"),JSON.stringify({files: ["calls.mts"],compilerOptions: {strict: true,noEmit: true,module: "NodeNext",target: "ES2022",types: []}}));
 		await run(process.execPath,[createRequire(import.meta.url).resolve("typescript/bin/tsc"),"--project","tsconfig.json"],consumer);
 		await writeFile(join(consumer,"run.mjs"),'import {exercise} from "./calls.mjs"; console.log(JSON.stringify(await exercise()));\n');

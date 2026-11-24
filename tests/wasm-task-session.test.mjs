@@ -28,13 +28,52 @@ const harness=(methods,control,leases=[],capacity,host=null) => {
 	};
 	const module={HEAP8: heap,_malloc: allocate,_free: p => events.push("free:"+p)};
 	const session=createWasmTaskSession({module,notifications,terminate: () => {stops++;},installHost: ()=>host});
-	const api=session.bind({methods,leases,...host?{hostKinds: []}:{}},f => {
+	const api=session.bind({methods,leases,...host?{hostKinds: host.kinds ?? []}:{}},f => {
 		const code=d.getUint32(f+12,true); events.push("call:"+code);
 		if(code===op.listen) tokens.push(d.getUint32(f+16,true));
 		return control({code,f,d,index: d.getUint32(f+8,true)});
 	},host?{}:null);
 	return {api,session,events,tokens,notifications,failAllocationAt: n => {failAt=n;},stops: () => stops};
 };
+
+test("host preparation precedes binding, runs once per component and leaves no frame on failure",async()=>{
+	for(const status of [0,5])
+	{
+		let preparations=0,bindings=0;
+		const idle=()=>{};
+		const fake={kinds: [{index: 0,type: "host:test"}]
+			, collect: idle,abandon: idle,live: ()=>0,heldErrors: ()=>0
+			, bind: ()=>{assert.equal(preparations,1);bindings++;return {disable: idle,close: idle};}};
+		const h=harness([],({index,code,f,d})=>{
+			assert.equal(index,0);assert.equal(code,op.hostPrepare);assert.equal(d.getUint32(f+4,true),op.leaseSize);
+			assert.ok(new Uint8Array(d.buffer,f+op.handle,op.leaseSize-op.handle).every(x=>x===0));
+			preparations++;return status;
+		},[],undefined,fake);
+		if(status)
+		{
+			assert.throws(()=>h.api.withHosts({}),/Malformed Lean resource lease/u);
+			assert.equal(h.session.snapshot().state,"poisoned");assert.equal(bindings,0);assert.equal(h.stops(),1);
+		} else
+{
+			await h.api.withHosts({}).dispose();await h.api.withHosts({}).dispose();
+			assert.equal(bindings,2);await h.session.close();
+}
+		assert.equal(preparations,1);assert.equal(h.session.snapshot().allocations,0);
+	}
+});
+
+test("a foreign exception cannot impersonate a decoded Lean error or run a code getter",()=>{
+	let reads=0, translations=0;
+	const trap=Object.defineProperty({},"code",{get: ()=>{reads++;return "declared-error";}});
+	const h=harness([method("read","uint32")],()=>{throw trap;});
+	let caught;
+	try
+{h.api.invoke("read",[],()=>{translations++;return new Error("wrong translation");});}
+	catch(error)
+{caught=error;}
+	assert.equal(caught,trap);assert.equal(reads,0);assert.equal(translations,0);
+	assert.equal(h.session.snapshot().state,"poisoned");assert.equal(h.stops(),1);
+});
 
 test("a member failure cannot be substituted for ordinary Lean IO in a root without host calls",()=>{
 	let consumed=0,abandoned=0;
@@ -111,6 +150,30 @@ test("a malformed owned result retires the shared heap and all pending siblings 
 });
 
 const retained={...method("relay","uint32","task",["callback"]),callbacks: [[0,"uint32","uint32"]]};
+test("a corrupted nominal callback word retires the heap before the application sees the object",async()=>{
+	const type="host:box",noop=()=>{},arms=[];
+	let invoked=0;
+	const fake={kinds: [{index: 0,type,tag: 3}]
+		, collect: noop,abandon: noop,live: ()=>0,heldErrors: ()=>0
+		, bind: ()=>({disable: noop,close: noop})};
+	const row={...retained,name: "relay",callbacks: [[0,type,"uint32"]]};
+	const h=harness([row],({code,f,d})=>{
+		if(code===op.start)
+{d.setBigUint64(f+24,BigInt(f),true);d.setBigUint64(f+32,1n,true);}
+		if(code===op.arm) arms.push(d.getUint32(f+16,true));
+		if(code===op.arg)
+{d.setBigUint64(f+op.out,7n,true);d.setBigUint64(f+op.out+8,1n,true);d.setBigUint64(f+op.out+24,4n,true);}
+		return 0;
+	},[],undefined,fake);
+	const api=h.api.withHosts({}),callback=()=>{invoked++;return 1;};
+	const settled=Promise.allSettled([api.relay(callback),api.relay(callback)]);
+	assert.equal(h.notifications.notify(arms[0]),true);
+	const [a,b]=await settled;
+	assert.equal(a.status,"rejected");assert.equal(b.status,"rejected");assert.equal(a.reason,b.reason);
+	assert.match(a.reason.message,/Malformed Lean task frame/u);assert.equal(invoked,0);
+	assert.equal(h.session.snapshot().state,"poisoned");assert.equal(h.session.snapshot().allocations,0);
+	assert.equal(h.notifications.pending(),0);assert.equal(h.stops(),1);
+});
 test("lost pthreads reject public work and terminate their heap, including workers added by Node",async () => {
 	const warm={}, running={}, later={};
 	const loadWasmModuleToWorker=worker => {

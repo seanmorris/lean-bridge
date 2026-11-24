@@ -15,4 +15,4 @@ export const taskFrame = Object.freeze({magic: 0x4c425431
 	, reply: 13
 	, fail: 14
 	, hostPin: 15
-	, hostResolve: 16});
+	, hostResolve: 16, hostPrepare: 17});

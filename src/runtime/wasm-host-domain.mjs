@@ -89,9 +89,13 @@ export const createWasmHostDomain = retire => {
 			if(n===1) temps.delete(token); else temps.set(token,n-1);
 			row.temps--; collect(row);
 		};
-		const resolve = (i,token) => {
+		const resolve = (i,token,onInvalidClass) => {
 			const k=kind(i), row=rowFor(k.id,token);
-			check(k,row.value); active(); return row.value;
+			try
+			{check(k,row.value);}
+			catch(error)
+			{if(onInvalidClass) return onInvalidClass(error);throw error;}
+			active(); return row.value;
 		};
 		const close = () => {
 			open(); if(depth) bad("cannot unbind an active host session");

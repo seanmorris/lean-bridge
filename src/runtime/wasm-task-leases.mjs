@@ -122,17 +122,25 @@ export const createWasmTaskLeases = context => {
 		} finally
 		{if(isLive()) session.leave();}
 	};
-	const resolveHost=(def,session,id,dom)=>{
+	const resolveHost=(def,session,id,dom,detach,onInvalidClass)=>{
 		if(!id || !dom || (domain!==undefined && domain!==dom) || active.has(id)) return bad();
 		domain=dom;
-		session.enter();
+		// Move the owned token out of the method frame before class validation:
+		// an application's proxy can cancel or reenter the same method here.
+		const row={def,id,domain: dom,closed: false};detach();active.set(id,row);
 		try
 		{
-			const token=command({def,id,domain: dom},op.hostResolve,{id: BigInt(session.kind(def.local)),domain: 0n});
-			return session.resolve(def.local,token);
+			session.enter();
+			try
+			{
+				const token=command(row,op.hostResolve,{id: BigInt(session.kind(def.local)),domain: 0n});
+				return session.resolve(def.local,token,onInvalidClass);
+			} finally
+			{if(isLive()) session.leave();}
 		} finally
-		{if(isLive()) session.leave();}
+		{closeRow(row);}
 	};
 	return {register,adopt,finish,live,pinHost,resolveHost,releaseHost: closeRow
+		, prepareHost: def=>command({def,id: 0n,domain: 0n},op.hostPrepare)
 		, resourceClass: type => kinds.get(type)?.Resource};
 };

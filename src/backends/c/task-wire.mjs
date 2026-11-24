@@ -69,7 +69,8 @@ export const retainedWireEntry = a => {
 	{
 		if(type.kind === "io-callback")
 		{
-			if(type.argument.kind !== "primitive" || type.reply.kind !== "primitive") throw new TypeError("Retained callbacks require copied scalars");
+			if(![type.argument,type.reply].every(t=>t.kind==="primitive" || a.wasmHost && t.kind==="named" && values.codec(t).host))
+				throw new TypeError("Retained callbacks require copied scalars or checked JavaScript host objects");
 			callbacks.push({ j, arg: shape(type.argument), reply: shape(type.reply), from: values.codec(type.argument), to: values.codec(type.reply) });
 			args.push("callback");
 			if(a.wasmTasks) checked.push(`if (args[${j*3}] || args[${j*3+1}] || args[${j*3+2}]) return ${p}_INVALID;`);

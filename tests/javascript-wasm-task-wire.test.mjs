@@ -34,6 +34,20 @@ test("threaded task generation refuses incompatible host and ownership contracts
 	assert.throws(() => generateSyncWire("lbc_job",callback,{tasks: true,wasmTasks: true}),TypeError);
 });
 
+test("only the authenticated JS host port moves nominal callback arguments and acquires the reply before waking Lean",()=>{
+	const hash="d".repeat(64),named={kind: "named",id: "host:meter.Box"};
+	const wasmHostKinds=[{id: named.id,name: "Box",hash}];
+	const rows=[{...entries[0],result: named,parameters: [{name: "f",type: {kind: "io-callback",argument: named,reply: named}}]}];
+	const options={wasmCallbacks: true,wasmTasks: true,wasmHostKinds};
+	const gen=generateCTaskExports({...config,...options,entries: rows});
+	const wire=generateSyncWire(gen.prefix,rows,{...options,tasks: true});
+	assert.deepEqual(wire.methods[0].callbacks,[[0,"host:"+hash,"host:"+hash]]);
+	assert.match(gen.source,/LB_LEASE\(borrow\)[\s\S]*lb_retained_reply\(&e->retained, 1, lb_lease_arg\(ref_v\)\)/u);
+	assert.match(wire.source,/out\[3\] = 3; v = \(lb_lease_[0-9a-f]+\)\{0\}/u);
+	assert.throws(()=>generateSyncWire(gen.prefix,rows,{tasks: true,wasmTasks: true,wasmCallbacks: true}));
+	assert.throws(()=>generateCTaskExports({...config,entries: rows,wasmTasks: true,wasmCallbacks: true}));
+});
+
 test("the pthread wire authenticates nominal kind and borrowing separately from the result lease", () => {
 	const declaration="Shared.Ticket", hash="b".repeat(64), named={kind: "named",id: "lean:"+declaration};
 	const component={name: "jobs",id: "jobs@1.0.0",version: "1.0.0"};

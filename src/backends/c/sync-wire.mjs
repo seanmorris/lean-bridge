@@ -124,8 +124,9 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 	});
 	const leaseHelpers = leases.map(r => {
 		const base = p + "_resource_" + r.slug, sym = r.symbol, t = r.raw;
+		if(r.host) symbols.push(sym+"_prepare");
 		symbols.push(sym + "_close", sym + "_retain", sym + "_same");
-		return `int ${sym}_close(uint64_t *h) {
+		return `${r.host?"int "+sym+"_prepare(void) { return "+base+"_prepare(); }\n":""}int ${sym}_close(uint64_t *h) {
     if (!h) return ${p}_INVALID; ${t} v = {{h[0],h[1]}}; int s = ${base}_release(&v);
     h[0] = v._private[0]; h[1] = v._private[1]; return s;
 }

@@ -2,6 +2,7 @@
 import {canonicalizeJsonValue,hashBindingIr} from "../binding-ir/canonical.mjs";
 import {componentScalarTypes} from "./component-scalars.mjs";
 import {javaScriptTaskHosts,jsMemberFailure} from "./javascript-task-hosts.mjs";
+import {callbackHostName} from "./host-member-names.mjs";
 
 const shape = (t,level=0) => {
 	if(t?.kind === "primitive" && componentScalarTypes.includes(t.name)) return t.name;
@@ -39,18 +40,27 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 	if(new Set(leases.map(r => r.hash)).size!==leases.length) throw new TypeError("Repeated nominal resource hash");
 	const resource=t => t?.kind==="named" && leases.find(r => r.id===t.id);
 	const callbackTypes=new Map(), hostError="error:JavaScriptCallbackError";
+	const callbackSite=x=>{
+		if(x?.type?.kind==="primitive" && componentScalarTypes.includes(x.type.name) && x.ownership==="copy" && x.lifetime===null)
+			return {name: x.type.name,type: x.type.name,mutability: "immutable"};
+		const k=hosts?.nominal(x?.type);
+		if(k && x.ownership==="lease" && same(x.lifetime,{scope: "explicit",anchor: null}))
+			return {name: callbackHostName(hostImports.types[k.index].name),type: k.type,mutability: k.mutability};
+		throw new TypeError("Inconsistent retained JavaScript callback contract");
+	};
 	for(const t of ir.types.filter(t => t.kind==="callback"))
 	{
 		const c=t.callable, arg=c?.parameters[0], result=c?.result;
+		const a=callbackSite(arg),b=callbackSite(result);
 		if(t.source?.producer!=="lean" || t.source.declaration!==t.name || t.id!=="bridge:"+t.name
 			|| t.representation!=="identity" || t.mutability!=="immutable" || t.resource!==null || t.host!==null || t.target!==null || t.fields.length || t.cases.length
 			|| t.source.extensions?.["lean-bridge.dev/callback-scheduler"]!=="javascript-owner-agent" || c?.resultMode!=="promise" || c.reentry!=="same-agent"
 			|| c.selfDisposal!=="defer" || c.invocation!=="many" || c.parameters.length!==1 || t.typeParameters.length
-			|| arg.optional || arg.default!==null || arg.mutability!=="immutable" || ![arg,result].every(x => x.type?.kind==="primitive" && x.ownership==="copy" && x.lifetime===null)
+			|| arg.optional || arg.default!==null || arg.mutability!==a.mutability
 			|| !same(c.effects,["async","fails","host-call"]) || c.failure.mode!=="declared" || !same(c.failure.errors,[hostError]) || c.failure.unexpected!=="poison-runtime"
-			|| t.id!=="bridge:Retained_"+arg.type.name+"_to_"+result.type.name)
+			|| t.id!=="bridge:Retained_"+a.name+"_to_"+b.name)
 			throw new TypeError("Inconsistent retained JavaScript callback contract");
-		callbackTypes.set(t.id,[shape(arg.type),shape(result.type)]);
+		callbackTypes.set(t.id,[a.type,b.type]);
 	}
 	const callback=t => t?.kind==="named" && callbackTypes.get(t.id);
 	if(callbackTypes.size)

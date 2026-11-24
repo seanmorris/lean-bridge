@@ -186,7 +186,9 @@ try {
 
 Use one live binding per threaded component. Disposing it stops new calls,
 cancels its outstanding operations, and waits for native cleanup. Other
-components on the heap remain usable. A host member's original thrown value
+components on the heap remain usable. Calling `withHosts` prepares the Lean
+component: your first call can take an application object, and you can also
+dispose the binding without calling any exports. A host member's original thrown value
 and a retained callback failure are different: the callback rejects with
 `JavaScriptCallbackError` and exposes the original value as `cause`.
 
@@ -216,6 +218,25 @@ To stop waiting, call `job.cancel()`. A successful cancellation rejects the
 job and discards late callback replies; it does not cancel unrelated work
 started by your JavaScript function. Browser pages using this pthread profile
 require cross-origin isolation.
+
+A package can also ask for an instance of a class you supplied to `withHosts`.
+For example, the [Workshop task](../tests/fixtures/javascript-threaded-host-callbacks/Workshop.lean)
+passes its `Box` directly to your callback. The callback can return that same
+instance or a replacement:
+
+```js
+const original = new Box(7);
+const replacement = new Box(11);
+const result = await workshop.map_box(original, box => {
+  if (box !== original) throw new Error("unexpected box");
+  return replacement;
+});
+console.log(result === replacement); // true
+```
+
+Neither object needs a bridge wrapper or a release call. If the callback
+returns an object of the wrong class, the task reports a
+`JavaScriptCallbackError` whose `cause` is a `TypeError`.
 
 Two Lean workers on the same runtime can wait for JavaScript replies at once,
 including calls from different packages. A third callback attempt raises a

@@ -247,3 +247,29 @@ in the factory, worker and cursor step. It drains pending operations when a
 binding closes and checks that a peer can still use the object on the same
 heap. The compiler rejects explicit blocking waits on this host-member
 profile rather than risking a worker waiting on its own JavaScript owner.
+
+### Retained callbacks with application objects
+
+Run `npm run test:javascript-threaded-host-callbacks` with the same SDK.
+The [Lean fixture](../../tests/fixtures/javascript-threaded-host-callbacks/Workshop.lean)
+exercises `Box → IO Box`, both mixed scalar/object directions, and two
+successive callbacks. The [installed consumer](../../tests/fixtures/javascript-threaded-host-callbacks/calls.mjs)
+checks JavaScript identity against an independent component. It also cancels
+a task while its callback waits and during prototype validation, rejects a
+wrong-class reply, and checks that an exception from one task doesn't retire
+the shared runtime. A completed task owns its result before JavaScript class
+validation: a reentrant cancellation at that point must return false.
+
+Cold binding is a separate regression. On the `f260e47` archives, passing
+`new Box(1)` to `identity` as the first call reported a lease limit even
+though the heap was empty. Closing that binding also failed. Calling a Lean
+factory first had hidden both failures. The new fixture first binds and
+disposes without calling Lean; the next binding uses a JavaScript-owned
+argument without a factory warm-up.
+
+The [installed replay record](javascript-threaded-host-callbacks-20261124.json)
+contains the three package receipts, archive digests and SDK identity.
+Both ordinary and reviewed Workshop passed 25 checks per execution in Node,
+a Node module worker, Chromium, a bundled page and a bundled module worker.
+Each execution drained all frames, allocations, pending operations, native
+owners, notifications, host pins and host-error tickets.

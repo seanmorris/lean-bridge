@@ -1,6 +1,6 @@
 /** @file Deliver retained worker requests on the owning JavaScript event loop. */
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
-import {WasmTaskCallbackLimit} from "./wasm-task-frames.mjs";
+import {WasmTaskCallbackLimit,wasmHostThrown} from "./wasm-task-frames.mjs";
 
 // A never-settling application promise must not keep the task, callback or
 // Wasm heap alive after cancellation. Its reactions retain only this ticket.
@@ -19,17 +19,24 @@ const follow=(value,ticket) => Promise.resolve(value).then(
  * @param options.notifications - Runtime-wide one-shot owner notifications.
  * @param options.retire - Reject every operation after an invariant violation.
  * @param options.abort - Reject this task and drain its native owner.
+ * @param options.admitted - Whether the owning binding still accepts callback delivery.
  */
-export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,abort}) => {
+export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,abort,admitted=()=>true}) => {
 	const slots=new Map(method.callbacks.map(([i]) => [i,args[i]]));
 	let open=true, sub, ticket;
+	const accepts=()=>open && admitted();
 	const close=() => {
 		open=false; sub?.detach(); sub=null;
 		if(ticket) ticket.answer=null;
 		ticket=null; slots.clear(); frame.forgetFailures();
 	};
 	const fatal=error => { try
-	{ if(error instanceof WasmTaskCallbackLimit) abort(error); else retire(error); } catch { /* A retired session has already rejected all public work. */ } };
+	{
+		if(wasmHostThrown.has(error))
+		{if(accepts()) abort(wasmHostThrown.get(error).error);}
+		else if(error instanceof WasmTaskCallbackLimit) abort(error);
+		else retire(error);
+	} catch { /* A retired session has already rejected all public work. */ } };
 	const reserve=() => { sub=notifications.subscribe(ready); };
 	const arm=() => {
 		if(!open) return;
@@ -42,19 +49,18 @@ export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,ab
 		frame.call(op.arm,sub.token);
 	};
 	const ready=() => {
-		sub=null; if(!open) return;
+		sub=null; if(!accepts()) return;
 		try
 		{
 			const req=frame.request();
-			if(!req) return; // Completion won. Its independent token drains the task.
+			if(!req || !accepts()) return; // Completion or reentrant cancellation won.
 			const {slot,value}=req, fn=slots.get(slot);
 			const active={answer: (ok,v) => {
-				if(!open || active!==ticket) return;
+				if(!accepts() || active!==ticket) return;
 				active.answer=null; ticket=null;
 				try
 				{
-					if(open)
-					{ frame.answer(slot,ok,v); arm(); }
+					frame.answer(slot,ok,v,accepts); if(accepts()) arm();
 				} catch(error)
 				{ fatal(error); }
 			}};

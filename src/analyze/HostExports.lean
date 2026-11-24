@@ -112,8 +112,15 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
       unless !b.hasLooseBVars && b.getAppFn.constName? == some ``IO && b.getAppArgs.size == 1 do
         throwError "retained task callbacks require an explicit unary IO function: {e}"
       let v := b.getAppArgs[0]!
-      unless [a, v].all (fun t => primitives.any (fun p => t.constName? == some p.1)) do
-        throwError "retained task callback arguments and replies must be copied scalars: {e}"
+      let admitted := fun (t : Expr) =>
+        primitives.any (fun p => t.constName? == some p.1) ||
+        (r.ownerHostMembers && r.javascriptTaskCallbacks == some true &&
+          t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)))
+      unless [a, v].all admitted do
+        if r.ownerHostMembers then
+          throwError "retained task callback arguments and replies must be copied scalars or declared JavaScript owner classes: {e}"
+        else
+          throwError "retained task callback arguments and replies must be copied scalars: {e}"
       return Json.mkObj [("kind", toJson "io-callback"), ("argument", ← carrier r a), ("reply", ← carrier r v)]
   delivered r e r.ownerHostMembers
 
