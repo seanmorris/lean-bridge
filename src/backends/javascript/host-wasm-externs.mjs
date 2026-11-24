@@ -42,7 +42,29 @@ export const generateJavaScriptHostExterns = (ir, identity) => {
 			, "    return io;", "}");
 	}
 	const hooks = ["token", "wrap", "send", "finish", "error"].map(name => "#define lb_host_" + name + " " + prefix + name);
+	const js = 'Module["lbJshDomainV1"]', id = JSON.stringify(identity);
+	const service = `#include "host-wasm-domain.h"
+#include <emscripten.h>
+EM_JS(uint32_t, ${prefix}kind, (unsigned i), { return ${js}.kind(${id},i>>>0); });
+EM_JS(uint32_t, ${prefix}send, (unsigned slot,unsigned n,const bridge_scalar_slot *args,bridge_scalar_slot *reply), {
+    return ${js}.send(${id},slot>>>0,n>>>0,args>>>0,reply>>>0);
+});
+EM_JS(void, ${prefix}finish, (bridge_scalar_slot *reply), { ${js}.finish(${id},reply>>>0); });
+EM_JS(uint32_t, ${prefix}record, (unsigned status,const bridge_scalar_slot *reply), {
+    return ${js}.record(${id},status>>>0,reply>>>0);
+});
+uint32_t ${prefix}token(uint32_t kind,b_lean_obj_arg o) {
+    return lb_jsh_domain_token_v1(${prefix}kind(kind),o);
+}
+lean_obj_res ${prefix}wrap(uint32_t kind,uint32_t token,b_lean_obj_arg anchor) {
+    return lb_jsh_domain_wrap_v1(${prefix}kind(kind),token,anchor);
+}
+lean_obj_res ${prefix}error(uint32_t status,const bridge_scalar_slot *reply) {
+    return lb_jsh_domain_error_v1(status,${prefix}record(status,reply));
+}
+`;
 	return {model, prefix
+		, service
 		, renames: names.join("\n") + "\n"
 		, declarations: declarations.join("\n") + "\n"
 		, source: [...hooks, '#include "host-wasm-wire.h"', ...entries].join("\n") + "\n"};

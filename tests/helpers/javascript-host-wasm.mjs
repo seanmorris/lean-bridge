@@ -11,6 +11,7 @@ import { javascriptWasmOwnedPins as pins } from "../../src/build/javascript-wasm
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { bindWasmHostMembers } from "../../src/runtime/wasm-host-members.mjs";
 import { checkGeneratedHostWasm } from "./javascript-host-generated.mjs";
+import { checkSharedHostWasm } from "./javascript-host-shared.mjs";
 
 const input = resolve("tests/fixtures/javascript-host-meter");
 const oracle = resolve("tests/fixtures/javascript-host-wasm");
@@ -25,7 +26,7 @@ const setup = async t => {
 	const app = await mkdtemp(join(tmpdir(), "js-host-wasm-"));
 	t.after(() => rm(app, {recursive: true, force: true}));
 	const env = {...process.env, EMSDK: sdk, EM_CONFIG: join(sdk, ".emscripten"), LEAN_PATH: app, LEAN_SYSROOT: prefix, EMCC_CORES: "1"};
-	const run = (command, args) => processBuildRunner.capture({command, args, cwd: app, env, timeoutMs: 240000})
+	const run = (command, args, cwd = app) => processBuildRunner.capture({command, args, cwd, env: {...env, LEAN_PATH: cwd, LEAN_SRC_PATH: cwd}, timeoutMs: 240000})
 		.catch(error => { t.diagnostic(error.details?.stderr || error.details?.stdout || error.message); throw error; });
 	const lean = join(prefix, "bin/lean"), emcc = join(sdk, "upstream/emscripten/emcc");
 	assert.equal((await run(lean, ["--githash"])).stdout.trim(), pins.leanCommit);
@@ -135,4 +136,8 @@ test("compiled Lean mutates JavaScript aliases, maps IO failure, and retires eve
 
 test("generated Wasm externs transport all nineteen scalars and nested JavaScript host calls", {timeout: 480_000}, async t => {
 	await checkGeneratedHostWasm(await setup(t));
+});
+
+test("independent compiled Wasm components share canonical host objects in both load orders", {timeout: 480_000}, async t => {
+	await checkSharedHostWasm(await setup(t));
 });

@@ -1,6 +1,29 @@
 /** @file Dispatch synchronous checked Wasm imports to real application-owned objects. */
 import {validateComponentScalar} from "../abi/component-scalars.mjs";
 
+const captured = new WeakMap();
+/**
+ * Snapshot nominal constructors before committing a shared-domain binding.
+ * Reuse this immutable snapshot for member dispatch without rerunning getters.
+ *
+ * @param model - Private component member table.
+ * @param supplied - Application classes or a snapshot for this exact model.
+ */
+export const captureWasmHostClasses = (model, supplied) => {
+	if(captured.has(supplied) && captured.get(supplied) === model) return supplied;
+	if(supplied===null || typeof supplied!=="object" || Reflect.ownKeys(supplied).length!==model.kinds.length)
+		throw new TypeError("Expected the declared JavaScript host classes");
+	const classes=Object.freeze(model.kinds.map(({name})=>{
+		if(!Object.hasOwn(supplied,name)) throw new TypeError("Missing host class "+name);
+		const ctor=Reflect.get(supplied,name);
+		const proto=typeof ctor==="function" && Object.getOwnPropertyDescriptor(ctor,"prototype")?.value;
+		if(!proto || typeof proto!=="object") throw new TypeError("Expected a JavaScript class for "+name);
+		return Object.freeze({ctor,proto});
+	}));
+	captured.set(classes,model);
+	return classes;
+};
+
 /**
  * Bind each declared class once. Instance tests use its captured prototype,
  * not an application-provided Symbol.hasInstance, equality or coercion.
@@ -11,15 +34,7 @@ import {validateComponentScalar} from "../abi/component-scalars.mjs";
  * @param invalid - Throws a boundary failure distinguishable from an application throw.
  */
 export const bindWasmHostMembers = (model,supplied,invalid = error => { throw error; }) => {
-	if(supplied===null || typeof supplied!=="object" || Reflect.ownKeys(supplied).length!==model.kinds.length)
-		throw new TypeError("Expected the declared JavaScript host classes");
-	const classes=model.kinds.map(({name})=>{
-		if(!Object.hasOwn(supplied,name)) throw new TypeError("Missing host class "+name);
-		const ctor=Reflect.get(supplied,name);
-		const proto=typeof ctor==="function" && Object.getOwnPropertyDescriptor(ctor,"prototype")?.value;
-		if(!proto || typeof proto!=="object") throw new TypeError("Expected a JavaScript class for "+name);
-		return {ctor,proto};
-	});
+	const classes=captureWasmHostClasses(model,supplied);
 	const value=(type,v)=>{
 		if(typeof type==="number")
 		{

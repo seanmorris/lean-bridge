@@ -103,5 +103,5 @@ export const createWasmHostWire = (wasm, model, supplied, domain) => {
 		finally
 		{ for(const p of f.allocations) wasm._free(p); }
 	};
-	return Object.freeze({call,failure,finish});
+	return Object.freeze({call,failure,finish,observed: reply => frames.get(reply)?.status ? failure(reply) : null});
 };

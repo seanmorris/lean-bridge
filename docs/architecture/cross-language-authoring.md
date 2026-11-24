@@ -53,7 +53,8 @@ For an application-owned class in another runtime, see the
 [NuGet](../publish/nuget.md#import-an-application-owned-c-class) and
 [CPAN](../publish/cpan.md#call-a-perl-object-from-lean) examples.
 The [JavaScript host-object integration check](../evidence/javascript-host-imports-20261124.md)
-runs a compiled Lean application against a real JavaScript class in WebAssembly.
+runs two separately compiled Lean components against the same JavaScript object
+and verifies that they receive the same native wrapper in WebAssembly.
 It does not yet produce an installable npm host-object adapter.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),

@@ -2,14 +2,15 @@
 
 Lean called a JavaScript constructor, instance method, getter and setter from
 compiled WebAssembly. This is a producer integration check, not an installed
-npm example. Two checks exercise the import boundary: a hand-written C
-provider for one class and a provider generated from the authored contract.
+npm example. Three checks exercise the import boundary: a hand-written C
+provider, generated member calls, and two separately compiled components that
+share the runtime's object registry.
 
 | Check | What it establishes |
 | --- | --- |
 | `npm run test:javascript-host-imports` | The ordinary and reviewed Workshop sources compile against the generated `LeanBridge.Host.Javascript` module. Analysis identifies the actual extern symbols, alias result and mapped EIO error. An outdated review, a foreign symbol or scheduler, and a shadow module are rejected. |
 | `node --test tests/javascript-host-members.test.mjs` | The host dispatcher calls the supplied class, respects the receiver, and rejects invalid member arguments and results. |
-| `npm run test:javascript-host-wasm` | Lean 4.32.2 and Emscripten 6.0.6 compile both providers. Node loads each side module into a prepared single-threaded Lean runtime and calls a real JavaScript class. |
+| `npm run test:javascript-host-wasm` | Lean 4.32.2 and Emscripten 6.0.6 compile the providers and a shared identity broker. Node runs the probes in the prepared single-threaded runtime, including two independent components loaded in both orders. |
 
 In the hand-written check, Lean writes through an alias, reads through the original
 object and gets **42**. On the second call the JavaScript method throws; the
@@ -42,7 +43,18 @@ prefix. The Wasm check also requires `LEAN_BRIDGE_JS_EMSDK` (pinned SDK),
 headers), and `LEAN_BRIDGE_RUNTIME_ROOT` (directory containing the prepared
 `main.mjs` and `main.wasm`). Neither check downloads a toolchain.
 
-The generated test still supplies the object registry and public call entry.
-It does not establish cross-package canonical identity or installation in Node,
-browser and Worker consumers. Those require a shared identity implementation
-and checks against separately packaged components.
+The third check loads the shared broker once per heap. Alpha and Beta compile
+independently and bind the same application classes. When given the same
+instance they receive the same **Lean wrapper**, checked inside Wasm rather
+than inferred from matching JavaScript values. Distinct live objects have
+distinct wrappers. A weak object is released when its last Lean reference
+goes away; an explicitly admitted strong result survives until the last
+binding closes. One component can call back into the other without mixing
+bindings or exceptions. Closing one binding leaves the other usable. Closing
+the last invalidates even a reference retained by Lean; rebinding does not
+revive it.
+
+These are separately compiled side modules, not installed npm packages.
+The shared-domain test still supplies the component call entry and loads the
+Wasm artifacts directly. The public npm producer/loader and installed Node,
+browser and Worker checks remain.
