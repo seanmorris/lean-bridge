@@ -48,6 +48,9 @@ static SV *ph_out(pTHX_ lbp_host_session *s, int k, b_lean_obj_arg v) {
   }
 }
 static lean_object *ph_in(pTHX_ lbp_host_session *s,int k,SV *v,SV *anchor) {
+  /* Conversion may inspect flags and then read the value. A tied scalar
+     must supply one observation, not a fresh FETCH for each inspection. */
+  if (SvGMAGICAL(v)) v=sv_mortalcopy(v);
   if (k>=PH_NOMINAL) return lbp_host_wrap(aTHX_ s,k-PH_NOMINAL,v,anchor);
   switch(k) {
     case PH_UNIT: lbp_plain(aTHX_ v); if (SvOK(v)) croak("Unit requires undef"); return lean_box(0);

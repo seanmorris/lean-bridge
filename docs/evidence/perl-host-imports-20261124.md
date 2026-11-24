@@ -101,3 +101,34 @@ child, an unrelated receiver was collectible, and clearing the last Lean
 reference released both child and anchor. All eight interpreter/load-order
 combinations passed. These are native component tests; the public host-object
 package builder remains a separate gate.
+
+## Public Perl calls
+
+`npm run test:perl-host-exports` compiles a Lake application into one Linux
+shared library. Only the XS adapter varies by Perl ABI. The publisher checks
+the entry signatures against Lean's emitted C, checks the exported symbol list,
+and rejects a library with a Perl dependency, a runtime search path, or an
+embedded producer path. Set `LEAN_BRIDGE_PERLS` to a JSON array of interpreter
+paths to test them against the same compiled library.
+
+Perl 5.36.3 and 5.38.2, threaded and unthreaded, each ran the client against
+component SHA-256 `1ca86269fdb2a16081d04752b43ceffa71b93f306a506d4852f47128be328ff4`.
+None of the four XS adapters exported its member dispatch functions.
+The tied class table, tied integer argument and tied object argument each
+supplied their value once.
+
+The client loads `LeanBridge::Workshop` and calls
+`with_hosts({Box => 'Meter'}, sub { ... })`. A constructor returns a blessed
+`Meter`. A property update changes that object, and an identity call returns
+the same referent. The scope forwards list, scalar and void context. It releases
+the binding when the block returns or dies; a call outside the block fails.
+
+The client distinguishes a rethrown Perl exception, a new Lean IO error with
+the same message, a declared EIO failure, and a returned nested `Except`. A
+nominal value in either arm or in the error payload keeps the original object
+alive after the binding closes. Dropping the last Perl reference releases it.
+When Lean catches repeated host failures, the 65th attempted call stops before
+the Perl method runs. Lean cannot turn that exhausted frame into a success.
+
+This check uses public calls and a fixture loader. It does not install the
+component from a CPAN distribution or enable the CLI's CPAN host-import route.

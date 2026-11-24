@@ -70,7 +70,7 @@ sub _object {
     die 'wrong nominal Perl host object' unless defined(Scalar::Util::blessed($_[0])) && UNIVERSAL::isa($_[0], $_[1]);
     return $_[0];
 }
-sub _bind {
+sub _capture {
     die 'expected one Perl host binding table' unless @_ == 1;
     my ($bindings) = @_;
     die 'expected named Perl host classes' unless ref($bindings) eq 'HASH' && keys(%{$bindings}) == ${types.length};
@@ -80,10 +80,11 @@ sub _bind {
         $class
     } (${names.map(lit).join(", ")});
 ${required.join("\n")}
-    return [
+    return [[@class], [
 ${code.join(",\n")}
-    ];
+    ]];
 }
+sub _bind { return _capture(@_)->[1] }
 1;
 `;
 	return { slots, kinds, implementation };

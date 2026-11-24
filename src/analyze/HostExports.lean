@@ -88,7 +88,8 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
     -- These synchronous ports retain the active application object before
     -- releasing the Lean result. Worker payloads do not take this path.
     if hostLeases && (r.hostModule.any (fun m =>
-        #["LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Ruby", "LeanBridge.Host.Python"].contains m)) &&
+        #["LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Ruby", "LeanBridge.Host.Python",
+          "LeanBridge.Host.Perl"].contains m)) &&
         e.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)) then return t
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t

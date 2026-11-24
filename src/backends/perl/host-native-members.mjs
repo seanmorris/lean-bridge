@@ -41,9 +41,11 @@ const checkSite = (s,t,output) => {
  *
  * @param ir - Validated application host contract.
  * @param name - CPAN module identity.
+ * @param key - Component identity for exported helper names (defaults to the namespace).
+ * @param local - Keep XS callback implementations local to this adapter.
  */
-export const perlNativeHostMembers = (ir,name) => {
-	const model=perlHostMembers(ir,name), protos=[], bodies=[], prefix="lb_ph_"+sha256(name).slice(0,32)+"_";
+export const perlNativeHostMembers = (ir,name,key=name,local=false) => {
+	const model=perlHostMembers(ir,name), protos=[], bodies=[], prefix="lb_ph_"+sha256(key).slice(0,32)+"_";
 	const helpers=["nat","int"].map(t=>"@[export "+prefix+t+"_text] def "+(t==="nat"?"natText (v : Nat)":"intText (v : Int)")+" : String := toString v").join("\n");
 	for(const [slot,m] of model.slots.entries())
 	{
@@ -59,7 +61,7 @@ export const perlNativeHostMembers = (ir,name) => {
 		}
 		const n=values.length, proto="lean_object *"+m.symbol+"("+(values.map((v,i)=>v.c+" v"+i).join(", ") || "void")+")";
 		protos.push(proto+";");
-		bodies.push(proto+" {\n  static const int tags[]={"+(values.map(v=>v.tag).join(",") || "0")+"};"
+		bodies.push((local?"static ":"")+proto+" {\n  static const int tags[]={"+(values.map(v=>v.tag).join(",") || "0")+"};"
 			+"\n  lean_object *values[]={"+(values.map((v,i)=>v.box("v"+i)).join(",") || "NULL")+"};"
 			+"\n  ph_member m={"+[slot,n,"tags",out.tag,anchor,"values"].join(",")+"};"
 			+"\n  lean_object *io=ph_call(ph_dispatch,&m);\n  "
@@ -71,5 +73,5 @@ export const perlNativeHostMembers = (ir,name) => {
 		, "#define PH_NAT_TEXT "+prefix+"nat_text"
 		, "#define PH_INT_TEXT "+prefix+'int_text'
 		, '#include "host-wire.h"'];
-	return {...model,header: protos.join("\n"),native: [...prelude,...bodies].join("\n"),helpers};
+	return {...model,prefix,header: protos.join("\n"),native: [...prelude,...bodies].join("\n"),helpers};
 };

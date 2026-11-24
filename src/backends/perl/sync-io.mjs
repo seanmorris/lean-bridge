@@ -152,7 +152,13 @@ ${args.map(a => "    SV *" + a + "\n").join("")}  PPCODE:
     XPUSHs(sv_2mortal(ret));
 `;
 };
-const modules = (ns, methods) => {
+/**
+ * Generate the common Perl exceptions and returned Except value classes.
+ *
+ * @param ns - Validated public Perl package name.
+ * @param methods - Selected functions and their declared effects.
+ */
+export const perlEffectClasses = (ns, methods) => {
 	const common = `package ${ns}::Failure;
 sub declaration { $_[0]->{declaration} }
 sub payload { $_[0]->{payload} }
@@ -176,7 +182,7 @@ const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evide
 		return q(i.module) + " => " + q(i.sourceSha256);
 	}).join(", ");
 	const args = `${q(runtime)}, { ${sources} }, ${q(api.component.id)}, ${q(libHash)}`;
-	return `${modules(name,methods)}${perlLeaseModules(kinds,name)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
+	return `${perlEffectClasses(name,methods)}${perlLeaseModules(kinds,name)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
 package ${name};
 use strict;
 use warnings;
