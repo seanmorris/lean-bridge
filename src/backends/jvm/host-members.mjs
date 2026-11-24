@@ -18,6 +18,20 @@ const java = { bool: "boolean", char: "int", uint8: "int", uint16: "int"
 	, float32: "float", float64: "double", bytes: "byte[]", string: "String" };
 const fail = reason => { throw new TypeError("Unsupported JVM host member: " + reason); };
 const quote = JSON.stringify;
+const kindKey = (ir,t) => sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId]));
+
+/**
+ * Authenticate the nominal worker carrier in the JVM host namespace. Its key
+ * is independent of the exporting JAR but tied to the original import contract.
+ *
+ * @param ir - Verified declarations for Java application classes.
+ */
+export const jvmWorkerKinds = ir => {
+	nativeHostSelection(ir, "jvm");
+	if(ir.types.length > 64 || ir.types.some(t => t.host.dynamic || !["weak-canonical", "strong-canonical"].includes(t.host.identity)))
+		fail("expected static JVM worker classes");
+	return ir.types.map(t => ({ name: t.name, id: t.id, hash: sha256(canonicalJson(["lean-bridge/jvm-host-lease/v1", kindKey(ir,t)])) }));
+};
 
 /**
  * Produce the private Java dispatch table and matching native symbol order.
@@ -30,7 +44,7 @@ export const generateJvmHostMembers = async ir => {
 	nativeHostSelection(ir, "jvm");
 	const types = ir.types;
 	if(!types.length || types.length > 64 || new Set(types.map(t => t.resource.kindId)).size !== types.length) fail("expected distinct nominal kinds");
-	const kinds = types.map(t => ({ key: sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId])), strong: t.host.identity === "strong-canonical" }));
+	const kinds = types.map(t => ({ key: kindKey(ir,t), strong: t.host.identity === "strong-canonical" }));
 	if(types.some(t => t.host.dynamic || !["weak-canonical", "strong-canonical"].includes(t.host.identity))) fail("dynamic or unknown identity");
 	const site = (s, result = false) => {
 		const ref = s.type, i = ref.kind === "named" ? types.findIndex(t => t.id === ref.id) : -1;

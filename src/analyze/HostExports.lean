@@ -37,6 +37,7 @@ structure Request where
   dotnetTaskCallbacks : Option Bool := none
   dotnetTaskObjects : Option Bool := none
   jvmTaskCallbacks : Option Bool := none
+  jvmTaskObjects : Option Bool := none
   perlTaskCallbacks : Option Bool := none
   phpTaskCallbacks : Option Bool := none
   phpNativeTaskObjects : Option Bool := none
@@ -89,7 +90,13 @@ def Request.dotnetObjects (r : Request) : Bool :=
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
     (r.dotnetTaskCallbacks == some true) == !r.taskExports.isEmpty
 
-def Request.localObjects (r : Request) : Bool := r.pythonObjects || r.rubyObjects || r.dotnetObjects
+/-- A worker carries a Java class as data; JNI member calls belong to the bound host. -/
+def Request.jvmObjects (r : Request) : Bool :=
+  r.jvmTaskObjects == some true && r.hostModule == some "LeanBridge.Host.Jvm" &&
+    (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
+    (r.jvmTaskCallbacks == some true) == !r.taskExports.isEmpty
+
+def Request.localObjects (r : Request) : Bool := r.pythonObjects || r.rubyObjects || r.dotnetObjects || r.jvmObjects
 
 def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects || r.localObjects
 
@@ -160,6 +167,8 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
           throwError "retained task callback arguments and replies must be copied scalars or declared Ruby owner classes: {e}"
         else if r.dotnetObjects then
           throwError "retained task callback arguments and replies must be copied scalars or declared CLR owner classes: {e}"
+        else if r.jvmObjects then
+          throwError "retained task callback arguments and replies must be copied scalars or declared JVM owner classes: {e}"
         else if r.pythonObjects then
           throwError "retained task callback arguments and replies must be copied scalars or declared Python owner classes: {e}"
         else if r.phpTaskObjects then
@@ -214,6 +223,10 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
 
 def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
   if r.ownerHostMembers then return
+  if r.jvmObjects then
+    if r.members.any (fun m => deps.contains m.toName) then
+      throwError "JVM task calls a JVM member outside its owner: {n}"
+    return
   if r.dotnetObjects then
     if r.members.any (fun m => deps.contains m.toName) then
       throwError "CLR task calls a CLR member outside its owner: {n}"
@@ -342,6 +355,8 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid Python task object selection"
   if r.rubyTaskObjects.isSome && !r.rubyObjects then
     throwError "invalid Ruby task object selection"
+  if r.jvmTaskObjects.isSome && !r.jvmObjects then
+    throwError "invalid JVM task object selection"
   if r.dotnetTaskObjects.isSome && !r.dotnetObjects then
     throwError "invalid CLR task object selection"
   if r.phpWasmTaskObjects.isSome && !r.phpTaskObjects then

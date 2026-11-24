@@ -71,13 +71,15 @@ export const compileHostSources = async options => {
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const phpNativeTaskObjects=Boolean(ir && options.target==="php-native" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const rubyTaskObjects=Boolean(ir && options.target==="rubygems" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	const jvmTaskObjects = Boolean(ir && options.target === "maven" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const dotnetTaskObjects=Boolean(ir && options.target==="nuget" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	if(rubyTaskObjects || dotnetTaskObjects)
+	const localWorkerOwner = jvmTaskObjects ? "JVM" : dotnetTaskObjects ? "CLR" : rubyTaskObjects ? "Ruby" : null;
+	if(localWorkerOwner)
 	{
 		const source=projectContract.hostImportsSource;
 		if(projectContract.generatedHostModule!==hostModule || typeof source!=="string"
 			|| sha256(source)!==projectContract.hostImportsSourceSha256 || canonicalJson(parseBindingIr(source))!==canonicalJson(ir))
-			fail((dotnetTaskObjects?"CLR":"Ruby")+" worker declarations differ from the captured host source");
+			fail(localWorkerOwner+" worker declarations differ from the captured host source");
 	}
 	// Probe the actual exported Lean types, not the project's package name or
 	// a claim in its review. A scalar worker next to a synchronous host import
@@ -163,6 +165,7 @@ export const compileHostSources = async options => {
 		, ...(phpNativeTaskObjects ? {phpNativeTaskObjects: true} : {})
 		, ...(pythonTaskObjects ? {pythonTaskObjects: true} : {})
 		, ...(rubyTaskObjects ? {rubyTaskObjects: true} : {})
+		, ...(jvmTaskObjects ? {jvmTaskObjects: true} : {})
 		, ...(dotnetTaskObjects ? {dotnetTaskObjects: true} : {})
 		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
@@ -180,10 +183,10 @@ export const compileHostSources = async options => {
 		if(error.code === "build-command-failed")
 		{
 			const output = [error.details?.stderr, error.details?.stdout].filter(Boolean).join("\n").split("\n");
-			if(rubyTaskObjects || dotnetTaskObjects)
+			if(localWorkerOwner)
 				for(const name of [...selection.taskExports,...selection.asyncIterators.flatMap(p=>[p.open,p.next,p.close])])
 				{
-					const owner=dotnetTaskObjects?"CLR":"Ruby";
+					const owner=localWorkerOwner;
 					const message=owner+" task calls a "+owner+" member outside its owner: "+name;
 					if(output.some(line=>line.trimEnd().endsWith(message)))
 						throw Object.assign(new Error(message),{code: "invalid-task-export",cause: error,details: error.details});

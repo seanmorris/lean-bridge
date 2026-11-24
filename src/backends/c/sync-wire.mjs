@@ -63,10 +63,11 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.wasmHostKinds - Authenticated JavaScript nominal classes for this component.
  * @param options.phpHostKinds - Authenticated classes for the native PHP owner.
  * @param options.rubyHostKinds - Authenticated classes for the native MRI owner.
+ * @param options.jvmHostKinds - Authenticated classes for the native JVM owner.
  * @param options.dotnetHostKinds - Authenticated classes for the native CLR owner.
  * @param options.witCallbacks - Preserve factory versus worker failures when dispatching on a Wasmtime store owner.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[],rubyHostKinds=[],dotnetHostKinds=[],wasmZendObjects=false } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[],rubyHostKinds=[],dotnetHostKinds=[],jvmHostKinds=[],wasmZendObjects=false } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if(witCallbacks && (!tasks || checkedWasm || wasmCallbacks)) throw new TypeError("Wasmtime callbacks require a native task wire");
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
@@ -74,13 +75,14 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const wasmHost=wasmHostKinds.length>0,phpHost=phpHostKinds.length>0,rubyHost=rubyHostKinds.length>0,dotnetHost=dotnetHostKinds.length>0;
-	const hostValues=wasmHost || phpHost || rubyHost || dotnetHost;
+	const jvmHost=jvmHostKinds.length>0, hostValues=wasmHost || phpHost || rubyHost || dotnetHost || jvmHost;
+	if(jvmHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || dotnetHost || wasmCallbacks || witCallbacks)) throw new TypeError("JVM host objects require a native JVM task wire");
 	if(dotnetHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || wasmCallbacks || witCallbacks)) throw new TypeError("CLR host objects require a native CLR task wire");
 	if(rubyHost && (!tasks || checkedWasm || phpHost || wasmHost || wasmCallbacks || witCallbacks)) throw new TypeError("Ruby host objects require a native Ruby task wire");
 	if(wasmZendObjects && (!wasmHost || phpHost || !wasmTasks)) throw new TypeError("Zend worker objects require the Wasm host ABI");
 	if(phpHost && (!tasks || checkedWasm || wasmHost || wasmCallbacks || witCallbacks)) throw new TypeError("PHP host objects require a native PHP task wire");
 	if(wasmHost && !wasmTasks) throw new TypeError("JavaScript host objects require threaded Wasm");
-	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,dotnetHost?dotnetHostKinds:rubyHost?rubyHostKinds:phpHost?phpHostKinds:wasmHostKinds,dotnetHost?"dotnet":rubyHost?"ruby":phpHost || wasmZendObjects?"php":"javascript"), values = cTaskValues(p, false, kinds);
+	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,jvmHost?jvmHostKinds:dotnetHost?dotnetHostKinds:rubyHost?rubyHostKinds:phpHost?phpHostKinds:wasmHostKinds,jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || wasmZendObjects?"php":"javascript"), values = cTaskValues(p, false, kinds);
 	const leases = kinds.map((r, i) => ({ ...r, type: (r.host?"host:":"lease:") + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
 	const wireShape = t => leases.find(r => t?.kind === "named" && t.id === r.id)?.type
 		?? (hostValues && t?.kind==="apply" && t.constructor==="result" && t.arguments.length===2?t.arguments.map(wireShape):shape(t));
