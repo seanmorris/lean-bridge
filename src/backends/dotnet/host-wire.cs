@@ -21,6 +21,7 @@ internal sealed unsafe partial class HostMembers {
         }
         if(w[2]!=0 || (k is not ("bytes" or "string") && w[1]!=0)) throw new ArgumentException("Invalid CLR host scalar");
         return k switch {
+            "nominal" when bits!=0=>HostRefs.Read(bits) ?? throw new ArgumentException("Expired CLR host object"),
             "unit" when bits==0=>null, "bool" when bits<2=>bits!=0, "char"=>new Rune(checked((int)bits)),
             "uint8"=>checked((byte)bits), "int8"=>unchecked((sbyte)checked((byte)bits)),
             "uint16"=>checked((ushort)bits), "int16"=>unchecked((short)checked((ushort)bits)),
@@ -34,6 +35,7 @@ internal sealed unsafe partial class HostMembers {
     private static void Encode(Site site, object? v, ulong* w) {
         w[0]=0; w[1]=0; w[2]=0;
         switch(site.Kind) {
+        case "nominal": w[0]=HostCall.PublishObject(v!); return;
         case "unit": return;
         case "bool": w[0]=(bool)v! ? 1UL : 0UL; return;
         case "char": w[0]=(uint)((Rune)v!).Value; return;

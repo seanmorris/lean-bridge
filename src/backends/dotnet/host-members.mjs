@@ -1,5 +1,6 @@
 /** @file Bind exact CLR members from a checked Lean host-import contract. */
 import { readFile } from "node:fs/promises";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { nativeHostSelection } from "../../analyze/host-export-model.mjs";
 import { generateLeanHostObjectAdapters, hostMemberSymbol } from "../lean/host-object.mjs";
 
@@ -47,5 +48,6 @@ export const generateDotnetHostMembers = async ir => {
     }
 }
 `;
-	return { implementation, contract, members };
+	const kinds = types.map(t => ({ key: sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId])), strong: t.host.identity === "strong-canonical" }));
+	return { implementation, contract, members, kinds };
 };

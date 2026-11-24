@@ -6,6 +6,7 @@
 
 typedef struct lb_dn_fault { struct lb_dn_fault *next; lean_object *error; uint32_t id; } lb_dn_fault;
 static _Thread_local lb_dn_frame *top;
+lb_dn_frame *lb_dn_current(void) { return top; }
 static lean_object *io_error(const char *why) {
     return lean_io_result_mk_error(lean_mk_io_user_error(lean_mk_string(why)));
 }

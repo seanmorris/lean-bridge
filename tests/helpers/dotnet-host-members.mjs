@@ -65,6 +65,7 @@ test("compiled Lean calls a bound CLR member without unwinding a managed excepti
 	await writeFile(join(app, "HostMembers.cs"), implementation);
 	await writeFile(join(app, "HostContract.cs"), "namespace LeanBridge.GeneratedHost;\n" + contract);
 	await copyFile(join(backend, "host-frame.cs"), join(app, "HostCall.cs"));
+	await copyFile(join(backend, "host-refs.cs"), join(app, "HostRefs.cs"));
 	await copyFile(join(backend, "host-wire.cs"), join(app, "HostWire.cs"));
 	const slots = members.map((m, i) => "internal const int " + (({ new: "New", set: "Set", get: "Get" })[m.mode] ?? m.name) + "=" + i + ";");
 	await writeFile(join(app, "Slots.cs"), "internal static class Slots {" + slots.join("\n") + "}");

@@ -25,7 +25,10 @@ internal sealed partial class HostMembers {
     private sealed record Bound(MethodBase Method, bool Instance, Site[] Args, Site Result);
     private static readonly UTF8Encoding Utf8 = new(false, true);
     private readonly Bound[] members;
+    private readonly Type[] classes;
+    internal Type ClassAt(int index) => classes[index];
     internal HostMembers(Type[] types, params Spec[] specs) {
+        classes=(Type[])types.Clone();
         if (types.Any(t => t is null || !t.IsVisible || !(t.IsClass || t.IsInterface) || t.IsArray || t.ContainsGenericParameters))
             throw new ArgumentException("Expected public, closed CLR reference types");
         members = specs.Select(s => {

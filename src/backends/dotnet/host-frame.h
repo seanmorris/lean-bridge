@@ -12,12 +12,14 @@ typedef struct lb_dn_frame {
     struct lb_dn_fault *faults;
     lb_dn_dispatch dispatch;
     uint64_t call;
+    void *domain_session;
     int fatal;
     void (*retire)(void);
 } lb_dn_frame;
 enum { LB_DN_OK=0, LB_DN_ERROR=1, LB_DN_FATAL=2, LB_DN_WRONG_THREAD=9 };
 int lb_dn_enter(lb_dn_frame *, uint64_t, lb_dn_dispatch, void (*retire)(void));
 void lb_dn_leave(lb_dn_frame *);
+lb_dn_frame *lb_dn_current(void);
 /* NULL = success (three result words); otherwise returns an owned Lean IO error. */
 lean_object *lb_dn_member(int32_t, const uint64_t *, size_t, uint64_t *);
 lean_object *lb_dn_corrupt(void);

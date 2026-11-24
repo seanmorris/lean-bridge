@@ -57,6 +57,28 @@ copy. A negative CLR result for `Nat` and an unpaired surrogate in a returned
 string produce boundary validation errors. Copied buffers have a 16 MiB budget;
 exact integers use the existing native word-magnitude conversion.
 
-This is a native integration test, not an installed NuGet consumer. The fixture
-still supplies the outer component entry. Canonical identity for managed
-instances across independently installed assemblies is a separate requirement.
+## Nominal identity across CLR assemblies
+
+Run `npm run test:dotnet-host-domain` with the same SDKs. The test builds
+two separate C# assemblies and two Lean native components. Each build produces
+the same reference-domain library. The client loads the assemblies into
+separate collectible contexts, in both orders in fresh processes, after their
+source and build directories have been removed.
+
+One component calls the application’s identity method and retains the returned
+Lean value. The other compares its own wrapper with that value using Lean’s
+`ptrEq`. The same C# object shares a wrapper across components; objects that
+compare equal in C# and two distinct nominal kinds do not. The test also
+constructs a C# object from Lean, changes its property, and returns the object
+after the native call releases its temporary wrapper.
+
+A borrowed child keeps its parent alive until Lean releases the child. A
+partially incompatible binding and a rejected second argument leave no pins.
+Closing a binding inside its own call is refused. Closing the last binding
+invalidates even a still-retained Lean wrapper, and a collected binder is
+swept on the next owner operation. At exit the client observes zero native
+rows, zero managed handles, and both assembly contexts unloading.
+
+These are native integration tests. The outer component entry is still test
+code; consumer installation from an ordinary or reviewed NuGet package is
+not established by these results.
