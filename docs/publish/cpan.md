@@ -69,6 +69,18 @@ Select your Lean functions and declare the OS access they need. For the [Journal
 
 The synchronous profile supports the 19 copied scalar types and nested returned or thrown `Except` values. `IO` failures carry the Lean error message; `EIO` failures retain the type of their payload. It does not turn tasks, streams, or direct resource parameters into synchronous copied values. See the [installed Perl example](../consume/perl.md#call-synchronous-io-and-handle-errors) and the [four-ABI acceptance record](../evidence/perl-sync-io-20261123.json).
 
+### Call a Perl object from Lean
+
+Use a host import when the Perl application owns the object and Lean needs to call its methods. The [Workshop project](../../tests/fixtures/perl-host-project/Workshop.lean) imports `LeanBridge.Host.Perl`. Its [host contract](../../tests/fixtures/perl-host-project/lean-bridge.hosts.json) declares a `Box` constructor, a mutable `level` property, a read method and an identity method. Lean Bridge generates the imported module; do not add a source module with that name.
+
+The [export configuration](../../tests/fixtures/perl-host-project/lean-bridge.exports.json) names the contract in `hostImports` and selects the application functions under `exports`. To build that example from the repository root:
+
+```sh
+lean-bridge build --project tests/fixtures/perl-host-project --target cpan --output release
+```
+
+This produces a `native-perl-host-v1` component and its exact shared runtime distribution. Publish the two archives as described [below](#publish-to-cpan). The application [binds its own Perl class](../consume/perl.md#supply-a-perl-class-to-lean). These calls run on the initiating interpreter thread; do not pass imported objects to a Lean worker.
+
 ### Export tasks and streams
 
 Use `taskExports` for functions returning an actual Lean `Task` (directly or inside `BaseIO`, `IO` or `EIO`). Use `asyncIterators` for a demand-driven stream: select its open, next and close declarations together. For the [Pulse source](../../tests/fixtures/c-lean-tasks/Pulse.lean):

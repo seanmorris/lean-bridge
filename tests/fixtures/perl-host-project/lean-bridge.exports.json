@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "hostImports": "lean-bridge.hosts.json",
+  "modules": [
+    "Workshop"
+  ],
+  "exports": [
+    "Workshop.make",
+    "Workshop.read",
+    "Workshop.update",
+    "Workshop.identity",
+    "Workshop.mapped"
+  ],
+  "targets": {
+    "cpan": {
+      "module": "LeanBridge::Workshop",
+      "version": "0.001"
+    }
+  }
+}

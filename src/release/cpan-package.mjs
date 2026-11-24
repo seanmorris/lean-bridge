@@ -102,11 +102,12 @@ export const readVerifiedCpanPackage = async packageRoot => {
 	{
 		verifyOwnedCpanTransfers(manifest, files);
 		const host = manifest.hostImports;
-		const hostPayload=files.has("host-imports.json") || files.has("host-scope.h") || files.has("ph-interface.h") ||
-			files.has("binding-manifest.json") && JSON.parse(files.get("binding-manifest.json")).profile==="native-perl-host-v1";
+		const hostPayload=files.has("host-imports.json") || files.has("host-scope.h") || files.has("ph-interface.h")
+			|| files.has("binding-manifest.json") && JSON.parse(files.get("binding-manifest.json")).profile==="native-perl-host-v1";
 		if(Boolean(host)!==hostPayload || (host && (manifest.syncIO || manifest.taskDelivery || manifest.ownedValues)))
 			throw new Error("CPAN host manifest and payload select different profiles");
-		if(host) {
+		if(host)
+		{
 			if(files.get("Makefile.PL")?.toString()!==makefilePL || files.get("t/00-load.t")?.toString()!==loadTest(manifest.module)
 				|| !files.get("inc/LeanBridge/Runtime/Platform.pm")?.equals(await readFile(join(templates,"Platform.pm"))))
 				throw new Error("CPAN host configuration or load test differs from its source");
@@ -190,7 +191,8 @@ export const stageCpanPackage = async ({ outputRoot
 	, runtimeRoot
 	, componentRoot = null
 	, runtimePackageRoot = null
-	, ownedGmpRoot = null, ownedModuleName = null, syncIO = null, hostImports = null
+	, ownedGmpRoot = null, ownedModuleName = null
+	, syncIO = null, hostImports = null
 	, leanPrefix
 	, version = "0.001", glibcMinimumVersion = "2.38" }) => {
 	if(!componentVersionPattern.test(version)) throw new TypeError("CPAN version must use Perl decimal version syntax");

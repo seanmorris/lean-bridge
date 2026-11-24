@@ -30,12 +30,17 @@ const hosts = {
  * @param backend - Compiler host target.
  */
 export const prepareNativeHostFixture = async (project, backend) => {
+	if(backend === "perl")
+	{
+		await cp(resolve("tests/fixtures/perl-host-project"),project,{recursive: true});
+		return;
+	}
 	await cp(fixture, project, { recursive: true });
 	if(backend === "ruby") return;
 	assert.ok(Object.hasOwn(hosts, backend)); const { label, target } = hosts[backend];
 	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(file, "utf8"));
 	contract.types[0].host.targets = [backend];
-	contract.types[0].documentation.summary = {jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method.", perl: "A Perl object with a read method."}[backend];
+	contract.types[0].documentation.summary = {jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method."}[backend];
 	await writeFile(file, canonicalJson(contract));
 	const cfg = join(project, "lean-bridge.exports.json"), config = JSON.parse(await readFile(cfg, "utf8"));
 	config.targets = { [target]: hosts[backend].coordinates };

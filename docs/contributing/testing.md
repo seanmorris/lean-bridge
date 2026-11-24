@@ -2644,6 +2644,27 @@ The build produces an ordinary Journal, a reviewed Journal and an independent co
 
 To test the producer a second time, set `LEAN_BRIDGE_PERL_IO_ORIGINAL` to the same directory and `LEAN_BRIDGE_PERL_IO_REPRO` to a new directory, then run `node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs`. It installs the CLI offline and compares both archives and their receipts byte for byte.
 
+### Perl host objects
+
+Set `LEAN_BRIDGE_PERLS` to the four interpreter paths above and
+`LEAN_BRIDGE_LEAN_PREFIX` to the pinned compiler. Run:
+
+```sh
+npm run test:perl-host-packages
+```
+
+This test installs the packed CLI offline and uses it to build two independent
+CPAN components, first from ordinary Lean source, then from a reviewed API.
+They must all depend on the same runtime archive. For each interpreter, the
+consumer installs the ordinary pair from prebuilt XS and compiles only XS for
+the reviewed pair. It moves the installed prefix and runs the same Perl
+application twice, reversing the order in which the components load. No Lean
+or C compiler is on the application's path.
+
+The [publisher example](../publish/cpan.md#call-a-perl-object-from-lean)
+uses one host class. The test adds a second class so it can distinguish
+weak objects from objects pinned by overlapping bindings.
+
 ### Perl futures and demand-driven streams
 
 Use the same four `LEAN_BRIDGE_PERLS` interpreters and compiler as for the synchronous suite. Install the upstream `Future` (0.54) and `IO::Async` (0.805) distributions and their prerequisites in a local Perl prefix. Set `LEAN_BRIDGE_PERL_TASK_DEPS` to that prefix's `lib/perl5` directory and include it in `PERL5LIB`. The installed-client suite uses the real event loop, not a mocked scheduler.

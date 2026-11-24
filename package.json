@@ -1224,6 +1224,7 @@
     "test:perl-host-frame": "node --test --test-concurrency=1 tests/helpers/perl-host-frame.mjs",
     "test:perl-host-domain": "node --test --test-concurrency=1 tests/helpers/perl-host-domain.mjs",
     "test:perl-host-exports": "node --test --test-concurrency=1 tests/helpers/perl-host-exports.mjs",
+    "test:perl-host-packages": "node --test --test-concurrency=1 tests/helpers/perl-host-packages.mjs",
     "test:perl-host-runtime-archive": "node --test --test-concurrency=1 tests/helpers/perl-host-runtime-archive.mjs",
     "test:perl-host-members": "node --test --test-concurrency=1 tests/helpers/perl-host-members.mjs",
     "test:dotnet-host-members": "node --test --test-concurrency=1 tests/helpers/dotnet-host-members.mjs",

@@ -64,7 +64,7 @@ Native CPAN uses the same [compiler report](../architecture/elaborated-export-me
 
 The npm builder accepts shared module/export selection, `arities`, `specializations`, `hostProjections`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, exact `hostProjections`, package metadata, generators and target settings can accompany it.
 
-If the package exports native tasks, pull iterators, Python or Ruby host imports, or standalone synchronous IO functions for C, C++, C#, JVM, Perl, native PHP, Python, Ruby or Rust,
+If the package uses native tasks, pull iterators, host imports, or standalone synchronous IO,
 [declare the OS access its Lean code needs](export-decisions.md#declare-native-os-access).
 For standalone IO, specify `nativeEffects: []` if no OS access is needed. Use
 ordinary `exports` for those functions; there is nothing to await. For Java
@@ -184,8 +184,10 @@ Independently built Python IO and asyncio wheels can also
 as a direct input, output, typed error, or stream item. Use `hostImports`
 instead when Lean needs to call an object supplied by
 [Python](../publish/pypi.md#call-python-objects-from-lean),
-[Ruby](../publish/rubygems.md#call-ruby-objects-from-lean), or
-[Java/Kotlin](../publish/maven.md#import-an-application-owned-jvm-class).
+[Ruby](../publish/rubygems.md#call-ruby-objects-from-lean),
+[Java/Kotlin](../publish/maven.md#import-an-application-owned-jvm-class),
+[C#](../publish/nuget.md#import-an-application-owned-c-class), or
+[Perl](../publish/cpan.md#call-a-perl-object-from-lean).
 
 The [Maven task profile](../publish/maven.md#export-tasks-and-streams) turns
 selected Lean tasks into Java `CompletableFuture` or Kotlin suspend functions.

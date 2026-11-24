@@ -94,6 +94,33 @@ Run `perl journal.pl`. It prints `42`, `37`, and `out of stock`. A function retu
 
 The package loads the shared runtime. Use it from the process and interpreter thread that loaded it. Invalid inputs fail before the Lean function runs. The [installed acceptance checks](../evidence/perl-sync-io-20261123.json) exercise both threaded and unthreaded Perl.
 
+### Supply a Perl class to Lean
+
+If the package declares a host object, bind the requested name to a class for the duration of a block. This [meter.pl example](../../tests/fixtures/perl-host-meter/meter.pl) uses the [host-import Workshop package](../publish/cpan.md#call-a-perl-object-from-lean):
+
+```perl
+use strict;
+use warnings;
+use LeanBridge::Workshop;
+
+{
+    package App::Meter;
+    sub new      { bless {level => $_[1]}, $_[0] }
+    sub level    { $_[0]->{level} = $_[1] if @_ == 2; return $_[0]->{level} }
+    sub read     { $_[0]->{level} }
+    sub identity { $_[0] }
+}
+
+my $meter = LeanBridge::Workshop::with_hosts({Box => 'App::Meter'}, sub {
+    my $m = LeanBridge::Workshop::make(18);
+    LeanBridge::Workshop::update($m, 42);
+    return LeanBridge::Workshop::identity($m);
+});
+print $meter->read, "\n";  # 42
+```
+
+`$meter` is the original blessed Perl object, not a handle. The binding closes on return or exception. A new call into these Lean functions needs a new block. If a Perl method dies and Lean propagates that IO error unchanged, the caller receives the original exception. If Lean maps it to a declared `EIO` error, the caller receives the generated exception and its payload.
+
 ### Wait for a task or read a stream
 
 A task export returns a `Future` attached to the default loop returned by `IO::Async::Loop->new`. If your application already uses that loop, its timers and I/O continue to run while `get` waits for a result. In event-driven code, register `on_done` and `on_fail` callbacks instead. The component declares its CPAN dependencies; synchronous-only packages do not require an event loop.

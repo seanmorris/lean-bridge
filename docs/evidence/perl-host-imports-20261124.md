@@ -21,8 +21,7 @@ exception. Binding captured a tied hash's class value once.
 
 Run `npm run test:perl-host-imports` with the pinned Lean producer and
 `npm run test:perl-host-members` with `LEAN_BRIDGE_PERL` set to each
-interpreter. These are compiler and dispatch checks, not an installed CPAN
-host-object package.
+interpreter. For installation and relocation, see [CPAN host packages](#cpan-host-packages).
 
 ## Compiled Lean to Perl and back
 
@@ -43,8 +42,7 @@ After 64 distinct caught failures, the frame refused further host calls
 before executing another method. Lean catching that refusal did not turn
 the outer call into a success. A fresh invocation succeeded. The fixture
 also refused inherited calls after fork and, on threaded Perl, calls from
-a cloned interpreter. This is a native frame check with a scalar member;
-it does not exercise an installed CPAN host-object pair.
+a cloned interpreter.
 
 ## Shared identity across components
 
@@ -78,9 +76,7 @@ and `Runtime.xs`.
 
 Run `npm run test:perl-host-domain` per interpreter and
 `npm run test:perl-host-runtime-archive` with the JSON array of interpreter
-paths in `LEAN_BRIDGE_PERLS`. The two-component probe and the runtime archive
-are separate checks: neither installs a pair of generated CPAN host-object
-distributions.
+paths in `LEAN_BRIDGE_PERLS`.
 
 ## Generated member ABI
 
@@ -99,8 +95,7 @@ passed it. Whether the declared anchor was the receiver or a named parameter,
 the result still kept the **original** anchor alive. The peer saw the same
 child, an unrelated receiver was collectible, and clearing the last Lean
 reference released both child and anchor. All eight interpreter/load-order
-combinations passed. These are native component tests; the public host-object
-package builder remains a separate gate.
+combinations passed.
 
 ## Public Perl calls
 
@@ -130,5 +125,54 @@ alive after the binding closes. Dropping the last Perl reference releases it.
 When Lean catches repeated host failures, the 65th attempted call stops before
 the Perl method runs. Lean cannot turn that exhausted frame into a success.
 
-This check uses public calls and a fixture loader. It does not install the
-component from a CPAN distribution or enable the CLI's CPAN host-import route.
+This check uses public calls and a fixture loader. The CPAN package check below
+uses the CLI and separate component archives.
+
+## CPAN host packages
+
+An offline installation of the packed CLI built Workshop and Peer from ordinary
+Lean source and again with independently reviewed APIs. Each package contained
+one compiled Lean library and four XS adapters. Each required the same exact
+runtime archive (`44164075…b4a9`, full digest above).
+These were local Linux x86-64 builds with the development glibc floor set to
+2.36. No package was published to CPAN.
+
+| Source | Package | Component archive SHA-256 | Compiled Lean library SHA-256 |
+| --- | --- | --- | --- |
+| Ordinary | Workshop | `76c2dc1c9a960fc156aed33053f36253c3ba6e7074d543820c0ce2bef475f02a` | `ed106b77a83cbe6d2dab2ab9f4a6e971e5c578357c414175af4878c5bac6a5b6` |
+| Ordinary | Peer | `ced1b6741fe844ae835455617c1d993f27624c89c33daf69282586cd843863e7` | `ac44d739cb2414dccb9d654feef3f63e0e8ff083f10755f37f8f9adbbfee2a9c` |
+| Reviewed | Workshop | `c73b2b0e47f9690a9c2d2a090816d6ffae8637f573d47fd411bd087605bad109` | `4ce0af0b0a11badcf2a34df998a4ffaf2004a79ed25f40e073ce55bac2b5e630` |
+| Reviewed | Peer | `c73ff419cfa8868a541349f68402a7aef4a21b1cf7e3afc27bbb580fdebec6f5` | `7d245272dee9755c7fe180ab15ef1a7fa358ea9a53a25f5674fce72894d2fe60` |
+
+The verifier rejected six modified copies of the ordinary Workshop package
+after their inventories had been recomputed: a removed or ambiguous profile,
+an extra installed module, an extra test, an XS receipt naming the wrong
+source, and a replacement Makefile.PL.
+
+Perl 5.36.3 and 5.38.2, each threaded and unthreaded, installed both pairs.
+The ordinary pair used prebuilt XS; the reviewed pair built the component XS
+against the prebuilt runtime. In all 16 processes (eight installs × two load
+orders), the client mutated an application object through the other component,
+re-entered Lean from a Perl method, and distinguished an original exception,
+a replacement IO error and a mapped EIO error. A rejected call left no strong
+pin. A nested error retained its weak object until released; the final matching
+unbind released the strong object, and a later call rejected its stale wrapper.
+
+An independent replay rehashed the five original archives, verified all four
+component manifests, and repeated those eight installations in fresh prefixes.
+The prebuilt installer had no compiler on its path; the XS-only installer had
+a C toolchain but no Lean, Lake or Node. Each prefix was physically moved
+before the two load orders ran. All 16 processes ran with an unavailable
+`PATH` and loaded both component modules and the runtime from the moved
+prefix. All 24 installed XS binaries matched their installation receipts.
+
+Run the [Perl host-object package check](../contributing/testing.md#perl-host-objects)
+to build and exercise a fresh set of packages.
+
+The smaller [documented Workshop project](../../tests/fixtures/perl-host-project/Workshop.lean)
+was also built without adding the test-only Token class. With its producer
+removed, its original archives installed prebuilt on threaded Perl 5.36.3.
+The [documented client](../../tests/fixtures/perl-host-meter/meter.pl) printed
+`42` from the moved installation with no build tools on its path.
+The single-ABI Workshop archive was 75,147 bytes, SHA-256
+`20898de41967c7e7eb3dd0e8fdbde266c68d3acbcd6f66e434f0a6be45f3cb77`.

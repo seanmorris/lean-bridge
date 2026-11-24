@@ -31,23 +31,7 @@ test("compiler-selected public Perl operations share one non-Perl Lean ELF acros
 	};
 	await mkdir(app); await prepareNativeHostFixture(project,"perl");
 	await copyFile(resolve("LICENSE"),join(project,"LICENSE"));
-	const extra=`
-namespace Workshop
-open LeanBridge.Host.Perl
-def reply (ok : Bool) : Except String (Except UInt32 String) :=
-  if ok then .ok (.error 23) else .error "no"
-def replaced (b : LeanBridge.Host.Perl.Box) : IO UInt32 := do
-  try b.read catch _ => throw (IO.userError "Perl host member failed")
-def plain : IO UInt32 := pure 37
-def chooseObject (box : Box) (ok : Bool) : Except Box (Except String Box) :=
-  if ok then .ok (.ok box) else .error box
-def rejectObject (box : Box) : EIO (Except String (Except Box String)) Unit :=
-  throw (.ok (.error box))
-def exhaust (box : Box) : IO Unit := do
-  for _ in [:66] do
-    try let _ ← box.read catch _ => pure ()
-end Workshop
-`;
+	const extra=await readFile("tests/fixtures/perl-host-meter/Public.lean.inc","utf8");
 	const sourceFile=join(project,"Workshop.lean"), cfgFile=join(project,"lean-bridge.exports.json");
 	await writeFile(sourceFile,(await readFile(sourceFile,"utf8"))+extra);
 	const cfg=JSON.parse(await readFile(cfgFile,"utf8")); cfg.exports.push(...["reply","replaced","plain","chooseObject","rejectObject","exhaust"].map(n=>"Workshop."+n));
@@ -92,6 +76,10 @@ end Workshop
 		}
 		const result=await exec(perl,["-I"+prefix,consumer],{cwd: root,env: {...process.env,LD_BIND_NOW: "1"}});
 		assert.equal(result.stderr,""); assert.match(result.stdout,/public host checks passed/u); t.diagnostic(perl+" ("+arch+"): "+result.stdout.trim());
+		const exampleFile=resolve("tests/fixtures/perl-host-meter/meter.pl");
+		const exampleEnv={PATH: "/unavailable",LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1"};
+		const example=await exec(perl,["-I"+prefix,exampleFile],{cwd: root,env: exampleEnv});
+		assert.equal(example.stderr,""); assert.equal(example.stdout,"42\n");
 	}
 	t.diagnostic("Single compiled component SHA-256: "+sha256(await readFile(lib)));
 });

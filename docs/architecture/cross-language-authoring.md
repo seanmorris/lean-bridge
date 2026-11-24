@@ -48,6 +48,10 @@ run in installed wheels. [Ruby host imports](../publish/rubygems.md#call-ruby-ob
 run in installed gems: two independent Lean components can call methods on the
 same Ruby instance without exposing a native handle. The [compiler check](../evidence/ruby-host-imports-20261124.md)
 checks which constructor, property and method each Lean function actually reaches.
+For an application-owned class in another runtime, see the
+[Maven](../publish/maven.md#import-an-application-owned-jvm-class),
+[NuGet](../publish/nuget.md#import-an-application-owned-c-class) and
+[CPAN](../publish/cpan.md#call-a-perl-object-from-lean) examples.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),

@@ -17,17 +17,20 @@ import { installCpanArchive } from "../release/cpan-install.mjs";
 const compileHostVariant = async ({working,runtimePackage,componentPackage,perl,environment,signal}) => {
 	const {manifest}=await readVerifiedCpanPackage(runtimePackage);
 	const view=await mkdtemp(join(working,".cpan-compiler-runtime-"));
-	try {
-		for(const file of [...Object.keys(manifest.files),"lean-bridge-package.json"]) {
+	try
+	{
+		for(const file of [...Object.keys(manifest.files),"lean-bridge-package.json"])
+		{
 			const to=join(view,file), from=join(runtimePackage,file);
-			await mkdir(dirname(to),{recursive:true});
+			await mkdir(dirname(to),{recursive: true});
 			if(["lib/LeanBridge/Runtime/native/libleanshared.so","lib/LeanBridge/Runtime/native/liblean_bridge_native.so"].includes(file)) await link(from,to);
 			else await copyFile(from,to);
 		}
-		await processBuildRunner.capture({command:perl,args:["Makefile.PL"],cwd:view,env:{...environment,LEAN_BRIDGE_PERL_INSTALL_MODE:"prebuilt-only"},signal});
+		await processBuildRunner.capture({command: perl,args: ["Makefile.PL"],cwd: view,env: {...environment,LEAN_BRIDGE_PERL_INSTALL_MODE: "prebuilt-only"},signal});
 		const PERL5LIB=[join(view,"lib"),environment.PERL5LIB].filter(Boolean).join(":");
-		await compileCpanXsVariant({packageRoot:componentPackage,perl,environment:{...environment,PERL5LIB}});
-	} finally { await rm(view,{recursive:true,force:true}); }
+		await compileCpanXsVariant({packageRoot: componentPackage,perl,environment: {...environment,PERL5LIB}});
+	} finally
+	{ await rm(view,{recursive: true,force: true}); }
 };
 
 /**
@@ -50,7 +53,10 @@ const compileHostVariant = async ({working,runtimePackage,componentPackage,perl,
 export const projectCpanPackages = async ({
 	working, runtimeRoot, nativeRoot, leanPrefix
 	, settings = {}, environment = process.env, signal, onProgress
-	, ownedGmpRoot = null, ownedModuleName = null, syncIO = null, hostImports = null
+	, ownedGmpRoot = null
+	, ownedModuleName = null
+	, syncIO = null
+	, hostImports = null
 }) => {
 	const perls = environment.LEAN_BRIDGE_PERLS ? JSON.parse(environment.LEAN_BRIDGE_PERLS) : ["perl"];
 	if(!Array.isArray(perls) || !perls.length || perls.some(perl => typeof perl !== "string" || !perl))
@@ -69,11 +75,16 @@ export const projectCpanPackages = async ({
 	await stageCpanPackage({ outputRoot: componentPackage
 		, componentRoot: nativeRoot
 		, runtimePackageRoot: runtimePackage, runtimeRoot, leanPrefix, version
-		, glibcMinimumVersion: floor, ownedGmpRoot, ownedModuleName, syncIO, hostImports });
+		, glibcMinimumVersion: floor
+		, ownedGmpRoot
+		, ownedModuleName
+		, syncIO
+		, hostImports });
 	for(const perl of perls)
 	{
 		signal?.throwIfAborted();
-		if(hostImports) {
+		if(hostImports)
+		{
 			await compileHostVariant({working,runtimePackage,componentPackage,perl,environment,signal});
 			continue;
 		}
