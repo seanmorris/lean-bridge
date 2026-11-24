@@ -3,7 +3,7 @@
    JS addresses or Lean pointers. Hooks are private to this component. */
 #include "component_scalar.h"
 #include <stdlib.h>
-#if !defined(__wasm32__) || !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
+#if !defined(__wasm32__) || !defined(__EMSCRIPTEN__) || (defined(__EMSCRIPTEN_PTHREADS__) && !defined(LB_JST_OWNER_WIRE))
 #error Synchronous JavaScript host imports require their owning wasm32 agent
 #endif
 _Static_assert(sizeof(bridge_scalar_slot) == 16, "incompatible scalar slot");
@@ -17,6 +17,9 @@ extern lean_obj_res lb_host_error(uint32_t status, const bridge_scalar_slot *rep
 
 static lean_obj_res lb_host_invoke(uint32_t slot, unsigned n, const uint8_t *tags,
     unsigned output, int anchor, lean_object **values) {
+#ifdef __EMSCRIPTEN_PTHREADS__
+    if (!emscripten_is_main_runtime_thread()) __builtin_trap();
+#endif
     bridge_scalar_slot args[64] = {0}, reply = {0};
     void *owned[64] = {0};
     uint32_t budget = 16u * 1024u * 1024u, status = 0;

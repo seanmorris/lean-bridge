@@ -63,8 +63,45 @@ static void sweep(uint32_t kind,bool all) {
     }
     sweeping=false;
 }
-void lb_jst_collect_v1(void) {sweep(0,false);}
-void lb_jst_retire_all_v1(void) {sweep(0,true);}
+/* A ticket follows the exact Lean IO.Error through tasks. Holding one MT
+   reference prevents pointer reuse. Catching, replacing, or discarding the
+   error drops the JS ticket at the next owner collection point. */
+typedef struct lb_jst_failure { struct lb_jst_failure *next; lean_object *value; uint32_t ticket; } lb_jst_failure;
+static lb_jst_failure *failures;
+static unsigned failure_count;
+EM_JS(void,lb_jst_discard,(uint32_t t),{Module['lbJstHostCallsV1'].discard(t>>>0);});
+EM_JS(uint32_t,lb_jst_copy_ticket,(uint32_t t),{return Module['lbJstHostCallsV1'].copy(t>>>0);});
+static void collect_errors(bool all) {
+    if (!owner()) return;
+    lb_jst_failure **at=&failures;
+    while (*at) {
+        lb_jst_failure *r=*at;
+        if (all || atomic_load_explicit(lean_get_rc_mt_addr(r->value),memory_order_acquire)==-1) {
+            *at=r->next;failure_count--;lb_jst_discard(r->ticket);lean_dec(r->value);free(r);
+        } else at=&r->next;
+    }
+}
+lean_obj_res lb_jst_new_error_v1(uint32_t status,uint32_t ticket) {
+    if (!owner() || !ticket) __builtin_trap();
+    if (failure_count==LB_JST_CAPACITY) collect_errors(false);
+    lb_jst_failure *r=failure_count==LB_JST_CAPACITY?NULL:malloc(sizeof(*r));
+    if (!r) {
+        lb_jst_discard(ticket);
+        /* Never relabel a thrown application value as an ordinary Lean IO
+           failure just because its origin cannot be retained. */
+        __builtin_trap();
+    }
+    r->value=lean_mk_io_user_error(lean_mk_string(status==1?"JavaScript host member failed":"Invalid JavaScript host value"));
+    lean_mark_mt(r->value);lean_inc(r->value);r->ticket=ticket;
+    r->next=failures;failures=r;failure_count++;return r->value;
+}
+uint32_t lb_jst_error_ticket_v1(b_lean_obj_arg error) {
+    if (!active()) return 0;
+    for (lb_jst_failure *r=failures;r;r=r->next) if (r->value==error) return lb_jst_copy_ticket(r->ticket);
+    return 0;
+}
+void lb_jst_collect_v1(void) {sweep(0,false);collect_errors(false);}
+void lb_jst_retire_all_v1(void) {sweep(0,true);collect_errors(true);}
 int lb_jst_retire_v1(uint32_t kind) {if (!active() || !kind) return 0;sweep(kind,false);return 1;}
 uint32_t lb_jst_token_v1(uint32_t kind,b_lean_obj_arg o) {
     if (!active()) return 0;

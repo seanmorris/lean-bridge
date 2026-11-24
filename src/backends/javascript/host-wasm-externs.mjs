@@ -28,11 +28,13 @@ const tag = type => typeof type === "number" ? 64 + type : componentScalarTypes.
  *
  * @param ir - Checked application host declarations.
  * @param identity - Immutable component build identity.
+ * @param options - Select the owner-dispatched pthread ABI for a task component.
  */
-export const generateJavaScriptHostExterns = (ir, identity) => {
+export const generateJavaScriptHostExterns = (ir, identity, options={}) => {
 	if(!/^[a-f0-9]{64}$(?![\s\S])/u.test(identity)) throw new TypeError("Invalid JavaScript host component identity");
 	const model = javaScriptHostMembers(ir), prefix = "lb_jsh_" + identity + "_";
 	const names = [], entries = [], declarations = [];
+	const invoke=options.threaded ? "lb_jst_member_v1("+JSON.stringify(identity)+"," : "lb_host_invoke(";
 	for(const [slot, m] of model.members.entries())
 	{
 		const args = m.args.map(javaScriptHostCarrier), n = args.length, name = prefix + "member_" + slot;
@@ -42,10 +44,16 @@ export const generateJavaScriptHostExterns = (ir, identity) => {
 		entries.push(signature + " {"
 			, "    static const uint8_t tags[] = {" + (m.args.map(tag).join(",") || 0) + "};"
 			, "    lean_object *values[] = {" + (args.map(([, box], i) => box ? box + "(a" + i + ")" : "a" + i).join(",") || "NULL") + "};"
-			, "    lean_object *io = lb_host_invoke(" + [slot, n, "tags", tag(m.result), m.anchor ?? -1, "values"].join(",") + ");"
+			, "    lean_object *io = "+invoke + [slot, n, "tags", tag(m.result), m.anchor ?? -1, "values"].join(",") + ");"
 			, ...args.flatMap(([, box], i) => box || m.inputOwnership[i] !== "borrow" ? ["    lean_dec(values[" + i + "]);"] : [])
 			, "    return io;", "}");
 	}
+	if(options.threaded) return {model,prefix,service: ""
+		, renames: names.join("\n")+"\n"
+		, declarations: declarations.join("\n")+"\n"
+		, source: ['#include <lean/lean.h>'
+			, 'extern lean_obj_res lb_jst_member_v1(const char *,unsigned,unsigned,const uint8_t *,unsigned,int,lean_object **);'
+			, ...entries].join("\n")+"\n"};
 	const hooks = ["token", "wrap", "send", "finish", "error"].map(name => "#define lb_host_" + name + " " + prefix + name);
 	const js = 'Module["lbJshDomainV1"]', id = JSON.stringify(identity);
 	const service = `#include "host-wasm-domain.h"

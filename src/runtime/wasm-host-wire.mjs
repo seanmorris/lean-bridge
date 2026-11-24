@@ -9,17 +9,18 @@ const u32 = n => Number.isInteger(n) && n > 0 && n <= 0xffff_ffff;
 /** Create the shared heap's private table of original thrown values and boundary faults. */
 export const createWasmHostErrorStore = () => {
 	const held = new Map(); let next = 0;
-	const take = token => {
+	const get = token => {
 		if(!held.has(token)) throw new Error("Unknown JavaScript host error token");
-		const value = held.get(token); held.delete(token); return value;
+		return held.get(token);
 	};
-	return Object.freeze({
-		keep: failure => {
-			if(next === 0xffff_ffff) throw new RangeError("JavaScript host error tokens exhausted");
-			const id = ++next; held.set(id, failure); return id;
-		}
-		, take, discard: token => { take(token); }, size: () => held.size
-	});
+	const keep = failure => {
+		if(next === 0xffff_ffff) throw new RangeError("JavaScript host error tokens exhausted");
+		const id = ++next; held.set(id, failure); return id;
+	};
+	const take = token => {
+		const value = get(token); held.delete(token); return value;
+	};
+	return Object.freeze({keep,take,copy: token=>keep(get(token)),discard: token=>{take(token);},size: ()=>held.size,clear: ()=>held.clear()});
 };
 
 /**
@@ -39,7 +40,7 @@ export const createWasmHostWire = (wasm, model, supplied, domain, lifecycle) => 
 		try
 		{lifecycle?.assertOpen();const result=fn();lifecycle?.assertOpen();return result;}
 		catch(error)
-		{lifecycle?.poison();throw error;}
+		{lifecycle?.poison(error);throw error;}
 	};
 	const send = bindWasmHostMembers(model, supplied, error => {
 		// Do not brand the public error itself. The application can subsequently

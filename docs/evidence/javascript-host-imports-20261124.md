@@ -142,6 +142,50 @@ step Lean's map closure can still retain the original task when JS handles
 readiness: the previous adapter failed the zero-pin assertion on this test.
 
 This verifies wrapper identity and retirement on Node with actual Wasm
-pthreads. It does not yet expose host-object tasks or execute JS methods on
-workers. Those exports remain rejected until generated owner-side dispatch
-and per-operation exception handling are in place.
+pthreads. The exported package interface for threaded host objects is a
+separate step from testing these runtime primitives.
+
+### Calling application methods from a Lean pthread
+
+For the threaded profile, the generator emits the same typed Lean externs
+but dispatches their calls on the JavaScript agent that owns the component.
+The worker marks its Lean arguments as shared and lends them to the owner
+until the synchronous method returns. The owner uses the existing scalar
+codec and class checks. Emscripten's system queue can run inside runtime
+locks, so each request uses an application queue instead. The owning JS
+event loop never waits for the worker to return from the host method.
+
+A thrown JS value is associated with the exact Lean `IO.Error`. This
+works even when concurrent tasks use the same class or throw errors with
+identical messages. Catching or replacing an error in Lean releases the
+ticket once the last Lean reference is gone and the owner collects.
+Returning the original error copies a delivery ticket before dropping the
+native result. This preserves thrown `undefined` and keeps invalid
+returned values distinct from application exceptions.
+
+The pthread host test compiles the generated Lean declarations and C shims
+into separate components. It exercises constructors, properties, methods,
+nested owner reentry, overlapping failures collected in reverse order,
+and a member queued before its binding closes. This is compiler/runtime
+evidence, not an installed public API: project analysis still rejects that
+combination until the task packager and public result adapters support it.
+
+All 70 assertions passed on each of three owners: Node, a cross-origin
+isolated Chromium page, and a Chromium module worker. Each owner started
+its own Lean pthread runtime. The Lean oracle round-tripped all 19 copied
+scalar types, including a string containing a BOM, emoji and NUL, a
+copied `ByteArray`, and signed and unsigned 160-bit magnitudes. Chromium's
+`TextDecoder` rejects views backed by shared Wasm memory, so that path
+snapshots the string bytes first. Non-shared heaps still decode directly.
+Set `LEAN_BRIDGE_CHROMIUM` if the Playwright default binary is unavailable.
+
+The final case injects an unexpected exception inside the owner bridge.
+The proxy returns to Emscripten so the waiting worker wakes and fails; the
+owner receives the original infrastructure exception, refuses new bindings
+and retains no JS object pins or error tickets. This is separate from a
+declared host method throwing, which leaves the runtime usable.
+
+The test applies the package verifier's dynamic import check before linking
+each side module. In particular, the wasm32 minimum `ISize` exercises
+pinned Lean's `lean_isize_of_big_int`: compiling the signed integer
+declarations alone does not make that runtime function available to a DSO.

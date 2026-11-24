@@ -10,14 +10,11 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createWasmHostErrorStore, createWasmHostWire } from "../../src/runtime/wasm-host-wire.mjs";
 
 /**
- * Check both the fresh C prototypes and the compiled values. The nominal
- * domain here is intentionally instrumented; it is not an installed adapter.
+ * Extend the test contract with every copied scalar and both anchor kinds.
  *
- * @param tools - Private build directory, pinned producer and prepared Wasm heap.
+ * @param ir - Fresh meter fixture for this compilation.
  */
-export const checkGeneratedHostWasm = async tools => {
-	const {app,run,lean,emcc,target,runtime,input,oracle} = tools;
-	const ir = JSON.parse(await readFile(join(input,"lean-bridge.hosts.json")));
+export const addHostProbeMembers=ir=>{
 	const read = ir.declarations.find(d=>d.name==="read"), parameter = ir.declarations.find(d=>d.kind==="constructor").parameters[0];
 	const identity = ir.declarations.find(d=>d.name==="identity");
 	for(const [name,scope,anchor] of [["child","receiver","receiver"],["childOf","parameter","peer"]])
@@ -39,6 +36,17 @@ export const checkGeneratedHostWasm = async tools => {
 			, result: {...read.result,type}
 			, source: {...read.source,declaration: "Box."+name}});
 	}
+};
+/**
+ * Check both the fresh C prototypes and the compiled values. The nominal
+ * domain here is intentionally instrumented; it is not an installed adapter.
+ *
+ * @param tools - Private build directory, pinned producer and prepared Wasm heap.
+ */
+export const checkGeneratedHostWasm = async tools => {
+	const {app,run,lean,emcc,target,runtime,input,oracle} = tools;
+	const ir = JSON.parse(await readFile(join(input,"lean-bridge.hosts.json")));
+	addHostProbeMembers(ir);
 	const generated = generateJavaScriptHostExterns(ir,sha256(canonicalJson(ir))), host = "LeanBridge/Host/Javascript";
 	await mkdir(join(app,"LeanBridge/Host"),{recursive: true});
 	await writeFile(join(app,host+".lean"),generateLeanHostObjectAdapters(ir)[host+".lean"]);

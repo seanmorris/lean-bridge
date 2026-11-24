@@ -79,13 +79,14 @@ const ownershipNote = site => {
 	return `${site.ownership}, lifetime ${lifetime}`;
 };
 
-const emitTarget = (ir, target, resources) => {
+const emitTarget = (ir, target, resources,threadedJavaScript) => {
 	const namespace = `LeanBridge.Host.${pascal(target)}`;
 	const types = new Map(resources.map(resource => [resource.id, resource.name]));
 	const names = new Set(["HostIterator", "HostAsyncIterator"]), symbols = new Set();
 	const doc = text => text.replaceAll("/-", "/ -").replaceAll("-/", "- /");
 	const lines = [
 		`/- Generated from Binding IR SHA-256 ${hashBindingIr(ir)}. -/`
+		, ...(threadedJavaScript && target==="javascript"?["prelude","import Init.System.Promise","import Init.Data.SInt.Basic"]:[])
 		, "set_option autoImplicit false"
 		, `namespace ${namespace}`
 		, ""
@@ -141,8 +142,9 @@ const emitTarget = (ir, target, resources) => {
  * Generates lean host object adapters from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Use the pthread SDK's explicit JS initialization root when compiling task imports.
  */
-export const generateLeanHostObjectAdapters = ir => {
+export const generateLeanHostObjectAdapters = (ir,options={}) => {
 	validateBindingIr(ir);
 	const resources = ir.types.filter(type => type.kind === "resource" && type.host !== null);
 	for(const resource of resources)
@@ -164,7 +166,7 @@ export const generateLeanHostObjectAdapters = ir => {
 	for(const target of targets)
 	{
 		const selected = resources.filter(resource => resource.host.targets.includes(target));
-		files[`LeanBridge/Host/${pascal(target)}.lean`] = emitTarget(ir, target, selected);
+		files[`LeanBridge/Host/${pascal(target)}.lean`] = emitTarget(ir, target, selected,options.threadedJavaScript);
 	}
 	const manifest = {
 		schemaVersion: 1

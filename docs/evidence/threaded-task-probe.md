@@ -105,7 +105,19 @@ The first command links the in-memory Lean value and scheduler operations, notif
 
 The installed-CLI test builds ordinary and reviewed releases, checks clean-directory reproduction, then builds a second library with a different API. Both libraries must use identical runtime archives and run together. A permanently pending worker in the first package would make a simple sequential smoke test hang; the consumer runs the second package before releasing the first worker.
 
-The compact SDK built above contains the pinned `Init.System.Promise` dependency closure. The example modules use `prelude` with an explicit import. This does not establish that the full default `Init` or arbitrary `Std` and Lake dependencies are available: a component that needs a missing runtime symbol fails before the handoff is written.
+The compact SDK built above contains the pinned dependency closures of
+`Init.System.Promise` and `Init.Data.SInt.Basic`. The latter provides the
+signed fixed-width types in host-member signatures. The example modules use
+`prelude` and explicit imports; this is not a full default `Init` or `Std`
+archive. A missing runtime symbol prevents packaging.
+
+To extend a trusted earlier pthread Init build, set
+`LEAN_BRIDGE_JS_TASK_INIT_BASE` to its archive, with its original
+`inputs.json` beside it. Preparation checks the target stamp, public
+headers, archive digest, complete object inventory and pinned Lean source
+hashes before extracting any object. The old 299-module Promise archive
+needs just one more module. Omit the variable to compile everything from
+the pinned source checkout.
 
 ### Installed CLI results, November 23, 2026
 

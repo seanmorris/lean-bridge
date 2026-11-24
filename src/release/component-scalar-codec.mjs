@@ -98,7 +98,9 @@ export const readComponentScalarSlot = (module, slot, type, charge = () => {}) =
 		if(byteLength > scalarCopyLimit || pointer + byteLength > module.HEAP8.length || (integer && pointer % 4)) throw new RangeError("Invalid component result buffer");
 		charge(byteLength);
 		const bytes = new Uint8Array(module.HEAP8.buffer, pointer, byteLength);
-		if(type === "string") value = decoder.decode(bytes);
+		// Chromium's TextDecoder rejects shared views. Snapshot pthread
+		// memory before decoding; ordinary Wasm heaps keep the direct path.
+		if(type === "string") value = decoder.decode(bytes.buffer instanceof ArrayBuffer ? bytes : bytes.slice());
 		else if(type === "bytes") value = bytes.slice();
 		else
 		{
