@@ -1277,6 +1277,7 @@
     "test:ruby-host-workers": "node --test --test-concurrency=1 tests/helpers/ruby-host-workers.mjs",
     "test:jvm-host-imports": "node --test --test-concurrency=1 tests/helpers/jvm-host-imports.mjs",
     "test:dotnet-host-imports": "node --test --test-concurrency=1 tests/helpers/dotnet-host-imports.mjs",
+    "test:dotnet-worker-source": "node --test --test-concurrency=1 tests/dotnet-host-worker-wire.test.mjs tests/helpers/dotnet-worker-elaboration.mjs",
     "test:perl-host-imports": "node --test --test-concurrency=1 tests/helpers/perl-host-imports.mjs",
     "test:php-host-imports": "node --test --test-concurrency=1 tests/helpers/php-host-imports.mjs",
     "test:python-host-task-imports": "node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",

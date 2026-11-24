@@ -51,6 +51,7 @@ export const nativeHostSelection = (ir, target) => {
  */
 export const taskWorkerInterface=(api,evidence)=>{
 	if(evidence.selection.rubyTaskObjects) throw new TypeError("Ruby task object carriers cannot use the JavaScript worker interface");
+	if(evidence.selection.dotnetTaskObjects) throw new TypeError("CLR task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.pythonTaskObjects) throw new TypeError("Python task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.phpNativeTaskObjects) throw new TypeError("Native PHP task object carriers cannot use the JavaScript worker interface");
 	// Nominal Zend workers have their own checked ABI; never turn their
@@ -110,7 +111,11 @@ export const reconcileHostExports = options => {
 	if(selection.rubyTaskObjects!==undefined && (!rubyObjects || !ir || selection.hostModule!==compiledHostModules.ruby
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || !(selection.taskExports?.length || selection.asyncIterators?.length)
 		|| Boolean(selection.taskExports?.length)!==(selection.rubyTaskCallbacks===true))) fail("Unauthenticated Ruby task objects");
-	const localObjects=pythonObjects || rubyObjects, hostValues=owner || phpObjects || localObjects;
+	const dotnetObjects=selection.dotnetTaskObjects===true;
+	if(selection.dotnetTaskObjects!==undefined && (!dotnetObjects || !ir || selection.hostModule!==compiledHostModules.dotnet
+		|| selection.nativeEffectPolicy!==nativeEffectPolicy || !(selection.taskExports?.length || selection.asyncIterators?.length)
+		|| Boolean(selection.taskExports?.length)!==(selection.dotnetTaskCallbacks===true))) fail("Unauthenticated CLR task objects");
+	const localObjects=pythonObjects || rubyObjects || dotnetObjects, hostValues=owner || phpObjects || localObjects;
 	const immediate = synchronous || ((!ir || hostValues) && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
@@ -200,7 +205,7 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
-	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":rubyObjects?"error:RubyCallbackException":hostError;
+	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":rubyObjects?"error:RubyCallbackException":dotnetObjects?"error:DotNetCallbackException":hostError;
 	const callbackCarrier=t=>{
 		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};
 		const kind=((owner && js) || (phpObjects && php) || localObjects) && t?.kind==="named" && types.find(k=>k.id===t.id);
@@ -238,7 +243,7 @@ export const reconcileHostExports = options => {
 		, name: callbackError.slice("error:".length)
 		, category: "domain"
 		, payload: null
-		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":rubyObjects?"A retained Ruby callback propagated its original exception.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
+		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":dotnetObjects?"A retained CLR delegate propagated its original exception.":rubyObjects?"A retained Ruby callback propagated its original exception.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
 	if(metadata.entries.some(e => hostCanEscape(e) || !hostValues && hasCallbacks(e))) errors.push({ id: hostError
 		, name: publicErrorName
 		, category: "domain"

@@ -12,6 +12,20 @@ const scalar = { unit: "void", bool: "bool", char: "System.Text.Rune"
 	, int: "System.Numerics.BigInteger" };
 const fail = why => { throw new TypeError("Invalid CLR host member: " + why); };
 const pascal = s => s.split("_").filter(Boolean).map(p => p[0].toUpperCase() + p.slice(1)).join("");
+const kindKey = (ir, t) => sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId]));
+
+/**
+ * Derive private CLR transport keys from the same nominal coordinates as BindHosts.
+ * The lease namespace is not shared with PHP, MRI or a bare Lean resource.
+ *
+ * @param ir - Captured CLR host-import declaration.
+ */
+export const dotnetWorkerKinds = ir => {
+	nativeHostSelection(ir, "dotnet");
+	if(ir.types.length > 64 || ir.types.some(t => t.host.dynamic || !["weak-canonical", "strong-canonical"].includes(t.host.identity)))
+		fail("expected statically declared worker classes");
+	return ir.types.map(t => ({name: t.name, id: t.id, hash: sha256(canonicalJson(["lean-bridge/dotnet-host-lease/v1",kindKey(ir,t)]))}));
+};
 /**
  * Generate a private binder; compiled applications never expose slot IDs or raw handles.
  *
@@ -48,6 +62,6 @@ export const generateDotnetHostMembers = async ir => {
     }
 }
 `;
-	const kinds = types.map(t => ({ key: sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId])), strong: t.host.identity === "strong-canonical" }));
+	const kinds = types.map(t => ({ key: kindKey(ir,t), strong: t.host.identity === "strong-canonical" }));
 	return { implementation, contract, members, kinds };
 };

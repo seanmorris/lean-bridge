@@ -35,6 +35,7 @@ structure Request where
   rubyTaskCallbacks : Option Bool := none
   rubyTaskObjects : Option Bool := none
   dotnetTaskCallbacks : Option Bool := none
+  dotnetTaskObjects : Option Bool := none
   jvmTaskCallbacks : Option Bool := none
   perlTaskCallbacks : Option Bool := none
   phpTaskCallbacks : Option Bool := none
@@ -82,7 +83,15 @@ def Request.rubyObjects (r : Request) : Bool :=
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
     (r.rubyTaskCallbacks == some true) == !r.taskExports.isEmpty
 
-def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects || r.pythonObjects || r.rubyObjects
+/-- A Lean worker may carry a CLR instance; only the binding's owner may invoke its members. -/
+def Request.dotnetObjects (r : Request) : Bool :=
+  r.dotnetTaskObjects == some true && r.hostModule == some "LeanBridge.Host.Dotnet" &&
+    (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
+    (r.dotnetTaskCallbacks == some true) == !r.taskExports.isEmpty
+
+def Request.localObjects (r : Request) : Bool := r.pythonObjects || r.rubyObjects || r.dotnetObjects
+
+def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects || r.localObjects
 
 /-- A task in a package does not change the delivery mode of adjacent exports. -/
 def Request.immediateValues (r : Request) : Bool :=
@@ -142,13 +151,15 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
       let v := b.getAppArgs[0]!
       let admitted := fun (t : Expr) =>
         primitives.any (fun p => t.constName? == some p.1) ||
-        (((r.ownerHostMembers && r.javascriptTaskCallbacks == some true) || r.phpTaskObjects || r.pythonObjects || r.rubyObjects) &&
+        (((r.ownerHostMembers && r.javascriptTaskCallbacks == some true) || r.phpTaskObjects || r.localObjects) &&
           t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)))
       unless [a, v].all admitted do
         if r.ownerHostMembers then
           throwError "retained task callback arguments and replies must be copied scalars or declared JavaScript owner classes: {e}"
         else if r.rubyObjects then
           throwError "retained task callback arguments and replies must be copied scalars or declared Ruby owner classes: {e}"
+        else if r.dotnetObjects then
+          throwError "retained task callback arguments and replies must be copied scalars or declared CLR owner classes: {e}"
         else if r.pythonObjects then
           throwError "retained task callback arguments and replies must be copied scalars or declared Python owner classes: {e}"
         else if r.phpTaskObjects then
@@ -203,6 +214,10 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
 
 def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
   if r.ownerHostMembers then return
+  if r.dotnetObjects then
+    if r.members.any (fun m => deps.contains m.toName) then
+      throwError "CLR task calls a CLR member outside its owner: {n}"
+    return
   if r.rubyObjects then
     if r.members.any (fun m => deps.contains m.toName) then
       throwError "Ruby task calls a Ruby member outside its owner: {n}"
@@ -279,7 +294,7 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
     throwError "cursor step must distinguish exhaustion with Option: {p.next}"
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
     ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]! r.hostValues)] ++ extra ++ failure ++
-    (if r.ownerHostMembers || r.phpWasmTaskObjects == some true || r.pythonObjects || r.rubyObjects then [("protocolHostMembers", Json.mkObj [
+    (if r.ownerHostMembers || r.phpWasmTaskObjects == some true || r.localObjects then [("protocolHostMembers", Json.mkObj [
       ("pull", toJson (usedMembers r pullDeps)), ("close", toJson (usedMembers r closeDeps))])] else [])
 
 /-- Module-system imports store code in the IR section; classic application modules
@@ -327,6 +342,8 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid Python task object selection"
   if r.rubyTaskObjects.isSome && !r.rubyObjects then
     throwError "invalid Ruby task object selection"
+  if r.dotnetTaskObjects.isSome && !r.dotnetObjects then
+    throwError "invalid CLR task object selection"
   if r.phpWasmTaskObjects.isSome && !r.phpTaskObjects then
     throwError "invalid PHP-Wasm task object selection"
   if let some m := r.hostModule then

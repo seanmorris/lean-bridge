@@ -26,3 +26,16 @@ Replay with `LEAN_BRIDGE_DOTNET_MANAGED_REPLAY` set to the retained handoff
 directory and run `node --test tests/helpers/dotnet-task-managed-replay.mjs`.
 This qualifies the managed lifetime mechanism against real Lean workers, not a
 new installed NuGet package carrying CLR classes.
+
+## Compiler checks
+
+`npm run test:dotnet-worker-source` builds the
+[Lean fixture](../../tests/fixtures/dotnet-host-workers/Workers.lean) from
+ordinary source, then repeats with a reviewed binding IR instead of an export
+list. Lean 4.32.2 compiled the generated worker entry points to C on both
+routes. The identical public IR had SHA-256
+`8f6794cb191b952a2f573e511cd4e41f140c2db56e2dbac55db4b40cf29379d8`.
+A third selection called a CLR member indirectly from a Lean worker; the
+compiler rejected it. Carrying a class reference and calling its methods have
+different requirements: the callback that invokes application code must run
+on the CLR owner.

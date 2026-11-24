@@ -25,16 +25,18 @@ export const generateCTaskExports = options => {
 		|| (synchronous ? entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
 	const wasmHost=!!options.wasmHostKinds?.length,phpHost=!!options.phpHostKinds?.length;
-	const rubyHost=!!options.rubyHostKinds?.length;
-	const hostKinds=(rubyHost?options.rubyHostKinds:phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
+	const rubyHost=!!options.rubyHostKinds?.length, dotnetHost=!!options.dotnetHostKinds?.length;
+	const hostKinds=(dotnetHost?options.dotnetHostKinds:rubyHost?options.rubyHostKinds:phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
 	if(options.wasmZendObjects && (!wasmHost || phpHost)) throw new TypeError("Zend worker objects require the Wasm host ABI");
 	if(wasmHost && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,rubyHost?"ruby":phpHost || options.wasmZendObjects?"php":"javascript");
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,dotnetHost?"dotnet":rubyHost?"ruby":phpHost || options.wasmZendObjects?"php":"javascript");
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
 	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery];
+	if(dotnetHost && (options.dotnetDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || options.wasmCallbacks || options.witCallbacks))
+		throw new TypeError("CLR host objects require the exclusive native CLR task owner and word carriers");
 	if(rubyHost && (options.rubyDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || options.wasmCallbacks || options.witCallbacks))
 		throw new TypeError("Ruby host objects require the exclusive native Ruby task owner and word carriers");
 	if(phpHost && (!options.phpDelivery || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || options.wasmCallbacks || options.witCallbacks))
@@ -90,7 +92,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: wasmHost || phpHost || rubyHost, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: wasmHost || phpHost || rubyHost || dotnetHost, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");

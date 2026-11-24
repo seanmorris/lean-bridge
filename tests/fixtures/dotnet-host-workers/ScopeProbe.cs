@@ -54,9 +54,10 @@ internal static class ScopeProbe
         Api.Reset();
         var abandoned = Abandon(a);
         var retained = Cold(a, false, out var retainedLabel);
+        var unopened = Cold(a, false, out var unopenedLabel);
         var blocked = Cold(a, true, out _);
         var sibling = Cold(b, false, out _);
-        Collect(); Check(!abandoned.IsAlive && retainedLabel.IsAlive);
+        Collect(); Check(!abandoned.IsAlive && retainedLabel.IsAlive && unopenedLabel.IsAlive);
         // Cold factories can be reused; each pull owns an independent port.
         for (int i = 0; i < 2; i++)
         {
@@ -79,7 +80,8 @@ internal static class ScopeProbe
             Check(pull.IsCanceled && !await cursor.MoveNextAsync());
             await using var stale = retained.GetAsyncEnumerator();
             await RejectAsync<ObjectDisposedException>(() => stale.MoveNextAsync().AsTask());
-            Collect(); Check(!retainedLabel.IsAlive); GC.KeepAlive(retained);
+            Collect(); Check(!retainedLabel.IsAlive && !unopenedLabel.IsAlive);
+            GC.KeepAlive(retained); GC.KeepAlive(unopened);
             a.Dispose();
         }
         finally { Api.Release(); }
