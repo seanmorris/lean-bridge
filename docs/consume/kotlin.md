@@ -35,6 +35,32 @@ UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.mat
 
 Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. The Kotlin API has non-nullable signatures; foreign JVM calls also encounter runtime null checks. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
 
+### Bind an application-owned class
+
+The Kotlin API accepts a class reference. For the Workshop package, a Kotlin
+class can satisfy the host contract directly: its public `var` supplies the
+JVM getter and setter.
+
+```kotlin
+import org.leanbridge.workshop.kotlin.Api
+
+class Meter(var level: Long) {
+    fun read(): Long = level
+    fun identity(): Meter = this
+}
+
+fun example() {
+    Api.bindHosts(Meter::class).use { api ->
+        val meter: Meter = api.make(21)
+        api.update(meter, 34)
+        check(api.identity(meter) === meter && meter.level == 34L)
+    }
+}
+```
+
+`use` closes the binding even if the call throws. These calls are synchronous;
+no coroutine, JNI handle or separate runtime installation is needed.
+
 ### Call synchronous IO
 
 Import the generated `.kotlin.Api` object and call it directly. Lean

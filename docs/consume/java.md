@@ -50,6 +50,40 @@ UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt
 
 Calls copy nested inputs and outputs. Null, negative Nat, out-of-range unsigned values and malformed UTF-16 throw. Native input and output conversions share a 16 MiB budget; the Java input scratch budget is also bounded. An oversized result throws after Lean returns. Scoped native memory and deep owned results are released on failure. The loader checks bundled native hashes, shares a compatible runtime and removes its private extracted files at normal JVM shutdown.
 
+### Bind an application-owned class
+
+If a prepared package imports a JVM class, pass the matching public class to
+its generated `Api.bindHosts`. For example, the Workshop fixture declares a
+constructor, a read method, a mutable level and an identity method. Its Java
+application can supply this class:
+
+```java
+public final class Meter {
+    private long level;
+    public Meter(long initial) { level = initial; }
+    public long read() { return level; }
+    public long getLevel() { return level; }
+    public void setLevel(long n) { level = n; }
+    public Meter identity() { return this; }
+}
+```
+
+In an application method that can throw `Exception`:
+
+```java
+try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
+    Meter meter = api.make(21);
+    api.update(meter, 34);
+    if (api.identity(meter) != meter || meter.read() != 34) throw new AssertionError();
+}
+```
+
+Binding checks the member signatures before returning. Lean `UInt32` uses
+Java `long` in the range 0–4,294,967,295. If a method throws and Lean
+propagates the original error, Java receives the same exception object.
+Closing the binding ends calls through that binding; it does not close
+your application object.
+
 ### Call synchronous IO
 
 An installed Maven package can expose Lean `BaseIO`, `IO` and `EIO` as

@@ -78,3 +78,50 @@ the comparison is with Lean's own observer: on 4.32.2, `Float32.toBits`
 reports `0x7fc00000` for a quiet NaN with payload `0x42`, even with no
 bridge involved. A Lean `Unit` input carries no data and is omitted from
 the Java host method's parameters; a `Unit` return uses Java `void`.
+
+## Installing the published API
+
+`npm run test:jvm-host-packages` exercises the offline-installed CLI, not the
+integration JAR builder. It builds Workshop and a separately named peer from
+ordinary and reviewed source, verifies the package-set receipts, and removes
+the publisher directories. Maven installs each JAR/POM pair into a private
+repository and resolves the application classpath offline. The test relocates
+that repository and verifies the installed bytes before compiling either
+consumer.
+
+On Linux x86-64, use Lean 4.32.2, a native C compiler and `readelf`, JDK 22,
+Kotlin 2.2.0, Node 22, Maven and Python 3. Set `JAVA_HOME`,
+`LEAN_BRIDGE_LEAN_PREFIX` and `LEAN_BRIDGE_KOTLIN_HOME` to the corresponding
+installations. Point `LEAN_BRIDGE_JVM_IO_M2_SEED` to an offline Maven cache
+containing install-plugin 3.1.4, dependency-plugin 3.8.1, kotlin-stdlib 2.2.0
+and their dependencies, but neither Workshop package. The test copies the
+seed, not the user's live Maven repository. `LEAN_BRIDGE_JVM_HOST_HANDOFF_TMP`
+can place the compressed archives on a separate volume. The production glibc
+floor is 2.38; this local acceptance run selected 2.36 with the existing
+test-only floor setting.
+
+The [Java consumer](../../tests/fixtures/jvm-host-meter/Consumer.java) uses
+ordinary methods and try-with-resources. It exercises two independent
+components, a second classloader for the same component, virtual-thread
+reentry, an escaping host exception, a typed Lean `EIO` error, a replacement
+IO error, and a returned nested `Except`. It rejects a tampered JNI library
+after loading the authentic component, refuses self-close, and observes an
+object becoming collectible after its final binding closes even while Lean
+still holds the stale wrapper. The [Kotlin consumer](../../tests/fixtures/jvm-host-meter/KotlinConsumer.kt)
+uses `KClass` and `use`, with both a Java class and a Kotlin class. Each
+language starts a fresh JVM for each package load order, with JNI checks
+enabled and no publisher tools on the runtime search path.
+
+This exercises synchronous imports of application-owned objects. It does not
+establish asynchronous host-object delivery, arbitrary aggregate arguments,
+or CLR host-object execution.
+
+All eight installed executions passed on 2026-11-24 (two source routes × two
+languages × two load orders). Package-set receipt and JAR digests:
+
+| Source | Component | Receipt SHA-256 | JAR SHA-256 |
+| --- | --- | --- | --- |
+| ordinary | workshop | `c1a23d1f09d3fce7959be2463a725c064a10cd7665ac7f0ef89a502dd4729c99` | `f90288ed4c700d533449ef07738b3dcb8c8b9b8238743d78fe0917099f1035c8` |
+| ordinary | workshop-peer | `2e623c7743fa1b101d442f03f808b4dfcd4a09f3e8271f97477bf56dd92f8355` | `6490f8d1ff99d08767005883000d775a1e236da8a45261966c7d8266b052dbb4` |
+| reviewed | workshop | `d853987e8466e45ff76934f3811fe02389afc2c0c068f406edd9d46cd26a3f04` | `512d6faf6fe7f77eba735d1d1f76b3cf1f43fa13be83a2c301d735596e649f7f` |
+| reviewed | workshop-peer | `c9cffd376b507bb0fcefe4f4d9fdfc032db0a8f0c0c2fe0946c54dae87bd5dfd` | `a054da3c5e5080d8ea4d3147153febc893b5396a4464454ccd9489b36bf8d8c0` |

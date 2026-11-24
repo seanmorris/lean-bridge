@@ -32,6 +32,13 @@ export const verifiedJvmAssets = (evidence, className, graph = false) => {
 		|| libraries.some(([name]) => name === "libgmp.so.10"))
 		throw new TypeError("Invalid authenticated JVM native library evidence");
 	const order = ["libleanshared.so", "liblean_bridge_native.so"];
+	if(evidence.hostDomainId !== undefined)
+	{
+		const owner = "liblb_jvm_owner_" + evidence.runtimeIdentity + ".so", domain = "liblb_jvm_host_" + evidence.runtimeIdentity + ".so";
+		if(!/^[a-f0-9]{64}$/u.test(evidence.hostDomainId) || evidence.ledgerId !== undefined
+			|| ![owner, domain].every(n => n !== evidence.library && Object.hasOwn(evidence.libraries, n))) throw new TypeError("Missing authenticated JVM host dependencies");
+		order.push(owner, domain);
+	}
 	if(libraries.some(([name]) => name === "libgmp-lean-bridge.so.10")) order.push("libgmp-lean-bridge.so.10");
 	if(evidence.ledgerId !== undefined)
 	{
@@ -132,7 +139,7 @@ ${libraries.map(([name, hash]) => `            hashes.put(${JSON.stringify(name)
                 root.toFile().deleteOnExit();
                 if (!java.nio.file.Files.isDirectory(root, java.nio.file.LinkOption.NOFOLLOW_LINKS))
                     throw new java.io.IOException("Native asset root must be a regular directory");
-                for (var entry : hashes.entrySet()) extract(root, entry.getKey(), entry.getValue());
+                for (var entry : hashes.entrySet()) ${evidence.hostDomainId ? "if (knownHandle(properties, entry.getKey(), entry.getValue()) == null) " : ""}extract(root, entry.getKey(), entry.getValue());
                 for (var entry : hashes.entrySet()) {
                     if (knownHandle(properties, entry.getKey(), entry.getValue()) != null) continue;
                     for (var candidate : new java.lang.String[] { entry.getKey(), root.resolve(entry.getKey()).toString() }) {

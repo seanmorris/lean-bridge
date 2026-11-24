@@ -17,7 +17,19 @@ for(const t of ["nat", "int", "uint64", "usize"]) types[t] = ["java.math.BigInte
 const boxed = { boolean: "Boolean", int: "Integer", long: "Long", byte: "Byte", short: "Short", float: "Float", double: "Double" };
 const words = new Set("abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new package private protected public return short static strictfp super switch synchronized this throw throws transient try void volatile while true false null record sealed permits var yield _ getClass clone finalize notify notifyAll wait hashCode toString equals".split(" "));
 const camel = s => s.replace(/_([a-z0-9])/gu, (_, c) => c.toUpperCase());
+/**
+ * Project a Lean name to the public Java method spelling.
+ *
+ * @param s - Source name.
+ */
 const ident = s => words.has(camel(s)) ? camel(s) + "_" : camel(s);
+/**
+ * Test a namespace segment or public member against Java's reserved names.
+ *
+ * @param s - Candidate Java identifier.
+ */
+export const jvmIOReserved = s => words.has(s);
+export { types as jvmIOScalarTypes, ident as jvmIOIdentifier };
 const insertAt = (source, marker, replacement) => {
 	if(!source.includes(marker) || source.indexOf(marker) !== source.lastIndexOf(marker)) throw new Error("Missing or ambiguous JVM template hook: " + marker);
 	return source.replace(marker, () => replacement);

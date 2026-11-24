@@ -40,6 +40,39 @@ Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ an
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Import an application-owned JVM class
+
+Use a host import when the application implements a class and Lean needs to
+call its constructor, methods or properties. This is the reverse of exporting
+a Lean-owned resource. The publisher needs the **contract**, not the application's
+class files. The consumer supplies the class when it opens a binding.
+
+For example, a host contract can declare a nominal `Box` with a
+`UInt32 → IO Box` constructor and a `Box → IO UInt32` read method. Set the
+nominal type's `host.targets` to `["jvm"]`. In the Lean library:
+
+```lean
+import LeanBridge.Host.Jvm
+
+namespace Workshop
+open LeanBridge.Host.Jvm
+
+def make (n : UInt32) : IO Box := Box.create n
+def read (box : Box) : IO UInt32 := box.read
+end Workshop
+```
+
+Set `hostImports` in `lean-bridge.exports.json` to the import-contract filename,
+select `Workshop.make` and `Workshop.read` in `exports`, and configure a single
+`maven` target. Use the ordinary build and receipt-verification commands above.
+The build checks the generated host module and the selected declarations against
+fresh Lean compiler output; a reviewed public binding IR must agree with that
+output. The JAR supplies the native runtime and binding code to both
+[Java](../consume/java.md#bind-an-application-owned-class) and
+[Kotlin](../consume/kotlin.md#bind-an-application-owned-class). This host-import
+build is synchronous; it does not accept task, iterator or Lean-owned resource
+exports alongside the imports.
+
 ## Export synchronous IO
 
 Select the Lean declarations by name and declare their OS access. For

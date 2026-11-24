@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { mavenPackageMetadata } from "../analyze/package-metadata.mjs";
 import { generateJvmIO } from "../backends/jvm/sync-io.mjs";
+import { generateJvmHostApi } from "../backends/jvm/host-api.mjs";
 import { compileJvmSources } from "../build/compile-jvm-sources.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -20,10 +21,10 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writeJvmIORelease = async o => {
 	const { workRoot, projectContract, name, version, prefix, files, owner, api, evidence, runtimeIdentity, bindingIrSha256, componentIdentity, floor } = o;
-	const tasks = Boolean(o.wire.wait), profile = tasks ? "native-jvm-task-v1" : "native-jvm-io-v1", component = projectContract.component;
+	const host = o.host, tasks = Boolean(o.wire?.wait), profile = tasks ? "native-jvm-task-v1" : "native-jvm-io-v1", component = projectContract.component;
 	const library = "lib" + prefix + ".so", libraries = {};
 	const ledger = o.ledgerId && { id: o.ledgerId, library: "liblb_task_resources_" + o.ledgerId + ".so" };
-	const built = [library, owner.name, ...ledger ? [ledger.library] : []];
+	const built = [library, owner.name, ...ledger ? [ledger.library] : [], ...host ? [host.domain.name] : []];
 	for(const n of [...built, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const path = "lib/" + n, bytes = files.get(path);
@@ -33,7 +34,9 @@ export const writeJvmIORelease = async o => {
 	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected JVM IO native payload");
 	const auth = { library, libraries, runtimeIdentity, componentId: component.id, componentReceiptSha256: componentIdentity, ...ledger ? { ledgerId: ledger.id } : {} };
-	const { namespace, files: sources } = await generateJvmIO({ api, wire: o.wire, ...o.jvmEntry, evidence: auth });
+	if(host)
+	{ auth.hostDomainId = host.domain.id; auth.veneerSha256 = host.veneer.sha256; }
+	const { namespace, files: sources } = host ? generateJvmHostApi({ api, ...host, evidence: auth }) : await generateJvmIO({ api, wire: o.wire, ...o.jvmEntry, evidence: auth });
 	const stage = await mkdtemp(join(workRoot, ".jvm-io-")), root = join(stage, "jar"), compiler = join(stage, "compiler");
 	const write = async (dir, path, bytes) => { await mkdir(dirname(join(dir, path)), { recursive: true }); await writeFile(join(dir, path), bytes, { flag: "wx" }); };
 	const inventory = {}, save = async (path, value) => {
@@ -53,6 +56,7 @@ export const writeJvmIORelease = async o => {
 		for(const p of classes) await save(p, await readFile(join(compiler, "classes", p)));
 		for(const n of Object.keys(libraries)) await save("META-INF/lean-bridge/native/linux-x64/" + n, files.get("lib/" + n));
 		const meta = "META-INF/lean-bridge/";
+		if(host) await save(meta + "jni/" + host.veneer.name, host.veneer.bytes);
 		for(const [p, v] of [["binding-ir.json", api], ["elaboration.json", evidence], ["runtime.json", o.manifest], ["compilers.json", sdk]])
 			await save(meta + p, canonicalJson(v));
 		await save(meta + "licenses/LeanBridge-LICENSE", await readFile(new URL("../../LICENSE", import.meta.url)));
@@ -66,11 +70,12 @@ export const writeJvmIORelease = async o => {
 		await save("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\n\n");
 		await save("README.md", `# ${name} ${version}\n\nCall ${namespace}.Api from Java or ${namespace}.kotlin.Api from Kotlin. JDK 22, Linux x86-64 (glibc ${floor}+), --enable-native-access=ALL-UNNAMED. ${tasks ? "Selected Lean tasks use Java CompletableFuture and Kotlin suspend functions. Stream factories expose Java Flow.Publisher and Kotlin Flow; demand starts and advances the cursor. Cancellation releases the native handle. Ordinary methods remain synchronous." : "Both APIs are synchronous."} Compatible packages share a native owner thread, including when called from different Java or virtual threads. Returned Except values are Result.Ok or Result.Err. An EIO throw raises the declaration's typed error; a Lean IO failure raises LeanIOException. No Lean compiler or scheduler setup is needed.\n`);
 		await save(meta + "package-receipt.json", canonicalJson({ schemaVersion: 1
-			, kind: tasks ? "lean-bridge-jvm-task-package" : "lean-bridge-jvm-io-package"
+			, kind: host ? "lean-bridge-jvm-host-package" : tasks ? "lean-bridge-jvm-task-package" : "lean-bridge-jvm-io-package"
 			, profile, name, version, component, namespace
 			, bindingIrSha256, runtimeIdentity, componentIdentity
 			, glibcMinimumVersion: floor
 			, owner: { id: owner.id, library: owner.name }
+			, ...host ? { hostDomain: { id: host.domain.id, library: host.domain.name }, jni: { library: host.veneer.name, sha256: host.veneer.sha256 } } : {}
 			, ...ledger ? { ledger } : {}
 			, libraries, files: inventory }));
 		const jar = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 });

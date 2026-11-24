@@ -139,7 +139,8 @@ test("CLI builds ordinary and reviewed Python host packages and pip consumes the
 	};
 	let publicApi, interfaces;
 	const retained = new Map();
-	await assert.rejects(run("build", "--project", project, "--target", "pypi", "--target", "c", "--output", join(root, "invalid")), /pypi-only/u);
+	await assert.rejects(run("build", "--project", project, "--target", "pypi", "--target", "c", "--output", join(root, "invalid")), /single pypi, rubygems, or maven target/u);
+	await assert.rejects(access(join(root, "invalid")), { code: "ENOENT" });
 	for(const route of ["ordinary", "reviewed"])
 	{
 		const handoff = join(root, route);

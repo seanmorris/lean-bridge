@@ -182,8 +182,10 @@ exception when Lean propagates it.
 Independently built Python IO and asyncio wheels can also
 [share a Lean-owned resource](../publish/pypi.md#export-a-shared-lean-resource)
 as a direct input, output, typed error, or stream item. Use `hostImports`
-instead when Lean needs to call a [Python-owned](../publish/pypi.md#call-python-objects-from-lean)
-or [Ruby-owned](../publish/rubygems.md#call-ruby-objects-from-lean) object's methods.
+instead when Lean needs to call an object supplied by
+[Python](../publish/pypi.md#call-python-objects-from-lean),
+[Ruby](../publish/rubygems.md#call-ruby-objects-from-lean), or
+[Java/Kotlin](../publish/maven.md#import-an-application-owned-jvm-class).
 
 The [Maven task profile](../publish/maven.md#export-tasks-and-streams) turns
 selected Lean tasks into Java `CompletableFuture` or Kotlin suspend functions.

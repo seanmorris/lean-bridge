@@ -33,7 +33,14 @@ export const validateKotlinCompilation = (evidence, namespace, { copiedGraph = f
 		throw new Error("Compiled Kotlin projection differs from the compiler contract");
 };
 
-const executable = async (command, environment, root) => {
+/**
+ * Locate the actual executable, not a symlink outside the JDK installation.
+ *
+ * @param command - Explicit path or executable name.
+ * @param environment - Author tool search path.
+ * @param root - Directory for relative names.
+ */
+export const resolveJvmTool = async (command, environment, root) => {
 	const candidates = isAbsolute(command) || command.includes("/") ? [resolve(root, command)]
 		: String(environment.PATH ?? "").split(delimiter).filter(Boolean).map(directory => resolve(root, directory, command));
 	for(const path of candidates)
@@ -62,8 +69,8 @@ const executable = async (command, environment, root) => {
 export const compileJvmSources = async ({ root, files, environment, signal }) => {
 	const env = { ...environment };
 	for(const key of ["CLASSPATH", "JAVA_TOOL_OPTIONS", "JDK_JAVA_OPTIONS", "JDK_JAVAC_OPTIONS", "_JAVA_OPTIONS", "JAVA_OPTS", "KOTLIN_OPTS", "KOTLIN_RUNNER"]) delete env[key];
-	const javac = await executable(environment.LEAN_BRIDGE_JAVAC ?? "javac", env, root);
-	const java = await executable(environment.LEAN_BRIDGE_JAVA ?? join(dirname(javac), "java"), env, root);
+	const javac = await resolveJvmTool(environment.LEAN_BRIDGE_JAVAC ?? "javac", env, root);
+	const java = await resolveJvmTool(environment.LEAN_BRIDGE_JAVA ?? join(dirname(javac), "java"), env, root);
 	const jdk = dirname(dirname(java));
 	if(dirname(dirname(javac)) !== jdk) throw new Error("Java and javac must use the same Java 22 installation");
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env, signal });
@@ -75,7 +82,7 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 	let classpath = "empty-classpath", kotlin;
 	if(kotlinSources.length)
 	{
-		const kotlinc = await executable(environment.LEAN_BRIDGE_KOTLINC ?? "kotlinc", env, root);
+		const kotlinc = await resolveJvmTool(environment.LEAN_BRIDGE_KOTLINC ?? "kotlinc", env, root);
 		const home = environment.LEAN_BRIDGE_KOTLIN_HOME ? resolve(root, environment.LEAN_BRIDGE_KOTLIN_HOME) : dirname(dirname(kotlinc));
 		const lib = join(home, "lib"), compilerFiles = {};
 		for(const name of (await readdir(lib)).filter(name => name.endsWith(".jar")).sort()) compilerFiles[name] = sha256(await readFile(join(lib, name)));
