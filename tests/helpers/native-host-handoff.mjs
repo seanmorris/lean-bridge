@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { constants } from "node:fs";
-import { copyFile, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
+import { access, copyFile, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { basename, isAbsolute, join, resolve } from "node:path";
 import { promisify } from "node:util";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -50,18 +50,37 @@ export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed,
 	{
 		await prepareNativeHostFixture(project, backend); await copyFile(resolve("LICENSE"), join(project, "LICENSE"));
 		const source = join(project, "Workshop.lean"), main = join(project, mod + ".lean");
-		const scalars = dotnet ? [...clrTypes.map(t => "def " + clrEcho(t) + " (v : " + t + ") : IO " + t + " := pure v")
+		const scalars = [...(dotnet ? clrTypes.map(t => "def " + clrEcho(t) + " (v : " + t + ") : IO " + t + " := pure v") : [])
 			, "def rejectBox (box : Box) : EIO Box Unit := throw box"
-			, "def chooseBox (box : Box) (ok : Bool) : Except Box Box := if ok then .ok box else .error box"].join("\n") : "";
+			, "def chooseBox (box : Box) (ok : Bool) : Except Box Box := if ok then .ok box else .error box"
+			, ...dotnet ? [] : ["def mixedFault (box : Box) (mode : UInt8) : EIO (Except String (Except Box UInt32)) Unit := do"
+				, "  if mode == 0 then throw (.error \"outer\")"
+				, "  if mode == 1 then throw (.ok (.error box))"
+				, "  if mode == 2 then throw (.ok (.ok 29))"]].join("\n");
 		const body = (await readFile(source, "utf8")).replace("end Workshop", extra + scalars + "\nend Workshop").replaceAll("Workshop", mod);
 		if(peer) await rename(source, main); await writeFile(main, body);
 		await writeFile(join(project, "lakefile.toml"), 'name = "' + name + '"\nversion = "1.0.0"\n[[lean_lib]]\nname = "' + mod + '"\n');
 		const config = join(project, "lean-bridge.exports.json"), cfg = await json(config);
 		cfg.targets[target].name = dotnet ? "Acme." + mod : "org.leanbridge:" + name; cfg.modules = [mod];
 		cfg.exports = [...cfg.exports.map(n => n.replace("Workshop", mod)), ...["keep", "held", "forget", "replaced", "verdict", "layered"].map(n => mod + "." + n)];
-		if(dotnet) cfg.exports.push(...[...clrTypes.map(clrEcho), "rejectBox", "chooseBox"].map(n => mod + "." + n));
+		cfg.exports.push(...[...dotnet ? clrTypes.map(clrEcho) : ["mixedFault"], "rejectBox", "chooseBox"].map(n => mod + "." + n));
 		await writeFile(config, canonicalJson(cfg));
-		if(reviewed) await copyFile(review, join(project, "workshop.binding-ir.json"));
+		if(reviewed)
+		{
+			const reviewedFile = join(project, "workshop.binding-ir.json");
+			if(!dotnet && !peer)
+			{
+				const stale = await json(review);
+				const declared = stale.declarations.find(d => d.source.declaration === mod + ".mixedFault");
+				delete declared.source.extensions["lean-bridge.dev/error-payload-site"];
+				await writeFile(reviewedFile, canonicalJson(stale));
+				const rejected = join(stage, "stale");
+				await assert.rejects(exec(process.execPath, [cli, "build", "--project", project, "--target", target, "--output", rejected, "--json", "--progress", "none"]),
+					e => /Reviewed API differs from compiled host exports/u.test(e.stdout + e.stderr));
+				await assert.rejects(access(join(rejected, "package-set-receipt.json")), { code: "ENOENT" });
+			}
+			await copyFile(review, reviewedFile);
+		}
 		try
 		{ await exec(process.execPath, [cli, "build", "--project", project, "--target", target, "--output", out, "--json", "--progress", "none"]); }
 		catch(e)
@@ -71,12 +90,17 @@ export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed,
 		assert.equal(pkg.name, cfg.targets[target].name); assert.equal(pkg.profile, "native-" + backend + "-io-v1"); assert.equal(pkg.runtimeDelivery, "embedded");
 		assert.equal(ev.selection.hostModule, "LeanBridge.Host." + (dotnet ? "Dotnet" : "Jvm")); assert.equal(ev.sourceTreeSha256, receipt.source.treeSha256);
 		assert.equal(ev.reviewedSourceSha256, reviewed ? sha256(await readFile(review)) : null);
-		if(dotnet)
 		{
 			const decl = n => api.declarations.find(d => d.source.declaration === mod + "." + n);
 			const payload = decl("rejectBox").source.extensions["lean-bridge.dev/error-payload-site"];
 			assert.deepEqual(payload, { type: { kind: "named", id: "host:meter.Box" }, ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 			assert.equal(decl("chooseBox").result.ownership, "lease"); assert.deepEqual(decl("chooseBox").result.lifetime, payload.lifetime);
+			if(!dotnet)
+			{
+				const nested = decl("mixedFault").source.extensions["lean-bridge.dev/error-payload-site"];
+				assert.deepEqual(nested.type.arguments[0].arguments[1], payload.type);
+				assert.equal(nested.ownership, "lease"); assert.deepEqual(nested.lifetime, payload.lifetime);
+			}
 		}
 		if(reviewed) assert.deepEqual(api, await json(review)); else await writeFile(review, canonicalJson(api), { flag: "wx" });
 		const files = [];

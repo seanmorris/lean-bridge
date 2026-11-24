@@ -124,11 +124,11 @@ export const reconcileHostExports = options => {
 		if([e.result, e.error, e.stepError].some(isOwned)) effects.push("allocates");
 		return effects;
 	};
-	const clrRef = t => hostTarget === "dotnet" && (t?.kind === "named" ? types.some(kind => kind.id === t.id)
-		: t?.kind === "apply" && t.constructor === "result" && t.arguments.some(clrRef));
+	const hostRef = t => (hostTarget === "dotnet" || hostTarget === "jvm") && (t?.kind === "named" ? types.some(kind => kind.id === t.id)
+		: t?.kind === "apply" && t.constructor === "result" && t.arguments.some(hostRef));
 	const leased = type => ({ type, ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	const site = (t, input = false) => isOwned(t) && input
-		? { type: t, ownership: "borrow", lifetime: { scope: "call", anchor: null } } : !input && clrRef(t) ? leased(t) : signature(t);
+		? { type: t, ownership: "borrow", lifetime: { scope: "call", anchor: null } } : !input && hostRef(t) ? leased(t) : signature(t);
 	if(ownedTypes.some(r => !metadata.entries.some(e => [e.result, e.error, e.stepError, ...e.parameters.map(p => p.type)].some(t => t?.id === r.id))))
 		fail("Selected resource does not occur directly at a checked export boundary");
 	const errors = [];
@@ -244,7 +244,7 @@ export const reconcileHostExports = options => {
 			, source: { producer: "lean", declaration: e.declaration
 				, extensions: {
 					"lean-lang.org/effect": e.effect
-					, ...(e.effect === "EIO" && !e.delivery && clrRef(e.error) ? { "lean-bridge.dev/error-payload-site": leased(e.error) } : {})
+					, ...(e.effect === "EIO" && !e.delivery && hostRef(e.error) ? { "lean-bridge.dev/error-payload-site": leased(e.error) } : {})
 					, ...(Object.keys(phases(e)).length ? { "lean-bridge.dev/native-effects-v1": phases(e) } : {})
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})
 					, ...(e.taskIO ? { "lean-bridge.dev/task-failure": "IO.Error" } : {})

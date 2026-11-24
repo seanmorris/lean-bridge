@@ -73,6 +73,12 @@ output. The JAR supplies the native runtime and binding code to both
 build is synchronous; it does not accept task, iterator or Lean-owned resource
 exports alongside the imports.
 
+A synchronous export can return an imported class in either branch of
+`Except`, or throw it in a declared `EIO` error. Nested `Except` values
+are supported. The compiler records a lease, not a copy, on a result or
+error site containing an imported class. Callers receive their application
+object through the generated API; they do not close the error payload.
+
 ## Export synchronous IO
 
 Select the Lean declarations by name and declare their OS access. For

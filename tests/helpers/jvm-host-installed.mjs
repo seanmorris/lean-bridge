@@ -44,9 +44,9 @@ export const runJvmHostConsumers = async (root, packs) => {
 			for(const a of p.artifacts) assert.equal(await hash(join(dirname(installed), basename(a.path))), a.sha256);
 		}
 		const classes = join(proj, "classes"); await mkdir(classes);
-		await run(javac, ["--release", "22", "-proc:none", "-cp", paths, "-d", classes, join(fixture, "Consumer.java")], proj, env);
+		await run(javac, ["--release", "22", "-proc:none", "-cp", paths, "-d", classes, join(fixture, "Consumer.java"), join(fixture, "LeasePayloads.java")], proj, env);
 		const cpArg = classes + delimiter + paths;
-		await run(java, ["-XX:ActiveProcessorCount=1", "-Xmx384m", "-cp", join(sdk, "lib/*"), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-kotlin-home", sdk, "-jdk-home", env.JAVA_HOME, "-no-stdlib", "-no-reflect", "-Werror", "-jvm-target", "22", "-classpath", cpArg, "-d", classes, join(fixture, "KotlinConsumer.kt")], proj, env);
+		await run(java, ["-XX:ActiveProcessorCount=1", "-Xmx384m", "-cp", join(sdk, "lib/*"), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-kotlin-home", sdk, "-jdk-home", env.JAVA_HOME, "-no-stdlib", "-no-reflect", "-Werror", "-jvm-target", "22", "-classpath", cpArg, "-d", classes, join(fixture, "KotlinConsumer.kt"), join(fixture, "KotlinLeasePayloads.kt")], proj, env);
 		for(const main of ["Consumer", "KotlinConsumerKt"]) for(const order of ["ordinary-first", "peer-first"])
 		{
 			const isolated = await mkdtemp(join(proj, "fresh-jvm-"));
@@ -59,6 +59,13 @@ export const runJvmHostConsumers = async (root, packs) => {
 			} finally
 			{ await rm(isolated, { recursive: true, force: true }); }
 		}
+		const witness = await mkdtemp(join(proj, "lease-payloads-"));
+		try
+		{
+			const message = await run(java, ["-XX:ActiveProcessorCount=1", "-Xmx128m", "-Xcheck:jni", "--enable-native-access=ALL-UNNAMED", "-Djava.io.tmpdir=" + witness, "-cp", cpArg, "KotlinLeasePayloadsKt"], witness, { LANG: "C.UTF-8", PATH: "/no-author-tools", LEAN_NUM_THREADS: "1" }, 180000);
+			assert.equal(message, "Java and Kotlin: typed leased values and declared errors retain identity after close"); answers.push(message);
+		} finally
+		{ await rm(witness, { recursive: true }); }
 		for(const p of packs) for(const file of p.files) await rm(file);
 		return answers;
 	} finally

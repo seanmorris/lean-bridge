@@ -8,7 +8,7 @@ import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { mavenPackageMetadata } from "../analyze/package-metadata.mjs";
 import { generateJvmIO } from "../backends/jvm/sync-io.mjs";
-import { generateJvmHostApi } from "../backends/jvm/host-api.mjs";
+import { generateJvmHostApi, jvmHostReadme } from "../backends/jvm/host-api.mjs";
 import { compileJvmSources } from "../build/compile-jvm-sources.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -68,7 +68,7 @@ export const writeJvmIORelease = async o => {
 <project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version>${mavenPackageMetadata(projectContract.metadata ?? {})}<properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties><dependencies><dependency><groupId>org.jetbrains.kotlin</groupId><artifactId>kotlin-stdlib</artifactId><version>2.2.0</version></dependency>${coroutines}</dependencies></project>\n`;
 		await save(`META-INF/maven/${group}/${artifact}/pom.xml`, pom);
 		await save("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\n\n");
-		await save("README.md", `# ${name} ${version}\n\nCall ${namespace}.Api from Java or ${namespace}.kotlin.Api from Kotlin. JDK 22, Linux x86-64 (glibc ${floor}+), --enable-native-access=ALL-UNNAMED. ${tasks ? "Selected Lean tasks use Java CompletableFuture and Kotlin suspend functions. Stream factories expose Java Flow.Publisher and Kotlin Flow; demand starts and advances the cursor. Cancellation releases the native handle. Ordinary methods remain synchronous." : "Both APIs are synchronous."} Compatible packages share a native owner thread, including when called from different Java or virtual threads. Returned Except values are Result.Ok or Result.Err. An EIO throw raises the declaration's typed error; a Lean IO failure raises LeanIOException. No Lean compiler or scheduler setup is needed.\n`);
+		await save("README.md", `# ${name} ${version}\n\nCall ${namespace}.Api from Java or ${namespace}.kotlin.Api from Kotlin. JDK 22, Linux x86-64 (glibc ${floor}+), --enable-native-access=ALL-UNNAMED. ${tasks ? "Selected Lean tasks use Java CompletableFuture and Kotlin suspend functions. Stream factories expose Java Flow.Publisher and Kotlin Flow; demand starts and advances the cursor. Cancellation releases the native handle. Ordinary methods remain synchronous." : "Both APIs are synchronous."} Compatible packages share a native owner thread, including when called from different Java or virtual threads. Returned Except values are Result.Ok or Result.Err. An EIO throw raises the declaration's typed error; a Lean IO failure raises LeanIOException. No Lean compiler or scheduler setup is needed.\n` + (host ? jvmHostReadme(host) : ""));
 		await save(meta + "package-receipt.json", canonicalJson({ schemaVersion: 1
 			, kind: host ? "lean-bridge-jvm-host-package" : tasks ? "lean-bridge-jvm-task-package" : "lean-bridge-jvm-io-package"
 			, profile, name, version, component, namespace

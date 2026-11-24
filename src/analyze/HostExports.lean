@@ -75,29 +75,28 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
   throwError "unsupported host export carrier: {e}"
 
 /-- A returned Except is a value. Its success arm is first in Binding IR. -/
-partial def returned (r : Request) (e : Expr) (copyOnly := false) (clrLeases := false) : MetaM Json := do
+partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases := false) : MetaM Json := do
   let e := (← instantiateMVars e).consumeMData
   let args := e.getAppArgs
   if e.getAppFn.constName? == some ``Except && args.size == 2 then
     return Json.mkObj [("kind", toJson "apply"), ("constructor", toJson "result"),
-      ("arguments", Json.arr #[← returned r args[1]! true clrLeases, ← returned r args[0]! true clrLeases])]
+      ("arguments", Json.arr #[← returned r args[1]! true hostLeases, ← returned r args[0]! true hostLeases])]
   let t ← carrier r e
   if copyOnly && e.constName?.any (fun n => r.leanResources.contains n.toString) then
     throwError "a leased Lean resource cannot be a copied exception payload: {e}"
   if copyOnly && !primitives.any (fun p => e.constName? == some p.1) then
-    -- The synchronous CLR port explicitly exports the active host reference
-    -- before releasing the Lean IO object. Never apply this to a worker or
-    -- to an arbitrary nominal: only these generated CLR import kinds qualify.
-    if clrLeases && r.hostModule == some "LeanBridge.Host.Dotnet" &&
+    -- Both synchronous ports retain the active application object before
+    -- releasing the Lean result. Worker payloads do not take this path.
+    if hostLeases && (r.hostModule == some "LeanBridge.Host.Dotnet" || r.hostModule == some "LeanBridge.Host.Jvm") &&
         e.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)) then return t
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
 
-/-- An explicitly leased nominal may cross by itself, never as a copied sum payload. -/
-def delivered (r : Request) (e : Expr) (clrLeases := false) : MetaM Json := do
+/-- Admit a leased nominal by itself, or a checked host lease in a synchronous declared error. -/
+def delivered (r : Request) (e : Expr) (hostLeases := false) : MetaM Json := do
   if let some name := (← instantiateMVars e).consumeMData.constName? then
     if r.leanResources.contains name.toString then return ← carrier r e
-  returned r e true clrLeases
+  returned r e true hostLeases
 
 /-- An actual unary, nondependent IO function, not a foreign host object or a pure borrow. -/
 def taskInput (r : Request) (e : Expr) : MetaM Json := do

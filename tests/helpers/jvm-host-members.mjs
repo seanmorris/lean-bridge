@@ -4,9 +4,30 @@ import { copyFile, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "nod
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
+import { generateJvmHostApi } from "../../src/backends/jvm/host-api.mjs";
 import { generateJvmHostMembers } from "../../src/backends/jvm/host-members.mjs";
 import { generateLeanHostObjectAdapters } from "../../src/backends/lean/host-object.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
+
+test("Java projects a declared error with two distinct nominal leaves without unchecked casts", async t => {
+	const root = await mkdtemp(join(tmpdir(), "jvm-error-types-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const named = id => ({ kind: "named", id });
+	const sum = (a,b) => ({ kind: "apply", constructor: "result", arguments: [a,b] });
+	const ir = { types: [{ id: "left" }, { id: "right" }] };
+	const error = sum(named("right"),sum(named("left"),named("right")));
+	const api = { component: { name: "projection" } }, model = { contract: "", implementation: "" };
+	const hash = "0".repeat(64), veneer = { name: "liblb_jni_"+hash+".so", sha256: hash };
+	const result = { kind: "primitive", name: "unit" };
+	const entries = [{ name: "both", declaration: "Checks.both", effect: "EIO", parameters: [], result, error }];
+	const { files } = generateJvmHostApi({ api, ir, model, evidence: null, veneer, entries });
+	for(const name of ["BothError.java", "LeanEIOError.java", "Result.java"])
+		await writeFile(join(root,name),files["src/main/java/org/leanbridge/projection/"+name]);
+	await copyFile(resolve("tests/fixtures/jvm-host-members/Projection.java"),join(root,"Projection.java"));
+	const bin = n => process.env.JAVA_HOME ? join(process.env.JAVA_HOME,"bin",n) : n;
+	await run(bin("javac"), ["-J-XX:ActiveProcessorCount=1","-J-Xmx96m","--release","22","-Xlint:unchecked","-Werror","-d",root,"BothError.java","LeanEIOError.java","Result.java","Projection.java"],root,process.env);
+	assert.equal(await run(bin("java"),["-XX:ActiveProcessorCount=1","-Xmx64m","-cp",root,"org.leanbridge.projection.Projection"],root,process.env),"two nominal types; checked active branches");
+});
 
 test("JVM binds exact public members, preserves objects and throws the original exception", { timeout: 120_000 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "jvm-checked-members-"));

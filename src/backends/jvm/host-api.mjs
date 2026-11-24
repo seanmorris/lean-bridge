@@ -7,6 +7,20 @@ const box = { int: "Integer", long: "Long", boolean: "Boolean", float: "Float", 
 const fail = why => { throw new TypeError("Invalid JVM host API: " + why); };
 const ident = /^[A-Za-z][A-Za-z0-9_]*$/u;
 /**
+ * Describe the exact Java members the installed package will bind.
+ *
+ * @param host - The import contract and the member model used by the compiled binder.
+ */
+export const jvmHostReadme = host => {
+	const name = s => s.index !== undefined ? host.ir.types[s.index].name : s.kind === "unit" ? "void" : jvmIOScalarTypes[s.kind][0];
+	const members = host.model.members.map(m => {
+		const owner = host.ir.types[m.owner].name, params = m.params.filter(p => p.kind !== "unit").map(name).join(", ");
+		return m.mode === "new" ? "new " + owner + "(" + params + ")" : (m.mode === "static" ? "static " : "") + name(m.out) + " " + owner + "." + m.name + "(" + params + ")";
+	});
+	return "\nBind your public classes with Api.bindHosts(" + host.ir.types.map(t => t.name+".class").join(", ") + "). Use the returned binding in try-with-resources (Kotlin: use). Its required members are:\n\n"
+		+ members.map(m => "- `"+m+"`").join("\n") + "\n\nA returned host reference is your original object. For a declared error containing one, catch the generated error for the declaration and pass its host class token(s) to payload. The payload remains valid after the binding closes.\n";
+};
+/**
  * Return the same package name used for JNI symbol generation and public sources.
  *
  * @param component - Elaborated application component.
@@ -63,6 +77,33 @@ export const generateJvmHostApi = o => {
 		if(r.kind === "named") return token(r) + ".cast(" + v + ")";
 		return "(" + type(r, true) + ")HostWire.decode(" + JSON.stringify(r.name) + "," + token(r) + "," + v + ")";
 	};
+	// A Throwable cannot have type parameters. Capture the already-decoded Java
+	// value, not a JNI pair or a live binding. A method can introduce fresh type
+	// parameters and check the active leaves with caller-supplied Class tokens.
+	const faultPayload = r => {
+		const kinds = new Set();
+		const project = (t, v, depth = 0) => {
+			if(t.kind === "apply")
+			{
+				const it = "part" + depth;
+				return "switch ((Result<?,?>)" + v + ") { case Result.Ok<?,?> " + it + " -> new Result.Ok<>(" + project(t.arguments[0], it + ".value()", depth+1)
+					+ "); case Result.Err<?,?> " + it + " -> new Result.Err<>(" + project(t.arguments[1], it + ".error()", depth+1) + "); }";
+			}
+			if(t.kind === "named")
+			{
+				const i = jvmHostCarrier(ir.types, t).index; kinds.add(i);
+				return cls(i) + ".cast(" + v + ")";
+			}
+			return "(" + type(t, true) + ")" + v;
+		};
+		const jt = type(r, true), expr = project(r, "value");
+		if(!kinds.size) return { jt, accessor: "" };
+		const ids = [...kinds].sort((a,b) => a-b);
+		const accessor = "    public <" + ids.map(i => gens[i]).join(",") + "> " + jt + " payload("
+			+ ids.map(i => "Class<" + gens[i] + "> " + cls(i)).join(",") + ") { "
+			+ ids.map(i => "java.util.Objects.requireNonNull(" + cls(i) + ");").join(" ") + " return " + expr + "; }\n";
+		return { jt: r.kind === "named" ? "Object" : "Result<?,?>", accessor };
+	};
 	const names = new Set(["close", "bindHosts", "encode", "tag", "payload", "nativeLive"]), methods = [];
 	const classes = new Set(["NativePort", "HostWire", "HostContract", "HostMembers", "Unit", "Api", "Result", "LeanIOException", "LeanEIOError", "NativeAssets"]);
 	for(const [index, e] of entries.entries())
@@ -75,13 +116,12 @@ export const generateJvmHostApi = o => {
 		if(e.effect === "EIO")
 		{
 			const ex = name[0].toUpperCase() + name.slice(1) + "Error"; if(classes.has(ex)) fail("duplicate error class"); classes.add(ex);
-			const jt = type(e.error, true);
-			if(/\bT\d+\b/u.test(jt)) fail("owned exception payload");
+			const { jt, accessor } = faultPayload(e.error);
 			java(ex, `public final class ${ex} extends LeanEIOError {
     private final ${jt} value;
     ${ex}(${jt} v) { super(${d}); value=v; }
     @Override public ${jt} payload() { return value; }
-}\n`);
+${accessor}}\n`);
 			err = "if (status==1) throw new " + ex + "(" + get(e.error, "answer[1]") + ");";
 		}
 		methods.push(`        public ${unit ? "void" : type(e.result)} ${name}(${args.join(",")}) throws Exception {

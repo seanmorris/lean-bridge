@@ -64,6 +64,22 @@ Ordinary exceptions can be handled in Lean or propagated back to Kotlin.
 A terminal JVM error, such as `OutOfMemoryError` or `LinkageError`, retires
 the shared Lean runtime even if a nested Kotlin method catches it.
 
+A returned `Except` is a `Result`. An `EIO` failure throws a separate
+generated error class. If the error carries your application object, pass
+its JVM class to recover the typed value:
+
+```kotlin
+try {
+    api.rejectBox(meter)
+} catch (e: org.leanbridge.workshop.RejectBoxError) {
+    val original: Meter = e.payload(Meter::class.java)
+    check(original === meter)
+}
+```
+
+This remains the same Kotlin object after the binding closes. No JNI
+reference or binding object is needed to read the exception.
+
 ### Call synchronous IO
 
 Import the generated `.kotlin.Api` object and call it directly. Lean

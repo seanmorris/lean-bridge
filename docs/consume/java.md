@@ -88,6 +88,25 @@ re-enable calls through this package or another package using that runtime.
 Closing the binding ends calls through that binding; it does not close
 your application object.
 
+If Lean returns `Except Meter Meter`, both branches of the generated
+`Result<Meter,Meter>` carry the original object. If Lean *throws* a meter
+through `EIO Meter Unit`, catch the error class for that declaration. For
+example, given the Workshop export `rejectBox`:
+
+```java
+try {
+    api.rejectBox(meter);
+} catch (org.leanbridge.workshop.RejectBoxError e) {
+    Meter original = e.payload(Meter.class);
+    if (original != meter) throw new AssertionError();
+}
+```
+
+The class argument checks the type; it does not look up a native handle.
+For a nested error, the same accessor returns a typed `Result` and checks
+the object in the active branch. The payload remains usable after closing
+the binding. A wrong class for that object throws `ClassCastException`.
+
 ### Call synchronous IO
 
 An installed Maven package can expose Lean `BaseIO`, `IO` and `EIO` as
