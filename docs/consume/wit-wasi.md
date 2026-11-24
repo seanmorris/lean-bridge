@@ -231,6 +231,13 @@ For example, `feed` returns `result<stream<result<result<s64, string>, u16>>, u3
 
 Cancel a pending **read** to stop waiting; you can read again later. Drop the **reader** to close the cursor on early exit and discard outstanding delivery. A read that already reached Lean may have started work; cancelling the read does not roll it back. The [installed stream checks](../evidence/wit-canonical-async-20261124.md#consume-a-compiled-pull-cursor-as-a-stream) exercise both cases.
 
+Dropping the reader also requests cancellation of a pending Lean pull.
+That request is cooperative: the cursor can close before the worker
+stops. A worker that ignores cancellation can finish a side effect, but
+its late item is not delivered. The [worker-side observations](../evidence/wit-canonical-async-20261124.md#observe-cancellation-inside-the-lean-worker)
+show both outcomes. This is a stream-cursor contract; dropping
+a standalone future reader does not by itself promise to stop its worker.
+
 ### Give a task a host callback
 
 [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean) takes a Lean function of type `UInt32 → IO UInt32`. In the installed C package, register a function with that signature and pass its handle to the task. The function runs on the store's main thread, during `poll` or `await`. The Lean worker never calls into your C context from a worker thread.

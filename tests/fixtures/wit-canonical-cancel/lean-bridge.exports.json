@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Watch"],
+  "exports": ["Watch.feed", "Watch.event", "Watch.release", "Watch.closes"],
+  "taskExports": ["Watch.event"],
+  "asyncIterators": [{"open": "Watch.feed", "next": "Watch.advance", "close": "Watch.finish"}],
+  "targets": {"wit-wasi": {"name": "watch", "version": "1.0.0", "asyncAbi": "canonical"}}
+}

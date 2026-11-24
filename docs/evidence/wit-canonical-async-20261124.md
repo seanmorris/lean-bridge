@@ -94,3 +94,35 @@ All three relocated packages ran the same guest with no build tools on its searc
 Run `npm run test:wit-canonical-stream` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks). To replay a prepared archive, set `LEAN_BRIDGE_CANONICAL_STREAM_ORDINARY`, `LEAN_BRIDGE_CANONICAL_STREAM_REVIEWED`, or `LEAN_BRIDGE_CANONICAL_STREAM_MIXED` to its handoff directory. The test builds any missing handoff and always runs the stale-review check.
 
 After adding streams, the fallible-future regression above also passed from fresh builds of both source routes (SHA-256 `0b0caa0d0624bcc16a84037f283ce9a409d60d27d059bb1f1160412c77ea651f` and `9a539a82b8826e0fa3e112c350f0689f293d5176da88c6ce7da96a2184f78e0f`, respectively).
+
+## Observe cancellation inside the Lean worker
+
+The [Watch package](../../tests/fixtures/wit-canonical-cancel/Watch.lean)
+separates three events: a pull worker starts, its cursor closes, and the
+worker finishes. A [Wasm guest](../../tests/fixtures/wit-canonical-cancel/application.wat)
+waits for each event through a public future. On the abandonment paths it
+does not release the parked worker until the Lean close callback has run.
+There are no sleeps, timing thresholds, or host-generated acknowledgements
+in the protocol.
+
+| Guest action | What the worker reported | What reached the guest |
+| --- | --- | --- |
+| Release the worker with its reader still open | `4`: completed without cancellation | The item `73`, then one close when the guest dropped the reader |
+| Withdraw the read, drop the reader, wait for close, then release a cooperative worker | `2`: `IO.checkCanceled` was true; the worker returned without producing an item | No write to the guest's destination; one close |
+| Repeat with a worker that ignores the same cancellation request | `3`: `IO.checkCanceled` was true; the worker still computed an item | No write to the guest's destination; one close |
+
+Both freshly built and relocated packages returned **423**, the three
+worker observations in order. The guest and package agreed on the emitted WIT
+world, and the launcher ran with no build tools on its path. This verifies a
+pending **stream pull**; it does not claim a standalone future's reader drop
+interrupts arbitrary Lean code.
+
+| Source | Bytes | Archive SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 60,916,681 | `6a8840d8a8eb808f4d863f1c04f2165533bb9f6d02495a417f78845aac9623f1` |
+| Reviewed | 60,917,615 | `05942387113385cc18f674cd9ada44df5d0340aeb0b4c909b3a28ee11e7feca0` |
+
+Run `npm run test:wit-canonical-cancel` with the same pinned producer tools
+as the stream test. The [installation gate](../../tests/helpers/wit-canonical-cancel.mjs)
+can also replay handoffs supplied in `LEAN_BRIDGE_CANONICAL_CANCEL_ORDINARY`
+and `LEAN_BRIDGE_CANONICAL_CANCEL_REVIEWED`.

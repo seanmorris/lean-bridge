@@ -1178,6 +1178,7 @@
     "test:wit-canonical-package": "node --test --test-concurrency=1 tests/helpers/wit-canonical-command-package.mjs",
     "test:wit-canonical-effects": "node --test --test-concurrency=1 tests/helpers/wit-canonical-effects.mjs",
     "test:wit-canonical-stream": "node --test --test-concurrency=1 tests/helpers/wit-canonical-stream.mjs",
+    "test:wit-canonical-cancel": "node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",
     "test:ruby-host-imports": "node --test --test-concurrency=1 tests/helpers/ruby-host-imports.mjs",
     "test:ruby-host-packages": "node --test --test-concurrency=1 tests/helpers/ruby-host-packages.mjs",
     "test:python-host-kinds": "LEAN_BRIDGE_PYTHON_HOST_KINDS=1 node --test --test-concurrency=1 tests/helpers/host-object-installed.mjs",
