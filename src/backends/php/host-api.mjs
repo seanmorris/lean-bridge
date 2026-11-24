@@ -74,9 +74,7 @@ export const generatePhpHostFiles = async (linked, ir, runtime) => {
     public function ${name}(${args.map(a=>"mixed "+a).join(", ")}): ${hint(result)} {
         if (func_num_args()!==${args.length}) throw new \\ArgumentCountError('Wrong number of arguments');
         if (!$this->open) throw new \\LogicException('PHP host binding is closed');
-        [$channel,$value]=Internal\\HostFrame::call($this->ffi,Internal\\Native::PREFIX,$this->members,${i},[${args.join(",")}],${literal(inputs)},${literal(result)},${literal(error)});
-        if ($channel==='io') throw new IOError(${JSON.stringify(e.declaration)},$value);${error===null?"":"\n        if ($channel==='declared') throw new "+ex+"("+JSON.stringify(e.declaration)+",$value);"}
-        return $value;
+        return $this->_call(${i},[${args.join(",")}],${literal(inputs)},${literal(result)},${literal(error)},${JSON.stringify(e.declaration)},${error===null?"null":ex+"::class"});
     }`);
 	}
 	const libraries = {...linked.binaries};
@@ -117,17 +115,33 @@ final class Binding {
     private readonly Internal\\HostMembers $members;
     private readonly \\FFI $ffi;
     private readonly int $pid;
+    private function _call(int $op,array $args,array $params,string|int|array $result='unit',string|int|array|null $error=null,
+                           string $name='',?string $exception=null): mixed {
+        \\LeanBridge\\NativeHostV2\\References::enter();
+        $failed=false;
+        try {
+            [$channel,$value]=Internal\\HostFrame::call($this->ffi,Internal\\Native::PREFIX,$this->members,$op,$args,$params,$result,$error);
+            if ($channel==='io') throw new IOError($name,$value);
+            if ($channel==='declared') throw new $exception($name,$value);
+            if ($op<0) $this->open=($op===-2);
+            return $value;
+        } catch (\\Throwable $e) { $failed=true; throw $e; }
+        finally { \\LeanBridge\\NativeHostV2\\References::leave($failed); }
+    }
     public function __construct(array $classes) {
         $this->pid=getmypid(); $this->members=Internal\\Native::members($classes); $this->ffi=Internal\\Native::ffi();
-        Internal\\HostFrame::call($this->ffi,Internal\\Native::PREFIX,$this->members,-2,[],[]);
-        $this->open=true;
+        try { $this->_call(-2,[],[]); }
+        catch (\\Throwable $e) {
+            if ($this->open) { try { $this->close(); } catch (\\Throwable) {} }
+            throw $e;
+        }
     }
     private function __clone() {}
     public function __serialize(): array { throw new \\LogicException('Cannot serialize a PHP host binding'); }
     public function __unserialize(array $data): void { throw new \\LogicException('Cannot restore a PHP host binding'); }
     public function close(): void {
         if (!$this->open) return;
-        Internal\\HostFrame::call($this->ffi,Internal\\Native::PREFIX,$this->members,-1,[],[]); $this->open=false;
+        $this->_call(-1,[],[]);
     }
     public function __destruct() { if ($this->open && getmypid()===$this->pid) { try { $this->close(); } catch (\\Throwable) {} } }
 ${methods.join("\n")}

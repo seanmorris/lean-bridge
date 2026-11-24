@@ -22,6 +22,13 @@ distribute the Composer ZIP as usual. The receipt identifies this synchronous
 profile as `native-php-host-v1`. The [PHP consumer example](../php.md#let-lean-call-an-application-object)
 shows how an application binds its classes; no consumer writes FFI code.
 
+For a borrowed member result, name the object that must outlive it. Use
+`{"scope":"receiver","anchor":"receiver"}` for the receiving object, or
+`{"scope":"parameter","anchor":"parent"}` for a nominal argument named
+`parent`. The [peer example](../../tests/fixtures/php-host-members/Peer.lean)
+uses both contracts. See the [installed lifetime checks](../evidence/php-host-finalizers-20261124.md)
+for retention, finalization and failure behavior.
+
 Generated copied-value Composer packages declare `brick/math: 1.0.0`; the 32-bit Alpha package declares it too. Consumers receive `Brick\Math\BigInteger` directly. Publish the generated dependency declaration unchanged. Composer resolves Brick Math through the application's repositories and records it in the application lockfile. For an offline release, supply that dependency through the same local repository or a prepared cache.
 
 PHP-Wasm npm packages bundle the pinned Brick Math sources and MIT license for hosts without Composer. The CLI includes those sources, so authors need no network access to assemble them. The bundled version and the Composer dependency are identical. No GMP or BCMath extension is required.

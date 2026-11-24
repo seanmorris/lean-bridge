@@ -101,6 +101,19 @@ caller gets a `LogicException`; it does not cancel the first call. A
 forked child cannot use or close an inherited binding. Start a fresh PHP
 process if the child needs to call Lean.
 
+A borrowed object can keep its receiver or a named argument alive; the
+publisher's contract selects which one. A strong-canonical object stays
+alive until the last compatible binding for its kind closes. A weak-canonical
+object does not stay alive solely because it once crossed the boundary.
+
+If releasing a bridge reference would run a PHP destructor, the bridge
+waits until the outermost native call returns. The destructor can then use
+another open binding. During `close()`, it sees the closing binding as
+already closed. If the call otherwise succeeded, the caller receives the
+first exception thrown by cleanup; the bridge still drains the remaining
+references. If the call itself failed, its original error takes precedence.
+See the [two-package lifetime and error checks](evidence/php-host-finalizers-20261124.md).
+
 ### Call synchronous IO and handle errors
 
 Install the publisher’s native Composer package and require its autoloader.

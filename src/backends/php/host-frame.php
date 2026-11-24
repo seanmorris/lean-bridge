@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace __LB_PUBLIC__\Internal;
-use LeanBridge\NativeHostV1\References;
+use LeanBridge\NativeHostV2\References;
 
 /** @internal Synchronous caller. All CData and reference tokens stay inside the component. */
 final class HostFrame {
@@ -99,7 +99,7 @@ final class HostFrame {
         if (!array_is_list($args) || count($params)!==count($args)) throw new \ArgumentCountError('Wrong host argument count');
         if (self::$sequence===PHP_INT_MAX) throw new \OverflowException('Native call sequence exhausted');
         $f=new self(++self::$sequence,$binding,$ffi); $parent=self::$top;
-        References::enter(); self::$top=$f;
+        self::$top=$f;
         try {
             $in=$ffi->new('uint64_t['.max(1,3*count($args)).']'); $out=$ffi->new('uint64_t[4]');
             $tags=$ffi->new('uint8_t[64]'); $fault=$ffi->new('uint32_t[1]'); $words=new HostWords($ffi);
@@ -120,8 +120,7 @@ final class HostFrame {
             } finally { $ffi->$clear($out); }
         } finally {
             self::$top=$parent;
-            try { $f->releaseReply(); foreach ($f->inputs as $id) References::drop($id); }
-            finally { References::leave(); }
+            $f->releaseReply(); foreach ($f->inputs as $id) References::drop($id);
         }
     }
 }

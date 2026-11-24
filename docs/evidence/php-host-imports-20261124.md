@@ -79,7 +79,7 @@ interpreter was built without `pcntl_fork`.
 | Reviewed | `586cc6a8829e60e051070d908bcb49a8ca47b9ad8e3de268db8fb5389a97379f` | `4f3e0105226eb6694dcf4f42a60aea26da7d3b5b9fef95c13b68151f5c2cecde` |
 | Independent peer | `6a6a10b5999f5741002e800d43275aaf73042a1787c60da4f0f76f99c960bc47` | `a19cfc0a7a54816ab1ec8f8f64ad7cbb40b383a3283f0db578292ad63039c92d` |
 
-`npm run test:php-host-peer` installs the ordinary package alongside a
+At commit `cb279b9`, `npm run test:php-host-peer` installed the ordinary package alongside a
 separately compiled peer. To reuse the first ZIP, set
 `LEAN_BRIDGE_PHP_HOST_HANDOFF` to the ordinary handoff directory. The
 [two-package client](../../tests/fixtures/php-host-members/peer.php) passed
@@ -87,6 +87,8 @@ in both load orders on both interpreters. A conflicting class binding left
 the original binding intact. The two packages shared the same PHP object,
 observed each other's mutations and preserved the original nested exception.
 Closing one binding left the other usable; closing both left zero private tokens.
+The [expanded peer](php-host-finalizers-20261124.md) adds receiver and
+parameter borrows, throwing destructors, and shared-runtime retirement.
 
 The local runs used Linux x86-64, Lean 4.32.2, NTS PHP with FFI and the
 glibc 2.36 test floor. The release default remains glibc 2.38. These checks

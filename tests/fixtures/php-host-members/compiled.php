@@ -3,7 +3,9 @@ declare(strict_types=1);
 require $argv[1];
 
 use function LeanWorkshop\withHosts;
-use LeanBridge\NativeHostV1\References;
+// Replay earlier packages as well as the deferred-release owner.
+$references=class_exists(LeanBridge\NativeHostV2\References::class,false)
+    ? LeanBridge\NativeHostV2\References::class : LeanBridge\NativeHostV1\References::class;
 
 class Meter {
     public function __construct(public int $level) {}
@@ -95,7 +97,7 @@ if ($fork) {
 check($binding->read($box)===42,'original binding remains usable after owner checks');
 $binding->close(); $binding->close();
 check(failure(fn()=>$binding->read($box)) instanceof \LogicException,'closed binding refuses calls');
-check(References::count()===0,'weak binding, class, object and call tokens all released');
+check($references::count()===0,'weak binding, class, object and call tokens all released');
 $reopen=withHosts(['Box'=>Meter::class]); check($reopen->identity($box)===$box,'new binding starts clean'); $reopen->close();
-check(References::count()===0,'zero tokens after second binding');
+check($references::count()===0,'zero tokens after second binding');
 echo json_encode(['php'=>PHP_VERSION,'checks'=>$checks,'fork'=>$fork],JSON_THROW_ON_ERROR),"\n";
