@@ -36,3 +36,27 @@ toolchains, and `LEAN_BRIDGE_JVM_IO_M2_SEED` set to a Maven seed containing
 the install/dependency plugins, Kotlin stdlib 2.2.0, and coroutines 1.8.0.
 Set `LEAN_BRIDGE_JVM_WORKER_HANDOFFS` to a private directory to retain the
 receipts and archives after the test.
+
+## Offline publishing CLI and reviewed release
+
+The full release test passed on November 24, 2026 (30 minutes 17 seconds
+for the test case). It installed the candidate CLI from its npm archive,
+built three Maven handoffs locally, verified each package-set receipt, and
+installed each pair in an offline Maven repository. These are the artifacts
+from that run; the table above records the earlier ordinary-source run.
+
+| Handoff | JAR bytes | JAR SHA-256 | Package-set receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary `workshop` | 51,490,536 | `0d2eb456c621856721cbbae20f3e5d6da6989b7e1c33bf42630af70729058fcf` | `26de80fa6a203a6b635f9c4a20c504758ef806474abe30aaca3d0de55f1a9a7e` |
+| Ordinary `workshop-peer` | 51,491,749 | `d36a2128d3e08fcecc0966c21792b8b4458aa93ee54dc834d4cb87b717e71a29` | `dd8204ee573620cee774fea12d717e7c9a03c351589737deb5600ebfed7c88ef` |
+| Reviewed `workshop` | 51,490,581 | `7e8fce05d73415f781a578f46f846b1bb75550d41608aa2114dad669aef50569` | `c98b1afa5bedbf9eb184408352b63c8868799a4194c1b199dcf75870130ca042` |
+
+The reviewed API matched the ordinary API. Its review-source SHA-256 was
+`f70443c3e441061b598d3f5c41b1c202621298c31bf5eee347f1044151bcc9c9`.
+Each main package ran with the same peer: Java and Kotlin each passed in
+both load orders (eight application processes total). Four more processes
+checked the installed loader: changing either the worker ledger or the JNI
+library caused rejection on both routes. A fourth author project removed the
+declared error payload site from `Jobs.refuse`; the CLI rejected the review
+before writing a package-set receipt. No Maven or npm registry was used to
+publish these artifacts.
