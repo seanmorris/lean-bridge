@@ -72,6 +72,12 @@ the references Lean retained, not the Ruby object itself. If the Ruby method
 raises and Lean propagates that failure unchanged, the caller gets the original
 Ruby exception, including its identity. Lean can also catch or replace it.
 
+A synchronous export may return your object in an `Ok` or `Err`, or raise
+`api::DeclaredError` with the object in `payload`. Read the active arm of a
+nested result through `value`. These are ordinary Ruby references: they still
+refer to the same object after the binding block ends. Closing the binding
+prevents further calls through it; it does not invalidate a saved error.
+
 The package declares how long it keeps each kind of Ruby object. A
 `weak-canonical` import does not keep an object alive once Lean releases
 its last reference. A `strong-canonical` import keeps the same Ruby instance

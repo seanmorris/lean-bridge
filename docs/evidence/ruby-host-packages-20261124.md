@@ -41,3 +41,25 @@ This is the synchronous, statically declared Ruby host-object profile. It does
 not establish that a Lean worker may call arbitrary Ruby methods. The archive
 set above uses a weak-canonical import. The [mixed-kind follow-up](ruby-host-kinds-20261124.md)
 checks strong-canonical retention as well.
+
+## Keep Ruby objects in returned values and declared errors
+
+The [installed consumer](../../tests/fixtures/ruby-host-meter/nominals.rb) used
+two different host classes in the same declaration. A returned `Ok` held the
+original box; a returned `Err` held the original token. A declared error could
+hold the box directly, or hold either object in a nested result. The consumer
+closed both bindings, forced GC and compaction, and read each active arm.
+It compared objects with `equal?`, including value-equal but distinct tokens.
+
+A fresh binding refused to convert a stale Lean reference into an exception
+payload. After clearing it, the same component delivered a declared string
+error normally. Both binding orders ended with zero native registrations.
+The publisher also rejected a reviewed contract missing the nested error's
+lease before it wrote a receipt.
+
+| Source | Gem | Bytes | Gem SHA-256 | Receipt SHA-256 |
+| --- | --- | ---: | --- | --- |
+| ordinary | workshop | 50,106,880 | `3973d96d1dd0c415567ccbb2eeb93a55345cb6d4fc6eae7486aa1761d7cb860f` | `05398edbb75583f2835b0cea73e4970055beed74da74a48903dbc836fb22c425` |
+| ordinary | workshop-peer | 50,106,880 | `b7019ffc1a0b156edaa6091de80cf1b62f086849c92bbbee3f1e9f191cffc833` | `12b8e5bd7155820d643ab4502d3edf20c3c02370904ef821af2bdde0eb4841a0` |
+| reviewed | workshop | 50,106,880 | `249b206dad9ab02de6f084d401bd9355fea7519b055c1d7ca67b030182aaec59` | `902cdb3b30ed82b73bd39bd5c011d1f60ae5fbad10e4985ec2c6f531799c89a9` |
+| reviewed | workshop-peer | 50,106,880 | `85fba6afcfdcbf8cd9681239b38b2c25f53b5e88649b0de0f8b5f418d2903ebb` | `6de57e8c3a468eb81994a9932b53c644024f372f51703ad740489a46b634366c` |

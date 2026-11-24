@@ -33,6 +33,10 @@ The publisher needs Ruby 3.3 development headers; the consumer only needs the
 matching Ruby runtime. For a reviewed build, keep the import contract and Lean
 sources: the build checks the review against freshly compiled members. This
 profile is synchronous; it does not schedule Ruby method calls on Lean workers.
+Use an imported class in `Except` results or `EIO` errors when callers need
+the original Ruby object. The generated contract records a lease on the
+result or error payload, including when the object is nested in another
+`Except`. This does not change the copied-value or task profiles.
 See [how the Ruby application supplies the class](../consume/ruby.md#supply-a-ruby-object-to-lean).
 
 ## Build an ordinary Lean project

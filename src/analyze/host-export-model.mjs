@@ -124,7 +124,7 @@ export const reconcileHostExports = options => {
 		if([e.result, e.error, e.stepError].some(isOwned)) effects.push("allocates");
 		return effects;
 	};
-	const hostRef = t => (hostTarget === "dotnet" || hostTarget === "jvm") && (t?.kind === "named" ? types.some(kind => kind.id === t.id)
+	const hostRef = t => ["dotnet", "jvm", "ruby"].includes(hostTarget) && (t?.kind === "named" ? types.some(kind => kind.id === t.id)
 		: t?.kind === "apply" && t.constructor === "result" && t.arguments.some(hostRef));
 	const leased = type => ({ type, ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	const site = (t, input = false) => isOwned(t) && input

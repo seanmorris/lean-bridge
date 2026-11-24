@@ -114,3 +114,50 @@ A.bind_hosts(box: Box, token: Box) do
 end
 registration_count(A, 0)
 puts "strong and weak kinds; both binding orders; live=0"
+
+# Returned sums and declared errors must hold the actual Ruby objects, not
+# Lean references that expire when the last binding closes.
+def saved_leases(outer, inner)
+  outer.bind_hosts(box: Box, token: Token) do
+    inner.bind_hosts(box: Box, token: Token) do
+      box, token = outer.make(17), ComparableToken.new
+      wrong = ComparableToken.new
+      refused(TypeError) { inner.pick_object(token, box, true) }
+      ok, err = outer.pick_object(box, token, true), inner.pick_object(box, token, false)
+      declared = refused(inner::DeclaredError) { inner.reject_box(box) }
+      check(declared.declaration.end_with?(".rejectBox"), "wrong declared error")
+      scalar = refused(outer::DeclaredError) { outer.mixed_fault(box, token, 0) }
+      check(scalar.payload.is_a?(outer::Err) && scalar.payload.value == "outer", "wrong outer branch")
+      bad = refused(outer::DeclaredError) { outer.mixed_fault(box, token, 1) }
+      good = refused(inner::DeclaredError) { inner.mixed_fault(box, token, 2) }
+      outer.mixed_fault(box, token, 3)
+      outer.keep(box)
+      check(good.payload.value.value == wrong && !good.payload.value.value.equal?(wrong), "collapsed value-equal tokens")
+      [WeakRef.new(box), WeakRef.new(token), ok, err, declared, bad, good]
+    end
+  end
+end
+
+[[A, B], [B, A]].each do |outer, inner|
+  box, token, ok, err, declared, bad, good = Fiber.new { saved_leases(outer, inner) }.resume
+  registration_count(outer, 0)
+  GC.start(full_mark: true, immediate_sweep: true)
+  GC.compact
+  check(ok.is_a?(outer::Ok) && ok.value.equal?(box.__getobj__), "lost successful result")
+  check(err.is_a?(inner::Err) && err.value.equal?(token.__getobj__), "lost returned error")
+  check(declared.payload.equal?(box.__getobj__) && declared.payload.read == 17, "stale direct payload")
+  check(bad.payload.is_a?(outer::Ok) && bad.payload.value.is_a?(outer::Err) &&
+    bad.payload.value.value.equal?(box.__getobj__), "wrong nominal in nested declared error")
+  check(good.payload.is_a?(inner::Ok) && good.payload.value.is_a?(inner::Ok) &&
+    good.payload.value.value.equal?(token.__getobj__), "wrong nominal in nested success arm")
+  outer.bind_hosts(box: Box, token: Token) do
+    # The saved Ruby exception remains usable, but a new call must not turn
+    # the old binding's stale Lean reference into a new Ruby exception payload.
+    refused(TypeError) { outer.reject_saved }
+    outer.forget
+    empty = refused(outer::DeclaredError) { outer.reject_saved }
+    check(empty.payload.is_a?(outer::Err) && empty.payload.value == "empty", "failed conversion poisoned binding")
+  end
+  registration_count(inner, 0)
+end
+puts "leased values and declared errors survived GC after both bindings closed; live=0"
