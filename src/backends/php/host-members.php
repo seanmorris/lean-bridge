@@ -62,7 +62,13 @@ final class HostMembers
         }
     }
 
-    private function nominal(int $kind, mixed $value): void {
+    public function classAt(int $kind): string {
+        return $this->classes[$kind] ?? throw new \UnexpectedValueException('Unknown host class slot');
+    }
+    public function memberAt(int $slot): array {
+        return $this->members[$slot][0] ?? throw new \UnexpectedValueException('Unknown host member slot');
+    }
+    public function nominal(int $kind, mixed $value): void {
         $class = $this->classes[$kind];
         if (!$value instanceof $class) throw new \TypeError('Expected a PHP host object of type '.$class);
     }

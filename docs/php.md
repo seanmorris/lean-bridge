@@ -62,6 +62,39 @@ Parameters use `mixed` with precise PHPDoc so generated checks can reject numeri
 
 Validation, PHP conversion and native copying each have a 16 MiB accounting limit. PHP lists count at least 32 bytes per element. These limits do not bound Lean working memory. `finally` releases native outputs after conversion errors. Compatible packages share one process runtime; post-fork calls and already loaded foreign Lean runtimes are rejected. Loading needs readable `/proc/self/maps` to detect foreign runtime mappings. See [installed PHP evidence](evidence/native-php-copied-20260915.md).
 
+### Let Lean call an application object
+
+A native Composer package that imports PHP classes exposes `withHosts()`.
+Pass the classes named in the publisher’s contract. Calls on the returned
+binding use your actual objects, including subclasses. For example, the
+Workshop package imports a `Box` with a mutable `level` property:
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+class Meter {
+    public function __construct(public int $level) {}
+    public function read(): int { return $this->level; }
+    public function identity(): static { return $this; }
+}
+
+$workshop = LeanWorkshop\withHosts(['Box' => Meter::class]);
+try {
+    $meter = new Meter(7);
+    $workshop->update($meter, 42);
+    echo $meter->level;                       // 42
+    assert($workshop->identity($meter) === $meter);
+} finally {
+    $workshop->close();
+}
+```
+
+If Lean propagates a PHP method’s exception unchanged, the PHP caller catches
+the same `Throwable`. If Lean maps it to a typed `EIO` failure, the caller
+catches the generated exception and reads its `payload`. A returned `Except`
+is an `Ok` or `Err` value, not a thrown exception. This synchronous host-class
+profile is native PHP CLI only; it does not run PHP methods on a Lean worker.
+
 ### Call synchronous IO and handle errors
 
 Install the publisher’s native Composer package and require its autoloader.
@@ -2066,19 +2099,21 @@ one of those profiles.
 
 ### Native CLI effects and delivery
 
-The two native Composer profiles have their own receipts. Use these mappings
-for native IO and task packages; the cross-profile inventory below describes
+Use these mappings for native Composer host, IO and task packages. Their
+receipts identify the profile; the cross-profile inventory below describes
 the older package paths.
 
 | Export | Native PHP result | Failure or cleanup |
 | --- | --- | --- |
 | Synchronous `IO α` or `EIO ε α` | `α` before the call returns | `IOError` or a declaration-specific exception carrying `ε` |
+| Declared PHP class in a synchronous host package | The application instance supplied to or returned by a binding method | Close the binding; an unchanged application exception retains its identity |
 | Selected `Task α` | `Amp\Future` resolving to `α` | An operation token cancels the worker; an await token cancels only that waiter |
 | Selected worker callback `α → IO β` | A unary PHP callable returning a copied value | Retained through settlement; a propagated PHP exception keeps its identity |
 | Selected pull protocol | `PullStream` consumed with `foreach` | One outstanding pull; exhaustion, early exit or explicit close releases the cursor |
 
-See the [synchronous IO receipts](evidence/php-sync-io-20261123.json) and the
-[native task receipts](evidence/php-task-delivery-20261123.json). Neither changes PHP-Wasm's coverage.
+See the [host-class install checks](evidence/php-host-imports-20261124.md#installed-composer-checks),
+[synchronous IO receipts](evidence/php-sync-io-20261123.json) and
+[native task receipts](evidence/php-task-delivery-20261123.json). These native profiles do not change PHP-Wasm's coverage.
 
 ### Type conversions
 

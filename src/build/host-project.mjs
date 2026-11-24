@@ -24,6 +24,7 @@ import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validatePerlIOSettings } from "../backends/perl/sync-io.mjs";
 import { ownedPerlNamespace } from "./owned-perl-projection.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
+import { buildPhpHostPackage } from "../release/php-host-package.mjs";
 import { buildNativeSharedRuntime } from "./native-component.mjs";
 import { openHostProjectSource } from "./host-project-source.mjs";
 import { validateOrdinaryWasiSettings } from "../backends/wit/copied-model.mjs";
@@ -46,7 +47,7 @@ const absent = async path => {
 export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
-	if(config.hostImports && (targets.length !== 1 || !["pypi", "rubygems", "maven", "nuget", "cpan"].includes(target))) fail("Host imports require a single pypi, rubygems, maven, nuget, or cpan target");
+	if(config.hostImports && (targets.length !== 1 || !["pypi", "rubygems", "maven", "nuget", "cpan", "php-native"].includes(target))) fail("Host imports require a single pypi, rubygems, maven, nuget, cpan, or php-native target");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
@@ -95,7 +96,7 @@ export const buildHostProject = async options => {
 		let artifact, receipt;
 		if(target !== "pypi")
 		{
-			const hosts = { maven: buildJvmHostPackage, nuget: buildDotnetHostPackage, rubygems: buildRubyHostPackage, cpan: buildPerlHostPackage };
+			const hosts = { maven: buildJvmHostPackage, nuget: buildDotnetHostPackage, rubygems: buildRubyHostPackage, cpan: buildPerlHostPackage, "php-native": buildPhpHostPackage };
 			const builder = (contract.ir && hosts[target]) || (wit && !canonical ? buildWitHostPackage : buildCTaskPackage);
 			artifact = await builder({ ...common, target, canonical }); receipt = artifact.receipt;
 		}

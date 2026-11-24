@@ -6,11 +6,13 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { generateDotnetHostMembers } from "../../src/backends/dotnet/host-members.mjs";
 import { generateDotnetNativeMembers } from "../../src/backends/dotnet/host-native-members.mjs";
+import { wordHostFrame } from "../../src/backends/native/word-host-frame.mjs";
 import { generateLeanHostObjectAdapters } from "../../src/backends/lean/host-object.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 
 test("compiled Lean calls a bound CLR member without unwinding a managed exception through native frames", { timeout: 300000 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "dotnet-host-frame-")); t.after(() => rm(root, { recursive: true, force: true }));
+	await writeFile(join(root, "host-frame.c"), await wordHostFrame("dotnet"));
 	const app = join(root, "app"); await mkdir(app);
 	const fixture = resolve("tests/fixtures/dotnet-host-meter"), backend = resolve("src/backends/dotnet");
 	const lean = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -54,7 +56,7 @@ test("compiled Lean calls a bound CLR member without unwinding a managed excepti
 		, "-I" + resolve("src/backends/c")
 		, "checked.c", "provider.c"
 		, "checked-app.c"
-		, join(backend, "host-frame.c")
+		, join(root, "host-frame.c")
 		, join(fixture, "frame-check.c")
 		, "-L" + join(lean, "lib/lean")
 		, "-Wl,-rpath," + join(lean, "lib/lean")

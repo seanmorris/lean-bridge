@@ -2,6 +2,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { wordHostFrame } from "../backends/native/word-host-frame.mjs";
 
 /**
  * One SONAME per runtime, one symbol namespace per native and managed ABI.
@@ -15,7 +16,7 @@ export const compileDotnetHostDomain = async options => {
 	const parts = {};
 	for(const name of ["host-domain.c", "host-domain.h", "host-frame.h", "host-frame.c", "host-frame.cs", "host-refs.cs"])
 	{
-		const bytes = await readFile(new URL("../backends/dotnet/" + name, import.meta.url));
+		const bytes = name === "host-frame.c" ? await wordHostFrame("dotnet") : await readFile(new URL("../backends/dotnet/" + name, import.meta.url));
 		await writeFile(join(app, name), bytes, { flag: "wx" }); parts[name] = sha256(bytes);
 	}
 	const id = sha256(canonicalJson({ runtimeIdentity, parts }));

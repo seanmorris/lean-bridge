@@ -13,9 +13,14 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Select a PHP target explicitly. `--target npm` alone produces JavaScript packages. Neither PHP target has a CLI registry-upload adapter.
 
-Importing an application-defined PHP class into Lean is not yet a Composer
-build profile. The [authoring checks](../evidence/php-host-imports-20261124.md)
-cover the Lean declarations and the PHP dispatcher separately.
+To call application-defined PHP classes from Lean, select `php-native`, set
+`hostImports` to the path of the host Binding IR, and include `"php"` in each
+imported class’s `host.targets`. Import `LeanBridge.Host.Php` in your Lean
+module. The [Workshop example](../../tests/fixtures/php-host-members/Workshop.lean)
+shows a constructor, mutable property, method, and typed error. Build and
+distribute the Composer ZIP as usual. The receipt identifies this synchronous
+profile as `native-php-host-v1`. The [PHP consumer example](../php.md#let-lean-call-an-application-object)
+shows how an application binds its classes; no consumer writes FFI code.
 
 Generated copied-value Composer packages declare `brick/math: 1.0.0`; the 32-bit Alpha package declares it too. Consumers receive `Brick\Math\BigInteger` directly. Publish the generated dependency declaration unchanged. Composer resolves Brick Math through the application's repositories and records it in the application lockfile. For an offline release, supply that dependency through the same local repository or a prepared cache.
 
