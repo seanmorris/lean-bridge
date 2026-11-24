@@ -273,3 +273,8 @@ Both ordinary and reviewed Workshop passed 25 checks per execution in Node,
 a Node module worker, Chromium, a bundled page and a bundled module worker.
 Each execution drained all frames, allocations, pending operations, native
 owners, notifications, host pins and host-error tickets.
+
+The [compatibility replay on `9431fd5`](javascript-threaded-host-regression-9431fd5.json)
+rebuilt the original task/cursor fixture on the same runtime. Both source routes
+again passed all 36 checks per execution, including early iterator exit and
+typed error payloads.
