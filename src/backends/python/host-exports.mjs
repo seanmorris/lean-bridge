@@ -8,6 +8,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { sha256 } from "../../capsule/node.mjs";
 import { taskResourceTypes } from "../c/task-resources.mjs";
 import { generatePythonHostProvider } from "./host-provider.mjs";
+import { pythonHostArguments, pythonWorkerMethods } from "./worker-methods.mjs";
 import { streamCodec, streamEntryLean, streamStub } from "./stream-exports.mjs";
 import { callbackLean, callbackMethods, callbackPrototypes, ioOutcome, ioPython, retainedEntry } from "./task-callback.mjs";
 
@@ -67,6 +68,7 @@ const carrier = (resources, type) => {
 	return {
 		lean: `_root_.LeanBridge.Host.Python.${resources[i].name}`
 		, c: "lean_object *", hostIndex: i
+		, fromPython: arg => `lb_host_result(${i}, ${arg}, NULL)`
 		, toPython: arg => `lb_host_arg(${i}, ${arg})`
 	};
 };
@@ -123,7 +125,7 @@ _native._io_failure_type = LeanIOError
 const payload = (t, host = null) => t?.kind === "primitive" ? Object.hasOwn(scalars, t.name)
 	: t?.kind === "named" ? host?.some(r => !r.hash && r.id === t.id) === true
 		: t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2 && t.arguments.every(v => payload(v, host));
-const delivered = (t, resources) => payload(t) || (t?.kind === "named" && resources.some(r => r.hash && r.id === t.id));
+const delivered = (t, resources, scoped = false) => payload(t, scoped ? resources : null) || (t?.kind === "named" && resources.some(r => r.hash && r.id === t.id));
 const asset = path => readFileSync(new URL(path, import.meta.url), "utf8");
 const taskCodec = (i, value, error, checked) => {
 	const task = `(_root_.Task ${checked ? `(_root_.Except _root_.IO.Error ${value.lean})` : value.lean})`;
@@ -148,31 +150,21 @@ static PyObject *lb_start_${i}(lean_object *v) {
 		].join("\n")
 	};
 };
-const emit = (resources, entry, i, codecs, synchronous, immediate) => {
+const emit = (resources, entry, i, codecs, synchronous, immediate, scoped) => {
 	const args = entry.parameters.map(p => carrier(resources, p.type));
 	const effect = entry.effect ?? "IO", task = entry.delivery === "task", stream = entry.delivery === "async-iterator";
 	const bound = resources.some(r => !r.hash) && !task && !stream;
 	if(!["pure", "IO", "EIO", ...(task || stream || immediate ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
-	if((task || stream) && entry.parameters.some(p => !delivered(p.type, resources))) throw new TypeError("Lean tasks require copied carriers or checked Lean resources");
+	if((task || stream) && entry.parameters.some(p => !delivered(p.type, resources,scoped))) throw new TypeError("Lean tasks require copied carriers or checked Lean resources" + (scoped ? " or a declared Python object" : ""));
 	if(stream && (entry.protocol?.open !== entry.declaration || !qualified.test(entry.protocol.next) || !qualified.test(entry.protocol.close)
-		|| (entry.stepError && !delivered(entry.stepError, resources)))) throw new TypeError("invalid async iterator protocol");
+		|| (entry.stepError && !delivered(entry.stepError, resources,scoped)))) throw new TypeError("invalid async iterator protocol");
 	if(!immediate && !task && !stream && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
 	const startError = effect === "EIO" ? returned(resources, entry.error, codecs) : null;
 	const asyncOut = stream ? streamCodec(i, entry, returned(resources, entry.result, codecs), startError, entry.stepError ? returned(resources, entry.stepError, codecs) : null)
 		: task ? taskCodec(i, returned(resources, entry.result, codecs), startError, entry.taskIO) : null;
 	const out = asyncOut ?? returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
 	const symbol = `lb_python_host_invoke_${i}`;
-	const hostArgs = args.flatMap((a, j) => a.hostIndex === undefined ? [] : [{ index: a.hostIndex, j }]);
-	const conversions = args.map((a, j) => a.hostIndex === undefined
-		? `if (!(v[${j}] = ${a.fromPython(`PyTuple_GET_ITEM(args, ${j})`)})) goto done;`
-		: `if (!lb_check_host(${a.hostIndex}, PyTuple_GET_ITEM(args, ${j}))) goto done;`);
-	if(hostArgs.length)
-	{
-		conversions.unshift("lb_value *pending_hosts = NULL;");
-		for(const { index, j } of hostArgs)
-			conversions.push(`if (!(v[${j}] = lb_stage_argument(${index}, PyTuple_GET_ITEM(args, ${j}), &pending_hosts))) goto done;`);
-		conversions.push("lb_finish_hosts(&pending_hosts, 1);");
-	}
+	const conversions = pythonHostArguments(args, "v", 0);
 	const values = args.map((a, j) => a.unbox ? `${a.unbox}(v[${j}])` : `v[${j}]`).join(", ");
 	const call = `(_root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")})`;
 	const application = stream ? asyncOut.application(call) : call;
@@ -193,7 +185,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     lb_sync_started = 1;` : ""}
     ${bound ? "lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; lb_sweep();" : ""}
     lean_object *v[${Math.max(1, args.length)}] = {0}, *io = NULL; PyObject *result = NULL;
-    ${conversions.join("\n    ")}
+    ${conversions.setup}
     io = ${symbol}(${values});
     ${args.flatMap((a, j) => a.unbox ? [] : [`v[${j}] = NULL;`]).join(" ")}
     if (lean_io_result_is_ok(io)) {
@@ -220,7 +212,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     if (!result) PyErr_Fetch(&et, &ev, &tb);
     if (io) lean_dec(io);
     ${args.map((_, j) => `if (v[${j}]) lean_dec(v[${j}]);`).join(" ")}
-    ${hostArgs.length ? "lb_finish_hosts(&pending_hosts, 0);\n    " : ""}${bound ? "lb_frame_close(&frame); lb_sweep(); lb_current->depth--;" : ""}
+    ${conversions.rollback}${bound ? "lb_frame_close(&frame); lb_sweep(); lb_current->depth--;" : ""}
     if (!result) PyErr_Restore(et, ev, tb);
     return result;
 }`;
@@ -239,6 +231,8 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
  */
 export const generatePythonHostExtension = options => {
 	const { ir, module, entries, runtimeIdentity, componentIdentity, modules = [module] } = options;
+	const scoped = options.pythonTaskObjects === true;
+	if(scoped && (!ir || !entries.some(e=>e.delivery))) throw new TypeError("Expected checked Python object worker entries");
 	const synchronous = options.synchronousIO === true, syncIO = synchronous && entries.some(e => e.effect === "IO");
 	if(synchronous && (ir || entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))))
 		throw new TypeError("Invalid standalone Python IO delivery contract");
@@ -258,39 +252,43 @@ export const generatePythonHostExtension = options => {
 	const resources = [...imported, ...owned];
 	for(const e of entries)
 	{
-		// Only synchronous conversions run inside the application's active binding.
+		// Async object conversion requires the authenticated binding. Workers never dispatch Python.
 		// Check both async generator paths, including retained callback factories.
 		if(e.delivery)
 		{
-			if(!delivered(e.result, resources) || (e.effect === "EIO" && !delivered(e.error, resources)))
-				throw new TypeError("Lean tasks require copied carriers or checked Lean resources");
+			if(!delivered(e.result, resources, scoped) || (e.effect === "EIO" && !delivered(e.error, resources, scoped)))
+				throw new TypeError("Lean tasks require copied carriers or checked Lean resources" + (scoped ? " or a declared Python object" : ""));
 		}
-		else if((e.result?.kind === "apply" && !payload(e.result, imported)) ||
-			(e.effect === "EIO" && !payload(e.error, imported) && !delivered(e.error, owned)))
+		else if((e.result?.kind === "apply" && !payload(e.result, imported))
+			|| (e.effect === "EIO" && !payload(e.error, imported) && !delivered(e.error, owned)))
 			throw new TypeError("returned sums and EIO errors require copied payloads or declared synchronous host objects");
 	}
 	const codecs = new Map(), slots = new Map();
 	for(const e of entries) for(const p of e.parameters) if(p.type.kind === "io-callback")
 	{
-		if(e.delivery !== "task" || ![p.type.argument, p.type.reply].every(t => t?.kind === "primitive" && Object.hasOwn(scalars, t.name)))
-			throw new TypeError("expected a retained task callback with copied scalar values");
+		if(e.delivery !== "task" || ![p.type.argument, p.type.reply].every(t => t?.kind === "primitive" && Object.hasOwn(scalars, t.name) || scoped && t?.kind==="named" && imported.some(r=>r.id===t.id)))
+			throw new TypeError("expected a retained task callback with copied scalar values" + (scoped ? " or declared Python objects" : ""));
 		slots.set(p, slots.size);
 	}
 	const callbacks = slots.size > 0, outcomes = callbacks || entries.some(e => e.taskIO);
 	const publicNames = [...provider.resources, ...leaseNames, ...entries.map(e => e.name)];
+	const streamIO = entries.some(e => e.stepIO);
+	if(streamIO && publicNames.includes("LeanStreamIOError")) throw new TypeError("reserved Python stream error name");
 	if((outcomes && publicNames.includes("LeanTaskError")) || (callbacks && publicNames.includes("RetainedCallback")))
 		throw new TypeError("reserved Python task name");
-	const immediate = synchronous || (!ir && entries.some(row => row.delivery));
+	const immediate = synchronous || ((!ir || scoped) && entries.some(row => row.delivery));
 	const functions = entries.map((e, i) => e.parameters.some(p => slots.has(p))
-		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots, owned })
-		: emit(resources, e, i, codecs, synchronous, immediate));
+		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots, owned: scoped?resources:owned, scoped })
+		: emit(resources, e, i, codecs, synchronous, immediate, scoped));
 	const callbackCodecs = callbacks ? [...slots].map(([p, id]) => {
 		const a = carrier(resources, p.type.argument);
+		const b=carrier(resources,p.type.reply);
 		return `static PyObject *lb_cb_in_${id}(lean_object *v) { return ${a.toPython("v")}; }
-static const lb_codec lb_cb_slot_${id} = {lb_cb_in_${id}, lb_out_${p.type.reply.name}};`;
+${b.hostIndex===undefined?"":`static lean_object *lb_cb_out_${id}(PyObject *v) {return ${b.fromPython("v")};}\n`}static const lb_codec lb_cb_slot_${id} = {lb_cb_in_${id}, ${b.hostIndex===undefined?"lb_out_"+p.type.reply.name:"lb_cb_out_"+id}};`;
 	}).join("\n") + "\nstatic const lb_codec *lb_cb_codec(uint32_t slot) { switch(slot) { "
 		+ [...slots.values()].map(id => `case ${id}: return &lb_cb_slot_${id};`).join(" ") + " default: return NULL; } }" : "";
 	const tasks = entries.some(e => e.delivery), streams = entries.some(e => e.delivery === "async-iterator");
+	const worker = scoped ? pythonWorkerMethods(entries, streams, callbacks) : null;
 	const errorTypes = codecs.size || entries.some(e => e.effect === "EIO");
 	const entryLean = [
 		...modules.map(m => `import ${m}`)
@@ -308,6 +306,7 @@ static const lb_codec lb_cb_slot_${id} = {lb_cb_in_${id}, lb_out_${p.type.reply.
 	const source = `${provider.source}
 #include "lean_bridge_native_runtime.h"
 #define LB_COMPONENT "pyhost:${componentIdentity}"
+${scoped?asset("worker-binding.h"):""}
 ${entryDeclarations}${leased ? `\n#define LB_PY_LEASE_ABI "lean-bridge/python-resource/${sha256([runtimeIdentity, options.ledgerId, leaseHeader].join("\n"))}"\n${leaseHeader}` : ""}
 ${synchronous ? `#include <sys/syscall.h>
 #include <unistd.h>
@@ -329,12 +328,23 @@ static int lb_prepare(void) {${leased ? "\n    if (!lb_resource_context()) retur
 }
 ${ir ? `static PyObject *lb_pybind(PyObject *mod, PyObject *args) {
     (void)mod; if (!lb_prepare()) return NULL;
-    if (lb_bind(lb_specs, sizeof(lb_specs)/sizeof(lb_specs[0]), args, "${runtimeIdentity}")) return NULL;
+    ${scoped?'if (lb_worker_cookie) {PyErr_SetString(PyExc_RuntimeError,"component already has a host binding");return NULL;} PyObject *cookie=PyObject_CallNoArgs((PyObject *)&PyBaseObject_Type);if (!cookie) return NULL;':""}
+    if (lb_bind(lb_specs, sizeof(lb_specs)/sizeof(lb_specs[0]), args, "${runtimeIdentity}")) {${scoped?"Py_DECREF(cookie);":""} return NULL;}
+    ${scoped?"lb_worker_cookie=cookie;":""}
     Py_RETURN_NONE;
 }
 static PyObject *lb_pyunbind(PyObject *mod, PyObject *args) {
-    (void)mod; (void)args; if (lb_unbind()) return NULL; Py_RETURN_NONE;
+    (void)mod; (void)args; if (lb_unbind()) return NULL; ${scoped?"Py_CLEAR(lb_worker_cookie);":""} Py_RETURN_NONE;
 }` : ""}
+${scoped?`static PyObject *lb_may_unbind(PyObject *mod, PyObject *unused) {
+    (void)mod;(void)unused;if (!lb_worker_active()) return NULL;
+    if (lb_current->depth) {PyErr_SetString(PyExc_RuntimeError,"cannot close a binding in its own callback or member");return NULL;}
+    Py_RETURN_NONE;
+}
+static PyObject *lb_worker_sweep(PyObject *mod, PyObject *unused) {
+    (void)mod;(void)unused;if (!lb_worker_active()) return NULL;
+    lb_current->depth++;lb_sweep();lb_current->depth--;Py_RETURN_NONE;
+}`:""}
 static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
     (void)mod;
     unsigned long long lean, broker;
@@ -342,11 +352,14 @@ static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
     return PyBool_FromLong(lean == (uintptr_t)&lean_register_external_class
         && broker == (uintptr_t)&lean_bridge_native_component_initialize);
 }
+${scoped?"#define LB_SCOPED_CALLBACKS 1\n#define PyCapsule_New lb_worker_cap":""}
 ${tasks ? asset("../native/task-notification.h") + "\n" + asset("task-delivery.h") : ""}
 ${streams ? asset("stream-delivery.h") : ""}
 ${outcomes ? ioOutcome + "\n" : ""}${callbacks ? '#define LB_PORT_NAME LB_COMPONENT ".callback-port-v1"\n#define LB_PORT_KIND "lean-bridge/python-callback-port-v1"\n#define LB_CB_REQUEST lb_py_cb_request\n#define LB_CB_TRACK lb_py_cb_track\n' + asset("../native/task-callback-queue.h") + "\n" + asset("task-callback.h") + "\n" + callbackCodecs + "\n" : ""}${[...codecs.values()].map(f => f.c).join("\n")}
 ${functions.map(f => f.c).join("\n")}
+${worker?"#undef PyCapsule_New\n"+worker:""}
 static PyMethodDef lb_methods[] = {
+    ${scoped?'{"_may_unbind", lb_may_unbind, METH_NOARGS, NULL}, {"_worker_sweep", lb_worker_sweep, METH_NOARGS, NULL},':""}
     ${ir ? '{"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},' : ""}
     ${tasks ? '{"_task_ready", lb_task_ready, METH_O, NULL}, {"_task_fd", lb_task_descriptor, METH_O, NULL}, {"_task_take", lb_task_take, METH_O, NULL}, {"_task_close", lb_task_close, METH_O, NULL},' : ""}
     ${streams ? '{"_cursor_next", lb_cursor_next, METH_O, NULL}, {"_cursor_close", lb_cursor_close, METH_O, NULL},' : ""}
@@ -369,7 +382,7 @@ PyMODINIT_FUNC PyInit__native(void) { ${leased ? `PyObject *m = PyModule_Create(
 	const startPayload = payloadUnion(entries.filter(e => e.effect === "EIO").map(e => e.error));
 	const stepPayload = payloadUnion(entries.filter(e => e.delivery === "async-iterator").map(e => e.stepError));
 	const stub = [
-		"from typing import ContextManager as _ContextManager"
+		scoped ? "class _LBHostBinding:\n    def __enter__(self) -> None: ...\n    def __exit__(self, *exc: object) -> None: ...\n    async def __aenter__(self) -> None: ...\n    async def __aexit__(self, *exc: object) -> None: ...\n" : "from typing import ContextManager as _ContextManager"
 		, ...(leased ? ["from typing import Literal as _Literal, Protocol as _Protocol, Self as _Self, runtime_checkable as _runtime_checkable"
 			, ...owned.map(r => `@_runtime_checkable
 class ${r.name}(_Protocol):
@@ -387,8 +400,9 @@ class ${r.name}(_Protocol):
 		, ...(outcomes ? ["class LeanTaskError(RuntimeError):\n    declaration: str\n"] : [])
 		, ...(callbacks ? ["from typing import Callable as _Callable, Generic as _CBGeneric, TypeVar as _CBVar\n_CBArg = _CBVar('_CBArg')\n_CBReply = _CBVar('_CBReply')\nclass RetainedCallback(_CBGeneric[_CBArg, _CBReply]):\n    def __init__(self, callback: _Callable[[_CBArg], _CBReply]) -> None: ...\n    def close(self) -> None: ...\n    def __call__(self, value: _CBArg) -> _CBReply: ...\n"] : [])
 		, ...(streams ? [streamStub.replace("payload: object", "payload: " + stepPayload)] : [])
+		, ...(streamIO ? ["class LeanStreamIOError(RuntimeError):\n    declaration: str\n    def __init__(self, declaration: str, message: str) -> None: ...\n"] : [])
 		, ...(errorTypes ? [resultTypes, `class LeanEIOError(Exception):\n    declaration: str\n    payload: ${startPayload}\n    def __init__(self, declaration: str, payload: ${startPayload}) -> None: ...\n`] : [])
-		, ...(ir ? [`from .host_types import ${provider.resources.map(n => `${n} as ${n}`).join(", ")}`, `def bind_hosts(*, ${provider.resources.map(n => `${n}: type[${n}]`).join(", ")}) -> _ContextManager[None]: ...`] : [])
+		, ...(ir ? [`from .host_types import ${provider.resources.map(n => `${n} as ${n}`).join(", ")}`, `def bind_hosts(*, ${provider.resources.map(n => `${n}: type[${n}]`).join(", ")}) -> ${scoped ? "_LBHostBinding" : "_ContextManager[None]"}: ...`] : [])
 		, ...entries.map(e => `${e.delivery === "task" ? "async " : ""}def ${e.name}(${e.parameters.map(p => `${p.name}: ${render(p.type)}`).join(", ")}) -> ${e.delivery === "async-iterator" ? `_LBStream[${render(e.result)}]` : render(e.result)}: ...`)
 		, ""
 	].join("\n");
@@ -421,6 +435,6 @@ class ${r.name}(_Protocol):
 		hostLean: provider.lean, entryLean, entryDeclarations, source, stub
 		, types: types.join("\n")
 		, bindingIrSha256: ir ? hashBindingIr(ir) : null
-		, python: `${provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}${leased ? "\nfrom ._native import " + leaseNames.join(", ") : ""}\n\n${syncIO ? syncIOClass : ""}${support}\n${tasks ? asset("task-await.py") : ""}\n${streams ? asset("stream-await.py") : ""}\n${outcomes ? ioPython + "\n" : ""}${callbacks ? asset("task-callback.py") + "\n" : ""}${functions.map(f => f.python).join("\n")}`
+		, python: `${scoped?"from . import _native\n"+asset("worker-binding.py")+"\ndef bind_hosts(*, "+hostNames+"):\n    return _LBHostBinding(("+hostNames+",))\n":provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}${leased ? "\nfrom ._native import " + leaseNames.join(", ") : ""}\n\n${syncIO ? syncIOClass : ""}${support}\n${tasks ? asset("task-await.py") : ""}${scoped ? "\n_LBWait._binding = staticmethod(_lb_binding)\n" : ""}\n${streams ? asset("stream-await.py") : ""}${streamIO ? "\nclass LeanStreamIOError(RuntimeError):\n    def __init__(self, declaration, message):\n        self.declaration = declaration\n        super().__init__(message)\n" : ""}\n${outcomes ? ioPython + "\n" : ""}${callbacks ? asset("task-callback.py") + "\n" : ""}${functions.map((f,i) => (scoped ? ({task: "@_lb_bound_task\n", "async-iterator": "@_lb_bound_stream\n"}[entries[i].delivery] ?? "@_lb_bound_call\n") : "")+f.python).join("\n")}`
 	};
 };

@@ -4723,6 +4723,18 @@ jobs:
             fi
           done
           exit "$status"
+      - name: Verify installed Python worker class bindings
+        if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
+        timeout-minutes: 15
+        env:
+          HOST_PYTHON_311: ${{ steps.collection_python311.outputs.python-path }}
+          HOST_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
+        run: |
+          status=0
+          for interpreter in "$HOST_PYTHON_311" "$HOST_PYTHON_312"; do
+            LEAN_BRIDGE_PYTHON="$interpreter" npm run test:python-host-workers || status=1
+          done
+          exit "$status"
       - name: Retain Python host-object and task receipts with the original wheels
         if: ${{ !cancelled() && steps.python_host_imports.outcome == 'success' }}
         uses: actions/upload-artifact@v7

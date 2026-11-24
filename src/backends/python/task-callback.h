@@ -91,6 +91,14 @@ static PyObject *lb_cb_drain(PyObject *mod, PyObject *args) {
         PyObject *value = arg ? PyObject_CallOneArg(f, arg) : NULL;
         lean_object *v = value ? codec->out(value) : NULL;
         int ok = v != NULL;
+#ifdef LB_SCOPED_CALLBACKS
+        /* Only a thrown application Exception belongs to the declared Lean IO
+           channel. Codec failures and BaseException interrupt this operation,
+           even when the producer catches IO.Error and returns a fallback. */
+        if (!ok && (!arg || value || !PyErr_ExceptionMatches(PyExc_Exception))) {
+            v = lean_mk_io_user_error(lean_mk_string("Python callback boundary failed"));
+        } else
+#endif
         if (!ok && PyDict_Size(faults) >= 4096) {
             PyErr_SetString(PyExc_RuntimeError, "retained callback exception budget exceeded");
             v = lean_mk_io_user_error(lean_mk_string("retained callback exception budget exceeded"));

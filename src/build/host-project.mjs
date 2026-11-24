@@ -102,7 +102,7 @@ export const buildHostProject = async options => {
 		}
 		else
 		{
-			artifact = await buildPythonHostWheel({ ...common, python: environment.LEAN_BRIDGE_PYTHON ?? environment.LEAN_BRIDGE_HOST_PYTHON ?? "python3" });
+			artifact = await buildPythonHostWheel({ ...common, target, python: environment.LEAN_BRIDGE_PYTHON ?? environment.LEAN_BRIDGE_HOST_PYTHON ?? "python3" });
 			const runtime = await packagePythonHostRuntime(common);
 			receipt = await writePythonHostPackageSet({ root: stage, runtime, component: artifact, archivePrefix: "archives/" });
 		}

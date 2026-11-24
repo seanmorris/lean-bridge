@@ -32,9 +32,14 @@ class LeanStreamError(Exception):
 export const streamCodec = (i, entry, value, startError, stepError) => {
 	const unpack = (t, expression) => t?.decode ? t.decode(expression) : expression;
 	return {
-		...nativePullEntry(i, "lb_python", entry, value.lean, startError?.lean, stepError?.lean)
+		...nativePullEntry(i, "lb_python", entry, value.lean, startError?.lean, entry.stepIO ? "_root_.IO.Error" : stepError?.lean)
 		, c: `static PyObject *lb_item_${i}(lean_object *v) {
-    ${stepError ? `lean_object *payload = lean_ctor_get(v, 0);
+    ${entry.stepIO ? `lean_object *payload = lean_ctor_get(v, 0);
+    if (!lean_obj_tag(v)) {
+        lean_inc(payload); lean_object *s = lb_python_host_error_text(payload);
+        PyObject *msg = lb_in_string(s); lean_dec(s); return lb_cursor_value(3, msg);
+    }
+    v = payload;` : stepError ? `lean_object *payload = lean_ctor_get(v, 0);
     if (!lean_obj_tag(v)) return lb_cursor_value(2, ${stepError.toPython("payload")});
     v = payload;` : ""}
     if (!lean_obj_tag(v)) Py_RETURN_NONE;
@@ -55,7 +60,9 @@ static PyObject *lb_open_${i}(lean_object *v) {
             raise _lb_error_type("${name}", ${unpack(startError, "_r[1]")})
         return _r[1]` : "return _r"}
     def _decode(_r):
-        ${stepError ? `if _r[0] == 2:
+        ${entry.stepIO ? `if _r[0] == 3:
+            raise LeanStreamIOError("${name}", _r[1])
+        ` : stepError ? `if _r[0] == 2:
             raise LeanStreamError("${name}", ${unpack(stepError, "_r[1]")})
         ` : ""}return ${unpack(value, "_r[1]")}
     return _LBStream(_start, _decode)

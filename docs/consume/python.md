@@ -116,6 +116,30 @@ nested `Ok`/`Err` values. You can inspect the value or `exc.payload` after
 `bind_hosts` exits. Holding it is an ordinary Python reference; you do not
 need to keep the binding open or call `close` on the object.
 
+### Pass your objects through a Lean task
+
+A worker can carry a Python object while the callback that uses it runs on
+your asyncio loop. In the [worker example](../../tests/fixtures/python-host-tasks/Workers.lean),
+`relay` sends a box to your callback and returns its reply. With the `Meter`
+class above, use the component wheel that exports `relay`:
+
+```python
+async def exchange():
+    first, second = Meter(), Meter()
+    async with lean_meter.bind_hosts(Box=Meter):
+        answer = await lean_meter.relay(first, lambda box: second if box is first else box)
+        assert answer is second
+```
+
+Use `async with` when a task or iterator can outlive the call that created it.
+Leaving the binding cancels its pending calls, closes its cursors, and waits
+for the cancelled operations to finish. A coroutine created in that binding
+cannot start in a later binding, even if you bind the same class again.
+Already delivered objects are yours. A callback can call a synchronous Lean
+method, but it cannot close the binding while it is executing. The
+[installed-wheel results](../evidence/python-worker-wheels-20261124.md)
+also cover closing one binding while another package still uses the same class.
+
 ### Call synchronous IO
 
 Call a `native-python-io-v1` function directly on the process main thread
@@ -219,6 +243,8 @@ without emitting a late item. Cancelling the reader propagates
 A typed startup failure raises `LeanEIOError`. A typed failure during a pull
 raises `LeanStreamError`, with `declaration` and `payload`. An `Ok` or `Err`
 yielded as an item is still a value. See the [working consumer](../../tests/fixtures/python-lean-tasks/streams.py).
+In an object-bearing stream, a pull that throws a Lean `IO.Error` instead
+raises `LeanStreamIOError` with the declaration and Lean's message.
 
 ### Share a Lean resource across packages
 

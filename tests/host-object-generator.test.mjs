@@ -143,3 +143,16 @@ test("generated CPython providers refuse dynamic, asynchronous and unimplemented
 	assert.match(result.stub, /def read\(box: Box\) -> int:/u);
 	assert.match(result.types, /@level.setter\n +def level\(self, value: int\) -> None:/u);
 });
+
+test("Python worker stubs expose the application class, not native tickets or binding cookies", () => {
+	const box = { kind: "named", id: "lean:Alpha.Box" };
+	const params = [{ name: "box", type: box }, { name: "reply", type: { kind: "io-callback", argument: box, reply: box } }];
+	const entry = { name: "relay", declaration: "Workshop.relay", effect: "BaseIO", delivery: "task", taskIO: true, parameters: params, result: box };
+	const opts = { ir: executableHostFixture(), module: "Workshop", runtimeIdentity: "a".repeat(64), componentIdentity: "b".repeat(64), pythonTaskObjects: true };
+	const {stub} = generatePythonHostExtension({ ...opts, entries: [entry] });
+	assert.match(stub, /async def relay\(box: Box, reply: _Callable\[\[Box\], Box\]\) -> Box:/u);
+	assert.match(stub, /async def __aexit__\(/u);
+	assert.match(stub, /def bind_hosts\(.*\) -> _LBHostBinding:/u);
+	assert.doesNotMatch(stub, /capsule|cookie|_worker_sweep|_task_take/iu);
+	assert.throws(() => generatePythonHostExtension({ ...opts, entries: [{ ...entry, result: { kind: "named", id: "other:Box" } }] }), /checked Lean resources/u);
+});

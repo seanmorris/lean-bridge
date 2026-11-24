@@ -70,7 +70,11 @@ export const compileHostSources = async options => {
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const phpNativeTaskObjects=Boolean(ir && options.target==="php-native" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	const pythonTaskObjects=options.pythonTaskObjects===true;
+	// Probe the actual exported Lean types, not the project's package name or
+	// a claim in its review. A scalar worker next to a synchronous host import
+	// retains its existing, binding-independent Python API.
+	const pythonTaskObjects=Boolean(options.python && options.target === "pypi" && ir
+		&& (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	if(pythonTaskObjects)
 	{
 		const source=projectContract?.hostImportsSource;
@@ -156,7 +160,7 @@ export const compileHostSources = async options => {
 		, asyncIterators: projectContract.asyncIterators ?? []
 		, exportModules: roots, modules: [...built.keys()]
 	};
-	const request = join(app, "host-request.json");
+	let request = join(app, "host-request.json");
 	await writeFile(request, canonicalJson(selection), { flag: "wx" });
 	const result = await run(lean, ["-j1", "--run", extractor, request], app, env).catch(error => {
 		signal?.throwIfAborted();
@@ -174,7 +178,21 @@ export const compileHostSources = async options => {
 		}
 		throw error;
 	});
-	const metadata = JSON.parse(result.stdout);
+	let metadata = JSON.parse(result.stdout);
+	if(pythonTaskObjects)
+	{
+		const kinds = new Set(selection.resources.map(r => r.id));
+		const nominal = t => t?.kind === "named" ? kinds.has(t.id)
+			: t?.kind === "io-callback" ? nominal(t.argument) || nominal(t.reply)
+				: t?.kind === "apply" && t.arguments.some(nominal);
+		if(!metadata.entries.some(e => e.delivery && [e.result, e.error, e.stepError, ...e.parameters.map(p => p.type)].some(nominal)))
+		{
+			delete selection.pythonTaskObjects;
+			request = join(app, "host-request-copied.json");
+			await writeFile(request, canonicalJson(selection), { flag: "wx" });
+			metadata = JSON.parse((await run(lean, ["-j1", "--run", extractor, request], app, env)).stdout);
+		}
+	}
 	const interfaces = [];
 	for(const f of built.values())
 	{

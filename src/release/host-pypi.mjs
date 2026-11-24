@@ -113,6 +113,7 @@ export const buildPythonHostWheel = async options => {
 		const ledger = leanResources.length ? await taskResourceLedger(identity) : null;
 		const config = { ir, module, entries, runtimeIdentity: identity
 			, modules: projectContract?.modules, synchronousIO: synchronous
+			, pythonTaskObjects: evidence?.selection.pythonTaskObjects===true
 			, ...ledger ? { leanResources, ledgerId: ledger.id } : {} };
 		const leaseLoader = ledger && await readFile(new URL("../backends/python/resource-loader.py", import.meta.url), "utf8");
 		const skeleton = generatePythonHostExtension({ ...config, componentIdentity: "0".repeat(64) });

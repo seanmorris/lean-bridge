@@ -25,7 +25,7 @@ class RetainedCallback(_Generic[_CBArg, _CBReply]):
 
 
 class _LBCallbacks:
-    def __init__(self, callbacks):
+    def __init__(self, callbacks, binding=None):
         if not all(callable(f) for f in callbacks.values()):
             raise TypeError("expected a callable for each Lean callback")
         self.loop = _asyncio.get_running_loop()
@@ -36,6 +36,7 @@ class _LBCallbacks:
         self.callbacks = {k: self.guard(f) for k, f in callbacks.items()}
         self.faults = {}
         self.failure = None
+        self.binding = binding
 
     def guard(self, f):
         def invoke(value):
@@ -45,7 +46,11 @@ class _LBCallbacks:
             if _cb_inspect.isawaitable(reply):
                 if _cb_inspect.iscoroutine(reply):
                     reply.close()
-                raise TypeError("a retained Lean IO callback must return a value, not an awaitable")
+                error = TypeError("a retained Lean IO callback must return a value, not an awaitable")
+                if self.binding is not None:
+                    self.failure = error
+                    self.owner.cancel()
+                raise error
             return reply
         return invoke
 
@@ -54,6 +59,8 @@ class _LBCallbacks:
         try:
             self.fd = _native._cb_fd(self.port)
             self.loop.add_reader(self.fd, self.pump)
+            if self.binding is not None:
+                self.binding.ports.add(self)
         except BaseException:
             _native._cb_close(self.port)
             raise
@@ -69,7 +76,14 @@ class _LBCallbacks:
             self.owner.cancel()
 
     def __exit__(self, kind, value, tb):
+        self.revoke()
+        if self.failure is not None:
+            raise self.failure
+
+    def revoke(self):
         port, self.port = self.port, None
+        if port is None:
+            return
         try:
             if not self.loop.is_closed():
                 self.loop.remove_reader(self.fd)
@@ -78,5 +92,6 @@ class _LBCallbacks:
             self.callbacks.clear()
             self.faults.clear()
             self.owner = None
-        if self.failure is not None:
-            raise self.failure
+            if self.binding is not None:
+                self.binding.ports.discard(self)
+                self.binding = None

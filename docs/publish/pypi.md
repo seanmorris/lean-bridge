@@ -114,7 +114,7 @@ in your import contract. The generated contract records a lease when a
 result or error can carry a host object. For example,
 `EIO Nat (Except String UInt32)` has two distinct error channels: a thrown
 `Nat` and a returned `String`. See the [compiled example](../../tests/fixtures/host-object/Workshop.lean).
-This does not make Python-owned objects into worker results or stream items.
+For worker results and stream items, select the [async export](#let-a-lean-task-call-python) too.
 This profile builds one target at a time. Python host-member calls themselves
 are synchronous; compound member arguments and custom native objects are not supported.
 
@@ -191,14 +191,17 @@ exception when awaited. An `Except` **inside** the task stays a returned value
 unless you explicitly select terminal `IO.Error` delivery as described below.
 Ordinary `IO α` is not an async contract. A factory without retained callbacks
 starts on the calling thread: put long-running work *inside* its task.
-Task arguments may use the nineteen copied scalars; results may also nest
-`Except` over them. Imported Python host objects cannot cross onto Lean workers.
+Task arguments may use copied scalars or opaque objects declared in
+`hostImports`; results may nest `Except` over these values. A worker can
+carry the object and pass it back. It cannot invoke a Python member directly:
+take a callback and let the generated adapter dispatch it on the Python loop.
 [Use the installed awaitable](../consume/python.md#await-a-lean-task).
 
 ### Let a Lean task call Python
 
-Use an ordinary unary Lean function argument, `α → IO β`. Both sides of the
-callback use copied scalar types. For example:
+Use an ordinary unary Lean function argument, `α → IO β`. Either side can
+be a copied scalar or a Python class from the package's import contract.
+For example:
 
 ```lean
 def repeatCall (s : String) (f : String → IO String) :
@@ -234,6 +237,15 @@ Cancellation revokes the callback even if Lean stored the function for later.
 Each export call can queue up to 256 unanswered requests and retain up to
 4,096 caught Python exceptions. Keep callbacks short so other event-loop
 work can run. [Call the installed package](../consume/python.md#pass-a-callback-to-a-lean-task).
+
+For a class-bearing signature such as `Box → (Box → IO Box) → BaseIO (Task (Except IO.Error Box))`,
+keep the package's `hostImports` and select the function in `taskExports` and
+`taskIOErrors`. The reviewed route uses the same selections. The [Lean fixture](../../tests/fixtures/python-host-tasks/Workers.lean)
+also returns a box as a typed failure and as a cursor item. The
+[Python caller](../consume/python.md#pass-your-objects-through-a-lean-task) gets
+the original instance. A wrong callback return type fails the call even if the
+Lean function catches `IO.Error`; a Python exception raised by the callback
+can be caught by Lean or propagated unchanged.
 
 ## Export an async iterator
 

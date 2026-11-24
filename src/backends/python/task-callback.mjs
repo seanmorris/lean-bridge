@@ -5,6 +5,7 @@
  */
 
 import { taskCallbackLean } from "../native/task-callback.mjs";
+import { pythonHostArguments } from "./worker-methods.mjs";
 
 const cb = p => p.type.kind === "io-callback";
 export const callbackLean = taskCallbackLean("lb_py_cb");
@@ -51,6 +52,7 @@ export const retainedEntry = options => {
 	const value = returned(entry.result), err = typed && returned(entry.error);
 	const params = parameters.map((p, j) => ({ p, j, c: cb(p) ? null : scalar(p.type) }));
 	const ordinary = params.filter(x => x.c), callbacks = params.filter(x => !x.c);
+	const conversions = pythonHostArguments(ordinary.map(x => x.c), "vals", 1);
 	const slot = x => slots.get(x.p);
 	const args = params.map(x => x.c ? "v" + x.j : `(cbInvoke port ${slot(x)})`).join(" ");
 	const call = `(_root_.${declaration} ${args})`;
@@ -77,17 +79,17 @@ static PyObject *lb_invoke_${i}(PyObject *mod, PyObject *args) {
     if (PyTuple_GET_SIZE(args) != ${1 + ordinary.length}) { PyErr_SetString(PyExc_TypeError, "wrong number of task arguments"); return NULL; }
     lean_object *port = lb_cb_start_token(PyTuple_GET_ITEM(args, 0)); if (!port) return NULL;
     lean_object *vals[${Math.max(1, ordinary.length)}] = {0}, *io = NULL; PyObject *ret = NULL;
-    ${ordinary.map((x, k) => `if (!(vals[${k}] = ${x.c.fromPython(`PyTuple_GET_ITEM(args, ${k+1})`)})) goto done;`).join("\n    ")}
+    ${conversions.setup}
     lean_inc(port); io = ${symbol}(port${ordinary.map((x, k) => ", " + (x.c.unbox ? x.c.unbox + "(vals[" + k + "])" : "vals[" + k + "]")).join("")});
     ${ordinary.flatMap((x, k) => x.c.unbox ? [] : [`vals[${k}] = NULL;`]).join(" ")}
     if (lean_io_result_is_ok(io)) ret = lb_ticket_new(lean_io_result_get_value(io), cb_factory_${i});
     else PyErr_SetString(PyExc_RuntimeError, "could not schedule Lean callback factory");
     ${ordinary.length ? "done:" : ""} if (io) lean_dec(io);
     ${ordinary.map((x, k) => `if (vals[${k}]) lean_dec(vals[${k}]);`).join(" ")}
-    return ret;
+    ${conversions.rollback}return ret;
 }`;
 	const python = `async def ${name}(${parameters.map(p => p.name).join(", ")}):
-    with _LBCallbacks({${callbacks.map(x => slot(x) + ": " + x.p.name).join(", ")}}) as _scope:
+    with _LBCallbacks({${callbacks.map(x => slot(x) + ": " + x.p.name).join(", ")}}${options.scoped?", _lb_binding()":""}) as _scope:
         _outer = _native.${name}(_scope.port${ordinary.map(x => ", " + x.p.name).join("")})
         _t = _lb_outcome(await _lb_await(_outer), _scope.faults, "${declaration}", False)
 ${typed ? `        if not _t[0]:

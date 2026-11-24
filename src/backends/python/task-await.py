@@ -3,9 +3,14 @@ import asyncio as _asyncio
 
 
 class _LBWait:
+    _binding = None
+
     def __init__(self, ticket):
         self.ticket = ticket
         self.loop = self.ready = self.fd = None
+        self.binding = self._binding() if self._binding is not None else None
+        if self.binding is not None:
+            self.binding.waits.add(self)
 
     def wake(self):
         if self.ready is not None and not self.ready.done():
@@ -21,7 +26,12 @@ class _LBWait:
                 self.wake()
         finally:
             self.fd = self.ready = self.loop = None
-            _native._task_close(ticket)
+            try:
+                _native._task_close(ticket)
+            finally:
+                if self.binding is not None:
+                    self.binding.waits.discard(self)
+                    self.binding = None
 
     async def take(self):
         try:
