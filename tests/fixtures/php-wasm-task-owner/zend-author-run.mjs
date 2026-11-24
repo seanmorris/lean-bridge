@@ -24,7 +24,7 @@ export const runZendAuthorWorkers=async options=>{
 	const dir=await mkdtemp(join(tmpdir(),"zwk-")),sources={},brick=bundledBrickMath();
 	try
 	{
-		for(const f of ["php-wasm-task-objects","php-wasm-task-pump","php-wasm-task-callbacks","php-wasm-task-delivery","php-wasm-task-port","php-wasm-io-codec"])
+		for(const f of ["host-members","php-wasm-members","php-wasm-task-objects","php-wasm-task-pump","php-wasm-task-callbacks","php-wasm-task-delivery","php-wasm-task-port","php-wasm-io-codec"])
 			sources[f]=(await readFile(new URL("../../../src/backends/php/"+f+".php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__","Probe");
 		sources.budget="<?php namespace Probe\\Internal;\n"+phpConversionBudget;
 		sources.check=await readFile(new URL("./zend-author.php",import.meta.url),"utf8");
@@ -46,7 +46,7 @@ export const runZendAuthorWorkers=async options=>{
 			assert.equal(descriptor.integrity,sha256(await readFile(file)));
 			await copyFile(file,join(dir,route+".wasm"));
 			const input={sources,brick,descriptor},node=await exerciseZendAuthor({...input,Php: PhpNode,factory,side: pathToFileURL(file).href});
-			assert.equal(node.checks.length,21);console.log(JSON.stringify({route,host: "node",sdk: verified.identity,...node}));
+			assert.equal(node.checks.length,34);console.log(JSON.stringify({route,host: "node",sdk: verified.identity,...node}));
 			const browser=await runInstalledChromium({root: dir
 				, consumer: dir
 				, assembledDirectory: dir

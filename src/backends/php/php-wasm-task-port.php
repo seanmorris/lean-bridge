@@ -40,14 +40,13 @@ final class Port {
     }
     public static function call(string $key, array $args, array $kinds, ?string $delivery, ?string $class,
             string $declaration, array|string $result, ?array $start, ?array $terminal, array $callbacks=[],
-            ?\LeanBridge\Internal\PhpWasmObjectsV1\Domain $domain=null): mixed {
+            ?\LeanBridge\Internal\PhpWasmObjectsV1\Domain $domain=null,?ZendMembers $members=null): mixed {
         $budget=new Budget(); $encoded=[];
         $objects=$domain?->open();$scope=$callbacks ? new CallbackScope($callbacks,$args,$objects) : null;
         foreach ($args as $i=>$v) $encoded[]=$kinds[$i]==='callback' ? '' :
             ($objects?->has($kinds[$i])?$objects->pin($kinds[$i],$v):self::input($kinds[$i],$v,$budget));
         $submit=vrzno_shared($key);
         if (!is_callable($submit)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing PHP-Wasm host for '.$declaration);
-        $reply=$submit(...$encoded);
         $decode=static function(mixed $packet) use ($declaration,$result,$start,$terminal,$objects): mixed {
             if (is_object($packet)) {
                 try {
@@ -72,6 +71,20 @@ final class Port {
             [$type,$origin,$shape]=$error;
             throw new $type($origin,WireValues::output($shape,$tags,$bytes));
         };
+        if ($members!==null) {
+            if ($delivery!==null || $objects===null) throw new \LogicException('PHP member call requires an immediate object scope');
+            $frame=$members->open($objects);$failed=true;
+            try {
+                // VRZNO calls a plain closure; a first-class PHP method callable
+                // is not interchangeable with a closure at this Wasm boundary.
+                $reply=$submit(static fn(...$args)=>$frame->invoke(...$args),...$encoded);
+                $frame->check($reply);$value=$decode($reply);$failed=false;return $value;
+            } finally {
+                try {$frame->close();} catch (\Throwable $cleanup) {if (!$failed) {$failed=true;throw $cleanup;}}
+                finally {$objects->close($failed);}
+            }
+        }
+        $reply=$submit(...$encoded);
         if (is_string($reply) || $delivery===null || (is_object($reply) && $reply->form()!=='owner')) return $decode($reply);
         if (!is_object($reply)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing task owner for '.$declaration);
         $open=$delivery==='task'

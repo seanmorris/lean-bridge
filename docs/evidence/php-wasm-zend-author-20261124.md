@@ -46,7 +46,8 @@ checks source elaboration only. The recorded SDK manifest SHA-256 was
 `9f9b2c252f457e4f77b1efb81a85cbd47eddee4ddfa312f68f8f8afc019ef2c1`.
 
 This is compiler and runtime evidence. The client calls the internal adapter;
-it does not install a generated PHP host-object package. Direct PHP member
-dispatch and an installed npm/Composer host-object facade remain separate
-requirements. The [cross-component test](php-wasm-zend-objects-20261124.md)
+it does not install a generated PHP host-object package. The
+[subsequent member run](php-wasm-zend-members-20261124.md) extends the
+same command with synchronous PHP member dispatch and trap injection.
+The [cross-component test](php-wasm-zend-objects-20261124.md)
 covers sharing Zend objects between two JavaScript-authored components.

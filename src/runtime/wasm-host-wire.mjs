@@ -33,8 +33,9 @@ export const createWasmHostErrorStore = () => {
  * @param supplied - Application-supplied nominal constructors.
  * @param domain - Internal resolve/pin/release operations of this heap's nominal domain.
  * @param lifecycle - Shared-heap guard, including retirement during an application callback.
+ * @param memberBridge - Internal synchronous dispatcher for an authenticated Zend model.
  */
-export const createWasmHostWire = (wasm, model, supplied, domain, lifecycle) => {
+export const createWasmHostWire = (wasm, model, supplied, domain, lifecycle, memberBridge) => {
 	const frames = new Map(), faults = new WeakMap();
 	const native=fn=>{
 		try
@@ -42,11 +43,15 @@ export const createWasmHostWire = (wasm, model, supplied, domain, lifecycle) => 
 		catch(error)
 		{lifecycle?.poison(error);throw error;}
 	};
-	const send = bindWasmHostMembers(model, supplied, error => {
+	const invalid = error => {
 		// Do not brand the public error itself. The application can subsequently
 		// throw that same error, which is then an application exception.
 		const marker = {}; faults.set(marker,error); throw marker;
-	});
+	};
+	// A Zend object is not a JavaScript object with similarly named members.
+	// Its application code may run only on the PHP owner of this invocation.
+	const trap=error=>{lifecycle?.poison(error);throw error;};
+	const send = model.zend ? (slot,args)=>memberBridge(slot,args,invalid,trap) : bindWasmHostMembers(model,supplied,invalid);
 	const span = (p, size) => u32(p) && p % 8 === 0 && p + size <= wasm.HEAP8.length;
 	const overlap = (p, size, q, bytes) => size && bytes && p < q + bytes && q < p + size;
 	const call = (slot, n, args, reply) => {

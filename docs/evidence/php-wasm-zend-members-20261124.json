@@ -1,0 +1,133 @@
+{
+  "scope": "Immediate PHP member calls, async workers and transport-fault injection on private compiled Zend owner; no installed package claim",
+  "sdkSha256": "9f9b2c252f457e4f77b1efb81a85cbd47eddee4ddfa312f68f8f8afc019ef2c1",
+  "sourceSha256": {
+    "tests/fixtures/php-wasm-task-owner/ZendMembers.lean": "e61e835345c2f6668824b5d09d30bbb012dad53ded5c8ba053ff90cf3b028dc9",
+    "tests/fixtures/php-wasm-task-owner/zend-author.php": "f4a53fb4194ccb7d4e9301f4f3b16289b52203d29ff4c25483876659f8f37478",
+    "tests/fixtures/php-wasm-task-owner/zend-author-driver.mjs": "b92717078d924a3a0461e078d951f2293338d4b16915fde52d1068e2803b1826",
+    "src/backends/php/php-wasm-member-owner.mjs": "6e3fc7228a80984745c5d5996a29712e6e193af9a757b62ff7886395f8a9fd10",
+    "src/backends/php/php-wasm-members.php": "51906a09c5655e8a547f8ebc00b9d433043c973806c33455301f0c721067f6e9",
+    "src/backends/php/php-wasm-task-port.php": "f87f09f39fbba8c5c721ce514bb94ee6482d54502da3721e817ee2a78d3d3ba9",
+    "src/runtime/wasm-host-wire.mjs": "432ae6f7cde85db2a86c92259db18eba4d0be1475a14541cc0a7199ea16f85a5"
+  },
+  "builds": [
+    {
+      "route": "ordinary",
+      "componentIdentity": "5851810710b674e99a72b3a1a5dc4fb4d88773891dfd9b9fa6d64c6997057d8d",
+      "integrity": "946aa6243b806363c8b9a1c4eac8675277fea1f197ed8363a797b5815e1cd540",
+      "api": "0efefa00f4eda099c3a6676d8e21384341efab2082c8765191f68cc008dcbf2b"
+    },
+    {
+      "route": "reviewed",
+      "componentIdentity": "40b9f0736efc13a2b4a504f7fcf7a1346826627d8662db5d7ed0d4b666bbf80a",
+      "integrity": "1ffdc893b301420006938a0d7dc62e92f611f6b34e448cf765d8bc52664ad530",
+      "api": "0efefa00f4eda099c3a6676d8e21384341efab2082c8765191f68cc008dcbf2b"
+    }
+  ],
+  "checks": [
+    "immediate member returns a PHP UInt32",
+    "constructor runs in Zend with exact UInt32",
+    "static member returns real PHP subclass",
+    "read declared PHP property",
+    "write declared PHP property",
+    "receiver-anchored method returns the original PHP instance",
+    "PHP override makes nested immediate Lean call",
+    "Lean may catch a declared PHP member failure",
+    "Lean cannot swallow a boundary validation error",
+    "immediate member rethrows original PHP object",
+    "nested member frames preserve original exception",
+    "invalid member result is a PHP validation error",
+    "valid call after member validation or application error",
+    "incoming Zend identity",
+    "reentrant callback with exact UInt32",
+    "replacement keeps subclass",
+    "repeat await shares result",
+    "returned Except.error is data",
+    "typed EIO fails before delivery",
+    "callback-capable factory does not block Zend",
+    "IO factory error",
+    "nested callback exception identity",
+    "nested callback exception identity",
+    "worker IO error",
+    "one Zend object yielded",
+    "typed cursor failure",
+    "cursor IO error",
+    "live iterator roots input: break",
+    "released iterator root: break",
+    "live iterator roots input: abandon",
+    "released iterator root: abandon",
+    "reject invalid argument before entry",
+    "cancel during callback",
+    "late reply ignored"
+  ],
+  "runs": [
+    {
+      "host": "node",
+      "route": "ordinary",
+      "php": "8.4.1",
+      "wasmSha256": "946aa6243b806363c8b9a1c4eac8675277fea1f197ed8363a797b5815e1cd540",
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    },
+    {
+      "host": "chromium",
+      "route": "ordinary",
+      "php": "8.4.1",
+      "wasmSha256": "946aa6243b806363c8b9a1c4eac8675277fea1f197ed8363a797b5815e1cd540",
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    },
+    {
+      "host": "node",
+      "route": "reviewed",
+      "php": "8.4.1",
+      "wasmSha256": "1ffdc893b301420006938a0d7dc62e92f611f6b34e448cf765d8bc52664ad530",
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    },
+    {
+      "host": "chromium",
+      "route": "reviewed",
+      "php": "8.4.1",
+      "wasmSha256": "1ffdc893b301420006938a0d7dc62e92f611f6b34e448cf765d8bc52664ad530",
+      "beforeFault": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      },
+      "afterInjectedTransportFault": "poisoned"
+    }
+  ]
+}

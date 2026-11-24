@@ -8,6 +8,8 @@ hosted packages across all 17 consumer profiles and both author routes.
 
 [PHP-authored Zend object workers](php-wasm-zend-author-20261124.md) records
 compiled ordinary and reviewed workers running on PHP-Wasm in Node and Chromium.
+The [synchronous Zend member checks](php-wasm-zend-members-20261124.md)
+exercise PHP constructors, properties, overrides, exception identity, and trap handling.
 
 [Zero-payload checked records in C and C++](zero-payload-checked-record-native-20261021.md)
 record four hosted native package selections for proof-only `Witness`,

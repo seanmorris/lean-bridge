@@ -68,5 +68,5 @@ export const phpHostMembers=ir=>{
  */
 export const phpWasmHostMembers=ir=>{
 	const {kinds,members}=phpHostMembers(ir);
-	return {members,kinds: kinds.map(k=>({name: k.name,policy: k.identity,key: sha256Text("php-wasm-zend-v1:"+k.key)}))};
+	return {zend: true,members,kinds: kinds.map(k=>({name: k.name,policy: k.identity,key: sha256Text("php-wasm-zend-v1:"+k.key)}))};
 };

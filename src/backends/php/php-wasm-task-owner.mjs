@@ -33,7 +33,7 @@ const guarded=(leases,m,perform,success)=>{
 	catch(e)
 	{return Promise.resolve(failure(leases,m,e));}
 };
-const operation=(m,call,hub,leases,objects)=>(...args)=>{
+const operation=(m,call,hub,leases,objects,memberFailure)=>(...args)=>{
 	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub,objects,m.callbackError);
 	const val=v=>packet(leases,"value",m.result,v);
 	try
@@ -68,7 +68,7 @@ const operation=(m,call,hub,leases,objects)=>(...args)=>{
 		const next=()=>guarded(leases,m,()=>owner.next(),step=>step.done?'["end"]':val(step.value));
 		return Object.freeze({form: ()=>"owner",pull: ()=>hub.monitor(next()),drain: ()=>hub.monitor(close()),dispose: ()=>{void close().then(v=>v?.discard?.());}});
 	} catch(e)
-	{const reply=failure(leases,m,e);box?.finish(reply);return reply;}
+	{const reply=memberFailure?.(e)??failure(leases,m,e);box?.finish(reply);return reply;}
 };
 /**
  * Connect a worker to a bound Zend class table. This internal entry is not
@@ -78,8 +78,13 @@ const operation=(m,call,hub,leases,objects)=>(...args)=>{
  * @param call - That method on the actual bound component.
  * @param hub - Interpreter's shared callback queue.
  * @param objects - Interpreter-local nominal domain.
+ * @param members - Synchronous Zend dispatch for a method that actually imports members.
  */
-export const phpZendTaskOperation=(m,call,hub,objects)=>operation(m,call,hub,objects,objects);
+export const phpZendTaskOperation=(m,call,hub,objects,members)=>{
+	if(!m.hostPhases?.call.length) return operation(m,call,hub,objects,objects);
+	if(m.delivery || !members) throw new TypeError("PHP members require a synchronous owner");
+	return (invoke,...args)=>members.enter(invoke,restore=>operation(m,call,hub,objects,objects,restore)(...args));
+};
 
 /**
  * Preserve the marker for a Zend callback and the typed payload for other

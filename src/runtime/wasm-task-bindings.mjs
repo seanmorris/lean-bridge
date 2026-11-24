@@ -181,13 +181,13 @@ export const createWasmTaskSession = options => {
 			hostRuntime??=options.installHost({assertOpen,poison: retire});
 			const defs=new Map(abi.hostKinds.map(r=>[r.type,{...r,local: r.index,index: abi.methods.length+(abi.leases?.length??0)+r.index,invoke}]));
 			let prepared=false;
-			const bindClasses=(classes,translate,syncStart)=>{
+			const bindClasses=(classes,translate,syncStart,memberBridge)=>{
 				assertOpen();
 				// The first public call may pin a JS argument before Lean has run,
 				// or the application may dispose without ever invoking an export.
 				if(!prepared && defs.size)
 				{leases.prepareHost(defs.values().next().value);prepared=true;}
-				const session=hostRuntime.bind(abi.componentIdentity,model,classes);
+				const session=hostRuntime.bind(abi.componentIdentity,model,classes,memberBridge);
 				const host={session,defs,takeError: hostRuntime.takeError,open: true
 					, assertOpen: ()=>{if(!host.open)throw new Error("JavaScript task host binding is closed");}};
 				let disposing;
@@ -215,8 +215,12 @@ export const createWasmTaskSession = options => {
 				};
 				bound.dispose=host.dispose;return Object.freeze(bound);
 			};
-			return Object.freeze({withHosts: (classes,translate)=>bindClasses(classes,translate,false)
-				, withHostsAndSynchronousStart: (classes,translate)=>bindClasses(classes,translate,true)
+			const constructors=model.zend?{withZendOwner: (classes,translate,bridge)=>{
+				if(typeof bridge!=="function") throw new TypeError("Missing Zend owner dispatch");
+				return bindClasses(classes,translate,true,bridge);
+			}}:{withHosts: (classes,translate)=>bindClasses(classes,translate,false)
+				, withHostsAndSynchronousStart: (classes,translate)=>bindClasses(classes,translate,true)};
+			return Object.freeze({...constructors
 				, resourceClass: type=>leaseTypes.has(type)?leases.resourceClass(type):undefined});
 		}
 		return Object.freeze({invoke: (id,args,translate)=>invokePublic(id,args,translate,false)

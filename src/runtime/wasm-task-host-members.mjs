@@ -39,7 +39,7 @@ export const installWasmTaskHostMembers=(wasm,lifecycle)=>{
 		if(!row) throw new Error("Host member outside its owner frame");
 		return row;
 	};
-	const bind=(id,model,classes)=>{
+	const bind=(id,model,classes,memberBridge)=>{
 		if(!/^[a-f0-9]{64}$(?![\s\S])/u.test(id) || bindings.has(id)) throw new Error("Invalid or duplicate threaded host component");
 		const session=arena.bind(model,classes);
 		let wire;
@@ -48,7 +48,7 @@ export const installWasmTaskHostMembers=(wasm,lifecycle)=>{
 			guard.assertOpen();
 			// Capturing a constructor may re-enter withHosts for this component.
 			if(bindings.has(id)) throw new Error("Duplicate threaded host component");
-			wire=createWasmHostWire(wasm,model,session.classes,session,guard);
+			wire=createWasmHostWire(wasm,model,session.classes,session,guard,memberBridge);
 		}
 		catch(error)
 		{session.close();throw error;}

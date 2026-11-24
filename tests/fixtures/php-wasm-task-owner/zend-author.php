@@ -5,8 +5,19 @@ use Brick\Math\BigInteger;
 use LeanBridge\Internal\PhpWasmObjectsV1\Domain;
 use Probe\Internal\Port;
 
-class Box {public function __construct(public int $n) {}}
+class Box {
+    public mixed $level;
+    public int $n;
+    public function __construct(int|BigInteger $n) {$this->level=BigInteger::of($n);$this->n=is_int($n)?$n:0;}
+    public static function fromValue(BigInteger $v): Box {return new SubBox($v);}
+    public function read(): mixed {return $this->level;}
+    public function identity(): Box {return $this;}
+}
 class SubBox extends Box {}
+class HookBox extends Box {
+    public function __construct(private readonly \Closure $fn) {parent::__construct(1);}
+    public function read(): mixed {return ($this->fn)();}
+}
 class LeanBridgeError extends \RuntimeException {}
 final class Ok {public function __construct(public mixed $value) {}}
 final class Err {public function __construct(public mixed $value) {}}
@@ -16,17 +27,38 @@ final class WorkerFailure extends Failure {}
 final class Job extends Awaitable {public function await(): mixed {return $this->take();}}
 $kind=(vrzno_shared('kind'))();$domain=new Domain([$kind=>Box::class],\Closure::fromCallable(vrzno_shared('mint')));
 $methods=array_column(json_decode((vrzno_shared('methods'))(),true,flags: JSON_THROW_ON_ERROR),null,'name');
+$members=new Internal\ZendMembers(json_decode((vrzno_shared('model'))(),true,flags: JSON_THROW_ON_ERROR),['Box'=>Box::class]);
 function work(string $name,mixed ...$args): mixed {
-    global $methods,$domain;
+    global $methods,$domain,$members;
     $m=$methods[$name];$op=$m['declaration'];
     $start=$m['startId']?[StartFailure::class,$op,$m['error']]:null;
     $terminal=$m['terminalId']?[WorkerFailure::class,$op,$m['terminal']]:null;
     return Port::call($name,$args,$m['args'],$m['delivery'],$m['delivery']==='task'?Job::class:PullStream::class,
-        $op,$m['result'],$start,$terminal,$m['callbacks']??[],$domain);
+        $op,$m['result'],$start,$terminal,$m['callbacks']??[],$domain,$m['hostPhases']['call']?$members:null);
 }
 $checks=[];
 function check(bool $ok,string $why): void {global $checks;if (!$ok) throw new \LogicException($why);$checks[]=$why;}
 $a=new Box(8);$b=new SubBox(9);$max=BigInteger::of('4294967295');
+check(work('read',$a)->isEqualTo(8),'immediate member returns a PHP UInt32');
+$made=work('make_box',$max);check($made::class===Box::class && $made->level->isEqualTo($max),'constructor runs in Zend with exact UInt32');
+$sub=work('from_class',$max);check($sub instanceof SubBox,'static member returns real PHP subclass');
+check(work('get_level',$made)->isEqualTo($max),'read declared PHP property');
+check(work('set_level',$made,BigInteger::of(47))===null && $made->level->isEqualTo(47),'write declared PHP property');
+check(work('same_box',$sub)===$sub,'receiver-anchored method returns the original PHP instance');
+$visits=0;$nested=new HookBox(function() use($a,&$visits) {++$visits;return work('read',$a)->plus(1);});
+check(work('read',$nested)->isEqualTo(9) && $visits===1,'PHP override makes nested immediate Lean call');
+$marker=new \UnexpectedValueException('member threw');
+$badBox=new HookBox(fn()=>throw $marker);
+check(work('recover_read',$badBox)->isEqualTo(99),'Lean may catch a declared PHP member failure');
+try {work('recover_read',new HookBox(fn()=>new \stdClass()));throw new \LogicException('Lean masked invalid member result');}
+catch (\TypeError $e) {check(true,'Lean cannot swallow a boundary validation error');}
+try {work('read',$badBox);throw new \LogicException('missing member error');}
+catch (\UnexpectedValueException $e) {check($e===$marker,'immediate member rethrows original PHP object');}
+try {work('read',new HookBox(fn()=>work('read',$badBox)));throw new \LogicException('missing nested error');}
+catch (\UnexpectedValueException $e) {check($e===$marker,'nested member frames preserve original exception');}
+try {work('read',new HookBox(fn()=>new \stdClass()));throw new \LogicException('invalid member return succeeded');}
+catch (\TypeError $e) {check(true,'invalid member result is a PHP validation error');}
+check(work('read',$a)->isEqualTo(8),'valid call after member validation or application error');
 $job=work('relay',$a,function($v) use($a,$b,$max) {
     check($v===$a,'incoming Zend identity');
     $num=work('project',$v,fn($w)=>$w===$a?$max:null);
