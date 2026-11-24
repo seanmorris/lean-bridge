@@ -200,6 +200,8 @@ Zero-initialize outputs that can own strings. Dispose them with the generated fu
 
 The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
 
+A separate [canonical future embedding test](../evidence/wit-canonical-async-20261124.md) delivers a parked Lean task through an async-enabled engine. It does not change the API of this release.
+
 ### Give a task a host callback
 
 [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean) takes a Lean function of type `UInt32 → IO UInt32`. In the installed C package, register a function with that signature and pass its handle to the task. The function runs on the store's main thread, during `poll` or `await`. The Lean worker never calls into your C context from a worker thread.
