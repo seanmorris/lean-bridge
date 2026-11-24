@@ -36,7 +36,7 @@ final class CallbackScope {
             throw new \TypeError('Expected a unary by-value PHP callback');
         return $call;
     }
-    public function __construct(array $spec,array $args) {
+    public function __construct(array $spec,array $args,private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null) {
         foreach ($spec as [$i,$in,$out]) $this->slots[$i]=[self::bind($args[$i]),$in,$out];
     }
     public function attach(object $owner): void {
@@ -56,11 +56,16 @@ final class CallbackScope {
         return $decode($packet);
     }
     public function dispatch(int $id,int $slot,string $bytes): void {
-        if (!$this->live || !isset($this->slots[$slot]) || ($arg=base64_decode($bytes,true))===false)
+        if (!$this->live || !isset($this->slots[$slot]))
             throw new \__LB_PUBLIC__\LeanBridgeError('Invalid PHP callback request');
         [$fn,$in,$out]=$this->slots[$slot]; $owner=$this->owner; $this->dispatching=true;
         try {
-            $input=WireValues::output($in,'',$arg);
+            if ($this->objects?->has($in)) $input=$this->objects->resolve($in,$bytes);
+            else {
+                $arg=base64_decode($bytes,true);
+                if ($arg===false) throw new \__LB_PUBLIC__\LeanBridgeError('Invalid PHP callback bytes');
+                $input=WireValues::output($in,'',$arg);
+            }
             try { $value=$fn($input); }
             catch (\Exception $error) {
                 $message=$error->getMessage();
@@ -73,7 +78,7 @@ final class CallbackScope {
                 return;
             }
             if (!$this->live) return;
-            try { $wire=base64_encode(WireValues::input($out,$value,new Budget())); }
+            try { $wire=$this->objects?->has($out)?$this->objects->pin($out,$value):base64_encode(WireValues::input($out,$value,new Budget())); }
             catch (\Throwable $error) {
                 if ($owner->invalid($id)) $this->errors[$id]=$error;
                 return;

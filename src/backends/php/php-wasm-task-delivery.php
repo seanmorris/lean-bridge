@@ -11,7 +11,8 @@ abstract class Awaitable {
     private mixed $value=null;
     private ?\Throwable $failure=null;
     private ?object $cleanup;
-    final protected function __construct(private ?object $owner, private readonly \Closure $decode, private ?Internal\CallbackScope $callbacks=null) {
+    final protected function __construct(private ?object $owner, private readonly \Closure $decode, private ?Internal\CallbackScope $callbacks=null,
+            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null) {
         $this->cleanup=$owner->cleanup(); $callbacks?->attach($owner);
     }
     private function __clone() {}
@@ -19,10 +20,17 @@ abstract class Awaitable {
     final public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean owner'); }
     final public function cancel(): bool {
         $stopped=$this->owner?->cancel() ?? false;
-        if ($stopped) $this->callbacks?->close();
+        if ($stopped) $this->release(true);
         return $stopped;
     }
-    final public function __destruct() { try { $this->owner?->abandon(); } finally { $this->callbacks?->close(); } }
+    private function release(bool $suppress): void {
+        $first=null;
+        try {$this->callbacks?->close();} catch (\Throwable $e) {$first=$e;}
+        $this->callbacks=null;
+        try {$this->objects?->close($suppress || $first!==null);} catch (\Throwable $e) {$first??=$e;}
+        if (!$suppress && $first!==null) throw $first;
+    }
+    final public function __destruct() { try { $this->owner?->abandon(); } finally { $this->release(true); } }
     final public function awaitCleanup(): void {
         if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Cannot wait for an active callback on this task');
         if ($this->cleanup===null) return;
@@ -41,7 +49,15 @@ abstract class Awaitable {
                 $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner);
                 $this->value=$this->callbacks!==null ? $this->callbacks->decode($packet,$this->decode) : ($this->decode)($packet);
             } catch (\Throwable $error) { $this->owner->cancel(); $this->failure=$error; }
-            finally { $this->callbacks?->close(); $this->callbacks=null; $this->owner=null; $this->observing=false; $this->observed=true; }
+            finally {
+                $this->observed=true;$this->owner=null;
+                try {$this->release($this->failure!==null);} catch (\Throwable $e) {
+                    $this->failure??=$e;
+                    // await() will never deliver the previously decoded value.
+                    try {$this->value=null;} catch (\Throwable) { /* Preserve the first failure. */ }
+                }
+                finally {$this->observing=false;}
+            }
         }
         if ($this->failure!==null) throw $this->failure;
         return $this->value;
@@ -51,16 +67,21 @@ abstract class Awaitable {
 /** A one-pass, demand-driven sequence. Breaking a foreach closes its Lean cursor. */
 final class PullStream implements \IteratorAggregate {
     private bool $started=false;
-    private function __construct(private ?object $owner, private readonly \Closure $decode) {}
+    private function __construct(private ?object $owner, private readonly \Closure $decode,
+            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null) {}
     private function __clone() {}
     public function __serialize(): array { throw new \LogicException('Cannot serialize a Lean cursor'); }
     public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean cursor'); }
     public function close(): void {
         if ($this->owner===null) return;
         $owner=$this->owner; $this->owner=null;
-        if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($owner->drain())!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
+        $failed=true;
+        try {
+            if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($owner->drain())!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
+            $failed=false;
+        } finally { $this->objects?->close($failed); }
     }
-    public function __destruct() { $this->owner?->dispose(); }
+    public function __destruct() { try {$this->owner?->dispose();} finally {$this->objects?->close(true);} }
     public function getIterator(): \Traversable {
         if ($this->started || $this->owner===null) throw new \LogicException('Lean cursor is closed or already in use');
         $this->started=true;

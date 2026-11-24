@@ -31,8 +31,9 @@ export const createPhpCallbackHub=()=>{
  *
  * @param slots - Compiler-authenticated callback slot, input and output triples.
  * @param hub - Notification queue shared only within this PHP interpreter.
+ * @param objects - Optional interpreter-local domain for Zend object arguments and replies.
  */
-export const createPhpCallbackMailbox=(slots,hub)=>{
+export const createPhpCallbackMailbox=(slots,hub,objects)=>{
 	const specs=new Map(slots.map(([slot,input,output])=>[slot,{input,output}]));
 	const failures=new WeakMap();
 	const key=hub.allocate();
@@ -45,7 +46,7 @@ export const createPhpCallbackMailbox=(slots,hub)=>{
 	const request=(slot,value)=>{
 		const spec=specs.get(slot);
 		if(terminal!==undefined || current || !spec || sequence>=2147483647) throw new Error("Invalid PHP callback request");
-		const [,bytes]=writePhpTaskValue(spec.input,value),ticket=++sequence;
+		const bytes=objects?.has(spec.input)?objects.key(spec.input,value):writePhpTaskValue(spec.input,value)[1],ticket=++sequence;
 		const wait=Promise.withResolvers();
 		current={ticket,output: spec.output,claimed: false,...wait};
 		hub.post(key,()=>{current.claimed=true;return JSON.stringify(["call",key,ticket,slot,bytes]);});
@@ -62,7 +63,7 @@ export const createPhpCallbackMailbox=(slots,hub)=>{
 		current=null;
 		try
 		{
-			if(ok) r.resolve(readPhpTaskValue(r.output,value));
+			if(ok) r.resolve(objects?.has(r.output)?objects.borrow(r.output,value):readPhpTaskValue(r.output,value));
 			else
 			{
 				const marker=makeFailure(readPhpTaskValue("string",value));

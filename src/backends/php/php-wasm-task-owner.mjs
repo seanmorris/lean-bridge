@@ -23,8 +23,8 @@ const guarded=(leases,m,perform,success)=>{
 	catch(e)
 	{return Promise.resolve(failure(leases,m,e));}
 };
-const operation=(m,call,hub,leases)=>(...args)=>{
-	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub);
+const operation=(m,call,hub,leases,objects)=>(...args)=>{
+	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub,objects);
 	const val=v=>packet(leases,"value",m.result,v);
 	try
 	{
@@ -60,6 +60,16 @@ const operation=(m,call,hub,leases)=>(...args)=>{
 	} catch(e)
 	{const reply=failure(leases,m,e);box?.finish(reply);return reply;}
 };
+/**
+ * Connect a worker to a bound Zend class table. This internal entry is not
+ * selected by a public release profile.
+ *
+ * @param m - Compiler-derived worker method.
+ * @param call - That method on the actual bound component.
+ * @param hub - Interpreter's shared callback queue.
+ * @param objects - Interpreter-local nominal domain.
+ */
+export const phpZendTaskOperation=(m,call,hub,objects)=>operation(m,call,hub,objects,objects);
 /**
  * Install private method closures before Zend starts. The PHP surface never
  * names a JS export, waits on a raw rejection, or touches a Lean pointer.

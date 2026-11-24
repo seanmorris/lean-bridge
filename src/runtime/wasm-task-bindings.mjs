@@ -181,7 +181,7 @@ export const createWasmTaskSession = options => {
 			hostRuntime??=options.installHost({assertOpen,poison: retire});
 			const defs=new Map(abi.hostKinds.map(r=>[r.type,{...r,local: r.index,index: abi.methods.length+(abi.leases?.length??0)+r.index,invoke}]));
 			let prepared=false;
-			const withHosts=(classes,translate)=>{
+			const bindClasses=(classes,translate,syncStart)=>{
 				assertOpen();
 				// The first public call may pin a JS argument before Lean has run,
 				// or the application may dispose without ever invoking an export.
@@ -209,13 +209,15 @@ export const createWasmTaskSession = options => {
 				const bound=Object.create(null);
 				for(const m of abi.methods) bound[m.name]=(...args)=>{
 					try
-					{return invokePublic(m.id,args,translate,false,host);}
+					{return invokePublic(m.id,args,translate,syncStart,host);}
 					finally
 					{if(live()) hostRuntime.collect();}
 				};
 				bound.dispose=host.dispose;return Object.freeze(bound);
 			};
-			return Object.freeze({withHosts,resourceClass: type=>leaseTypes.has(type)?leases.resourceClass(type):undefined});
+			return Object.freeze({withHosts: (classes,translate)=>bindClasses(classes,translate,false)
+				, withHostsAndSynchronousStart: (classes,translate)=>bindClasses(classes,translate,true)
+				, resourceClass: type=>leaseTypes.has(type)?leases.resourceClass(type):undefined});
 		}
 		return Object.freeze({invoke: (id,args,translate)=>invokePublic(id,args,translate,false)
 			, invokeWithSynchronousStart: (id,args,translate)=>invokePublic(id,args,translate,true)
