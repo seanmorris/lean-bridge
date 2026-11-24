@@ -73,7 +73,8 @@ export const compileHostSources = async options => {
 	const rubyTaskObjects=Boolean(ir && options.target==="rubygems" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const jvmTaskObjects = Boolean(ir && options.target === "maven" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const dotnetTaskObjects=Boolean(ir && options.target==="nuget" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	const localWorkerOwner = jvmTaskObjects ? "JVM" : dotnetTaskObjects ? "CLR" : rubyTaskObjects ? "Ruby" : null;
+	const perlTaskObjects=Boolean(ir && options.target==="cpan" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	const localWorkerOwner = perlTaskObjects ? "Perl" : jvmTaskObjects ? "JVM" : dotnetTaskObjects ? "CLR" : rubyTaskObjects ? "Ruby" : null;
 	if(localWorkerOwner)
 	{
 		const source=projectContract.hostImportsSource;
@@ -166,6 +167,7 @@ export const compileHostSources = async options => {
 		, ...(pythonTaskObjects ? {pythonTaskObjects: true} : {})
 		, ...(rubyTaskObjects ? {rubyTaskObjects: true} : {})
 		, ...(jvmTaskObjects ? {jvmTaskObjects: true} : {})
+		, ...(perlTaskObjects ? {perlTaskObjects: true} : {})
 		, ...(dotnetTaskObjects ? {dotnetTaskObjects: true} : {})
 		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})

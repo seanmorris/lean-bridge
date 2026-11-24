@@ -8,6 +8,22 @@ const fail = why => { throw new TypeError("Perl host members: " + why); };
 const id = /^[A-Za-z][A-Za-z0-9_]*$/u;
 const primitives = new Set("unit bool char bytes string nat int usize isize float32 float64 uint8 uint16 uint32 uint64 int8 int16 int32 int64".split(" "));
 const reserved = new Set(["destroy", "autoload", "clone", "clone_skip", "can", "isa", "does", "version"]);
+const kindKey=(ir,t)=>sha256(canonicalJson([ir.component.id,t.id,t.resource.kindId]));
+
+/**
+ * Use the original import's identity across CPAN distributions, without
+ * accepting a token issued for another host, class or import contract.
+ *
+ * @param ir - The captured, checked Perl class and member contract.
+ */
+export const perlWorkerKinds = ir => {
+	validateBindingIr(ir);
+	if(!ir.types.length || ir.types.length>64 || new Set(ir.types.map(t=>t.name)).size!==ir.types.length
+		|| new Set(ir.types.map(t=>t.resource?.kindId)).size!==ir.types.length || ir.types.some(t=>t.kind!=="resource"
+			|| !t.host?.targets.includes("perl") || t.host.dynamic || !id.test(t.name)
+			|| !["strong-canonical","weak-canonical"].includes(t.host.identity))) fail("expected statically declared Perl worker classes");
+	return ir.types.map(t=>({name: t.name,id: t.id,hash: sha256(canonicalJson(["lean-bridge/perl-host-lease/v1",kindKey(ir,t)]))}));
+};
 
 /**
  * Member closures receive already converted scalar arguments. They dispatch
@@ -25,7 +41,7 @@ export const perlHostMembers = (ir, moduleName) => {
 		t.kind !== "resource" || !t.host?.targets.includes("perl") || t.host.dynamic || !id.test(t.name)
 		|| !["strong-canonical", "weak-canonical"].includes(t.host.identity))) fail("expected statically declared Perl host classes");
 	if(new Set(types.map(t => t.resource.kindId)).size !== types.length) fail("duplicate nominal kind");
-	const kinds = types.map(t => ({key: sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId])), strong: t.host.identity === "strong-canonical"}));
+	const kinds = types.map(t => ({key: kindKey(ir,t), strong: t.host.identity === "strong-canonical"}));
 	const kind = t => {
 		if(t.kind === "primitive" && primitives.has(t.name)) return -1;
 		const i = types.findIndex(r => r.id === t.id);

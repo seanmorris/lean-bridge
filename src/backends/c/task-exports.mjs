@@ -26,16 +26,18 @@ export const generateCTaskExports = options => {
 			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
 	const wasmHost=!!options.wasmHostKinds?.length,phpHost=!!options.phpHostKinds?.length;
 	const rubyHost=!!options.rubyHostKinds?.length, dotnetHost=!!options.dotnetHostKinds?.length;
-	const jvmHost=!!options.jvmHostKinds?.length;
-	const hostKinds=(jvmHost?options.jvmHostKinds:dotnetHost?options.dotnetHostKinds:rubyHost?options.rubyHostKinds:phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
+	const jvmHost=!!options.jvmHostKinds?.length, perlHost=!!options.perlHostKinds?.length;
+	const hostKinds=(perlHost?options.perlHostKinds:jvmHost?options.jvmHostKinds:dotnetHost?options.dotnetHostKinds:rubyHost?options.rubyHostKinds:phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
 	if(options.wasmZendObjects && (!wasmHost || phpHost)) throw new TypeError("Zend worker objects require the Wasm host ABI");
 	if(wasmHost && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || options.wasmZendObjects?"php":"javascript");
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,perlHost?"perl":jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || options.wasmZendObjects?"php":"javascript");
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
 	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery];
+	if(perlHost && (options.perlDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || options.wasmCallbacks || options.witCallbacks))
+		throw new TypeError("Perl host objects require the exclusive native Perl task owner and word carriers");
 	if(jvmHost && (options.jvmDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || options.wasmCallbacks || options.witCallbacks))
 		throw new TypeError("JVM host objects require the exclusive native JVM task owner and word carriers");
 	if(dotnetHost && (options.dotnetDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || options.wasmCallbacks || options.witCallbacks))
