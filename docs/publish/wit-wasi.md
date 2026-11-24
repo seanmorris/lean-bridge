@@ -97,6 +97,8 @@ Use the normal native Lean author toolchain and wasm-tools 1.245.1. Set `LEAN_BR
 
 The canonical profile accepts `pure`, `BaseIO`, `IO` and `EIO` task factories and synchronous companion functions. Use `Bool`, `Char`, `String`, fixed-width integers and floats for inputs. Results and typed errors may also contain nested `Except` values. Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. This profile does not accept resources, external capabilities or retained callbacks. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
 
+When a guest drops a future reader, the launcher requests cancellation of any pending Lean task. Check `IO.checkCanceled` inside the worker at a point where it can safely stop. Withdrawing only a read keeps the task available for a later read. The [Watch task](../../tests/fixtures/wit-canonical-cancel/Watch.lean) demonstrates both outcomes.
+
 ### Publish a canonical stream
 
 Select the cursor implementation with `asyncIterators`. You can publish a cursor without any `taskExports`, or include tasks in the same world. For example:

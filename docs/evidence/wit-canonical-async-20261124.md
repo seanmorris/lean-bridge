@@ -126,3 +126,30 @@ Run `npm run test:wit-canonical-cancel` with the same pinned producer tools
 as the stream test. The [installation gate](../../tests/helpers/wit-canonical-cancel.mjs)
 can also replay handoffs supplied in `LEAN_BRIDGE_CANONICAL_CANCEL_ORDINARY`
 and `LEAN_BRIDGE_CANONICAL_CANCEL_REVIEWED`.
+
+## Drop a standalone future while its worker is parked
+
+The [guest](../../tests/fixtures/wit-canonical-cancel/future.wat) runs against
+a package that exports futures but **no stream or cursor finalizer**. The
+[Lean worker](../../tests/fixtures/wit-canonical-cancel/Watch.lean) signals
+that it has started, parks on a promise, and reports its own `IO.checkCanceled`
+flag after the guest releases the promise.
+
+| Guest action | Worker observation | Delivery |
+| --- | --- | --- |
+| Withdraw a pending read; keep the reader and read again | `4`: no cancellation | The second read received `73`. |
+| Withdraw the read, then drop the reader | `2`: the cooperative worker observed cancellation and stopped | The discarded read's destination was unchanged. |
+| Drop the reader without ever issuing a read | `3`: the worker observed cancellation, ignored it and computed `73` | No late value reached the guest. |
+
+On both drop paths the guest awaits an independent future before opening the
+worker's gate. That round trip gives the reactor a turn; the worker's own flag,
+not the passage of time, establishes cancellation. Both relocated WIT packages
+ran the same guest with no build tools on its path and printed **423**.
+
+| Source | Bytes | WIT archive SHA-256 |
+| --- | ---: | --- |
+| ordinary | 60,916,539 | `c6348053ab5b320bac86e8b01df9d7c7872c9d21378b310d694ef0b966cbf1d3` |
+| reviewed | 60,917,324 | `f01e1c7bb080c04a676a8d89fe3b5f01a7ffe685502614676c0f2f7f2dd48d30` |
+
+Run `npm run test:wit-canonical-future-cancel` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks).
+To replay the same guest on existing packages, set `LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_ORDINARY` and `LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_REVIEWED` to their handoff directories.

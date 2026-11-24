@@ -13,24 +13,27 @@ import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-rec
 const exec = promisify(execFile), json = async path => JSON.parse(await readFile(path));
 const cli = resolve("scripts/lean-bridge.mjs"), fixture = resolve("tests/fixtures/wit-canonical-cancel");
 const tools = process.env.LEAN_BRIDGE_WASM_TOOLS ?? "wasm-tools";
+const future = process.env.LEAN_BRIDGE_CANONICAL_CANCEL_KIND === "future";
+const prefix = future ? "LEAN_BRIDGE_CANONICAL_FUTURE_CANCEL_" : "LEAN_BRIDGE_CANONICAL_CANCEL_";
 
-test("installed canonical stream cancellation is visible to its Lean worker", { timeout: 900000 }, async t => {
+test("installed canonical " + (future ? "future" : "stream") + " cancellation is visible to its Lean worker", { timeout: 900000 }, async t => {
 	const temp = await mkdtemp(join(tmpdir(), "wit-cancel-"));
 	t.after(() => rm(temp, { recursive: true, force: true }));
 	const guest = join(temp, "application.wasm");
-	await exec(tools, ["parse", join(fixture, "application.wat"), "-o", guest]);
+	await exec(tools, ["parse", join(fixture, future ? "future.wat" : "application.wat"), "-o", guest]);
 	await exec(tools, ["validate", "--features", "cm-async,cm-async-builtins", guest]);
 	const hashes = new Set();
 	let ordinary;
 	for(const route of ["ordinary", "reviewed"])
 	{
-		const replay = process.env["LEAN_BRIDGE_CANONICAL_CANCEL_" + route.toUpperCase()];
+		const replay = process.env[prefix + route.toUpperCase()];
 		const out = replay ? resolve(replay) : join(temp, route);
 		if(!replay)
 		{
 			const src = join(temp, route + "-src"); await mkdir(src);
-			for(const file of ["lean-toolchain", "lakefile.toml", "lean-bridge.exports.json", "Watch.lean"])
+			for(const file of ["lean-toolchain", "lakefile.toml", "Watch.lean"])
 				await copyFile(join(fixture, file), join(src, file));
+			await copyFile(join(fixture, future ? "future-project.json" : "lean-bridge.exports.json"), join(src, "lean-bridge.exports.json"));
 			await copyFile(resolve("LICENSE"), join(src, "LICENSE"));
 			if(ordinary) await writeFile(join(src, "watch.binding-ir.json"), canonicalJson(ordinary));
 			await exec(process.execPath, [cli, "build", "--project", src, "--target", "wit-wasi", "--output", out, "--json", "--progress", "none"])
@@ -42,11 +45,13 @@ test("installed canonical stream cancellation is visible to its Lean worker", { 
 		assert.deepEqual(api, ordinary);
 		assert.equal(evidence.reviewedSourceSha256, route === "ordinary" ? null : sha256(canonicalJson(ordinary)));
 		const { receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(out, "package-set-receipt.json") });
+		assert.equal(evidence.sourceTreeSha256, receipt.source.treeSha256);
+		assert.deepEqual(receipt.profiles.map(p => [p.id, p.bindingIrSha256]), [["native-wit-canonical-task-v1", hashBindingIr(api)]]);
 		assert.equal(receipt.packages.length, 1);
 		const [pkg] = receipt.packages, [archive] = pkg.artifacts;
-		assert.equal(pkg.profile, "native-wit-canonical-task-v1");
+		assert.deepEqual([pkg.name, pkg.version, pkg.profile], [future ? "futurewatch" : "watch", "1.0.0", "native-wit-canonical-task-v1"]);
 		assert.ok(!hashes.has(archive.sha256)); hashes.add(archive.sha256);
-		const save = process.env.LEAN_BRIDGE_CANONICAL_CANCEL_SAVE;
+		const save = process.env[prefix + "SAVE"];
 		if(save && !replay)
 		{
 			const dest = join(resolve(save), route);

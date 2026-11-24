@@ -214,6 +214,8 @@ If the release receipt says `native-wit-canonical-task-v1`, use the WIT world an
 
 Read nested results from the outside in. For the [`phase` example](../../tests/fixtures/wit-task-package/effects.lean), the type is `result<future<result<u32, string>>, string>`. An outer error means **no task started**. An inner error means **the worker failed**. The two errors can carry exactly the same message. A Lean function that returns an ordinary `Except` instead gives you that tagged value; its error branch is not a runner failure.
 
+Cancel a pending **read** if you want to stop waiting but might read the same future later. Drop the **reader** if you no longer want its result. If the Lean task is still pending, the launcher releases it and asks its worker to cancel. A worker that ignores cancellation may still finish or perform a side effect; its late result cannot reach the discarded reader. The [installed example](../evidence/wit-canonical-async-20261124.md#drop-a-standalone-future-while-its-worker-is-parked) exercises all three cases.
+
 The command prints the signed 64-bit result of `run`. A trap or incompatible component exits nonzero. Keep `bin/` and `lib/` together when moving the package. You do not need Lean, a Wasmtime installation, or a custom host adapter. This is a Linux x86-64 runner, not a browser or standalone WASI command. See the [application and installed-package checks](../evidence/wit-canonical-async-20261124.md#run-a-prepared-wit-package).
 
 ### Read a canonical stream from a Wasm application
@@ -235,8 +237,8 @@ Dropping the reader also requests cancellation of a pending Lean pull.
 That request is cooperative: the cursor can close before the worker
 stops. A worker that ignores cancellation can finish a side effect, but
 its late item is not delivered. The [worker-side observations](../evidence/wit-canonical-async-20261124.md#observe-cancellation-inside-the-lean-worker)
-show both outcomes. This is a stream-cursor contract; dropping
-a standalone future reader does not by itself promise to stop its worker.
+show both outcomes. Unlike a standalone future, a stream also runs the
+cursor's close operation when the reader is dropped.
 
 ### Give a task a host callback
 

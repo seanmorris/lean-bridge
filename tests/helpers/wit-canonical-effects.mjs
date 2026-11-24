@@ -48,6 +48,7 @@ test("a relocated component distinguishes factory failure, worker failure and a 
             await copyFile(resolve("tests/fixtures/wit-canonical-latches/lean-toolchain"),join(src,"lean-toolchain"));
             if(ordinary) await writeFile(join(src,"meter.binding-ir.json"),canonicalJson(ordinary),{flag: "wx"});
             await exec(process.execPath,[resolve("scripts/lean-bridge.mjs"),"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"]);
+            await rm(src,{recursive: true});
 }
         const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(out,"package-set-receipt.json")});
         const [pkg]=receipt.packages,[a]=pkg.artifacts;assert.equal(pkg.profile,"native-wit-canonical-task-v1");
@@ -67,6 +68,7 @@ test("a relocated component distinguishes factory failure, worker failure and a 
 {
             await exec("tar",["-xzf",join(out,a.path),"-C",area,"--no-same-owner","--no-same-permissions"]);
             await rename(join(area,basename(a.path,".tar.gz")),prefix);
+            if(!prepared) await rm(out,{recursive: true});
             const inner=await json(join(prefix,"lean-bridge-package.json"));
             await exec(tools,["component","targets",join(prefix,inner.world),guest]);
             assert.equal((await exec(join(prefix,inner.command),[guest],{cwd: area,env: {PATH: "/no-consumer-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1"},timeout: 15000})).stdout.trim(),String(0xdecafbad));

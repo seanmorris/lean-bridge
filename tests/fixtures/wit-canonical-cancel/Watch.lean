@@ -18,7 +18,7 @@ def feed (cooperate : Bool) : BaseIO Cursor := do
   current.set (some c)
   return c
 
-def advance (c : Cursor) : BaseIO (Task (Option UInt32)) := BaseIO.asTask do
+private def work (c : Cursor) : BaseIO (Option UInt32) := do
   c.started.resolve 1
   let _ ← IO.wait c.release.result?
   let cancelled ← IO.checkCanceled
@@ -29,6 +29,16 @@ def advance (c : Cursor) : BaseIO (Task (Option UInt32)) := BaseIO.asTask do
   -- to stop. Distinguish cancelled late work from ordinary completion.
   c.finished.resolve (if cancelled then 3 else 4)
   return some 73
+
+def advance (c : Cursor) : BaseIO (Task (Option UInt32)) := BaseIO.asTask (work c)
+
+-- The standalone future has no cursor finalizer. The only way for the worker
+-- to report 2 or 3 is for its own cancellation flag to have been set.
+def watchTask (cooperate : Bool) : BaseIO (Task UInt32) := do
+  let c ← feed cooperate
+  BaseIO.asTask do return (← work c).getD 0
+
+def ack (value : UInt32) : Task UInt32 := Task.pure value
 
 def finish (c : Cursor) : BaseIO Unit := do
   c.closes.modify (· + 1)

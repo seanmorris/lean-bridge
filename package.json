@@ -1206,6 +1206,7 @@
     "test:wit-canonical-effects": "node --test --test-concurrency=1 tests/helpers/wit-canonical-effects.mjs",
     "test:wit-canonical-stream": "node --test --test-concurrency=1 tests/helpers/wit-canonical-stream.mjs",
     "test:wit-canonical-cancel": "node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",
+    "test:wit-canonical-future-cancel": "LEAN_BRIDGE_CANONICAL_CANCEL_KIND=future node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",
     "test:ruby-host-imports": "node --test --test-concurrency=1 tests/helpers/ruby-host-imports.mjs",
     "test:jvm-host-imports": "node --test --test-concurrency=1 tests/helpers/jvm-host-imports.mjs",
     "test:dotnet-host-imports": "node --test --test-concurrency=1 tests/helpers/dotnet-host-imports.mjs",
