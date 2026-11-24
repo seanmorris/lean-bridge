@@ -28,6 +28,21 @@ test("PHP callback requests are owner-local, one-shot and revoked on completion"
 	box.finish('["fault"]');assert.equal(await box.next(),'["cancelled"]');
 });
 
+test("a malformed success or exception packet settles the waiting callback and cancels only its task",async()=>{
+	for(const ok of [true,false])
+{
+		const hub=createPhpCallbackHub(),box=createPhpCallbackMailbox([[0,"uint8","uint8"]],hub);
+		const pending=box.request(0,1);const [,,ticket]=JSON.parse(await box.next());let stops=0;
+		const refused=assert.rejects(pending);
+		assert.equal(box.answer(ticket,ok,"!",message=>new Error(message),()=>{stops++;}),false);
+		await refused;assert.equal(await box.next(),'["fault"]');assert.equal(stops,1);
+		assert.equal(box.answer(ticket,ok,"!",null,()=>{stops++;}),false);assert.equal(stops,1);
+		const good=createPhpCallbackMailbox([[0,"uint8","uint8"]],hub),sibling=good.request(0,1);
+		const [,,next]=JSON.parse(await good.next());
+		assert.equal(good.answer(next,true,writePhpTaskValue("uint8",2)[1]),true);assert.equal(await sibling,2);
+}
+});
+
 test("PHP task transport preserves exact copied values, byte strings, and chosen Except branches",()=>{
 	const vectors={unit: undefined,bool: true,bytes: Uint8Array.of(0,255)
 		, float32: -0,float64: NaN

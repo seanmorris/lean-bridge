@@ -36,7 +36,7 @@ const operation=(m,call,hub)=>(...args)=>{
 			{
 				Promise.resolve(owner).then(v=>val(m.result,v)).catch(e=>box.failure(e)??failure(m,e)).then(box.finish);
 				const cancel=()=>{const stopped=owner.cancel();if(stopped) box.finish('["cancelled"]');return stopped;};
-				const answer=(id,ok,value)=>box.answer(id,ok,value,owner.callbackFailure);
+				const answer=(id,ok,value)=>box.answer(id,ok,value,owner.callbackFailure,()=>owner.cancel());
 				const invalid=id=>{if(!box.stop(id)) return false;owner.cancel();return true;};
 				const trap=id=>{const live=box.stop(id);owner.hostTrap();return live;};
 				return Object.freeze({result: box.next,key: ()=>box.key,answer,invalid,trap,cancel,cleanup: ()=>cleanup});

@@ -50,7 +50,7 @@ export const exercisePhpTaskRelease=async(release,t,peer)=>{
 	await symlink(resolve(host),join(app,"node_modules/php-wasm"),"dir");
 	await cp(resolve("tests/fixtures/php-wasm-task-owner",peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
 	await cp(resolve("tests/fixtures/php-wasm-task-owner/installed.mjs"),join(app,"installed.mjs"));
-	if(peer) for(const file of ["trap.php","trap.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,file));
+	if(peer) for(const file of ["trap.php","trap.mjs","malformed.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,file));
 	await rename(app,moved);await rm(feed,{recursive: true});
 	for(const mode of ["embedded","composer"])
 	{
@@ -62,6 +62,8 @@ export const exercisePhpTaskRelease=async(release,t,peer)=>{
 	{
 		const result=await run(process.execPath,["trap.mjs",...components],moved,{PATH: "/no-producer-tools"});
 		assert.equal(result.stderr,"");t.diagnostic(result.stdout.trim());
+		const corrupt=await run(process.execPath,["malformed.mjs",name],moved,{PATH: "/no-producer-tools"});
+		assert.equal(corrupt.stderr,"");t.diagnostic(corrupt.stdout.trim());
 	}
 };
 if(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE) test("installed PHP-Wasm task API survives relocation",t=>exercisePhpTaskRelease(resolve(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE),t,process.env.LEAN_BRIDGE_PHP_TASK_PEER));

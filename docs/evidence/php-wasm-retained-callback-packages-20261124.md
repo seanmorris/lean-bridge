@@ -8,6 +8,7 @@ The [Relay module](../../tests/fixtures/javascript-wasm-retained-tasks/Relay.lea
 | Retained identity | Two callbacks throw distinct exceptions with identical messages. Rethrowing the original Lean error yields the corresponding PHP object, even on a second await. Catching or replacing that error in Lean changes the outcome. |
 | Cancellation and disposal | Self-cancellation rejects the await once and discards the late reply. Closing a callback registration allows the current reply but refuses its next invocation. Dropping an unobserved owner releases its PHP callable. |
 | Failed conversion | An invalid PHP return fails the submitting task. The shared executor remains usable. |
+| Malformed private reply | The [installed worker probe](../../tests/fixtures/php-wasm-task-owner/malformed.mjs) sends both an invalid return and an invalid exception packet. Each task drains its native owner. A subsequent Lean worker on the same executor returns 2. |
 | Lost worker | In Chromium a real pthread fails with a callback in flight. The pending task and new calls fail; the retired executor reports no live host frames, allocations, operations or notifications. |
 | PHP engine trap | A PHP `Error` is not a Lean-recoverable callback exception. The [fault application](../../tests/fixtures/php-wasm-task-owner/trap.php) checks original object identity and refusal of pending and new work in the peer package. |
 

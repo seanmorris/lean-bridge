@@ -56,16 +56,28 @@ export const createPhpCallbackMailbox=(slots,hub)=>{
 		if(!currentTicket(ticket)) return false;
 		finish(JSON.stringify(["throw",ticket]));return true;
 	};
-	const answer=(ticket,ok,value,makeFailure)=>{
+	const answer=(ticket,ok,value,makeFailure,cancel)=>{
 		const r=current;
 		if(!currentTicket(ticket)) return false;
 		current=null;
-		if(!ok)
-		{const marker=makeFailure(readPhpTaskValue("string",value));failures.set(marker,ticket);r.reject(marker);}
-		else
-		{try
-		{r.resolve(readPhpTaskValue(r.output,value));}catch(error)
-		{r.reject(error);}}
+		try
+		{
+			if(ok) r.resolve(readPhpTaskValue(r.output,value));
+			else
+			{
+				const marker=makeFailure(readPhpTaskValue("string",value));
+				failures.set(marker,ticket);r.reject(marker);
+			}
+		}
+		catch(error)
+		{
+			// The request is no longer queued. Settle the worker promise even
+			// when decoding its reply (including an exception message) fails.
+			finish('["fault"]');r.reject(error);
+			try
+			{cancel();} catch { /* A retired heap has already rejected its tasks. */ }
+			return false;
+		}
 		return true;
 	};
 	const failure=error=>{
