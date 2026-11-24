@@ -38,9 +38,9 @@ const fail = (code, message, details = {}) => {
 export const compiledHostModules = Object.freeze({ python: "LeanBridge.Host.Python"
 	, ruby: "LeanBridge.Host.Ruby", jvm: "LeanBridge.Host.Jvm"
 	, dotnet: "LeanBridge.Host.Dotnet", perl: "LeanBridge.Host.Perl"
-	, javascript: "LeanBridge.Host.Javascript" });
+	, javascript: "LeanBridge.Host.Javascript", php: "LeanBridge.Host.Php" });
 /** Package coordinates select their own checked host namespace. */
-export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript" });
+export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript", "php-native": "php" });
 
 const primitive = Object.freeze({
 	unit: "Unit", bool: "Bool", char: "Char", bytes: "ByteArray", string: "String"

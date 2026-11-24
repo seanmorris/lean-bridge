@@ -13,6 +13,7 @@ import { heapResourceIdentities } from "../analyze/heap-resource-identity.mjs";
 import { nativeHostSelection, reconcileHostExports } from "../analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../analyze/native-host-effects.mjs";
 import { generatePythonHostProvider } from "../backends/python/host-provider.mjs";
+import { phpHostMembers } from "../backends/php/host-members.mjs";
 import { compiledHostModules, compiledHostTargets, generateLeanHostObjectAdapters } from "../backends/lean/host-object.mjs";
 
 const extractor = fileURLToPath(new URL("../analyze/HostExports.lean", import.meta.url));
@@ -64,6 +65,16 @@ export const compileHostSources = async options => {
 	if(ir && options.target && !Object.hasOwn(compiledHostTargets, options.target)) fail("No host import provider for the selected target");
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	if(ir && target==="php")
+	{
+		if(projectContract)
+		{
+			const {hostImportsSource: text,hostImportsSourceSha256: hash}=projectContract;
+			if(typeof text!=="string" || sha256(text)!==hash || canonicalJson(parseBindingIr(text))!==canonicalJson(ir))
+				fail("PHP host declarations differ from the captured import source");
+		}
+		phpHostMembers(ir);
+	}
 	if(threadedJavaScript && canonicalJson(threadedHostSource(projectContract))!==canonicalJson(ir)) fail("Wrong threaded host compile input");
 	if(projectContract && Object.hasOwn(projectContract, "generatedHostModule")
 		&& projectContract.generatedHostModule !== (ir ? hostModule : null)) fail("Captured host module and compile target differ");

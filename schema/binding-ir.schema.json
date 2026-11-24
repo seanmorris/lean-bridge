@@ -242,7 +242,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "enum": ["javascript", "python", "dotnet", "jvm", "ruby", "perl"] }
+          "items": { "enum": ["javascript", "python", "dotnet", "jvm", "ruby", "perl", "php"] }
         },
         "identity": { "enum": ["weak-canonical", "strong-canonical"] },
         "dynamic": { "type": "boolean" }

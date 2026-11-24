@@ -103,7 +103,8 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const asyncRoots = new Set([...(selection.taskExports ?? []), ...selection.asyncIterators.flatMap(p => [p.open, p.next, p.close])]);
 	const names = audit.roots.map(r => r?.declaration);
 	if(!strings(names) || names.length !== roots.length || roots.some(k => !names.includes(k))) fail("compiled roots do not match the export, startup and pull selection");
-	const byRoot = new Map(), compiledMembers=hasJavaScriptHostOwner(selection)?new Map():null;
+	const workerOwner=hasJavaScriptHostOwner(selection);
+	const byRoot = new Map(), compiledMembers=workerOwner || selection.hostModule==="LeanBridge.Host.Php"?new Map():null;
 	const violations = new Set();
 	for(const { declaration, leaves } of audit.roots)
 	{
@@ -115,7 +116,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 			if(module === (selection.hostModule ?? "LeanBridge.Host.Python") && selection.members.includes(name) && hostSymbols.get(name) === symbol)
 			{
 				if(audit.initializers.includes(declaration)) violations.add(`initializer ${declaration} reaches host member ${name} before it is bound`);
-				if(asyncRoots.has(declaration) && !compiledMembers) violations.add(`async entry ${declaration} reaches host member ${name} outside its owner`);
+				if(asyncRoots.has(declaration) && !workerOwner) violations.add(`async entry ${declaration} reaches host member ${name} outside its owner`);
 				host?.push(name);
 				continue;
 			}
@@ -126,7 +127,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 				continue;
 				}
 			const cap = exact ? null : catalog.get(symbol);
-			if(compiledMembers && ownerBlocking.has(symbol))
+			if(workerOwner && ownerBlocking.has(symbol))
 				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the JavaScript host owner; return or compose the task without waiting synchronously`);
 			if(cap === null) continue;
 			if(!allowed.includes(cap)) violations.add(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);

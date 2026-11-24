@@ -82,6 +82,10 @@ export const reconcileHostExports = options => {
 			|| canonicalJson(selection.members) !== canonicalJson(expected.members)) fail("Unverified host import selection");
 	}
 	const synchronous = selection.synchronousIO === true;
+	if(ir && hostTarget==="php" && selection.nativeEffectPolicy!==nativeEffectPolicy)
+		fail("PHP host imports require compiled member evidence");
+	if(ir && hostTarget==="php" && (selection.phpTaskCallbacks===true || selection.taskExports?.length || selection.asyncIterators?.length))
+		fail("PHP host objects require synchronous owner calls, not a worker scheduler");
 	const owner=hasJavaScriptHostOwner(selection);
 	if(selection.javascriptThreadedHostMembers!==undefined && (!owner || !ir || selection.nativeEffectPolicy!==nativeEffectPolicy
 		|| selection.nativeEffects?.length || Boolean(selection.taskExports?.length)!==(selection.javascriptTaskCallbacks===true)))
@@ -112,7 +116,7 @@ export const reconcileHostExports = options => {
 		{
 			const root=phase==="call"?e.declaration:phase==="pull"?p.next:p.close;
 			if(!Array.isArray(names) || new Set(names).size!==names.length || names.some(n=>!members.has(n))
-				|| owner && native.compiledMembers.get(root)?.some(n=>!names.includes(n)))
+				|| native?.compiledMembers?.get(root)?.some(n=>!names.includes(n)))
 				fail("Unverified host member dependencies for "+root);
 		}
 	}
@@ -171,6 +175,7 @@ export const reconcileHostExports = options => {
 		, ruby: ["RubyHostException", "Ruby"]
 		, dotnet: ["DotNetHostException", ".NET"]
 		, perl: ["PerlHostException", "Perl"]
+		, php: ["PhpHostException", "PHP"]
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";

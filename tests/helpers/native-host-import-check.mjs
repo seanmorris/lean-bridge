@@ -21,6 +21,7 @@ const hosts = {
 	, jvm: { target: "maven", label: "Jvm", error: "JvmHostException", coordinates: {name: "org.leanbridge:workshop", version: "1.0.0"} }
 	, dotnet: { target: "nuget", label: "Dotnet", error: "DotNetHostException", coordinates: {name: "Workshop.Host", version: "1.0.0"} }
 	, perl: { target: "cpan", label: "Perl", error: "PerlHostException", coordinates: {module: "LeanBridge::Workshop", version: "0.001"} }
+	, php: { target: "php-native", label: "Php", error: "PhpHostException", coordinates: {name: "lean-bridge/workshop", version: "1.0.0"} }
 	, javascript: { target: "npm", label: "Javascript", error: "JavaScriptHostException" }
 };
 
@@ -42,12 +43,18 @@ export const prepareNativeHostFixture = async (project, backend) => {
 	assert.ok(Object.hasOwn(hosts, backend)); const { label, target } = hosts[backend];
 	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(file, "utf8"));
 	contract.types[0].host.targets = [backend];
-	contract.types[0].documentation.summary = {jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method."}[backend];
+	contract.types[0].documentation.summary = {jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method.", php: "A PHP object with a read method."}[backend];
 	await writeFile(file, canonicalJson(contract));
 	const cfg = join(project, "lean-bridge.exports.json"), config = JSON.parse(await readFile(cfg, "utf8"));
 	config.targets = { [target]: hosts[backend].coordinates };
+	if(backend==="php") config.exports.push("Workshop.choose","Workshop.failWith");
 	await writeFile(cfg, canonicalJson(config));
 	const lean = join(project, "Workshop.lean");
+	if(backend==="php")
+	{
+		await copyFile(resolve("tests/fixtures/php-host-members/Workshop.lean"),lean);
+		return;
+	}
 	await writeFile(lean, (await readFile(lean, "utf8")).replaceAll("LeanBridge.Host.Ruby", "LeanBridge.Host." + label));
 };
 
@@ -76,6 +83,16 @@ export const checkNativeHostImports = backend => {
 			{
 				const app = await mkdtemp(join(root, "objects-"));
 				const compiled = { ...source, app, ir: source.projectContract.ir };
+				if(backend === "php" && !source.projectContract.review)
+				{
+					const options = { ...compiled, target, environment: process.env, run: () => assert.fail("unexpected Lean invocation") };
+					const original = source.projectContract;
+					const mismatched = { ...original, hostImportsSource: original.hostImportsSource + " " };
+					await assert.rejects(compileHostSources({ ...options, projectContract: mismatched }), /captured import source/u);
+					const ir = structuredClone(compiled.ir);
+					ir.types[0].host.identity = "strong-canonical";
+					await assert.rejects(compileHostSources({ ...options, ir }), /captured import source/u);
+				}
 				const built = await compileHostSources({ ...compiled, target, environment: process.env, run });
 				await source.verify();
 				return { ...built, ir: source.projectContract.ir };
@@ -97,6 +114,17 @@ export const checkNativeHostImports = backend => {
 		assert.ok(entry("update").effects.includes("writes-resource"));
 		assert.deepEqual(entry("read").failure.errors, ["error:IO.Error", "error:" + error]);
 		assert.deepEqual(entry("mapped").failure.errors, ["error:EIO.Workshop.mapped"]);
+		if(backend==="php")
+		{
+			const leased={type: {kind: "named",id: api.types[0].id},ownership: "lease",lifetime: {scope: "explicit",anchor: null}};
+			assert.deepEqual(entry("failWith").source.extensions["lean-bridge.dev/error-payload-site"],leased);
+			assert.deepEqual(entry("failWith").failure.errors,["error:EIO.Workshop.failWith"]);
+			assert.deepEqual(entry("choose").failure.errors,[]);
+			assert.deepEqual(entry("choose").result.type.arguments,[leased.type,{kind: "primitive",name: "uint32"}]);
+			assert.equal(entry("choose").result.ownership,"lease");
+			assert.equal(entry("read").resultMode,"value");
+			assert.ok(!entry("read").effects.includes("async"));
+		}
 		if(backend==="javascript")
 		{
 			assert.equal(entry("read").resultMode,"value");
@@ -108,6 +136,17 @@ export const checkNativeHostImports = backend => {
 		const replay = (selection, metadata) => reconcileHostExports({ selection, metadata, ir, component: api.component });
 		assert.throws(() => replay({ ...evidence.selection, hostModule: "LeanBridge.Host.Python" }, evidence.metadata), /host import/i);
 		assert.throws(() => replay({ ...evidence.selection, pythonTaskCallbacks: true }, evidence.metadata), /same runtime/u);
+		if(backend==="php")
+		{
+			assert.throws(()=>replay({...evidence.selection,phpTaskCallbacks: true},evidence.metadata),/synchronous owner/u);
+			assert.throws(()=>replay({...evidence.selection,taskExports: ["Workshop.identity"]},evidence.metadata),/synchronous owner/u);
+			assert.throws(()=>replay({...evidence.selection,asyncIterators: [{open: "Workshop.identity"}]},evidence.metadata),/synchronous owner/u);
+			const omitted=structuredClone(evidence.metadata);
+			omitted.entries.find(e=>e.declaration==="Workshop.update").hostMembers=[];
+			assert.throws(()=>replay(evidence.selection,omitted),/Unverified host member dependencies/u);
+			const grant={...evidence.selection};delete grant.nativeEffectPolicy;delete grant.nativeEffects;
+			assert.throws(()=>replay(grant,evidence.metadata),/compiled member evidence/u);
+		}
 		if(backend==="javascript")
 			assert.throws(() => replay({ ...evidence.selection, javascriptTaskCallbacks: true }, evidence.metadata), /owning agent/u);
 		const wrongSymbol = structuredClone(evidence.metadata);

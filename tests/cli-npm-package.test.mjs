@@ -212,6 +212,18 @@ test("tarball installs work locally, globally, and through npm exec without the 
 		const executable = join(consumer, "node_modules/.bin/lean-bridge");
 		assert.equal((await execute(executable, ["--version"], npmOptions)).stdout.trim(), config.version);
 		assert.match((await execute(executable, ["--help"], npmOptions)).stdout, /analyze/);
+		const phpImports = JSON.parse(await readFile("tests/fixtures/ruby-host-meter/lean-bridge.hosts.json", "utf8"));
+		phpImports.types[0].host.targets = ["php"];
+		const phpProbe = [
+			"import {phpHostMembers} from './src/backends/php/host-members.mjs'"
+			, "import './src/build/host-elaboration.mjs'"
+			, "const model = phpHostMembers(JSON.parse(process.argv[1]))"
+			, "console.log(model.members.find(m => m.op === 'constructor').symbol)"
+		].join("; ");
+		const dispatched = await execute(process.execPath, ["--input-type=module", "-e", phpProbe, JSON.stringify(phpImports)], { cwd: installed });
+		assert.equal(dispatched.stdout.trim(), "lean_bridge_host_php_box_create");
+		const phpDispatcher = "src/backends/php/host-members.php";
+		assert.deepEqual(await readFile(join(installed, phpDispatcher)), await readFile(phpDispatcher));
 		const globalPrefix = join(scratch, "global");
 		await execute("npm", ["install", "--global", "--prefix", globalPrefix, ...installOptions, candidate.archive], npmOptions);
 		assert.equal((await execute(join(globalPrefix, "bin/lean-bridge"), ["--version"], npmOptions)).stdout.trim(), config.version);
