@@ -3,6 +3,7 @@ import {javaScriptTaskAbi} from "../../../src/abi/javascript-wasm-tasks.mjs";
 import {createPhpCallbackHub} from "../../../src/backends/php/php-wasm-task-mailbox.mjs";
 import {phpWasmObjectDomain} from "../../../src/backends/php/php-wasm-task-objects.mjs";
 import {phpZendTaskOperation} from "../../../src/backends/php/php-wasm-task-owner.mjs";
+import {runZendClient,drainedZendStats} from "./zend-test-host.mjs";
 import {createWasmTaskLoader} from "../../../src/runtime/wasm-task-loader.mjs";
 
 /**
@@ -38,24 +39,7 @@ export const exerciseZendObjects=async o=>{
 			}
 		}
 		shared.closePeer=()=>owners[1].dispose().then(()=>true);
-		const php=new Php({version: "8.4",autoTransaction: false,shared});let out="",err="";
-		php.addEventListener("output",e=>{out+=e.detail.join("");});php.addEventListener("error",e=>{err+=e.detail.join("");});
-		if((await php.binary).HEAPU8.buffer instanceof SharedArrayBuffer) throw new Error("Expected separate, unthreaded Zend heap");
-		const dirs=new Set();
-		for(const [path,contents] of Object.entries(o.brick))
-		{
-			const parts=path.split("/");let parent="";
-			for(const part of parts.slice(0,-1))
-			{parent+="/"+part;if(!dirs.has(parent))
-			{await php.mkdir(parent);dirs.add(parent);}}
-			await php.writeFile("/"+path,contents);
-		}
-		for(const [name,source] of Object.entries(sources)) await php.writeFile("/"+name+".php",source);
-		const rc=await php.run("<?php require '/dependencies/brick-math/autoload.php';"+Object.keys(sources).map(n=>"require '/"+n+".php';").join(" "));
-		if(rc!==0 || err) throw new Error(err || out || "PHP failed: "+rc);
-		const checked=JSON.parse(out);await runtime.whenIdle();const stats=runtime.stats();
-		for(const key of ["frames","allocations","pending","notifications","nativeOwners","hostPins","hostErrors"])
-			if(stats[key]!==0) throw new Error(key+" not drained: "+stats[key]);
+		const checked=await runZendClient({Php,shared,sources,brick: o.brick}),stats=await drainedZendStats(runtime);
 		return {...checked,components: stages.map(({descriptor: d})=>({componentIdentity: d.componentIdentity,integrity: d.integrity})),stats};
 	} finally
 	{

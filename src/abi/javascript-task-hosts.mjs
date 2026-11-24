@@ -1,6 +1,7 @@
 /** @file Reconstruct the threaded member boundary from the import IR, independently of the producer. */
 import {canonicalizeJsonValue,hashBindingIr} from "../binding-ir/canonical.mjs";
 import {javaScriptHostMembers} from "../backends/javascript/host-members.mjs";
+import {phpWasmHostMembers} from "../backends/php/host-members.mjs";
 import {hostDeclarationName} from "./host-member-names.mjs";
 
 const same=(a,b)=>canonicalizeJsonValue(a)===canonicalizeJsonValue(b);
@@ -14,15 +15,17 @@ export const jsMemberFailure="error:JavaScriptHostException";
  *
  * @param api - Compiler-checked application functions.
  * @param hosts - Original, independently hashed import contract.
+ * @param zend - Check the PHP provider and PHP exception identity, not a JS surrogate.
  */
-export const javaScriptTaskHosts=(api,hosts)=>{
-	const model=javaScriptHostMembers(hosts),hash=hashBindingIr(hosts),projected=api.types.filter(t=>t.host);
+export const javaScriptTaskHosts=(api,hosts,zend=false)=>{
+	const target=zend?"php":"javascript",module=zend?"LeanBridge.Host.Php":"LeanBridge.Host.Javascript";
+	const model=(zend?phpWasmHostMembers:javaScriptHostMembers)(hosts),hash=hashBindingIr(hosts),projected=api.types.filter(t=>t.host);
 	if(projected.length!==hosts.types.length) fail();
 	const named=new Map(),members=new Map();
 	for(const [i,t] of hosts.types.entries())
 	{
-		const p=projected[i],lean="LeanBridge.Host.Javascript."+t.name;
-		const expected={...t,assurance: [],host: {...t.host,targets: ["javascript"]},source: {producer: "lean",declaration: lean,extensions: {}}};
+		const p=projected[i],lean=module+"."+t.name;
+		const expected={...t,assurance: [],host: {...t.host,targets: [target]},source: {producer: "lean",declaration: lean,extensions: {}}};
 		if(!same({...p,documentation: t.documentation},expected)) fail();
 		named.set(t.id,{index: i,type: "host:"+model.kinds[i].key,mutability: t.mutability});
 		for(const d of hosts.declarations.filter(d=>d.owner===t.id))
@@ -58,9 +61,9 @@ export const javaScriptTaskHosts=(api,hosts)=>{
 			const h=hosts.capabilities.find(k=>k.id===c.id);
 			if(!h || c.id.startsWith("capability:native.") || !same({...c,documentation: h.documentation},h)) fail();
 		}
-		const f=api.errors.find(e=>e.id===jsMemberFailure);
-		if(Boolean(f)!==api.declarations.some(d=>d.failure.errors.includes(jsMemberFailure))
-			|| f && (f.category!=="domain" || f.name!=="JavaScriptHostException" || f.payload!==null)) fail();
+		const name=zend?"PhpHostException":"JavaScriptHostException",id="error:"+name,f=api.errors.find(e=>e.id===id);
+		if(Boolean(f)!==api.declarations.some(d=>d.failure.errors.includes(id))
+			|| f && (f.category!=="domain" || f.name!==name || f.payload!==null)) fail();
 	};
 	return {hash,nominal,contains,checkErrorSite,method,finish};
 };

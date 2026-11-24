@@ -26,8 +26,9 @@ export const generateCTaskExports = options => {
 			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
 	const wasmHost=!!options.wasmHostKinds?.length,phpHost=!!options.phpHostKinds?.length;
 	const hostKinds=(phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
+	if(options.wasmZendObjects && (!wasmHost || phpHost)) throw new TypeError("Zend worker objects require the Wasm host ABI");
 	if(wasmHost && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,phpHost?"php":"javascript");
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,phpHost || options.wasmZendObjects?"php":"javascript");
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;

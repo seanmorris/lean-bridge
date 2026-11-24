@@ -30,8 +30,9 @@ const sourceAsset = path => readFile(new URL("../backends/" + path, import.meta.
 export const compileJavaScriptTaskComponent = async options => {
 	const {app, projectContract: contract, leanPrefix, emsdkRoot: sdk, leanRuntimeRoot: target, environment, signal} = options;
 	if(!contract?.taskExports?.length && !contract?.asyncIterators?.length) throw new TypeError("Expected a selected task or iterator");
-	const ir=threadedHostSource(contract);
-	if(contract.nativeEffects?.length || options.phpWasm && ir)
+	const zend=Boolean(options.phpWasm && contract.ir),targetHost=zend?"php":"javascript";
+	const ir=threadedHostSource(contract,null,targetHost);
+	if(contract.nativeEffects?.length)
 		throw new TypeError("Threaded Wasm task components require in-memory effects and a matching host");
 	const env = {...environment, EMSDK: sdk, EM_CONFIG: join(sdk,".emscripten"), LANG: "C.UTF-8", LC_ALL: "C.UTF-8"};
 	for(const key of ["CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","COMPILER_PATH","GCC_EXEC_PREFIX","LIBRARY_PATH","CFLAGS","CPPFLAGS","LDFLAGS","EMCC_CFLAGS","CCC_OVERRIDE_OPTIONS","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES_OUTPUT"]) delete env[key];
@@ -55,7 +56,7 @@ export const compileJavaScriptTaskComponent = async options => {
 		, "lean_bridge_native_runtime.h": generateOwnedWasmBroker().header};
 	const headers = {}, include = join(app,"include/lean");
 	const resources=api.types.filter(t => t.kind==="resource" && !t.host), wasmCallbacks=api.types.some(t => t.kind==="callback");
-	const dummy="0".repeat(64), hostGen=id=>generateJavaScriptHostExterns(ir,id,{threaded: true});
+	const dummy="0".repeat(64), hostGen=id=>generateJavaScriptHostExterns(ir,id,{threaded: true,phpWasmTaskObjects: zend});
 	const provider=ir?hostGen(dummy):null;
 	const wasmHostKinds=ir?ir.types.map((t,i)=>({name: t.name,id: t.id,hash: provider.model.kinds[i].key})):[];
 	if(resources.length || ir) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
@@ -72,9 +73,9 @@ export const compileJavaScriptTaskComponent = async options => {
 			throw new Error("Expected threaded wasm32 headers, not host headers");
 		headers[name] = sha256(bytes); await writeFile(join(include,name),bytes,{flag: "wx"});
 	}
-	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources, wasmTasks: true, wasmCallbacks,wasmHostKinds,integerMode: "words"};
+	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources, wasmTasks: true, wasmCallbacks,wasmHostKinds,wasmZendObjects: zend,integerMode: "words"};
 	const skeleton = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources,wasmCallbacks,wasmHostKinds});
+	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources,wasmCallbacks,wasmHostKinds,wasmZendObjects: zend});
 	const componentIdentity = sha256(canonicalJson({evidence
 		, compiler
 		, stamp
@@ -84,7 +85,7 @@ export const compileJavaScriptTaskComponent = async options => {
 		, wire: sha256(wire.source)
 		, control: sha256(generateTaskControl("lb_js_task_"+"0".repeat(64),wire))
 		, assets: Object.fromEntries(Object.entries(assets).map(([k,v]) => [k,sha256(v)]))}));
-	const abi = javaScriptTaskAbi(taskWorkerInterface(api,evidence),componentIdentity,ir), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
+	const abi = javaScriptTaskAbi(taskWorkerInterface(api,evidence),componentIdentity,ir,zend), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
 	const leases = [...abi.leases??[],...abi.hostKinds??[]], nativeLeases = wire.leases ?? [];
 	if(leases.length !== nativeLeases.length || leases.some((lease,i) =>
 		["name","type","hash","tag"].some(k => lease[k] !== nativeLeases[i][k])))
@@ -98,7 +99,7 @@ export const compileJavaScriptTaskComponent = async options => {
 	const objects=[...built.objects];
 	if(ir)
 	{
-		threadedHostSource(contract,evidence);
+		threadedHostSource(contract,evidence,targetHost);
 		const iface=evidence.interfaces.findIndex(f=>f.module===contract.generatedHostModule),obj=objects[iface];
 		if(!/^module[0-9]+\.c$/u.test(obj) || sha256(await readFile(join(app,obj)))!==evidence.interfaces[iface].cSha256)
 			throw new Error("Compiled JavaScript host interface differs from its captured C");

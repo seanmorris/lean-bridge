@@ -20,10 +20,12 @@ const same = (a,b) => canonicalizeJsonValue(a) === canonicalizeJsonValue(b);
  * @param ir - Validated, compiler-checked public binding contract.
  * @param componentIdentity - Digest of the compiled inputs and adapter.
  * @param hostImports - Separate authored member contract, required for a JS host component.
+ * @param zend - Select the distinct PHP-Wasm host member and synchronous callback contract.
  */
-export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
+export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=false) => {
 	const bindingIrSha256 = hashBindingIr(ir);
-	const hosts=hostImports===null?null:javaScriptTaskHosts(ir,hostImports);
+	if(zend && !hostImports) throw new TypeError("Missing PHP-Wasm host declarations");
+	const hosts=hostImports===null?null:javaScriptTaskHosts(ir,hostImports,zend);
 	if(!/^[0-9a-f]{64}$(?![\s\S])/u.test(componentIdentity) || !hosts && ir.capabilities.length)
 		throw new TypeError("Expected an in-memory Wasm task component");
 	const leases=ir.types.filter(t => t.kind!=="callback" && !(hosts && t.host)).map((t,i) => {
@@ -39,7 +41,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 	});
 	if(new Set(leases.map(r => r.hash)).size!==leases.length) throw new TypeError("Repeated nominal resource hash");
 	const resource=t => t?.kind==="named" && leases.find(r => r.id===t.id);
-	const callbackTypes=new Map(), hostError="error:JavaScriptCallbackError";
+	const callbackTypes=new Map(),callbackName=zend?"PhpCallbackException":"JavaScriptCallbackError",hostError="error:"+callbackName;
 	const callbackSite=x=>{
 		if(x?.type?.kind==="primitive" && componentScalarTypes.includes(x.type.name) && x.ownership==="copy" && x.lifetime===null)
 			return {name: x.type.name,type: x.type.name,mutability: "immutable"};
@@ -54,10 +56,10 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 		const a=callbackSite(arg),b=callbackSite(result);
 		if(t.source?.producer!=="lean" || t.source.declaration!==t.name || t.id!=="bridge:"+t.name
 			|| t.representation!=="identity" || t.mutability!=="immutable" || t.resource!==null || t.host!==null || t.target!==null || t.fields.length || t.cases.length
-			|| t.source.extensions?.["lean-bridge.dev/callback-scheduler"]!=="javascript-owner-agent" || c?.resultMode!=="promise" || c.reentry!=="same-agent"
+			|| t.source.extensions?.["lean-bridge.dev/callback-scheduler"]!==(zend?"owner-event-loop":"javascript-owner-agent") || c?.resultMode!==(zend?"value":"promise") || c.reentry!=="same-agent"
 			|| c.selfDisposal!=="defer" || c.invocation!=="many" || c.parameters.length!==1 || t.typeParameters.length
 			|| arg.optional || arg.default!==null || arg.mutability!==a.mutability
-			|| !same(c.effects,["async","fails","host-call"]) || c.failure.mode!=="declared" || !same(c.failure.errors,[hostError]) || c.failure.unexpected!=="poison-runtime"
+			|| !same(c.effects,zend?["fails","host-call"]:["async","fails","host-call"]) || c.failure.mode!=="declared" || !same(c.failure.errors,[hostError]) || c.failure.unexpected!=="poison-runtime"
 			|| t.id!=="bridge:Retained_"+a.name+"_to_"+b.name)
 			throw new TypeError("Inconsistent retained JavaScript callback contract");
 		callbackTypes.set(t.id,[a.type,b.type]);
@@ -66,7 +68,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 	if(callbackTypes.size)
 	{
 		const failure=ir.errors.find(e => e.id===hostError);
-		if(failure?.name!=="JavaScriptCallbackError" || failure.category!=="domain" || failure.payload!==null
+		if(failure?.name!==callbackName || failure.category!=="domain" || failure.payload!==null
 			|| [...callbackTypes.keys()].some(id => !ir.declarations.some(d => d.parameters.some(p => p.type.kind==="named" && p.type.id===id))))
 			throw new TypeError("Unbound retained JavaScript callback contract");
 	}
@@ -108,7 +110,8 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 		const callbacks=d.parameters.flatMap((p,i) => callback(p.type) ? [[i,...callback(p.type)]] : []);
 		const memberEscapes=phases && ((effect==="IO" || terminal) && phases.call.length || stepIO && phases.pull.length);
 		if((stepIO && !terminalId) || d.failure.mode!==(d.failure.errors.length?"declared":"none")
-			|| !same([...d.failure.errors].sort(),[startId,terminalId,memberEscapes?jsMemberFailure:null,callbacks.length && (effect==="IO" || terminal) ? hostError : null].filter(Boolean).sort()))
+			|| zend && delivery && Object.values(phases).some(names=>names.length)
+			|| !same([...d.failure.errors].sort(),[startId,terminalId,memberEscapes?(zend?"error:PhpHostException":jsMemberFailure):null,callbacks.length && (effect==="IO" || terminal) ? hostError : null].filter(Boolean).sort()))
 			throw new TypeError("Inconsistent Wasm task failure channels: " + d.id);
 		const errorShape = id => {
 			if(!id) return null;
@@ -131,6 +134,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 			, declaration
 			, args
 			, ...callbacks.length ? {callbacks} : {}
+			, ...zend && callbacks.length ? {callbackError: hostError} : {}
 			, ...(phases ? {hostPhases: phases} : {})
 			, ...(stepIO ? {stepIO: true} : {})
 			, result

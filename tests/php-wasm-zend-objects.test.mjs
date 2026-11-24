@@ -18,3 +18,15 @@ test("Zend worker keys cannot substitute for a live, matching capability",()=>{
 	const dropped=d.packet("worker",a,mirror);dropped.discard();assert.equal(dropped.claim(a),null);
 	assert.throws(()=>phpWasmObjectDomain([a,a]),TypeError);assert.throws(()=>phpWasmObjectDomain(["Box"]),TypeError);
 });
+
+test("a nested returned Except exposes only the active Zend object branch",()=>{
+	const type="host:"+"c".repeat(64),domain=phpWasmObjectDomain([type]),cap=domain.mint(type);
+	const shape=["uint32",[type,"string"]],obj=domain.borrow(type,cap);
+	const packet=domain.tagged("value",shape,{error: {ok: obj}});
+	assert.equal(packet.tags(),"01");assert.equal(packet.form(),"value");
+	assert.equal(packet.claim(type),cap.key());assert.equal(packet.claim(type),null);
+	assert.equal(domain.tagged("value",shape,{ok: 2}),null);
+	assert.equal(domain.tagged("value",shape,{error: {error: "message"}}),null);
+	for(const invalid of [{ok: 3,error: {}},{other: {}},{error: {ok: {}}},{error: {}}])
+		assert.throws(()=>domain.tagged("value",shape,invalid),TypeError);
+});

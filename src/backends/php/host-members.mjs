@@ -2,7 +2,7 @@
 import {componentScalarTypes} from "../../abi/component-scalars.mjs";
 import {hostMemberSymbol} from "../../abi/host-member-names.mjs";
 import {validateBindingIr} from "../../binding-ir/contract.mjs";
-import {canonicalJson,sha256} from "../../capsule/node.mjs";
+import {sha256Text} from "../../binding-ir/sha256.mjs";
 
 const identifier=/^[A-Za-z][A-Za-z0-9_]*$(?![\s\S])/u;
 const fail=why=>{throw new TypeError("PHP host members: "+why);};
@@ -20,7 +20,7 @@ export const phpHostMembers=ir=>{
 		|| !identifier.test(t.name) || !t.host?.targets.includes("php") || t.host.dynamic)
 		|| new Set(types.map(t=>t.name.toLowerCase())).size!==types.length
 		|| new Set(types.map(t=>t.resource.kindId)).size!==types.length) fail("expected distinct statically declared PHP classes");
-	const kinds=types.map(t=>({name: t.name,key: sha256(canonicalJson([ir.component.id,t.id,t.resource.kindId])),identity: t.host.identity}));
+	const kinds=types.map(t=>({name: t.name,key: sha256Text(JSON.stringify([ir.component.id,t.id,t.resource.kindId],null,2)+"\n"),identity: t.host.identity}));
 	const carrier=s=>{
 		const t=s.type;
 		if(t.kind==="primitive" && componentScalarTypes.includes(t.name) && s.ownership==="copy" && s.lifetime===null) return t.name;
@@ -58,4 +58,15 @@ export const phpHostMembers=ir=>{
 		return {id: d.id,owner,op,name: d.name,symbol,args,result,anchor,inputOwnership: sites.map(s=>s.ownership),resultOwnership: d.result.ownership};
 	});
 	return {kinds,members};
+};
+
+/**
+ * Bind the PHP selector rules and extern symbols to the threaded heap. Zend
+ * and ordinary JavaScript classes can coexist there without aliasing kinds.
+ *
+ * @param ir - The author's checked PHP import contract.
+ */
+export const phpWasmHostMembers=ir=>{
+	const {kinds,members}=phpHostMembers(ir);
+	return {members,kinds: kinds.map(k=>({name: k.name,policy: k.identity,key: sha256Text("php-wasm-zend-v1:"+k.key)}))};
 };

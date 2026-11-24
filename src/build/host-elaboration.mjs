@@ -20,33 +20,37 @@ const extractor = fileURLToPath(new URL("../analyze/HostExports.lean", import.me
 const fail = message => { throw Object.assign(new Error(message), { code: "host-elaboration-drift" }); };
 
 /**
- * Recover the exact JavaScript host provider from the captured author file.
+ * Recover the exact threaded host provider from the captured author file.
  * Never select a module or its generated C object by an archive-supplied name.
  *
  * @param contract - Project snapshot with the original UTF-8 host input.
  * @param evidence - Fresh elaboration record (when reconstructing after compilation).
+ * @param target - Author language of the nominal host contract.
  */
-export const threadedHostSource=(contract,evidence)=>{
+export const threadedHostSource=(contract,evidence,target="javascript")=>{
+	if(!["php","javascript"].includes(target)) fail("Unknown threaded host provider");
+	const php=target==="php",label=php?"PHP-Wasm":"JavaScript";
 	const {ir,hostImportsSource: source,hostImportsSourceSha256: hash}=contract;
 	if(!ir)
 	{
 		if(source!=null || hash!==null || contract.generatedHostModule!=null || evidence
-			&& (evidence.hostImportsSourceSha256!==null || evidence.selection.hostModule!==undefined || evidence.selection.javascriptThreadedHostMembers!==undefined))
+			&& (evidence.hostImportsSourceSha256!==null || evidence.selection.hostModule!==undefined || evidence.selection.javascriptThreadedHostMembers!==undefined || evidence.selection.phpWasmTaskObjects!==undefined || evidence.selection.phpNativeTaskObjects!==undefined))
 			fail("Unexpected threaded host source without import declarations");
 		return null;
 	}
-	const module=compiledHostModules.javascript;
+	const module=compiledHostModules[target];
 	if(typeof source!=="string" || sha256(source)!==hash || contract.generatedHostModule!==module)
-		fail("Unverified threaded JavaScript host source");
+		fail("Unverified threaded "+label+" host source");
 	const parsed=parseBindingIr(source);
-	if(canonicalJson(parsed)!==canonicalJson(ir)) fail("Captured host source differs from threaded JavaScript declarations");
+	if(canonicalJson(parsed)!==canonicalJson(ir)) fail("Captured host source differs from threaded "+label+" declarations");
 	if(evidence)
 	{
 		const interfaces=evidence.interfaces.filter(f=>f.module===module);
-		const lean=generateLeanHostObjectAdapters(parsed,{threadedJavaScript: true})[module.replaceAll(".","/")+".lean"];
-		if(evidence.selection.javascriptThreadedHostMembers!==true || evidence.selection.hostModule!==module
+		const lean=generateLeanHostObjectAdapters(parsed,{threadedJavaScript: !php,phpWasmTaskObjects: php})[module.replaceAll(".","/")+".lean"];
+		if((php?evidence.selection.phpWasmTaskObjects:evidence.selection.javascriptThreadedHostMembers)!==true || evidence.selection.phpNativeTaskObjects!==undefined
+			|| (php?evidence.selection.javascriptThreadedHostMembers:evidence.selection.phpWasmTaskObjects)!==undefined || evidence.selection.hostModule!==module
 			|| evidence.hostImportsSourceSha256!==hash || interfaces.length!==1 || interfaces[0].sourceSha256!==sha256(lean))
-			fail("Threaded JavaScript provider differs from the elaborated module");
+			fail("Threaded "+label+" provider differs from the elaborated module");
 	}
 	return parsed;
 };
@@ -66,6 +70,7 @@ export const compileHostSources = async options => {
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const phpNativeTaskObjects=Boolean(ir && options.target==="php-native" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	const phpWasmTaskObjects=Boolean(ir && options.target==="php-wasm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	if(ir && target==="php")
 	{
 		if(projectContract)
@@ -82,7 +87,7 @@ export const compileHostSources = async options => {
 	if(ir && sources.some(s => s.module === hostModule)) fail("Application source shadows the generated host module");
 	const modules = [...(ir ? [{ module: hostModule
 		, source: target === "python" ? generatePythonHostProvider(ir).lean
-			: generateLeanHostObjectAdapters(ir,{threadedJavaScript})[hostModule.replaceAll(".", "/") + ".lean"] }] : [])
+			: generateLeanHostObjectAdapters(ir,{threadedJavaScript,phpWasmTaskObjects})[hostModule.replaceAll(".", "/") + ".lean"] }] : [])
 	, ...sources];
 	const byPath = new Map(), byName = new Map(), built = new Map(), active = new Set(), objects = [];
 	for(const s of modules)
@@ -134,6 +139,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
 		, ...(threadedJavaScript ? {javascriptThreadedHostMembers: true} : {})
 		, ...(phpNativeTaskObjects ? {phpNativeTaskObjects: true} : {})
+		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []

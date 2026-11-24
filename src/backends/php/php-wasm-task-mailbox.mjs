@@ -32,8 +32,9 @@ export const createPhpCallbackHub=()=>{
  * @param slots - Compiler-authenticated callback slot, input and output triples.
  * @param hub - Notification queue shared only within this PHP interpreter.
  * @param objects - Optional interpreter-local domain for Zend object arguments and replies.
+ * @param errorId - Callback exception channel required by this compiled component.
  */
-export const createPhpCallbackMailbox=(slots,hub,objects)=>{
+export const createPhpCallbackMailbox=(slots,hub,objects,errorId="error:JavaScriptCallbackError")=>{
 	const specs=new Map(slots.map(([slot,input,output])=>[slot,{input,output}]));
 	const failures=new WeakMap();
 	const key=hub.allocate();
@@ -82,7 +83,7 @@ export const createPhpCallbackMailbox=(slots,hub,objects)=>{
 		return true;
 	};
 	const failure=error=>{
-		const ticket=error?.code==="error:JavaScriptCallbackError" && failures.get(error.cause);
+		const ticket=error?.code===errorId && failures.get(error.cause);
 		return ticket ? JSON.stringify(["throw",ticket]) : null;
 	};
 	return {key,request,answer,stop,next: ()=>hub.receive(()=>terminal),finish,failure};

@@ -40,7 +40,7 @@ export const compiledHostModules = Object.freeze({ python: "LeanBridge.Host.Pyth
 	, dotnet: "LeanBridge.Host.Dotnet", perl: "LeanBridge.Host.Perl"
 	, javascript: "LeanBridge.Host.Javascript", php: "LeanBridge.Host.Php" });
 /** Package coordinates select their own checked host namespace. */
-export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript", "php-native": "php" });
+export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript", "php-native": "php", "php-wasm": "php" });
 
 const primitive = Object.freeze({
 	unit: "Unit", bool: "Bool", char: "Char", bytes: "ByteArray", string: "String"
@@ -79,14 +79,14 @@ const ownershipNote = site => {
 	return `${site.ownership}, lifetime ${lifetime}`;
 };
 
-const emitTarget = (ir, target, resources,threadedJavaScript) => {
+const emitTarget = (ir, target, resources,options) => {
 	const namespace = `LeanBridge.Host.${pascal(target)}`;
 	const types = new Map(resources.map(resource => [resource.id, resource.name]));
 	const names = new Set(["HostIterator", "HostAsyncIterator"]), symbols = new Set();
 	const doc = text => text.replaceAll("/-", "/ -").replaceAll("-/", "- /");
 	const lines = [
 		`/- Generated from Binding IR SHA-256 ${hashBindingIr(ir)}. -/`
-		, ...(threadedJavaScript && target==="javascript"?["prelude","import Init.System.Promise","import Init.Data.SInt.Basic"]:[])
+		, ...((options.threadedJavaScript && target==="javascript" || options.phpWasmTaskObjects && target==="php")?["prelude","import Init.System.Promise","import Init.Data.SInt.Basic"]:[])
 		, "set_option autoImplicit false"
 		, `namespace ${namespace}`
 		, ""
@@ -166,7 +166,7 @@ export const generateLeanHostObjectAdapters = (ir,options={}) => {
 	for(const target of targets)
 	{
 		const selected = resources.filter(resource => resource.host.targets.includes(target));
-		files[`LeanBridge/Host/${pascal(target)}.lean`] = emitTarget(ir, target, selected,options.threadedJavaScript);
+		files[`LeanBridge/Host/${pascal(target)}.lean`] = emitTarget(ir, target, selected,options);
 	}
 	const manifest = {
 		schemaVersion: 1

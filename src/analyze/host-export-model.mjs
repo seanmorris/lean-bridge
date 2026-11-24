@@ -51,6 +51,9 @@ export const nativeHostSelection = (ir, target) => {
  */
 export const taskWorkerInterface=(api,evidence)=>{
 	if(evidence.selection.phpNativeTaskObjects) throw new TypeError("Native PHP task object carriers cannot use the JavaScript worker interface");
+	// Nominal Zend workers have their own checked ABI; never turn their
+	// synchronous PHP callbacks into JavaScript promises.
+	if(evidence.selection.phpWasmTaskObjects) return api;
 	if(!evidence.selection.phpTaskCallbacks || !api.types.some(t=>t.kind==="callback")) return api;
 	const selection={...evidence.selection,javascriptTaskCallbacks: true};delete selection.phpTaskCallbacks;
 	const resources=evidence.metadata.leanResources??[];
@@ -85,8 +88,10 @@ export const reconcileHostExports = options => {
 	const synchronous = selection.synchronousIO === true;
 	if(ir && hostTarget==="php" && selection.nativeEffectPolicy!==nativeEffectPolicy)
 		fail("PHP host imports require compiled member evidence");
-	const phpObjects=selection.phpNativeTaskObjects===true;
-	if(selection.phpNativeTaskObjects!==undefined && (!phpObjects || !ir || hostTarget!=="php" || selection.nativeEffectPolicy!==nativeEffectPolicy
+	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
+	if(selection.phpWasmTaskObjects!==undefined && (!phpWasm || selection.phpNativeTaskObjects!==undefined || selection.nativeEffects?.length))
+		fail("Unauthenticated PHP-Wasm task objects");
+	if((selection.phpNativeTaskObjects!==undefined || phpWasm) && (!phpObjects || !ir || hostTarget!=="php" || selection.nativeEffectPolicy!==nativeEffectPolicy
 		|| !(selection.taskExports?.length || selection.asyncIterators?.length) || Boolean(selection.taskExports?.length)!==(selection.phpTaskCallbacks===true)))
 		fail("Unauthenticated native PHP task objects");
 	if(ir && hostTarget==="php" && !phpObjects && (selection.phpTaskCallbacks===true || selection.taskExports?.length || selection.asyncIterators?.length))
@@ -114,7 +119,7 @@ export const reconcileHostExports = options => {
 	{
 		const p=selection.asyncIterators?.find(s=>s.open===e.declaration);
 		const protocol=e.protocolHostMembers;
-		if(owner && p)
+		if((owner || phpWasm) && p)
 		{
 			if(!protocol || canonicalJson(Object.keys(protocol).sort())!==canonicalJson(["close","pull"])) fail("Invalid cursor host member phases: "+e.declaration);
 		} else if(protocol!==undefined) fail("Unexpected cursor host member phases: "+e.declaration);
@@ -308,7 +313,7 @@ export const reconcileHostExports = options => {
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
 					, "lean-bridge.dev/host-members": owner ? used(e) : e.hostMembers
-					, ...(owner ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
+					, ...(owner || phpWasm ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
 				}
 			}
 		}))

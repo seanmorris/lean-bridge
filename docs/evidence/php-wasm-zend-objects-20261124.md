@@ -13,6 +13,8 @@ It runs the current owner adapter and [PHP application](../../tests/fixtures/php
 on PHP-Wasm 8.4.1 in Node and in an isolated Chromium page. The selected
 Lean methods have no direct calls to PHP class members. A PHP author still
 cannot publish a PHP-Wasm package that declares these host imports.
+The [PHP author-route test](php-wasm-zend-author-20261124.md) separately compiles
+and executes workers whose source imports `LeanBridge.Host.Php`.
 
 ## Ownership and failure behavior
 

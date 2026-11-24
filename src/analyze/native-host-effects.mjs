@@ -127,8 +127,8 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 				continue;
 				}
 			const cap = exact ? null : catalog.get(symbol);
-			if(workerOwner && ownerBlocking.has(symbol))
-				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the JavaScript host owner; return or compose the task without waiting synchronously`);
+			if((workerOwner || selection.phpWasmTaskObjects===true) && ownerBlocking.has(symbol))
+				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the ${workerOwner?"JavaScript":"PHP-Wasm"} host owner; return or compose the task without waiting synchronously`);
 			if(cap === null) continue;
 			if(!allowed.includes(cap)) violations.add(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);
 			found.add(cap);

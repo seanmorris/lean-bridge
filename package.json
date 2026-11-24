@@ -1084,6 +1084,7 @@
     "test:php-wasm-package:release": "node scripts/check-php-wasm-package-release.mjs",
     "test:php-wasm-composition": "node scripts/check-php-wasm-composition.mjs",
     "test:php-wasm-task-owner": "node --test --test-concurrency=1 tests/helpers/php-wasm-task-owner.mjs",
+    "test:php-wasm-zend-author": "node --test --test-concurrency=1 tests/helpers/php-wasm-zend-author.mjs",
     "test:php-wasm-zend-objects": "node --test --test-concurrency=1 tests/helpers/php-wasm-zend-objects.mjs",
     "test:php-wasm-task-packages": "node --test --test-concurrency=1 tests/php-wasm-task-wire.test.mjs tests/helpers/php-wasm-task-cli.mjs",
     "test:php-wasm-task-callbacks": "LEAN_BRIDGE_PHP_WASM_TASK_CALLBACKS=1 node --test --test-concurrency=1 tests/php-wasm-task-wire.test.mjs tests/helpers/php-wasm-task-cli.mjs",

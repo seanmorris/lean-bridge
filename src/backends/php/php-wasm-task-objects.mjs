@@ -38,11 +38,26 @@ export const phpWasmObjectDomain=kinds=>{
 		if(!known || known.kind!==kind) throw new TypeError("Unrecognized Zend object result");
 		return known.id;
 	};
-	const packet=(phase,kind,v)=>{
+	const packet=(phase,kind,v,tags="")=>{
 		let id=key(kind,v);
 		return Object.freeze({form: ()=>phase
+			, tags: ()=>tags
 			, claim: expected=>{if(expected!==kind) return null;const value=id;id=null;return value;}
 			, discard: ()=>{id=null;}});
 	};
-	return Object.freeze({classFor,mint,borrow,key,packet,has: kind=>types.has(kind)});
+	const tagged=(phase,shape,value)=>{
+		let tags="",type=shape,v=value;
+		while(Array.isArray(type))
+		{
+			if(type.length!==2 || tags.length>=32 || !v || typeof v!=="object" || Object.keys(v).length!==1)
+				throw new TypeError("Invalid Zend result branch");
+			if(Object.hasOwn(v,"ok"))
+			{tags+="1";type=type[0];v=v.ok;}
+			else if(Object.hasOwn(v,"error"))
+			{tags+="0";type=type[1];v=v.error;}
+			else throw new TypeError("Invalid Zend result branch");
+		}
+		return types.has(type)?packet(phase,type,v,tags):null;
+	};
+	return Object.freeze({classFor,mint,borrow,key,packet,tagged,has: kind=>types.has(kind)});
 };

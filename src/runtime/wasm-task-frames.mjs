@@ -252,7 +252,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 				if(key<1n || key>4096n || ![2n,3n].includes(phase) || (!discard && !hostFailures.has(Number(key)))) return retire(invalid());
 				checkedOut(16); blankOut();
 				if(discard) return {done: true};
-				throw failed("error:JavaScriptCallbackError",phase===2n ? "factory" : "task",hostFailures.get(Number(key)));
+				throw failed(method.callbackError??"error:JavaScriptCallbackError",phase===2n ? "factory" : "task",hostFailures.get(Number(key)));
 			}
 			if(!declared && !value)
 			{

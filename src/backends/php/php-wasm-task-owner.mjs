@@ -4,7 +4,17 @@ import {createPhpCallbackHub,createPhpCallbackMailbox} from "./php-wasm-task-mai
 import {phpTaskLeases} from "./php-wasm-task-leases.mjs";
 
 const fault=JSON.stringify(["fault"]);
-const packet=(leases,phase,type,result)=>leases.has(type)?leases.packet(phase,type,result):JSON.stringify([phase,...writePhpTaskValue(type,result)]);
+const packet=(leases,phase,type,result)=>{
+	if(leases.has(type)) return leases.packet(phase,type,result);
+	// Only the selected branch carries a payload. In particular, a returned
+	// Except.error containing a Zend object is a value, not a host failure.
+	if(Array.isArray(type) && leases.tagged)
+	{
+		const tagged=leases.tagged(phase,type,result);
+		if(tagged) return tagged;
+	}
+	return JSON.stringify([phase,...writePhpTaskValue(type,result)]);
+};
 const failure=(leases,m,e)=>{
 	try
 	{
@@ -24,7 +34,7 @@ const guarded=(leases,m,perform,success)=>{
 	{return Promise.resolve(failure(leases,m,e));}
 };
 const operation=(m,call,hub,leases,objects)=>(...args)=>{
-	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub,objects);
+	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub,objects,m.callbackError);
 	const val=v=>packet(leases,"value",m.result,v);
 	try
 	{
@@ -70,6 +80,17 @@ const operation=(m,call,hub,leases,objects)=>(...args)=>{
  * @param objects - Interpreter-local nominal domain.
  */
 export const phpZendTaskOperation=(m,call,hub,objects)=>operation(m,call,hub,objects,objects);
+
+/**
+ * Preserve the marker for a Zend callback and the typed payload for other
+ * declared errors. The caller supplies this only to the checked runtime.
+ *
+ * @param failure - A genuine declared failure from the executor.
+ */
+export const translateZendWorkerFailure=failure=>{
+	const id=failure.details.errorId;
+	return Object.assign(new Error("Lean worker: "+id,{cause: id==="error:PhpCallbackException"?failure.details.payload:failure}),{code: id});
+};
 /**
  * Install private method closures before Zend starts. The PHP surface never
  * names a JS export, waits on a raw rejection, or touches a Lean pointer.

@@ -4,6 +4,7 @@ import {createWasmTaskNotifications} from "./wasm-task-notifications.mjs";
 import {createWasmTaskSession} from "./wasm-task-bindings.mjs";
 import {installWasmTaskHostMembers} from "./wasm-task-host-members.mjs";
 import {javaScriptHostMembers} from "../backends/javascript/host-members.mjs";
+import {phpWasmHostMembers} from "../backends/php/host-members.mjs";
 
 const componentBytes = async url => {
 	if(url.protocol === "file:") return (await import("node:fs/promises")).readFile(url);
@@ -58,9 +59,9 @@ export const createWasmTaskLoader = createModule => {
 		observeTaskWorkerFailures(module.PThread,failed);
 		return session;
 	})();
-	const load = async ({bindingIr,componentIdentity,bindingIrSha256,integrity,sideModule,hostImports=null}) => {
+	const load = async ({bindingIr,componentIdentity,bindingIrSha256,integrity,sideModule,hostImports=null,zendObjects=false}) => {
 		if(closed || (session && session.snapshot().state!=="open")) throw new Error("Lean task loader is closed");
-		const abi=javaScriptTaskAbi(bindingIr,componentIdentity,hostImports);
+		const abi=javaScriptTaskAbi(bindingIr,componentIdentity,hostImports,zendObjects);
 		if(abi.bindingIrSha256!==bindingIrSha256 || !/^[0-9a-f]{64}$/u.test(integrity) || !(sideModule instanceof URL))
 			throw new TypeError("Invalid Lean task component identity");
 		const id=bindingIr.component.id, revision=[componentIdentity,bindingIrSha256,integrity].join(":");
@@ -93,7 +94,7 @@ export const createWasmTaskLoader = createModule => {
 				if(!slot) throw new Error("Cannot link installed Lean task component");
 				module.FS.unlink(path);
 				while(pointers.length) module._free(pointers.pop());
-				return owner.bind(abi,frame => module._lb_js_task_call(slot,frame),hostImports?javaScriptHostMembers(hostImports):null);
+				return owner.bind(abi,frame => module._lb_js_task_call(slot,frame),hostImports?(zendObjects?phpWasmHostMembers:javaScriptHostMembers)(hostImports):null);
 			}
 			catch(error)
 { return owner.retire(error); }

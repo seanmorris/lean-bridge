@@ -12,6 +12,19 @@ final class Port {
         return $get();
     }
     private static function unpack(object $packet,mixed $expected,?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects): object {
+        if ($objects!==null && is_array($expected)) {
+            $tags=$packet->tags();
+            if (!is_string($tags) || strlen($tags)>32) throw new \UnexpectedValueException('Invalid Zend object branch tags');
+            $type=$expected;
+            foreach (str_split($tags) as $tag) {
+                if (!is_array($type) || ($tag!=='0' && $tag!=='1')) throw new \UnexpectedValueException('Unexpected Zend object branch');
+                $type=$type[$tag==='1'?0:1];
+            }
+            if (!$objects->has($type)) throw new \UnexpectedValueException('Missing Zend object result branch');
+            $value=self::unpack($packet,$type,$objects);
+            for ($i=strlen($tags)-1;$i>=0;--$i) $value=$tags[$i]==='1'?new \__LB_PUBLIC__\Ok($value):new \__LB_PUBLIC__\Err($value);
+            return $value;
+        }
         if ($objects?->has($expected)) {
             $key=$packet->claim($expected);
             if (!is_string($key)) throw new \UnexpectedValueException('Missing or already delivered Zend object');

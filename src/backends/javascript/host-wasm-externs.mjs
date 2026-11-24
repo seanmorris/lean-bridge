@@ -1,6 +1,7 @@
 /** @file Emit Lean's synchronous application-host symbols for a wasm32 side module. */
 import { componentScalarTypes } from "../../abi/component-scalars.mjs";
 import { javaScriptHostMembers } from "./host-members.mjs";
+import { phpWasmHostMembers } from "../php/host-members.mjs";
 
 // These are Lean C carriers, not the application's JavaScript types. Signed
 // fixed-width arguments use the same unsigned bit carrier in Lean-generated C.
@@ -32,7 +33,7 @@ const tag = type => typeof type === "number" ? 64 + type : componentScalarTypes.
  */
 export const generateJavaScriptHostExterns = (ir, identity, options={}) => {
 	if(!/^[a-f0-9]{64}$(?![\s\S])/u.test(identity)) throw new TypeError("Invalid JavaScript host component identity");
-	const model = javaScriptHostMembers(ir), prefix = "lb_jsh_" + identity + "_";
+	const model = (options.phpWasmTaskObjects?phpWasmHostMembers:javaScriptHostMembers)(ir), prefix = "lb_jsh_" + identity + "_";
 	const names = [], entries = [], declarations = [];
 	const invoke=options.threaded ? "lb_jst_member_v1("+JSON.stringify(identity)+"," : "lb_host_invoke(";
 	for(const [slot, m] of model.members.entries())

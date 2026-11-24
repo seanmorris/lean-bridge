@@ -46,6 +46,7 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, "abi/javascript-task-hosts"
 		, "abi/host-member-names"
 		, "backends/javascript/host-members"
+		, "backends/php/host-members"
 		, "abi/component-scalars"
 		, "release/wasm-word-codecs"
 		, "binding-ir/canonical"

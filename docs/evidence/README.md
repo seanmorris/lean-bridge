@@ -6,6 +6,9 @@ The [complete checked-record value-index matrix](checked-record-value-index-matr
 binds closed Bool, String, and Nat parameter/result acceptance to retained
 hosted packages across all 17 consumer profiles and both author routes.
 
+[PHP-authored Zend object workers](php-wasm-zend-author-20261124.md) records
+compiled ordinary and reviewed workers running on PHP-Wasm in Node and Chromium.
+
 [Zero-payload checked records in C and C++](zero-payload-checked-record-native-20261021.md)
 record four hosted native package selections for proof-only `Witness`,
 Unit-bearing `Token`, plain empty `Marker`, Option, Array and variant values.

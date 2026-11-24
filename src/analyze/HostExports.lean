@@ -37,6 +37,7 @@ structure Request where
   perlTaskCallbacks : Option Bool := none
   phpTaskCallbacks : Option Bool := none
   phpNativeTaskObjects : Option Bool := none
+  phpWasmTaskObjects : Option Bool := none
   javascriptTaskCallbacks : Option Bool := none
   javascriptThreadedHostMembers : Option Bool := none
   witTaskCallbacks : Option Bool := none
@@ -57,10 +58,12 @@ def Request.ownerHostMembers (r : Request) : Bool :=
   r.javascriptThreadedHostMembers == some true && r.hostModule == some "LeanBridge.Host.Javascript" &&
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty)
 
-/-- Native PHP workers may carry opaque objects to an owner callback, but may
+/-- PHP workers may carry opaque objects to an owner callback, but may
     not invoke PHP members themselves. Do not grant the JS dispatcher here. -/
 def Request.phpTaskObjects (r : Request) : Bool :=
-  r.phpNativeTaskObjects == some true && r.hostModule == some "LeanBridge.Host.Php" &&
+  ((r.phpNativeTaskObjects == some true && r.phpWasmTaskObjects.isNone) ||
+    (r.phpWasmTaskObjects == some true && r.phpNativeTaskObjects.isNone)) &&
+    r.hostModule == some "LeanBridge.Host.Php" &&
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
     (r.phpTaskCallbacks == some true) == !r.taskExports.isEmpty
 
@@ -183,6 +186,8 @@ def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
   if r.ownerHostMembers then return
   if r.phpTaskObjects then
     if r.members.any (fun m => deps.contains m.toName) then
+      if r.phpWasmTaskObjects == some true then
+        throwError "PHP-Wasm worker calls a PHP member outside its owner: {n}"
       throwError "native PHP task calls a PHP member outside its owner: {n}"
     return
   if r.members.any (fun m => deps.contains m.toName) || r.resources.any (fun t => deps.contains t.lean.toName) then
@@ -247,7 +252,7 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
     throwError "cursor step must distinguish exhaustion with Option: {p.next}"
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
     ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]! r.hostValues)] ++ extra ++ failure ++
-    (if r.ownerHostMembers then [("protocolHostMembers", Json.mkObj [
+    (if r.ownerHostMembers || r.phpWasmTaskObjects == some true then [("protocolHostMembers", Json.mkObj [
       ("pull", toJson (usedMembers r pullDeps)), ("close", toJson (usedMembers r closeDeps))])] else [])
 
 /-- Module-system imports store code in the IR section; classic application modules
@@ -291,6 +296,8 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid JavaScript owner-dispatch selection"
   if r.phpNativeTaskObjects.isSome && !r.phpTaskObjects then
     throwError "invalid native PHP task object selection"
+  if r.phpWasmTaskObjects.isSome && !r.phpTaskObjects then
+    throwError "invalid PHP-Wasm task object selection"
   if let some m := r.hostModule then
     unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet",
              "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&
