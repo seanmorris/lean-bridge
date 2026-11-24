@@ -11,10 +11,19 @@ package-set receipt before installation. Both primary routes emitted identical
 | 3.11 | Ordinary | 47,824 | `4336f0215a1fb9a95346c50fb1c004bdb2ac43b92e01fd52c7542964b82fa4c6` |
 | 3.11 | Reviewed | 47,858 | `91689aa84c117a7c7ec6e0af34838ae30a69f45cedda36d1242639614a53253f` |
 | 3.11 | Peer | 38,414 | `e95260e8f96b9c50b4916c14a84417167a0d8c723b34298fd7a1fb8626e0f151` |
+| 3.12 | Ordinary | 48,677 | `1d29adb5cb774cc479687518b38871c7ca280d4daaca62c8b3166e36574bd54a` |
+| 3.12 | Reviewed | 48,723 | `8aa7c6a53558a602ef624501765bde96b63fe3567bb143291bba5363625c5bd1` |
+| 3.12 | Peer | 39,084 | `f2ed818787624b93c0178a6832b01ee5670afa618af4866979eb7a8b9f3ef3c2` |
 
 The shared runtime wheel was 51,310,803 bytes, SHA-256
 `29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd`.
-These are local release and consumer checks, not registry publications.
+Both interpreter versions used that same runtime. On 3.12 the ordinary,
+reviewed, and peer package-set receipts had SHA-256 digests
+`45e15650260bd994e050d6bb8454643d88d513f5d15816a91d64b4852f175f26`,
+`cf00c12b37403b7ee1f3c76f54d0680befa427f5787d2e2c20b103266828721a`,
+and `5279bb13ff6c6a8b746c5093ffdba0d989f274f778c1bc5fab46cf31ce91546e`.
+Both consumer programs passed on both routes for both interpreters. These are
+local release and consumer checks, not hosted CI or registry publications.
 
 After removing the author trees, pip installed each primary wheel locally with
 the peer. The tests moved the installation, then ran isolated Python with no
