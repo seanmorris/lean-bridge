@@ -31,6 +31,7 @@ const init = async (wasm,bytes) => {
 		, kind: (id,i)=>current(id).session.kind(i)
 		, send: (id,...args)=>current(id).wire.call(...args)
 		, finish: (id,out)=>current(id).wire.finish(out)
+		, deliver: (id,...args)=>current(id).deliver(...args)
 		, record: (id,status,out)=>{
 			const {wire}=current(id);
 			const failure=out?wire.observed(out):null;
@@ -54,9 +55,8 @@ const init = async (wasm,bytes) => {
 		{ wire=createWasmHostWire(wasm,model,session.classes,session); }
 		catch(error)
 		{ session.close(); throw error; }
-		const item={id,session,wire};
-		const during=fn=>{
-			session.enter();stack.push(item);
+		const during=(fn,deliver)=>{
+			session.enter();stack.push({id,session,wire,deliver});
 			try
 			{ return fn(); }
 			finally

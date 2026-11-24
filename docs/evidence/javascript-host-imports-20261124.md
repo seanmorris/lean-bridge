@@ -11,6 +11,7 @@ share the runtime's object registry.
 | `npm run test:javascript-host-imports` | The ordinary and reviewed Workshop sources compile against the generated `LeanBridge.Host.Javascript` module. Analysis identifies the actual extern symbols, alias result and mapped EIO error. An outdated review, a foreign symbol or scheduler, and a shadow module are rejected. |
 | `node --test tests/javascript-host-members.test.mjs` | The host dispatcher calls the supplied class, respects the receiver, and rejects invalid member arguments and results. |
 | `npm run test:javascript-host-wasm` | Lean 4.32.2 and Emscripten 6.0.6 compile the providers and a shared identity broker. Node runs the probes in the prepared single-threaded runtime, including two independent components loaded in both orders. |
+| `npm run test:javascript-host-public` | Capture a Lake project, elaborate its public functions and generate the caller-facing entry. Call all eight source-derived methods from JavaScript on the prepared Wasm heap. |
 
 In the hand-written check, Lean writes through an alias, reads through the original
 object and gets **42**. On the second call the JavaScript method throws; the
@@ -54,7 +55,23 @@ bindings or exceptions. Closing one binding leaves the other usable. Closing
 the last invalidates even a reference retained by Lean; rebinding does not
 revive it.
 
-These are separately compiled side modules, not installed npm packages.
-The shared-domain test still supplies the component call entry and loads the
-Wasm artifacts directly. The public npm producer/loader and installed Node,
-browser and Worker checks remain.
+The public-entry check removes the hand-written call entry. It binds the
+application's `Box` class, calls `make(41)`, writes `42`, and receives the
+same instance from `identity`. An invalid constructor argument fails before
+the application constructs an object. Returned `Except` branches appear as
+nested `{ok: …}` / `{error: …}` values. A typed EIO failure carries its
+declared error identity and payload (including an actual host object);
+ordinary Lean IO errors carry their message. An unchanged JS throw is
+delivered as-is, even when the thrown object looks like a Lean declared
+failure. After `dispose()`, subsequent calls fail. This eight-function test's
+public IR SHA-256 is
+`ddd893093c382f5ebf8c3da754fcfc115dfb7d65c010b1018fe13fd6a2c6cbe7`.
+
+The ordinary IO error in this fixture uses a fixed message. Formatting its
+unsigned argument into the message reached `Array.mk` (`lean_array_mk`),
+which the current effect checker does not admit on that call path. The test
+does not establish support for that formatting path.
+
+These are compiled side modules loaded directly, not installed npm packages.
+The npm release writer, shared package loader and installed Node, browser
+and Worker checks remain.

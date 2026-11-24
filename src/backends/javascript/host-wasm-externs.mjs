@@ -4,7 +4,12 @@ import { javaScriptHostMembers } from "./host-members.mjs";
 
 // These are Lean C carriers, not the application's JavaScript types. Signed
 // fixed-width arguments use the same unsigned bit carrier in Lean-generated C.
-const carrier = type => {
+/**
+ * Determine the actual Lean C argument type and its boxing operation.
+ *
+ * @param type - Checked scalar name or nominal kind index.
+ */
+export const javaScriptHostCarrier = type => {
 	if(typeof type === "number" || ["unit", "nat", "int", "string", "bytes"].includes(type))
 		return ["lean_object *", null];
 	if(type === "float32" || type === "float64")
@@ -30,7 +35,7 @@ export const generateJavaScriptHostExterns = (ir, identity) => {
 	const names = [], entries = [], declarations = [];
 	for(const [slot, m] of model.members.entries())
 	{
-		const args = m.args.map(carrier), n = args.length, name = prefix + "member_" + slot;
+		const args = m.args.map(javaScriptHostCarrier), n = args.length, name = prefix + "member_" + slot;
 		names.push("#define " + m.symbol + " " + name);
 		const signature = "lean_object *" + name + "(" + (args.map(([c], i) => c + " a" + i).join(",") || "void") + ")";
 		declarations.push(signature + ";");

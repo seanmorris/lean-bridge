@@ -3,8 +3,9 @@
  *
  * @file
  */
-import { constants } from "node:fs";
-import { lstat, open, readFile } from "node:fs/promises";
+import { constants, createReadStream } from "node:fs";
+import { createHash } from "node:crypto";
+import { lstat, open } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 
@@ -94,7 +95,16 @@ export const identifyJavaScriptWasmCompiler = async ({ sdkRoot, run }) => {
 		: { emsdkCommit: (await run("git", ["-C", root, "rev-parse", "HEAD"])).stdout.trim() };
 	if(!archiveBytes && origin.emsdkCommit !== javascriptWasmOwnedPins.emsdkCommit) fail("JavaScript SDK checkout differs from the pinned emsdk commit");
 	const version = (await run(join(root, "upstream/emscripten/emcc"), ["--version"])).stdout.split("\n")[0];
-	const files = Object.fromEntries(await Promise.all(javascriptWasmCompilerFiles.map(async path => [path, identity(await readFile(join(root, path)))])));
+	// clang and wasm-ld together can exceed 200 MiB. Fingerprint exactly the
+	// same bytes without holding either executable in the author process.
+	const files = {};
+	for(const path of javascriptWasmCompilerFiles)
+	{
+		const digest=createHash("sha256"); let bytes=0;
+		for await(const chunk of createReadStream(join(root,path)))
+		{ digest.update(chunk);bytes+=chunk.length; }
+		files[path]={bytes,sha256: digest.digest("hex")};
+	}
 	if(archiveBytes) files[javascriptWasmToolchainMarker] = identity(archiveBytes);
 	const compiler = { version, ...origin, files };
 	if(!validJavaScriptWasmCompilerIdentity(compiler)) fail("Owned JavaScript compilation requires the pinned npm Emscripten 6.0.6 toolchain");
