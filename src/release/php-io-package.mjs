@@ -74,12 +74,19 @@ export const writePhpCompiledDistribution = async (o, distribution) => {
 		await save("lean-bridge/host-imports.json", projectContract.hostImportsSource);
 		await save("lean-bridge/host-provider.c",port.source); await save("lean-bridge/entry-abi.h",port.header);
 		await save("lean-bridge/BridgePhpExports.lean",port.entryLean);
+		if(tasks)
+		{
+			await save("lean-bridge/port.c",distribution.taskPort.source);
+			await save("lean-bridge/php-io-port.h",distribution.taskPort.header);
+			for(const [file,bytes] of Object.entries(distribution.workerSources)) await save("lean-bridge/"+file,bytes);
+		}
 	} else
 	{ await save("lean-bridge/port.c",port.source); await save("lean-bridge/php-io-port.h",port.header); }
 	await save("lean-bridge/binding-ir.json",canonicalJson(api)); await save("lean-bridge/elaboration.json",canonicalJson(evidence));
 	await save("lean-bridge/runtime.json",canonicalJson(manifest));
 	const usage=host ? "Bind application classes with withHosts(['Box' => YourClass::class]), call methods on the binding and close it in finally. Substitute the class names from your host contract. Original PHP exceptions, Lean IO errors and declared EIO failures remain distinct." : tasks ? "Tasks return Amp futures; call ->await() to receive a result. Iterate pull streams with foreach. Pass an Amp cancellation token to the generated function to cancel the operation; passing one only to await cancels that wait. Composer installs Amp and Revolt. No compiler is required." : "Calls execute synchronously on the original Linux x86-64 PHP CLI thread. IO errors and typed EIO exceptions are distinct from returned Ok/Err values. The native runtime is included; no compiler or event loop is required.";
-	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+namespace+". "+usage+" Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
+	const asyncUsage=host && tasks?" Task methods return Amp futures and cursors support foreach. To stop pending work, pass an Amp cancellation token to the binding method or close the binding.":"";
+	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+namespace+". "+usage+asyncUsage+" Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
 	const glibcMinimumVersion = o.floor;
 	const bridge = { profile, namespace, platform: "linux-x86_64", glibcMinimumVersion };
 	const require = { php: ">=8.2 <9", "ext-ffi": "*", ...brickMathRequirement, ...tasks ? { "amphp/amp": "^3.1", "revolt/event-loop": "^1.0" } : {} };

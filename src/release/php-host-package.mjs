@@ -5,7 +5,7 @@ import { generatePhpHostFiles } from "../backends/php/host-api.mjs";
 import { generatePhpHostExports } from "../backends/php/host-exports.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-artifacts.mjs";
-import { compilePhpHostComponent } from "../build/php-host-component.mjs";
+import { compilePhpHostComponent,compilePhpHostTaskComponent } from "../build/php-host-component.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { sha256 } from "../capsule/node.mjs";
 import { writePhpCompiledDistribution } from "./php-io-package.mjs";
@@ -21,13 +21,14 @@ export const buildPhpHostPackage = async o => {
 	const app = await mkdtemp(join(o.workRoot, ".php-host-"));
 	try
 	{
-		const linked = await compilePhpHostComponent({ ...o, app });
+		const tasks=Boolean(o.projectContract.taskExports?.length || o.projectContract.asyncIterators?.length);
+		const linked = await (tasks?compilePhpHostTaskComponent:compilePhpHostComponent)({ ...o, app });
 		const { manifest, identity } = await readVerifiedNativeRuntime(o.runtimeRoot);
 		if(identity !== linked.runtimeIdentity) throw new Error("PHP host runtime changed after compilation");
 		const floor = o.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 		if(!/^2\.(?:3[0-9]|[4-9][0-9])$/u.test(floor)) throw new TypeError("Invalid PHP host glibc floor");
 		const files = new Map(), libraries = {};
-		for(const n of ["libleanshared.so","liblean_bridge_native.so",linked.domain,linked.component])
+		for(const n of ["libleanshared.so","liblean_bridge_native.so",linked.domain,...tasks?[linked.task.ledger]:[],linked.component])
 		{
 			const path = "lib/"+n, dep=manifest.files[path], file=dep ? join(o.runtimeRoot,path) : join(app,n);
 			const bytes=await readFile(file), hash=sha256(bytes); validateNativeElf(bytes);
@@ -40,7 +41,10 @@ export const buildPhpHostPackage = async o => {
 			libraries[n]=hash; files.set(path,bytes);
 		}
 		const {files: generated, namespace}=await generatePhpHostFiles(linked,o.ir,manifest);
-		const port=generatePhpHostExports({ir: o.ir,entries: linked.entries,modules: o.projectContract.modules,identity: linked.identity});
+		const port=generatePhpHostExports({ir: o.ir,entries: linked.entries.filter(e=>!e.delivery),modules: o.projectContract.modules,identity: linked.identity,phpTaskLeases: tasks});
+		const workerSources={};
+		if(tasks) for(const f of ["BridgeCAsync.lean","task-adapter.c","host-wire.c","host-task-leases.h"])
+			workerSources[f]=await readFile(join(app,f));
 		const metadata={...o,api: linked.api,evidence: linked.evidence
 			, bindingIrSha256: hashBindingIr(linked.api)
 			, componentIdentity: linked.identity
@@ -48,7 +52,7 @@ export const buildPhpHostPackage = async o => {
 			, files
 			, manifest
 			, floor};
-		return await writePhpCompiledDistribution(metadata,{tasks: false,host: true,profile: "native-php-host-v1",generated,namespace,libraries,port});
+		return await writePhpCompiledDistribution(metadata,{tasks,host: true,profile: tasks?"native-php-host-task-v1":"native-php-host-v1",generated,namespace,libraries,port,taskPort: linked.task?.port,workerSources});
 	} finally
 	{ await rm(app,{recursive: true,force: true}); }
 };

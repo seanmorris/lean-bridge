@@ -114,6 +114,36 @@ first exception thrown by cleanup; the bridge still drains the remaining
 references. If the call itself failed, its original error takes precedence.
 See the [two-package lifetime and error checks](evidence/php-host-finalizers-20261124.md).
 
+#### Await a task that uses your objects
+
+A Composer package with the `native-php-host-task-v1` profile also exposes
+tasks and cursors on the binding. Pass your object and an ordinary PHP
+callable. Lean runs the task on a worker; PHP invokes your callable on the
+event-loop thread. For example, the [async Workshop](../tests/fixtures/php-host-tasks/Workshop.lean)
+exports `relay`, which sends one callback’s result to the next:
+
+```php
+$workshop = LeanWorkshop\withHosts(['Box' => Meter::class]);
+try {
+    $meter = new Meter(7);
+    $replacement = new Meter(42);
+    $result = $workshop->relay(
+        $meter,
+        fn(Meter $input) => $replacement,
+        fn(Meter $input) => $input
+    )->await();
+    assert($result === $replacement);
+} finally {
+    $workshop->close();
+}
+```
+
+Use `foreach` on a cursor. Each iteration requests one item. To cancel work,
+pass an Amp cancellation token as the last argument to the binding method;
+passing it to `await()` cancels only that wait. Closing a binding cancels
+its outstanding deliveries without closing another binding. An immediate
+method such as `read()` remains synchronous.
+
 ### Call synchronous IO and handle errors
 
 Install the publisher’s native Composer package and require its autoloader.

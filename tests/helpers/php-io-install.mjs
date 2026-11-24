@@ -17,7 +17,7 @@ const repo = async (handoff, stage) => {
 	const { receipt, result } = await readVerifiedPackageSetReceipt({ receiptPath: join(handoff,"package-set-receipt.json") });
 	const [pkg] = receipt.packages;
 	assert.equal(receipt.profiles[0].id, pkg.profile); assert.equal(pkg.target, "php-native");
-	assert.ok(["native-php-io-v1","native-php-task-v1","native-php-host-v1"].includes(pkg.profile));
+	assert.ok(["native-php-io-v1","native-php-task-v1","native-php-host-v1","native-php-host-task-v1"].includes(pkg.profile));
 	assert.equal(pkg.runtimeDelivery, "embedded"); assert.equal(pkg.artifacts.length, 1);
 	const archive = join(handoff, pkg.artifacts[0].path);
 	const meta = JSON.parse(await run("unzip", ["-p",archive,"composer.json"],stage,env));

@@ -22,10 +22,13 @@ distribute the Composer ZIP as usual. The receipt identifies this synchronous
 profile as `native-php-host-v1`. The [PHP consumer example](../php.md#let-lean-call-an-application-object)
 shows how an application binds its classes; no consumer writes FFI code.
 
-This Composer profile supports synchronous calls on imported classes. The
-[native worker kernel](../evidence/php-host-task-kernel-20261124.md) also
-tests class-valued tasks and callbacks, but those combinations are not yet
-available through a published package interface.
+To carry an imported class through a task or cursor, keep the same
+`hostImports` and declare `taskExports`, `taskIOErrors` or `asyncIterators`
+as appropriate. See the [async Workshop configuration](../../tests/fixtures/php-host-tasks/lean-bridge.exports.json).
+The resulting Composer archive uses `native-php-host-task-v1` and requires
+Amp and Revolt. A worker can carry objects and call a retained PHP callback
+on the owner thread; it cannot invoke a PHP member directly. Synchronous
+methods on the same binding can still invoke imported members.
 
 For a borrowed member result, name the object that must outlive it. Use
 `{"scope":"receiver","anchor":"receiver"}` for the receiving object, or

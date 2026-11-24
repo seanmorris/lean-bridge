@@ -28,7 +28,7 @@ final class Delivery {
             register_shutdown_function(static function() {
                 $owners=[];
                 foreach (self::$live as $owner=>$_) $owners[]=$owner;
-                foreach ($owners as $owner) if ($owner->pid===getmypid()) $owner->close();
+                foreach ($owners as $owner) if ($owner->pid===getmypid()) { try { $owner->close(); } catch (\Throwable) {} }
             });
         }
         self::$live[$this]=true;
@@ -36,7 +36,7 @@ final class Delivery {
     private function __clone() {}
     public function __serialize(): array { throw new \LogicException('Cannot serialize Lean delivery'); }
     public function __unserialize(array $data): void { throw new \LogicException('Cannot restore Lean delivery'); }
-    public function __destruct() { if ($this->pid===getmypid()) $this->close(); }
+    public function __destruct() { if ($this->pid===getmypid()) { try { $this->close(); } catch (\Throwable) {} } }
     public function subscribe(): void {
         if ($this->cancel===null) return;
         $weak=\WeakReference::create($this);
@@ -58,21 +58,21 @@ final class Delivery {
         if ($this->closed) return;
         $this->closed=true;
         $this->reason=$reason;
+        $cleanup=null;
+        try { $this->unwatch(); } catch (\Throwable $e) { $cleanup=$e; }
         try {
-            $this->unwatch();
-        } finally {
-            try {
-                if ($this->handle[0]) {
-                    $close=$this->ops['close']; $status=$this->ffi->$close($this->handle);
-                    if ($status!==0 && $status!==6) throw new LeanBridgeError('Cannot close Lean delivery (status '.$status.')');
-                }
-            } finally {
-                if ($this->subscription!==null) $this->cancel->unsubscribe($this->subscription);
-                unset(self::$live[$this]);/*__LB_RELEASE_CALLBACKS__*/
-                $pending=$this->pending; $this->pending=null;
-                $pending?->error($reason??new LeanBridgeError('Lean stream closed during pull'));
+            if ($this->handle[0]) {
+                $close=$this->ops['close']; $status=$this->ffi->$close($this->handle);
+                if ($status!==0 && $status!==6) throw new LeanBridgeError('Cannot close Lean delivery (status '.$status.')');
             }
-        }
+        } catch (\Throwable $e) { $cleanup??=$e; }
+        try { if ($this->subscription!==null) $this->cancel->unsubscribe($this->subscription); }
+        catch (\Throwable $e) { $cleanup??=$e; }
+        unset(self::$live[$this]);
+        try { /*__LB_RELEASE_CALLBACKS__*/ } catch (\Throwable $e) { $cleanup??=$e; }
+        $pending=$this->pending; $this->pending=null;
+        $pending?->error($reason??$cleanup??new LeanBridgeError('Lean stream closed during pull'));
+        if ($cleanup && !$reason) throw $cleanup;
     }
     public function read(): Future {
         \LeanBridge\CopiedNativeV1\Runtime::ensureProcess();

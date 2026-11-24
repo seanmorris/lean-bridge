@@ -86,7 +86,8 @@ final class CallbackPump {
             self::ok($this->ffi->$get($this->h,$slot,\FFI::addr($buffer)));
             $n=$buffer->length;
             if ($n<0 || $n>16777216 || ($n && ($buffer->data===null || \FFI::isNull($buffer->data)))) throw new LeanBridgeError('Invalid callback payload');
-            $value=WireValues::output($in,"\0",$n?\FFI::string($buffer->data,$n):'');
+            $value=isset($this->ops['decode']) ? ($this->ops['decode'])($in,$buffer)
+                : WireValues::output($in,"\0",$n?\FFI::string($buffer->data,$n):'');
         } finally { $this->ffi->$dispose(\FFI::addr($buffer)); }
         try { $reply=$call($value); }
         catch (\Exception $error) {
@@ -102,6 +103,10 @@ final class CallbackPump {
             $retire=$this->ops['trap']; $this->ffi->$retire(); throw $trap;
         }
         if (!$this->active()) return;
+        if (isset($this->ops['replyValue'])) {
+            ($this->ops['replyValue'])($out,$reply,$this->ops['reply'],$this->h,$slot,fn()=>$this->active());
+            return;
+        }
         $bytes=WireValues::input($out,$reply,new Budget());
         if (!$this->active()) return;
         $data=$this->ffi->new('lbphp_buffer'); $scope=new Scope($this->ffi); $put=$this->ops['reply'];

@@ -44,6 +44,7 @@ const compile = async (o,taskObjects) => {
 		, "php/copied-support.mjs"
 		, "php/copied-assets.mjs"
 		, "php/host-api.mjs", "php/io-package.mjs", "php/copied-equality.mjs"];
+	if(taskObjects) assets.push("php/host-task-api.mjs","php/host-task-objects.php","php/host-tasks.php","php/io-callbacks.php","php/io-delivery.php");
 	for(const name of assets)
 	{
 		const bytes = name === "native/host-frame.c" ? await wordHostFrame("php") : await readFile(new URL("../backends/" + name, import.meta.url));
@@ -104,7 +105,7 @@ const compile = async (o,taskObjects) => {
 		, prefix: gen.prefix
 		, component
 		, domain
-		, ...kernel?{task: {methods: kernel.methods,port: kernel.port,ledger: kernel.ledger.name}}:{}
+		, ...kernel?{task: {coordinate: o.name,methods: kernel.methods,port: kernel.port,ledger: kernel.ledger.name}}:{}
 		, binaries
 		, kinds: gen.model.kinds
 		, members: gen.model.members };

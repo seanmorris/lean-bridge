@@ -1,7 +1,7 @@
 /* Native PHP owner only. A worker receives a Lean external object; it never
    sees a Zend object, an FFI callback, or a reference-table entry. */
 #include "task-resource-ledger.h"
-enum { PHP_HOST_PIN=-3, PHP_HOST_RESOLVE=-4, PHP_HOST_ADMIT=-5 };
+enum { PHP_HOST_PIN=-3, PHP_HOST_RESOLVE=-4, PHP_HOST_ADMIT=-5, PHP_HOST_SWEEP=-6 };
 static int php_host_lease(lb_dn_frame *f, lb_dnd_session *s, int op, const uint64_t *a,
                           size_t n, uint64_t *out) {
     if (!a || n!=2 || a[0]>=sizeof(specs)/sizeof(specs[0]) || a[1] || a[2] || a[5]) return 5;

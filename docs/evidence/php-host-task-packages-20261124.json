@@ -1,0 +1,204 @@
+{
+  "producers": {
+    "ordinary": {
+      "configuration": "c6d94762206108267239dfc711f8e480892dd05520ea04ea4f59023f73ffa831",
+      "sourceTree": "e621d41bf37c7e433326413a0de4fa08416ed45ecb7c969c5f0f42345776f91a",
+      "hostImports": "7eb0a3e75fcd5fa0e2a5191f27e2147305dc30397b228d63af910329c8171f83",
+      "review": null
+    },
+    "reviewed": {
+      "configuration": "637aa4b3dc5309fd5e5dd7cbba7a2dee553d449a502d82bcbf955853133a7d37",
+      "sourceTree": "ef597c31f5ef4440f1e298e82c48a3b4a1368fb75149ab8bcd3b590b98c03576",
+      "hostImports": "7eb0a3e75fcd5fa0e2a5191f27e2147305dc30397b228d63af910329c8171f83",
+      "review": "d8819ab0e1de0d8581879effd9b9d29441c4e5587f9d1dc8f0dd75e0c2772ab5"
+    },
+    "peer": {
+      "configuration": "c678710945fbfd80533e373150adc7f3876e41867981158a7cc6c2a09a1aa008",
+      "sourceTree": "9161c41333c7f8b260ba1baf07283075c0e85b053fc692f14a9bf5a78f115159",
+      "hostImports": "7eb0a3e75fcd5fa0e2a5191f27e2147305dc30397b228d63af910329c8171f83",
+      "review": null
+    }
+  },
+  "profile": "native-php-host-task-v1",
+  "platform": "linux-x86_64",
+  "compiler": "Lean 4.32.2",
+  "sourceSha256": {
+    "tests/fixtures/php-host-tasks/Workshop.lean": "b843b44a696fbcf30a973daff41f37984b9f4e7998c44ccbd7d1679422af346a",
+    "tests/fixtures/php-host-tasks/Parcel.lean": "71d5b84f5c5cf8927a026b18cbfe8d79217fe41256002bc649d5df5f2af778cc",
+    "tests/fixtures/php-host-tasks/lean-bridge.exports.json": "8949070d3200ff6c392914dcabd706192cd479a6b7bfd968190725255e733d63",
+    "tests/fixtures/php-host-tasks/installed.php": "c89e0f18bbcf5919b2f2b93c42b647eff448aa2f213a67b779da957832396f8d",
+    "tests/fixtures/php-host-tasks/peer.php": "51207438c98b8479170d07e31d0e097e0d895ab507237c5fb90d2468a6b5fae8",
+    "src/backends/php/host-tasks.php": "75286329fa6bd19c1e8739cb1a336ab349c6840f1af6e30b7405904e06361728",
+    "src/backends/php/host-task-objects.php": "d52a086a36fa9da03b5b446efb8473f6160cec854f6742b5a12afabd0f84c6ee",
+    "src/backends/php/io-delivery.php": "a9283c5a0458e335e08df491f1565943e4cff1bb608f223dec3a911dfb872142",
+    "src/backends/php/io-callbacks.php": "d483a705e90ddd40a8514be72580128b8e662a249dd13bffd34f3147231b83ce"
+  },
+  "routes": {
+    "ordinary": {
+      "api": "d8819ab0e1de0d8581879effd9b9d29441c4e5587f9d1dc8f0dd75e0c2772ab5",
+      "artifact": {
+        "bytes": 51401883,
+        "path": "archives/lean-bridge-workshop-1.0.0-linux-x86_64.zip",
+        "sha256": "da38447171eeef5991cf19371ea960fa02306eaf0214fbeb16c1eb28e7ab6248"
+      },
+      "receipt": "921a2f2b70c6ba985bd31b923300572b4060a2ca616546c2fdd7db27e6a44256",
+      "results": [
+        {
+          "checks": 43,
+          "fork": true,
+          "livePhpReferences": 0,
+          "php": "8.2.35"
+        },
+        {
+          "checks": 42,
+          "fork": false,
+          "livePhpReferences": 0,
+          "php": "8.5.10"
+        }
+      ],
+      "route": "ordinary"
+    },
+    "reviewed": {
+      "api": "d8819ab0e1de0d8581879effd9b9d29441c4e5587f9d1dc8f0dd75e0c2772ab5",
+      "artifact": {
+        "bytes": 51401916,
+        "path": "archives/lean-bridge-workshop-1.0.0-linux-x86_64.zip",
+        "sha256": "dd14c2afc11f7a92a995ee2e9dca3ed3830350cad222830de8f8fe1a1f9b7efa"
+      },
+      "receipt": "a8fce2187114e9079fd434c817172cae03703204d5877ab1b84542e627ebd7ab",
+      "results": [
+        {
+          "checks": 43,
+          "fork": true,
+          "livePhpReferences": 0,
+          "php": "8.2.35"
+        },
+        {
+          "checks": 42,
+          "fork": false,
+          "livePhpReferences": 0,
+          "php": "8.5.10"
+        }
+      ],
+      "route": "reviewed"
+    }
+  },
+  "paired": {
+    "ordinary": {
+      "packages": [
+        {
+          "artifact": {
+            "bytes": 51401883,
+            "path": "archives/lean-bridge-workshop-1.0.0-linux-x86_64.zip",
+            "sha256": "da38447171eeef5991cf19371ea960fa02306eaf0214fbeb16c1eb28e7ab6248"
+          },
+          "component": "47fd85e78dec455828185a62f6fa0a214593ee24ff6bcfbba4cdb4ed61a25c84",
+          "name": "lean-bridge/workshop",
+          "receipt": "921a2f2b70c6ba985bd31b923300572b4060a2ca616546c2fdd7db27e6a44256",
+          "workerSha256": "a7d7d372833374b443459a6d177fa0531b81ea775c86b4c010e04d055a6fff05"
+        },
+        {
+          "artifact": {
+            "bytes": 51404021,
+            "path": "archives/lean-bridge-workshop-peer-1.0.0-linux-x86_64.zip",
+            "sha256": "82a2d3f163b59c0e74ab592e496ff02ba78d60f989721a784cb2b719a3ad01ef"
+          },
+          "component": "61865b616c0639ddbc8595a747b63e114fc8a8264bd5e7768720573b534ea62d",
+          "name": "lean-bridge/workshop-peer",
+          "receipt": "ae8d0b05151925ddd1a17088709a29f5a6e69c3baf737e807afd6ad8ac433770",
+          "workerSha256": "154232a1e48035ddd2149e78be327d5b3f1c4f855a231fcc7ac4bce8f81432ee"
+        }
+      ],
+      "registry": {
+        "liblb_php_host_domain_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "af7cdc9015c09f461245bc1b08145605776ca2f944ec43b9871a187445e25b3b",
+        "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "results": [
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "peer",
+          "php": "8.2.35"
+        },
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "workshop",
+          "php": "8.2.35"
+        },
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "peer",
+          "php": "8.5.10"
+        },
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "workshop",
+          "php": "8.5.10"
+        }
+      ],
+      "route": "ordinary",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "reviewed": {
+      "packages": [
+        {
+          "artifact": {
+            "bytes": 51401916,
+            "path": "archives/lean-bridge-workshop-1.0.0-linux-x86_64.zip",
+            "sha256": "dd14c2afc11f7a92a995ee2e9dca3ed3830350cad222830de8f8fe1a1f9b7efa"
+          },
+          "component": "35d8bc7aea1a78d7d7ced8ec62469c9bbcb1188956cb3231fa7550bde7b2d3b1",
+          "name": "lean-bridge/workshop",
+          "receipt": "a8fce2187114e9079fd434c817172cae03703204d5877ab1b84542e627ebd7ab",
+          "workerSha256": "0944725be8f37add78efc0cb9017ac9b00350b48f772781d3ec5ae6eb701c256"
+        },
+        {
+          "artifact": {
+            "bytes": 51404021,
+            "path": "archives/lean-bridge-workshop-peer-1.0.0-linux-x86_64.zip",
+            "sha256": "82a2d3f163b59c0e74ab592e496ff02ba78d60f989721a784cb2b719a3ad01ef"
+          },
+          "component": "61865b616c0639ddbc8595a747b63e114fc8a8264bd5e7768720573b534ea62d",
+          "name": "lean-bridge/workshop-peer",
+          "receipt": "ae8d0b05151925ddd1a17088709a29f5a6e69c3baf737e807afd6ad8ac433770",
+          "workerSha256": "154232a1e48035ddd2149e78be327d5b3f1c4f855a231fcc7ac4bce8f81432ee"
+        }
+      ],
+      "registry": {
+        "liblb_php_host_domain_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "af7cdc9015c09f461245bc1b08145605776ca2f944ec43b9871a187445e25b3b",
+        "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "results": [
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "peer",
+          "php": "8.2.35"
+        },
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "workshop",
+          "php": "8.2.35"
+        },
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "peer",
+          "php": "8.5.10"
+        },
+        {
+          "checks": 14,
+          "livePhpReferences": 0,
+          "order": "workshop",
+          "php": "8.5.10"
+        }
+      ],
+      "route": "reviewed",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  }
+}

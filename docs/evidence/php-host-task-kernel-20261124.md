@@ -53,8 +53,7 @@ executables to run each build on several interpreters. Set
 two native builds and their `execution.json` files. For the compiler-only
 check, leave the SDK variable unset and run `npm run test:php-host-task-imports`.
 
-This is a private native kernel, not a released Composer task API. The
-installed [synchronous host-object profile](php-host-finalizers-20261124.md)
+This record tests the private native kernel. The
+[installed Composer client](php-host-task-packages-20261124.md) tests the
+public Amp binding above it. The [synchronous host-object profile](php-host-finalizers-20261124.md)
 and the [PHP-Wasm task profile](php-wasm-task-leases-20261124.md) are separate.
-The public native package still needs binding-scoped Amp delivery, including
-cancellation and shutdown tests through an offline Composer install.

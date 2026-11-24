@@ -8,6 +8,7 @@ import { phpValueSemantics } from "./copied-equality.mjs";
 import { phpClassName, phpFieldName } from "./copied-names.mjs";
 import { phpIOPublicDeclarations } from "./io-package.mjs";
 import { phpHostMembers } from "./host-members.mjs";
+import { phpHostTaskApi } from "./host-task-api.mjs";
 
 const fail = why => { throw new TypeError("Invalid PHP native host surface: " + why); };
 const pascal = s => s.split(/[-_]/u).map(p => p[0].toUpperCase() + p.slice(1)).join("");
@@ -55,25 +56,39 @@ export const generatePhpHostFiles = async (linked, ir, runtime) => {
 		return fail("unsupported export type");
 	};
 	const names = new Set(["close"]), errorNames = new Set(["ioerror","declaredfailure","bytes","err","ok","binding","leanbridgeerror"]);
-	const methods=[],errors=[];
-	for(const [i,e] of checked.entries.entries())
+	const async=Boolean(linked.task), worker=async && await phpHostTaskApi({linked,checked,ir,model,ns});
+	const methods=[],errors=[]; let syncIndex=0;
+	if(async) for(const n of ["taskioerror","retainedcallback","callbackclosed","pullstream"]) errorNames.add(n);
+	for(const e of checked.entries)
 	{
 		const name=phpClassName(e.name);
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || names.has(name.toLowerCase())) fail("colliding export "+name);
 		names.add(name.toLowerCase());
 		const params=e.parameters.map(p=>phpFieldName(p.name,fail)), args=params.map(p=>"$"+p);
 		if(new Set(params).size!==params.length) fail("duplicate parameter");
-		const inputs=e.parameters.map(p=>site(p.type)), result=site(e.result), error=e.effect==="EIO"?site(e.error):null;
+		const error=e.effect==="EIO"?site(e.error):null;
 		const ex=pascal(e.name)+"Error";
 		if(error!==null)
 		{
 			if(errorNames.has(ex.toLowerCase())) fail("colliding exception "+ex);
 			errorNames.add(ex.toLowerCase()); errors.push("final class "+ex+" extends DeclaredFailure {}");
 		}
+		if(e.delivery)
+		{
+			if(!worker) fail("missing PHP worker implementation");
+			const stepEx=e.delivery==="task"?"TaskIOError":e.stepIO || e.stepError?pascal(e.name)+"StepError":null;
+			if(stepEx && stepEx!=="TaskIOError")
+			{
+				if(errorNames.has(stepEx.toLowerCase())) fail("colliding step exception "+stepEx);
+				errorNames.add(stepEx.toLowerCase()); errors.push("final class "+stepEx+" extends DeclaredFailure {}");
+			}
+			methods.push(worker.method({entry: e,name,args,ex: error===null?null:ex,stepEx})); continue;
+		}
+		const inputs=e.parameters.map(p=>site(p.type)), result=site(e.result), i=syncIndex++;
 		methods.push(`    /** ${params.map((p,j)=>"@param "+hint(inputs[j])+" $"+p).join(" ")} @return ${hint(result)} */
     public function ${name}(${args.map(a=>"mixed "+a).join(", ")}): ${hint(result)} {
         if (func_num_args()!==${args.length}) throw new \\ArgumentCountError('Wrong number of arguments');
-        if (!$this->open) throw new \\LogicException('PHP host binding is closed');
+        if (!$this->open${async?" || $this->closing":""}) throw new \\LogicException('PHP host binding is closed');
         return $this->_call(${i},[${args.join(",")}],${literal(inputs)},${literal(result)},${literal(error)},${JSON.stringify(e.declaration)},${error===null?"null":ex+"::class"});
     }`);
 	}
@@ -83,11 +98,13 @@ export const generatePhpHostFiles = async (linked, ir, runtime) => {
 		const h=runtime.files["lib/"+n]?.sha256;if(!hex(h)) fail("missing runtime library"); libraries[n]=h;
 	}
 	const defs = "typedef int (*php_host_dispatch)(uint64_t,int32_t,const uint64_t*,size_t,uint64_t*,uint32_t*); typedef struct { php_host_dispatch fn; } php_host_gate; "
-		+"int "+prefix+"_call(uint64_t,php_host_dispatch,int,const uint64_t*,size_t,uint64_t*,uint8_t*,uint32_t*); void "+prefix+"_clear(uint64_t*);";
+		+"int "+prefix+"_call(uint64_t,php_host_dispatch,int,const uint64_t*,size_t,uint64_t*,uint8_t*,uint32_t*); void "+prefix+"_clear(uint64_t*);"+(async?linked.task.port.definitions:"");
 	const templates = {"References": "host-refs","HostMembers": "host-members","HostFrame": "host-frame","HostWords": "host-words","WireValues": "io-codec"};
+	if(async) Object.assign(templates,{HostTaskObjects: "host-task-objects",HostTasks: "host-tasks",Callbacks: "io-callbacks",Delivery: "io-delivery"});
 	const files = {"src/Internal/Loader.php": copiedPhpLoader};
 	for(const [file,source] of Object.entries(templates))
 		files["src/Internal/"+file+".php"]=(await readFile(new URL("./"+source+".php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
+	if(async) files["src/Internal/Delivery.php"]=files["src/Internal/Delivery.php"].replace("/*__LB_RELEASE_CALLBACKS__*/","\n                if (isset($this->ops['releaseCallbacks'])) ($this->ops['releaseCallbacks'])();");
 	files["src/Internal/Native.php"]=`<?php
 declare(strict_types=1);
 namespace ${ns}\\Internal;
@@ -97,7 +114,7 @@ final class Native {
     public const PREFIX='${prefix}';
     private const DEFINITIONS='${defs}';
     public static function ffi(): \\FFI { ${copiedPhpAssets({componentId: api.component.id, componentIdentity: identity,runtimeIdentity,library: component,libraries})} }
-    public static function members(array $classes): HostMembers { return new HostMembers(json_decode(<<<'MODEL'
+${worker?worker.factory():""}    public static function members(array $classes): HostMembers { return new HostMembers(json_decode(<<<'MODEL'
 ${canonicalJson(model).trim()}
 MODEL, true, 128, JSON_THROW_ON_ERROR),$classes); }
 }
@@ -108,19 +125,19 @@ namespace ${ns};
 ${Object.keys(files).map(k=>"require_once __DIR__ . '/"+k.slice(4)+"';").join("\n")}
 ${phpIOPublicDeclarations([],["Ok","Err"])}
 final class IOError extends DeclaredFailure {}
-${errors.join("\n")}
+${async?"final class TaskIOError extends DeclaredFailure {}\n":""}${errors.join("\n")}
 function withHosts(array $classes): Binding { return new Binding($classes); }
 final class Binding {
     private bool $open=false;
     private readonly Internal\\HostMembers $members;
     private readonly \\FFI $ffi;
-    private readonly int $pid;
+    private readonly int $pid;${async?"\n    private readonly Internal\\HostTasks $tasks;\n    private int $nativeDepth=0;\n    private bool $closing=false;":""}
     private function _call(int $op,array $args,array $params,string|int|array $result='unit',string|int|array|null $error=null,
                            string $name='',?string $exception=null): mixed {
         \\LeanBridge\\NativeHostV2\\References::enter();
         $failed=false;
         try {
-            [$channel,$value]=Internal\\HostFrame::call($this->ffi,Internal\\Native::PREFIX,$this->members,$op,$args,$params,$result,$error);
+            ${async?"++$this->nativeDepth;\n            try { ":""}[$channel,$value]=Internal\\HostFrame::call($this->ffi,Internal\\Native::PREFIX,$this->members,$op,$args,$params,$result,$error);${async?" } finally { --$this->nativeDepth; }":""}
             if ($channel==='io') throw new IOError($name,$value);
             if ($channel==='declared') throw new $exception($name,$value);
             if ($op<0) $this->open=($op===-2);
@@ -130,7 +147,7 @@ final class Binding {
     }
     public function __construct(array $classes) {
         $this->pid=getmypid(); $this->members=Internal\\Native::members($classes); $this->ffi=Internal\\Native::ffi();
-        try { $this->_call(-2,[],[]); }
+        ${async?"$this->tasks=Internal\\Native::tasks($this->ffi,$this->members);\n        ":""}try { $this->_call(-2,[],[]); }
         catch (\\Throwable $e) {
             if ($this->open) { try { $this->close(); } catch (\\Throwable) {} }
             throw $e;
@@ -141,7 +158,14 @@ final class Binding {
     public function __unserialize(array $data): void { throw new \\LogicException('Cannot restore a PHP host binding'); }
     public function close(): void {
         if (!$this->open) return;
-        $this->_call(-1,[],[]);
+        ${async?`if ($this->closing) return;
+        if ($this->nativeDepth) throw new \\RuntimeException('Native PHP host call failed (status 14)');
+        \\LeanBridge\\NativeHostV2\\References::enter();
+        $this->closing=true; $failed=true;
+        try {
+            try { $this->tasks->close(); } finally { $this->_call(-1,[],[]); }
+            $failed=false;
+        } finally { $this->closing=false; \\LeanBridge\\NativeHostV2\\References::leave($failed); }`:"$this->_call(-1,[],[]);"}
     }
     public function __destruct() { if ($this->open && getmypid()===$this->pid) { try { $this->close(); } catch (\\Throwable) {} } }
 ${methods.join("\n")}

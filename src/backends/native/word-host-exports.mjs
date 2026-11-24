@@ -103,15 +103,15 @@ __attribute__((visibility("default"))) int ${prefix}_call(uint64_t id,lb_dn_disp
     if(op==-2 || op==-1) {
         int code=op==-1 ? LB_DND(close)(&f,component) : lean_bridge_native_component_initialize(component,init) ? LB_DND(open)(&f,component,specs,${ir.types.length}) : DN_DOMAIN_FATAL;
         status=code==DN_BOUND ? 0 : code==DN_INCOMPATIBLE ? 5 : code==DN_ACTIVE ? 14 : 10;
-    } else if(!lean_bridge_native_component_ready(component)) status=10;
+    } else if(!lean_bridge_native_component_ready(component)${taskObjects?" && op!=PHP_HOST_SWEEP":""}) status=10;
     else {
         lb_dnd_session *s=LB_DND(enter)(&f,component); if(!s) status=14;
         else { f.domain_session=s; f.available=available;
-            switch(op) { ${taskObjects?"case PHP_HOST_PIN: case PHP_HOST_RESOLVE: case PHP_HOST_ADMIT: status=php_host_lease(&f,s,op,args,n,out); break; ":""}${entries.map((_,i) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")} default: status=5; }
+            switch(op) { ${taskObjects?"case PHP_HOST_SWEEP: status=n ? 5 : 0; break; case PHP_HOST_PIN: case PHP_HOST_RESOLVE: case PHP_HOST_ADMIT: status=php_host_lease(&f,s,op,args,n,out); break; ":""}${entries.map((_,i) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")} default: status=5; }
             LB_DND(leave)(&f,s);
         }
     }
-    if(f.fatal || (${taskObjects?"(op>=0 || op<=PHP_HOST_PIN)":"op>=0"} && !lean_bridge_native_component_ready(component))) status=10;
+    if(f.fatal || (${taskObjects?"(op>=0 || (op<=PHP_HOST_PIN && op!=PHP_HOST_SWEEP))":"op>=0"} && !lean_bridge_native_component_ready(component))) status=10;
     lb_dn_leave(&f); return status;
 }
 `;
