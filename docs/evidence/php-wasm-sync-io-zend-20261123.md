@@ -82,3 +82,5 @@ The digest pins this particular build; it is not a publisher signature.
 
 The [public CLI and installed consumer run](php-wasm-installed-sync-io-20261123.md)
 checks the npm and Composer archives in Node and Chromium.
+
+The [PHP-Wasm task owner experiment](php-wasm-task-owner-20261124.md) tests pending work in a separate Lean heap. The synchronous Zend extension does not start that worker.

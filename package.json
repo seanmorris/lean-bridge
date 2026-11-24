@@ -989,6 +989,7 @@
     "test:php-wasm-package:host": "node scripts/test-php-wasm-package-host.mjs",
     "test:php-wasm-package:release": "node scripts/check-php-wasm-package-release.mjs",
     "test:php-wasm-composition": "node scripts/check-php-wasm-composition.mjs",
+    "test:php-wasm-task-owner": "node --test --test-concurrency=1 tests/helpers/php-wasm-task-owner.mjs",
     "test:php-transport-parity": "node scripts/check-php-transport-parity.mjs",
     "test:npm-package": "node --test tests/npm-package.test.mjs",
     "test:pypi-package": "node --test tests/pypi-package.test.mjs",
