@@ -46,5 +46,5 @@ resource bindings. All matched byte-for-byte.
 Run `npm run test:jvm-worker-transport` with the pinned Lean toolchain and a
 JDK 22 compiler. This is a local bridge test, **not** an installed Maven
 package. The test knows private operations; application consumers must not.
-Public Java and Kotlin signatures, installed binding shutdown, and installations
-from ordinary and reviewed source still need their own package-level evidence.
+The [Maven package checks](jvm-worker-packages-20261124.md) separately exercise
+public Java and Kotlin signatures and shutdown in installed applications.

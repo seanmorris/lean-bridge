@@ -60,6 +60,28 @@ fun example() {
 
 `use` closes the binding even if the call throws. These calls are synchronous;
 no coroutine, JNI handle or separate runtime installation is needed.
+
+If the package exports workers with application objects, its Kotlin
+binding exposes suspending functions and cold flows. In a suspending
+function, the Workshop worker package can be used like this:
+
+```kotlin
+import kotlinx.coroutines.flow.first
+
+suspend fun exampleWorker() {
+    Api.bindHosts(Meter::class).use { api ->
+        val meter = api.make(21)
+        check(api.echo(meter) === meter)
+        check(api.boxes(meter, false).first() === meter)
+    }
+}
+```
+
+Cancelling the coroutine cancels its task; `first()` stops the cursor after
+one item. Leaving `use` closes the binding, including work that is still
+pending. Close the binding outside its own retained callback and after any
+synchronous call returns. The meter remains yours.
+
 Ordinary exceptions can be handled in Lean or propagated back to Kotlin.
 A terminal JVM error, such as `OutOfMemoryError` or `LinkageError`, retires
 the shared Lean runtime even if a nested Kotlin method catches it.

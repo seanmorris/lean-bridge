@@ -100,7 +100,7 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 			, "jvm-owned-values-v5"].includes(metadata.generator);
 		const options = kotlinOptions(module, copiedGraph || ownedValues);
 		const dependencies = [join(lib, "kotlin-stdlib.jar"), join(lib, "annotations-13.0.jar")];
-		if(metadata.generator === "jvm-tasks-v1")
+		if(["jvm-tasks-v1", "jvm-host-tasks-v1"].includes(metadata.generator))
 		{
 			const name = "kotlinx-coroutines-core-jvm.jar";
 			if(compilerFiles[name] !== "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5")

@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { mavenPackageMetadata } from "../analyze/package-metadata.mjs";
 import { generateJvmIO } from "../backends/jvm/sync-io.mjs";
 import { generateJvmHostApi, jvmHostReadme } from "../backends/jvm/host-api.mjs";
+import { jvmHostTaskRuntime } from "../backends/jvm/host-task-runtime.mjs";
 import { compileJvmSources } from "../build/compile-jvm-sources.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -37,6 +38,7 @@ export const writeJvmIORelease = async o => {
 	if(host)
 	{ auth.hostDomainId = host.domain.id; auth.veneerSha256 = host.veneer.sha256; }
 	const { namespace, files: sources } = host ? generateJvmHostApi({ api, ...host, evidence: auth }) : await generateJvmIO({ api, wire: o.wire, ...o.jvmEntry, evidence: auth });
+	if(host && tasks) Object.assign(sources, await jvmHostTaskRuntime({ ns: namespace, wire: o.wire, options: o.jvmEntry }));
 	const stage = await mkdtemp(join(workRoot, ".jvm-io-")), root = join(stage, "jar"), compiler = join(stage, "compiler");
 	const write = async (dir, path, bytes) => { await mkdir(dirname(join(dir, path)), { recursive: true }); await writeFile(join(dir, path), bytes, { flag: "wx" }); };
 	const inventory = {}, save = async (path, value) => {

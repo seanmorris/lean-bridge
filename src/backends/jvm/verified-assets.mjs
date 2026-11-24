@@ -35,7 +35,7 @@ export const verifiedJvmAssets = (evidence, className, graph = false) => {
 	if(evidence.hostDomainId !== undefined)
 	{
 		const owner = "liblb_jvm_owner_" + evidence.runtimeIdentity + ".so", domain = "liblb_jvm_host_" + evidence.runtimeIdentity + ".so";
-		if(!/^[a-f0-9]{64}$/u.test(evidence.hostDomainId) || evidence.ledgerId !== undefined
+		if(!/^[a-f0-9]{64}$/u.test(evidence.hostDomainId)
 			|| ![owner, domain].every(n => n !== evidence.library && Object.hasOwn(evidence.libraries, n))) throw new TypeError("Missing authenticated JVM host dependencies");
 		order.push(owner, domain);
 	}
@@ -46,7 +46,8 @@ export const verifiedJvmAssets = (evidence, className, graph = false) => {
 		if(!/^[a-f0-9]{64}$/u.test(evidence.ledgerId) || ![owner, ledger].every(n => n !== evidence.library && Object.hasOwn(evidence.libraries, n)))
 			throw new TypeError("Missing authenticated JVM resource dependencies");
 		// The ledger calls into the shared owner. Load both before the component, regardless of filename order.
-		order.push(owner, ledger);
+		if(!order.includes(owner)) order.push(owner);
+		order.push(ledger);
 	}
 	order.push(...libraries.map(([name]) => name).filter(name => !order.includes(name) && name !== evidence.library), evidence.library);
 	return `    private ${className}() { }

@@ -248,7 +248,7 @@ export const reconcileHostExports = options => {
 		, name: callbackError.slice("error:".length)
 		, category: "domain"
 		, payload: null
-		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":dotnetObjects?"A retained CLR delegate propagated its original exception.":rubyObjects?"A retained Ruby callback propagated its original exception.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
+		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":jvmObjects?"A retained JVM callback propagated its original exception.":dotnetObjects?"A retained CLR delegate propagated its original exception.":rubyObjects?"A retained Ruby callback propagated its original exception.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
 	if(metadata.entries.some(e => hostCanEscape(e) || !hostValues && hasCallbacks(e))) errors.push({ id: hostError
 		, name: publicErrorName
 		, category: "domain"

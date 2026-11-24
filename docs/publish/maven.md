@@ -69,9 +69,13 @@ The build checks the generated host module and the selected declarations against
 fresh Lean compiler output; a reviewed public binding IR must agree with that
 output. The JAR supplies the native runtime and binding code to both
 [Java](../consume/java.md#bind-an-application-owned-class) and
-[Kotlin](../consume/kotlin.md#bind-an-application-owned-class). This host-import
-build is synchronous; it does not accept task, iterator or Lean-owned resource
-exports alongside the imports.
+[Kotlin](../consume/kotlin.md#bind-an-application-owned-class). Ordinary
+exports stay synchronous. To pass an application class through a Lean worker,
+also select its task or cursor as described under [tasks and streams](#export-tasks-and-streams).
+The worker may carry the object or send it to a retained callback; it cannot
+invoke a JVM member from an arbitrary Lean scheduler thread. Calls to those
+members belong on the JVM owner. Imported classes and Lean-owned resources
+remain distinct; this author profile does not combine their declarations.
 
 A synchronous export can return an imported class in either branch of
 `Except`, or throw it in a declared `EIO` error. Nested `Except` values

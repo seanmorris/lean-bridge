@@ -107,6 +107,26 @@ For a nested error, the same accessor returns a typed `Result` and checks
 the object in the active branch. The payload remains usable after closing
 the binding. A wrong class for that object throws `ClassCastException`.
 
+If the package also exports workers, call class-bearing tasks on the same
+binding. In the Workshop worker example:
+
+```java
+try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
+    Meter meter = api.make(21);
+    Meter returned = api.relay(meter, value -> value).get();
+    if (returned != meter) throw new AssertionError();
+}
+```
+
+The return type of `relay` here is `CompletableFuture<Meter>`. A cursor
+returns a `Flow.Publisher<Meter>`; subscription alone does not start the
+Lean cursor. Closing the binding cancels its pending tasks and ends its
+subscriptions. It does not close the meter or a second binding. A publisher
+kept after close cannot start against a new binding. Close is refused while
+a synchronous call is active or from inside the binding’s own retained
+callback; let that call return first. Workers with copied values only, such
+as `Api.scalar(10)`, need no binding.
+
 ### Call synchronous IO
 
 An installed Maven package can expose Lean `BaseIO`, `IO` and `EIO` as

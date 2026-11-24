@@ -1,6 +1,6 @@
 /** @file Call the actual JVM worker kernel through JNI from a virtual thread. */
 import assert from "node:assert/strict";
-import { copyFile, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import test from "node:test";
@@ -8,6 +8,7 @@ import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { generateJvmHostExports } from "../../src/backends/jvm/host-exports.mjs";
 import { jvmHostTaskRuntime } from "../../src/backends/jvm/host-task-runtime.mjs";
+import { jvmHostWorkerApi } from "../../src/backends/jvm/host-worker-api.mjs";
 import { resolveJvmTool } from "../../src/build/compile-jvm-sources.mjs";
 import { compileHostSources } from "../../src/build/host-elaboration.mjs";
 import { openHostProjectSource } from "../../src/build/host-project-source.mjs";
@@ -47,6 +48,17 @@ test("virtual-thread JNI operations transfer JVM objects across the compiled Lea
 		const identity=sha256(canonicalJson(kernel.fingerprint));
 		const gen=await generateJvmHostExports({identity,ir,entries: checked.entries.filter(e=>!e.delivery),modules: cfg.modules,workerWire: kernel.wire});
 		const units=await stageJvmHostTasks({...tools,identity,kernel,save,env: checked.env});
+		const evidence={ledgerId: kernel.ledger.id,libraries: {[kernel.ledger.name]: sha256(await readFile(join(app,kernel.ledger.name)))}};
+		const render=api=>jvmHostWorkerApi({api,ir,ns: "probe",wire: kernel.wire,evidence,names: new Set(),errorClass: ()=>{}});
+		const publicMethods=render(checked.api);
+		assert.ok(publicMethods.direct.some(s=>s.includes(" scalar(")));
+		assert.ok(publicMethods.ktBound.some(s=>s.includes("Flow<T0>")));
+		const wrong=structuredClone(checked.api), refuse=wrong.declarations.find(d=>d.source.declaration==="Jobs.refuse");
+		refuse.source.extensions["lean-bridge.dev/error-payload-site"].ownership="copy";
+		assert.throws(()=>render(wrong),/worker ownership/u);
+		const wrongCallback=structuredClone(checked.api), callback=wrongCallback.types.find(t=>t.kind==="callback");
+		callback.source.extensions["lean-bridge.dev/callback-scheduler"]="owner-event-loop";
+		assert.throws(()=>render(wrongCallback),/retained callback/u);
 		await save("BridgeJvmExports.lean",gen.entryLean); await save("entry-abi.h",gen.header); await save("provider.c",gen.source);
 		await copyFile(resolve("src/backends/jvm/host-wire.h"),join(app,"host-wire.h"));
 		await run(join(leanPrefix,"bin/lean"),["-j1","-c","entry.c","BridgeJvmExports.lean"],app,checked.env);

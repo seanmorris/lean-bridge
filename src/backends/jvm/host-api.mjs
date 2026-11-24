@@ -1,6 +1,7 @@
 /** @file The scoped Java/Kotlin API for application-supplied classes. */
 import { copiedJvmAssets } from "./copied-assets.mjs";
 import { jvmHostCarrier } from "./host-native-members.mjs";
+import { jvmHostWorkerApi } from "./host-worker-api.mjs";
 import { jvmIOScalarTypes, jvmIOIdentifier, jvmIOReserved } from "./sync-io.mjs";
 
 const box = { int: "Integer", long: "Long", boolean: "Boolean", float: "Float", double: "Double", short: "Short", byte: "Byte" };
@@ -30,7 +31,7 @@ export const jvmHostNamespace = component => {
 	if(!ident.test(slug) || jvmIOReserved(slug)) fail("component namespace");
 	return "org.leanbridge." + slug;
 };
-const port = (veneer, hash) => `final class NativePort {
+const port = (veneer, hash, workers) => `final class NativePort {
     private NativePort() {}
     static { load(); }
     private static void load() {
@@ -52,7 +53,7 @@ const port = (veneer, hash) => `final class NativePort {
             System.load(file.toAbsolutePath().toString());
         } catch (java.io.IOException | java.security.NoSuchAlgorithmException e) { throw new IllegalStateException("Cannot load prepared JVM host component", e); }
     }
-    static native Object[] invoke(HostMembers binding,int operation,Object[] args) throws Exception;
+    static native Object[] invoke(HostMembers binding,int operation,Object[] args) throws Exception;${workers ? "\n    static native Object work(HostMembers binding,Object[] classes,int method,int op,java.nio.ByteBuffer args,java.nio.ByteBuffer handle,java.nio.ByteBuffer output,java.nio.ByteBuffer tags,java.nio.ByteBuffer control);" : ""}
 }\n`;
 /**
  * Emit normal host-language methods. Only the per-classloader JNI veneer
@@ -106,6 +107,20 @@ export const generateJvmHostApi = o => {
 	};
 	const names = new Set(["close", "bindHosts", "encode", "tag", "payload", "nativeLive"]), methods = [];
 	const classes = new Set(["NativePort", "HostWire", "HostContract", "HostMembers", "Unit", "Api", "Result", "LeanIOException", "LeanEIOError", "NativeAssets"]);
+	const ktSync = [], ktType = r => {
+		if(r.kind==="apply") return ns+".Result<"+r.arguments.map(ktType).join(",")+">";
+		if(r.kind==="named") return gens[jvmHostCarrier(ir.types,r).index];
+		return r.name==="unit" ? ns+".Unit" : jvmIOScalarTypes[r.name][1];
+	};
+	const errorClass = (ex,r,d) => {
+		if(classes.has(ex)) fail("duplicate error class"); classes.add(ex);
+		const { jt, accessor } = faultPayload(r);
+		java(ex, `public final class ${ex} extends LeanEIOError {
+    private final ${jt} value;
+    ${ex}(${jt} v) { super(${d}); value=v; }
+    @Override public ${jt} payload() { return value; }
+${accessor}}\n`);
+	};
 	for(const [index, e] of entries.entries())
 	{
 		const name = jvmIOIdentifier(e.name), d = JSON.stringify(e.declaration);
@@ -115,17 +130,16 @@ export const generateJvmHostApi = o => {
 		let err = "";
 		if(e.effect === "EIO")
 		{
-			const ex = name[0].toUpperCase() + name.slice(1) + "Error"; if(classes.has(ex)) fail("duplicate error class"); classes.add(ex);
-			const { jt, accessor } = faultPayload(e.error);
-			java(ex, `public final class ${ex} extends LeanEIOError {
-    private final ${jt} value;
-    ${ex}(${jt} v) { super(${d}); value=v; }
-    @Override public ${jt} payload() { return value; }
-${accessor}}\n`);
+			const ex = name[0].toUpperCase() + name.slice(1) + "Error"; errorClass(ex,e.error,d);
 			err = "if (status==1) throw new " + ex + "(" + get(e.error, "answer[1]") + ");";
 		}
+		if(o.workerWire)
+		{
+			const esc=s=>"\u0060"+s+"\u0060", params=e.parameters.map(p=>esc(p.name)+": "+ktType(p.type));
+			ktSync.push(`    fun ${esc(name)}(${params.join(",")}): ${unit?"kotlin.Unit":ktType(e.result)} = binding.${esc(name)}(${e.parameters.map(p=>esc(p.name)).join(",")})`);
+		}
 		methods.push(`        public ${unit ? "void" : type(e.result)} ${name}(${args.join(",")}) throws Exception {
-            Object[] answer=NativePort.invoke(port,${index},new Object[]{${input.join(",")}});
+            Object[] answer=${o.workerWire?"scope.invoke(":"NativePort.invoke(port,"}${index},new Object[]{${input.join(",")}});
             long status=tag(answer);
             if(status==2) throw new LeanIOException(${d},(String)HostWire.decode("string",String.class,answer[1]));
             ${err}
@@ -134,12 +148,13 @@ ${accessor}}\n`);
         }`);
 	}
 	const params = gens.map((t, i) => "Class<" + t + "> " + cls(i)), values = gens.map((_, i) => cls(i)).join(",");
+	const workers = o.workerWire && jvmHostWorkerApi({ api, ir, ns, wire: o.workerWire, evidence, names, errorClass });
 	java("Unit", "public enum Unit { INSTANCE }\n");
 	java("Result", "public sealed interface Result<V,E> { record Ok<V,E>(V value) implements Result<V,E> {} record Err<V,E>(E error) implements Result<V,E> {} }\n");
 	java("LeanIOException", "public final class LeanIOException extends java.io.UncheckedIOException { private final String decl; LeanIOException(String d,String msg) { super(d+\": \"+msg,new java.io.IOException(msg)); decl=d; } public String declaration(){return decl;} }\n");
 	java("LeanEIOError", "public abstract class LeanEIOError extends RuntimeException { private final String decl; LeanEIOError(String d){super(d+\" failed\"); decl=d;} public String declaration(){return decl;} public abstract Object payload(); }\n");
 	java("Api", `public final class Api {
-    private Api(){}
+    private Api(){}${workers?"\n"+workers.direct.join("\n"):""}
     public static ${g} Bound${g} bindHosts(${params.join(",")}) throws Exception {
         Bound${g} bound=new Bound<>(${values});
         NativePort.invoke(bound.port,-2,null); return bound;
@@ -150,17 +165,17 @@ ${accessor}}\n`);
     private static long tag(Object r) { return (Long)((Object[])r)[0]; }
     private static Object payload(Object r) { return ((Object[])r)[1]; }
     public static final class Bound${g} implements AutoCloseable {
-        private final HostMembers port;
+        private final HostMembers port;${workers?"\n        private final HostTaskScope scope;":""}
         ${params.map(p => "private final " + p + ";").join(" ")}
         private Bound(${params.join(",")}) {
             ${gens.map((_, i) => "this." + cls(i) + "=" + cls(i) + ";").join(" ")}
-            port=HostContract.bind(Unit.class,${values});
+            port=HostContract.bind(Unit.class,${values});${workers?" scope=new HostTaskScope(port);":""}
         }
-        @Override public void close() throws Exception { NativePort.invoke(port,-1,null); }
-${methods.join("\n")}
+        @Override public void close() throws Exception { ${workers?"scope.close();":"NativePort.invoke(port,-1,null);"} }
+${[...methods,...workers?.bound??[]].join("\n")}
     }
 }\n`);
-	java("NativePort", port(veneer.name, veneer.sha256)); java("HostMembers", model.implementation); java("HostContract", model.contract);
+	java("NativePort", port(veneer.name, veneer.sha256, workers)); java("HostMembers", model.implementation); java("HostContract", model.contract);
 	files["src/main/java/" + dir + "/NativeAssets.java"] = copiedJvmAssets({ namespace: ns }, evidence);
 	files["src/main/kotlin/" + dir + "/kotlin/Api.kt"] = `package ${ns}.kotlin
 object Api {
@@ -168,6 +183,24 @@ object Api {
         ${ns}.Api.bindHosts(${gens.map((_, i) => cls(i) + ".java").join(",")})
 }
 `;
-	files["binding-manifest.json"] = JSON.stringify({ generator: "jvm-host-v1", namespace: ns, kotlin: { namespace: ns + ".kotlin" } });
+	if(workers)
+	{
+		const types = "<"+gens.map(t=>t+": Any").join(",")+">";
+		const params=gens.map((t,i)=>cls(i)+": kotlin.reflect.KClass<"+t+">").join(",");
+		files["src/main/kotlin/" + dir + "/kotlin/Api.kt"] = `package ${ns}.kotlin
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.flow.map
+object Api {
+    @JvmStatic fun ${types} bindHosts(${params}): Bound${g} =
+        Bound(${ns}.Api.bindHosts(${gens.map((_,i)=>cls(i)+".java").join(",")}))
+${workers.ktDirect.join("\n")}
+}
+class Bound${types} internal constructor(private val binding: ${ns}.Api.Bound${g}): AutoCloseable {
+    override fun close() = binding.close()
+${[...ktSync,...workers.ktBound].join("\n")}
+}
+`;
+	}
+	files["binding-manifest.json"] = JSON.stringify({ generator: workers ? "jvm-host-tasks-v1" : "jvm-host-v1", namespace: ns, kotlin: { namespace: ns + ".kotlin" } });
 	return { namespace: ns, files };
 };

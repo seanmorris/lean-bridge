@@ -45,6 +45,14 @@ const renderDelivery = (text, owned) => {
 	if(src.includes("// @")) throw new TypeError("Unmatched JVM ownership template");
 	return src;
 };
+/**
+ * Render a public JVM value type.
+ *
+ * @param {any} t Scalar tag, result pair, or lease descriptor.
+ * @param {string} ns Generated component class name.
+ * @param {boolean} k Use Kotlin source spelling.
+ * @param {boolean} nest Use boxed Java types in generic arguments.
+ */
 const spelling = (t, ns, k, nest = false) => {
 	if(t?.leaseClass) return t.leaseClass;
 	if(Array.isArray(t) && t.length === 2)
@@ -53,6 +61,13 @@ const spelling = (t, ns, k, nest = false) => {
 	if(k && t === "unit") return ns + ".Unit";
 	const s = types[t][k ? 1 : 0]; return !k && nest ? boxed[s] ?? s : s;
 };
+/**
+ * Emit the frame write for one argument.
+ *
+ * @param {any} t Scalar tag or lease descriptor.
+ * @param {number} i Argument slot in the frame.
+ * @param {string} v Java expression for the argument.
+ */
 const argument = (t, i, v) => {
 	if(t?.leaseClass) return `Resources.K${t.index}.borrow(f, ${i}, ${v});`;
 	const call = (f, arg) => `f.${f}(${i}, ${arg});`;
@@ -66,6 +81,12 @@ const argument = (t, i, v) => {
 		, float64: `Double.doubleToRawLongBits(${v})` };
 	return call("word", value[t] ?? v);
 };
+/**
+ * Emit the expression that decodes a frame result.
+ *
+ * @param {any} t Scalar tag, nested result pair, or lease descriptor.
+ * @param {number} d Tag depth in a nested result.
+ */
 const result = (t, d = 0) => {
 	if(t?.leaseClass) return `Resources.K${t.index}.take(f)`;
 	if(Array.isArray(t)) return `(f.tag(${d}) ? new Result.Ok<>(${result(t[0], d + 1)}) : new Result.Err<>(${result(t[1], d + 1)}))`;
@@ -77,6 +98,8 @@ const result = (t, d = 0) => {
 		, float32: "Float.intBitsToFloat((int)f.scalar())" };
 	return read[t] ?? "(" + types[t][0] + ") f.scalar()";
 };
+
+export { argument as jvmWorkerScalarInput, result as jvmWorkerScalarOutput, spelling as jvmWorkerScalarType };
 
 const callbackSpecs = (api, m, decl, ns) => {
 	const slots = new Map(), spec = m.callbacks ?? [];
