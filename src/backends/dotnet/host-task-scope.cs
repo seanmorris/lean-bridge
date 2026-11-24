@@ -28,6 +28,7 @@ internal sealed class HostTaskScope : IDisposable
         ++depth;
         try { return call(); } finally { --depth; }
     }
+    internal void Invoke(Action call) => Invoke(() => { call(); return 0; });
     internal Action Track(Action close)
     {
         Check();
@@ -53,11 +54,15 @@ internal sealed class HostTaskScope : IDisposable
         deferred.Add(cell, Present);
         return cell.Open;
     }
-    public void Dispose()
+    internal void CheckDisposal()
     {
         LeanRuntime.CheckThread();
-        if (closed) return;
         if (depth != 0) throw new InvalidOperationException("Cannot dispose a binding inside its active call");
+    }
+    public void Dispose()
+    {
+        CheckDisposal();
+        if (closed) return;
         closed = true;
         foreach (var cell in deferred) cell.Key.Revoke();
         deferred.Clear();

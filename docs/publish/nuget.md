@@ -66,8 +66,19 @@ For a returned `Except` containing a bound class, the public IR marks the
 result as a lease. A declared `EIO` with such a payload records its ownership
 in `lean-bridge.dev/error-payload-site`. In either case, C# receives the
 application object from the active branch, not a serialized copy.
-This route accepts synchronous host imports. The task and resource-lease
-profiles below have their own calling and ownership rules.
+Host members run on the CLR owner thread. A Lean worker can carry the
+class reference and request a C# callback on the owner; it cannot call a
+member directly from the worker. The build checks indirect calls too.
+
+To export a worker alongside synchronous members, list its full Lean name
+in both `exports` and `taskExports`. For a reviewed package, supply the
+public Binding IR in place of `exports` and keep `taskExports`. For example,
+the [Workshop worker source](../../tests/fixtures/dotnet-host-workers/Workers.lean)
+declares `Workers.echo : Box → Task Box`. It becomes `Task<Meter>` when the
+application binds `Meter`; `Workers.identityBase : Box → BaseIO Box` remains
+synchronous. The same source shows a retained callback, two cursor step
+error types, and a returned `Except` that carries a class. See the
+[C# consumer example](../consume/dotnet.md#let-lean-call-your-c-class).
 
 ## Export synchronous IO
 

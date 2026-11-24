@@ -9,8 +9,9 @@ import { runNativeTool as run } from "./native-effect-consumers.mjs";
  *
  * @param root - Isolated test staging.
  * @param feed - Offline folder containing the .nupkg handoffs.
+ * @param workers - Exercise the mixed class/worker packages instead of the synchronous pair.
  */
-export const runDotnetHostConsumers = async (root, feed) => {
+export const runDotnetHostConsumers = async (root, feed, workers = false) => {
 	const work = await mkdtemp(join(root, "client-")), proj = join(work, "src"), cache = join(work, "cache"), moved = join(work, "relocated");
 	const dotnet = process.env.LEAN_BRIDGE_DOTNET ?? "dotnet";
 	const env = { ...process.env, DOTNET_PROCESSOR_COUNT: "1"
@@ -21,10 +22,10 @@ export const runDotnetHostConsumers = async (root, feed) => {
 		, MSBUILDDISABLENODEREUSE: "1" };
 	try
 	{
-		await mkdir(proj); await copyFile(resolve("tests/fixtures/dotnet-host-meter/Installed.cs"), join(proj, "Program.cs"));
-		await copyFile(resolve("tests/fixtures/dotnet-host-meter/InstalledScalars.cs"), join(proj, "Scalars.cs"));
+		await mkdir(proj); await copyFile(resolve("tests/fixtures", workers ? "dotnet-host-workers/Installed.cs" : "dotnet-host-meter/Installed.cs"), join(proj, "Program.cs"));
+		await copyFile(resolve("tests/fixtures", workers ? "dotnet-sync-io/Audit.cs" : "dotnet-host-meter/InstalledScalars.cs"), join(proj, "Support.cs"));
 		await writeFile(join(proj, "NuGet.Config"), "<configuration><packageSources><clear/></packageSources></configuration>");
-		await writeFile(join(proj, "Client.csproj"), '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><UseAppHost>false</UseAppHost><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup><ItemGroup><PackageReference Include="Acme.Workshop" Version="[1.0.0]"/><PackageReference Include="Acme.Peer" Version="[1.0.0]"/></ItemGroup></Project>');
+		await writeFile(join(proj, "Client.csproj"), '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><UseAppHost>false</UseAppHost><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup><ItemGroup><PackageReference Include="Acme.Workshop" Version="[1.0.0]"/><PackageReference Include="Acme.Peer" Version="[1.0.0]"/></ItemGroup></Project>');
 		await run(dotnet, ["restore", "--source", feed, "--configfile", "NuGet.Config", "--disable-parallel", "-m:1", "-p:NuGetAudit=false"], proj, env);
 		const graph = JSON.parse(await readFile(join(proj, "obj/project.assets.json")));
 		assert.deepEqual(Object.keys(graph.libraries).sort(), ["Acme.Peer/1.0.0", "Acme.Workshop/1.0.0"]);
@@ -34,11 +35,16 @@ export const runDotnetHostConsumers = async (root, feed) => {
 			const p = join(cache, id, "1.0.0"), r = JSON.parse(await readFile(join(p, "lean-bridge/package-receipt.json")));
 			const readme = await readFile(join(p, "README.md"), "utf8");
 			for(const signature of ["new Box(uint)", "uint Box.Level { get; }", "uint Box.Level { set; }", "Box Box.Identity()"]) assert.ok(readme.includes(signature), signature);
-			assert.equal(r.profile, "native-dotnet-io-v1"); assert.ok(/^[a-f0-9]{64}$/u.test(r.hostDomain.id));
+			assert.equal(r.profile, workers ? "native-dotnet-task-v1" : "native-dotnet-io-v1"); assert.ok(/^[a-f0-9]{64}$/u.test(r.hostDomain.id));
 			assert.equal(r.files["runtimes/linux-x64/native/" + r.hostDomain.library].sha256, r.hostDomain.sha256);
 			receipts.push(r);
 		}
 		assert.deepEqual(receipts[0].hostDomain, receipts[1].hostDomain);
+		if(workers)
+		{
+			assert.deepEqual(receipts[0].resourceLedger, receipts[1].resourceLedger);
+			for(const r of receipts) assert.equal(r.files["runtimes/linux-x64/native/"+r.resourceLedger.library].sha256, r.resourceLedger.sha256);
+		}
 		assert.equal(receipts[0].runtimeIdentity, receipts[1].runtimeIdentity); assert.notEqual(receipts[0].componentIdentity, receipts[1].componentIdentity);
 		await run(dotnet, ["build", "--no-restore", "-c", "Release"
 			, "--disable-build-servers", "-m:1", "-p:UseSharedCompilation=false"
@@ -51,9 +57,13 @@ export const runDotnetHostConsumers = async (root, feed) => {
 		const results = [];
 		for(const order of ["ab", "ba"])
 		{
-			const line = await launch(order); assert.equal(line, order + ": ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup"); results.push(line);
+			const line = await launch(order); assert.equal(line, order + (workers ? ": worker identity, callbacks, errors, cursors, cancellation, binding isolation and shared retirement" : ": ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup")); results.push(line);
 		}
 		const path = join(native, receipts[0].hostDomain.library);
+		if(workers)
+		{
+			const line=await launch("shutdown"); assert.equal(line,"owner shutdown cancelled outstanding work; both bindings survived"); results.push(line);
+		}
 		await rename(path, path + ".original"); await writeFile(path, "modified domain", { flag: "wx" });
 		assert.equal(await launch("tampered"), "tampered domain refused"); return results;
 	} finally

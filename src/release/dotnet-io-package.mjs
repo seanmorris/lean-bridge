@@ -20,7 +20,8 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writeDotnetIORelease = async o => {
 	const { workRoot, name, version, prefix, wire, host, files, api, evidence, manifest, runtimeIdentity, componentIdentity, bindingIrSha256, floor, projectContract } = o;
-	const library = "lib" + prefix + ".so", libraries = {}, mode = wire?.wait ? "task" : "io", profile = "native-dotnet-" + mode + "-v1";
+	const delivery=host?.workerWire??wire;
+	const library = "lib" + prefix + ".so", libraries = {}, mode = delivery?.wait ? "task" : "io", profile = "native-dotnet-" + mode + "-v1";
 	for(const path of [library, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const file = "lib/" + path, bytes = files.get(file);
@@ -28,7 +29,7 @@ export const writeDotnetIORelease = async o => {
 		libraries[path] = sha256(bytes);
 	}
 	let resourceLedger;
-	if(wire?.leases?.length)
+	if(delivery?.leases?.length)
 	{
 		if(!/^[a-f0-9]{64}$/u.test(o.ledgerId)) throw new Error("Missing .NET resource ledger identity");
 		const path = "liblb_task_resources_" + o.ledgerId + ".so", bytes = files.get("lib/" + path);
@@ -93,7 +94,7 @@ ${refs}</Project>
 		await save("lean-bridge/licenses/LeanBridge-LICENSE", await readFile(new URL("../../LICENSE", import.meta.url)));
 		for(const f of ["LICENSE", "LICENSES"]) await save("lean-bridge/licenses/Lean-" + f, await readFile(join(o.leanPrefix, f)));
 		for(const [p, data] of Object.entries(projectContract.notices)) await save("lean-bridge/licenses/" + p, data);
-		await save("README.md", host ? `# ${name} ${version}\n\nBind application classes with \`using var hosts = ${assembly}.Api.BindHosts<${host.ir.types.map(t => t.name).join(", ")}>();\`. Call the generated instance methods on the process main thread. Dispose the binding when done. The package verifies and loads its own native libraries. Requires .NET 8, Linux x86-64 and glibc ${floor}+.\n\nRequired public C# members (replace each contract class name with your implementing class):\n\n${dotnetHostSignatures(host).map(s => "- `" + s + "`").join("\n")}\n` : wire.wait
+		await save("README.md", host ? `# ${name} ${version}\n\nBind application classes with \`using var hosts = ${assembly}.Api.BindHosts<${host.ir.types.map(t => t.name).join(", ")}>();\`. Call the generated instance methods on the process main thread. Dispose the binding when done.${host.workerWire ? ` Start ${assembly}.LeanRuntime.Run(async () => { /* application */ }) on the process main thread for worker calls. Await methods on the binding for operations carrying your objects; copied-only workers are static Api methods. Use await foreach for cursor results. Disposing the binding cancels its pending deliveries and invalidates its cold sequences without cancelling other bindings.` : ""} The package verifies and loads its own native libraries. Requires .NET 8, Linux x86-64 and glibc ${floor}+.\n\nRequired public C# members (replace each contract class name with your implementing class):\n\n${dotnetHostSignatures(host).map(s => "- `" + s + "`").join("\n")}\n` : wire.wait
 			? `# ${name} ${version}\n\nStart ${assembly}.LeanRuntime.Run(async () => { /* application */ }) once on the process main thread. Await generated Api methods and use await foreach for pull streams. Pass a CancellationToken to a task or WithCancellation(token) to a stream. No polling, Lean compiler or external runtime setup is required. Native calls stay on the owner thread. For .NET 8 on Linux x86-64 with glibc ${floor}+.\n`
 			: `# ${name} ${version}\n\nCall ${assembly}.Api synchronously on the process main thread. Returned Except values are Result<T,E>; thrown EIO raises DeclaredError<T> with its Lean declaration and typed payload. OS errors raise LeanIOException. .NET 8, Linux x86-64 with glibc ${floor}+; the exact native runtime is included and verified automatically. No Lean compiler or event loop needed.\n`);
 		await writeNugetManifest(save, name, version, projectContract.metadata ?? {});

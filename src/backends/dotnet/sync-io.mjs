@@ -64,17 +64,26 @@ const decode = (t, depth = 0) => {
 // The host-import entry uses the identical private copy/layout ABI as plain IO.
 export { args as dotnetScalarArgument, decode as dotnetScalarResult, type as dotnetScalarType };
 
-const parameterTypes = (m, d, api, project) => {
+/**
+ * Select native CLR argument and delegate types from a reconciled declaration.
+ *
+ * @param m - Worker wire method.
+ * @param d - Public declaration.
+ * @param api - Binding IR containing the nominal callback types.
+ * @param project - Maps a wire type to its C# type.
+ * @param shape - Maps a verified type reference back to its wire type.
+ */
+const parameterTypes = (m, d, api, project, shape = ref => ref?.name) => {
 	const slots = new Map();
 	for(const [i, from, to] of m.callbacks ?? [])
 	{
 		const p = d.parameters[i], cb = api.types?.find(t => t.id === p?.type?.id)?.callable;
 		if(m.delivery !== "task" || slots.has(i) || m.args[i] !== "callback" || p?.ownership !== "lease"
-			|| p.lifetime?.scope !== "explicit" || cb?.parameters.length !== 1 || cb.parameters[0].type?.name !== from
-			|| cb.result?.type?.name !== to || cb.reentry !== "same-agent" || cb.selfDisposal !== "defer"
+			|| p.lifetime?.scope !== "explicit" || cb?.parameters.length !== 1 || shape(cb.parameters[0].type) !== from
+			|| shape(cb.result?.type) !== to || cb.reentry !== "same-agent" || cb.selfDisposal !== "defer"
 			|| cb.resultMode !== "value" || cb.failure?.errors?.[0] !== "error:DotNetCallbackException")
 			throw new TypeError("Invalid retained .NET callback contract");
-		slots.set(i, to === "unit" ? `global::System.Action<${type(from)}>` : `global::System.Func<${type(from)}, ${type(to)}>`);
+		slots.set(i, to === "unit" ? `global::System.Action<${project(from)}>` : `global::System.Func<${project(from)}, ${project(to)}>`);
 	}
 	return m.args.map((t, i) => slots.get(i) ?? project(t));
 };
@@ -131,23 +140,34 @@ const verifyLeaseSites = (m, d, api, leases) => {
 	const errors = new Set([m.error, m.terminal].map(t => leases.get(t)?.id).filter(Boolean));
 	if(errors.size !== payloads.size || [...errors].some(id => !payloads.has(id))) throw new TypeError("Unverified .NET resource error: " + m.declaration);
 };
-const callbackSetup = m => {
+const callbackSetup = (m, codecs, bound) => {
+	const {type,args,decode}=codecs;
 	const ns = ["callbacks", "next", "arg", "reply", "fail", "trap"].map(k => {
 		if(!m.names[k]) throw new TypeError("Incomplete native callback port");
 		return JSON.stringify(m.names[k]);
 	});
-	const cases = m.callbacks.map(([j, from, to]) => `                case ${j}:
+	const cases = m.callbacks.map(([j, from, to]) => {
+		const argument=`owner.Argument<${type(from)}>(h, slot, static output => ${decode(from)})`;
+		const invoke=to==="unit"?`{ v${j}(x); return default(Unit); }`:`v${j}(x)`;
+		const reply=`owner.Reply(h, slot, (frame, input) => { ${args(to, "y", 0)} });`;
+		return `                case ${j}:
                 {
-                    var x = owner.Argument<${type(from)}>(h, slot, static output => ${decode(from)});
-                    if (!owner.Invoke<${type(to)}>(h, active, () => ${to === "unit" ? `{ v${j}(x); return default(Unit); }` : `v${j}(x)`}, out var y)) return;
-                    owner.Reply(h, slot, (frame, input) => { ${args(to, "y", 0)} });
+                    var x = ${bound?`binding.Visit(() => ${argument})`:argument};
+                    if (!owner.Invoke<${type(to)}>(h, active, () => ${bound?`binding.Scope.Invoke<${type(to)}>(() => ${invoke})`:invoke}, out var y)) return;
+                    ${bound?`binding.Visit(() => { ${reply} HostWorkerFrame.Admit(); });`:reply}
                     return;
-                }`);
+                }`;
+	});
 	return { ns, cases, guards: m.callbacks.map(([j]) => `        CheckDelegate(v${j});`).join("\n") };
 };
-// Keep await outside of unsafe code. Start copies values before returning; Take
-// copies the active value or error before releasing native output ownership.
-const taskMethod = ({ m, i, params, argTypes, signature, method, runtimeClass, assembly, wire, codecs }) => {
+/**
+ * Render a safe public task/stream method and its private synchronous ABI calls.
+ * Start copies inputs before returning; take decodes before releasing ownership.
+ *
+ * @param options - Verified method, codecs, managed names and optional class binding.
+ */
+const taskMethod = options => {
+	const { m, i, params, argTypes, signature, method, runtimeClass, assembly, wire, codecs, bound } = options;
 	const { type, args, decode, keep, drain } = codecs;
 	const value = type(m.result), stream = m.delivery === "async-iterator", call = params.map(n => "@" + n).join(", ");
 	let token = "cancellationToken";
@@ -155,10 +175,15 @@ const taskMethod = ({ m, i, params, argTypes, signature, method, runtimeClass, a
 	const output = stream ? `global::System.Collections.Generic.IAsyncEnumerable<${value}>`
 		: "global::System.Threading.Tasks.Task" + (m.result === "unit" ? "" : `<${value}>`);
 	const publicArgs = [signature, ...stream ? [] : ["global::System.Threading.CancellationToken " + token + " = default"]].filter(Boolean).join(", ");
+	const binder=bound?`new ${runtimeClass}.BoundWorker(this.Binding,this.scope)`:"";
+	const invocation=[binder,call].filter(Boolean).join(", ");
+	const factory=`() => ${runtimeClass}.Port${i}${bound?.g??""}(${invocation})`;
+	const make=bound && stream?`this.scope.Defer(${factory})`:factory;
+	const delivery=`global::${assembly}.Delivery<${value}>.${stream?"Sequence":"Value"}(${make}${stream?"":", "+token}${bound?", this.scope.Track":""})`;
 	const pub = `    /// <summary>${stream ? "Pull items from" : "Await"} ${m.declaration} on the Lean owner loop.</summary>
-    public static ${output} ${method}(${publicArgs}) => global::${assembly}.Delivery<${value}>.${stream ? "Sequence" : "Value"}(() => ${runtimeClass}.Port${i}(${call})${stream ? "" : ", " + token});`;
+    public ${bound?"":"static "}${output} ${method}(${publicArgs}) => ${bound?`this.scope.Invoke(() => ${delivery})`:delivery};`;
 	const name = JSON.stringify;
-	const cb = m.callbacks?.length && callbackSetup(m);
+	const cb = m.callbacks?.length && callbackSetup(m,codecs,bound);
 	const construct = cb ? `
     {
 ${cb.guards}
@@ -170,7 +195,8 @@ ${cb.cases.join("\n")}
             }
         });
         return new(h =>` : " =>\n        new(h =>";
-	const impl = `    internal static Port<${value}> Port${i}(${argTypes.map((t, j) => t + " v" + j).join(", ")})${construct}
+	const formals=[...bound?["BoundWorker binding"]:[],...argTypes.map((t,j)=>t+" v"+j)];
+	const impl = `    internal static Port<${value}> Port${i}${bound?.g??""}(${formals.join(", ")})${bound?" "+bound.constraints:""}${construct}${bound?" binding.Visit(() =>":""}
         {
             ${drain ? drain + "\n            " : ""}using var frame = new Frame();
             ulong* input = stackalloc ulong[${Math.max(1, m.args.length * 3)}];
@@ -182,13 +208,13 @@ ${cb.cases.join("\n")}
             byte* tags = stackalloc byte[${m.tagBytes}];
             try
             {
-                int s = fn(input, h, output, tags);
+                int s = fn(input, h, output, tags);${bound?"\n                if (s is 0 or 3 or 4) HostWorkerFrame.Admit();":""}
                 if (s == 0) return;
                 ${m.effect === "EIO" ? `if (s == 3) throw new DeclaredError<${type(m.error)}>(${name(m.declaration)}, ${decode(m.error)});` : m.effect === "IO" ? `if (s == 4) throw new LeanIOException(${name(m.declaration)}, ${decode("string")});` : ""}
                 throw Failure(s);
             }
             finally { clear(output);${keep(m)} }
-        }, h =>
+        }${bound?")":""}, h =>${bound?` binding.Visit<(bool,${value})>(() =>`:""}
         {
             var fn = (delegate* unmanaged[Cdecl]<ulong*, ulong*, byte*, int>)Symbol(${name(m.names.take)});
             var clear = (delegate* unmanaged[Cdecl]<ulong*, void>)Symbol(${name(wire.clear)});
@@ -203,13 +229,15 @@ ${cb.cases.join("\n")}
                 if (s == 4) throw new TaskIOException(${name(m.declaration)}, ${decode("string")});${m.effect === "EIO" ? `
                 if (s == 3) throw new DeclaredError<${type(m.error)}>(${name(m.declaration)}, ${decode(m.error)});` : ""}` : ""}
                 ${stream ? "if (s == 2) return (false, default!);" : ""}
-                ${m.terminal ? stream ? `if (s == 3) throw new DeclaredError<${type(m.terminal)}>(${name(m.stepDeclaration)}, ${decode(m.terminal)});` : `if (s == 4) throw new TaskIOException(${name(m.declaration)}, ${decode("string")});` : ""}
+                ${m.terminal ? stream && !m.stepIO ? `if (s == 3) throw new DeclaredError<${type(m.terminal)}>(${name(m.stepDeclaration)}, ${decode(m.terminal)});` : `if (s == 4) throw new TaskIOException(${name(stream?m.stepDeclaration:m.declaration)}, ${decode("string")});` : ""}
                 throw Failure(s);
             }
             finally { clear(output); }
-        }, ${name(m.names.poll)}, ${name(m.names.close)}, ${name(m.names.pull ?? null)}${cb ? ", callbacks);\n    }" : ");"}`;
+        }${bound?")":""}, ${name(m.names.poll)}, ${name(m.names.close)}, ${name(m.names.pull ?? null)}${cb ? ", callbacks);\n    }" : ");"}`;
 	return { pub, impl };
 };
+
+export { parameterTypes as dotnetTaskParameters, taskMethod as renderDotnetTaskMethod };
 
 /**
  * Derive the public API and internal marshaller from the same compiler model.

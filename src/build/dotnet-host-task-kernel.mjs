@@ -20,6 +20,7 @@ export const dotnetHostTaskKernel = async options => {
 	const entries=checked.entries.filter(e=>e.delivery), dotnetHostKinds=dotnetWorkerKinds(ir);
 	const generate=componentIdentity=>generateCTaskExports({name: "clr-"+sha256(name),modules,entries,dotnetDelivery: true,integerMode: "words",dotnetHostKinds,componentIdentity});
 	const skeleton=generate("0".repeat(64)), wire=generateSyncWire(skeleton.prefix,entries,{tasks: true,dotnetHostKinds});
+	wire.methods.forEach((m,i)=>{if(entries[i].stepIO) m.stepIO=true;});
 	const ledger=await taskResourceLedger(runtimeIdentity), headers={"task-delivery.h": await nativeDeliveryHeader(false)};
 	for(const f of ["native/task-notification.h","c/task-callback-port.h","native/task-callback-queue.h","dotnet/worker-owner.h","dotnet/worker-ledger.h","dotnet/worker-ledger.c"])
 		headers[f.split("/").at(-1)]=await readFile(new URL("../backends/"+f,import.meta.url));

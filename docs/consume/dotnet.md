@@ -121,6 +121,26 @@ references retained under the old binding are stale.
 See [publishing a host contract](../publish/nuget.md#import-an-application-owned-c-class)
 for the Lean side of the example.
 
+A package can also carry your class through a Lean worker. Use the same
+binding inside the owner loop. For example, the Workshop worker package
+returns the original `Meter` to its callback:
+
+```csharp
+LeanBridge.Workshop.LeanRuntime.Run(async () =>
+{
+    using var workshop = LeanBridge.Workshop.Api.BindHosts<Meter>();
+    var meter = workshop.Make(7);
+    var returned = await workshop.Relay(meter, m => { m.Level++; return m; });
+    Console.WriteLine(ReferenceEquals(meter, returned)); // True
+    Console.WriteLine(meter.Level);                     // 8
+});
+```
+
+Use the binding for any task or stream whose signature carries your class.
+Workers with only copied values stay on `Api`. Closing a binding cancels its
+pending work and invalidates streams created with it, even ones you haven't
+started reading. It leaves other bindings and your C# object alone.
+
 ### Await tasks and pull streams
 
 For a `native-dotnet-task-v1` package, start the application with

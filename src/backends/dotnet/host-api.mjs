@@ -5,6 +5,7 @@ import { dotnetComponentAssembly } from "./copied-model.mjs";
 import { dotnetHostCarrier } from "./host-native-members.mjs";
 import { dotnetScalarArgument, dotnetScalarResult, dotnetScalarType } from "./sync-io.mjs";
 import { verifiedDotnetAssets } from "./verified-assets.mjs";
+import { dotnetHostWorkerApi } from "./host-worker-api.mjs";
 
 /**
  * List the C# signatures the consumer must supply, without private wire details.
@@ -54,7 +55,8 @@ export const generateDotnetHostApi = async o => {
 		methods.add(method);
 		const result = type(e.result), unit = result === "Unit", ret = unit ? "void" : result;
 		const parameters = e.parameters.map((p, j) => type(p.type) + " @" + names[j]);
-		pub.push(`    public ${ret} ${method}(${parameters.join(",")}) => global::${assembly}.Wire.Call${i}${g}(this.Binding${names.map(n => ",@" + n).join("")});`);
+		const invoke=`global::${assembly}.Wire.Call${i}${g}(this.Binding${names.map(n => ",@" + n).join("")})`;
+		pub.push(`    public ${ret} ${method}(${parameters.join(",")}) => ${o.workerWire?`this.scope.Invoke(() => ${invoke})`:invoke};`);
 		const local = e.parameters.map((p, j) => type(p.type) + " v" + j);
 		impl.push(`    internal static ${ret} Call${i}${g}(HostMembers binding${local.length ? "," + local.join(",") : ""}) ${constraints} {
         using var call=new HostCall(binding); using var frame=new Frame();
@@ -72,6 +74,9 @@ export const generateDotnetHostApi = async o => {
         } finally { clear(output); }
     }`);
 	}
+	const worker=o.workerWire?dotnetHostWorkerApi({...o,wire: o.workerWire,assembly,g,constraints,names: methods}):null;
+	const finish=worker?`if(binder is null) return; scope.CheckDisposal();
+        try { scope.Dispose(); } finally { global::${assembly}.Wire.Control(binder,-1); binder=null; }`:`if(binder is not null) { global::${assembly}.Wire.Control(binder,-1); binder=null; }`;
 	const files = { "Api.cs": `using LeanBridge.GeneratedHost;
 namespace ${assembly};
 public readonly record struct Unit;
@@ -84,14 +89,14 @@ public sealed class LeanIOException(string declaration,string message):System.IO
 public sealed class WrongContextException():System.InvalidOperationException("Lean IO requires the original process main thread") {}
 public sealed class RuntimeUnavailableException():System.InvalidOperationException("The Lean runtime is unavailable") {}
 public static class Api {
-    public static Bound${g} BindHosts${g}() ${constraints} => new(HostContract.Bind(${gens.map(n => "typeof(" + n + ")").join(",")}));
+    public static Bound${g} BindHosts${g}() ${constraints} => new(HostContract.Bind(${gens.map(n => "typeof(" + n + ")").join(",")}));${worker?"\n"+worker.staticPub.join("\n"):""}
 }
 public sealed class Bound${g} : System.IDisposable ${constraints} {
-    private HostMembers? binder;
+    private HostMembers? binder;${worker?"\n    private readonly HostTaskScope scope=new();":""}
     private HostMembers Binding => binder ?? throw new System.ObjectDisposedException("CLR host binding");
     internal Bound(HostMembers value) { global::${assembly}.Wire.Control(value,-2); binder=value; }
-    public void Dispose() { if(binder is not null) { global::${assembly}.Wire.Control(binder,-1); binder=null; } }
-${pub.join("\n")}
+    public void Dispose() { ${finish} }
+${[...pub,...worker?.boundPub??[]].join("\n")}
 }
 `
 	, "HostContract.cs": "namespace LeanBridge.GeneratedHost;\n" + model.contract
@@ -113,10 +118,11 @@ ${verifiedDotnetAssets(evidence)}
         int status=Entry(call.Id,HostCall.Entry,op,null,0,output,&tag,&fault); call.Check(fault);
         if(status!=0) throw Status(status);
     }
-${impl.join("\n")}
+${impl.join("\n")}${worker?"\n"+worker.impl:""}
 }
 ` };
-	for(const name of ["host-frame.cs", "host-refs.cs", "host-wire.cs", "sync-wire.cs"])
+	const taskFiles=worker?["task-delivery.cs","task-loop.cs","host-task-scope.cs","host-worker-frame.cs",...o.workerWire.methods.some(m=>m.callbacks?.length)?["task-callbacks.cs"]:[]]:[];
+	for(const name of ["host-frame.cs", "host-refs.cs", "host-wire.cs", "sync-wire.cs",...taskFiles])
 		files[name] = (await readFile(new URL("./" + name, import.meta.url), "utf8")).replace("namespace LeanBridge.GeneratedIO;", "namespace " + assembly + ";");
 	return { files, assembly };
 };
