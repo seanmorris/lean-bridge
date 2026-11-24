@@ -16,4 +16,5 @@ helper was rejected on fresh compilation.
 This is compiler evidence, not an installed Maven release. It does not
 establish Java delivery, Kotlin cancellation, or JNI cleanup. Reproduce it
 with `node --test --test-concurrency=1 tests/helpers/jvm-worker-elaboration.mjs`
-and the project's pinned Lean toolchain.
+and the project's pinned Lean toolchain. For execution rather than compilation,
+see the [JNI transport check](jvm-worker-transport-20261124.md).

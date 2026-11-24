@@ -105,6 +105,45 @@ const callbackSpecs = (api, m, decl, ns) => {
 };
 
 /**
+ * Add the shared reactor, task, callback and Flow machinery to a generated
+ * package. The caller supplies the checked wire codecs and native symbols.
+ *
+ * @param o - Prepared Java frame/source map and compiler-selected delivery options.
+ */
+export const installJvmTaskRuntime = async o => {
+	const { files, ns, dir, retained, owned, java, options } = o;
+	const path = `src/main/java/${dir}/Wire.java`;
+	files[path] = files[path].replace("    int call(int op)", "    int task(TaskPort<?> port, int op) { return port.call(op, arena, args, out, tags); }\n    int call(int op)");
+	const assets = [["TaskReactor", "task-reactor"], ["TaskPort", "task-port"], ["Delivery", "task-delivery"]];
+	if(retained) assets.push(["CallbackPort", "callback-port"], ["RetainedCallback", "retained-callback"]);
+	for(const [name, asset] of assets) files[`src/main/java/${dir}/${name}.java`] = (await readFile(new URL("./" + asset + ".java", import.meta.url), "utf8"))
+		.replace("__PACKAGE__", ns).replace("__WATCH__", options.watch).replace("__TASK__", options.task);
+	const deliveryPath = `src/main/java/${dir}/Delivery.java`;
+	files[deliveryPath] = renderDelivery(files[deliveryPath], owned);
+	if(retained)
+	{
+		// Keep copied-only packages free of callback classes or callback policy.
+		const port = `src/main/java/${dir}/TaskPort.java`, delivery = `src/main/java/${dir}/Delivery.java`;
+		files[port] = insertAt(files[port], "final class TaskPort", "class TaskPort");
+		files[path] = insertAt(files[path], "private static IllegalStateException corrupt", `static void retireCallbackRuntime() {
+        try { Native.RETIRE.invokeExact(); } catch (Throwable e) { throw new IllegalStateException("Cannot retire Lean runtime", e); }
+    }
+    static IllegalStateException corrupt`);
+		files[delivery] = insertAt(files[delivery], "        @Override public boolean cancel", `        private void checkWait() { if (!isDone()) CallbackPort.checkWait(port); }
+        @Override public T join() { checkWait(); return super.join(); }
+        @Override public T get() throws InterruptedException, ExecutionException { checkWait(); return port instanceof CallbackPort<?> cb ? cb.checkedGet(this) : super.get(); }
+        @Override public T get(long t, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException { checkWait(); return port instanceof CallbackPort<?> cb ? cb.checkedGet(this,t,unit) : super.get(t,unit); }
+        @Override public boolean cancel`);
+	}
+	java("TaskIOException", `public final class TaskIOException extends java.io.UncheckedIOException {
+    private final String declaration;
+    TaskIOException(String decl, String message) { super(decl + ": " + message, new java.io.IOException(message)); declaration = decl; }
+    public String declaration() { return declaration; }
+}\n`);
+	files[`src/main/kotlin/${dir}/kotlin/TaskFlow.kt`] = (await readFile(new URL("./task-flow.kt", import.meta.url), "utf8")).replace("__PACKAGE__", ns);
+};
+
+/**
  * Generate both language projections over the same private native ABI.
  *
  * @param options - Checked Binding IR, wire methods, owner entry and native library evidence.
@@ -271,38 +310,7 @@ export const generateJvmIO = async options => {
 	const imports = (tasks ? "import kotlinx.coroutines.future.await\nimport kotlinx.coroutines.flow.map\n" : "")
 		+ (tasks && leases.size ? `import ${ns}.awaitLeanLease\nimport ${ns}.asLeanLeaseFlow\n` : "");
 	files[`src/main/kotlin/${dir}/kotlin/Api.kt`] = `package ${ns}.kotlin\n${imports}object Api {\n${kotlin.join("\n")}\n}\n`;
-	if(tasks)
-	{
-		const path = `src/main/java/${dir}/Wire.java`;
-		files[path] = files[path].replace("    int call(int op)", "    int task(TaskPort<?> port, int op) { return port.call(op, arena, args, out, tags); }\n    int call(int op)");
-		const assets = [["TaskReactor", "task-reactor"], ["TaskPort", "task-port"], ["Delivery", "task-delivery"]];
-		if(retained) assets.push(["CallbackPort", "callback-port"], ["RetainedCallback", "retained-callback"]);
-		for(const [name, asset] of assets) files[`src/main/java/${dir}/${name}.java`] = (await readFile(new URL("./" + asset + ".java", import.meta.url), "utf8"))
-			.replace("__PACKAGE__", ns).replace("__WATCH__", options.watch).replace("__TASK__", options.task);
-		const deliveryPath = `src/main/java/${dir}/Delivery.java`;
-		files[deliveryPath] = renderDelivery(files[deliveryPath], leases.size);
-		if(retained)
-		{
-			// Keep copied-only packages free of callback classes or callback policy.
-			const port = `src/main/java/${dir}/TaskPort.java`, delivery = `src/main/java/${dir}/Delivery.java`;
-			files[port] = insertAt(files[port], "final class TaskPort", "class TaskPort");
-			files[path] = insertAt(files[path], "private static IllegalStateException corrupt", `static void retireCallbackRuntime() {
-        try { Native.RETIRE.invokeExact(); } catch (Throwable e) { throw new IllegalStateException("Cannot retire Lean runtime", e); }
-    }
-    static IllegalStateException corrupt`);
-			files[delivery] = insertAt(files[delivery], "        @Override public boolean cancel", `        private void checkWait() { if (!isDone()) CallbackPort.checkWait(port); }
-        @Override public T join() { checkWait(); return super.join(); }
-        @Override public T get() throws InterruptedException, ExecutionException { checkWait(); return port instanceof CallbackPort<?> cb ? cb.checkedGet(this) : super.get(); }
-        @Override public T get(long t, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException { checkWait(); return port instanceof CallbackPort<?> cb ? cb.checkedGet(this,t,unit) : super.get(t,unit); }
-        @Override public boolean cancel`);
-		}
-		java("TaskIOException", `public final class TaskIOException extends java.io.UncheckedIOException {
-    private final String declaration;
-    TaskIOException(String decl, String message) { super(decl + ": " + message, new java.io.IOException(message)); declaration = decl; }
-    public String declaration() { return declaration; }
-}\n`);
-		files[`src/main/kotlin/${dir}/kotlin/TaskFlow.kt`] = (await readFile(new URL("./task-flow.kt", import.meta.url), "utf8")).replace("__PACKAGE__", ns);
-	}
+	if(tasks) await installJvmTaskRuntime({ files, ns, dir, retained, owned: leases.size, java, options });
 	files["binding-manifest.json"] = JSON.stringify({ generator: tasks ? "jvm-tasks-v1" : "jvm-sync-io-v1", namespace: ns, kotlin: { namespace: ns + ".kotlin" } });
 	return { namespace: ns, files };
 };

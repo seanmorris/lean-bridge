@@ -1,5 +1,6 @@
 /** @file Compile checked application host exports into synchronous Lean and JNI entry points. */
 import { generateJvmNativeMembers, jvmHostCarrier } from "./host-native-members.mjs";
+import { jvmWorkerControl } from "./worker-control.mjs";
 
 const qual = /^(?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*$/u;
 const fail = message => { throw new TypeError("JVM host exports: " + message); };
@@ -27,7 +28,7 @@ const leanType = (types, ref) => {
  */
 export const generateJvmHostExports = async o => {
 	const { ir, entries, modules, identity } = o, types = ir.types;
-	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(n => !qual.test(n)) || !entries.length) fail("invalid component inputs");
+	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(n => !qual.test(n)) || (!entries.length && !o.workerWire)) fail("invalid component inputs");
 	const model = await generateJvmNativeMembers(ir), header = [model.header], defs = [], bodies = [], outputs = [];
 	const toWire = type => {
 		if(!either(type)) return "jh_to(f,jh_session," + jvmHostCarrier(types, type).code + ",v)";
@@ -41,7 +42,7 @@ export const generateJvmHostExports = async o => {
 	for(const [i, d] of entries.entries())
 	{
 		if(!qual.test(d.declaration) || d.delivery || !["IO", "EIO", "BaseIO", "pure"].includes(d.effect)
-			|| d.parameters.length > 64 || (d.effect === "pure" && !either(d.result))) fail("unsupported synchronous declaration " + d.declaration);
+			|| d.parameters.length > 64 || (d.effect === "pure" && !either(d.result) && !o.workerWire)) fail("unsupported synchronous declaration " + d.declaration);
 		const args = d.parameters.map(p => jvmHostCarrier(types, p.type)), params = args.map((_, j) => "v" + j);
 		const result = leanType(types, d.result), eio = d.effect === "EIO", fn = "lb_jh_export_" + i;
 		const ret = eio ? "(_root_.Except " + leanType(types, d.error) + " " + result + ")" : result;
@@ -113,5 +114,5 @@ __attribute__((visibility("default"))) jobject ${prefix}_call(JNIEnv *e,jobject 
     return lb_jh_call(e,port,args,execute,&op);
 }
 `;
-	return { entryLean, source, header: '#include <lean/lean.h>\n' + header.join("\n"), prefix, model };
+	return { entryLean, source: o.workerWire ? source + jvmWorkerControl(ir,o.workerWire,prefix) + "\n" : source, header: '#include <lean/lean.h>\n' + header.join("\n"), prefix, model };
 };
