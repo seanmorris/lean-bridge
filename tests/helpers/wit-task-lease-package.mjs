@@ -13,10 +13,12 @@ import { writeWitLeaseProject } from "./wit-task-lease-project.mjs";
 import { writeWitParkedProject } from "./wit-task-parked-project.mjs";
 
 const parked=process.env.LEAN_BRIDGE_WIT_PARKED_LEASE_TEST==="1";
-const modules=parked?["Depot"]:["Depot","Peer"], names=modules.map(m=>m.toLowerCase());
+const retained=process.env.LEAN_BRIDGE_WIT_RETAINED_LEASE_TEST==="1";
+const modules=parked?["Depot"]:retained?["Peer","Depot"]:["Depot","Peer"], names=modules.map(m=>m.toLowerCase());
 test(parked?"installed WIT tasks anchor borrowed objects through cancellation and late completion"
+	:retained?"installed WIT tasks keep foreign Lean borrows alive across retained callbacks"
 	:"installed WIT sessions exchange a nominal lease without exchanging stores",{
-	skip: !parked && process.env.LEAN_BRIDGE_WIT_LEASE_PACKAGE_TEST!=="1"
+	skip: !parked && !retained && process.env.LEAN_BRIDGE_WIT_LEASE_PACKAGE_TEST!=="1"
 	},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"wit-lease-install-")); t.after(()=>rm(root,{recursive: true,force: true}));
 	const env={...process.env,npm_config_cache: join(root,"cache")};delete env.NODE_TEST_CONTEXT;
@@ -42,7 +44,7 @@ test(parked?"installed WIT tasks anchor borrowed objects through cancellation an
 			const name=module.toLowerCase(),project=join(phase,"source-"+name),out=join(phase,"handoff-"+name);
 			const review=route==="reviewed"?reviews[name]:null;
 			if(parked) await writeWitParkedProject(project,review);
-			else await writeWitLeaseProject(project,module,review);
+			else await writeWitLeaseProject(project,module,review,false,retained);
 			await build(project,out);
 			await rm(project,{recursive: true});
 			const receiptPath=join(out,"package-set-receipt.json");
@@ -75,7 +77,7 @@ test(parked?"installed WIT tasks anchor borrowed objects through cancellation an
 			assert.equal(manifests.depot.ledgerDigest,manifests.peer.ledgerDigest);
 		}
 		const relocated=join(phase,"relocated install");await rename(consumer,relocated);
-		await cp(resolve("tests/fixtures/wit-task-package",parked?"parked-leases.c":"leases.c"),join(phase,"main.c"));
+		await cp(resolve("tests/fixtures/wit-task-package",parked?"parked-leases.c":retained?"retained-leases.c":"leases.c"),join(phase,"main.c"));
 		await writeFile(join(phase,"lean_bridge_native_runtime.h"),linuxBrokerHeader);
 		const clean={PATH: "/usr/bin:/bin",PKG_CONFIG_LIBDIR: names.map(n=>join(relocated,n,"lib/pkgconfig")).join(":")};
 		const flags=(await run("pkg-config",["--cflags","--libs",...names.map(n=>n+"-wit")],phase,clean)).stdout.trim().match(/(?:\\.|[^\s\\])+/gu).map(s=>s.replace(/\\(.)/gu,"$1"));
@@ -86,7 +88,7 @@ test(parked?"installed WIT tasks anchor borrowed objects through cancellation an
 		await rm(phase,{recursive: true});
 	}
 	if(parked) return;
-	const changed=join(root,"changed"),refused=join(root,"refused");await writeWitLeaseProject(changed,"Peer",reviews.peer,true);
+	const changed=join(root,"changed"),refused=join(root,"refused");await writeWitLeaseProject(changed,"Peer",reviews.peer,true,retained);
 	await assert.rejects(build(changed,refused),e=>/Reviewed API differs/u.test([e.details?.stdout,e.details?.stderr].join("\n")));
 	await assert.rejects(access(refused),{code: "ENOENT"});}
 );
