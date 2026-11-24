@@ -26,6 +26,28 @@ The JVM and Ruby source checks were rerun against the same compiler change.
 Each reproduced its previously recorded public IR and generated host C digests:
 [JVM](jvm-host-imports-20261124.md) and [Ruby](ruby-host-imports-20261124.md).
 
-This is a source check, not a CLR runtime test. The NuGet publisher still
-rejects host imports. No installed C# class, exception round trip or
-cross-assembly object identity is claimed by this check.
+## Synchronous CLR calls through compiled Lean
+
+With .NET SDK 8 and a C compiler installed, run
+`npm run test:dotnet-host-members`. Set `LEAN_BRIDGE_DOTNET` to the SDK's
+`dotnet` executable if it is not on PATH. The test compiles a Lean caller,
+links its real extern to a C shared library, builds a C# application with an
+empty NuGet source list, and launches it without publisher tools on PATH.
+
+The generated CLR binder resolves the public constructor, mutable property,
+instance method and exact unsigned overload of an overloaded static method
+before the application calls them. The compiled Lean call uses a private
+reverse-call frame on the main thread. A C# method can reenter Lean; two
+exceptions with identical messages stay distinct when Lean catches both and
+rethrows the first. The consumer gets the same exception object even when it
+is itself a `TargetInvocationException`. Mapping the failure in Lean,
+replacing it with an identically worded IO error, or catching it completely
+does not resurrect the original exception. A worker-thread call is refused.
+An injected `OutOfMemoryException` is not allowed to unwind through native
+code: the caller receives it after returning to managed code, even when Lean
+tries to swallow it, and the retired fixture runtime refuses further calls.
+
+This is a native integration test, not an installed NuGet consumer. The fixture
+currently supplies the outer component entry and tests a static scalar call
+through native code. Canonical identity for managed instances across
+independently installed assemblies is a separate requirement.
