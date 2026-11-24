@@ -10,6 +10,7 @@ import { generateLeanHostObjectAdapters } from "../../src/backends/lean/host-obj
 import { javascriptWasmOwnedPins as pins } from "../../src/build/javascript-wasm-toolchain.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { bindWasmHostMembers } from "../../src/runtime/wasm-host-members.mjs";
+import { checkGeneratedHostWasm } from "./javascript-host-generated.mjs";
 
 const input = resolve("tests/fixtures/javascript-host-meter");
 const oracle = resolve("tests/fixtures/javascript-host-wasm");
@@ -18,7 +19,7 @@ const variable = name => {
 	return resolve(process.env[name]);
 };
 
-test("compiled Lean mutates JavaScript aliases, maps IO failure, and retires every object lease", {timeout: 480_000}, async t => {
+const setup = async t => {
 	const sdk = variable("LEAN_BRIDGE_JS_EMSDK"), target = variable("LEAN_BRIDGE_JS_TARGET_RUNTIME");
 	const runtime = variable("LEAN_BRIDGE_RUNTIME_ROOT"), prefix = variable("LEAN_BRIDGE_LEAN_PREFIX");
 	const app = await mkdtemp(join(tmpdir(), "js-host-wasm-"));
@@ -30,6 +31,11 @@ test("compiled Lean mutates JavaScript aliases, maps IO failure, and retires eve
 	assert.equal((await run(lean, ["--githash"])).stdout.trim(), pins.leanCommit);
 	assert.equal((await readFile(join(target, "source/.lean-wasm-patched"), "utf8")).trim(), pins.leanCommit + " " + pins.patchSetSha256 + " browser");
 	assert.ok((await run(emcc, ["--version"])).stdout.split("\n")[0].endsWith(pins.emscriptenVersion + " (" + pins.emscriptenCommit + ")"));
+	return {app,run,lean,emcc,target,runtime,input,oracle};
+};
+
+test("compiled Lean mutates JavaScript aliases, maps IO failure, and retires every object lease", {timeout: 480_000}, async t => {
+	const {app,run,lean,emcc,target,runtime} = await setup(t);
 	const ir = JSON.parse(await readFile(join(input, "lean-bridge.hosts.json"), "utf8")), model = javaScriptHostMembers(ir);
 	const host = "LeanBridge/Host/Javascript.lean";
 	await mkdir(join(app, "LeanBridge/Host"), {recursive: true});
@@ -125,4 +131,8 @@ test("compiled Lean mutates JavaScript aliases, maps IO failure, and retires eve
 		assert.deepEqual([failures, drops], [1, 6]);
 	} finally
 	{ wasm._free(frame); wasm._free(symbol); }
+});
+
+test("generated Wasm externs transport all nineteen scalars and nested JavaScript host calls", {timeout: 480_000}, async t => {
+	await checkGeneratedHostWasm(await setup(t));
 });
