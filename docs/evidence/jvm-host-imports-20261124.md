@@ -39,3 +39,30 @@ When Lean replaces an error with the same text or maps it to a typed
 This native test uses a small test entry point and one static host member.
 It is not a Maven installation test: it does not establish cross-JAR host
 object identity, host lease retirement, or generated package delivery.
+
+## Sharing an application object between components
+
+`npm run test:jvm-host-domain` compiles two independent native components,
+packages their private Java adapters in separate JARs and removes both build
+directories. A Java consumer loads each JAR in a different classloader and
+exercises both load orders, each in a fresh JVM with JNI checking enabled.
+
+The first component calls the host's identity method and saves the resulting
+Lean reference in a test observation slot. The second component receives the
+original Java object as a fresh argument. Lean compares the two wrappers by
+pointer: they match. Two objects that compare equal in Java do not match.
+One Java object bound as two distinct nominal Lean kinds does not match either.
+
+An incompatible second class in a binding rolls back. A call with a bad
+second argument does not retain its first strong argument. Closing a binding
+inside its own host method is rejected; closing it after return leaves the
+other binding usable. Closing the final binding brings the registry count
+to zero, invalidates a previously saved Lean reference even after rebinding,
+and lets the JVM collect the object.
+
+The test supplies the component entry and a native observation slot. These
+are integration JARs, not releases built by the Maven publisher. On Linux
+x86-64, the independently built copies of the owner had SHA-256
+`b627be085eafc1cfdc61d2685a7d5c568176e12ac8a82810bd36df6407367b43`;
+both copies of the shared nominal domain had SHA-256
+`9728e40ff5b5f69e1893524253e12d2055de6cf2aedfadb87eb90e94f77a0436`.

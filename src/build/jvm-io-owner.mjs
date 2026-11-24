@@ -46,6 +46,42 @@ export const compileJvmIOOwner = async options => {
 };
 
 /**
+ * Build the JNI nominal registry as a process-lifetime peer of the shared
+ * JVM owner. Its public C symbols also authenticate the owner and frame ABI.
+ *
+ * @param o - Private component staging, verified runtime, matching owner and publisher toolchains.
+ */
+export const compileJvmHostDomain = async o => {
+	const { app, runtimeRoot, leanPrefix, javaHome, runtimeIdentity, owner, run, cc } = o;
+	const parts = {};
+	for(const name of ["host-domain.c", "host-domain.h", "host-frame.c", "host-frame.h"])
+	{
+		const bytes = await asset("jvm/" + name);
+		await writeFile(join(app, name), bytes, { flag: "wx" }); parts[name] = sha256(bytes);
+	}
+	const id = sha256(canonicalJson({ runtimeIdentity, owner: owner.id, parts }));
+	const name = "liblb_jvm_host_" + runtimeIdentity + ".so", flag = "-DLB_JVM_DOMAIN_PREFIX=lb_jhd_" + id + "_";
+	const includes = [join(leanPrefix, "include"), join(javaHome, "include"), join(javaHome, "include/linux")].map(p => "-I" + p);
+	const compile = ["-std=gnu11", "-O1", "-g0", "-DNDEBUG", "-shared", "-fPIC"];
+	await run(cc, [...compile, "-fvisibility=hidden"
+		, flag
+		, owner.flag
+		, ...includes
+		, "host-domain.c"
+		, "-L."
+		, "-l:" + owner.name
+		, "-L" + join(runtimeRoot, "lib")
+		, "-lleanshared"
+		, "-Wl,-z,defs,-z,nodelete"
+		, "-Wl,--build-id=none"
+		, "-Wl,-soname," + name
+		, "-Wl,-rpath,$ORIGIN"
+		, "-o"
+		, name], app);
+	return { id, name, flag, includes };
+};
+
+/**
  * Only generated, enumerated calls cross the JVM downcall (never caller-provided functions).
  *
  * @param wire - Compiler-derived copied methods and optional task or pull protocols.

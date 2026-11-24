@@ -1,5 +1,6 @@
 /** @file Resolve a JVM host contract into private, exact-signature Java adapters. */
 import { readFile } from "node:fs/promises";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { nativeHostSelection } from "../../analyze/host-export-model.mjs";
 import { generateLeanHostObjectAdapters, hostDeclarationName, hostMemberSymbol } from "../lean/host-object.mjs";
 
@@ -28,6 +29,8 @@ export const generateJvmHostMembers = async ir => {
 	generateLeanHostObjectAdapters(ir);
 	nativeHostSelection(ir, "jvm");
 	const types = ir.types;
+	if(!types.length || types.length > 64 || new Set(types.map(t => t.resource.kindId)).size !== types.length) fail("expected distinct nominal kinds");
+	const kinds = types.map(t => ({ key: sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId])), strong: t.host.identity === "strong-canonical" }));
 	if(types.some(t => t.host.dynamic || !["weak-canonical", "strong-canonical"].includes(t.host.identity))) fail("dynamic or unknown identity");
 	const site = (s, result = false) => {
 		const ref = s.type, i = ref.kind === "named" ? types.findIndex(t => t.id === ref.id) : -1;
@@ -58,11 +61,11 @@ export const generateJvmHostMembers = async ir => {
         if (types.length != ${types.length}) throw new IllegalArgumentException("wrong number of nominal host classes");
         for (Class<?> t : types) if (t == null || t.isPrimitive() || t.isArray()) throw new IllegalArgumentException("expected host class");
         if (unit == null || unit.isPrimitive() || unit.isArray()) throw new IllegalArgumentException("expected component Unit class");
-        return new HostMembers(
+        return new HostMembers(types,
             ${members.map(m => m.spec).join(",\n            ")}
         );
     }
 }
 `;
-	return { implementation, contract, members };
+	return { implementation, contract, members, kinds };
 };

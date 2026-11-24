@@ -61,8 +61,11 @@ final class HostMembers {
     }
     private record Bound(MethodHandle invoke, Site[] args, Site result) {}
     private final Bound[] members;
+    private final Class<?>[] classes;
+    Class<?>[] classes() { return classes.clone(); }
 
-    HostMembers(Spec... specs) {
+    HostMembers(Class<?>[] classes, Spec... specs) {
+        this.classes = classes.clone();
         members = new Bound[specs.length];
         for (int i = 0; i < specs.length; i++) {
             Spec s = specs[i];
