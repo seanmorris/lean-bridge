@@ -161,8 +161,34 @@ If a method throws and Lean propagates the same error unchanged, the caller
 catches the original JavaScript value. If Lean maps it to a declared `EIO`
 failure, the caller catches the package's error class with its typed payload.
 A returned Lean `Except` is a value (`{ok: …}` or `{error: …}`), not a throw.
-Bindings are synchronous and belong to their JavaScript agent. Create a new
-binding with worker-local classes when using a module worker.
+The binding belongs to the JavaScript agent that supplied the classes. A
+module worker supplies its own classes. The synchronous Workshop above
+returns its values directly.
+
+A **threaded** package can also call those members from a Lean task or
+cursor. Your method still runs on the JavaScript owner, with the original
+object as its receiver. With the [threaded Workshop](../tests/fixtures/javascript-threaded-host/Workshop.lean)
+and the same `Box` class:
+
+```js
+const workshop = withHosts({ Box });
+try {
+  const box = await workshop.start(7);
+  console.log(await workshop.work(box, n => n + 1)); // 8
+  for await (const item of workshop.open_cursor(box)) {
+    console.log(item === box); // true
+    break;                     // closes the Lean cursor
+  }
+} finally {
+  await workshop.dispose();
+}
+```
+
+Use one live binding per threaded component. Disposing it stops new calls,
+cancels its outstanding operations, and waits for native cleanup. Other
+components on the heap remain usable. A host member's original thrown value
+and a retained callback failure are different: the callback rejects with
+`JavaScriptCallbackError` and exposes the original value as `cause`.
 
 ### Answer a callback from a Lean task
 

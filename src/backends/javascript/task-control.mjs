@@ -54,6 +54,17 @@ export const generateTaskControl = (symbol, wire) => {
 		cases.push(`case ${wire.methods.length+i}: {
     if (f[1] != ${taskFrame.leaseSize} || h[0] || h[1] || out[0] || out[1] || out[2] || out[3] || !args[0] || !args[1]) return 5;
     switch (f[3]) {
+      ${r.host?`case ${taskFrame.hostPin}: {
+        if (args[0]>UINT32_MAX || args[1]>UINT32_MAX || args[2] || args[3]) return 5;
+        lean_object *v=lb_jst_wrap_v1((uint32_t)args[0],(uint32_t)args[1],NULL); if (!v) return 10;
+        int status=LB_LEASE(create)("${r.hash}",v,out); lean_dec(v); return status==LB_LEASE_OK?0:status==LB_LEASE_MEMORY?11:10;
+      }
+      case ${taskFrame.hostResolve}: {
+        if (!args[2] || args[2]>UINT32_MAX || args[3]) return 5;
+        lean_object *v=LB_LEASE(borrow)("${r.hash}",args);
+        if (!v || !lb_jst_admit_v1((uint32_t)args[2],v)) return 6;
+        out[0]=lb_jst_token_v1((uint32_t)args[2],v); return out[0]?0:6;
+      }`:""}
       case ${taskFrame.leaseClose}: return args[2] || args[3] ? 5 : ${fn}_close(args);
       case ${taskFrame.leaseRetain}: return args[2] || args[3] ? 5 : ${fn}_retain(args,out);
       case ${taskFrame.leaseSame}: return !args[2] || !args[3] ? 5 : ${fn}_same(args,args+2,(uint8_t*)out);
@@ -62,6 +73,10 @@ export const generateTaskControl = (symbol, wire) => {
   }`);
 	}
 	return `#include <stdint.h>
+${wire.leases?.some(r=>r.host)?`#include "task-resource-ledger.h"
+extern lean_obj_res lb_jst_wrap_v1(uint32_t,uint32_t,b_lean_obj_arg);
+extern uint32_t lb_jst_token_v1(uint32_t,b_lean_obj_arg);
+extern int lb_jst_admit_v1(uint32_t,b_lean_obj_arg);`:""}
 extern void ${wire.clear}(uint64_t *);
 ${prototypes.join("\n")}
 __attribute__((visibility("default"))) int ${symbol}(uint32_t *f) {

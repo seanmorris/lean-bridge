@@ -17,6 +17,13 @@ const ambient = {
 export const nativeEffects = Object.freeze(Object.keys(ambient).sort());
 const fail = message => { throw Object.assign(new TypeError(`Native effect policy: ${message}`), { code: "native-effect-policy" }); };
 const catalog = new Map();
+// A synchronous pthread-to-JavaScript proxy needs the heap owner to service it.
+// The audit records transitive leaves, not which agent eventually runs them;
+// refuse explicit waits even when the author expects them to run on a worker.
+const ownerBlocking = new Set(["lean_task_get_own", "lean_io_wait"
+	, "lean_io_wait_any", "lean_dbg_sleep", "lean_io_condvar_wait"
+	, "lean_io_basemutex_lock", "lean_io_baserecmutex_lock"
+	, "lean_io_basesharedmutex_read", "lean_io_basesharedmutex_write"]);
 // Lean 4.32.2: runtime/object.cpp dispatches this constructor to
 // Init/Data/List/ToArrayImpl.lean (allocate, then push each element).
 // Authenticate both ends of the shim; a similar symbol is not a grant.
@@ -119,6 +126,8 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 				continue;
 				}
 			const cap = exact ? null : catalog.get(symbol);
+			if(compiledMembers && ownerBlocking.has(symbol))
+				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the JavaScript host owner; return or compose the task without waiting synchronously`);
 			if(cap === null) continue;
 			if(!allowed.includes(cap)) violations.add(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);
 			found.add(cap);

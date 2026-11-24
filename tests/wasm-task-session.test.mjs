@@ -5,9 +5,21 @@ import {taskFrame as op} from "../src/abi/wasm-task-frame.mjs";
 import {createWasmTaskNotifications} from "../src/runtime/wasm-task-notifications.mjs";
 import {createWasmTaskSession} from "../src/runtime/wasm-task-bindings.mjs";
 import {observeTaskWorkerFailures} from "../src/runtime/wasm-task-loader.mjs";
+import {installWasmTaskHostMembers} from "../src/runtime/wasm-task-host-members.mjs";
+
+test("an incomplete pthread owner is rejected before its first binding",()=>{
+	const wasm=Object.fromEntries(["member","run_member","error_ticket","retire"].map(op=>["_lb_jst_"+op+"_v1",()=>0]));
+	assert.throws(()=>installWasmTaskHostMembers(wasm),/fresh threaded host runtime/u);
+	assert.equal(Object.hasOwn(wasm,"lbJstHostCallsV1"),false);
+	const fault=new Error("collector trapped");let cause;
+	wasm._lb_jst_collect_v1=()=>{throw fault;};
+	const host=installWasmTaskHostMembers(wasm,{poison: e=>{cause=e;}});
+	assert.throws(()=>host.collect(),e=>e===fault);assert.equal(cause,fault);
+	assert.throws(()=>wasm.lbJstHostCallsV1.enter("a".repeat(64)),/retired/u);
+});
 
 const method=(id,result,delivery=null,args=[]) => ({id,args,result,delivery,tagBytes: 1,startId: null,terminalId: null});
-const harness=(methods,control,leases=[],capacity) => {
+const harness=(methods,control,leases=[],capacity,host=null) => {
 	const notifications=createWasmTaskNotifications(capacity), events=[], tokens=[], heap=new Uint8Array(4096), d=new DataView(heap.buffer);
 	let top=16, failAt=0, allocations=0, stops=0;
 	const allocate=n => {
@@ -15,14 +27,29 @@ const harness=(methods,control,leases=[],capacity) => {
 		const p=top; top+=Math.ceil(n/8)*8; return p;
 	};
 	const module={HEAP8: heap,_malloc: allocate,_free: p => events.push("free:"+p)};
-	const session=createWasmTaskSession({module,notifications,terminate: () => {stops++;}});
-	const api=session.bind({methods,leases},f => {
+	const session=createWasmTaskSession({module,notifications,terminate: () => {stops++;},installHost: ()=>host});
+	const api=session.bind({methods,leases,...host?{hostKinds: []}:{}},f => {
 		const code=d.getUint32(f+12,true); events.push("call:"+code);
 		if(code===op.listen) tokens.push(d.getUint32(f+16,true));
 		return control({code,f,d,index: d.getUint32(f+8,true)});
-	});
+	},host?{}:null);
 	return {api,session,events,tokens,notifications,failAllocationAt: n => {failAt=n;},stops: () => stops};
 };
+
+test("a member failure cannot be substituted for ordinary Lean IO in a root without host calls",()=>{
+	let consumed=0,abandoned=0;
+	const idle=()=>{};
+	const fake={bind: ()=>({disable: idle,close: idle}),collect: idle
+		, abandon: ()=>{abandoned++;},live: ()=>0,heldErrors: ()=>0
+		, takeError: key=>{assert.equal(key,23);consumed++;return {application: true,error: "forged"};}};
+	const row={...method("read","uint32"),name: "read",effect: "IO",startId: "error:IO.Error",hostPhases: {call: []}};
+	const h=harness([row],({f,d,code})=>{
+		assert.equal(code,op.start);d.setBigUint64(f+op.out,23n,true);d.setBigUint64(f+op.out+8,1n,true);return 15;
+	},[],undefined,fake);
+	const b=h.api.withHosts({});
+	assert.throws(()=>b.read(),/Malformed Lean task frame/u);
+	assert.equal(h.session.snapshot().state,"poisoned");assert.equal(consumed,1);assert.equal(abandoned,1);assert.equal(h.stops(),1);
+});
 
 test("JS rejects its promise and PHP throws before returning an owner for the same failed Lean factory",async () => {
 	const m={...method("factory","uint32","task"),startId: "error:EIO.factory",error: "uint32"};

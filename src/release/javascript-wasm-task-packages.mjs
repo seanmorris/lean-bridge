@@ -3,6 +3,7 @@ import {readFile,readdir,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
+import {taskHostOwnerExports} from "../abi/wasm-task-frame.mjs";
 import {reconcileHostExports,taskWorkerInterface} from "../analyze/host-export-model.mjs";
 import {hashBindingIr} from "../binding-ir/canonical.mjs";
 import {heapResourceIdentities} from "../analyze/heap-resource-identity.mjs";
@@ -10,6 +11,7 @@ import {threadedHostSource} from "../build/host-elaboration.mjs";
 import {npmPackageMetadata} from "../analyze/package-metadata.mjs";
 import {assertExportConfigurationCapabilities} from "../analyze/export-configuration.mjs";
 import {generateJavaScriptPackage} from "../backends/javascript/generate.mjs";
+import {generateJavaScriptHostPackage} from "../backends/javascript/host-public-package.mjs";
 import {componentNpmIdentity} from "./component-package-receipt.mjs";
 import {tarGzipPackingIdentity} from "./deterministic-archive.mjs";
 import {archiveSharedJavaScriptPackages,assertWasmSideImports} from "./owned-javascript-npm-package.mjs";
@@ -29,6 +31,11 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, ["LICENSE",await readFile(new URL("../../LICENSE",import.meta.url))]]);
 	const assets=["runtime/wasm-task-loader"
 		, "runtime/wasm-task-leases"
+		, "runtime/wasm-task-host-members"
+		, "runtime/wasm-host-domain"
+		, "runtime/wasm-host-wire"
+		, "runtime/wasm-host-members"
+		, "release/component-scalar-codec"
 		, "runtime/wasm-task-bindings"
 		, "runtime/wasm-task-callbacks"
 		, "runtime/wasm-task-frames"
@@ -59,6 +66,7 @@ export declare function closeTaskRuntime(): Promise<void>;
 export declare function taskRuntimeStats(): {
   state?: "open" | "closing" | "closed" | "poisoned";
   frames?: number; allocations?: number; pending?: number; nativeOwners: number | null; notifications: number;
+  hostPins?: number; hostErrors?: number;
 };
 `);
 	const notices=new URL("../../notices/runtime/",import.meta.url);
@@ -87,7 +95,7 @@ export declare function taskRuntimeStats(): {
  */
 export const assertJavaScriptTaskConfiguration=configuration => {
 	assertExportConfigurationCapabilities(configuration,{target: "npm"
-		, fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors"]
+		, fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors","hostImports"]
 		, targetFields: ["name","version"]});
 	if(configuration.nativeEffects?.length) throw new Error("Threaded JavaScript tasks support only in-memory effects");
 };
@@ -125,7 +133,9 @@ export const writeJavaScriptTaskPackages = async options => {
 	const main=new WebAssembly.Module(mainWasm), side=new WebAssembly.Module(binary);
 	const exportsOf=m => new Set(WebAssembly.Module.exports(m).map(e => e.kind+":"+e.name));
 	const runtimeExports=exportsOf(main), sideExports=exportsOf(side);
-	for(const name of ["lb_js_task_load","lb_js_task_call","malloc","free","bridge_owned_runtime_identities"])
+	const required=["lb_js_task_load","lb_js_task_call","malloc","free","bridge_owned_runtime_identities"];
+	if(hosts) required.push(...taskHostOwnerExports);
+	for(const name of required)
 		if(!runtimeExports.has("function:"+name) || !mainModule.includes(Buffer.from("_"+name)))
 			throw new Error("Prepared owner lacks JS task entry: "+name);
 	const controls=WebAssembly.Module.exports(side).filter(e => e.name.startsWith("lb_js_task_"));
@@ -136,7 +146,7 @@ export const writeJavaScriptTaskPackages = async options => {
 	const profile=abi.profile, runtime=await taskRuntime(mainModule,mainWasm,profile);
 	const coordinate=php?phpTaskCoordinates(api,configuration).npm:componentNpmIdentity(api.component,configuration.targets?.npm);
 	if(coordinate.name==="@lean-bridge/runtime") throw new TypeError("Component cannot replace its shared task runtime");
-	const files=new Map(Object.entries(generateJavaScriptPackage(worker,componentIdentity)));
+	const files=new Map(Object.entries(hosts?generateJavaScriptHostPackage(api,hosts,componentIdentity,{threaded: true}):generateJavaScriptPackage(worker,componentIdentity)));
 	const pkg=JSON.parse(files.get("package.json")), metadata=configuration.package ?? {};
 	files.set("package.json",canonicalJson({...pkg
 		, ...coordinate
@@ -153,6 +163,8 @@ export const writeJavaScriptTaskPackages = async options => {
 			, componentIdentitySha256: componentIdentity
 			, runtimeIdentity: runtime.runtimeIdentity}}));
 	const descriptor={bindingIr: worker,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity};
+	if(hosts)
+	{descriptor.hostImports=hosts;files.set("metadata/host-imports.json",projectContract.hostImportsSource);}
 	files.set("internal/runtime.mjs",`import {loadTaskComponent} from "@lean-bridge/runtime";
 ${php ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart,resourceClass:component.resourceClass});" : ""}
 `);

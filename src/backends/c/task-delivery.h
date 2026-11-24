@@ -151,10 +151,23 @@ static int lb_utf8(LB(view) v) {
     }
     return 1;
 }
+#ifdef LB_WASM_HOST_ERRORS
+extern uint32_t lb_jst_error_ticket_v1(b_lean_obj_arg error);
+static LB(status) lb_host_io_error(lean_object *err, LB(buffer) *message) {
+    if ((message->host_ticket=lb_jst_error_ticket_v1(err))) return LB(IO_ERROR);
+    lean_inc(err); lean_object *text=lb_c_error_text(err);
+    LB(status) s=lb_string(message,text); lean_dec(text);
+    return s==LB(OK)?LB(IO_ERROR):s;
+}
+#endif
 static LB(status) lb_io_failure(lean_object *io, LB(buffer) *message) {
     if (!message) return LB(IO_ERROR);
+#ifdef LB_WASM_HOST_ERRORS
+    return lb_host_io_error(lean_io_result_get_error(io),message);
+#else
     lean_object *err = lean_io_result_get_error(io); lean_inc(err);
     lean_object *text = lb_c_error_text(err);
     LB(status) s = lb_string(message, text); lean_dec(text);
     return s == LB(OK) ? LB(IO_ERROR) : s;
+#endif
 }

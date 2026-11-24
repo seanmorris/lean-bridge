@@ -31,12 +31,18 @@ export const createWasmTaskLeases = context => {
 			if(other)
 			{ d.setBigUint64(p+op.args+16,other.id,true); d.setBigUint64(p+op.args+24,other.domain,true); }
 			const status=row.def.invoke(p), after=view();
-			if(status!==0 || after.getUint32(p,true)!==op.magic || after.getUint32(p+4,true)!==op.leaseSize || after.getUint32(p+8,true)!==row.def.index
+			if(after.getUint32(p,true)!==op.magic || after.getUint32(p+4,true)!==op.leaseSize || after.getUint32(p+8,true)!==row.def.index
 				|| after.getUint32(p+12,true)!==operation || m.HEAP8.subarray(p+16,p+op.out).some(Boolean)
 				|| m.HEAP8.subarray(p+op.out+16,p+op.args).some(Boolean)) return bad();
 			const id=after.getBigUint64(p+op.out,true), dom=after.getBigUint64(p+op.out+8,true);
 			if(after.getBigUint64(p+op.args,true)!==(operation===op.leaseClose ? 0n : row.id) || after.getBigUint64(p+op.args+8,true)!==(operation===op.leaseClose ? 0n : row.domain)
 				|| after.getBigUint64(p+op.args+16,true)!==(other?.id??0n) || after.getBigUint64(p+op.args+24,true)!==(other?.domain??0n)) return bad();
+			if(operation===op.hostPin && [10,11].includes(status) && !id && !dom) return null;
+			if(status!==0) return bad();
+			if(operation===op.hostResolve)
+			{ if(!id || id>0xffffffffn || dom) return bad();return Number(id); }
+			if(operation===op.hostPin)
+			{ if(!id || !dom || domain!==undefined && dom!==domain || active.has(id)) return bad();domain=dom;return [id,dom]; }
 			if(operation===op.leaseRetain)
 			{ if(!id || dom!==row.domain) return bad(); return [id,dom]; }
 			if(dom || id>(operation===op.leaseSame ? 1n : 0n)) return bad();
@@ -99,5 +105,34 @@ export const createWasmTaskLeases = context => {
 		Object.freeze(Resource.prototype); Object.freeze(Resource); kinds.set(type,{type,name,index,invoke,Resource});
 	};
 	const finish=() => { for(const row of active.values()) closeRow(row); };
-	return {register,adopt,finish,live,resourceClass: type => kinds.get(type)?.Resource};
+	const pinHost=(def,session,value)=>{
+		session.enter();
+		try
+		{
+			const token=session.pin(def.local,value);
+			try
+			{
+				assertOpen();
+				const pair=command({def,id: BigInt(session.kind(def.local)),domain: BigInt(token)},op.hostPin);
+				if(!pair) throw new RangeError("JavaScript task host lease limit reached");
+				const row={def,id: pair[0],domain: pair[1],closed: false};
+				active.set(row.id,row);return row;
+			} finally
+			{if(isLive()) session.release(token);}
+		} finally
+		{if(isLive()) session.leave();}
+	};
+	const resolveHost=(def,session,id,dom)=>{
+		if(!id || !dom || (domain!==undefined && domain!==dom) || active.has(id)) return bad();
+		domain=dom;
+		session.enter();
+		try
+		{
+			const token=command({def,id,domain: dom},op.hostResolve,{id: BigInt(session.kind(def.local)),domain: 0n});
+			return session.resolve(def.local,token);
+		} finally
+		{if(isLive()) session.leave();}
+	};
+	return {register,adopt,finish,live,pinHost,resolveHost,releaseHost: closeRow
+		, resourceClass: type => kinds.get(type)?.Resource};
 };

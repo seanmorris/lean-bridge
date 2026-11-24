@@ -8,10 +8,11 @@
  * Project verified nominal Lean resources into independently disposable C leases.
  *
  * @param definitions - Resource type definitions from the compiled public binding.
+ * @param hostKinds - Authenticated JS owner kinds sharing the native lease ledger.
  */
-export const taskResourceTypes = (definitions = []) => {
+export const taskResourceTypes = (definitions = [],hostKinds=[]) => {
 	const seen = new Set();
-	return definitions.map(t => {
+	const resources=definitions.map(t => {
 		const hash = t.source?.extensions?.["lean-bridge.dev/resource-identity"], lean = t.source?.declaration;
 		if(t.kind !== "resource" || t.host !== null || !/^[a-f0-9]{64}$/u.test(hash) || t.resource?.kindId !== "resource:" + lean + "/" + hash
 			|| !/^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u.test(lean) || t.id !== "lean:" + lean)
@@ -21,6 +22,15 @@ export const taskResourceTypes = (definitions = []) => {
 		seen.add(slug);
 		return { id: t.id, name, slug, hash, lean, raw: "lb_lease_" + hash };
 	});
+	for(const [i,k] of hostKinds.entries())
+	{
+		const {name,id,hash}=k,slug="js_host_"+i;
+		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || !/^[a-f0-9]{64}$(?![\s\S])/u.test(hash) || !id || seen.has(slug)
+			|| resources.some(r=>r.hash===hash || r.id===id)) throw new TypeError("Invalid JavaScript host lease layout");
+		resources.push({id,name,hash,slug,lean: "LeanBridge.Host.Javascript."+name,raw: "lb_lease_"+hash,host: true});
+		seen.add(slug);
+	}
+	return resources;
 };
 
 /**

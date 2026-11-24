@@ -90,11 +90,11 @@ export const installedTaskHarness=async (t,fixtures) => {
 		};
 		const chromium=await runInstalledChromium({root,consumer,names,isolated: true,timeoutMs: 60000,evaluate});
 		assert.deepEqual(chromium,node); t.diagnostic(JSON.stringify({mode: r.label,node,worker,chromium}));
-		return {root,consumer,fixtures,names};
+		return {root,consumer,fixtures,names,node,worker,chromium};
 	};
 	const retain=async (dest,releases) => {
 		if(!dest) return;
 		await mkdir(dest); for(const r of releases) await cp(r.out,join(dest,r.label),{recursive: true});
 	};
-	return {file,source,release,review,exercise,refuse,retain};
+	return {root,build,file,source,release,review,exercise,refuse,retain};
 };

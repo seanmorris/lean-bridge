@@ -21,7 +21,7 @@ const buffer = s => s === "string" || s === "bytes", wide = s => s === "nat" || 
 // can silently change a value, pointer or length and before Lean runs any IO.
 const wasmArgument = (v, k) => {
 	const [a, b, c] = [0, 1, 2].map(i => `args[${3 * k + i}]`);
-	if(v.startsWith("lease:")) return `!${a} || !${b} || ${c}`;
+	if(v.startsWith("lease:") || v.startsWith("host:")) return `!${a} || !${b} || ${c}`;
 	if(buffer(v) || wide(v)) return `!lb_wire_span(${a}, ${b}, ${wide(v) ? 8 : 1}) || ${c} > ${v === "int" ? 1 : 0}u`;
 	const bits = { char: 32, usize: 32, float32: 32, uint8: 8, uint16: 16, uint32: 32 }[v];
 	const signed = { isize: 32, int8: 8, int16: 16, int32: 32 }[v];
@@ -59,22 +59,29 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.wasm32 - Check inputs for a single-threaded wasm32 synchronous transport.
  * @param options.wasmTasks - Use owner notifications for threaded wasm32 task and pull handles.
  * @param options.wasmCallbacks - Enable owner-agent requests only for checked pthread task declarations.
+ * @param options.wasmHostKinds - Authenticated JavaScript nominal classes for this component.
  * @param options.witCallbacks - Preserve factory versus worker failures when dispatching on a Wasmtime store owner.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[] } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if(witCallbacks && (!tasks || checkedWasm || wasmCallbacks)) throw new TypeError("Wasmtime callbacks require a native task wire");
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
 	if(wasmTasks && (!tasks || phpWasm || wasm32 || !wasmCallbacks && entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
 		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
-	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources), values = cTaskValues(p, false, kinds);
-	const leases = kinds.map((r, i) => ({ ...r, type: "lease:" + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
-	const wireShape = t => leases.find(r => t?.kind === "named" && t.id === r.id)?.type ?? shape(t);
-	const move = (t, v, prefix) => {
+	const wasmHost=wasmHostKinds.length>0;
+	if(wasmHost && !wasmTasks) throw new TypeError("JavaScript host objects require threaded Wasm");
+	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,wasmHostKinds), values = cTaskValues(p, false, kinds);
+	const leases = kinds.map((r, i) => ({ ...r, type: (r.host?"host:":"lease:") + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
+	const wireShape = t => leases.find(r => t?.kind === "named" && t.id === r.id)?.type
+		?? (wasmHost && t?.kind==="apply" && t.constructor==="result" && t.arguments.length===2?t.arguments.map(wireShape):shape(t));
+	const move = (t, v, prefix,index=0) => {
+		if(wasmHost && Array.isArray(t)) return `if (${v}.ok) { tags[${index}]=1; ${move(t[0],v+".as.value",prefix,index+1)} }
+        else { tags[${index}]=0; ${move(t[1],v+".as.error",prefix,index+1)} }`;
 		const r = leases.find(x => x.type === t);
-		return r ? `out[0] = ${v}._private[0]; out[1] = ${v}._private[1]; out[3] = ${r.tag}; ${v} = (${r.raw}){0};` : emit(t, v, prefix);
+		return r ? `out[0] = ${v}._private[0]; out[1] = ${v}._private[1]; out[3] = ${r.tag}; ${v} = (${r.raw}){0};` : emit(t, v, prefix,index);
 	};
+	const errorWord=(code,phase)=>wasmHost?`if (error.host_ticket) { out[0]=error.host_ticket; out[1]=${phase}; s=15; } else { ${code} }`:code;
 	const symbols = [stem + "_clear"], methods = [];
 	const functions = entries.map((e, i) => {
 		if((!tasks && (e.delivery || e.taskIO)) || (e.delivery && !["task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
@@ -83,7 +90,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
 			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
-			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks });
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks, wasmHost });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		const args = e.parameters.map(a => wireShape(a.type));
@@ -95,7 +102,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		if(checkedWasm) for(const [k, v] of args.entries()) checks.push(`if (${wasmArgument(v, k)}) return ${p}_INVALID;`);
 		if(e.delivery)
 		{
-			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape: wireShape, depth, input, emit: move, checks, wasmTasks });
+			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape: wireShape, depth, input, emit: move, checks, wasmTasks, errorWord });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		methods.push({ name: e.name, declaration: e.declaration
@@ -110,7 +117,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
     ${n}_value value = {0}; ${err ? (ec ? alias : p + "_buffer") + " error = {0};" : ""}
     ${p}_status s = ${n}_call(${call.join(", ")});
     if (s == ${p}_OK) { ${move(result, "value", p)} }
-    ${err ? `else if (s == ${p}_${ec ? "TYPED_ERROR" : "IO_ERROR"}) { ${move(err, "error", p)} }` : ""}
+    ${err ? `else if (s == ${p}_${ec ? "TYPED_ERROR" : "IO_ERROR"}) { ${ec?move(err,"error",p):errorWord(move(err,"error",p),1)} }` : ""}
     ${item.dispose ? `${n}_value_dispose(&value);` : ""} ${ec?.dispose ? `${alias}_dispose(&error);` : e.effect === "IO" ? `${p}_buffer_dispose(&error);` : ""}
     return (int)s;
 }`;
@@ -154,7 +161,7 @@ void ${stem}_clear(uint64_t *out) {
 }
 ${functions.join("\n")}
 `;
-	const extra = leases.length ? { leases: leases.map(({ type, name, hash, tag, symbol }) => ({ type, name, hash, tag, symbol })) } : {};
+	const extra = leases.length ? { leases: leases.map(({ type, name, hash, tag, symbol,host }) => ({ type, name, hash, tag, symbol,...host?{host: true}:{} })) } : {};
 	if(tasks && !wasmTasks)
 	{
 		const wait = taskWireWait(stem, p);

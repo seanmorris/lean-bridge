@@ -2,6 +2,8 @@
 import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
 import {createWasmTaskNotifications} from "./wasm-task-notifications.mjs";
 import {createWasmTaskSession} from "./wasm-task-bindings.mjs";
+import {installWasmTaskHostMembers} from "./wasm-task-host-members.mjs";
+import {javaScriptHostMembers} from "../backends/javascript/host-members.mjs";
 
 const componentBytes = async url => {
 	if(url.protocol === "file:") return (await import("node:fs/promises")).readFile(url);
@@ -52,13 +54,13 @@ export const createWasmTaskLoader = createModule => {
 { session.retire(error); } catch { /* The session delivered this error to all public operations. */ }
 		};
 		module=await createModule({onLeanTaskReady: notifications.notify,onAbort: reason => failed(new Error("Lean Wasm runtime aborted",{cause: reason}))});
-		session=createWasmTaskSession({module,notifications,nativeOwners: () => finalOwners=module._bridge_owned_runtime_identities(),terminate: () => module.PThread.terminateAllThreads()});
+		session=createWasmTaskSession({module,notifications,installHost: lifecycle=>installWasmTaskHostMembers(module,lifecycle),nativeOwners: () => finalOwners=module._bridge_owned_runtime_identities(),terminate: () => module.PThread.terminateAllThreads()});
 		observeTaskWorkerFailures(module.PThread,failed);
 		return session;
 	})();
-	const load = async ({bindingIr,componentIdentity,bindingIrSha256,integrity,sideModule}) => {
+	const load = async ({bindingIr,componentIdentity,bindingIrSha256,integrity,sideModule,hostImports=null}) => {
 		if(closed || (session && session.snapshot().state!=="open")) throw new Error("Lean task loader is closed");
-		const abi=javaScriptTaskAbi(bindingIr,componentIdentity);
+		const abi=javaScriptTaskAbi(bindingIr,componentIdentity,hostImports);
 		if(abi.bindingIrSha256!==bindingIrSha256 || !/^[0-9a-f]{64}$/u.test(integrity) || !(sideModule instanceof URL))
 			throw new TypeError("Invalid Lean task component identity");
 		const id=bindingIr.component.id, revision=[componentIdentity,bindingIrSha256,integrity].join(":");
@@ -91,7 +93,7 @@ export const createWasmTaskLoader = createModule => {
 				if(!slot) throw new Error("Cannot link installed Lean task component");
 				module.FS.unlink(path);
 				while(pointers.length) module._free(pointers.pop());
-				return owner.bind(abi,frame => module._lb_js_task_call(slot,frame));
+				return owner.bind(abi,frame => module._lb_js_task_call(slot,frame),hostImports?javaScriptHostMembers(hostImports):null);
 			}
 			catch(error)
 { return owner.retire(error); }

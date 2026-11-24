@@ -8,7 +8,8 @@ import {generateCTaskExports} from "../backends/c/task-exports.mjs";
 import {generateSyncWire} from "../backends/c/sync-wire.mjs";
 import {generateOwnedWasmBroker} from "../backends/javascript/owned-wasm-broker.mjs";
 import {generateTaskControl} from "../backends/javascript/task-control.mjs";
-import {compileHostSources} from "./host-elaboration.mjs";
+import {compileHostSources,threadedHostSource} from "./host-elaboration.mjs";
+import {generateJavaScriptHostExterns} from "../backends/javascript/host-wasm-externs.mjs";
 import {identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders} from "./javascript-wasm-toolchain.mjs";
 import {processBuildRunner} from "./process-runner.mjs";
 import {taskStamp} from "../release/javascript-wasm-task-inputs.mjs";
@@ -29,8 +30,9 @@ const sourceAsset = path => readFile(new URL("../backends/" + path, import.meta.
 export const compileJavaScriptTaskComponent = async options => {
 	const {app, projectContract: contract, leanPrefix, emsdkRoot: sdk, leanRuntimeRoot: target, environment, signal} = options;
 	if(!contract?.taskExports?.length && !contract?.asyncIterators?.length) throw new TypeError("Expected a selected task or iterator");
-	if(contract.nativeEffects?.length || contract.ir || contract.hostImportsSourceSha256 !== null)
-		throw new TypeError("Threaded Wasm task components require in-memory effects without imported hosts");
+	const ir=threadedHostSource(contract);
+	if(contract.nativeEffects?.length || options.phpWasm && ir)
+		throw new TypeError("Threaded Wasm task components require in-memory effects and a matching host");
 	const env = {...environment, EMSDK: sdk, EM_CONFIG: join(sdk,".emscripten"), LANG: "C.UTF-8", LC_ALL: "C.UTF-8"};
 	for(const key of ["CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","COMPILER_PATH","GCC_EXEC_PREFIX","LIBRARY_PATH","CFLAGS","CPPFLAGS","LDFLAGS","EMCC_CFLAGS","CCC_OVERRIDE_OPTIONS","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES_OUTPUT"]) delete env[key];
 	const run = (command,args,cwd=app,vars=env) => processBuildRunner.capture({command,args,cwd,env: vars,signal});
@@ -43,7 +45,7 @@ export const compileJavaScriptTaskComponent = async options => {
 		throw new Error("Expected matching pinned Lean compiler and threaded Wasm runtime");
 	const compiler = await identifyJavaScriptWasmCompiler({sdkRoot: sdk, run});
 	if(kit && canonicalJson(compiler)!==canonicalJson(kit.manifest.compiler)) throw new Error("Installed Emscripten differs from the pthread SDK producer");
-	const built = await compileHostSources({...options, ir: null, environment: env, target: options.phpWasm ? "php-wasm" : "npm", run});
+	const built = await compileHostSources({...options, ir, environment: env, target: options.phpWasm ? "php-wasm" : "npm", run});
 	const {api,evidence,entries} = built;
 	const assets = {"task-notification.h": await sourceAsset("javascript/wasm-task-watch.h")
 		, "wasm-task-notification.h": await sourceAsset("javascript/task-notification.h")
@@ -52,8 +54,11 @@ export const compileJavaScriptTaskComponent = async options => {
 		, "task-owner-policy.h": owner
 		, "lean_bridge_native_runtime.h": generateOwnedWasmBroker().header};
 	const headers = {}, include = join(app,"include/lean");
-	const resources=api.types.filter(t => t.kind==="resource"), wasmCallbacks=api.types.some(t => t.kind==="callback");
-	if(resources.length) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
+	const resources=api.types.filter(t => t.kind==="resource" && !t.host), wasmCallbacks=api.types.some(t => t.kind==="callback");
+	const dummy="0".repeat(64), hostGen=id=>generateJavaScriptHostExterns(ir,id,{threaded: true});
+	const provider=ir?hostGen(dummy):null;
+	const wasmHostKinds=ir?ir.types.map((t,i)=>({name: t.name,id: t.id,hash: provider.model.kinds[i].key})):[];
+	if(resources.length || ir) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
 	if(wasmCallbacks)
 	{
 		assets["task-callback-port.h"]=await sourceAsset("c/task-callback-port.h");
@@ -67,19 +72,20 @@ export const compileJavaScriptTaskComponent = async options => {
 			throw new Error("Expected threaded wasm32 headers, not host headers");
 		headers[name] = sha256(bytes); await writeFile(join(include,name),bytes,{flag: "wx"});
 	}
-	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources, wasmTasks: true, wasmCallbacks,integerMode: "words"};
+	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources, wasmTasks: true, wasmCallbacks,wasmHostKinds,integerMode: "words"};
 	const skeleton = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources,wasmCallbacks});
+	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources,wasmCallbacks,wasmHostKinds});
 	const componentIdentity = sha256(canonicalJson({evidence
 		, compiler
 		, stamp
 		, headers
 		, skeleton
+		, ...(provider?{hostProvider: {source: sha256(provider.source),renames: sha256(provider.renames)}}:{})
 		, wire: sha256(wire.source)
 		, control: sha256(generateTaskControl("lb_js_task_"+"0".repeat(64),wire))
 		, assets: Object.fromEntries(Object.entries(assets).map(([k,v]) => [k,sha256(v)]))}));
-	const abi = javaScriptTaskAbi(taskWorkerInterface(api,evidence),componentIdentity), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
-	const leases = abi.leases ?? [], nativeLeases = wire.leases ?? [];
+	const abi = javaScriptTaskAbi(taskWorkerInterface(api,evidence),componentIdentity,ir), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
+	const leases = [...abi.leases??[],...abi.hostKinds??[]], nativeLeases = wire.leases ?? [];
 	if(leases.length !== nativeLeases.length || leases.some((lease,i) =>
 		["name","type","hash","tag"].some(k => lease[k] !== nativeLeases[i][k])))
 		throw new Error("Generated Wasm resource layout differs from the public lease contract");
@@ -89,6 +95,18 @@ export const compileJavaScriptTaskComponent = async options => {
 			|| canonicalJson(m.callbacks ?? [])!==canonicalJson(wire.methods[i].callbacks ?? [])))
 		throw new Error("Generated Wasm wire differs from the public task contract");
 	const save = (name,bytes) => writeFile(join(app,name),bytes,{flag: "wx"});
+	const objects=[...built.objects];
+	if(ir)
+	{
+		threadedHostSource(contract,evidence);
+		const iface=evidence.interfaces.findIndex(f=>f.module===contract.generatedHostModule),obj=objects[iface];
+		if(!/^module[0-9]+\.c$/u.test(obj) || sha256(await readFile(join(app,obj)))!==evidence.interfaces[iface].cSha256)
+			throw new Error("Compiled JavaScript host interface differs from its captured C");
+		const imports=hostGen(componentIdentity);
+		await save("host-renames.h",imports.renames);
+		await save("host-imports.c",'#include "'+obj+'"\n'+imports.source);
+		objects[iface]="host-imports.c";
+	}
 	for(const [file, bytes] of Object.entries(assets)) await save(file,bytes);
 	await save(gen.entryModule+".lean", gen.entryLean);
 	await run(lean,["-j1","-c","entry.c",gen.entryModule+".lean"],app,built.env);
@@ -111,7 +129,8 @@ export const compileJavaScriptTaskComponent = async options => {
 		, "-Wl,--no-entry"
 		, "-Wl,--fatal-warnings"
 		, "-Wl,--export="+controlSymbol
-		, ...built.objects
+		, ...ir?["-include","host-renames.h"]:[]
+		, ...objects
 		, "checked.c"
 		, "adapter.c"
 		, "wire.c"

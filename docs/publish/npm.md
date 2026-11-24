@@ -117,6 +117,21 @@ access or move application objects onto a Lean task thread.
 
 Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures.
 
+For an object owned by **JavaScript**, use `hostImports` alongside the task
+or cursor [selection](../../tests/fixtures/javascript-threaded-host/lean-bridge.exports.json). Do not list its class in `resources`. The [threaded
+Workshop](../../tests/fixtures/javascript-threaded-host/Workshop.lean) calls
+a host method from a worker, returns a host object in a task or cursor,
+and uses that object as a typed error payload. The npm consumer supplies
+the class once with `withHosts`.
+
+Return or compose the Lean task instead of synchronously waiting for it.
+The worker may need the JavaScript owner to run an application method.
+For this combination, the build rejects known blocking primitives such as
+`Task.get`, `IO.wait`, and blocking mutex acquisition wherever they appear
+in the compiled dependencies of a selected operation or initializer. The
+audit does not distinguish where a transitive function will run; it also
+does not establish that arbitrary application code terminates.
+
 For a task that uses an application-owned Lean object, list its fully qualified type in `resources`, as in the [Depot configuration](../../tests/fixtures/javascript-wasm-resource-tasks/lean-bridge.exports.json). The type must compile to a heap object. A worker may capture a borrowed argument; a returned object, yielded item, or typed error payload gives the caller an independent lease. Two components can exchange the type if they use the same runtime, compiler and defining Lean source, including its application imports. For an application callback, use a parameter of type `α → IO β` on a selected task, where both types are supported copied scalars. The [Relay example](../../tests/fixtures/javascript-wasm-retained-tasks/Relay.lean) calls JavaScript both before returning a task and inside a worker. Set `taskIOErrors` only when the task’s `Except IO.Error` represents failure rather than data. External system effects such as filesystem access remain outside this profile.
 
 Use an author CLI containing the threaded SDK, or set `LEAN_BRIDGE_JS_TASK_INPUTS` to the prepared SDK directory. Set `LEAN_BRIDGE_LEAN_PREFIX` to Lean 4.32.2 and `LEAN_BRIDGE_JS_EMSDK` to the matching pinned Emscripten 6.0.6 installation. A separately supplied `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` pins the SDK manifest to an identity from a trusted source. A single-threaded browser runtime cannot substitute for this kit.

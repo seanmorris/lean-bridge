@@ -24,7 +24,9 @@ export const generateCTaskExports = options => {
 		|| !modules?.length || !modules.every(m => qualified.test(m))
 		|| (synchronous ? entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources);
+	const hostKinds=options.wasmHostKinds??[];
+	if(hostKinds.length && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds);
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
@@ -81,14 +83,16 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost: hostKinds.length>0, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
 		const item = values.codec(e.result), error = e.effect === "EIO" ? values.codec(e.error) : null;
 		const step = e.stepError ? values.codec(e.stepError) : null;
 		if(stream && (e.protocol?.open !== e.declaration || !qualified.test(e.protocol.next) || !qualified.test(e.protocol.close))) throw new TypeError("Invalid C pull protocol");
-		const pull = stream ? nativePullEntry(i, entryPrefix, e, item.lean, error?.lean, step?.lean) : null;
+		if(e.stepIO && (!hostKinds.length || !stream || step)) throw new TypeError("Invalid Wasm host cursor failure contract");
+		const ioTerminal=e.taskIO || e.stepIO;
+		const pull = stream ? nativePullEntry(i, entryPrefix, e, item.lean, error?.lean, e.stepIO?"_root_.IO.Error":step?.lean) : null;
 		if(pull)
 		{
 			lean.push(pull.helpers); declarations.push(pull.declarations);
@@ -145,21 +149,21 @@ export const generateCTaskExports = options => {
     lean_io_cancel_core(e->watch.source); return LB(OK);`);
 		}
 		else fn(`${n}_poll`, [`${h} h`, "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
-		fn(`${n}_take`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : [], ...e.taskIO ? [`${p}_buffer *message`] : []],
-			`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}${e.taskIO ? " || !message" : ""}) return LB(INVALID);
+		fn(`${n}_take`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : [], ...ioTerminal ? [`${p}_buffer *message`] : []],
+			`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}${ioTerminal ? " || !message" : ""}) return LB(INVALID);
     lb_entry *e; LB(status) s = lb_lookup(h->id, h->domain, ${i}, &e, 0);
     if (s != LB(OK)) return s;
     if (!e->watch.source) return LB(IDLE);
     if (!lb_watch_ready(&e->watch)) return LB(PENDING);
     lean_object *v = lean_task_get(e->watch.source);
-    ${e.taskIO ? `if (!lean_obj_tag(v)) {
-        lean_object *err = lean_ctor_get(v, 0); lean_inc(err); lean_object *text = lb_c_error_text(err);
-        s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(${publicC ? "TASK_IO_ERROR" : "IO_ERROR"});
+    ${ioTerminal ? `if (!lean_obj_tag(v)) {
+        lean_object *err = lean_ctor_get(v, 0); ${hostKinds.length?"s = lb_host_io_error(err,message);":`lean_inc(err); lean_object *text = lb_c_error_text(err);
+        s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(${publicC ? "TASK_IO_ERROR" : "IO_ERROR"});`}
     } else { v = lean_ctor_get(v, 0);` : ""}
     ${step ? `if (!lean_obj_tag(v)) { s = ${step.read}(lean_ctor_get(v, 0), error); if (s == LB(OK)) s = LB(TYPED_ERROR); }
     else { v = lean_ctor_get(v, 0);` : ""}
     ${stream ? `if (!lean_obj_tag(v)) s = LB(END);
-    else s = ${item.read}(lean_ctor_get(v, 0), out);` : `s = ${item.read}(v, out);`}${step || e.taskIO ? " }" : ""}
+    else s = ${item.read}(lean_ctor_get(v, 0), out);` : `s = ${item.read}(v, out);`}${step || ioTerminal ? " }" : ""}
     lb_watch_close(&e->watch, 0);
     ${stream ? "if (s != LB(OK)) " : ""}{ h->id = 0; lb_drop(e); }
     return s;`);
@@ -180,7 +184,7 @@ extern "C" {
 #endif
 typedef enum { ${statuses.flatMap((s, i) => synchronous ? ["PENDING", "END", "IDLE"].includes(s) ? [] : [`${p}_${s} = ${i}`] : [`${p}_${s}`]).join(", ")} } ${p}_status;
 typedef struct { const uint8_t *data; size_t len; } ${p}_view;
-typedef struct { uint8_t *data; size_t len; } ${p}_buffer;
+typedef struct { uint8_t *data; size_t len;${hostKinds.length?" uint32_t host_ticket;":""} } ${p}_buffer;
 void ${p}_buffer_dispose(${p}_buffer *v);${exact && !gmp ? `
 typedef struct { const uint64_t *words; size_t len; bool negative; } ${p}_integer_view;
 typedef struct { uint64_t *words; size_t len; bool negative; } ${p}_integer;
@@ -198,7 +202,7 @@ ${wasm && retained ? "#include <pthread.h>\n#define LB_WASM_CALLBACK_PORT 1\n#de
 #define LB_SYNC_ONLY ${Number(synchronous)}
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
-#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
+${hostKinds.length?"#define LB_WASM_HOST_ERRORS 1\n":""}#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
 ${values.bodies.join("\n")}
 ${host ? '#include "task-host-callback.h"\n' + host.helpers.join("\n") : ""}
 ${functions.join("\n")}

@@ -54,6 +54,7 @@ export const cTaskValues = (p, gmp = true, resources = []) => {
 				, arg: type
 				, abi: "lean_object *"
 				, resource: true
+				, host: r.host===true
 				, validate: () => ""
 				, bind: v => `lean_object *ref_${v} = LB_LEASE(borrow)(${kind}, ${v}._private);
     if (!ref_${v}) return LB(CLOSED);`
@@ -88,7 +89,7 @@ export const cTaskValues = (p, gmp = true, resources = []) => {
 		} else if(t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2)
 		{
 			const [ok, err] = t.arguments.map(codec), type = `${p}_result_${values.size}`;
-			if(ok.resource || err.resource) throw new TypeError("Resource-bearing sums require an owned aggregate contract");
+			if(ok.resource && !ok.host || err.resource && !err.host) throw new TypeError("Resource-bearing sums require an owned aggregate contract");
 			const hasMpz = ok.hasMpz || err.hasMpz;
 			types.push(`typedef struct { bool ok; ${hasMpz ? "bool initialized; " : ""}union { ${ok.type} value; ${err.type} error; } as; } ${type};`);
 			c = { lean: `(_root_.Except ${err.lean} ${ok.lean})`, type

@@ -5,6 +5,9 @@ import {encodeWasmWord,decodeWasmWord} from "../release/wasm-word-codecs.mjs";
 
 const invalid = () => new Error("Malformed Lean task frame");
 const phpFailureMessages=new WeakMap();
+// An arbitrary thrown JS value may have hostile getters (or be undefined).
+// Unwrap only at the public boundary, before inspecting ordinary error codes.
+export const wasmHostThrown=new WeakMap();
 /**
  * Brand a copied message without inspecting arbitrary JS exceptions or their getters.
  *
@@ -18,7 +21,7 @@ export const phpTaskCallbackFailure=message=>{
 /** A valid callback request exceeded the bounded resources of its task. */
 export class WasmTaskCallbackLimit extends RangeError {}
 const knownIO = id => id === "error:IO.Error" || id === "error:TaskIO.Error";
-const failed = (id,phase,value) => Object.assign(new Error(knownIO(id) ? value : "Lean raised "+id),{
+const failed = (id,phase,value,io=knownIO(id)) => Object.assign(new Error(io ? value : "Lean raised "+id),{
 	code: "declared-error",details: {errorId: id,phase,payload: value}
 });
 
@@ -36,13 +39,16 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 	const {module: m,ledger,retire,isLive} = context;
 	if(args.length !== method.args.length) throw new TypeError("Wrong arity for "+method.id);
 	const lease=t => typeof t==="string" && t.startsWith("lease:");
+	const host=t=>typeof t==="string" && t.startsWith("host:");
+	const borrowed=[];
+	const releaseInputs=()=>{while(borrowed.length)context.leases.releaseHost(borrowed.pop());};
 	const inputs=method.args.map((type,i) => {
 		if(type==="callback")
 {
 			if(typeof args[i]!=="function") throw new TypeError("Expected a JavaScript callback for "+method.id);
 			return null;
 }
-		return lease(type) ? context.leases.live(args[i],type) : (validateComponentScalar(type,args[i]),null);
+		return host(type)?null:lease(type) ? context.leases.live(args[i],type) : (validateComponentScalar(type,args[i]),null);
 	});
 	const view = () => new DataView(m.HEAP8.buffer);
 	const native = fn => {
@@ -74,7 +80,9 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 	const tags = layout.args + method.args.length*24, size = tags + method.tagBytes;
 	const dispose = () => {
 		if(disposed) return;
-		disposed = true; freeTo(0);
+		disposed = true;try
+		{releaseInputs();} finally
+		{freeTo(0);}
 	};
 	try
 	{
@@ -82,7 +90,10 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		view().setUint32(f,layout.magic,true); view().setUint32(f+4,size,true); view().setUint32(f+8,index,true);
 		for(const [i,t] of method.args.entries())
 		{
-			const pos=f+layout.args+24*i, row=inputs[i];
+			const pos=f+layout.args+24*i;
+			let row=inputs[i];
+			if(host(t))
+			{row=context.leases.pinHost(context.host.defs.get(t),context.host.session,args[i]);borrowed.push(row);}
 			if(row)
 			{ view().setBigUint64(pos,row.id,true); view().setBigUint64(pos+8,row.domain,true); }
 			else if(t!=="callback") encodeWasmWord(m,pos,t,args[i],alloc);
@@ -95,7 +106,8 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		const s = native(() => invoke(f)), h = view();
 		if(h.getUint32(f,true)!==layout.magic || h.getUint32(f+4,true)!==size || h.getUint32(f+8,true)!==index
 			|| h.getUint32(f+12,true)!==op || h.getUint32(f+16,true)!==token || h.getUint32(f+20,true)
-			|| !Number.isInteger(s) || s<0 || s>(method.callbacks && op===layout.take ? 14 : 12)) retire(invalid());
+			|| !Number.isInteger(s) || s<0 || !(s<=12 || method.callbacks && op===layout.take && [13,14].includes(s)
+				|| s===15 && context.host && [layout.start,layout.take].includes(op))) retire(invalid());
 		return s;
 	};
 	const hostFailures=new Map(), slots=new Map((method.callbacks ?? []).map(([i,arg,reply]) => [i,{arg,reply}]));
@@ -180,10 +192,25 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		handle=id; domain=dom;
 		const factory=start || (take && method.callbacks && [3,13].includes(s));
 		const errorId = factory ? method.startId : take ? method.terminalId : null;
-		const declared = errorId && s === (knownIO(errorId)?(take && factory ? 13 : 4):3);
+		const io=knownIO(errorId) || take && cursor && method.stepIO;
+		const declared = errorId && s === (io?(take && factory ? 13 : 4):3);
 		const value = !s && (take || (start && !method.delivery));
 		try
 		{
+			if(s===15)
+			{
+				const pos=f+layout.out,key=d.getBigUint64(pos,true),phase=Number(d.getBigUint64(pos+8,true));
+				if(!key || key>0xffffffffn || m.HEAP8.subarray(f+tags,f+size).some(Boolean)
+					|| !(start && phase===(method.delivery?2:1) && method.effect==="IO"
+					|| take && (phase===2 && method.callbacks && method.effect==="IO" || phase===3 && knownIO(method.terminalId) || phase===4 && method.stepIO))) return retire(invalid());
+				checkedOut(16);blankOut();
+				let failure;try
+				{failure=context.host.takeError(Number(key));} catch(error)
+				{return retire(error);}
+				if(failure.application && !method.hostPhases?.[phase===4?"pull":"call"]?.length) return retire(invalid());
+				if(discard) return {done: true};
+				const marker=new Error("JavaScript host member failed");wasmHostThrown.set(marker,failure);throw marker;
+			}
 			if(take && method.callbacks && s===14)
 			{
 				const key=d.getBigUint64(f+layout.out,true), phase=d.getBigUint64(f+layout.out+8,true);
@@ -213,7 +240,12 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			};
 			try
 			{
-				if(lease(type))
+				if(host(type))
+				{
+					const pos=f+layout.out,def=context.host.defs.get(type),key=d.getBigUint64(pos,true),dom=d.getBigUint64(pos+8,true);
+					if(!key || !dom || d.getBigUint64(pos+16,true) || d.getBigUint64(pos+24,true)!==BigInt(def.tag)) return retire(invalid());
+					if(!discard) result=context.leases.resolveHost(def,context.host.session,key,dom);
+				} else if(lease(type))
 				{
 					const pos=f+layout.out, def=context.leaseTypes.get(type);
 					const id=d.getBigUint64(pos,true), dom=d.getBigUint64(pos+8,true);
@@ -229,12 +261,15 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			catch(error)
 			{ if(!over) return retire(error); clear(); throw error; }
 			clear(); for(const key of wrap.reverse()) result={[key]: result};
-			if(declared) throw failed(errorId,factory ? method.delivery ? "factory" : "call" : cursor ? "step" : "task",result);
+			if(declared) throw failed(errorId,factory ? method.delivery ? "factory" : "call" : cursor ? "step" : "task",result,io);
 			return {value: result,done: false};
 		}
 		finally
 		{
-			if(start) freeTo(1); // All copied inputs have become Lean values.
+			if(start)
+			{try
+			{releaseInputs();} finally
+			{freeTo(1);}} // Inputs have become Lean values.
 			used=size; // The return budget is per call/pull, not per iterator lifetime.
 		}
 	};

@@ -135,5 +135,9 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 	});
 	if(!methods.some(m => m.delivery)) throw new TypeError("Expected a Task or async iterator");
 	hosts?.finish();
-	return {profile: "javascript-wasm-threaded-task-v1",componentIdentity,bindingIrSha256,controlSymbol: "lb_js_task_"+componentIdentity,methods,...leases.length ? {leases} : {},...hosts?{hostIrSha256: hosts.hash}:{}};
+	const hostKinds=hostImports?.types.map((t,index)=>{
+		const {type}=hosts.nominal({kind: "named",id: t.id});
+		return {name: t.name,id: t.id,index,type,hash: type.slice(5),tag: 3+leases.length+index};
+	});
+	return {profile: "javascript-wasm-threaded-task-v1",componentIdentity,bindingIrSha256,controlSymbol: "lb_js_task_"+componentIdentity,methods,...leases.length ? {leases} : {},...hosts?{hostIrSha256: hosts.hash,hostKinds}:{}};
 };

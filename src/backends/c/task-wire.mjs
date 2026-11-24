@@ -15,31 +15,32 @@ export const taskWireEntry = a => {
 	const start = e.effect === "EIO" ? values.codec(e.error) : null, io = e.effect === "IO";
 	const error = start ? shape(e.error) : io ? "string" : null;
 	const step = e.stepError ? values.codec(e.stepError) : null;
-	const terminal = step ? shape(e.stepError) : e.taskIO ? "string" : null;
+	const ioTerminal=e.taskIO || e.stepIO;
+	const terminal = step ? shape(e.stepError) : ioTerminal ? "string" : null;
 	const names = Object.fromEntries(["start", "take", ...a.wasmTasks ? ["listen", "cancel"] : ["poll"], "close", ...stream ? ["pull"] : []].map(k => [k, symbol + "_" + k]));
 	const pass = (declared, text) => declared || text ? ["&error"] : [];
 	const slot = (c, t, alias) => c ? n + "_" + alias + " error = {0};" : t ? p + "_buffer error = {0};" : "";
 	const clear = (c, t, alias) => c?.dispose ? n + "_" + alias + "_dispose(&error);" : !c && t ? p + "_buffer_dispose(&error);" : "";
-	const failure = (c, t, v) => v ? `if (s == ${p}_${c ? "TYPED_ERROR" : t ? "IO_ERROR" : "INVALID"}) { ${emit(v, "error", p)} }` : "";
+	const failure = (c, t, v,phase) => v ? `if (s == ${p}_${c ? "TYPED_ERROR" : t ? "IO_ERROR" : "INVALID"}) { ${c?emit(v,"error",p):a.errorWord(emit(v,"error",p),phase)} }` : "";
 	const save = "h[0] = owner.id; h[1] = owner.domain;";
 	const owner = `${n}_handle owner = {h[0], h[1]};`;
 	const startArgs = [...codecs.map((c, i) => input(c, args[i], i)), "&owner", ...pass(start, io)];
-	const takeArgs = ["&owner", "&value", ...pass(step, e.taskIO)];
+	const takeArgs = ["&owner", "&value", ...pass(step, ioTerminal)];
 	const source = `int ${names.start}(const uint64_t *args, uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (!h || h[0] || !out || !tags${args.length ? " || !args" : ""}) return ${p}_INVALID;
     (void)args; memset(out, 0, 4 * sizeof(*out)); ${checks.join("\n    ")}
     ${n}_handle owner = {0}; ${slot(start, io, "start_error")}
     ${p}_status s = ${n}_start(${startArgs.join(", ")}); ${save}
-    ${failure(start, io, error)} ${clear(start, io, "start_error")} return (int)s;
+    ${failure(start, io, error,2)} ${clear(start, io, "start_error")} return (int)s;
 }
 int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (!h || !out || !tags) return ${p}_INVALID;
     memset(out, 0, 4 * sizeof(*out)); ${owner}
-    ${n}_value value = {0}; ${slot(step, e.taskIO, "step_error")}
+    ${n}_value value = {0}; ${slot(step, ioTerminal, "step_error")}
     ${p}_status s = ${n}_take(${takeArgs.join(", ")}); ${save}
     if (s == ${p}_OK) { ${emit(result, "value", p)} }
-    ${failure(step, e.taskIO, terminal)}
-    ${item.dispose ? n + "_value_dispose(&value);" : ""} ${clear(step, e.taskIO, "step_error")} return (int)s;
+    ${failure(step, ioTerminal, terminal,stream?4:3)}
+    ${item.dispose ? n + "_value_dispose(&value);" : ""} ${clear(step, ioTerminal, "step_error")} return (int)s;
 }
 ${a.wasmTasks ? `int ${names.listen}(uint64_t *h, uint32_t token) { if (!h) return ${p}_INVALID; ${owner} return ${n}_listen(owner, token); }
 int ${names.cancel}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} return ${n}_cancel(owner); }` : `int ${names.poll}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_poll(owner, fd); }`}
@@ -119,6 +120,7 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     ${ec ? `else if (s == ${p}_TYPED_ERROR) { ${emit(err, "er", p)} }` : ""}
     else if (s == ${p}_IO_ERROR) {
         if (origin) { ${a.witCallbacks ? emit("string","msg",p)+" out[2] = origin; tags[0] = phase; " : "out[0] = origin; "+(a.wasmTasks ? "out[1] = phase; " : "")}s = 14; }
+        ${a.wasmHost?"else if (msg.host_ticket) { out[0]=msg.host_ticket; out[1]=phase; s=15; }":""}
         else { ${emit("string", "msg", p)} if (phase == 2) s = 13; }
     }
     ${value.dispose ? n + "_value_dispose(&v);" : ""} ${ec?.dispose ? n + "_start_error_dispose(&er);" : ""} ${p}_buffer_dispose(&msg); return s;

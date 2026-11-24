@@ -1,8 +1,8 @@
 /** @file Elaborate a real authored Lake archive with JS host members in tasks and cursor operations. */
 import assert from "node:assert/strict";
-import {copyFile,cp,mkdir,mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
+import {mkdir,mkdtemp,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
-import {join,resolve} from "node:path";
+import {join} from "node:path";
 import test from "node:test";
 import {inspectLeanProject} from "../../src/analyze/lean-project.mjs";
 import {elaboratedComponent} from "../../src/analyze/semantic-model.mjs";
@@ -12,23 +12,11 @@ import {compileHostSources,threadedHostSource} from "../../src/build/host-elabor
 import {processBuildRunner} from "../../src/build/process-runner.mjs";
 import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {javaScriptTaskAbi} from "../../src/abi/javascript-wasm-tasks.mjs";
+import {prepareThreadedHostProject} from "./javascript-threaded-host-source.mjs";
 
 test("ordinary and reviewed Lake sources authenticate JavaScript host calls in tasks, pull and close",async t=>{
 	const root=await mkdtemp(join(tmpdir(),"js-owner-project-"));t.after(()=>rm(root,{recursive: true,force: true}));
-	const project=join(root,"project"), fixture=resolve("tests/fixtures/javascript-host-meter");
-	await cp(fixture,project,{recursive: true});
-	await copyFile(resolve("tests/fixtures/javascript-threaded-host/Workshop.lean"),join(project,"Workshop.lean"));
-	const hostFile=join(project,"lean-bridge.hosts.json"),hosts=JSON.parse(await readFile(hostFile));
-	const capability={id: "capability:meter.write",category: "runtime",requirement: "required",documentation: {summary: "Update a meter.",details: ""}};
-	hosts.capabilities.push(capability);
-	hosts.declarations.find(d=>d.kind==="property" && d.parameters.length).capabilities.push(capability.id);
-	await writeFile(hostFile,canonicalJson(hosts));
-	const config=JSON.parse(await readFile(join(project,"lean-bridge.exports.json")));
-	const tasks=["work","start","either","checked"].map(n=>"Workshop."+n);
-	Object.assign(config,{exports: [...tasks,"Workshop.openCursor","Workshop.identity"]
-		, taskExports: tasks,taskIOErrors: ["Workshop.work"]
-		, asyncIterators: [{open: "Workshop.openCursor",next: "Workshop.pull",close: "Workshop.close"}]});
-	await writeFile(join(project,"lean-bridge.exports.json"),canonicalJson(config));
+	const project=join(root,"project"),{config,capability}=await prepareThreadedHostProject(project);
 	const compile=async label=>{
 		const inventory=await inspectLeanProject(project),component=elaboratedComponent(inventory.project);
 		const source=await openHostProjectSource({project,inventory,component,targets: ["npm"]});
@@ -54,7 +42,7 @@ test("ordinary and reviewed Lake sources authenticate JavaScript host calls in t
 		assert.throws(()=>threadedHostSource({...built.contract,hostImportsSource: built.hostSource+" "},evidence),/Unverified threaded JavaScript host source/u);
 		assert.throws(()=>threadedHostSource(built.contract,{...evidence,interfaces: evidence.interfaces.filter(f=>f.module==="Workshop")}),/differs from the elaborated module/u);
 		assert.equal(evidence.selection.javascriptThreadedHostMembers,true);
-		assert.deepEqual(ext("openCursor")["lean-bridge.dev/host-member-phases"],{call: [],pull: [prefix+"identity"],close: [prefix+"setLevel"]});
+		assert.deepEqual(ext("openCursor")["lean-bridge.dev/host-member-phases"],{call: [],pull: [prefix+"identity",prefix+"read"],close: [prefix+"setLevel"]});
 		assert.deepEqual(ext("work")["lean-bridge.dev/host-members"],[prefix+"read"]);
 		assert.deepEqual(new Set(fn("work").failure.errors),new Set(["error:TaskIO.Error","error:JavaScriptCallbackError","error:JavaScriptHostException"]));
 		assert.deepEqual(fn("start").failure.errors,["error:IO.Error","error:JavaScriptHostException"]);

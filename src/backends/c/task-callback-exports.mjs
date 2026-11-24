@@ -131,7 +131,7 @@ export const emitRetainedTask = options => {
     ${error ? `case 1: s = ${error.read}(x, error); if (s == LB(OK)) s = LB(TYPED_ERROR); break;` : ""}
     case 2: case 3:
         *phase = lean_obj_tag(v); *origin = lb_retained_origin(&e->retained, x);
-        ${options.witCallbacks ? "" : "if (*origin) s = LB(IO_ERROR);\n        else "}{ lean_inc(x); lean_object *text = lb_c_error_text(x); s = lb_string(msg, text); lean_dec(text); if (s == LB(OK)) s = LB(IO_ERROR); }
+        ${options.wasmHost?"s = *origin ? LB(IO_ERROR) : lb_host_io_error(x,msg);":(options.witCallbacks ? "" : "if (*origin) s = LB(IO_ERROR);\n        else ")+"{ lean_inc(x); lean_object *text = lb_c_error_text(x); s = lb_string(msg, text); lean_dec(text); if (s == LB(OK)) s = LB(IO_ERROR); }"}
         break;
     default: s = LB(UNAVAILABLE);
     }

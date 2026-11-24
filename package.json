@@ -1249,6 +1249,7 @@
     "test:javascript-host-wasm": "node --test --test-concurrency=1 tests/helpers/javascript-host-wasm.mjs",
     "test:javascript-threaded-host-identity": "node --test --test-concurrency=1 tests/helpers/javascript-threaded-host-identity.mjs",
     "test:javascript-threaded-host-project": "node --test --test-concurrency=1 tests/helpers/javascript-threaded-host-project.mjs",
+    "test:javascript-threaded-host-installed": "LEAN_BRIDGE_JS_THREADED_HOST_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-threaded-host-installed.mjs",
     "test:perl-host-frame": "node --test --test-concurrency=1 tests/helpers/perl-host-frame.mjs",
     "test:perl-host-domain": "node --test --test-concurrency=1 tests/helpers/perl-host-domain.mjs",
     "test:perl-host-exports": "node --test --test-concurrency=1 tests/helpers/perl-host-exports.mjs",
