@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LeanBridge.GeneratedHost;
 
-public sealed class Box {
+public sealed partial class Box {
     public uint Level { get; set; }
     public Box(uint n) { Level=n; }
     public uint Read() => Level;
@@ -19,10 +19,7 @@ internal static unsafe class Program {
     private static delegate* unmanaged[Cdecl]<ulong,delegate* unmanaged[Cdecl]<ulong,int,ulong*,nuint,ulong*,uint*,int>,int,uint,uint*,uint*,int> entry;
     internal static void Check(bool good) { if(!good) throw new Exception("check failed"); }
     static uint Call(int op,uint n) {
-        using var frame=new HostCall((slot,words,count,result) => {
-            Check(slot==Slots.Observe && count==1);
-            result[0]=(uint)binding.Invoke(slot,checked((uint)words[0]))!;
-        });
+        using var frame=new HostCall(binding.InvokeWire);
         uint number=0, fault=0; int status=entry(frame.Id,HostCall.Entry,op,n,&number,&fault);
         frame.Check(fault);
         return status switch { 0=>number, 1=>throw new System.IO.IOException("replaced"), 2=>throw new InvalidOperationException("retired"),
@@ -38,6 +35,13 @@ internal static unsafe class Program {
         try { binding.Invoke(Slots.Set,x,-1); throw new Exception(); } catch(HostMembers.BadValue){Check(x.Level==37U);}
         try { HostContract.Bind(typeof(string)); throw new Exception(); } catch(ArgumentException){}
         Check(Call(0,5)==11);
+        Check(Call(5,0)==41 && Box.Units==1);
+        Box.InvalidNat=true;
+        try { Call(5,0); throw new Exception(); } catch(HostMembers.BadValue seen) { Check(seen.InnerException is ArgumentOutOfRangeException); }
+        Box.InvalidNat=false;
+        Box.InvalidText=true;
+        try { Call(5,0); throw new Exception(); } catch(HostMembers.BadValue seen) { Check(seen.InnerException is System.Text.EncoderFallbackException); }
+        Box.InvalidText=false;
         Box.Handler = n => n==2 ? Call(0,10)+1 : n*2;
         Check(Call(0,2)==23);
         var a=new TargetInvocationException("same",new Exception()); var b=new TargetInvocationException("same",new Exception());
@@ -53,7 +57,7 @@ internal static unsafe class Program {
         try { Call(4,5); throw new Exception(); } catch(OutOfMemoryException seen) { Check(ReferenceEquals(fatal,seen)); }
         Box.Handler=n=>throw new Exception("retired runtime called host");
         try { Call(0,5); throw new Exception(); } catch(InvalidOperationException e) { Check(e.Message=="retired"); }
-        Console.WriteLine("CLR: exact members, nested native reentry, original exception identity, mapped/replaced/caught errors, wrong thread, fatal retirement");
+        Console.WriteLine("CLR: 19 generated scalar imports, exact members, nested native reentry, original exception identity, mapped/replaced/caught errors, wrong thread, fatal retirement");
         return 0;
     }
 }

@@ -27,6 +27,10 @@ static void poison(lb_dn_frame *f) {
     for(lb_dn_frame *p=f; p; p=p->parent) p->fatal=1;
     f->retire();
 }
+lean_object *lb_dn_corrupt(void) {
+    if(top && !top->fatal) poison(top);
+    return io_error("invalid CLR host wire result");
+}
 lean_object *lb_dn_member(int32_t slot,const uint64_t *args,size_t arity,uint64_t *out) {
     lb_dn_frame *f=top;
     if(!f || f->fatal) return io_error("no active CLR host binding");

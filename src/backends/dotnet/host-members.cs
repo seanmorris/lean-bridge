@@ -7,13 +7,14 @@ using System.Text;
 namespace LeanBridge.GeneratedHost;
 
 // Component-private: resolve every exact signature before any application method executes.
-internal sealed class HostMembers {
+internal sealed partial class HostMembers {
     internal sealed record Site(string Kind, Type Type) {
         internal object? Check(object? value) {
             if (Kind == "unit") return value is null ? null : throw new ArgumentException("Expected Unit");
             if (!Type.IsInstanceOfType(value)) throw new ArgumentException("Invalid value for " + Kind);
             if (Kind == "nat" && ((BigInteger)value!).Sign < 0) throw new ArgumentOutOfRangeException(nameof(value));
-            if (value is string s && Kind == "string") _ = Utf8.GetByteCount(s);
+            if (value is string s && Kind == "string" && (s.Length>16*1024*1024 || Utf8.GetByteCount(s)>16*1024*1024)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (Kind=="bytes" && ((byte[])value!).Length>16*1024*1024) throw new ArgumentOutOfRangeException(nameof(value));
             return Kind == "bytes" ? ((byte[])value!).Clone() : value;
         }
     }

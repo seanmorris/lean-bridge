@@ -47,7 +47,16 @@ An injected `OutOfMemoryException` is not allowed to unwind through native
 code: the caller receives it after returning to managed code, even when Lean
 tries to swallow it, and the retired fixture runtime refuses further calls.
 
+The integration test now generates all 20 imported extern definitions from
+the checked contract: the throwing observation method and one method per
+primitive type. The generated prototypes compile alongside both Lean C units.
+C# verifies each input independently, changes its value, and Lean checks the
+result. Cases include signed minima, unsigned maxima, 160-bit integers, NaNs
+and signed subnormals, Unicode scalars, embedded NUL, and a mutated byte-array
+copy. A negative CLR result for `Nat` and an unpaired surrogate in a returned
+string produce boundary validation errors. Copied buffers have a 16 MiB budget;
+exact integers use the existing native word-magnitude conversion.
+
 This is a native integration test, not an installed NuGet consumer. The fixture
-currently supplies the outer component entry and tests a static scalar call
-through native code. Canonical identity for managed instances across
-independently installed assemblies is a separate requirement.
+still supplies the outer component entry. Canonical identity for managed
+instances across independently installed assemblies is a separate requirement.

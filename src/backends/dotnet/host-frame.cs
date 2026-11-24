@@ -16,6 +16,15 @@ internal sealed unsafe class HostCall : IDisposable {
     private Dispatcher? dispatch;
     private readonly List<ExceptionDispatchInfo> faults = new();
     private Exception? fatal;
+    private byte[]? outputBuffer;
+    // The native caller copies a result before its next member dispatch. A nested
+    // invocation has its own frame and cannot invalidate the outer result buffer.
+    internal static byte[] AllocateResult(int size, ulong* words) {
+        var f=top ?? throw new InvalidOperationException("Missing CLR host frame");
+        var buffer=GC.AllocateArray<byte>(size,pinned:true); f.outputBuffer=buffer;
+        fixed(byte* p=buffer) words[0]=(ulong)p;
+        return buffer;
+    }
     internal readonly ulong Id;
     internal HostCall(Dispatcher invoke) {
         if (getpid()!=gettid()) throw new InvalidOperationException("CLR host calls require the process main thread");
@@ -31,7 +40,7 @@ internal sealed unsafe class HostCall : IDisposable {
         *fault=0;
         if (frame==null || frame.Id!=call || frame.dispatch==null || frame.fatal!=null) return 2;
         try {
-            frame.dispatch(slot,args,count,result); return 0;
+            frame.outputBuffer=null; frame.dispatch(slot,args,count,result); return 0;
         } catch (Exception e) {
             // No managed exception (including an exception capturing the first fault)
             // may unwind through an unmanaged callback. Never call virtual Message.
@@ -52,6 +61,6 @@ internal sealed unsafe class HostCall : IDisposable {
     public void Dispose() {
         if (dispatch==null) return;
         if (top!=this) throw new InvalidOperationException("Out-of-order CLR host call disposal");
-        top=parent; dispatch=null; fatal=null; faults.Clear();
+        top=parent; dispatch=null; fatal=null; outputBuffer=null; faults.Clear();
     }
 }

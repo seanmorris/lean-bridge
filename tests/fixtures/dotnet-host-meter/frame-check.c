@@ -5,14 +5,9 @@
 extern void lean_initialize_runtime_module(void);
 extern lean_object *initialize_Init(uint8_t), *initialize_FrameCheck(uint8_t);
 extern lean_object *lb_dn_test_through(uint32_t), *lb_dn_test_first(uint32_t), *lb_dn_test_replace(uint32_t);
-extern lean_object *lb_dn_test_mapped(uint32_t), *lb_dn_test_swallow(uint32_t);
+extern lean_object *lb_dn_test_mapped(uint32_t), *lb_dn_test_swallow(uint32_t), *lb_dn_test_corpus(uint32_t);
 static int ready, retired;
 static void retire(void) { retired=1; }
-lean_object *lean_bridge_host_dotnet_box_observe(uint32_t n) {
-    uint64_t in[3]={n}, out[3]={0};
-    lean_object *error=lb_dn_member(OBSERVE_SLOT,in,1,out);
-    return error ? error : lean_io_result_mk_ok(lean_box_uint32((uint32_t)out[0]));
-}
 __attribute__((visibility("default"))) int frame_call(uint64_t id,lb_dn_dispatch dispatch,
     int op,uint32_t arg,uint32_t *out,uint32_t *fault) {
     lb_dn_frame f; *fault=0; *out=0;
@@ -25,7 +20,7 @@ __attribute__((visibility("default"))) int frame_call(uint64_t id,lb_dn_dispatch
         lean_io_mark_end_initialization(); ready=1;
     }
     lean_object *r=(op==0 ? lb_dn_test_through : op==1 ? lb_dn_test_first : op==2 ? lb_dn_test_mapped :
-                    op==3 ? lb_dn_test_replace : lb_dn_test_swallow)(arg);
+                    op==3 ? lb_dn_test_replace : op==4 ? lb_dn_test_swallow : lb_dn_test_corpus)(arg);
     lean_object *v=lean_ctor_get(r,0);
     if(f.fatal) status=LB_DN_FATAL;
     else if(!lean_io_result_is_ok(r)) { *fault=lb_dn_original(&f,v); status=LB_DN_ERROR; }
