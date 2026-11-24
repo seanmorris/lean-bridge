@@ -70,6 +70,15 @@ export const compileHostSources = async options => {
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const phpNativeTaskObjects=Boolean(ir && options.target==="php-native" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	const pythonTaskObjects=options.pythonTaskObjects===true;
+	if(pythonTaskObjects)
+	{
+		const source=projectContract?.hostImportsSource;
+		if(!ir || !options.python || target!=="python" || projectContract.generatedHostModule!==hostModule
+			|| !(projectContract.taskExports?.length || projectContract.asyncIterators?.length) || typeof source!=="string"
+			|| sha256(source)!==projectContract.hostImportsSourceSha256 || canonicalJson(parseBindingIr(source))!==canonicalJson(ir))
+			fail("Python worker declarations differ from the captured host source");
+	}
 	const phpWasmTaskObjects=Boolean(ir && options.target==="php-wasm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	if(ir && target==="php")
 	{
@@ -139,6 +148,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
 		, ...(threadedJavaScript ? {javascriptThreadedHostMembers: true} : {})
 		, ...(phpNativeTaskObjects ? {phpNativeTaskObjects: true} : {})
+		, ...(pythonTaskObjects ? {pythonTaskObjects: true} : {})
 		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})

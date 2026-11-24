@@ -1270,6 +1270,7 @@
     "test:dotnet-host-imports": "node --test --test-concurrency=1 tests/helpers/dotnet-host-imports.mjs",
     "test:perl-host-imports": "node --test --test-concurrency=1 tests/helpers/perl-host-imports.mjs",
     "test:php-host-imports": "node --test --test-concurrency=1 tests/helpers/php-host-imports.mjs",
+    "test:python-host-task-imports": "node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",
     "test:php-host-task-imports": "node --test --test-concurrency=1 tests/helpers/php-host-task-project.mjs",
     "test:php-host-task-kernel": "LEAN_BRIDGE_PHP_REQUIRE_TASK_KERNEL=1 node --test --test-concurrency=1 tests/helpers/php-host-task-project.mjs",
     "test:php-host-task-installed": "node --test --test-concurrency=1 tests/helpers/php-host-task-installed.mjs",

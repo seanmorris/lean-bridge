@@ -28,6 +28,7 @@ structure Request where
   hostModule : Option String := none
   leanResources : Array String := #[]
   pythonTaskCallbacks : Option Bool := none
+  pythonTaskObjects : Option Bool := none
   rustTaskCallbacks : Option Bool := none
   cppTaskCallbacks : Option Bool := none
   cTaskCallbacks : Option Bool := none
@@ -67,7 +68,14 @@ def Request.phpTaskObjects (r : Request) : Bool :=
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
     (r.phpTaskCallbacks == some true) == !r.taskExports.isEmpty
 
-def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects
+/-- An opaque Python object may travel with the worker. Only its asyncio owner
+    calls the application, never the worker or a Lean external finalizer. -/
+def Request.pythonObjects (r : Request) : Bool :=
+  r.pythonTaskObjects == some true && r.hostModule == some "LeanBridge.Host.Python" &&
+    (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
+    (r.pythonTaskCallbacks == some true) == !r.taskExports.isEmpty
+
+def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects || r.pythonObjects
 
 /-- A task in a package does not change the delivery mode of adjacent exports. -/
 def Request.immediateValues (r : Request) : Bool :=
@@ -127,11 +135,13 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
       let v := b.getAppArgs[0]!
       let admitted := fun (t : Expr) =>
         primitives.any (fun p => t.constName? == some p.1) ||
-        (((r.ownerHostMembers && r.javascriptTaskCallbacks == some true) || r.phpTaskObjects) &&
+        (((r.ownerHostMembers && r.javascriptTaskCallbacks == some true) || r.phpTaskObjects || r.pythonObjects) &&
           t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)))
       unless [a, v].all admitted do
         if r.ownerHostMembers then
           throwError "retained task callback arguments and replies must be copied scalars or declared JavaScript owner classes: {e}"
+        else if r.pythonObjects then
+          throwError "retained task callback arguments and replies must be copied scalars or declared Python owner classes: {e}"
         else if r.phpTaskObjects then
           throwError "retained task callback arguments and replies must be copied scalars or declared PHP owner classes: {e}"
         else
@@ -184,6 +194,10 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
 
 def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
   if r.ownerHostMembers then return
+  if r.pythonObjects then
+    if r.members.any (fun m => deps.contains m.toName) then
+      throwError "Python task calls a Python member outside its owner: {n}"
+    return
   if r.phpTaskObjects then
     if r.members.any (fun m => deps.contains m.toName) then
       if r.phpWasmTaskObjects == some true then
@@ -252,7 +266,7 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
     throwError "cursor step must distinguish exhaustion with Option: {p.next}"
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
     ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]! r.hostValues)] ++ extra ++ failure ++
-    (if r.ownerHostMembers || r.phpWasmTaskObjects == some true then [("protocolHostMembers", Json.mkObj [
+    (if r.ownerHostMembers || r.phpWasmTaskObjects == some true || r.pythonObjects then [("protocolHostMembers", Json.mkObj [
       ("pull", toJson (usedMembers r pullDeps)), ("close", toJson (usedMembers r closeDeps))])] else [])
 
 /-- Module-system imports store code in the IR section; classic application modules
@@ -296,6 +310,8 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid JavaScript owner-dispatch selection"
   if r.phpNativeTaskObjects.isSome && !r.phpTaskObjects then
     throwError "invalid native PHP task object selection"
+  if r.pythonTaskObjects.isSome && !r.pythonObjects then
+    throwError "invalid Python task object selection"
   if r.phpWasmTaskObjects.isSome && !r.phpTaskObjects then
     throwError "invalid PHP-Wasm task object selection"
   if let some m := r.hostModule then

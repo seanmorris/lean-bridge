@@ -50,6 +50,7 @@ export const nativeHostSelection = (ir, target) => {
  * @param evidence - Actual compiler selection and elaborated metadata.
  */
 export const taskWorkerInterface=(api,evidence)=>{
+	if(evidence.selection.pythonTaskObjects) throw new TypeError("Python task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.phpNativeTaskObjects) throw new TypeError("Native PHP task object carriers cannot use the JavaScript worker interface");
 	// Nominal Zend workers have their own checked ABI; never turn their
 	// synchronous PHP callbacks into JavaScript promises.
@@ -100,7 +101,11 @@ export const reconcileHostExports = options => {
 	if(selection.javascriptThreadedHostMembers!==undefined && (!owner || !ir || selection.nativeEffectPolicy!==nativeEffectPolicy
 		|| selection.nativeEffects?.length || Boolean(selection.taskExports?.length)!==(selection.javascriptTaskCallbacks===true)))
 		fail("Unauthenticated JavaScript host owner");
-	const hostValues=owner || phpObjects;
+	const pythonObjects=selection.pythonTaskObjects===true;
+	if(selection.pythonTaskObjects!==undefined && (!pythonObjects || !ir || selection.hostModule!==compiledHostModules.python
+		|| selection.nativeEffectPolicy!==nativeEffectPolicy || !(selection.taskExports?.length || selection.asyncIterators?.length)
+		|| Boolean(selection.taskExports?.length)!==(selection.pythonTaskCallbacks===true))) fail("Unauthenticated Python task objects");
+	const hostValues=owner || phpObjects || pythonObjects;
 	const immediate = synchronous || ((!ir || hostValues) && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
@@ -119,7 +124,7 @@ export const reconcileHostExports = options => {
 	{
 		const p=selection.asyncIterators?.find(s=>s.open===e.declaration);
 		const protocol=e.protocolHostMembers;
-		if((owner || phpWasm) && p)
+		if((owner || phpWasm || pythonObjects) && p)
 		{
 			if(!protocol || canonicalJson(Object.keys(protocol).sort())!==canonicalJson(["close","pull"])) fail("Invalid cursor host member phases: "+e.declaration);
 		} else if(protocol!==undefined) fail("Unexpected cursor host member phases: "+e.declaration);
@@ -190,10 +195,10 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
-	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":hostError;
+	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":hostError;
 	const callbackCarrier=t=>{
 		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};
-		const kind=((owner && js) || (phpObjects && php)) && t?.kind==="named" && types.find(k=>k.id===t.id);
+		const kind=((owner && js) || (phpObjects && php) || pythonObjects) && t?.kind==="named" && types.find(k=>k.id===t.id);
 		if(!kind) fail("Unauthenticated retained callback carrier");
 		return {label: callbackHostName(kind.name),mutability: kind.mutability};
 	};
@@ -225,10 +230,10 @@ export const reconcileHostExports = options => {
 		, documentation: doc("A terminal IO failure from the selected Lean task.") });
 	const hostCanEscape=e=>(e.effect==="IO" || e.taskIO) && e.hostMembers.length || e.stepIO && e.protocolHostMembers?.pull?.length;
 	if(hostValues && metadata.entries.some(hasCallbacks)) errors.push({id: callbackError
-		, name: owner?"JavaScriptCallbackError":"PhpCallbackException"
+		, name: callbackError.slice("error:".length)
 		, category: "domain"
 		, payload: null
-		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":"A retained PHP callback propagated its original exception.")});
+		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
 	if(metadata.entries.some(e => hostCanEscape(e) || !hostValues && hasCallbacks(e))) errors.push({ id: hostError
 		, name: publicErrorName
 		, category: "domain"
@@ -248,6 +253,8 @@ export const reconcileHostExports = options => {
 	const entries = metadata.entries.map(e => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
+		if(async && !hostValues && [e.result,e.error,e.stepError,...e.parameters.map(p=>p.type)].some(hostRef))
+			fail("Async host objects require an authenticated owner");
 		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration)) || (e.taskIO && !task))
 			fail("Unverified terminal IO selection");
 		if(hasCallbacks(e) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c || ruby || dotnet || jvm || perl || php || js || wit)))
@@ -313,7 +320,7 @@ export const reconcileHostExports = options => {
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
 					, "lean-bridge.dev/host-members": owner ? used(e) : e.hostMembers
-					, ...(owner || phpWasm ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
+					, ...(owner || phpWasm || pythonObjects ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
 				}
 			}
 		}))

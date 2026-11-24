@@ -13,6 +13,8 @@ exercise PHP constructors, properties, overrides, exception identity, and trap h
 The [installed npm and Composer checks](php-wasm-zend-packages-20261124.md)
 run two independently built PHP class bindings and check disposal and interpreter isolation.
 
+The [Python worker contract check](python-worker-object-contract-20261124.md) distinguishes opaque Python objects on a Lean worker from Python methods, which execute only on the interpreter owner.
+
 [Zero-payload checked records in C and C++](zero-payload-checked-record-native-20261021.md)
 record four hosted native package selections for proof-only `Witness`,
 Unit-bearing `Token`, plain empty `Marker`, Option, Array and variant values.
