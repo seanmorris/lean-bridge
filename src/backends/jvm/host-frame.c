@@ -24,11 +24,39 @@ static void raise(JNIEnv *e, const char *type, const char *message) {
     if (cls) { (*e)->ThrowNew(e, cls, message); (*e)->DeleteLocalRef(e, cls); }
 }
 
+enum { JH_RETIRED=1, JH_NO_PIN=2 };
+static void stop(lb_jh_frame *f, int reason) {
+    if (!f->fatal) f->fatal=reason;
+    for (lb_jh_frame *p=f->parent;p;p=p->parent) if (!p->fatal) p->fatal=JH_RETIRED;
+    if (f->retire) f->retire();
+}
+int lb_jh_guard(lb_jh_frame *f) {
+    if (!f->fatal && f->available && !f->available()) stop(f,JH_RETIRED);
+    if (!f->fatal) return 1;
+    raise(f->env,"java/lang/IllegalStateException","Lean runtime unavailable");
+    return 0;
+}
+jobject lb_jh_invoke(lb_jh_frame *f, jmethodID method, jint slot, jobjectArray args) {
+    if (!lb_jh_guard(f)) return NULL;
+    jobject v=(*f->env)->CallObjectMethod(f->env,f->binder,method,slot,args);
+    if ((*f->env)->ExceptionCheck(f->env) || !lb_jh_guard(f)) return NULL;
+    return v;
+}
 jobject lb_jh_member(lb_jh_frame *f, jint slot, jobjectArray args) {
-    if (f->fatal) {
-        raise(f->env, "java/lang/OutOfMemoryError", "cannot retain host throwable"); return NULL;
+    return lb_jh_invoke(f,f->invoke,slot,args);
+}
+/* Match the JVM callback adapter. Never invoke application exception methods
+   (even getMessage); these three bootstrap classes classify terminal errors. */
+static int terminal_error(JNIEnv *e,jthrowable original) {
+    const char *names[]={"java/lang/VirtualMachineError","java/lang/LinkageError","java/lang/ThreadDeath"};
+    for (size_t i=0;i<sizeof(names)/sizeof(names[0]);i++) {
+        jclass cls=(*e)->FindClass(e,names[i]);
+        if (!cls) { (*e)->ExceptionClear(e); return 1; }
+        int match=(*e)->IsInstanceOf(e,original,cls);
+        (*e)->DeleteLocalRef(e,cls);
+        if (match) return 1;
     }
-    return (*f->env)->CallObjectMethod(f->env, f->binder, f->invoke, slot, args);
+    return 0;
 }
 
 lean_object *lb_jh_catch(lb_jh_frame *f) {
@@ -36,7 +64,11 @@ lean_object *lb_jh_catch(lb_jh_frame *f) {
     jthrowable original = (*e)->ExceptionOccurred(e);
     if (original) (*e)->ExceptionClear(e);
     lean_object *error = lean_mk_io_user_error(lean_mk_string("JVM host member failed"));
-    if (original) {
+    if (original && !f->terminal && terminal_error(e,original)) {
+        f->terminal=(*e)->NewGlobalRef(e,original);
+        if (!f->terminal) (*e)->ExceptionClear(e);
+        stop(f,f->terminal?JH_RETIRED:JH_NO_PIN);
+    } else if (original && !f->fatal) {
         lb_jh_fault *entry = malloc(sizeof(*entry));
         jthrowable pin = entry ? (*e)->NewGlobalRef(e, original) : NULL;
         if (pin) {
@@ -46,10 +78,10 @@ lean_object *lb_jh_catch(lb_jh_frame *f) {
         } else {
             free(entry);
             (*e)->ExceptionClear(e);
-            f->fatal = 1;
+            stop(f,JH_NO_PIN);
         }
-        (*e)->DeleteLocalRef(e, original);
     }
+    if (original) (*e)->DeleteLocalRef(e,original);
     return lean_io_result_mk_error(error);
 }
 
@@ -75,9 +107,12 @@ static void on_owner(void *arg) {
             current = &f;
             jobject v = r->body(&f, r->context);
             current = f.parent;
+            if (!f.fatal && f.available && !f.available()) stop(&f,JH_RETIRED);
             if (f.fatal) {
                 (*e)->ExceptionClear(e);
-                raise(e, "java/lang/OutOfMemoryError", "cannot retain host throwable");
+                if (f.terminal) { (*e)->Throw(e,f.terminal); (*e)->DeleteGlobalRef(e,f.terminal); }
+                else if (f.fatal==JH_NO_PIN) raise(e,"java/lang/OutOfMemoryError","cannot retain host throwable");
+                else raise(e,"java/lang/IllegalStateException","Lean runtime unavailable");
             }
             if (!(*e)->ExceptionCheck(e) && v) r->output = (*e)->NewGlobalRef(e, v);
             while (f.faults) {

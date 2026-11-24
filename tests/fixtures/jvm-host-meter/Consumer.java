@@ -10,11 +10,11 @@ public final class Consumer {
     @FunctionalInterface public interface Read { long get() throws Exception; }
     public static final class Box {
         private long level;
-        public Read hook;
+        public Read hook, onGet, onSet;
         public Box(long n) { level = n; }
         public long read() throws Exception { return hook == null ? level : hook.get(); }
-        public long getLevel() { return level; }
-        public void setLevel(long n) { level = n; }
+        public long getLevel() throws Exception { if (onGet!=null) onGet.get(); return level; }
+        public void setLevel(long n) throws Exception { if (onSet!=null) onSet.get(); level = n; }
         public Box identity() { return this; }
         @Override public boolean equals(Object o) { return o instanceof Box; }
         @Override public int hashCode() { return 1; }
@@ -97,6 +97,22 @@ public final class Consumer {
         java.lang.ref.Reference<? extends Box> collected = null;
         for (int i=0; i<60 && collected==null; i++) { System.gc(); collected=queue.remove(100); }
         check(collected == reference);
+        try (var left = Api.bindHosts(Box.class); var right = org.leanbridge.workshop_peer.Api.bindHosts(Box.class)) {
+            Box inner = right.make(1), outer = left.make(2);
+            LinkageError fatal = new LinkageError("injected peer fatal");
+            int[] reads = {0};
+            inner.hook = () -> { throw fatal; };
+            outer.onSet = () -> {
+                try { right.mapped(inner); throw new AssertionError("Lean mapped a terminal JVM error"); }
+                catch (LinkageError seen) { check(seen == fatal); }
+                return 0;
+            };
+            outer.onGet = () -> ++reads[0];
+            try { left.update(outer, 23); throw new AssertionError("returned after peer retirement"); }
+            catch (IllegalStateException retired) { check(reads[0] == 0); }
+            try { right.read(inner); throw new AssertionError("peer still usable"); }
+            catch (IllegalStateException retired) { check(reads[0] == 0); }
+        }
         System.out.println("Java: independent peers, repeated classloader, virtual-thread reentry, original and mapped errors, retirement");
     }
 }

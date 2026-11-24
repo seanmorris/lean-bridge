@@ -36,6 +36,13 @@ both and rethrows the first error, the caller gets the *first Java object*.
 When Lean replaces an error with the same text or maps it to a typed
 `EIO String`, neither result is mistaken for the original exception.
 
+The frame test also exercises a failure that an exception-identity check
+alone missed: Lean caught a `LinkageError`, called Java a second time, then
+rethrew the original error. The extra call incremented a Java counter.
+The test requires that counter to stay at zero **and** that Java receive
+the same throwable. It distinguishes terminal JVM errors from an ordinary
+application `AssertionError`, which Lean can still map.
+
 This native test uses a small test entry point and one static host member.
 It is not a Maven installation test: it does not establish cross-JAR host
 object identity, host lease retirement, or generated package delivery.

@@ -60,6 +60,9 @@ fun example() {
 
 `use` closes the binding even if the call throws. These calls are synchronous;
 no coroutine, JNI handle or separate runtime installation is needed.
+Ordinary exceptions can be handled in Lean or propagated back to Kotlin.
+A terminal JVM error, such as `OutOfMemoryError` or `LinkageError`, retires
+the shared Lean runtime even if a nested Kotlin method catches it.
 
 ### Call synchronous IO
 

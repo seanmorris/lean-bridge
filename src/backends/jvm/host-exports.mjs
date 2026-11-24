@@ -82,6 +82,7 @@ ${model.native}
 static const char component[]="jvmhost:${identity}";
 static const lb_jhd_spec specs[]={${model.kinds.map(k => "{" + JSON.stringify(k.key) + "," + Number(k.strong) + "}").join(",")}};
 static void *init(uint8_t b) { return initialize_BridgeJvmExports(b); }
+static int available(void) { return lean_bridge_native_component_ready(component); }
 static jobject jh_pair(lb_jh_frame *f,jlong tag,jobject payload) {
     JNIEnv *e=f->env; if ((*e)->ExceptionCheck(e)) return NULL;
     jclass obj=(*e)->FindClass(e,"java/lang/Object"); if (!obj) return NULL;
@@ -101,7 +102,8 @@ static jobject execute(lb_jh_frame *f,void *ptr) {
         return NULL;
     }
     if(op==-1) { LB_JHD(close)(f,component); return NULL; }
-    if (!lean_bridge_native_component_ready(component)) { jh_raise(f->env,"java/lang/IllegalStateException","Lean runtime unavailable"); return NULL; }
+    f->available=available; f->retire=lean_bridge_native_runtime_retire;
+    if (!lb_jh_guard(f)) return NULL;
     lb_jhd_session *s=LB_JHD(enter)(f,component); if(!s) return NULL;
     lb_jhd_session *outer=jh_session; jh_session=s; jobject answer=NULL;
     switch(op) { ${entries.map((_, i) => "case " + i + ": answer=jh_entry_" + i + "(f); break;").join(" ")} default: jh_bad(f->env); }

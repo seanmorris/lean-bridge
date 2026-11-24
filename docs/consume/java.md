@@ -81,6 +81,10 @@ try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
 Binding checks the member signatures before returning. Lean `UInt32` uses
 Java `long` in the range 0–4,294,967,295. If a method throws and Lean
 propagates the original error, Java receives the same exception object.
+Three exceptions to recovery are `VirtualMachineError`, `LinkageError` and
+`ThreadDeath`. The throwing call preserves the original throwable and
+retires the shared Lean runtime. Catching it inside a host method cannot
+re-enable calls through this package or another package using that runtime.
 Closing the binding ends calls through that binding; it does not close
 your application object.
 

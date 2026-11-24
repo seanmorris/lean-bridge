@@ -73,7 +73,7 @@ export const generateJvmNativeMembers = async ir => {
         ${i === anchor ? "owner=v;" : "if(v) (*e)->DeleteLocalRef(e,v);"} }`).join("\n    ")}
     jclass binding=(*e)->GetObjectClass(e,f->binder); if (!binding) goto fault;
     jmethodID invoke=(*e)->GetMethodID(e,binding,"invokeWire","(I[Ljava/lang/Object;)Ljava/lang/Object;"); if (!invoke) goto fault;
-    jobject answer=(*e)->CallObjectMethod(e,f->binder,invoke,${slot},args); if ((*e)->ExceptionCheck(e)) goto fault;
+    jobject answer=lb_jh_invoke(f,invoke,${slot},args); if ((*e)->ExceptionCheck(e)) goto fault;
     lean_object *v=jh_from(f,jh_session,${out.code},answer,owner); if (!v) goto fault;
     ${out.kind === "nominal" ? "LB_JHD(admit)(v); " : ""}io=lean_io_result_mk_ok(v); goto pop;
 fault: io=lb_jh_catch(f);
