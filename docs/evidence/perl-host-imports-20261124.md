@@ -45,3 +45,39 @@ the outer call into a success. A fresh invocation succeeded. The fixture
 also refused inherited calls after fork and, on threaded Perl, calls from
 a cloned interpreter. This is a native frame check with a scalar member;
 it does not exercise an installed CPAN host-object pair.
+
+## Shared identity across components
+
+Two independently compiled XS components used the same registry in the real
+`LeanBridge::Runtime` XS library. A separate witness retained a Lean value;
+compiled Lean in the other component compared it with the wrapper for the
+same Perl referent. Both load orders passed on 5.36.3 and 5.38.2, threaded
+and unthreaded. Distinct objects that overload equality remained distinct,
+as did different nominal kinds. The tests rejected reblessed objects,
+foreign external classes and stale wrappers. A failed partial binding rolled
+back. A weak object kept its borrow anchor only while Lean retained the
+wrapper; an admitted strong object survived until the last matching unbind.
+An input rejected before admission did not leave a pin. Reentry from a Perl
+destructor during registry cleanup was refused. Live rows returned to zero.
+
+A separate archive run built all four XS variants, extracted them from the
+actual CPAN runtime tarball, and loaded each with its matching interpreter
+and the verified native runtime. It checked all seven private registry
+symbols and the binding hashes of the distributed ABI header, implementation
+and `Runtime.xs`.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Native runtime identity | `435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0` |
+| CPAN binding identity | `93e84bc3a42acdec6fca0ca4a3bd0e215322969197adc11ff4ad6abf67ddc2ad` |
+| Four-ABI CPAN runtime archive | `44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9` |
+| 5.36.3 threaded XS | `85ccbb92aa56bcf79a3c1ba268e219e66eb13acbc601c5e554dd3b7aa04f22f0` |
+| 5.36.3 unthreaded XS | `30bcb000ce32ca8badc87710d2d40181dd1ca8166546c3eb4a6c71856a976324` |
+| 5.38.2 threaded XS | `670dd22696597d29db5b8f0df72786e960d9623212eb576da6b38f68e484a7a4` |
+| 5.38.2 unthreaded XS | `89321f836fab00c33c95178d61832e89eab4559b1468ff4440de094d8f57f157` |
+
+Run `npm run test:perl-host-domain` per interpreter and
+`npm run test:perl-host-runtime-archive` with the JSON array of interpreter
+paths in `LEAN_BRIDGE_PERLS`. The two-component probe and the runtime archive
+are separate checks: neither installs a pair of generated CPAN host-object
+distributions.

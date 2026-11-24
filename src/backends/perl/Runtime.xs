@@ -37,6 +37,7 @@ void lbp_check_interpreter(pTHX) {
   if (lbp_interpreter != LBP_CONTEXT || lbp_pid != getpid() || !pthread_equal(lbp_thread, pthread_self()))
     croak("Lean Bridge requires its initiating process and Perl interpreter thread; cross-interpreter calls are unsupported");
 }
+#include "host-domain.inc"
 static const char *lbp_library_path(pTHX_ SV *value, int absolute) {
   lbp_check_interpreter(aTHX);
   SvGETMAGIC(value);

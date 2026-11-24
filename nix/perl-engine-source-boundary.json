@@ -259,6 +259,10 @@
     "src/backends/perl/copied-variants.mjs",
     "src/backends/perl/default-value.mjs",
     "src/backends/perl/generate.mjs",
+    "src/backends/perl/host-domain.h",
+    "src/backends/perl/host-domain.inc",
+    "src/backends/perl/host-frame.h",
+    "src/backends/perl/host-members.mjs",
     "src/backends/perl/io-resources.mjs",
     "src/backends/perl/naming.mjs",
     "src/backends/perl/owned-borrows.mjs",
@@ -608,6 +612,16 @@
     "src/release/rust-task-package.mjs",
     "src/release/source-notices.mjs",
     "src/release/wheel-record.mjs",
-    "src/release/wit-canonical-package.mjs"
+    "src/release/wit-canonical-package.mjs",
+    "src/release/wit-sync-io-package.mjs",
+    "src/build/wit-sync-io-host.mjs",
+    "src/backends/wit/sync-io-host.mjs",
+    "src/backends/wit/sync-io-model.mjs",
+    "src/backends/wit/task-callback-bindings.mjs",
+    "src/backends/wit/task-callback-model.mjs",
+    "src/backends/wit/task-callback-table.mjs",
+    "src/backends/wit/task-host.mjs",
+    "src/backends/wit/task-model.mjs",
+    "src/backends/wit/task-session.mjs"
   ]
 }

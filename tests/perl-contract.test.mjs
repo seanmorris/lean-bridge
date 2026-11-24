@@ -712,7 +712,7 @@ test("the Nix Perl source boundary includes the complete import and template clo
     if(!path.endsWith(".mjs")) continue;
     for(const match of source.matchAll(/from\s+["'](\.[^"']+)["']/g)) assert.ok(paths.has(resolve(dirname(path), match[1])), `${path}: ${match[1]}`);
 }
-  for(const template of ["Build.pm", "Platform.pm", "Runtime.pm", "Runtime.xs", "runtime.h"]) assert.ok(paths.has(resolve("src/backends/perl", template)));
+  for(const template of ["Build.pm", "Platform.pm", "Runtime.pm", "Runtime.xs", "runtime.h", "host-domain.h", "host-domain.inc"]) assert.ok(paths.has(resolve("src/backends/perl", template)));
   for(const template of ["src/analyze/NativeExports.lean", "src/build/ResolveLakeWorkspace.lean"]) assert.ok(paths.has(resolve(template)));
 });
 

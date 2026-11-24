@@ -1,5 +1,6 @@
 /** @file Generate the private Perl method table for a checked synchronous host import. */
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { hostMemberSymbol } from "../lean/host-object.mjs";
 import { perlExportName, perlStringLiteral as lit, projectPerlNames } from "./naming.mjs";
 
@@ -21,7 +22,10 @@ export const perlHostMembers = (ir, moduleName) => {
 	validateBindingIr(ir); projectPerlNames(moduleName, []);
 	const types = ir.types, names = types.map(t => t.name);
 	if(!types.length || types.length > 64 || new Set(names).size !== types.length || types.some(t =>
-		t.kind !== "resource" || !t.host?.targets.includes("perl") || t.host.dynamic || !id.test(t.name))) fail("expected statically declared Perl host classes");
+		t.kind !== "resource" || !t.host?.targets.includes("perl") || t.host.dynamic || !id.test(t.name)
+		|| !["strong-canonical", "weak-canonical"].includes(t.host.identity))) fail("expected statically declared Perl host classes");
+	if(new Set(types.map(t => t.resource.kindId)).size !== types.length) fail("duplicate nominal kind");
+	const kinds = types.map(t => ({key: sha256(canonicalJson([ir.component.id, t.id, t.resource.kindId])), strong: t.host.identity === "strong-canonical"}));
 	const kind = t => {
 		if(t.kind === "primitive" && primitives.has(t.name)) return -1;
 		const i = types.findIndex(r => r.id === t.id);
@@ -82,5 +86,5 @@ ${code.join(",\n")}
 }
 1;
 `;
-	return { slots, implementation };
+	return { slots, kinds, implementation };
 };

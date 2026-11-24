@@ -188,7 +188,7 @@ export const stageCpanPackage = async ({ outputRoot
 	const directory = resolve(outputRoot); await empty(directory);
 	const { manifest: runtime, identity: nativeRuntimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const bindingSources = {};
-	for(const name of ["Runtime.xs", "runtime.h", "Runtime.pm", "Platform.pm", "OwnedAssets.pm"])
+	for(const name of ["Runtime.xs", "runtime.h", "host-domain.h", "host-domain.inc", "Runtime.pm", "Platform.pm", "OwnedAssets.pm"])
 		bindingSources[name] = sha256(await readFile(join(templates, name)));
 	const binding = { schemaVersion: 1, nativeRuntimeIdentity, sources: bindingSources };
 	const runtimeIdentity = sha256(canonicalJson(binding));
@@ -268,6 +268,8 @@ export const stageCpanPackage = async ({ outputRoot
       await copy(join(runtimeRoot, path), join(directory, include, path.slice("include/".length)));
 		await copy(join(runtimeRoot, "include/lean_bridge_native_runtime.h"), join(directory, include, "lean_bridge_native_runtime.h"));
 		await copy(join(templates, "runtime.h"), join(directory, include, "runtime.h"));
+		await copy(join(templates, "host-domain.h"), join(directory, include, "host-domain.h"));
+		await copy(join(templates, "host-domain.inc"), join(directory, "host-domain.inc"));
 	}
 	const taskDelivery = ioContract?.profile === "native-perl-task-v1";
 	if(ioContract)
