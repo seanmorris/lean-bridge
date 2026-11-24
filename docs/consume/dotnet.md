@@ -84,6 +84,43 @@ and loads the matching native runtime; no scheduler or interop setup is
 needed. See [how to export this API](../publish/nuget.md#export-synchronous-io)
 and the [installed results for both load orders](../evidence/dotnet-sync-io-20261122.json).
 
+### Let Lean call your C# class
+
+Some packages import a class that your application implements. The package
+README names the required members. For the Workshop example, provide a
+public constructor, property, and two methods with these exact C# types:
+
+```csharp
+public sealed class Meter
+{
+    public Meter(uint level) => Level = level;
+    public uint Level { get; set; }
+    public uint Read() => Level;
+    public Meter Identity() => this;
+}
+```
+
+Open the generated binding on the process main thread. These are synchronous
+calls; no event loop, handle registration, or additional runtime install is
+needed.
+
+```csharp
+using var workshop = LeanBridge.Workshop.Api.BindHosts<Meter>();
+var meter = workshop.Make(7);      // Lean calls new Meter(7).
+workshop.Update(meter, 42);        // Lean sets the C# property.
+Console.WriteLine(meter.Level);   // 42
+```
+
+When Lean propagates a C# member exception unchanged, the caller receives
+the original exception object. If Lean handles it or maps it to a declared
+`EIO` error, the caller sees that outcome instead. `Dispose` closes this
+binding, not the C# object. If another package still binds the same nominal
+kind, it can keep using the object. After the last binding closes, Lean
+references retained under the old binding are stale.
+
+See [publishing a host contract](../publish/nuget.md#import-an-application-owned-c-class)
+for the Lean side of the example.
+
 ### Await tasks and pull streams
 
 For a `native-dotnet-task-v1` package, start the application with

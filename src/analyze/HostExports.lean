@@ -75,24 +75,29 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
   throwError "unsupported host export carrier: {e}"
 
 /-- A returned Except is a value. Its success arm is first in Binding IR. -/
-partial def returned (r : Request) (e : Expr) (copyOnly := false) : MetaM Json := do
+partial def returned (r : Request) (e : Expr) (copyOnly := false) (clrLeases := false) : MetaM Json := do
   let e := (← instantiateMVars e).consumeMData
   let args := e.getAppArgs
   if e.getAppFn.constName? == some ``Except && args.size == 2 then
     return Json.mkObj [("kind", toJson "apply"), ("constructor", toJson "result"),
-      ("arguments", Json.arr #[← returned r args[1]! true, ← returned r args[0]! true])]
+      ("arguments", Json.arr #[← returned r args[1]! true clrLeases, ← returned r args[0]! true clrLeases])]
   let t ← carrier r e
   if copyOnly && e.constName?.any (fun n => r.leanResources.contains n.toString) then
     throwError "a leased Lean resource cannot be a copied exception payload: {e}"
   if copyOnly && !primitives.any (fun p => e.constName? == some p.1) then
+    -- The synchronous CLR port explicitly exports the active host reference
+    -- before releasing the Lean IO object. Never apply this to a worker or
+    -- to an arbitrary nominal: only these generated CLR import kinds qualify.
+    if clrLeases && r.hostModule == some "LeanBridge.Host.Dotnet" &&
+        e.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)) then return t
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
 
 /-- An explicitly leased nominal may cross by itself, never as a copied sum payload. -/
-def delivered (r : Request) (e : Expr) : MetaM Json := do
+def delivered (r : Request) (e : Expr) (clrLeases := false) : MetaM Json := do
   if let some name := (← instantiateMVars e).consumeMData.constName? then
     if r.leanResources.contains name.toString then return ← carrier r e
-  returned r e true
+  returned r e true clrLeases
 
 /-- An actual unary, nondependent IO function, not a foreign host object or a pure borrow. -/
 def taskInput (r : Request) (e : Expr) : MetaM Json := do
@@ -334,12 +339,12 @@ def extract (r : Request) : MetaM Json := do
         else pure (payload, [])
         pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value)] ++ extra ++ terminal
       else if (head == ``IO || (head == ``BaseIO && r.immediateValues)) && resultArgs.size == 1 then
-        pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]!)]
+        pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]! false true)]
       else if head == ``EIO && resultArgs.size == 2 then
-        pure [("effect", toJson "EIO"), ("error", ← delivered r resultArgs[0]!),
-          ("result", ← returned r resultArgs[1]!)]
+        pure [("effect", toJson "EIO"), ("error", ← delivered r resultArgs[0]! true),
+          ("result", ← returned r resultArgs[1]! false true)]
       else if head == ``Except && resultArgs.size == 2 then
-        pure [("effect", toJson "pure"), ("result", ← returned r result)]
+        pure [("effect", toJson "pure"), ("result", ← returned r result false true)]
       else if r.immediateValues then
         pure [("effect", toJson "pure"), ("result", ← returned r result)]
       else throwError "expected synchronous IO result, typed EIO or returned Except: {n}"

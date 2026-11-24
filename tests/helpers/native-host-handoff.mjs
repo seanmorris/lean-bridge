@@ -1,4 +1,4 @@
-/** @file Build an ordinary or reviewed host-object Maven handoff from checked application source. */
+/** @file Build a host-object Maven or NuGet handoff from ordinary or reviewed Lean source. */
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { constants } from "node:fs";
@@ -27,8 +27,10 @@ def layered (box : Box) (success : Bool) : EIO String (Except String (Except Str
   if success then return .ok (.ok v) else return .ok (.error "inner refusal")
 `;
 const json = async p => JSON.parse(await readFile(p, "utf8"));
+const clrTypes = "Unit Bool Char UInt8 UInt16 UInt32 UInt64 USize Int8 Int16 Int32 Int64 ISize Float32 Float String ByteArray Nat Int".split(" ");
+const clrEcho = t => "echo_" + (({ ByteArray: "bytes", Float: "float64" })[t] ?? t.toLowerCase());
 /**
- * Verify the whole receipt before deleting the producer, retaining only JAR/POM and public review input.
+ * Verify the receipt before deleting the producer; keep only package artifacts and the review input.
  *
  * @param o - Private scratch and archive directories, CLI, component and source route.
  * @param o.root - Private publisher scratch.
@@ -36,40 +38,53 @@ const json = async p => JSON.parse(await readFile(p, "utf8"));
  * @param o.peer - Build the independently named second component.
  * @param o.reviewed - Require the ordinary build's public IR.
  * @param o.cli - Path to the author's CLI entry point.
+ * @param o.backend - JVM or CLR package route for the common Lean example.
  */
-export const captureJvmHostHandoff = async ({ root, archives, peer, reviewed, cli }) => {
+export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed, cli, backend = "jvm" }) => {
+	assert.ok(["jvm", "dotnet"].includes(backend)); const dotnet = backend === "dotnet", target = dotnet ? "nuget" : "maven";
 	assert.ok(isAbsolute(archives) && (await stat(archives)).isDirectory(), "expected an existing absolute archive directory");
 	const stage = await mkdtemp(join(root, "publisher-")), project = join(stage, "src"), out = join(stage, "out");
 	const name = peer ? "workshop-peer" : "workshop", mod = peer ? "Peer" : "Workshop";
 	const review = join(archives, name + ".binding-ir.json");
 	try
 	{
-		await prepareNativeHostFixture(project, "jvm"); await copyFile(resolve("LICENSE"), join(project, "LICENSE"));
+		await prepareNativeHostFixture(project, backend); await copyFile(resolve("LICENSE"), join(project, "LICENSE"));
 		const source = join(project, "Workshop.lean"), main = join(project, mod + ".lean");
-		const body = (await readFile(source, "utf8")).replace("end Workshop", extra + "\nend Workshop").replaceAll("Workshop", mod);
+		const scalars = dotnet ? [...clrTypes.map(t => "def " + clrEcho(t) + " (v : " + t + ") : IO " + t + " := pure v")
+			, "def rejectBox (box : Box) : EIO Box Unit := throw box"
+			, "def chooseBox (box : Box) (ok : Bool) : Except Box Box := if ok then .ok box else .error box"].join("\n") : "";
+		const body = (await readFile(source, "utf8")).replace("end Workshop", extra + scalars + "\nend Workshop").replaceAll("Workshop", mod);
 		if(peer) await rename(source, main); await writeFile(main, body);
 		await writeFile(join(project, "lakefile.toml"), 'name = "' + name + '"\nversion = "1.0.0"\n[[lean_lib]]\nname = "' + mod + '"\n');
 		const config = join(project, "lean-bridge.exports.json"), cfg = await json(config);
-		cfg.targets.maven.name = "org.leanbridge:" + name; cfg.modules = [mod];
+		cfg.targets[target].name = dotnet ? "Acme." + mod : "org.leanbridge:" + name; cfg.modules = [mod];
 		cfg.exports = [...cfg.exports.map(n => n.replace("Workshop", mod)), ...["keep", "held", "forget", "replaced", "verdict", "layered"].map(n => mod + "." + n)];
+		if(dotnet) cfg.exports.push(...[...clrTypes.map(clrEcho), "rejectBox", "chooseBox"].map(n => mod + "." + n));
 		await writeFile(config, canonicalJson(cfg));
 		if(reviewed) await copyFile(review, join(project, "workshop.binding-ir.json"));
 		try
-		{ await exec(process.execPath, [cli, "build", "--project", project, "--target", "maven", "--output", out, "--json", "--progress", "none"]); }
+		{ await exec(process.execPath, [cli, "build", "--project", project, "--target", target, "--output", out, "--json", "--progress", "none"]); }
 		catch(e)
 		{ throw new Error(e.stdout + "\n" + e.stderr, { cause: e }); }
 		const { result, receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(out, "package-set-receipt.json") });
 		const api = await json(join(out, "binding-ir.json")), ev = await json(join(out, "host-export-evidence.json")), [pkg] = receipt.packages;
-		assert.equal(pkg.name, cfg.targets.maven.name); assert.equal(pkg.profile, "native-jvm-io-v1"); assert.equal(pkg.runtimeDelivery, "embedded");
-		assert.equal(ev.selection.hostModule, "LeanBridge.Host.Jvm"); assert.equal(ev.sourceTreeSha256, receipt.source.treeSha256);
+		assert.equal(pkg.name, cfg.targets[target].name); assert.equal(pkg.profile, "native-" + backend + "-io-v1"); assert.equal(pkg.runtimeDelivery, "embedded");
+		assert.equal(ev.selection.hostModule, "LeanBridge.Host." + (dotnet ? "Dotnet" : "Jvm")); assert.equal(ev.sourceTreeSha256, receipt.source.treeSha256);
 		assert.equal(ev.reviewedSourceSha256, reviewed ? sha256(await readFile(review)) : null);
+		if(dotnet)
+		{
+			const decl = n => api.declarations.find(d => d.source.declaration === mod + "." + n);
+			const payload = decl("rejectBox").source.extensions["lean-bridge.dev/error-payload-site"];
+			assert.deepEqual(payload, { type: { kind: "named", id: "host:meter.Box" }, ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
+			assert.equal(decl("chooseBox").result.ownership, "lease"); assert.deepEqual(decl("chooseBox").result.lifetime, payload.lifetime);
+		}
 		if(reviewed) assert.deepEqual(api, await json(review)); else await writeFile(review, canonicalJson(api), { flag: "wx" });
 		const files = [];
 		for(const a of pkg.artifacts)
 		{
 			const dest = join(archives, basename(a.path)); await copyFile(join(out, a.path), dest, constants.COPYFILE_EXCL); files.push(dest);
 		}
-		assert.deepEqual(files.map(f => f.slice(-4)).sort(), [".jar", ".pom"]);
+		assert.deepEqual(files.map(f => f.slice(f.lastIndexOf("."))).sort(), dotnet ? [".nupkg"] : [".jar", ".pom"]);
 		return { name, files, receiptSha256: result.receiptSha256, artifacts: pkg.artifacts };
 	} finally
 	{ await rm(stage, { recursive: true, force: true }); }

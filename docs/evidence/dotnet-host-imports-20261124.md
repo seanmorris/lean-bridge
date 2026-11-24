@@ -79,6 +79,31 @@ invalidates even a still-retained Lean wrapper, and a collected binder is
 swept on the next owner operation. At exit the client observes zero native
 rows, zero managed handles, and both assembly contexts unloading.
 
-These are native integration tests. The outer component entry is still test
-code; consumer installation from an ordinary or reviewed NuGet package is
-not established by these results.
+The two native tests use fixture entry points to observe internal invariants.
+Use the package test below to check the public API and delivery path.
+
+## Installed NuGet consumer
+
+Run `npm run test:dotnet-host-packages` with the same Lean and .NET SDKs.
+The test installs the publisher CLI with npm offline, builds Workshop and a
+separate peer, verifies the package-set receipts, and deletes the producer
+directories. It repeats with each package’s public binding IR as review
+input. `LEAN_BRIDGE_DOTNET_HOST_HANDOFF_TMP` can put the compressed handoffs
+on a different filesystem from the NuGet restore cache.
+
+The [C# client](../../tests/fixtures/dotnet-host-meter/Installed.cs) has two
+ordinary `PackageReference` entries. It runs from relocated build output
+after the project and restore cache have been removed, with publisher tools
+off `PATH`. It checks both package load orders. A separate process tries to
+open a binding after the installed domain library is modified.
+
+| Observation | What the client checks |
+| --- | --- |
+| Object owned by C# | Construct it from Lean, change its property through the peer, and get back the original C# object. Closing the last binding invalidates a saved Lean wrapper. |
+| Returned `Except` versus thrown `EIO` | Inspect nested success/error branches as data; catch `DeclaredError<T>` with the exact declaration and typed payload. A C# object in either path retains its identity. |
+| Host, IO, and fatal failures | A nested call rethrows the original `TargetInvocationException`; Lean can replace it with an IO error. If a setter swallows a peer’s fatal exception, Lean cannot call the following getter. |
+| Copied public calls | The [scalar client](../../tests/fixtures/dotnet-host-meter/InstalledScalars.cs) checks all 19 carriers, including integer extremes, floating-point bits, wide integers and copy isolation. Invalid UTF-16, negative `Nat` and over-budget input are rejected before another valid call. |
+
+This evidence covers synchronous host imports on .NET 8/Linux x86-64. It
+does not establish arbitrary dynamic member lookup or asynchronous host
+imports.

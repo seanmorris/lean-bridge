@@ -35,8 +35,12 @@ lean_object *lb_dn_corrupt(void) {
 lean_object *lb_dn_member(int32_t slot,const uint64_t *args,size_t arity,uint64_t *out) {
     lb_dn_frame *f=top;
     if(!f || f->fatal) return io_error("no active CLR host binding");
+    if(f->available && !f->available()) { poison(f); return io_error("CLR host runtime retired"); }
     uint32_t id=0;
     int status=f->dispatch(f->call,slot,args,arity,out,&id);
+    /* A nested component has a separate native and managed frame stack, but
+       retirement is shared. A host method can catch its peer's exception. */
+    if(f->available && !f->available()) { poison(f); return io_error("CLR host runtime retired"); }
     if(status==LB_DN_OK && !id && !f->fatal) return NULL;
     if(status==LB_DN_ERROR && id && !f->fatal) {
         lb_dn_fault *row=malloc(sizeof(*row));

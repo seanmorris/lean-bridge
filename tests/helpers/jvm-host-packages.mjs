@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
-import { captureJvmHostHandoff } from "./jvm-host-handoff.mjs";
+import { captureNativeHostHandoff } from "./native-host-handoff.mjs";
 import { runJvmHostConsumers } from "./jvm-host-installed.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 
@@ -29,7 +29,7 @@ test("installed Java and Kotlin bind application-owned objects through two indep
 		const packs = [], route = reviewed ? "reviewed" : "ordinary";
 		for(const peer of [false, true])
 		{
-			const p = await captureJvmHostHandoff({ root, archives, cli, peer, reviewed }); packs.push(p);
+			const p = await captureNativeHostHandoff({ root, archives, cli, peer, reviewed }); packs.push(p);
 			t.diagnostic(route + " " + p.name + " receipt " + p.receiptSha256 + "; JAR " + p.artifacts.find(a => a.path.endsWith(".jar")).sha256);
 		}
 		for(const line of await runJvmHostConsumers(root, packs)) t.diagnostic(route + " " + line);

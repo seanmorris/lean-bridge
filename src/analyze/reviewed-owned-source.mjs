@@ -402,7 +402,7 @@ export const readReviewedOwnedSource = async (projectRoot, inventory, signal) =>
  */
 export const readNativeReviewedSource = async (projectRoot, inventory, signal, ownedGraphs = false) => {
 	if(inventory.configurationRecord?.configuration?.hostImports)
-		fail("invalid-host-project", "A host import contract describes application members, not the application's reviewed exports; build it with a single pypi, rubygems, or maven target");
+		fail("invalid-host-project", "A host import contract describes application members, not the application's reviewed exports; build it with a single pypi, rubygems, maven, or nuget target");
 	try
 	{ return await readReviewedSource(projectRoot, inventory, signal); }
 	catch(error)

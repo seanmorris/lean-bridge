@@ -16,6 +16,7 @@ import { buildPythonHostWheel, packagePythonHostRuntime, writePythonHostPackageS
 import { buildCTaskPackage } from "../release/c-task-package.mjs";
 import { buildRubyHostPackage } from "../release/ruby-host-package.mjs";
 import { buildJvmHostPackage } from "../release/jvm-host-package.mjs";
+import { buildDotnetHostPackage } from "../release/dotnet-host-package.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
 import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
@@ -44,7 +45,7 @@ const absent = async path => {
 export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
-	if(config.hostImports && (targets.length !== 1 || !["pypi", "rubygems", "maven"].includes(target))) fail("Host imports require a single pypi, rubygems, or maven target");
+	if(config.hostImports && (targets.length !== 1 || !["pypi", "rubygems", "maven", "nuget"].includes(target))) fail("Host imports require a single pypi, rubygems, maven, or nuget target");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
@@ -93,7 +94,9 @@ export const buildHostProject = async options => {
 		let artifact, receipt;
 		if(target !== "pypi")
 		{
-			artifact = await (target === "maven" && contract.ir ? buildJvmHostPackage : target === "rubygems" && contract.ir ? buildRubyHostPackage : wit && !canonical ? buildWitHostPackage : buildCTaskPackage)({ ...common, target, canonical }); receipt = artifact.receipt;
+			const hosts = { maven: buildJvmHostPackage, nuget: buildDotnetHostPackage, rubygems: buildRubyHostPackage };
+			const builder = (contract.ir && hosts[target]) || (wit && !canonical ? buildWitHostPackage : buildCTaskPackage);
+			artifact = await builder({ ...common, target, canonical }); receipt = artifact.receipt;
 		}
 		else
 		{

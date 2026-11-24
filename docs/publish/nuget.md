@@ -38,6 +38,37 @@ Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation.
 
 NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Import an application-owned C# class
+
+Use a host contract when the C# application owns an object and Lean needs to
+call it. The publisher supplies the contract; no application DLL is needed at
+build time. Set the nominal type’s `host.targets` to `["dotnet"]`. For a
+`Box` with a constructor and a read method, the calling Lean code looks like:
+
+```lean
+import LeanBridge.Host.Dotnet
+
+namespace Workshop
+open LeanBridge.Host.Dotnet
+
+def make (n : UInt32) : IO Box := Box.create n
+def read (box : Box) : IO UInt32 := box.read
+end Workshop
+```
+
+Set `hostImports` in `lean-bridge.exports.json` to the import contract’s
+filename, list `Workshop.make` and `Workshop.read` in `exports`, and build
+with a single `--target nuget`. An optional reviewed `.binding-ir.json`
+describes the **public exports**; it does not replace the import contract.
+The prepared package exposes [ordinary typed C# methods](../consume/dotnet.md#let-lean-call-your-c-class)
+and includes the shared native library that tracks host-object identity.
+For a returned `Except` containing a bound class, the public IR marks the
+result as a lease. A declared `EIO` with such a payload records its ownership
+in `lean-bridge.dev/error-payload-site`. In either case, C# receives the
+application object from the active branch, not a serialized copy.
+This route accepts synchronous host imports. The task and resource-lease
+profiles below have their own calling and ownership rules.
+
 ## Export synchronous IO
 
 Select the functions and declare the OS access they use in

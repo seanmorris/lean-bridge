@@ -15,6 +15,7 @@ typedef struct lb_dn_frame {
     void *domain_session;
     int fatal;
     void (*retire)(void);
+    int (*available)(void);
 } lb_dn_frame;
 enum { LB_DN_OK=0, LB_DN_ERROR=1, LB_DN_FATAL=2, LB_DN_WRONG_THREAD=9 };
 int lb_dn_enter(lb_dn_frame *, uint64_t, lb_dn_dispatch, void (*retire)(void));

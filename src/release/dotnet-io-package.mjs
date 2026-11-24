@@ -7,6 +7,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateDotnetIO, generateDotnetTasks } from "../backends/dotnet/sync-io.mjs";
+import { dotnetHostSignatures, generateDotnetHostApi } from "../backends/dotnet/host-api.mjs";
 import { compilePreparedAssembly } from "../build/native-dotnet-projection.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { writeNugetManifest } from "./native-nuget.mjs";
@@ -18,8 +19,8 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  * @param o - Authenticated IO declarations, compiled native files and private staging paths.
  */
 export const writeDotnetIORelease = async o => {
-	const { workRoot, name, version, prefix, wire, files, api, evidence, manifest, runtimeIdentity, componentIdentity, bindingIrSha256, floor, projectContract } = o;
-	const library = "lib" + prefix + ".so", libraries = {}, mode = wire.wait ? "task" : "io", profile = "native-dotnet-" + mode + "-v1";
+	const { workRoot, name, version, prefix, wire, host, files, api, evidence, manifest, runtimeIdentity, componentIdentity, bindingIrSha256, floor, projectContract } = o;
+	const library = "lib" + prefix + ".so", libraries = {}, mode = wire?.wait ? "task" : "io", profile = "native-dotnet-" + mode + "-v1";
 	for(const path of [library, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const file = "lib/" + path, bytes = files.get(file);
@@ -27,12 +28,18 @@ export const writeDotnetIORelease = async o => {
 		libraries[path] = sha256(bytes);
 	}
 	let resourceLedger;
-	if(wire.leases?.length)
+	if(wire?.leases?.length)
 	{
 		if(!/^[a-f0-9]{64}$/u.test(o.ledgerId)) throw new Error("Missing .NET resource ledger identity");
 		const path = "liblb_task_resources_" + o.ledgerId + ".so", bytes = files.get("lib/" + path);
 		if(!bytes) throw new Error("Missing .NET resource ledger library");
 		libraries[path] = sha256(bytes); resourceLedger = { id: o.ledgerId, library: path, sha256: libraries[path] };
+	}
+	if(host)
+	{
+		const { id, name: path } = host.domain, bytes = files.get("lib/" + path);
+		if(wire || !bytes || !/^[a-f0-9]{64}$/u.test(id) || path !== "liblb_dotnet_host_" + runtimeIdentity + ".so") throw new Error("Invalid CLR host domain");
+		libraries[path] = sha256(bytes);
 	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected .NET IO native payload");
 	const auth = { library
@@ -40,7 +47,8 @@ export const writeDotnetIORelease = async o => {
 		, componentId: api.component.id
 		, componentReceiptSha256: componentIdentity
 		, runtimeIdentity, ...resourceLedger ? { ledgerId: resourceLedger.id } : {} };
-	const { assembly, files: sources, contracts = {} } = await (wire.wait ? generateDotnetTasks : generateDotnetIO)({ api, wire, evidence: auth });
+	const { assembly, files: sources, contracts = {} } = host ? await generateDotnetHostApi({ ...host, api, prefix, evidence: auth })
+		: await (wire.wait ? generateDotnetTasks : generateDotnetIO)({ api, wire, evidence: auth });
 	const stage = await mkdtemp(join(workRoot, ".dotnet-io-")), root = join(stage, "package"), compiler = join(stage, "managed");
 	const write = async (dir, path, data) => {
 		await mkdir(dirname(join(dir, path)), { recursive: true });
@@ -85,7 +93,7 @@ ${refs}</Project>
 		await save("lean-bridge/licenses/LeanBridge-LICENSE", await readFile(new URL("../../LICENSE", import.meta.url)));
 		for(const f of ["LICENSE", "LICENSES"]) await save("lean-bridge/licenses/Lean-" + f, await readFile(join(o.leanPrefix, f)));
 		for(const [p, data] of Object.entries(projectContract.notices)) await save("lean-bridge/licenses/" + p, data);
-		await save("README.md", wire.wait
+		await save("README.md", host ? `# ${name} ${version}\n\nBind application classes with \`using var hosts = ${assembly}.Api.BindHosts<${host.ir.types.map(t => t.name).join(", ")}>();\`. Call the generated instance methods on the process main thread. Dispose the binding when done. The package verifies and loads its own native libraries. Requires .NET 8, Linux x86-64 and glibc ${floor}+.\n\nRequired public C# members (replace each contract class name with your implementing class):\n\n${dotnetHostSignatures(host).map(s => "- `" + s + "`").join("\n")}\n` : wire.wait
 			? `# ${name} ${version}\n\nStart ${assembly}.LeanRuntime.Run(async () => { /* application */ }) once on the process main thread. Await generated Api methods and use await foreach for pull streams. Pass a CancellationToken to a task or WithCancellation(token) to a stream. No polling, Lean compiler or external runtime setup is required. Native calls stay on the owner thread. For .NET 8 on Linux x86-64 with glibc ${floor}+.\n`
 			: `# ${name} ${version}\n\nCall ${assembly}.Api synchronously on the process main thread. Returned Except values are Result<T,E>; thrown EIO raises DeclaredError<T> with its Lean declaration and typed payload. OS errors raise LeanIOException. .NET 8, Linux x86-64 with glibc ${floor}+; the exact native runtime is included and verified automatically. No Lean compiler or event loop needed.\n`);
 		await writeNugetManifest(save, name, version, projectContract.metadata ?? {});
@@ -95,6 +103,7 @@ ${refs}</Project>
 			, sourceTreeSha256: projectContract.sourceTreeSha256
 			, runtimeIdentity, assembly, namespace: assembly, sdk
 			, ...resourceLedger ? { resourceLedger, resourceContracts: contractIds } : {}
+			, ...host ? { hostDomain: { id: host.domain.id, library: host.domain.name, sha256: libraries[host.domain.name] } } : {}
 			, glibcMinimumVersion: floor, files: inventory }));
 		const archive = name + "." + version + ".nupkg", bytes = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 });
 		await writeFile(join(o.output, archive), bytes, { flag: "wx" });

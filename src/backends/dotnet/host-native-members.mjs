@@ -12,7 +12,19 @@ const carrier = k => {
 	else if(k === "float32" || k === "float64")
 	{ c = k === "float32" ? "float" : "double"; box = v => (k === "float32" ? "lean_box_float32" : "lean_box_float") + "(" + v + ")"; }
 	else if(!["unit", "nat", "int", "string", "bytes"].includes(k)) throw new TypeError("Unsupported CLR copied member site " + k);
-	return { c, box, tag: "DN_" + k.toUpperCase() };
+	return { c, box, tag: "DN_" + k.toUpperCase(), unbox: v => box(v).replace(/^lean_box/u, "lean_unbox") };
+};
+/**
+ * Resolve a compiler-reconciled host site to the exact Lean C carrier.
+ *
+ * @param types - The declared CLR host kinds.
+ * @param ref - A concrete binding type reference.
+ */
+export const dotnetHostCarrier = (types, ref) => {
+	const index = ref?.kind === "named" ? types.findIndex(t => t.id === ref.id) : -1;
+	if(index >= 0) return { c: "lean_object *", index, unbox: v => v };
+	if(ref?.kind !== "primitive") throw new TypeError("Unknown CLR host export type");
+	return carrier(ref.name);
 };
 /**
  * Bind each managed callback slot to the source contract's exact Lean external symbol.

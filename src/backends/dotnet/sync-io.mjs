@@ -16,12 +16,24 @@ const primitive = { unit: "Unit", bool: "bool", char: "global::System.Text.Rune"
 	, usize: "nuint", isize: "nint", float32: "float", float64: "double"
 	, bytes: "byte[]", string: "string", nat: "global::System.Numerics.BigInteger"
 	, int: "global::System.Numerics.BigInteger" };
+/**
+ * Render the public C# type of a copied scalar or nested result.
+ *
+ * @param t - A primitive name or an ordered success/error pair.
+ */
 const type = t => {
 	if(Array.isArray(t) && t.length === 2) return `Result<${type(t[0])}, ${type(t[1])}>`;
 	if(typeof t !== "string" || !Object.hasOwn(primitive, t)) throw new TypeError("Unsupported .NET synchronous value");
 	return primitive[t];
 };
 const pascal = s => s.split(/[^A-Za-z0-9]+/u).filter(Boolean).map(p => p[0].toUpperCase() + p.slice(1)).join("");
+/**
+ * Emit code writing a C# argument into its private three-word slot.
+ *
+ * @param t - Copied primitive.
+ * @param v - Local C# expression.
+ * @param i - Argument index.
+ */
 const args = (t, v, i) => {
 	const slot = "input + " + 3 * i;
 	if(t === "bytes" || t === "string") return `frame.Copy(${v}, ${slot});`;
@@ -31,6 +43,12 @@ const args = (t, v, i) => {
 		, float64: `global::System.BitConverter.DoubleToUInt64Bits(${v})` };
 	return `input[${3 * i}] = ${from[t] ?? `unchecked((ulong)${v})`};`;
 };
+/**
+ * Emit the C# expression that copies an owned native result.
+ *
+ * @param t - Copied scalar or nested success/error pair.
+ * @param depth - Current discriminant index.
+ */
 const decode = (t, depth = 0) => {
 	if(Array.isArray(t)) return `(Tag(tags[${depth}]) ? ${type(t)}.Ok(${decode(t[0], depth + 1)}) : ${type(t)}.Err(${decode(t[1], depth + 1)}))`;
 	const base = { unit: "default(Unit)", bool: "TagWord(output[0])"
@@ -42,6 +60,9 @@ const decode = (t, depth = 0) => {
 		, nat: "Integer(output, true)", int: "Integer(output, false)" };
 	return base[t] ?? `unchecked((${type(t)})output[0])`;
 };
+
+// The host-import entry uses the identical private copy/layout ABI as plain IO.
+export { args as dotnetScalarArgument, decode as dotnetScalarResult, type as dotnetScalarType };
 
 const parameterTypes = (m, d, api, project) => {
 	const slots = new Map();
