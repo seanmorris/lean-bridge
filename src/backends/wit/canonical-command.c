@@ -113,7 +113,9 @@ int main(int argc,char **argv) {
         if (result.of.boolean) break;
         unsigned count=0;bool immediate=false;
         for (unsigned i=0;i<LB_METHODS;++i) {
-            if (!stream_methods[i]) continue;
+            /* A guest may have dropped a reader while its Lean worker is
+               still parked. Do not wait on that worker's fd to notice. */
+            if (!stream_methods[i]) { check(lb_cf_reap(&drivers[i])); continue; }
             for (unsigned j=0;j<LB_SLOTS;++j) if (rows[i][j].phase==LB_CF_STREAM)
                 immediate |= pump_stream(&drivers[i],j+1)==2;
         }

@@ -94,7 +94,9 @@ const producerWat=({wat,core,store,params,lower,locals,slots,rich})=>{
     (func $free (param $p i32)
       (call $drop (i32.load (local.get $p)))
       ${rich?"(call $release (i32.add (local.get $p) (i32.const 8)))":""}
-      (i64.store (local.get $p) (i64.const 0)))
+      (i64.store (local.get $p) (i64.const 0))
+      (global.set $waiting (i32.sub (global.get $waiting) (i32.const 1)))
+      (if (i32.eqz (global.get $waiting)) (then (call $drop-set (global.get $set)))))
     (func (export "start") ${lower} (result i32) (local $p i32) (local $pair i64)
       ${failure?`(call $begin ${locals} (i32.const 64))
       (if (i32.load8_u (i32.const 64)) (then (return (i32.const 64))))
@@ -103,6 +105,11 @@ const producerWat=({wat,core,store,params,lower,locals,slots,rich})=>{
       (local.set $pair (call $new))
       (i32.store (local.get $p) (i32.wrap_i64 (i64.shr_u (local.get $pair) (i64.const 32))))
       (i32.store offset=4 (local.get $p) (i32.const 1))
+      ;; An idle future writer receives DROPPED even before it has a value to
+      ;; write. Register before returning the reader, while Lean may be parked.
+      (if (i32.eqz (global.get $waiting)) (then (global.set $set (call $sets))))
+      (call $join (i32.load (local.get $p)) (global.get $set))
+      (global.set $waiting (i32.add (global.get $waiting) (i32.const 1)))
       ${failure?`(i32.store (i32.const ${dest}) (i32.wrap_i64 (local.get $pair))) (i32.const 64)`:"(i32.wrap_i64 (local.get $pair))"})
     ${rich?'(func (export "post") (param i32) (call $release (i32.const 12)))':""}
     (func (export "deliver") (param $key i32) ${rich?"":"(param $v "+core+")"} (result i32) (local $p i32) (local $rc i32)
@@ -114,9 +121,6 @@ const producerWat=({wat,core,store,params,lower,locals,slots,rich})=>{
       (local.set $rc (call $write (i32.load (local.get $p)) (i32.add (local.get $p) (i32.const ${payloadAt}))))
       (if (i32.eq (local.get $rc) (i32.const -1))
         (then
-          (if (i32.eqz (global.get $waiting)) (then (global.set $set (call $sets))))
-          (call $join (i32.load (local.get $p)) (global.get $set))
-          (global.set $waiting (i32.add (global.get $waiting) (i32.const 1)))
           (i32.store offset=4 (local.get $p) (i32.const 2))
           (return (i32.const 2))))
       (if (i32.gt_u (local.get $rc) (i32.const 1)) (then unreachable))
@@ -129,11 +133,12 @@ const producerWat=({wat,core,store,params,lower,locals,slots,rich})=>{
       (loop $find
         (local.set $key (i32.add (local.get $key) (i32.const 1)))
         (local.set $p (call $row (local.get $key)))
-        (br_if $find (i32.or (i32.ne (i32.load offset=4 (local.get $p)) (i32.const 2))
+        (br_if $find (i32.or (i32.eqz (i32.load offset=4 (local.get $p)))
           (i32.ne (i32.load (local.get $p)) (i32.load (i32.const 0))))))
+      ;; Only reader drop can acknowledge a writer that has issued no write.
+      (if (i32.and (i32.eq (i32.load offset=4 (local.get $p)) (i32.const 1))
+                   (i32.ne (i32.load (i32.const 4)) (i32.const 1))) (then unreachable))
       (call $free (local.get $p))
-      (global.set $waiting (i32.sub (global.get $waiting) (i32.const 1)))
-      (if (i32.eqz (global.get $waiting)) (then (call $drop-set (global.get $set))))
       (local.get $key)))
   (core instance $i (instantiate $m (with "" (instance (export "m" (memory $mem "m"))
     ${rich?'(export "peek" (func $peek)) (export "select" (func $mem "select")) (export "release" (func $mem "release"))':""}

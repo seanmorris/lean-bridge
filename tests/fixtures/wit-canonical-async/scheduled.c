@@ -147,17 +147,25 @@ int main(int argc, char **argv) {
         }
         ok(lb_cf_advance(&r.driver,0)); assert(r.rows[r.keys[n]-1].phase==LB_CF_FREE);
     }
-    assert(r.started == 6 && r.taken == 6 && r.released == 6);
+    assert(r.started == 6 && r.taken == 5 && r.released == 6 && r.closed == 1);
     for (unsigned i=0; i<LIMIT; ++i) assert(r.rows[i].phase==LB_CF_FREE);
     wasmtime_component_func_t park=port(&inst,ctx,"park");
     wasmtime_component_val_t last[]={{.kind=WASMTIME_COMPONENT_U32,.of.u32=1},{.kind=WASMTIME_COMPONENT_S64,.of.s64=42}};
     ok(wasmtime_component_func_call(&park,ctx,last,2,NULL,0));
-    assert(r.started==7 && r.released==6 && r.taken==6);
-    lb_cf_shutdown(&r.driver); lb_cf_shutdown(&r.driver); assert(r.closed==1 && !lb_cf_reserve(&r.driver));
+    /* Unlike hold() above, this worker cannot finish until we release the
+       Lean gate. Reader drop alone must reclaim its slot and close the owner. */
+    ok(wasmtime_component_func_call(&discard,ctx,last,1,NULL,0));
+    ok(lb_cf_advance(&r.driver,0)); ok(lb_cf_advance(&r.driver,0));
+    assert(r.started==7 && r.released==6 && r.taken==5 && r.closed==2);
+    assert(r.rows[r.keys[0]-1].phase==LB_CF_FREE);
     bool late=false; assert(P(release_call)(1,&late)==P(OK) && late);
+    ok(wasmtime_component_func_call(&park,ctx,last,2,NULL,0));
+    assert(r.started==8 && r.taken==5);
+    lb_cf_shutdown(&r.driver); lb_cf_shutdown(&r.driver); assert(r.closed==3 && !lb_cf_reserve(&r.driver));
+    late=false; assert(P(release_call)(1,&late)==P(OK) && late);
     wasmtime_component_linker_delete(link); wasmtime_store_delete(store);
     wasmtime_component_delete(component); wasm_engine_delete(engine);
     puts("canonical futures woke the app in order 2,1; exact sum 100000000000000002; both owners consumed");
-    puts("three pinned writers, reverse reads, early and late reader drop; all six operations reclaimed; shutdown closed the seventh pending owner once");
+    puts("reverse reads; reader drop closed a still-parked native owner before release; shutdown closed the eighth owner once");
     return 0;
 }

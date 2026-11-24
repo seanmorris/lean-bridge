@@ -78,7 +78,7 @@ test("two independently parked Lean tasks wake an async WIT consumer without a g
                 assert.ok(shared.includes(lib+" => "+join(lib==="libwasmtime.so"?sdk:stage,"lib",lib)),shared);
             const {stdout}=await exec(bin,[wasm],{cwd: stage,env,timeout: 25000});
             assert.match(stdout,/canonical futures woke the app in order 2,1; exact sum 100000000000000002; both owners consumed/u);
-            assert.match(stdout,/shutdown closed the seventh pending owner once/u);
+            assert.match(stdout,/reader drop closed a still-parked native owner before release; shutdown closed the eighth owner once/u);
             t.diagnostic(route+" "+a.sha256+": "+stdout.trim());
 }finally
 {await rm(stage,{recursive: true,force: true});}
