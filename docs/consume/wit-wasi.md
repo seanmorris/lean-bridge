@@ -286,6 +286,8 @@ A task input is a borrow. Its result, an iterator item, and a typed failure can 
 
 Once `start` succeeds, you can drop your Ticket even if the worker is still waiting. Lean keeps the object it needs. Cancelling the task stops delivery to the caller; it does not undo mutations or guarantee that the worker has stopped. Closing the session invalidates its borrowed readiness descriptors.
 
+If the shared runtime retires, every package returns `UNAVAILABLE` for new work, even from a session that was idle when the failure occurred. A callback already on the stack can return, but its reply will not reach the worker. Drop the callback, task and Ticket owners you hold, then close their sessions. If a store trapped, close that session directly. Opening another session in the same process does not restart the runtime.
+
 ### Packages containing resources
 
 An ownership-aware package ships named C records, variants, sequences and opaque

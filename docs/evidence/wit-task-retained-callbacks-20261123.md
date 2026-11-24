@@ -48,3 +48,18 @@ Both installed clients passed with Binding IR SHA-256 `df62612e03e8ce16b2cc765f0
 | --- | ---: | --- |
 | Ordinary Lean source | 59,214,645 | `04621b4e95558fa404dff926bf953461724032fdd9a49676ec797df85d714e3f` |
 | Independently reviewed Binding IR | 59,216,190 | `add7d2962fa89e9dffee4b7ed486786b7db632e6d4da1a1161cf931e625c6a97` |
+
+## Retire the shared runtime with two packages installed
+
+Run `npm run test:wit-task-retained-lease` with the same toolchains. Set `LEAN_BRIDGE_WIT_LEASE_PACKAGE_EVIDENCE` to a new directory to keep all four releases. The driver builds Depot and Peer independently for each route, verifies their receipts, removes the producer directories, relocates the installs, and compiles the consumer against both installed headers and libraries.
+
+The [cross-package client](../../tests/fixtures/wit-task-package/retained-leases.c) receives a Ticket from Depot, then drops its last external owner inside a Peer callback. Peer still updates that Ticket twice, from 11 to 42 to 73. A separate case revokes the callback after the first update and observes 42. A failed EIO factory returns a separately owned reference to the original Ticket.
+
+Before the fix, retiring the broker left an untouched session able to register a callback and a new session able to open. Both returned `OK`. The [regression client](../../tests/fixtures/wit-task-package/retained-lease-retire.c) retires the runtime before observation in one process and inside a running callback in another. On both routes the pending observation and both packages' attempts to open new sessions returned `UNAVAILABLE`. Retirement also refused a new registration, lease comparison and lease retention. Cleanup destroyed the callback context once and left zero live broker identities after one initialization.
+
+| Installed package | Archive SHA-256 | Package-set receipt SHA-256 |
+| --- | --- | --- |
+| ordinary peer | `43c27acec4331b7af1c0f9259fbc799792b8d0d3c3480ed6d56e398ac25d1783` | `9b3241e47316fccd2036dbbbf882672ffa5a1d420bb146a5b4258bb6dde5fc9a` |
+| ordinary depot | `32a1ec197b0b0fbeec72d22b38a20b026a5dce88c9836e19e249e6ff683c8dca` | `b407a4e150ffb97c916e3ed8b47c29cc813d434863e454438a8efb6b5b0275e2` |
+| reviewed peer | `adcfbd214b8d021738fc58709e054e0ef8af110ab94f885aed8328b7ec116cdf` | `133969aa8a0fdde8e141959193a312f7fc08e79d4d303dfc61c6c735b22284f6` |
+| reviewed depot | `df73ec336bfba2815f47465c8a3421be24397123388cc1f46804b341a9556d9f` | `752d11adf88b0deeac957c1d575e6df988483dfd932292f373722e080292c115` |

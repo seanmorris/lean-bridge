@@ -31,14 +31,27 @@ static void lb_fn_close_all(lb_session *);
 static void lb_fn_detach(lb_session *,size_t);
 #endif
 static bool lb_main(void) { return !lb_package_failure() && getpid()==(pid_t)syscall(SYS_gettid); }
-static LBP(status) lb_check(lb_session *s) {
+/* The process/fork guard is not a health check. Cold permits the first start;
+ * a retired broker cannot admit work even on a previously untouched store. */
+static bool lb_runtime_active(uint64_t *domain) {
+    lean_bridge_native_snapshot snap={0}; lean_bridge_native_snapshot_read(&snap);
+    if (domain) *domain=snap.identity_domain_id;
+    return snap.abi_version==LEAN_BRIDGE_NATIVE_RUNTIME_ABI_VERSION && snap.identity_domain_id &&
+           (snap.runtime_state==LB_RUNTIME_COLD || snap.runtime_state==LB_RUNTIME_READY);
+}
+static LBP(status) lb_store(lb_session *s) {
     if (!lb_main()) return LBP(UNAVAILABLE);
     if (!s || !lb_task_owner(&s->tasks,s->tasks.ctx)) return LBP(INVALID);
 #if LB_CALLBACKS
     if (s->close_pending) return LBP(UNAVAILABLE);
     if (s->finalizing) return LBP(BUSY);
 #endif
-    return s->failed ? LBP(UNAVAILABLE) : LBP(OK);
+    return LBP(OK);
+}
+static LBP(status) lb_check(lb_session *s) {
+    LBP(status) rc=lb_store(s);
+    if (rc!=LBP(OK)) return rc;
+    return !s->failed && lb_runtime_active(NULL) ? LBP(OK) : LBP(UNAVAILABLE);
 }
 static void lb_dispose(lb_session *s) {
 #if LB_CALLBACKS
@@ -54,7 +67,7 @@ static void lb_dispose(lb_session *s) {
     free(s);
 }
 LBP(status) LBP(open)(lb_session **out) {
-    if (!lb_main() || !lean_bridge_native_process_valid()) return LBP(UNAVAILABLE);
+    if (!lb_main() || !lb_runtime_active(NULL)) return LBP(UNAVAILABLE);
     if (!out || *out) return LBP(INVALID);
     lb_session *s=calloc(1,sizeof *s); if (!s) return LBP(UNAVAILABLE);
     wasm_config_t *cfg=wasm_config_new(); if (!cfg) { free(s); return LBP(UNAVAILABLE); }
@@ -68,10 +81,10 @@ LBP(status) LBP(open)(lb_session **out) {
     }
     if (!err) err=wasmtime_component_linker_instantiate(s->linker,s->tasks.ctx,s->component,&s->instance);
     if (err) { wasmtime_error_delete(err); lb_dispose(s); return LBP(UNAVAILABLE); }
+    uint64_t domain=0;
+    if (!lb_runtime_active(&domain) || !s->instance.store_id) { lb_dispose(s); return LBP(UNAVAILABLE); }
 #if LB_CALLBACKS
-    lean_bridge_native_snapshot snap={0}; lean_bridge_native_snapshot_read(&snap);
-    s->fn_domain=snap.identity_domain_id;
-    if (!s->fn_domain || !s->instance.store_id) { lb_dispose(s); return LBP(UNAVAILABLE); }
+    s->fn_domain=domain;
 #endif
     *out=s; return LBP(OK);
 }
@@ -142,11 +155,15 @@ static LBP(status) lb_start(lb_session *s,size_t i,const lb_val *args,uint64_t *
     if (!s->key) return lb_fault(s,false);
     out[0]=s->key; out[1]=t->rep; return LBP(OK);
 }
-static LBP(status) lb_handle(lb_session *s,size_t i,const uint64_t *h,lb_val **v) {
-    LBP(status) rc=lb_check(s); if (rc!=LBP(OK)) return rc;
+static LBP(status) lb_owned(lb_session *s,size_t i,const uint64_t *h,lb_val **v,bool release) {
+    LBP(status) rc=release?lb_store(s):lb_check(s); if (rc!=LBP(OK)) return rc;
+    if (s->failed) return LBP(UNAVAILABLE); /* A trapped store needs full teardown. */
     if (!h || !s->key || h[0]!=s->key || h[1]>UINT32_MAX) return LBP(STALE);
     lb_task_slot *t=lb_task_find(&s->tasks,i,(uint32_t)h[1]); if (!t) return LBP(STALE);
     *v=&s->owners[t-s->tasks.slots]; return LBP(OK);
+}
+static LBP(status) lb_handle(lb_session *s,size_t i,const uint64_t *h,lb_val **v) {
+    return lb_owned(s,i,h,v,false);
 }
 static LBP(status) lb_cancel(lb_session *s,size_t i,const uint64_t *h,bool *accepted) {
     if (!accepted) return LBP(INVALID);
@@ -174,7 +191,7 @@ static inline LBP(status) lb_request_cursor(lb_session *s,size_t i,const uint64_
     wasmtime_component_val_delete(&result); return rc;
 }
 static LBP(status) lb_drop_owner(lb_session *s,size_t i,uint64_t *h) {
-    lb_val *owner=NULL; LBP(status) rc=lb_handle(s,i,h,&owner); if (rc!=LBP(OK)) return rc;
+    lb_val *owner=NULL; LBP(status) rc=lb_owned(s,i,h,&owner,true); if (rc!=LBP(OK)) return rc;
     wasmtime_error_t *err=wasmtime_component_resource_any_drop(s->tasks.ctx,owner->of.resource);
     if (err) { wasmtime_error_delete(err); return lb_fault(s,true); }
 #if LB_CALLBACKS
@@ -239,6 +256,7 @@ static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait
             struct pollfd p={gate,POLLIN,0}; int n;
             do { n=poll(&p,1,-1); } while (n<0 && errno==EINTR);
             if (n!=1 || !(p.revents&POLLIN)) return lb_fault(s,false);
+            if (!lb_runtime_active(NULL)) return LBP(UNAVAILABLE);
             continue;
         }
         *fd=gate; *state=next; return LBP(OK);

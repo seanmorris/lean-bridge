@@ -17,9 +17,9 @@ const retained=process.env.LEAN_BRIDGE_WIT_RETAINED_LEASE_TEST==="1";
 const modules=parked?["Depot"]:retained?["Peer","Depot"]:["Depot","Peer"], names=modules.map(m=>m.toLowerCase());
 test(parked?"installed WIT tasks anchor borrowed objects through cancellation and late completion"
 	:retained?"installed WIT tasks keep foreign Lean borrows alive across retained callbacks"
-	:"installed WIT sessions exchange a nominal lease without exchanging stores",{
+		:"installed WIT sessions exchange a nominal lease without exchanging stores",{
 	skip: !parked && !retained && process.env.LEAN_BRIDGE_WIT_LEASE_PACKAGE_TEST!=="1"
-	},async t=>{
+		},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"wit-lease-install-")); t.after(()=>rm(root,{recursive: true,force: true}));
 	const env={...process.env,npm_config_cache: join(root,"cache")};delete env.NODE_TEST_CONTEXT;
 	const run=async (command,args,cwd=root,environment=env)=>{
@@ -85,6 +85,17 @@ test(parked?"installed WIT tasks anchor borrowed objects through cancellation an
 		const actual=await run(join(phase,"consumer-program"),[],phase,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
 		assert.equal(actual.stderr,"");assert.match(actual.stdout,parked?/Installed WIT leases: .* passed/u:/Independent WIT packages: .* passed/u);
 		t.diagnostic(route+": "+actual.stdout.trim());
+		if(retained)
+{
+			const source=resolve("tests/fixtures/wit-task-package/retained-lease-retire.c");
+			await run("cc",["-std=c11","-Wall","-Wextra","-Werror","-I.",source,...flags,"-ldl","-o","retirement"],phase,clean);
+			for(const args of [[],["--inside"]])
+{
+				const report=await run(join(phase,"retirement"),args,phase,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
+				assert.equal(report.stderr,""); assert.equal(report.stdout.trim(),"Retired WIT runtime: both packages refuse work and release existing owners");
+				t.diagnostic(route+" "+(args.length?"inside":"pending")+": "+report.stdout.trim());
+}
+}
 		await rm(phase,{recursive: true});
 	}
 	if(parked) return;

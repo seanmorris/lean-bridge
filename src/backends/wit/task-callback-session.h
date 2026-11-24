@@ -35,7 +35,7 @@ static lb_fn *lb_fn_find(lb_session *s,size_t sig,const uint64_t *h) {
     return NULL;
 }
 static LBP(status) lb_fn_drop(lb_session *s,size_t sig,uint64_t *h,bool revoke) {
-    LBP(status) rc=lb_check(s); if (rc!=LBP(OK)) return rc;
+    LBP(status) rc=lb_store(s); if (rc!=LBP(OK)) return rc;
     if (!h) return LBP(INVALID);
     lb_fn *fn=lb_fn_find(s,sig,h); if (!fn) return LBP(STALE);
     fn->external=false; fn->revoked=revoke; h[0]=h[1]=h[2]=0; lb_fn_put(s,fn); return LBP(OK);
@@ -77,6 +77,13 @@ static LBP(status) lb_fn_yield(lb_session *s,size_t i,lb_val *owner,int *gate) {
     if (!t->waiting && LB_TASK_WAIT(terminal,callback,t->gate)!=0) return lb_fault(s,false);
     t->waiting=true; *gate=t->gate[0]; return LBP(OK);
 }
+static LBP(status) lb_fn_abandon(lb_session *s,lb_val *request) {
+    /* This typed adapter, unlike a raw WIT caller, owns the pending request.
+       Drop it without delivering a normal reply into a retired runtime. */
+    wasmtime_error_t *err=wasmtime_component_resource_any_drop(s->tasks.ctx,request->of.resource);
+    if (err) { wasmtime_error_delete(err); return lb_fault(s,true); }
+    return LBP(UNAVAILABLE);
+}
 static LBP(status) lb_fn_dispatch(lb_session *s,lb_val *owner,uint32_t rep,size_t site,lb_val *request) {
     if (!request || request->kind!=WASMTIME_COMPONENT_RESOURCE || !wasmtime_component_resource_any_owned(request->of.resource))
         return lb_fault(s,true);
@@ -86,6 +93,7 @@ static LBP(status) lb_fn_dispatch(lb_session *s,lb_val *owner,uint32_t rep,size_
     lb_fn *fn=hold->fn; const lb_cb_method *m=&lb_cb_methods[site]; bool failed=false;
     lb_val arg={0},answer={0}; LBP(status) rc=lb_invoke(s,m->read,request,1,&arg);
     if (rc!=LBP(OK)) return rc;
+    if (!lb_runtime_active(NULL)) { wasmtime_component_val_delete(&arg); return lb_fn_abandon(s,request); }
     lb_fn_frame current={rep,s->frame}; s->frame=&current; ++fn->refs;
     if (fn->revoked) { failed=true; rc=lb_fn_message((LBP(text)){"retained callback is closed",26},&answer); }
     else rc=fn->invoke(fn->ctx,&arg,&failed,&answer);
@@ -94,6 +102,7 @@ static LBP(status) lb_fn_dispatch(lb_session *s,lb_val *owner,uint32_t rep,size_
         wasmtime_component_val_delete(&answer); if (!s->frame) lb_dispose(s); return LBP(UNAVAILABLE);
     }
     if (s->failed) { wasmtime_component_val_delete(&answer); return LBP(UNAVAILABLE); }
+    if (!lb_runtime_active(NULL)) { wasmtime_component_val_delete(&answer); return lb_fn_abandon(s,request); }
     bool invalid=rc!=LBP(OK);
     if (invalid) {
         wasmtime_component_val_delete(&answer); answer=(lb_val){0}; failed=true;

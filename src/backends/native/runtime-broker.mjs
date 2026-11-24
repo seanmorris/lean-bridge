@@ -3,6 +3,8 @@
  *
  * @file
  */
+/** Values of runtime_state in ABI v1 snapshots, including before the first Lean call. */
+export const nativeRuntimeState=Object.freeze({cold: 0,initializing: 1,ready: 2,failed: 3,shutDown: 4});
 const linuxPollDeclarations = `
 /* Linux task dispatchers borrow a level-triggered descriptor. Release one
    registration per successful watch; do not read or close the descriptor. */
@@ -81,11 +83,11 @@ extern lean_object *initialize_Init(uint8_t builtin);
 extern void lean_initialize_runtime_module(void);
 
 enum lean_bridge_runtime_state {
-  LEAN_BRIDGE_RUNTIME_COLD = 0,
-  LEAN_BRIDGE_RUNTIME_INITIALIZING = 1,
-  LEAN_BRIDGE_RUNTIME_READY = 2,
-  LEAN_BRIDGE_RUNTIME_FAILED = 3,
-  LEAN_BRIDGE_RUNTIME_SHUT_DOWN = 4
+  LEAN_BRIDGE_RUNTIME_COLD = ${nativeRuntimeState.cold},
+  LEAN_BRIDGE_RUNTIME_INITIALIZING = ${nativeRuntimeState.initializing},
+  LEAN_BRIDGE_RUNTIME_READY = ${nativeRuntimeState.ready},
+  LEAN_BRIDGE_RUNTIME_FAILED = ${nativeRuntimeState.failed},
+  LEAN_BRIDGE_RUNTIME_SHUT_DOWN = ${nativeRuntimeState.shutDown}
 };
 
 enum {

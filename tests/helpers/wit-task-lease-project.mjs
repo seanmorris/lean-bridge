@@ -29,7 +29,8 @@ export const writeWitLeaseProject=async (project,module,review=null,changed=fals
 		, taskExports: depot?["Depot.checked","Depot.issue","Depot.tag","Depot.view"]:["Peer.bump"]
 		, ...depot?{asyncIterators: [{open: "Depot.stream",next: "Depot.next",close: "Depot.close"}]}:{}
 		, targets: {"wit-wasi": settings}};
-	if(retained && !depot) {
+	if(retained && !depot)
+	{
 		cfg.taskExports.push("Peer.drive","Peer.inspect");
 		cfg.taskIOErrors=["Peer.drive","Peer.inspect"];
 	}

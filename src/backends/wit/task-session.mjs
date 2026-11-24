@@ -1,5 +1,6 @@
 /** @file Render the typed, relocatable Wasmtime task consumer API. */
 import { readFile } from "node:fs/promises";
+import { nativeRuntimeState } from "../native/runtime-broker.mjs";
 import { renderWitTaskImports } from "./task-host.mjs";
 import { callbackBindings,retainedObservations } from "./task-callback-bindings.mjs";
 
@@ -68,13 +69,13 @@ const bindings = model=>{
 		const {raw,type,hash,kind,slug}=r, m="lb_heap_methods["+kind+"]";
 		defs.push("#ifndef LB_LEASE_TYPE_"+hash,"#define LB_LEASE_TYPE_"+hash,
 			"typedef struct "+raw+" { uint64_t _private[2]; } "+raw+";","#endif","typedef "+raw+" "+type+";");
-		add("retain_lease_"+slug,[type+" value",type+" *out"],`    if (!lb_main()) return ${p}UNAVAILABLE;
+		add("retain_lease_"+slug,[type+" value",type+" *out"],`    if (!lb_main() || !lb_runtime_active(NULL)) return ${p}UNAVAILABLE;
     if (!out || out->_private[0] || out->_private[1]) return ${p}INVALID;
     return lb_lease_status(${m}.clone(value._private,out->_private));`);
 		add("drop_lease_"+slug,[type+" *owner"],`    if (!lb_main()) return ${p}UNAVAILABLE;
     if (!owner) return ${p}INVALID;
     return lb_lease_status(${m}.release(owner->_private));`);
-		add("same_lease_"+slug,[type+" left",type+" right","bool *equal"],`    if (!lb_main()) return ${p}UNAVAILABLE;
+		add("same_lease_"+slug,[type+" left",type+" right","bool *equal"],`    if (!lb_main() || !lb_runtime_active(NULL)) return ${p}UNAVAILABLE;
     if (!equal) return ${p}INVALID;
     uint8_t v=0; ${p}status rc=lb_lease_status(${m}.equal(left._private,right._private,&v));
     if (rc==${p}OK) *equal=(v!=0);
@@ -191,6 +192,7 @@ export const generateWitTaskSession = async (model,component)=>{
 			'#include "'+prefix+'_wasmtime.h"',await renderWitTaskImports(model)
 			, "#define LBP(x) "+p+"##x"
 			, "#define LB_SESSION_KIND "+JSON.stringify(model.prefix+".wit-session")
+			, "#define LB_RUNTIME_COLD "+nativeRuntimeState.cold+"\n#define LB_RUNTIME_READY "+nativeRuntimeState.ready
 			, "static const uint8_t lb_task_component[]={"+Array.from(component).join(",")+"};"
 			, session
 			, ...heapSession?[
