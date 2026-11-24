@@ -1,6 +1,7 @@
 /** @file Render the typed, relocatable Wasmtime task consumer API. */
 import { readFile } from "node:fs/promises";
 import { renderWitTaskImports } from "./task-host.mjs";
+import { callbackBindings,retainedObservations } from "./task-callback-bindings.mjs";
 
 const kinds = {
 	bool: ["bool","BOOL","boolean"],char: ["uint32_t","CHAR","character"]
@@ -58,7 +59,7 @@ const bindings = model=>{
 	};
 	defs.push("typedef struct "+p+"session "+p+"session;",
 		"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","TRAPPED","START_ERROR","BUSY","FINISHED"].map(n=>p+n).join(", ")+" } "+p+"status;",
-		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END"].map(n=>p+n).join(", ")+" } "+p+"state;",
+		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END",...model.methods.some(m=>m.callbacks?.length)?["FACTORY_FAILED","FACTORY_CALLBACK_FAILED","WORKER_CALLBACK_FAILED"]:[]].map(n=>p+n).join(", ")+" } "+p+"state;",
 		"typedef struct { const char *data; size_t size; } "+p+"text;",
 		"typedef struct { char *data; size_t size; } "+p+"string;");
 	add("open",[p+"session **out"]); add("close",[p+"session **owner"]);
@@ -79,25 +80,30 @@ const bindings = model=>{
     if (rc==${p}OK) *equal=(v!=0);
     return rc;`);
 	}
+	const sites=callbackBindings({model,p,kinds,defs,code,add});
 	for(const [i,m] of model.wire.methods.entries())
 	{
 		const stream=m.delivery==="async-iterator", h=p+(stream?"cursor_":"task_")+m.name,s=p+"session *s",own=h+" task",value=make(m.result,m.name+"_value");
 		const error=m.error && make(m.error,m.name+"_start_error"), terminal=m.terminal && make(m.terminal,m.name+"_failure");
 		const result=value.type+" *value", state=p+"state *state";
 		defs.push("typedef struct { uint64_t _private[2]; } "+h+";");
-		const args=m.args.map((a,k)=>(heap.get(a)?.type??kinds[a]?.[0]??p+"text")+" v"+k);
+		const calls=(model.methods[i].callbacks??[]).map(r=>sites.get(r.resource)),retained=calls.length>0;
+		const args=m.args.map((a,k)=>(a==="callback"?calls.find(r=>r.slot===k).name:heap.get(a)?.type??kinds[a]?.[0]??p+"text")+" v"+k);
 		const borrowed=m.args.some(a=>heap.has(a));
-		const init=m.args.map((a,k)=>heap.has(a)?"{0}":a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
-			: "{.kind=WASMTIME_COMPONENT_"+kinds[a][1]+",.of."+kinds[a][2]+"=v"+k+"}");
-		const input=borrowed?"args,leases":args.length?"args":"NULL";
-		const call=(borrowed?"lb_start_leases":"lb_start")+"(s,"+i+","+input+",out?out->_private:NULL,"+(error?"&v":"NULL")+")";
-		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error?[error.type+" *failure"]:[]],(args.length?"    "+(borrowed?"":"const ")+"lb_val args[]={"+init.join(",")+"};\n":"")
-			+(borrowed?"    const uint64_t *leases[]={"+m.args.map((a,k)=>heap.has(a)?"v"+k+"._private":"NULL").join(",")+"};\n":"")
-			+(error?`    if (${occupied(error,"failure")}) return ${p}INVALID;
+		const init=m.args.map((a,k)=>a==="callback"?null:heap.has(a)?"{0}":a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
+			: "{.kind=WASMTIME_COMPONENT_"+kinds[a][1]+",.of."+kinds[a][2]+"=v"+k+"}").filter(Boolean);
+		const input=borrowed?"args,leases":init.length?"args":"NULL";
+		const call=(borrowed?"lb_start_leases":"lb_start")+"(s,"+i+","+input+",out?out->_private:NULL,"+(error && !retained?"&v":"NULL")+")";
+		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error && !retained?[error.type+" *failure"]:[]],(init.length?"    "+(borrowed?"":"const ")+"lb_val args[]={"+init.join(",")+"};\n":"")
+			+(borrowed?"    const uint64_t *leases[]={"+m.args.flatMap((a,k)=>a==="callback"?[]:[heap.has(a)?"v"+k+"._private":"NULL"]).join(",")+"};\n":"")
+			+(retained?`    lb_fn_hold *holds=NULL; const lb_fn_arg callbacks[]={${calls.map(r=>"{"+r.site+","+r.index+",v"+r.slot+"._private}").join(",")}};
+    ${p}status rc=lb_fn_prepare(s,callbacks,${calls.length},&holds); if (rc!=${p}OK) return rc;
+    rc=${call}; return lb_fn_bind(s,${i},out?out->_private:NULL,holds,rc);`:error?`    if (${occupied(error,"failure")}) return ${p}INVALID;
     lb_val v={0}; ${p}status rc=${call};
     if (rc==${p}START_ERROR) { ${receive(error,"failure")} }
     wasmtime_component_val_delete(&v); return rc;`:"    return "+call+";"));
-		for(const wait of [false,true])
+		if(retained) retainedObservations({p,m,s,own,i,value,error,terminal,make,defs,add,occupied,receive});
+		else for(const wait of [false,true])
 		{
 			add((wait?"await_":"poll_")+m.name,[s,own,state,result,...terminal?[terminal.type+" *failure"]:[],...wait?[]:["int *fd"]],`    if (!state || ${occupied(value,"value")}${wait?"":" || !fd"}${terminal?" || "+occupied(terminal,"failure"):""}) return ${p}INVALID;
     lb_val v={0}; ${p}state next; int gate=-1;
@@ -146,7 +152,13 @@ extern "C" {
  * borrowed value directly to another package built for the same declaration
  * and runtime. Drop each owner exactly once, even after closing its session;
  * copying the struct does not retain it. Use retain_lease for another owner. */`:""}
-${defs.join("\n")}
+${sites.size?`/* A callback-bearing start returns an owner before the factory runs. Poll runs
+ * at most one host invocation per call; await dispatches until delivery. Drop
+ * your registration after start, or revoke to refuse future invocations. The
+ * context destructor runs after the last task and active invocation release it.
+ * Observe FACTORY_FAILED, FAILED or the declared *_CALLBACK_FAILED state;
+ * inspect its matching errors field and dispose the errors before reuse. */
+`:""}${defs.join("\n")}
 static inline void ${p}string_dispose(${p}string *s) { if (s) { free(s->data); s->data=NULL; s->size=0; } }
 #ifdef __cplusplus
 }
@@ -171,7 +183,8 @@ export const renderWitTaskHeader = model=>bindings(model).header;
  */
 export const generateWitTaskSession = async (model,component)=>{
 	const {header,code,symbols,p}=bindings(model), prefix=model.name.replaceAll("-","_");
-	const session=await readFile(new URL("task-session.h",import.meta.url),"utf8");
+	const callback=model.methods.some(m=>m.callbacks?.length)?await readFile(new URL("task-callback-session.h",import.meta.url),"utf8"):"";
+	const session=(await readFile(new URL("task-session.h",import.meta.url),"utf8")).replace("/* LB_CALLER_DISPATCH */",()=>callback);
 	const heapSession=model.heap?.length?await readFile(new URL("task-lease-session.h",import.meta.url),"utf8"):null;
 	return {prefix,header,symbols
 		, source: [

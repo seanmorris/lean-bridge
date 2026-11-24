@@ -13,9 +13,10 @@ import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 
 const tasks=process.env.LEAN_BRIDGE_WIT_TASK_PACKAGE_TEST==="1", cursors=process.env.LEAN_BRIDGE_WIT_CURSOR_PACKAGE_TEST==="1";
+const callbacks=process.env.LEAN_BRIDGE_WIT_CALLBACK_PACKAGE_TEST==="1";
 const protocols=[{open: "Meter.feed",next: "Meter.advance",close: "Meter.finish"},{open: "Meter.gauge",next: "Meter.sample",close: "Meter.closeGauge"}];
 if(tasks && cursors) protocols.push({open: "Meter.outcome",next: "Meter.sample",close: "Meter.closeGauge"});
-test("installed CLI ships typed Wasmtime "+[tasks && "tasks",cursors && "cursors"].filter(Boolean).join(" and ")+" to ordinary and reviewed consumers", {skip: !tasks && !cursors},async t=>{
+test("installed CLI ships typed Wasmtime "+[tasks && "tasks",cursors && "cursors",callbacks && "retained callbacks"].filter(Boolean).join(" and ")+" to ordinary and reviewed consumers", {skip: !tasks && !cursors && !callbacks},async t=>{
 	const env={...process.env}; delete env.NODE_TEST_CONTEXT;
 	const root=await mkdtemp(join(tmpdir(),"wit-tasks-install-"));t.after(()=>rm(root,{recursive: true,force: true}));
 	env.npm_config_cache=join(root,"npm-cache");
@@ -69,6 +70,26 @@ test("installed CLI ships typed Wasmtime "+[tasks && "tasks",cursors && "cursors
 				const result=await run(join(cwd,"probe"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
 				assert.equal(result.stdout.trim(),message); assert.equal(result.stderr,""); t.diagnostic(message);
 			};
+			if(callbacks)
+{
+				assert.equal(proof.selection.witTaskCallbacks,true);
+				const hidden=join(root,"parked-inputs"); await mkdir(hidden);
+				await rename(source,join(hidden,"project")); await rename(handoff,join(out,"parked-release"));
+				try
+{
+					await cp(join(dest,"lib/libmeter_wasmtime.so"),join(cwd,"other-host.so"));
+					await replay("retained-consumer","installed Wasmtime retained callbacks: passed",["-DTEST_LEDGER","-I.","-ldl","-pthread"]);
+					const guide=await readFile(resolve("docs/consume/wit-wasi.md"),"utf8");
+					const snippet=guide.split("### Give a task a host callback\n")[1].split("\n```c\n")[1].split("\n```")[0];
+					await writeFile(join(cwd,"guide.c"),snippet);
+					await run("cc",["-std=c11","-Wall","-Wextra","-Werror","guide.c",...flags,"-o","guide"],cwd,clean);
+					await run(join(cwd,"guide"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
+}
+				finally
+{
+					await rename(join(out,"parked-release"),handoff); await rename(join(hidden,"project"),source); await rm(hidden,{recursive: true});
+}
+}
 			if(tasks)
 {
 				await replay("consumer","installed Wasmtime task consumer: passed",["-DALL_SCALARS","-pthread"]);
@@ -109,7 +130,12 @@ int main(void) {
 	const mod=join(source,"Meter.lean"),config=join(source,"lean-bridge.exports.json"),cfg=JSON.parse(await readFile(config));
 	const fixture=f=>readFile(resolve("tests/fixtures/wit-task-package/"+f+".lean"),"utf8");
 	let lean=await readFile(mod,"utf8");
-	if(tasks)
+	if(callbacks)
+{
+		assert.ok(!tasks && !cursors);
+		lean=await fixture("retained-phase")+"\n"+await fixture("retained-chain");
+		cfg.exports=["Meter.through","Meter.chain","Meter.routed"]; cfg.taskExports=[...cfg.exports]; cfg.taskIOErrors=[...cfg.exports];
+} else if(tasks)
 {
 		const extra=(await Promise.all(["scalars","effects"].map(fixture))).join("\n");
 		cfg.taskIOErrors=["Meter.phase"]; lean=lean.replace("prelude\n","prelude\nimport Init.Data.Float32\n")+"\n"+extra;
@@ -148,6 +174,12 @@ int main(void) {
 		x=>{x.declarations.find(d=>d.source.declaration==="Meter.feed").result.type.arguments[0].name="int32";}
 		, x=>{x.errors.find(e=>e.id==="error:AsyncStep.Meter.feed").payload.name="uint8";}
 	];
+	if(callbacks)
+{
+		const other=structuredClone(ir);
+		other.types.find(x=>x.kind==="callback").source.extensions["lean-bridge.dev/callback-scheduler"]="owner-event-loop";
+		await writeFile(pub,canonicalJson(other)); await reject(/Reviewed API differs/u);
+}
 	for(const change of [...tasks?taskDrift:[],...cursors?cursorDrift:[]])
 {
 		const other=structuredClone(ir);change(other);

@@ -200,6 +200,43 @@ Zero-initialize outputs that can own strings. Dispose them with the generated fu
 
 The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
 
+### Give a task a host callback
+
+[Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean) takes a Lean function of type `UInt32 → IO UInt32`. In the installed C package, register a function with that signature and pass its handle to the task. The function runs on the store's main thread, during `poll` or `await`. The Lean worker never calls into your C context from a worker thread.
+
+```c
+#include <meter_wasmtime.h>
+
+static bool add_one(void *context, uint32_t argument, uint32_t *reply,
+                    meter_wit_text *error) {
+    (void)context; (void)error;
+    *reply = argument + 1;
+    return true;
+}
+
+int main(void) {
+    meter_wit_session *session = NULL;
+    meter_wit_callback_uint32_to_uint32 fn = {0};
+    meter_wit_task_through task = {0};
+    meter_wit_through_errors errors = {0};
+    meter_wit_state state;
+    uint32_t value = 0;
+    if (meter_wit_open(&session) != meter_wit_OK) return 1;
+    int ok = meter_wit_make_callback_uint32_to_uint32(session, add_one, NULL, NULL, &fn) == meter_wit_OK
+          && meter_wit_start_through(session, false, false, fn, &task) == meter_wit_OK
+          && meter_wit_drop_callback_uint32_to_uint32(session, &fn) == meter_wit_OK
+          && meter_wit_await_through(session, task, &state, &value, &errors) == meter_wit_OK
+          && state == meter_wit_READY && value == 12;
+    meter_wit_through_errors_dispose(&errors);
+    meter_wit_close(&session);
+    return ok ? 0 : 1;
+}
+```
+
+Dropping your registration after start is safe: the task holds its own reference. To refuse **future invocations**, use `revoke_callback_…` instead. If you supply a context destructor, it runs after the last reference and after any active invocation returns. Registrations belong to one session. A callback may drive a different task on that session; waiting on its own task returns `BUSY`.
+
+To reject a call, set the error byte span and return `false`. The host copies text replies and errors before releasing the callback context; an input span can be returned directly. For a callback-bearing task, start returns the task before running the Lean factory. Observe `FACTORY_FAILED` for a Lean factory error, `FAILED` for a declared worker failure, or `FACTORY_CALLBACK_FAILED` / `WORKER_CALLBACK_FAILED` for a host rejection. A returned Lean `Except.error` is still a `READY` value. Inspect the state, not the message.
+
 ### Pull an asynchronous sequence
 
 The [Meter example](../../tests/fixtures/wit-task-package/cursors.lean) exposes a feed that produces one item per request. Pass an open main-thread session to this function. It prints each integer, skips items that carry a text error, and drops the cursor on exit.

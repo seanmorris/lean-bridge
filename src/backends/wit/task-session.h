@@ -3,6 +3,13 @@
 #include <poll.h>
 #include <errno.h>
 #include "lean_bridge_native_runtime.h"
+#if LB_CALLBACKS
+typedef LBP(status) (*lb_fn_invoke)(void *,const lb_val *,bool *,lb_val *);
+typedef struct { uint64_t id; size_t signature,refs; bool external,revoked; void *ctx; lb_fn_invoke invoke; void (*destroy)(void *); } lb_fn;
+typedef struct lb_fn_hold { size_t site; lb_fn *fn; struct lb_fn_hold *next; } lb_fn_hold;
+typedef struct lb_fn_frame { uint32_t rep; struct lb_fn_frame *outer; } lb_fn_frame;
+typedef struct { size_t site,signature; const uint64_t *handle; } lb_fn_arg;
+#endif
 struct LBP(session) {
     lb_tasks tasks;
     wasm_engine_t *engine;
@@ -13,15 +20,30 @@ struct LBP(session) {
     lb_val owners[LB_TASK_MAX];
     uint64_t key;
     bool failed;
+#if LB_CALLBACKS
+    lb_fn funcs[LB_TASK_MAX]; lb_fn_hold *holds[LB_TASK_MAX]; uint64_t fn_generation,fn_domain;
+    lb_fn_frame *frame; bool close_pending,finalizing;
+#endif
 };
 typedef LBP(session) lb_session;
+#if LB_CALLBACKS
+static void lb_fn_close_all(lb_session *);
+static void lb_fn_detach(lb_session *,size_t);
+#endif
 static bool lb_main(void) { return !lb_package_failure() && getpid()==(pid_t)syscall(SYS_gettid); }
 static LBP(status) lb_check(lb_session *s) {
     if (!lb_main()) return LBP(UNAVAILABLE);
     if (!s || !lb_task_owner(&s->tasks,s->tasks.ctx)) return LBP(INVALID);
+#if LB_CALLBACKS
+    if (s->close_pending) return LBP(UNAVAILABLE);
+    if (s->finalizing) return LBP(BUSY);
+#endif
     return s->failed ? LBP(UNAVAILABLE) : LBP(OK);
 }
 static void lb_dispose(lb_session *s) {
+#if LB_CALLBACKS
+    s->close_pending=true; lb_fn_close_all(s);
+#endif
     if (s->tasks.ctx) (void)lb_tasks_shutdown(&s->tasks);
     for (size_t i=0;i<LB_TASK_MAX;i++) wasmtime_component_val_delete(&s->owners[i]);
     if (s->key) lean_bridge_native_identity_release(s->key,LB_SESSION_KIND,s);
@@ -46,12 +68,24 @@ LBP(status) LBP(open)(lb_session **out) {
     }
     if (!err) err=wasmtime_component_linker_instantiate(s->linker,s->tasks.ctx,s->component,&s->instance);
     if (err) { wasmtime_error_delete(err); lb_dispose(s); return LBP(UNAVAILABLE); }
+#if LB_CALLBACKS
+    lean_bridge_native_snapshot snap={0}; lean_bridge_native_snapshot_read(&snap);
+    s->fn_domain=snap.identity_domain_id;
+    if (!s->fn_domain || !s->instance.store_id) { lb_dispose(s); return LBP(UNAVAILABLE); }
+#endif
     *out=s; return LBP(OK);
 }
 LBP(status) LBP(close)(lb_session **owner) {
     if (!lb_main()) return LBP(UNAVAILABLE);
     if (!owner) return LBP(INVALID);
-    if (*owner) { lb_dispose(*owner); *owner=NULL; }
+    if (*owner) {
+        lb_session *s=*owner;
+#if LB_CALLBACKS
+        if (s->finalizing) return LBP(BUSY);
+        if (s->frame) { s->close_pending=true; *owner=NULL; return LBP(OK); }
+#endif
+        *owner=NULL; lb_dispose(s);
+    }
     return LBP(OK);
 }
 static LBP(status) lb_fault(lb_session *s,bool poison) {
@@ -121,6 +155,9 @@ static LBP(status) lb_cancel(lb_session *s,size_t i,const uint64_t *h,bool *acce
     rc=lb_invoke(s,lb_methods[i].names[2],owner,1,&result); if (rc!=LBP(OK)) return rc;
     bool valid=result.kind==WASMTIME_COMPONENT_BOOL;
     if (valid) *accepted=result.of.boolean;
+#if LB_CALLBACKS
+    if (valid && *accepted) lb_fn_detach(s,(size_t)(owner-s->owners));
+#endif
     wasmtime_component_val_delete(&result); return valid ? LBP(OK) : lb_fault(s,true);
 }
 static inline LBP(status) lb_request_cursor(lb_session *s,size_t i,const uint64_t *h) {
@@ -140,28 +177,61 @@ static LBP(status) lb_drop_owner(lb_session *s,size_t i,uint64_t *h) {
     lb_val *owner=NULL; LBP(status) rc=lb_handle(s,i,h,&owner); if (rc!=LBP(OK)) return rc;
     wasmtime_error_t *err=wasmtime_component_resource_any_drop(s->tasks.ctx,owner->of.resource);
     if (err) { wasmtime_error_delete(err); return lb_fault(s,true); }
+#if LB_CALLBACKS
+    lb_fn_detach(s,(size_t)(owner-s->owners));
+#endif
     wasmtime_component_val_delete(owner); *owner=(lb_val){0}; h[0]=h[1]=0; return LBP(OK);
 }
+/* LB_CALLER_DISPATCH */
 static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait,LBP(state) *state,int *fd,lb_val *payload) {
     if (!state || !fd) return LBP(INVALID);
     lb_val *owner=NULL; LBP(status) rc=lb_handle(s,i,h,&owner); if (rc!=LBP(OK)) return rc;
+#if LB_CALLBACKS
+    /* Waiting on the very callback being executed cannot make progress. */
+    for (lb_fn_frame *f=s->frame;f;f=f->outer) if (f->rep==h[1]) return LBP(BUSY);
+#endif
     for (;;) {
         lb_val result={0}; rc=lb_invoke(s,lb_methods[i].names[1],owner,1,&result);
         if (rc!=LBP(OK)) return rc;
         LBP(state) next; int gate=-1;
         if (result.kind!=WASMTIME_COMPONENT_VARIANT) goto malformed;
         wasm_name_t *label=&result.of.variant.discriminant;
+#if LB_CALLBACKS
+        size_t cb=0;
+        while (cb<LB_CALLBACKS && (lb_cb_methods[cb].owner!=i || !lb_name(label,lb_cb_methods[cb].state))) ++cb;
+        if (cb<LB_CALLBACKS) {
+            rc=lb_fn_dispatch(s,owner,(uint32_t)h[1],cb,result.of.variant.val);
+            wasmtime_component_val_delete(&result);
+            if (rc!=LBP(OK)) return rc;
+            /* The user may have dropped or cancelled this task during dispatch. */
+            rc=lb_handle(s,i,h,&owner); if (rc!=LBP(OK)) return rc;
+            if (!wait) {
+                rc=lb_fn_yield(s,i,owner,&gate); if (rc!=LBP(OK)) return rc;
+                if (gate>=0) { *state=LBP(PENDING); *fd=gate; return LBP(OK); }
+            }
+            continue;
+        }
+#endif
         bool cursor=lb_methods[i].request!=NULL;
         if (!cursor && lb_name(label,"ready")) { next=LBP(READY); }
         else if (cursor && lb_name(label,"idle")) { next=LBP(IDLE); }
         else if (cursor && lb_name(label,"end")) { next=LBP(END); }
         else if (cursor && lb_name(label,"item")) { next=LBP(ITEM); }
         else if (lb_methods[i].terminal && lb_name(label,"failed")) { next=LBP(FAILED); }
+#if LB_CALLBACKS
+        else if (lb_cb_ports[i].factory && lb_name(label,"factory-failed")) { next=LBP(FACTORY_FAILED); }
+        else if (lb_cb_ports[i].factory_host && lb_name(label,"factory-callback-failed")) { next=LBP(FACTORY_CALLBACK_FAILED); }
+        else if (lb_cb_ports[i].worker_host && lb_name(label,"worker-callback-failed")) { next=LBP(WORKER_CALLBACK_FAILED); }
+#endif
         else if (lb_name(label,"pending")) { next=LBP(PENDING); gate=s->tasks.pending_fd; if (gate<0) goto malformed; }
         else if (lb_name(label,"cancelled")) { next=LBP(CANCELLED); }
         else if (lb_name(label,"closed")) { next=LBP(CLOSED); }
         else goto malformed;
         bool has_value=next==LBP(READY) || next==LBP(ITEM) || next==LBP(FAILED);
+#if LB_CALLBACKS
+        has_value=has_value || next==LBP(FACTORY_FAILED) || next==LBP(FACTORY_CALLBACK_FAILED) || next==LBP(WORKER_CALLBACK_FAILED);
+        if (next!=LBP(PENDING) && lb_cb_ports[i].fd) lb_fn_detach(s,(size_t)(owner-s->owners));
+#endif
         if (has_value!=(result.of.variant.val!=NULL)) goto malformed;
         if (has_value) { *payload=*result.of.variant.val; *result.of.variant.val=(lb_val){0}; }
         wasmtime_component_val_delete(&result);

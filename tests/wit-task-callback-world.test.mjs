@@ -4,6 +4,7 @@ import test from "node:test";
 import { reconcileHostExports } from "../src/analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../src/analyze/native-host-effects.mjs";
 import { compileWitTaskResources } from "../src/backends/wit/task-model.mjs";
+import { renderWitTaskHeader } from "../src/backends/wit/task-session.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 
 const u32={kind: "primitive",name: "uint32"},str={kind: "primitive",name: "string"},cb={kind: "io-callback",argument: u32,reply: str};
@@ -25,6 +26,20 @@ const build=(host=selection)=>{
 	const {api}=reconcileHostExports({component,...evidence});
 	return compileWitTaskResources({api,evidence,bindingIrSha256: hashBindingIr(api),settings: {name: "jobs",version: "1.0.0"}});
 };
+
+test("the C consumer shares callable types but keeps each task and failure channel typed",()=>{
+	const header=renderWitTaskHeader(build()),fn="jobs_wit_callback_uint32_to_string";
+	assert.equal(header.split("jobs_wit_make_callback_uint32_to_string(").length,2);
+	assert.ok(header.includes("bool (*"+fn+"_fn)(void *context, uint32_t argument, jobs_wit_text *reply, jobs_wit_text *error)"));
+	for(const method of ["first","second"])
+{
+		const prefix="jobs_wit_",task=prefix+"task_"+method,failures=prefix+method+"_errors";
+		assert.ok(header.includes("jobs_wit_start_"+method+"(jobs_wit_session *s, "+fn+" v0, uint32_t v1, "+fn+" v2, "+task+" *out);"));
+		assert.ok(header.includes("jobs_wit_await_"+method+"(jobs_wit_session *s, "+task+" task, jobs_wit_state *state, jobs_wit_string *value, "+failures+" *errors);"));
+		assert.ok(header.includes("jobs_wit_string factory; jobs_wit_string worker; jobs_wit_string callback; } "+failures+";"));
+}
+	assert.doesNotMatch(header,/wasmtime_component_resource|wasmtime_context_t/u);
+});
 
 test("equal callback signatures at different sites get distinct, consumable request types",()=>{
 	const {wit,methods,wire}=build(),requests=methods.flatMap(m=>m.callbacks);

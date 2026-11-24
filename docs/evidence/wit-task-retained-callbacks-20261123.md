@@ -32,4 +32,19 @@ The ordinary and reviewed consumers each opened a second task in the same store 
 
 With all 256 store slots occupied, requesting a callback delivered a declared capacity error to the Lean factory. After the other tasks were dropped, the same store could open and settle a new request. The ordinary and reviewed store consumer executables had SHA-256 `badef1ca894949b5d54b73118c1f26b7ad1c44f0d4b68e3482436e5857b80fff` and `f63c6c48bd7ebb98d54877a519144ecaadd093d74aac9244ec051f09fdeec3bb` respectively.
 
-This gate uses the public WIT functions from an embedding program. The package builder still refuses the callback surface until the generated consumer API can drive it without manual dispatch. The [installed WIT lease checks](wit-task-resource-world-20261123.md#count-live-borrows-before-store-shutdown) cover mutable object ownership, not installed callbacks.
+This gate exercises the public WIT exports from an embedding program. The [installed WIT lease checks](wit-task-resource-world-20261123.md#count-live-borrows-before-store-shutdown) separately cover mutable object ownership.
+
+## Reproduce the installed callback API
+
+Run `npm run test:wit-task-callback-package` with the same producer tools. Set `LEAN_BRIDGE_WIT_TASK_RELEASE_EVIDENCE` to a new directory to keep both package-set receipts and archives. The harness installs the author CLI with npm offline, builds an ordinary package, and uses its public Binding IR as the independent input to a second build. It verifies each package-set receipt, extracts the archive, and relocates it before compiling a [C consumer](../../tests/fixtures/wit-task-package/retained-consumer.c) using only the release's pkg-config flags. Neither the source nor the handoff is at its original path during execution. The [documentation example](../consume/wit-wasi.md#give-a-task-a-host-callback) is compiled and run separately.
+
+- **Identity and lifetime.** Two parameters with the same signature call different C functions in the declared order. A task retains its registration after the caller drops it. Self-revocation lets the active invocation return and rejects the next one. Stale registrations, foreign stores, another loaded host image, and foreign threads cannot dispatch. Context destructors run once, off the invocation stack.
+- **Failure origin.** The client distinguishes factory IO, factory EIO carrying `3737844653`, worker IO, host rejection and a returned `Except.error`. A string callback echoes or rejects a UTF-8 span containing an embedded NUL. An invalid UTF-8 reply first returns an API error, then settles the worker with a declared callback failure.
+- **Scheduling and cleanup.** A callback drives another task on its store; observing the active task instead returns `BUSY`. Each nonblocking poll runs at most one callback, and a real readiness descriptor wakes the next poll. Cancellation, dropping the active task and closing its session from inside the callback all preserve the context until invocation returns. The ledger observer waits for outstanding native work to finish and requires zero remaining identities. The public consumer does not use the broker to schedule or settle callbacks.
+
+Both installed clients passed with Binding IR SHA-256 `df62612e03e8ce16b2cc765f07fb39b4165c66f831ebafd5f3aca563edf21efc`.
+
+| Verified archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary Lean source | 59,214,645 | `04621b4e95558fa404dff926bf953461724032fdd9a49676ec797df85d714e3f` |
+| Independently reviewed Binding IR | 59,216,190 | `add7d2962fa89e9dffee4b7ed486786b7db632e6d4da1a1161cf931e625c6a97` |

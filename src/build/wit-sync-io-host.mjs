@@ -27,8 +27,7 @@ export const linkWitHost = async options => {
 	const cc = env.CC ?? "cc", bindingIrSha256 = hashBindingIr(api);
 	const tasks=options.tasks===true;
 	const model = (tasks ? compileWitTaskResources : compileWitSyncIO)({api,evidence,bindingIrSha256,settings});
-	if(tasks && model.methods.some(m=>m.callbacks?.length))
-		throw new TypeError("A retained WIT callback requires the store-owner dispatch adapter before an installed package can be emitted");
+	const witCallbacks=tasks && model.methods.some(m=>m.callbacks?.length);
 	const save = (path,data)=>writeFile(join(app,path),data,{flag: "wx"});
 	if(!/^wasm-tools 1\.245\.1\b/u.test((await run(wasmTools,["--version"],app,env)).stdout)) throw new Error("WIT IO requires wasm-tools 1.245.1");
 	await save("world.wit",model.wit); await save("component.wat",model.wat);
@@ -44,13 +43,18 @@ export const linkWitHost = async options => {
 	if(ledger) await compileTaskResourceLedger({ledger,app,runtimeRoot,cc,run: (command,args,cwd)=>run(command,args,cwd,env)});
 	const config = { name: "wit-"+sha256(api.component.id)
 		, modules: evidence.selection.exportModules, entries
-		, ...ledger?{resources: api.types}:{}
+		, ...ledger?{resources: api.types.filter(type=>type.kind==="resource")}:{}
+		, ...witCallbacks?{witCallbacks}:{}
 		, synchronousIO: !tasks, witDelivery: tasks, integerMode: "words" };
 	const template = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks,resources: config.resources}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
+	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks,resources: config.resources,witCallbacks}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
 	const delivery = await nativeDeliveryHeader(false);
 	const integers = template.integerMode ? await readFile(new URL("../backends/c/task-integers.h",import.meta.url)) : null;
 	const notification=tasks && await readFile(new URL("../backends/native/task-notification.h",import.meta.url));
+	const callbackHeaders=witCallbacks?await Promise.all(["c/task-callback-port.h","native/task-callback-queue.h"].map(async path=>[
+		path.split("/")[1]
+		, await readFile(new URL("../backends/"+path,import.meta.url))
+	])):[];
 	const host = await (tasks ? generateWitTaskSession : generateWitSyncHost)(model,componentBytes), p = host.prefix;
 	const dependencies = ["liblean_bridge_native.so","libleanshared.so","libwasmtime.so"].map(name=>{
 		const id = (name==="libwasmtime.so"?wasmtimeFiles:manifest.files)["lib/"+name];
@@ -66,6 +70,7 @@ export const linkWitHost = async options => {
 	const identityInputs = { runtimeIdentity, bindingIrSha256, evidence, template
 		, delivery: sha256(delivery), integers: integers && sha256(integers)
 		, ...tasks ? {notification: sha256(notification)} : {}
+		, ...witCallbacks?{callbackHeaders: Object.fromEntries(callbackHeaders.map(([name,bytes])=>[name,sha256(bytes)]))}:{}
 		, wire: sha256(model.wire.source)
 		, host: sha256(guarded)
 		, header: sha256(host.header)
@@ -78,6 +83,7 @@ export const linkWitHost = async options => {
 	await save(gen.prefix+".h",gen.header); await save("adapter.c",gen.source);
 	await save("host-wire.c",model.wire.source); await save("task-delivery.h",delivery);
 	if(tasks) await save("task-notification.h",notification);
+	for(const [name,bytes] of callbackHeaders) await save(name,bytes);
 	if(integers) await save("task-integers.h",integers);
 	await save(p+"_wasmtime.h",host.header); await save("wit-host.c",guarded);
 	const exported = tasks ? [...host.symbols] : ["open","call","call_instance","link","close"].map(n=>p+"_wasmtime_"+n);

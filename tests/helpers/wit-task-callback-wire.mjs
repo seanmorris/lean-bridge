@@ -1,6 +1,6 @@
 /** @file Exercise the Wasmtime owner's private callback transport with compiler-checked Lean workers. */
 import assert from "node:assert/strict";
-import { access, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -18,7 +18,6 @@ import { nativeDeliveryHeader } from "../../src/build/jvm-io-owner.mjs";
 import { readVerifiedNativeRuntime } from "../../src/build/native-artifacts.mjs";
 import { buildNativeSharedRuntime } from "../../src/build/native-component.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
-import { linkWitHost } from "../../src/build/wit-sync-io-host.mjs";
 import { canonicalJson,sha256 } from "../../src/capsule/node.mjs";
 
 test("the WIT owner receives the original retained callback failure and its Lean phase",{
@@ -92,8 +91,6 @@ test("the WIT owner receives the original retained callback failure and its Lean
 		const wire=generateSyncWire(gen.prefix,entries,{tasks: true,witCallbacks: true}),[method]=wire.methods;
 		assert.deepEqual(method.callbacks,[[2,"uint32","uint32"]]); assert.equal(method.error,"string");assert.equal(method.terminal,"string");
 		const exec=(cmd,args)=>run(cmd,args,app,env),save=(name,value)=>writeFile(join(app,name),value,{flag: "wx"});
-		await assert.rejects(linkWitHost({app,built,tasks: true,settings: config.targets["wit-wasi"]}),/before an installed package can be emitted/u);
-		await assert.rejects(access(join(app,"world.wit")),{code: "ENOENT"});
 		assert.match((await exec(tools,["--version"])).stdout,/^wasm-tools 1\.245\.1\b/u);
 		await save("world.wit",model.wit);await save("world.wat",model.wat);
 		await exec(tools,["parse","world.wat","-o","world.wasm"]);
