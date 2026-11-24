@@ -45,3 +45,23 @@ The [installation gate](../../tests/helpers/wit-canonical-command-package.mjs) v
 A guest that starts no tasks returns `INT64_MIN` immediately. A core Wasm module, a component missing `run`, and a component requesting a private import are rejected. A guest that traps after opening a parked task exits nonzero without waiting for the Lean gate. These cases run inside each installed release.
 
 Compatibility check: an offline-installed CLI built `Immediate.ready` again without `asyncAbi`. Its receipt selected `native-wit-task-v1`; the archive bundled Wasmtime 42.0.1. A C client linked against the installed header and libraries started the task, awaited `READY`, and received `INT64_MIN`.
+
+## Distinguish factory, worker and returned errors
+
+The [Meter exports](../../tests/fixtures/wit-task-package/effects.lean) and [Direct exports](../../tests/fixtures/wit-canonical-effects/Direct.lean) were compiled first from ordinary Lean source and then with reviewed Binding IR. The [independent guest](../../tests/fixtures/wit-canonical-effects/application.wat) ran unchanged against each relocated release. It imports six public functions. The consumer process had no Lean, Wasmtime SDK or build commands on its search path.
+
+| Lean contract | What the guest checked |
+| --- | --- |
+| `EIO ε (Task α)` | A rejected factory returned the exact typed error and no future. After 96 consecutive rejections of the same factory, success still worked. A separate factory preserved `UInt64.max` on failure and `Int64.min` on completion. |
+| `IO (Task (Except IO.Error UInt32))` with `taskIOErrors` | The same UTF-8 message, including an embedded NUL, came back in the outer error at startup and the inner error after awaiting the worker. A successful worker returned 97. |
+| `Task (Except ε α)` and nested `Except` | A pure factory returned a future directly. Returned error branches, including the inner and outer branches of a nested value, survived delivery without turning into factory or worker failures. |
+| Synchronous `EIO String (Except String UInt32)` | A direct call returned either a declared failure or a successful call containing an ordinary error. Neither outcome required a future. |
+
+Two same-method string futures delivered separate NUL-containing Unicode strings in reverse order. The guest then read one future and dropped another in each of 96 rounds, exceeding the 64-slot capacity without exhausting it. Both runs printed `3737844653`, the final Lean value. The allocator test also reused a freed block 4,097 times with no linear-memory growth while another writer’s bytes stayed intact.
+
+| Installed WIT archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary Lean source | 60,916,915 | `b47ba0fdc421d35e7873ca2cf18dd82261c358c7258e19be57525c958d40e4e0` |
+| Reviewed Binding IR and Lean source | 60,918,316 | `5ef1e2b8c842fe5616b8db96bb015c3ede7ad0a953cd7370cdcb044274195c56` |
+
+Run `npm run test:wit-canonical-effects` with the [publisher toolchain](../publish/wit-wasi.md#export-asynchronous-tasks) to build and test both packages. To replay existing handoffs, set `LEAN_BRIDGE_CANONICAL_EFFECTS_RELEASES` to the directory containing `ordinary/` and `reviewed/`. Dropping a future in this check releases delivery storage; it does **not** demonstrate that a running Lean worker stopped. Canonical streams are a separate gate.

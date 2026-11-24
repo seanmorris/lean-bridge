@@ -32,6 +32,8 @@ These decisions define the full authoring work. A listed form becomes usable in 
 
 For WIT tasks, choose the API your caller uses. A native host can use the default [typed task-resource API](../consume/wit-wasi.md#await-a-lean-task). A Wasm guest can await [canonical futures](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application) when the author selects `targets.wit-wasi.asyncAbi: "canonical"`.
 
+Choose where an error belongs in the Lean signature. `EIO ε (Task α)` can fail before a task exists. `Task (Except ε α)` completes with an ordinary tagged value. To declare an `IO.Error` from inside the worker, select its export in `taskIOErrors`. The generated WIT preserves these layers; callers do not have to infer the failure phase from message text.
+
 ### Select an explicit host-null wrapper
 
 Use a host-null projection only when the public API deliberately gives one Lean

@@ -26,7 +26,9 @@ typedef struct {
     unsigned capacity;
     wasmtime_context_t *ctx;
     wasmtime_component_func_t deliver, reap;
-    bool poisoned;
+    bool poisoned, pull_payload;
+    unsigned staged_key;
+    wasmtime_component_val_t *staged;
 } lb_cf_reactor;
 
 static inline unsigned lb_cf_reserve(lb_cf_reactor *r) {
@@ -88,9 +90,12 @@ static inline wasmtime_error_t *lb_cf_advance(lb_cf_reactor *r, int timeout) {
         if (!row->take(row->owner,&args[1])) return lb_cf_fail(r,"could not take notified native future");
         /* take consumed the token. Never call its close if delivery now traps. */
         *row=(lb_cf_row){.phase=LB_CF_WRITER,.fd=-1};
-        wasmtime_error_t *err=wasmtime_component_func_call(&r->deliver,r->ctx,args,2,&result,1);
+        r->staged=r->pull_payload ? &args[1] : NULL; r->staged_key=i+1;
+        wasmtime_error_t *err=wasmtime_component_func_call(&r->deliver,r->ctx,args,r->pull_payload?1:2,&result,1);
+        bool missed=r->staged!=NULL; r->staged=NULL; r->staged_key=0;
         wasmtime_component_val_delete(&args[1]);
         if (err) {r->poisoned=true; return err;}
+        if (missed) return lb_cf_fail(r,"writer did not claim its payload");
         if (result.kind!=WASMTIME_COMPONENT_U32 || result.of.u32>2) return lb_cf_fail(r,"invalid canonical future write result");
         if (result.of.u32!=2) *row=(lb_cf_row){0};
     }

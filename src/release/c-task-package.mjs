@@ -67,7 +67,7 @@ export const buildCTaskPackage = async options => {
 		const resources = api.types.filter(t => t.kind === "resource");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
-		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php ? "words" : "gmp" };
+		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, witDelivery: canonical, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php || canonical ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));

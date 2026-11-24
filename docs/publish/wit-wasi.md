@@ -79,7 +79,7 @@ for the ordinary and reviewed builds.
 
 ## Export asynchronous tasks
 
-For a Wasm guest that awaits ordinary Component Model futures, opt in with `targets.wit-wasi.asyncAbi`. Omit it for the typed task-resource profile, which also supports cursors, callbacks and declared errors.
+For a Wasm guest that awaits ordinary Component Model futures, opt in with `targets.wit-wasi.asyncAbi`. Omit it for the typed task-resource profile, which also supports cursors and retained callbacks.
 
 ```json
 {
@@ -95,7 +95,7 @@ For a Wasm guest that awaits ordinary Component Model futures, opt in with `targ
 
 Use the normal native Lean author toolchain and wasm-tools 1.245.1. Set `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the extracted [Wasmtime 51.0.0 Linux x86-64 C SDK](https://github.com/bytecodealliance/wasmtime/releases/tag/v51.0.0), then build with `lean-bridge build --project . --target wit-wasi --output release/wit`. The builder verifies the SDK headers, shared library and license before compiling the launcher. The default profile’s Wasmtime 42 SDK is unchanged.
 
-The canonical profile accepts pure and `BaseIO` task factories and synchronous companion functions. Parameters and results may be Boolean, fixed-width signed or unsigned integers, or 32- and 64-bit floats. Each factory admits up to 64 outstanding futures; a completed write keeps its slot until the guest reads or drops it. Streams, typed failures, external capabilities and retained callbacks are not admitted by this profile. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
+The canonical profile accepts `pure`, `BaseIO`, `IO` and `EIO` task factories and synchronous companion functions. Use `Bool`, `Char`, `String`, fixed-width integers and floats for inputs. Results and typed errors may also contain nested `Except` values. Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. This profile does not accept streams, resources, external capabilities or retained callbacks. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
 
 ### Typed task resources
 

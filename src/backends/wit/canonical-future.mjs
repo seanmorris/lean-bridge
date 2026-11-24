@@ -1,4 +1,5 @@
 /** @file Render a canonical future producer with private, bounded per-store writer ownership. */
+import {canonicalArena} from "./canonical-arena.mjs";
 const scalars={bool: ["bool","i32",1]
 	, uint8: ["u8","i32",1]
 	, uint16: ["u16","i32",2]
@@ -32,12 +33,41 @@ export const renderCanonicalFutureProducer=(d,slots=64,labels=d?.parameters?.map
 	if(!Array.isArray(labels) || labels.length!==d.parameters.length || new Set(labels).size!==labels.length || labels.some(x=>typeof x!=="string" || !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u.test(x))) throw new TypeError("Invalid canonical parameter labels");
 	const args=d.parameters.map(scalar), params=args.map(([w],i)=>'(param "'+labels[i]+'" '+w+')').join(" ");
 	const lower=args.map(([,c])=>"(param "+c+")").join(" "),locals=args.map((_,i)=>"(local.get "+i+")").join(" ");
+	return producerWat({wat,core,store,params,lower,locals,slots});
+};
+/**
+ * Render a checked Task whose payload or factory requires canonical memory.
+ *
+ * @param m - Reconciled canonical method, payload and factory error layout.
+ * @param slots - Number of outstanding native or unacknowledged writes.
+ */
+export const richCanonicalFuture=(m,slots)=>{
+	const payload=m.payload,core=payload.flat?.length===1?payload.flat[0]:null;
+	const lower=m.args.flatMap(a=>a.t.flat).map(c=>"(param "+c+")").join(" ");
+	return producerWat({wat: payload.wat,core
+		, store: core && core+".store"+(payload.size<4?payload.size*8:"")
+		, params: m.params
+		, lower
+		, locals: m.args.flatMap(a=>a.t.flat).map((_,i)=>"(local.get "+i+")").join(" ")
+		, slots
+		, rich: m});
+};
+const producerWat=({wat,core,store,params,lower,locals,slots,rich})=>{
+	const failure=rich?.failure, begin=failure?"(result u32 (error "+failure.wat+"))":"u32";
+	const dest=failure && 64+Math.max(4,failure.align);
+	if(failure?.size>160) throw new TypeError("Canonical factory result exceeds scratch layout");
+	const shift=rich?Math.ceil(Math.log2(16+rich.payload.size)):4;
+	const pages=1+Math.ceil((1024+(slots+1)*2**shift)/65536);
+	const options=rich?' (memory $mem "m") (realloc (func $mem "realloc"))':"";
+	const payloadAt=rich?16:8;
 	return `(component
-  (import "begin" (func $begin ${params} (result u32)))
+  (import "begin" (func $begin ${params} (result ${begin})))
+  ${rich?'(import "peek" (func $peek (param "key" u32) (result '+wat+')))':""}
   (type $t (future ${wat}))
-  (core module $mem (memory (export "m") 1))
+  ${rich?canonicalArena(pages*65536,pages):'(core module $mem (memory (export "m") 1))'}
   (core instance $mem (instantiate $mem))
-  (core func $begin (canon lower (func $begin)))
+  (core func $begin (canon lower (func $begin)${options}))
+  ${rich?'(core func $peek (canon lower (func $peek)'+options+'))':""}
   (core func $new (canon future.new $t))
   (core func $write (canon future.write $t async (memory $mem "m")))
   (core func $drop (canon future.drop-writable $t))
@@ -47,7 +77,8 @@ export const renderCanonicalFutureProducer=(d,slots=64,labels=d?.parameters?.map
   (core func $drop-set (canon waitable-set.drop))
   (core module $m
     (import "" "m" (memory 1))
-    (import "" "begin" (func $begin ${lower} (result i32)))
+    (import "" "begin" (func $begin ${lower} ${failure?"(param i32)":"(result i32)"}))
+    ${rich?'(import "" "peek" (func $peek (param i32) '+(core?"(result "+core+")":"(param i32)")+')) (import "" "select" (func $select (param i32))) (import "" "release" (func $release (param i32)))':""}
     (import "" "new" (func $new (result i64)))
     (import "" "write" (func $write (param i32 i32) (result i32)))
     (import "" "drop" (func $drop (param i32)))
@@ -59,22 +90,28 @@ export const renderCanonicalFutureProducer=(d,slots=64,labels=d?.parameters?.map
     (global $waiting (mut i32) (i32.const 0))
     (func $row (param $key i32) (result i32)
       (if (i32.ge_u (i32.sub (local.get $key) (i32.const 1)) (i32.const ${slots})) (then unreachable))
-      (i32.shl (local.get $key) (i32.const 4)))
+      (i32.add (i32.const ${rich?1024:0}) (i32.shl (local.get $key) (i32.const ${shift}))))
     (func $free (param $p i32)
       (call $drop (i32.load (local.get $p)))
+      ${rich?"(call $release (i32.add (local.get $p) (i32.const 8)))":""}
       (i64.store (local.get $p) (i64.const 0)))
     (func (export "start") ${lower} (result i32) (local $p i32) (local $pair i64)
-      (local.set $p (call $row (call $begin ${locals})))
+      ${failure?`(call $begin ${locals} (i32.const 64))
+      (if (i32.load8_u (i32.const 64)) (then (return (i32.const 64))))
+      (local.set $p (call $row (i32.load (i32.const ${dest}))))`:`(local.set $p (call $row (call $begin ${locals})))`}
       (if (i32.load offset=4 (local.get $p)) (then unreachable))
       (local.set $pair (call $new))
       (i32.store (local.get $p) (i32.wrap_i64 (i64.shr_u (local.get $pair) (i64.const 32))))
       (i32.store offset=4 (local.get $p) (i32.const 1))
-      (i32.wrap_i64 (local.get $pair)))
-    (func (export "deliver") (param $key i32) (param $v ${core}) (result i32) (local $p i32) (local $rc i32)
+      ${failure?`(i32.store (i32.const ${dest}) (i32.wrap_i64 (local.get $pair))) (i32.const 64)`:"(i32.wrap_i64 (local.get $pair))"})
+    ${rich?'(func (export "post") (param i32) (call $release (i32.const 12)))':""}
+    (func (export "deliver") (param $key i32) ${rich?"":"(param $v "+core+")"} (result i32) (local $p i32) (local $rc i32)
       (local.set $p (call $row (local.get $key)))
       (if (i32.ne (i32.load offset=4 (local.get $p)) (i32.const 1)) (then unreachable))
-      (${store} offset=8 (local.get $p) (local.get $v))
-      (local.set $rc (call $write (i32.load (local.get $p)) (i32.add (local.get $p) (i32.const 8))))
+      ${rich?`(call $select (i32.add (local.get $p) (i32.const 8)))
+      ${core?`(${store} offset=16 (local.get $p) (call $peek (local.get $key)))`:"(call $peek (local.get $key) (i32.add (local.get $p) (i32.const 16)))"}
+      (call $select (i32.const 12))`:`(${store} offset=8 (local.get $p) (local.get $v))`}
+      (local.set $rc (call $write (i32.load (local.get $p)) (i32.add (local.get $p) (i32.const ${payloadAt}))))
       (if (i32.eq (local.get $rc) (i32.const -1))
         (then
           (if (i32.eqz (global.get $waiting)) (then (global.set $set (call $sets))))
@@ -99,10 +136,11 @@ export const renderCanonicalFutureProducer=(d,slots=64,labels=d?.parameters?.map
       (if (i32.eqz (global.get $waiting)) (then (call $drop-set (global.get $set))))
       (local.get $key)))
   (core instance $i (instantiate $m (with "" (instance (export "m" (memory $mem "m"))
+    ${rich?'(export "peek" (func $peek)) (export "select" (func $mem "select")) (export "release" (func $mem "release"))':""}
     (export "begin" (func $begin)) (export "new" (func $new)) (export "write" (func $write))
     (export "drop" (func $drop)) (export "sets" (func $sets)) (export "join" (func $join))
     (export "poll" (func $poll)) (export "drop-set" (func $drop-set))))))
-  (func (export "start") ${params} (result $t) (canon lift (core func $i "start")))
-  (func (export "deliver") (param "key" u32) (param "value" ${wat}) (result u32) (canon lift (core func $i "deliver")))
+  (func (export "start") ${params} (result ${failure?"(result $t (error "+failure.wat+"))":"$t"}) (canon lift (core func $i "start")${options}${rich?' (post-return (func $i "post"))':""}))
+  (func (export "deliver") (param "key" u32) ${rich?"":'(param "value" '+wat+')'} (result u32) (canon lift (core func $i "deliver")))
   (func (export "reap") (result u32) (canon lift (core func $i "reap"))))`;
 };

@@ -21,6 +21,19 @@ static void check(wasmtime_error_t *err) {
     wasm_name_t msg; wasmtime_error_message(err,&msg);
     fprintf(stderr,"%.*s\n",(int)msg.size,msg.data); wasm_name_delete(&msg); wasmtime_error_delete(err); exit(1);
 }
+static inline wasmtime_component_val_t *lb_child(wasmtime_component_val_t *parent,bool ok) {
+    wasmtime_component_val_t empty={0}; wasmtime_component_val_t *child=wasmtime_component_val_new(&empty);
+    if (!child) fail("insufficient memory for result");
+    parent->kind=WASMTIME_COMPONENT_RESULT; parent->of.result.is_ok=ok; parent->of.result.val=child;
+    return child;
+}
+static inline wasmtime_error_t *lb_peek(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *type,
+    wasmtime_component_val_t *args,size_t argc,wasmtime_component_val_t *out,size_t retc) {
+    (void)type; lb_cf_reactor *r=data;
+    if (ctx!=r->ctx || !r->staged || argc!=1 || retc!=1 || args[0].kind!=WASMTIME_COMPONENT_U32 || args[0].of.u32!=r->staged_key)
+        return wasmtime_error_new("canonical writer has no matching delivery");
+    *out=*r->staged; *r->staged=(wasmtime_component_val_t){0}; r->staged=NULL; return NULL;
+}
 #include "canonical-hooks.h"
 
 static void shutdown_owners(void) {
@@ -75,7 +88,7 @@ int main(int argc,char **argv) {
     for (unsigned i=0;i<LB_METHODS;++i) {
         char d[48],r[48];snprintf(d,sizeof(d),"deliver-%s",methods[i]);snprintf(r,sizeof(r),"reap-%s",methods[i]);
         drivers[i]=(lb_cf_reactor){.rows=rows[i],.fds=local_fds[i],.capacity=LB_SLOTS,.ctx=ctx,
-            .deliver=port(&inst,ctx,d),.reap=port(&inst,ctx,r)};
+            .pull_payload=pull_methods[i],.deliver=port(&inst,ctx,d),.reap=port(&inst,ctx,r)};
     }
     if (atexit(shutdown_owners)) fail("could not install owner cleanup");
     wasmtime_component_func_t launch=port(&inst,ctx,"launch"),tick=port(&inst,ctx,"tick"),done=port(&inst,ctx,"done"),take=port(&inst,ctx,"take");

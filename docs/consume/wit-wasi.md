@@ -205,12 +205,14 @@ The WIT interface exposes nominal task resources with typed start, poll and canc
 If the release receipt says `native-wit-canonical-task-v1`, use the WIT world and launcher in the archive. This profile is for a Wasm guest; `native-wit-task-v1` above is for a host using the typed task-resource API.
 
 1. Extract the whole archive. Use `wit/application.wit` as your guest’s world. Implement its `run: async func() -> s64` export and compile your application to a Component Model binary.
-2. Call the imported Lean functions by their WIT names. A task factory returns a canonical `future<T>`. Await it like any other future in your guest language. Other tasks can complete while it is pending.
+2. Call the imported Lean functions by their WIT names. An infallible factory returns `future<T>`. An `IO` or `EIO` factory returns `result<future<T>, E>`: handle the error or await the future. Other tasks can complete while it is pending.
 3. Run the included executable. For the `latches` package:
 
 ```sh
 ./bin/latches-run /path/to/application.wasm
 ```
+
+Read nested results from the outside in. For the [`phase` example](../../tests/fixtures/wit-task-package/effects.lean), the type is `result<future<result<u32, string>>, string>`. An outer error means **no task started**. An inner error means **the worker failed**. The two errors can carry exactly the same message. A Lean function that returns an ordinary `Except` instead gives you that tagged value; its error branch is not a runner failure.
 
 The command prints the signed 64-bit result of `run`. A trap or incompatible component exits nonzero. Keep `bin/` and `lib/` together when moving the package. You do not need Lean, a Wasmtime installation, or a custom host adapter. This is a Linux x86-64 runner, not a browser or standalone WASI command. See the [application and installed-package checks](../evidence/wit-canonical-async-20261124.md#run-a-prepared-wit-package).
 

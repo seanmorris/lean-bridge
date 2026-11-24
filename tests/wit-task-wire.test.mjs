@@ -4,11 +4,24 @@ import test from "node:test";
 import { generateCTaskExports } from "../src/backends/c/task-exports.mjs";
 import { generateSyncWire } from "../src/backends/c/sync-wire.mjs";
 import { renderWitTaskImports } from "../src/backends/wit/task-host.mjs";
+import {canonicalValue,canonicalResult} from "../src/backends/wit/canonical-values.mjs";
 
 const value={kind: "primitive",name: "uint32"};
 const entry={name: "job",declaration: "Jobs.job",effect: "IO",delivery: "task"
 	, parameters: [{name: "n",type: value}],result: value,taskIO: true};
 const options={name: "jobs",modules: ["Jobs"],entries: [entry],componentIdentity: "a".repeat(64),integerMode: "words"};
+
+test("canonical result storage respects the alignment and ownership of either branch",()=>{
+	const primitive=name=>canonicalValue({kind: "primitive",name});
+	const text=primitive("string"),number=primitive("uint64");
+	assert.deepEqual(text.flat,["i32","i32"]);
+	const nested=canonicalResult(canonicalResult(primitive("uint16"),text),number);
+	assert.equal(nested.wit,"result<result<u16, string>, u64>");
+	assert.deepEqual([nested.size,nested.align,nested.dynamic],[24,8,true]);
+	const scalar=canonicalResult(primitive("bool"),primitive("uint8"));
+	assert.deepEqual([scalar.size,scalar.align,Boolean(scalar.dynamic)],[2,1,false]);
+	assert.throws(()=>primitive("int"),/Unsupported copied canonical value/u);
+});
 
 test("WIT task errors use native readiness and stay distinct on the start and take wires",()=>{
 	const generated=generateCTaskExports({...options,witDelivery: true});
