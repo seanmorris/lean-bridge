@@ -26,6 +26,7 @@ typedef struct ph_frame {
     PerlInterpreter *interpreter;
     pid_t pid;
     SV *binding;
+    struct lbp_host_session *session;
     CV *trampoline;
     ph_fault *faults;
     unsigned count;

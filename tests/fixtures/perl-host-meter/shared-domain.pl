@@ -3,6 +3,7 @@ use warnings FATAL => 'all';
 use DynaLoader;
 use Scalar::Util qw(refaddr weaken);
 use Config;
+use WireMethods;
 my $rt=DynaLoader::dl_load_file('./Runtime.so',1) or die DynaLoader::dl_error();
 my $boot=DynaLoader::dl_find_symbol($rt,'boot_LeanBridge__Runtime') or die DynaLoader::dl_error();
 DynaLoader::dl_install_xsub('LeanBridge::Runtime::bootstrap',$boot)->('LeanBridge::Runtime');
@@ -10,7 +11,13 @@ sub load_component {
   my ($name)=@_;
   my $dll=DynaLoader::dl_load_file("./$name.so",0) or die DynaLoader::dl_error();
   my $entry=DynaLoader::dl_find_symbol($dll,'domain_probe') or die DynaLoader::dl_error();
-  return DynaLoader::dl_install_xsub("Probe::${name}::run",$entry);
+  my $go=DynaLoader::dl_install_xsub("Probe::${name}::run",$entry);
+  require "LeanBridge/$name/_HostMembers.pm";
+  my $bind="LeanBridge::${name}::_HostMembers"->can('_bind') or die "member table missing";
+  return sub {
+    return $go->(@_,$bind->({Box=>$_[1],Token=>$_[2]})) if $_[0] eq 'bind';
+    return $go->(@_);
+  };
 }
 { package Box; use overload '==' => sub {1}, 'bool'=>sub {0}, '""'=>sub {die 'stringified'}, fallback=>1; }
 { package Child; our @ISA=('Box'); }
@@ -26,6 +33,28 @@ $a->('bind','Box','Token');
 die unless fault { $b->('bind','Box','Child') } =~ /incompatible/;
 $b->('bind','Box','Token');
 my ($one,$two)=map {bless {},'Child'} 1..2;
+for my $api ($a,$b) {
+  %Box::seen=();
+  die unless refaddr($api->('wire',0,$one))==refaddr($one);
+  die unless keys(%Box::seen)==19 && !grep { $_!=1 } values %Box::seen;
+  local $Box::bad=2;
+  die unless fault { $api->('wire',0,$one) } =~ /native boolean/;
+}
+print "19 generated scalar members, constructor, mutable property and nominal return\n";
+for my $op ('child','child_of') {
+  my ($owner_mark,$child_mark,$actor_mark);
+  {
+    my $child=bless {},'Box'; my $owner=bless {child=>$child},'Child'; my $actor=bless {},'Box';
+    $owner_mark=$owner; $child_mark=$child; $actor_mark=$actor;
+    weaken($owner_mark); weaken($child_mark); weaken($actor_mark);
+    my $got=$op eq 'child' ? $a->($op,0,$owner) : $a->($op,0,$actor,$owner);
+    die unless refaddr($got)==refaddr($child);
+  }
+  die unless defined($owner_mark) && defined($child_mark) && !defined($actor_mark);
+  die unless refaddr($b->('get',0))==refaddr($child_mark);
+  $b->('clear',0);
+  die if defined($owner_mark) || defined($child_mark);
+}
 die unless $one==$two && refaddr($one)!=refaddr($two);
 $a->('save',0,$one);
 die unless $b->('same',0,$one) && !$b->('same',0,$two);

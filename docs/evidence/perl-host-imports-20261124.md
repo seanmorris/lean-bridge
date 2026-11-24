@@ -81,3 +81,23 @@ Run `npm run test:perl-host-domain` per interpreter and
 paths in `LEAN_BRIDGE_PERLS`. The two-component probe and the runtime archive
 are separate checks: neither installs a pair of generated CPAN host-object
 distributions.
+
+## Generated member ABI
+
+The two-component test also compiles the generated C declaration of every
+member alongside Lean's emitted C. Both libraries execute the generated
+native adapters. Lean calls a Perl constructor, writes and reads a property,
+calls a method, and receives the original blessed object. The client counts
+all 19 scalar method calls. Lean checks the returned values, including signed
+and unsigned limits, floating-point subnormals, Unicode with an embedded
+NUL, a copied byte string and 160-bit `Math::BigInt` values. Returning an
+ordinary integer where a native Perl boolean was required failed in the
+converter; the following valid call succeeded.
+
+For borrowed results, the host method overwrote the argument scalar Perl
+passed it. Whether the declared anchor was the receiver or a named parameter,
+the result still kept the **original** anchor alive. The peer saw the same
+child, an unrelated receiver was collectible, and clearing the last Lean
+reference released both child and anchor. All eight interpreter/load-order
+combinations passed. These are native component tests; the public host-object
+package builder remains a separate gate.
