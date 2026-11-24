@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
+import { nativeHostSelection } from "../analyze/host-export-model.mjs";
 import { captureSourceNotices } from "../release/source-notices.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeDependencySnapshot, verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
@@ -21,13 +22,11 @@ const capturedText = async (root, record, path = record?.path) => {
 	if(bytes.length !== record.bytes || sha256(bytes) !== record.sha256) fail(`Host project input changed: ${path}`);
 	return new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes);
 };
-const captureContracts = async (project, inventory) => {
+const captureContracts = async (project, inventory, target) => {
 	const config = inventory.configurationRecord.configuration;
 	const input = inventory.inputs.find(f => f.path === config.hostImports);
 	const ir = config.hostImports ? parseBindingIr(await capturedText(project, input)) : null;
-	const ids = new Set(ir?.types.filter(t => t.kind === "resource" && t.host?.targets.includes("python")).map(t => t.id));
-	if(ir && (!ids.size || ids.size !== ir.types.length || ir.declarations.some(d => !ids.has(d.owner))))
-		fail("The host import contract must contain only Python host resources and their members; application exports belong in the public API");
+	const generatedHostModule = ir ? nativeHostSelection(ir, target === "pypi" ? "python" : target === "rubygems" ? "ruby" : null).hostModule : null;
 	const reviews = inventory.inputs.filter(f => f.path.endsWith(".binding-ir.json"));
 	if(reviews.length > 1) fail("Expected at most one reviewed public .binding-ir.json file");
 	let review, reviewedExports;
@@ -48,7 +47,7 @@ const captureContracts = async (project, inventory) => {
 		|| selected.some(n => !exports.includes(n))
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
-	return { ir, review, exports, taskExports, asyncIterators
+	return { ir, review, exports, taskExports, asyncIterators, generatedHostModule
 		, ...(!ir && !selected.length ? { synchronousIO: true } : {})
 		, nativeEffects: config.nativeEffects?.toSorted() ?? []
 		, ...(config.taskIOErrors ? { taskIOErrors: config.taskIOErrors.toSorted() } : {})
@@ -65,7 +64,7 @@ const captureContracts = async (project, inventory) => {
 export const openHostProjectSource = async options => {
 	const { project, inventory, component, environment = process.env, signal } = options;
 	const record = inventory.configurationRecord, config = record.configuration;
-	const contract = await captureContracts(project, inventory);
+	const contract = await captureContracts(project, inventory, options.targets?.[0]);
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
 	const leanPrefix = resolve(options.leanPrefix ?? environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({
@@ -78,7 +77,7 @@ export const openHostProjectSource = async options => {
 		snapshot = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, allowMissingLock: true, signal });
 	try
 	{
-		workspace = await resolveLockedLakeWorkspace({ snapshot, modules: config.modules, leanPrefix, signal, generatedPythonHost: Boolean(contract.ir) });
+		workspace = await resolveLockedLakeWorkspace({ snapshot, modules: config.modules, leanPrefix, signal, generatedHostModule: contract.generatedHostModule });
 		if(workspace.document.leanCommit !== pinnedNativeLean || workspace.document.modules.some(m => m.nativeInputs?.length))
 			fail("Host modules require the pinned Lean compiler and cannot import additional native objects");
 		verifyLakeEntryModules(roots, workspace.document);

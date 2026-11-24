@@ -68,7 +68,7 @@ const strings = v => Array.isArray(v) && v.every(x => typeof x === "string") && 
  *
  * @param selection - Captured entry points, protocol members, modules and author grants.
  * @param audit - Fresh records produced from compiled Lean interfaces.
- * @param hostSymbols - Authenticated names from the generated Python provider.
+ * @param hostSymbols - Exact names and foreign symbols from the selected generated provider.
  */
 export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map()) => {
 	const allowed = selection.nativeEffects;
@@ -88,7 +88,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 		for(const { name, module, symbol } of leaves)
 		{
 			if(typeof module !== "string" || typeof symbol !== "string" || !symbol) fail(`unidentified native leaf in ${declaration}`);
-			if(module === "LeanBridge.Host.Python" && selection.members.includes(name) && hostSymbols.get(name) === symbol)
+			if(module === (selection.hostModule ?? "LeanBridge.Host.Python") && selection.members.includes(name) && hostSymbols.get(name) === symbol)
 			{
 				if(audit.initializers.includes(declaration)) fail(`initializer ${declaration} reaches host member ${name} before it is bound`);
 				if(asyncRoots.has(declaration)) fail(`async entry ${declaration} reaches host member ${name} outside its owner`);

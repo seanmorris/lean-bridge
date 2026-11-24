@@ -32,7 +32,7 @@ structure Request where
   files : Array String
   generatorPhase : String := "none"
   generators : Array GeneratorInput := #[]
-  generatedPythonHost? : Option Bool := none
+  generatedHostModule : Option String := none
   deriving FromJson
 
 structure Traversal where
@@ -139,10 +139,10 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
   if (← get).visiting.contains name then
     fail s!"Cyclic Lake module imports: {name}"
   let candidates := ws.findModules name
-  -- Only the host-wheel build supplies this exact module, in private staging.
-  -- The application cannot provide it, and this exception never affects other imports.
-  if request.generatedPythonHost? == some true && name == `LeanBridge.Host.Python then
-    unless candidates.isEmpty do fail "Lake source shadows the generated Python host module"
+  -- Only the selected host provider supplies this exact module, in private staging.
+  if request.generatedHostModule == some name.toString then
+    unless #[`LeanBridge.Host.Python, `LeanBridge.Host.Ruby].contains name && candidates.isEmpty do
+      fail s!"Unsupported or shadowed generated host module: {name}"
     modify fun state => { state with external := state.external.insert name }
     return
   if candidates.isEmpty then

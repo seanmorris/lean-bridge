@@ -25,6 +25,7 @@ structure Request where
   taskExports : Array String
   asyncIterators : Array PullProtocol
   resources : Array Nominal
+  hostModule : Option String := none
   leanResources : Array String := #[]
   pythonTaskCallbacks : Option Bool := none
   rustTaskCallbacks : Option Bool := none
@@ -116,7 +117,7 @@ def resourceOwner (r : Request) (name : String) : MetaM Json := do
   match info with
   | .inductInfo _ | .defnInfo _ | .opaqueInfo _ => pure ()
   | _ => throwError "resource must have an executable application definition: {n}"
-  unless r.modules.contains owner && owner != "LeanBridge.Host.Python" && !isPrivateName n &&
+  unless r.modules.contains owner && r.hostModule != some owner && !isPrivateName n &&
       !isProtected env n && info.levelParams.isEmpty && info.type.isSort && !info.type.isProp do
     throwError "resource must be a public concrete application type: {n}"
   let ty := mkConst n
@@ -131,7 +132,7 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
   let env ← getEnv
   let some index := env.getModuleIdxFor? n | return seen
   let module := env.header.modules[index.toNat]!.module.toString
-  if module == "LeanBridge.Host.Python" then
+  if r.hostModule == some module then
     if isExtern env n && !r.members.contains n.toString then throwError "undeclared host member {n}"
     return seen
   if !r.modules.contains module then return seen
@@ -243,6 +244,14 @@ private partial def nativeLeaves (env : Environment) (root : Name) (pending : Li
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  if let some m := r.hostModule then
+    unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby"].contains m &&
+        r.modules.contains m && !r.exportModules.contains m && !r.resources.isEmpty &&
+        r.resources.all (fun t => t.lean.startsWith (m ++ ".")) &&
+        r.members.all (fun n => n.startsWith (m ++ ".")) do
+      throwError "invalid generated host module or member selection"
+  else unless r.resources.isEmpty && r.members.isEmpty do
+    throwError "imported host resources require a generated host module"
   let owned ← r.leanResources.mapM (resourceOwner r)
   for name in r.leanResources do
     let _ ← checkDependencies r name.toName {}
@@ -250,7 +259,7 @@ def extract (r : Request) : MetaM Json := do
   -- Module startup runs even declarations that no public function references.
   let mut startup : NameSet := {}
   for module in r.modules do
-    if module == "LeanBridge.Host.Python" then continue
+    if r.hostModule == some module then continue
     let some idx := env.getModuleIdx? module.toName | throwError "missing source module {module}"
     if r.nativeEffectPolicy.isSome then
       -- In addition to 'initialize', codegen may eagerly evaluate an ordinary
@@ -283,11 +292,19 @@ def extract (r : Request) : MetaM Json := do
     | _ => throwError "not an executable application definition: {n}"
     let deps ← checkDependencies r n {}
     if (← collectAxioms n).contains ``sorryAx then throwError "export {n} depends on sorry"
+    -- A host member belongs to its language runtime, not the Lean scheduler.
+    -- Check before lowering arguments, where the copied-sum diagnostic is misleading.
+    if r.taskExports.contains publicName || r.asyncIterators.any (·.open == publicName) then
+      noWorkerHost r deps n
     let row ← forallTelescope info.type fun args result => do
       let mut params := #[]
       for arg in args do
         let decl ← arg.fvarId!.getDecl
         unless decl.binderInfo == .default do throwError "explicit application parameters required: {n}"
+        if r.taskExports.contains publicName || r.asyncIterators.any (·.open == publicName) then
+          if let some ty := (← instantiateMVars decl.type).consumeMData.constName? then
+            if r.resources.any (·.lean == ty.toString) then
+              throwError "host identities or calls cannot cross this task scheduler: {n}"
         let t ← if r.taskExports.contains publicName then taskInput r decl.type else carrier r decl.type
         params := params.push <| Json.mkObj [("name", toJson decl.userName.toString), ("type", t)]
       let result := result.consumeMData
@@ -307,7 +324,6 @@ def extract (r : Request) : MetaM Json := do
         else throwError "taskExports requires a real Lean Task result: {n}"
         unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
           throwError "taskExports requires a real Lean Task result: {n}"
-        noWorkerHost r deps n
         let payload := task.getAppArgs[0]!
         let (value, terminal) ← if (r.taskIOErrors.getD #[]).contains publicName then do
           -- A typed terminal IO error does not require a callback dispatcher.

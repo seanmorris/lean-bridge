@@ -169,10 +169,12 @@ export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) 
  * @param options.snapshot - Complete capture returned by captureLockedLakeProject.
  * @param options.modules - Root package modules selected for compilation.
  * @param options.leanPrefix - Selected Lean installation, without an Elan download step.
- * @param options.generatedPythonHost - Reserve the generated host import only for host wheels.
+ * @param options.generatedHostModule - Reserve the one generated import selected for this build.
  * @param options.signal - Optional cancellation signal.
  */
-export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix, signal, generatedPythonHost = false }) => {
+export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix, signal, generatedHostModule = null }) => {
+	if(generatedHostModule !== null && !["LeanBridge.Host.Python", "LeanBridge.Host.Ruby"].includes(generatedHostModule))
+		fail("invalid-lake-resolution", "Unsupported generated host import");
 	if(![2, 3].includes(snapshot?.document.schemaVersion) || !Array.isArray(modules) || !modules.length || modules.some(module => !name(module)))
 		fail("invalid-lake-resolution", "Lake resolution requires a complete capture and selected modules");
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-lake-workspace-"));
@@ -191,7 +193,7 @@ export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix
 			, packages: snapshot.document.packages.map(({ name, directory, packageRoot, configFile, manifestFile }) => ({ name, directory, packageRoot, configFile, manifestFile }))
 			, modules, files: [...records(snapshot).keys()]
 			, generatorPhase: "none", generators: []
-			, ...(generatedPythonHost ? { generatedPythonHost: true } : {}) };
+			, ...(generatedHostModule ? { generatedHostModule } : {}) };
 		await writeFile(join(working, "request.json"), canonicalJson(request));
 		const env = { PATH: `${join(resolve(leanPrefix), "bin")}:${process.env.PATH}`
 			, LEAN_SYSROOT: resolve(leanPrefix), LANG: "C.UTF-8", LC_ALL: "C.UTF-8"
@@ -218,7 +220,7 @@ export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix
 			await writeFile(destination, bytes, { mode: 0o444 });
 		}
 		const document = { ...resolved
-			, ...(generatedPythonHost ? { generatedImports: ["LeanBridge.Host.Python"] } : {})
+			, ...(generatedHostModule ? { generatedImports: [generatedHostModule] } : {})
 			, snapshotSha256: snapshot.sha256
 			, resolverSha256, leanCompilerSha256, lakeLibrarySha256 };
 		return { sourceRoot, snapshotRoot: workspace, document

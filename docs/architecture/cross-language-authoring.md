@@ -42,6 +42,12 @@ every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md),
 recursive callback payloads, completing all seventeen consumer profiles.
 Aggregates with explicit resource ownership remain part of the same task.
 
+Host objects travel in the opposite direction from Lean-owned resources: Lean
+calls methods implemented by a consumer's class. [Python host imports](../publish/pypi.md#call-python-objects-from-lean)
+run in installed wheels. For Ruby, the [compiler check](../evidence/ruby-host-imports-20261124.md)
+verifies the imported constructor, property and method against fresh Lean
+interfaces on both author routes. It does not yet supply a RubyGems runtime provider.
+
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),
 [Rust crates](../evidence/rust-compounds-20260920.md),

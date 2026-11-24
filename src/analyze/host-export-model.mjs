@@ -6,15 +6,14 @@
 import { canonicalJson } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
-import { hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
+import { compiledHostModules, hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
 import { resolveNativeHostEffects } from "./native-host-effects.mjs";
 import { heapResourceIdentities } from "./heap-resource-identity.mjs";
 
 const doc = summary => ({ summary, details: "" });
-const hostModule = "LeanBridge.Host.Python";
 const fail = message => { throw Object.assign(new TypeError(message), { code: "host-export-contract-mismatch" }); };
-const resources = ir => ir?.types.filter(t => t.kind === "resource" && t.host?.targets.includes("python")) ?? [];
-const importedMembers = (ir, types) => new Map(types.flatMap(t =>
+const resources = (ir, target) => ir?.types.filter(t => t.kind === "resource" && t.host?.targets.includes(target)) ?? [];
+const importedMembers = (ir, types, hostModule) => new Map(types.flatMap(t =>
 	ir.declarations.filter(d => d.owner === t.id).map(d => [`${hostModule}.${t.name}.${hostDeclarationName(d)}`, d])));
 const snake = value => value.replace(/([A-Z]+)([A-Z][a-z])/gu, "$1_$2").replace(/([a-z0-9])([A-Z])/gu, "$1_$2").toLowerCase();
 const signature = type => type.kind !== "named"
@@ -27,12 +26,17 @@ const hasCallbacks = e => e.parameters.some(p => isCallback(p.type));
  * Select only generated foreign names and concrete nominal identities.
  *
  * @param ir - Validated import contract.
+ * @param target - Host selected by the compiler, not by a reviewed public declaration.
  */
-export const pythonHostSelection = ir => {
-	const types = resources(ir);
+export const nativeHostSelection = (ir, target) => {
+	if(!Object.hasOwn(compiledHostModules, target)) fail("Unsupported native host import target");
+	const types = resources(ir, target), hostModule = compiledHostModules[target], ids = new Set(types.map(t => t.id));
+	if(ir && (!types.length || ir.types.length !== ids.size || ir.declarations.some(d => !ids.has(d.owner))))
+		fail("Host import contract must contain only the selected host's resources and members");
 	return {
-		resources: types.map(t => ({ lean: `${hostModule}.${t.name}`, id: t.id }))
-		, members: [...importedMembers(ir, types).keys()].sort()
+		...(ir ? { hostModule } : {})
+		, resources: types.map(t => ({ lean: `${hostModule}.${t.name}`, id: t.id }))
+		, members: [...importedMembers(ir, types, hostModule).keys()].sort()
 	};
 };
 
@@ -63,7 +67,19 @@ export const reconcileHostExports = options => {
 	const { component, ir, metadata, selection, review } = options;
 	if(metadata?.kind !== "lean-bridge-host-export-metadata" || metadata.schemaVersion !== 1
 		|| canonicalJson(metadata.entries.map(e => e.declaration)) !== canonicalJson(selection.exports)) fail("Fresh Lean metadata did not cover the complete export selection");
-	const imports = ir ? hashBindingIr(ir) : null, types = resources(ir), members = importedMembers(ir, types);
+	// Older Python handoffs predate an explicit module field. They must still
+	// agree with the complete Python nominal/member selection from their IR.
+	const hostModule = selection.hostModule ?? compiledHostModules.python;
+	const hostTarget = Object.keys(compiledHostModules).find(k => compiledHostModules[k] === hostModule);
+	if(!hostTarget || (!ir && selection.hostModule !== undefined)) fail("Unverified host import module");
+	const imports = ir ? hashBindingIr(ir) : null, types = resources(ir, hostTarget), members = importedMembers(ir, types, hostModule);
+	if(ir)
+	{
+		const expected = nativeHostSelection(ir, hostTarget);
+		if(!selection.modules.includes(hostModule) || selection.exportModules.includes(hostModule)
+			|| canonicalJson(selection.resources) !== canonicalJson(expected.resources)
+			|| canonicalJson(selection.members) !== canonicalJson(expected.members)) fail("Unverified host import selection");
+	}
 	const synchronous = selection.synchronousIO === true;
 	const immediate = synchronous || (!ir && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
@@ -75,7 +91,7 @@ export const reconcileHostExports = options => {
 	// mark the request; a partially missing audit must never become an empty one.
 	const native = selection.nativeEffectPolicy === undefined && selection.nativeEffects === undefined && metadata.nativeEffectAudit === undefined ? null
 		: resolveNativeHostEffects(selection, metadata.nativeEffectAudit, new Map([...members].map(([name, d]) =>
-			[name, hostMemberSymbol("python", types.find(t => t.id === d.owner), d)])));
+			[name, hostMemberSymbol(hostTarget, types.find(t => t.id === d.owner), d)])));
 	const phases = e => native?.phases.get(e.declaration) ?? {};
 	const capabilities = e => [...new Set([...Object.values(phases(e)).flat(), ...e.hostMembers.flatMap(n => members.get(n).capabilities)])].sort();
 	const owned = options.owned ?? [];
@@ -118,8 +134,11 @@ export const reconcileHostExports = options => {
 	const dotnet = selection.dotnetTaskCallbacks === true, jvm = selection.jvmTaskCallbacks === true;
 	const perl = selection.perlTaskCallbacks === true, php = selection.phpTaskCallbacks === true;
 	const js=selection.javascriptTaskCallbacks===true, wit=selection.witTaskCallbacks===true;
-	if([rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length > 1) fail("Ambiguous retained-callback host");
-	const publicErrorName = wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
+	const schedulerCount = [rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length;
+	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
+	if(ir && schedulerCount && !(hostTarget === "ruby" ? ruby : selection.pythonTaskCallbacks === true))
+		fail("Host imports and retained callbacks require the same runtime");
+	const publicErrorName = hostTarget === "ruby" ? "RubyHostException" : wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {
 		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
@@ -150,7 +169,7 @@ export const reconcileHostExports = options => {
 		, name: publicErrorName
 		, category: "domain"
 		, payload: null
-		, documentation: doc(wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through its original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+		, documentation: doc(hostTarget === "ruby" ? "An exception raised by a bound Ruby object and propagated through the original Lean IO error." : wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through its original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];
@@ -203,7 +222,7 @@ export const reconcileHostExports = options => {
 		, producers: [{ id: "lean", adapter: "lean-bridge-host-exports", adapterVersion: 1, tool: "Lean", toolVersion: metadata.leanVersion, extensions: {} }]
 		, types: [...ownedTypes, ...callbacks.values()
 			, ...types.map(t => ({ ...t, assurance: []
-				, host: { ...t.host, targets: ["python"] }
+				, host: { ...t.host, targets: [hostTarget] }
 				, source: { producer: "lean", declaration: `${hostModule}.${t.name}`, extensions: {} } }))]
 		, declarations: metadata.entries.map((e, i) => ({
 			id: `lean:${e.declaration}`, name: entries[i].name, kind: "function"

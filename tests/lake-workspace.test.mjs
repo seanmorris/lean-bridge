@@ -40,7 +40,7 @@ test("Lake reserves the generated Python module only for an explicit host build"
 	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: join(process.cwd(), "tests/fixtures/python-host-meter"), includeProject: true, allowMissingLock: true });
 	const options = { snapshot, modules: ["Workshop"], leanPrefix };
 	await assert.rejects(resolveLockedLakeWorkspace(options), e => /LeanBridge/u.test(e.details?.stderr ?? ""));
-	const host = await resolveLockedLakeWorkspace({ ...options, generatedPythonHost: true });
+	const host = await resolveLockedLakeWorkspace({ ...options, generatedHostModule: "LeanBridge.Host.Python" });
 	t.after(host.dispose);
 	assert.deepEqual(host.document.generatedImports, ["LeanBridge.Host.Python"]);
 	assert.deepEqual(host.document.modules.map(m => m.module), ["Workshop.Internal", "Workshop"]);

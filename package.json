@@ -1173,6 +1173,7 @@
     "test:wit-canonical-package": "node --test --test-concurrency=1 tests/helpers/wit-canonical-command-package.mjs",
     "test:wit-canonical-effects": "node --test --test-concurrency=1 tests/helpers/wit-canonical-effects.mjs",
     "test:wit-canonical-stream": "node --test --test-concurrency=1 tests/helpers/wit-canonical-stream.mjs",
+    "test:ruby-host-imports": "node --test --test-concurrency=1 tests/helpers/ruby-host-imports.mjs",
     "test:wit-canonical-lean-future": "LEAN_BRIDGE_CANONICAL_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-canonical-async.mjs",
     "test:wit-task-package": "LEAN_BRIDGE_WIT_TASK_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",
     "test:wit-cursor-package": "LEAN_BRIDGE_WIT_CURSOR_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",
