@@ -66,8 +66,8 @@ export const renderPerlIOBuild = (base, name, library, tasks = false, ledger = n
 	const dir = name.replaceAll("::", "/"), tag = "my @link_flags = ('-Wl,--build-id=none');";
 	if(ledger && (!digest(ledger.id) || ledger.library !== "liblb_task_resources_"+ledger.id+".so" || !digest(ledger.sha256)))
 		throw new TypeError("Invalid CPAN resource ledger library");
-	let s = hook(base, tag, tag + `\n  push @link_flags, '-L', 'lib/${dir}/native', '-l:${library}'${ledger?", '-l:"+ledger.library+"'":""};`);
-	if(hosts && (tasks || ledger)) throw new TypeError("Ambiguous Perl host installer");
+	let s = hook(base, tag, tag + `\n  push @link_flags, '-L', 'lib/${dir}/native', '-l:${library}'${ledger && !hosts?", '-l:"+ledger.library+"'":""};`);
+	if(hosts && (tasks!==Boolean(ledger))) throw new TypeError("Ambiguous Perl host installer");
 	const field = hosts ? "hostImports" : tasks ? "taskDelivery" : "syncIO";
 	s = hook(s, "if owned_values($manifest);", "if $manifest->{"+field+"};");
 	s = hook(s, "return unless owned_values($manifest);", "return unless $manifest->{"+field+"};");
@@ -94,6 +94,8 @@ const value = (t, ns, i = 0) => {
 	const b = t.endsWith("size") ? "64" : t.match(/\d+/u)[0];
 	return t.startsWith("u") ? "sv_2mortal(newSVuv(out[0]))" : `sv_2mortal(newSViv((int${b}_t)out[0]))`;
 };
+/** Use the same copied scalar conversions for standalone and class-bearing workers. */
+export const perlWorkerScalarCodecs = () => ({input,value});
 const verify = (api, wire, ns, kinds) => {
 	const methods = projectPerlNames(ns, wire.methods);
 	const stem = "lbwire_lbc_perl_" + sha256(ns) + "_v1";
@@ -224,7 +226,7 @@ sub CLONE_SKIP { 1 }
 __END__
 =head1 NAME
 
-${name} - ${assets ? "Compiled Lean futures and demand-driven cursors" : "Compiled synchronous Lean functions"}
+${name} - ${assets || methods.some(m=>m.delivery) ? "Compiled Lean futures and demand-driven cursors" : "Compiled synchronous Lean functions"}
 
 =head1 CALLS${hosts?"\n\nRegister the declared host classes with C<with_hosts(\\%classes, sub { ... })>. Call the exported functions inside that block. The binding closes on return or exception.":""}
 
@@ -245,7 +247,7 @@ is an Ok or Err object with a C<value> method, not an exception.
  * @param pins - Exact CPAN runtime version and binding identity.
  */
 export const renderPerlHostLoader = (o,pins) => loader(o.name,o.version,pins.runtimeVersion,pins.runtimeIdentity,o.library,o.librarySha256,
-	o.api,o.evidence,o.entries,null,new Map(),null,o.generated.implementation);
+	o.api,o.evidence,o.entries,null,new Map(),o.resourceLedger??null,o.generated.implementation);
 
 const xsSource = (wire, methods, name, kinds) => {
 	const encode=(t,i)=>kinds.has(t)?`lbs_in_${kinds.get(t).index}(aTHX_ v${i},a+${i*3});`:input(t,i);

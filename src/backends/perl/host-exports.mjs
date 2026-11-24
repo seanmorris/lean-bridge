@@ -1,5 +1,6 @@
 /** @file Emit a Perl-independent Lean library and ABI-specific public XS operations. */
 import { perlHostCarrier, perlNativeHostMembers } from "./host-native-members.mjs";
+import { perlHostWorkerApi } from "./host-worker-api.mjs";
 import { projectPerlNames } from "./naming.mjs";
 
 const fail = why => { throw new TypeError("Perl host exports: "+why); };
@@ -27,12 +28,16 @@ const reserved = new Set(["with_hosts","destroy","autoload","clone","clone_skip"
  * @param o.modules - Selected Lean entry modules.
  * @param o.name - CPAN namespace.
  * @param o.identity - Immutable component identity.
+ * @param o.worker - Optional compiled worker namespace and ordered nominal kinds.
  */
-export const generatePerlHostExports = ({ir,entries,modules,name,identity}) => {
-	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m=>!qual.test(m)) || !entries.length) fail("invalid component identity or modules");
+export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker=null}) => {
+	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m=>!qual.test(m)) || (!entries.length && !worker)) fail("invalid component identity or modules");
 	const model=perlNativeHostMembers(ir,name,identity,true), {prefix}=model, types=ir.types;
 	const fields=[], trampolines=[], renames=[], initializers=[], header=[], interfaceDecl=[], native=[], leans=[], xs=[];
 	const allowed=projectPerlNames(name,entries);
+	// Perl's method lookup and the lexical binding API reserve these names
+	// for both synchronous functions and event-loop entry points.
+	for(const m of worker?.wire.methods??[]) if(reserved.has(m.name)) fail("unsupported operation "+m.name);
 	for(const [i,m] of model.slots.entries())
 	{
 		const sites=m.sites.map(s=>perlHostCarrier(types,s.type)), params=argsOf(sites,true)||"void", argv=indices(sites);
@@ -106,6 +111,20 @@ static void *ph_init(uint8_t b) { lean_object *r=initialize_BridgePerlExports(b)
 int ${prefix}start(void) { return lean_bridge_native_component_initialize("${identity}",ph_init) && initialized; }
 ${[...trampolines,...native].join("\n")}
 `;
+	const async=worker?perlHostWorkerApi({...worker,name}):null;
+	let workerPrelude="";
+	if(worker)
+	{
+		if(!/^lbpw_[a-f0-9]{64}_(?![\s\S])/u.test(worker.scope) || worker.kinds.length!==types.length
+			|| worker.kinds.some((k,i)=>k.id!==types[i].id || !/^[a-f0-9]{64}$/u.test(k.hash))) fail("unverified Perl worker XS layout");
+		const op=n=>worker.scope+n;
+		workerPrelude=async.prelude+`extern int ${op("begin")}(void), ${op("end")}(void);
+extern int ${op("create")}(const char *,lean_object *,uint64_t [2]), ${op("release")}(const char *,uint64_t [2]);
+extern lean_object *${op("borrow")}(const char *,const uint64_t [2]);
+${["begin","end","create","release","borrow"].map(n=>"#define PHW_"+n.toUpperCase()+" "+op(n)).join("\n")}
+static const char *const phw_keys[]={${worker.kinds.map(k=>JSON.stringify(k.hash)).join(",")}};
+`;
+	}
 	const xsSource=`#include "ph-interface.h"
 ${renames.join("\n")}
 ${model.native}
@@ -116,13 +135,13 @@ static const lbp_host_spec ph_specs[]={${model.kinds.map(k=>"{"+JSON.stringify(k
 #define PH_CAPTURE "${name}::_HostMembers::_capture"
 #define ph_start ${prefix}start
 #define ph_ready() lean_bridge_native_component_ready("${identity}")
-#include "host-scope.h"
+${workerPrelude}#include "host-scope.h"
 
 MODULE = ${name}    PACKAGE = ${name}
 PROTOTYPES: DISABLE
 
 void
-with_hosts(input,body)
+${worker?"_with_hosts":"with_hosts"}(input,body)
     SV *input
     SV *body
   PPCODE:
@@ -130,12 +149,12 @@ with_hosts(input,body)
     SSize_t n=av_top_index(out)+1; SPAGAIN; SP=PL_stack_base+ax-1; EXTEND(SP,n);
     for (SSize_t i=0;i<n;++i) PUSHs(sv_2mortal(SvREFCNT_inc(*av_fetch(out,i,0))));
 
-${xs.join("\n")}`;
+${xs.join("\n")}${worker?"\n\nvoid\n_retire_scoped_workers()\n  PPCODE:\n    lbp_check_interpreter(aTHX); if (!ph_session) croak(\"no active Perl host binding\"); phw_retire_all(); XSRETURN_EMPTY;\n\n"+async.xs:""}`;
 	const entryLean=[...modules.map(m=>"import "+m),"import LeanBridge.Host.Perl"
 		, "namespace BridgePerlExports",model.helpers
 		, "@[export "+prefix+"error_text] def errorText (e : IO.Error) : String := toString e"
 		, ...leans
 		, "end BridgePerlExports"
 		, ""].join("\n");
-	return {entryLean,interfaceHeader,leanHeader,component,xsSource,symbols,implementation: model.implementation};
+	return {entryLean,interfaceHeader,leanHeader,component,xsSource,symbols,implementation: model.implementation+(async?"\n"+async.module:"")};
 };

@@ -49,10 +49,12 @@ export const retainedArguments = (api,declaration,method,shape) => {
  *
  * @param ns - Validated Perl component namespace.
  * @param m - Certified retained method.
+ * @param scoped - Track the returned Future in the current object binding.
  */
-export const retainedModule = (ns,m) => {
+export const retainedModule = (ns,m,scoped=false) => {
 	const ops="start ready next arg reply fail take close trap".split(" ")
 		.map(k=>k+"=>\\&_lb_"+m.name+"_"+k).join(",");
+	if(scoped) return `sub ${m.name} { my $args=\\@_; return ${ns}::_HostWorkers::managed(0,sub { return ${ns}::_Retained::start({${ops}},[${m.callbacks.map(x=>x[0]).join(",")}],$args) }); }`;
 	return `sub ${m.name} { return ${ns}::_Retained::start({${ops}},[${m.callbacks.map(x=>x[0]).join(",")}],\\@_) }`;
 };
 
@@ -65,8 +67,9 @@ export const retainedModule = (ns,m) => {
  * @param i - Local method identity.
  * @param input - Compile one input conversion into a word buffer.
  * @param value - Compile one output conversion from a word buffer.
+ * @param scope - Optional interpreter-scope registration and admission operations.
  */
-export const retainedXs = (m,ns,i,input,value) => {
+export const retainedXs = (m,ns,i,input,value,scope=null) => {
 	const n=m.names, fn="_lb_"+m.name, decl=JSON.stringify(m.declaration);
 	const owner=`lbs_owner_for(aTHX_ token,${i})`, args=m.args.map((_,k)=>"v"+k);
 	const reset="FREETMPS; LEAVE; SPAGAIN; SP=PL_stack_base+ax-1;";
@@ -76,10 +79,10 @@ export const retainedXs = (m,ns,i,input,value) => {
 	return `void
 ${fn}_start(${args.join(", ")})
 ${args.map(a=>"    SV *"+a+"\n").join("")}  PPCODE:
-    lbp_check_interpreter(aTHX); ENTER; SAVETMPS;
+    lbp_check_interpreter(aTHX); ENTER; SAVETMPS;${scope?.enter??""}
     uint64_t a[${Math.max(1,m.args.length*3)}]={0}; ${frame}
     ${m.args.map((t,k)=>t==="callback"?"":`if (SvGMAGICAL(v${k})) v${k}=sv_mortalcopy(v${k});\n    ${input(t,k)}`).join("\n    ")}
-    lbs_owner *o; SV *rv=lbs_new_owner(aTHX_ "${ns}::_Owner",${i},${n.close},&o);
+    lbs_owner *o; SV *rv=lbs_new_owner(aTHX_ "${ns}::_Owner",${i},${n.close},&o);${scope?.start??""}
     int status=${n.start}(a,o->handle,out,tags); ${fail("start")}
     if (!o->handle[0]) croak("Missing native callback owner");
     ${push("rv")}
@@ -117,7 +120,7 @@ ${fn}_arg(token, slot)
     SV *token
     UV slot
   PPCODE:
-    lbs_owner *o=${owner}; ENTER; SAVETMPS; ${frame}
+    lbs_owner *o=${owner}; ENTER; SAVETMPS;${scope?.enter??""} ${frame}
     if (slot>UINT32_MAX) croak("Invalid callback slot");
     int status=${n.arg}(o->handle,(uint32_t)slot,out); ${fail("callback argument")}
     SV *v=NULL; switch (slot) {
@@ -135,13 +138,13 @@ ${fn}_reply(token, slot, v0, stopped)
     lbs_owner *o=${owner};
     if (!SvROK(stopped)) croak("Invalid private cancellation state");
     if (SvOK(SvRV(stopped))) XSRETURN_EMPTY;
-    ENTER; SAVETMPS; uint64_t a[3]={0};
+    ENTER; SAVETMPS;${scope?.enter??""} uint64_t a[3]={0};
     if (SvGMAGICAL(v0)) v0=sv_mortalcopy(v0);
     switch (slot) {
     ${m.callbacks.map(([slot,,reply])=>`case ${slot}: { ${input(reply,0)} } break;`).join("\n    ")}
     default: croak("Unknown retained callback reply slot");
     }
-    if (!SvOK(SvRV(stopped))) { int status=${n.reply}(o->handle,(uint32_t)slot,a); ${fail("callback reply")} }
+    if (!SvOK(SvRV(stopped))) { ${scope?.reply??""}int status=${n.reply}(o->handle,(uint32_t)slot,a); ${fail("callback reply")} }
     ${reset} XSRETURN_EMPTY;
 
 void
@@ -149,7 +152,7 @@ ${fn}_fail(token, message)
     SV *token
     SV *message
   PPCODE:
-    lbs_owner *o=${owner}; ENTER; SAVETMPS; uint64_t a[3]={0}; uint32_t id=0;
+    lbs_owner *o=${owner}; ENTER; SAVETMPS;${scope?.enter??""} uint64_t a[3]={0}; uint32_t id=0;
     lbs_text(aTHX_ message,a,1,0); int status=${n.fail}(o->handle,a,&id); ${fail("callback failure")}
     ${reset} XPUSHs(sv_2mortal(newSVuv(id)));
 
@@ -164,7 +167,7 @@ ${fn}_take(token, faults)
     SV *token
     SV *faults
   PPCODE:
-    lbs_owner *o=${owner}; ENTER; SAVETMPS; ${frame}
+    lbs_owner *o=${owner}; ENTER; SAVETMPS;${scope?.enter??""} ${frame}
     LBS_WAIT_CLOSE(o->gate);
     int status=${n.take}(o->handle,out,tags);
     if (status==14) {
