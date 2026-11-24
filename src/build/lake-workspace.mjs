@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { compiledHostModules } from "../backends/lean/host-object.mjs";
 import { prepareLakeDependencySnapshot, validateLakeDependencySnapshotDocument, verifyLakeDependencySnapshot, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 
@@ -173,7 +174,7 @@ export const validateLockedLakeResolution = ({ snapshot, resolution, modules }) 
  * @param options.signal - Optional cancellation signal.
  */
 export const resolveLockedLakeWorkspace = async ({ snapshot, modules, leanPrefix, signal, generatedHostModule = null }) => {
-	if(generatedHostModule !== null && !["LeanBridge.Host.Python", "LeanBridge.Host.Ruby"].includes(generatedHostModule))
+	if(generatedHostModule !== null && !Object.values(compiledHostModules).includes(generatedHostModule))
 		fail("invalid-lake-resolution", "Unsupported generated host import");
 	if(![2, 3].includes(snapshot?.document.schemaVersion) || !Array.isArray(modules) || !modules.length || modules.some(module => !name(module)))
 		fail("invalid-lake-resolution", "Lake resolution requires a complete capture and selected modules");

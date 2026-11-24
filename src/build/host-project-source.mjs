@@ -5,6 +5,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { nativeHostSelection } from "../analyze/host-export-model.mjs";
+import { compiledHostTargets } from "../backends/lean/host-object.mjs";
 import { captureSourceNotices } from "../release/source-notices.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeDependencySnapshot, verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
@@ -26,7 +27,7 @@ const captureContracts = async (project, inventory, target) => {
 	const config = inventory.configurationRecord.configuration;
 	const input = inventory.inputs.find(f => f.path === config.hostImports);
 	const ir = config.hostImports ? parseBindingIr(await capturedText(project, input)) : null;
-	const generatedHostModule = ir ? nativeHostSelection(ir, target === "pypi" ? "python" : target === "rubygems" ? "ruby" : null).hostModule : null;
+	const generatedHostModule = ir ? nativeHostSelection(ir, compiledHostTargets[target]).hostModule : null;
 	const reviews = inventory.inputs.filter(f => f.path.endsWith(".binding-ir.json"));
 	if(reviews.length > 1) fail("Expected at most one reviewed public .binding-ir.json file");
 	let review, reviewedExports;

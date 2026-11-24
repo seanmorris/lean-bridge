@@ -12,7 +12,7 @@ import { heapResourceIdentities } from "../analyze/heap-resource-identity.mjs";
 import { nativeHostSelection, reconcileHostExports } from "../analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../analyze/native-host-effects.mjs";
 import { generatePythonHostProvider } from "../backends/python/host-provider.mjs";
-import { compiledHostModules, generateLeanHostObjectAdapters } from "../backends/lean/host-object.mjs";
+import { compiledHostModules, compiledHostTargets, generateLeanHostObjectAdapters } from "../backends/lean/host-object.mjs";
 
 const extractor = fileURLToPath(new URL("../analyze/HostExports.lean", import.meta.url));
 const fail = message => { throw Object.assign(new Error(message), { code: "host-elaboration-drift" }); };
@@ -28,14 +28,14 @@ export const compileHostSources = async options => {
 	const compilerSha256 = projectContract ? sha256(await readFile(lean)) : null;
 	const extractorSha256 = projectContract ? sha256(await readFile(extractor)) : null;
 	const env = { ...options.environment, LEAN_SYSROOT: leanPrefix, LEAN_SRC_PATH: app, LEAN_PATH: app, LEAN_NUM_THREADS: "1" };
-	const target = options.target === "rubygems" ? "ruby" : "python", hostModule = compiledHostModules[target];
-	if(ir && options.target && !["rubygems", "pypi"].includes(options.target)) fail("No host import provider for the selected target");
+	if(ir && options.target && !Object.hasOwn(compiledHostTargets, options.target)) fail("No host import provider for the selected target");
+	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	if(projectContract && Object.hasOwn(projectContract, "generatedHostModule")
 		&& projectContract.generatedHostModule !== (ir ? hostModule : null)) fail("Captured host module and compile target differ");
 	if(ir && sources.some(s => s.module === hostModule)) fail("Application source shadows the generated host module");
 	const modules = [...(ir ? [{ module: hostModule
 		, source: target === "python" ? generatePythonHostProvider(ir).lean
-			: generateLeanHostObjectAdapters(ir)["LeanBridge/Host/Ruby.lean"] }] : [])
+			: generateLeanHostObjectAdapters(ir)[hostModule.replaceAll(".", "/") + ".lean"] }] : [])
 	, ...sources];
 	const byPath = new Map(), byName = new Map(), built = new Map(), active = new Set(), objects = [];
 	for(const s of modules)
