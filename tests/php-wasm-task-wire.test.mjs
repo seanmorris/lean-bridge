@@ -3,6 +3,30 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {readPhpTaskValue,writePhpTaskValue} from "../src/backends/php/php-wasm-task-wire.mjs";
 import {createPhpTaskDescriptor} from "../src/backends/php/php-wasm-task-owner.mjs";
+import {createPhpCallbackHub,createPhpCallbackMailbox} from "../src/backends/php/php-wasm-task-mailbox.mjs";
+
+test("PHP callback requests are owner-local, one-shot and revoked on completion",async()=>{
+	const hub=createPhpCallbackHub(),box=createPhpCallbackMailbox([[3,"uint32","string"]],hub);
+	const next=box.next();
+	const waiting=box.request(3,9);
+	const [tag,key,ticket,slot,bytes]=JSON.parse(await next);assert.equal(key,box.key);
+	assert.equal(tag,"call");assert.equal(slot,3);assert.equal(readPhpTaskValue("uint32",bytes),9);
+	assert.equal(box.answer(ticket+1,true,""),false);
+	assert.equal(box.answer(ticket,true,writePhpTaskValue("string","a\0λ")[1]),true);
+	assert.equal(await waiting,"a\0λ");assert.equal(box.answer(ticket,false,""),false);
+	const failed=box.request(3,11), [,,id]=JSON.parse(await box.next());
+	assert.equal(box.answer(id,false,"",s=>new Error(s)),true);
+	const marker=await failed.catch(e=>e);
+	const jsError=cause=>({code: "error:JavaScriptCallbackError",cause});
+	assert.equal(box.failure(jsError(marker)),JSON.stringify(["throw",id]));
+	assert.equal(box.failure(jsError(new Error(marker.message))),null);
+	const other=createPhpCallbackMailbox([[3,"uint32","string"]],hub);assert.equal(other.failure(jsError(marker)),null);
+	const late=box.request(3,12),[,owner,last]=JSON.parse(await other.next());
+	assert.equal(owner,box.key);
+	box.finish('["cancelled"]');await assert.rejects(late,/closed/u);
+	assert.equal(box.answer(last,true,""),false);assert.equal(await box.next(),'["cancelled"]');
+	box.finish('["fault"]');assert.equal(await box.next(),'["cancelled"]');
+});
 
 test("PHP task transport preserves exact copied values, byte strings, and chosen Except branches",()=>{
 	const vectors={unit: undefined,bool: true,bytes: Uint8Array.of(0,255)

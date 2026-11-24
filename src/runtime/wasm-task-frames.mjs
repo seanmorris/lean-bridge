@@ -4,6 +4,17 @@ import {taskFrame as layout} from "../abi/wasm-task-frame.mjs";
 import {encodeWasmWord,decodeWasmWord} from "../release/wasm-word-codecs.mjs";
 
 const invalid = () => new Error("Malformed Lean task frame");
+const phpFailureMessages=new WeakMap();
+/**
+ * Brand a copied message without inspecting arbitrary JS exceptions or their getters.
+ *
+ * @param message - Bounded UTF-8 text already checked by the PHP transport.
+ */
+export const phpTaskCallbackFailure=message=>{
+	const marker=new Error("PHP callback failed");
+	phpFailureMessages.set(marker,typeof message==="string" && message.length<=4096 ? message : "PHP callback failed");
+	return marker;
+};
 /** A valid callback request exceeded the bounded resources of its task. */
 export class WasmTaskCallbackLimit extends RangeError {}
 const knownIO = id => id === "error:IO.Error" || id === "error:TaskIO.Error";
@@ -144,7 +155,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 				if(callbackOp(layout.reply,slot)) return retire(invalid()); checkedOut();
 			} else
 			{
-				encodeWasmWord(m,pos,"string","JavaScript callback failed",alloc);
+				encodeWasmWord(m,pos,"string",phpFailureMessages.get(value)??"JavaScript callback failed",alloc);
 				const status=callbackOp(layout.fail);
 				if([11,12].includes(status))
 				{ checkedOut(); throw new WasmTaskCallbackLimit("Lean callback failure retention limit reached"); }

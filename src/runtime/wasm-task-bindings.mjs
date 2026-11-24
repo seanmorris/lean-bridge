@@ -1,6 +1,6 @@
 /** @file Idiomatic Promise and async-iterator delivery over a runtime-owned, notification-driven Wasm scheduler. */
 import {PendingOperationRegistry} from "./pending-operations.mjs";
-import {openWasmTaskFrame} from "./wasm-task-frames.mjs";
+import {openWasmTaskFrame,phpTaskCallbackFailure} from "./wasm-task-frames.mjs";
 import {createWasmTaskLeases} from "./wasm-task-leases.mjs";
 import {createWasmTaskCallbacks} from "./wasm-task-callbacks.mjs";
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
@@ -33,7 +33,7 @@ export const createWasmTaskSession = options => {
 				row.work?.sub.detach();
 				row.callbacks?.close();
 				if(row.work) settle(row.work,"reject",failure);
-				row.work=null; row.ending=true; row.frame.dispose(); row.drained();
+				row.work=null; row.ending=true; row.frame.dispose(); row.drained(false);
 			}
 			rows.clear(); ledger.clear(); leases.finish(); stop();
 		}
@@ -48,7 +48,7 @@ export const createWasmTaskSession = options => {
 		try
 		{ if(live() && row.frame.hasOwner()) row.frame.call(op.close); }
 		finally
-		{ row.frame.dispose(); row.drained(); }
+		{ row.frame.dispose(); row.drained(state!=="poisoned"); }
 	};
 	const cancel = p => !p.settled && settle(p,"cancel","Lean operation cancelled");
 	const end = row => {
@@ -97,6 +97,15 @@ export const createWasmTaskSession = options => {
 			if(!p.promise || syncStart) throw error;
 		}
 		if(!cursor) Object.defineProperty(p.promise,"cancel",{value: () => cancel(p)});
+		if(syncStart && !cursor) Object.defineProperty(p.promise,"drained",{value: row.drain});
+		if(syncStart && row.method.callbacks?.length)
+		{
+			Object.defineProperty(p.promise,"callbackFailure",{value: phpTaskCallbackFailure});
+			Object.defineProperty(p.promise,"hostTrap",{value: ()=>{
+				try
+				{retire(new Error("PHP callback trapped"));} catch { /* Already delivered to the whole session. */ }
+			}});
+		}
 		return p.promise;
 	};
 	const dispatch = (method,index,invoke,args,mapError,leaseTypes,syncStart) => {

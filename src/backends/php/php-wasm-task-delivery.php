@@ -10,19 +10,38 @@ abstract class Awaitable {
     private bool $observing=false;
     private mixed $value=null;
     private ?\Throwable $failure=null;
-    final protected function __construct(private ?object $owner, private readonly \Closure $decode) {}
+    private ?object $cleanup;
+    final protected function __construct(private ?object $owner, private readonly \Closure $decode, private ?Internal\CallbackScope $callbacks=null) {
+        $this->cleanup=$owner->cleanup(); $callbacks?->attach($owner);
+    }
     private function __clone() {}
     final public function __serialize(): array { throw new \LogicException('Cannot serialize an active Lean owner'); }
     final public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean owner'); }
-    final public function cancel(): bool { return $this->owner?->cancel() ?? false; }
-    final public function __destruct() { $this->cancel(); }
+    final public function cancel(): bool {
+        $stopped=$this->owner?->cancel() ?? false;
+        if ($stopped) $this->callbacks?->close();
+        return $stopped;
+    }
+    final public function __destruct() { try { $this->cancel(); } finally { $this->callbacks?->close(); } }
+    final public function awaitCleanup(): void {
+        if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Cannot wait for an active callback on this task');
+        if ($this->cleanup===null) return;
+        if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->cleanup)!=='["end"]')
+            throw new LeanBridgeError('Failed to drain Lean task owner');
+        $this->cleanup=null;
+        // Capture the terminal result and release Zend callables even when the
+        // application keeps this owner and calls await() much later.
+        if (!$this->observed) { try { $this->take(); } catch (\Throwable) { /* Cached for await(). */ } }
+    }
     final protected function take(): mixed {
-        if ($this->observing) throw new \LogicException('Reentrant observation of the same Lean task');
+        if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Reentrant observation of the same Lean task');
         if (!$this->observed) {
             $this->observing=true;
-            try { $this->value=($this->decode)(vrzno_await($this->owner->result())); }
-            catch (\Throwable $error) { $this->failure=$error; }
-            finally { $this->owner=null; $this->observing=false; $this->observed=true; }
+            try {
+                $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner);
+                $this->value=$this->callbacks!==null ? $this->callbacks->decode($packet,$this->decode) : ($this->decode)($packet);
+            } catch (\Throwable $error) { $this->owner->cancel(); $this->failure=$error; }
+            finally { $this->callbacks?->close(); $this->callbacks=null; $this->owner=null; $this->observing=false; $this->observed=true; }
         }
         if ($this->failure!==null) throw $this->failure;
         return $this->value;
@@ -39,7 +58,7 @@ final class PullStream implements \IteratorAggregate {
     public function close(): void {
         if ($this->owner===null) return;
         $owner=$this->owner; $this->owner=null;
-        if (vrzno_await($owner->close())!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
+        if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($owner->drain())!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
     }
     public function __destruct() { $this->owner?->dispose(); }
     public function getIterator(): \Traversable {
@@ -47,7 +66,7 @@ final class PullStream implements \IteratorAggregate {
         $this->started=true;
         try {
             while ($this->owner!==null) {
-                $packet=vrzno_await($this->owner->next());
+                $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner->pull());
                 if ($packet==='["end"]') break;
                 yield ($this->decode)($packet);
             }

@@ -41,6 +41,25 @@ test("JS rejects its promise and PHP throws before returning an owner for the sa
 	assert.deepEqual(h.session.snapshot(),{state: "open",frames: 0,allocations: 0,pending: 0});await h.session.close();
 });
 
+test("PHP cancellation settles before native drain; a dead heap cannot certify cleanup",async()=>{
+	const h=harness([method("park","uint32","task")],({code,f,d})=>{
+		if(code===op.start)
+{d.setBigUint64(f+24,BigInt(f),true);d.setBigUint64(f+32,1n,true);}
+		if(code===op.take) d.setBigUint64(f+24,0n,true);
+		return 0;
+	});
+	const first=h.api.invokeWithSynchronousStart("park",[]),peer=h.api.invokeWithSynchronousStart("park",[]);
+	let drained=false;first.drained.then(()=>{drained=true;});
+	assert.equal(first.cancel(),true);await assert.rejects(first,e=>e.code==="operation-cancelled");
+	assert.equal(drained,false);assert.equal(h.session.snapshot().frames,2);
+	h.notifications.notify(h.tokens[0]);assert.equal(await first.drained,true);
+	assert.equal(h.session.snapshot().frames,1);
+	const killed=new Error("host trap"),failure=assert.rejects(peer,e=>e===killed);
+	assert.throws(()=>h.session.retire(killed),e=>e===killed);
+	await failure;assert.equal(await peer.drained,false);assert.equal(await first.drained,true);
+	assert.equal(h.notifications.pending(),0);
+});
+
 test("a malformed owned result retires the shared heap and all pending siblings without freeing through it",async () => {
 	const h=harness([method("a","string","task"),method("b","uint32","task")],({code,f,d}) => {
 		if(code===op.start)

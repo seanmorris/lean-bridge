@@ -21,7 +21,7 @@ For each release the [installed consumer gate](../../tests/helpers/php-wasm-task
 
 In a separate [browser fault test](../../tests/helpers/php-wasm-task-browser.mjs), PHP starts a pending task and a Lean pthread raises an uncaught error. The PHP caller catches `LeanBridgeError` from both the pending await and a new call. The executor remains poisoned and retains the original worker error. Host frames, allocations, pending operations and notifications return to zero. The destroyed heap cannot report its native owner count.
 
-The synchronous Zend profile uses a different heap. This release does not exchange a live Zend-side Lean object or invoke a retained PHP callback from a worker.
+The synchronous Zend profile uses a different heap. The Jobs archives below contain copied-value operations, not live Zend objects or PHP callbacks. The later [Relay package checks](php-wasm-retained-callback-packages-20261124.md) cover retained PHP callbacks.
 
 ## Tested archives
 

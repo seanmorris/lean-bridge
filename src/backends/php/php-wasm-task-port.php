@@ -5,9 +5,10 @@ namespace __LB_PUBLIC__\Internal;
 /** @internal Per-declaration functions supply the shape and the private owner key. */
 final class Port {
     public static function call(string $key, array $args, array $kinds, ?string $delivery, ?string $class,
-            string $declaration, array|string $result, ?array $start, ?array $terminal): mixed {
+            string $declaration, array|string $result, ?array $start, ?array $terminal, array $callbacks=[]): mixed {
         $budget=new Budget(); $encoded=[];
-        foreach ($args as $i=>$v) $encoded[]=base64_encode(WireValues::input($kinds[$i],$v,$budget));
+        $scope=$callbacks ? new CallbackScope($callbacks,$args) : null;
+        foreach ($args as $i=>$v) $encoded[]=$kinds[$i]==='callback' ? '' : base64_encode(WireValues::input($kinds[$i],$v,$budget));
         $submit=vrzno_shared($key);
         if (!is_callable($submit)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing PHP-Wasm host for '.$declaration);
         $reply=$submit(...$encoded);
@@ -27,8 +28,9 @@ final class Port {
         };
         if (is_string($reply) || $delivery===null) return $decode($reply);
         if (!is_object($reply)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing task owner for '.$declaration);
-        $scope=$delivery==='task' ? \__LB_PUBLIC__\Awaitable::class : \__LB_PUBLIC__\PullStream::class;
-        $open=\Closure::bind(static fn()=>new $class($reply,$decode),null,$scope);
+        $open=$delivery==='task'
+            ? \Closure::bind(static fn()=>new $class($reply,$decode,$scope),null,\__LB_PUBLIC__\Awaitable::class)
+            : \Closure::bind(static fn()=>new $class($reply,$decode),null,\__LB_PUBLIC__\PullStream::class);
         return $open();
     }
 }

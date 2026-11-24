@@ -15,8 +15,9 @@ import {exercisePhpTaskBrowser} from "./php-wasm-task-browser.mjs";
  *
  * @param release - Release root with its verified package set.
  * @param t - Test context for diagnostics and cleanup.
+ * @param peer - Independent Jobs package for the retained-callback application.
  */
-export const exercisePhpTaskRelease=async(release,t)=>{
+export const exercisePhpTaskRelease=async(release,t,peer)=>{
 	const host=process.env.LEAN_BRIDGE_PHP_WASM_HOST;assert.ok(host);
 	const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(release,"package-set-receipt.json")});
 	await assertJsonSchema("package-set-receipt",receipt);
@@ -30,27 +31,37 @@ export const exercisePhpTaskRelease=async(release,t)=>{
 		{t.diagnostic(e.details?.stderr || e.details?.stdout || e.message);throw e;}
 	};
 	const app=join(root,"app"),feed=join(root,"feed"),moved=join(root,"moved");await mkdir(app);await mkdir(feed);
-	const npm=[];let metadata,name;
-	for(const p of receipt.packages)
+	const npm=[],components=[],composer=[],hashes=new Map();
+	for(const [dir,set] of [[release,receipt],...peer?[[peer,(await readVerifiedPackageSetReceipt({receiptPath: join(peer,"package-set-receipt.json")})).receipt]]:[]]) for(const p of set.packages)
 	{
-		const file=join(release,p.artifacts[0].path), dest=join(feed,p.artifacts[0].path.split("/").at(-1));await cp(file,dest);
-		if(p.role==="component") name=p.name;
+		if(hashes.has(p.name))
+		{assert.equal(p.role,"runtime");assert.equal(p.artifacts[0].sha256,hashes.get(p.name));continue;}
+		hashes.set(p.name,p.artifacts[0].sha256);
+		const file=join(dir,p.artifacts[0].path), dest=join(feed,p.artifacts[0].path.split("/").at(-1));await cp(file,dest);
+		if(p.role==="component") components.push(p.name);
 		if(p.ecosystem==="npm") npm.push(dest);
 		else
-		{metadata=JSON.parse((await run("unzip",["-p",dest,"composer.json"],app)).stdout);assert.equal(metadata.name,p.name);metadata.dist={type: "zip",url: composerFileUrl(dest)};}
+		{const metadata=JSON.parse((await run("unzip",["-p",dest,"composer.json"],app)).stdout);assert.equal(metadata.name,p.name);metadata.dist={type: "zip",url: composerFileUrl(dest)};composer.push(metadata);}
 	}
-	assert.equal(npm.length,2);assert.ok(metadata && name);
+	assert.equal(npm.length,peer?3:2);assert.equal(composer.length,peer?2:1);const [name,other]=components;
 	await run("npm",["install","--prefix",app,"--offline","--ignore-scripts","--no-fund","--no-audit",...npm],app,{...env,npm_config_cache: join(root,"cache")});
-	await writeFile(join(app,"composer.json"),JSON.stringify({name: "test/tasks",config: {platform: {php: "8.4.1"}},require: {[metadata.name]: metadata.version},repositories: [{type: "package",package: metadata},await brickMathRepository(feed),{packagist: false}]}));
+	await writeFile(join(app,"composer.json"),JSON.stringify({name: "test/tasks",config: {platform: {php: "8.4.1"}},require: Object.fromEntries(composer.map(p=>[p.name,p.version])),repositories: [...composer.map(p=>({type: "package",package: p})),await brickMathRepository(feed),{packagist: false}]}));
 	await run("composer",["--no-plugins","--no-scripts","--no-interaction","--no-cache","install","--prefer-dist"],app,{...env,COMPOSER_DISABLE_NETWORK: "1",COMPOSER_ALLOW_SUPERUSER: "1",COMPOSER_HOME: join(root,"composer-home")});
 	await symlink(resolve(host),join(app,"node_modules/php-wasm"),"dir");
-	for(const p of ["installed.php","installed.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",p),join(app,p));
+	await cp(resolve("tests/fixtures/php-wasm-task-owner",peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
+	await cp(resolve("tests/fixtures/php-wasm-task-owner/installed.mjs"),join(app,"installed.mjs"));
+	if(peer) for(const file of ["trap.php","trap.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,file));
 	await rename(app,moved);await rm(feed,{recursive: true});
 	for(const mode of ["embedded","composer"])
 	{
-		const result=await run(process.execPath,["installed.mjs",name,mode],moved,{PATH: "/no-producer-tools"});
+		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools"});
 		assert.equal(result.stderr,"");assert.match(result.stdout,/zero live owners/u);t.diagnostic(result.stdout.trim());
 	}
-	t.diagnostic(await exercisePhpTaskBrowser({root,consumer: moved,name}));
+	t.diagnostic(await exercisePhpTaskBrowser({root,consumer: moved,name,other}));
+	if(peer)
+	{
+		const result=await run(process.execPath,["trap.mjs",...components],moved,{PATH: "/no-producer-tools"});
+		assert.equal(result.stderr,"");t.diagnostic(result.stdout.trim());
+	}
 };
-if(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE) test("installed PHP-Wasm task API survives relocation",t=>exercisePhpTaskRelease(resolve(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE),t));
+if(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE) test("installed PHP-Wasm task API survives relocation",t=>exercisePhpTaskRelease(resolve(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE),t,process.env.LEAN_BRIDGE_PHP_TASK_PEER));

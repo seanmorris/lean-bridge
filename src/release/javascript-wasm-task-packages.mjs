@@ -3,7 +3,8 @@ import {readFile,readdir,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
-import {reconcileHostExports} from "../analyze/host-export-model.mjs";
+import {reconcileHostExports,taskWorkerInterface} from "../analyze/host-export-model.mjs";
+import {hashBindingIr} from "../binding-ir/canonical.mjs";
 import {heapResourceIdentities} from "../analyze/heap-resource-identity.mjs";
 import {npmPackageMetadata} from "../analyze/package-metadata.mjs";
 import {assertExportConfigurationCapabilities} from "../analyze/export-configuration.mjs";
@@ -96,7 +97,10 @@ export const writeJavaScriptTaskPackages = async options => {
 	const {root,compilation,configuration,projectContract,captured,mainModule,mainWasm,signal}=options;
 	const php=options.phpWasm===true;
 	signal?.throwIfAborted(); (php?assertPhpWasmTaskConfiguration:assertJavaScriptTaskConfiguration)(configuration);
-	const {api,evidence,componentIdentity,binary,integrity}=compilation, abi=javaScriptTaskAbi(api,componentIdentity);
+	const {api,evidence,componentIdentity,binary,integrity}=compilation;
+	const worker=taskWorkerInterface(api,evidence),abi=javaScriptTaskAbi(worker,componentIdentity),publicHash=hashBindingIr(api);
+	if(api.types.some(t=>t.kind==="callback") && (php ? !evidence.selection.phpTaskCallbacks : !evidence.selection.javascriptTaskCallbacks))
+		throw new Error("Retained callback contract does not match the target host");
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
 		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null) || evidence.hostImportsSourceSha256!==null
 		|| canonicalJson(evidence.lake)!==canonicalJson(projectContract.lake) || canonicalJson(evidence.selection.exports)!==canonicalJson(projectContract.exports)
@@ -126,7 +130,7 @@ export const writeJavaScriptTaskPackages = async options => {
 	const profile=abi.profile, runtime=await taskRuntime(mainModule,mainWasm,profile);
 	const coordinate=php?phpTaskCoordinates(api,configuration).npm:componentNpmIdentity(api.component,configuration.targets?.npm);
 	if(coordinate.name==="@lean-bridge/runtime") throw new TypeError("Component cannot replace its shared task runtime");
-	const files=new Map(Object.entries(generateJavaScriptPackage(api,componentIdentity)));
+	const files=new Map(Object.entries(generateJavaScriptPackage(worker,componentIdentity)));
 	const pkg=JSON.parse(files.get("package.json")), metadata=configuration.package ?? {};
 	files.set("package.json",canonicalJson({...pkg
 		, ...coordinate
@@ -139,10 +143,10 @@ export const writeJavaScriptTaskPackages = async options => {
 		, leanBridge: {profile
 			, component: api.component.id
 			, sharedRuntime: true
-			, bindingIrSha256: abi.bindingIrSha256
+			, bindingIrSha256: publicHash
 			, componentIdentitySha256: componentIdentity
 			, runtimeIdentity: runtime.runtimeIdentity}}));
-	const descriptor={bindingIr: api,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity};
+	const descriptor={bindingIr: worker,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity};
 	files.set("internal/runtime.mjs",`import {loadTaskComponent} from "@lean-bridge/runtime";
 ${php ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart});" : ""}
 `);
@@ -151,7 +155,7 @@ ${php ? "const component" : "export const runtime"}=await loadTaskComponent({...
 	if(projectContract.review) files.set("metadata/review.binding-ir.json",projectContract.review.source);
 	for(const [path,bytes] of captured.files) files.set("notices/"+path,bytes);
 	files.set("notices/lean-bridge.txt",await readFile(new URL("../../LICENSE",import.meta.url)));
-	const composer=php?await attachPhpTaskPackages({api,componentIdentity,configuration,files,coordinate,root,runtimeIdentity: runtime.runtimeIdentity}):null;
+	const composer=php?await attachPhpTaskPackages({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity: runtime.runtimeIdentity}):null;
 	const outputProfile=php?phpWasmTaskProfile:profile;
 	const delivery=archiveSharedJavaScriptPackages({runtime,files,coordinate,profile: outputProfile});
 	const packages=delivery.packages;
@@ -171,7 +175,7 @@ ${php ? "const component" : "export const runtime"}=await loadTaskComponent({...
 		await writeFile(join(root,path),bytes,{flag: "wx",signal});
 	const receipt={component: api.component
 		, source: {treeSha256: evidence.sourceTreeSha256}
-		, profiles: [{id: outputProfile,bindingIrSha256: abi.bindingIrSha256,runtimeIdentity: runtime.runtimeIdentity}]
+		, profiles: [{id: outputProfile,bindingIrSha256: publicHash,runtimeIdentity: runtime.runtimeIdentity}]
 		, packages};
 	await writePackageSetReceipt({root,...receipt,signal});
 	return receipt;

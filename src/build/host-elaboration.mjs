@@ -75,7 +75,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "nuget" && projectContract.taskExports?.length ? { dotnetTaskCallbacks: true } : {})
 		, ...(options.target === "maven" && projectContract.taskExports?.length ? { jvmTaskCallbacks: true } : {})
 		, ...(options.target === "cpan" && projectContract.taskExports?.length ? { perlTaskCallbacks: true } : {})
-		, ...(options.target === "php-native" && projectContract.taskExports?.length ? { phpTaskCallbacks: true } : {})
+		, ...(["php-native","php-wasm"].includes(options.target) && projectContract.taskExports?.length ? { phpTaskCallbacks: true } : {})
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})

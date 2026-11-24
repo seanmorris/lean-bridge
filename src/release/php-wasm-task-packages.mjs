@@ -35,6 +35,7 @@ export const phpTaskCoordinates=(api,configuration)=>{
  *
  * @param options - Closed compiled inputs, generated component file map and private staging directory.
  * @param options.api - Source-authenticated Binding IR.
+ * @param options.worker - Private JS scheduler view of the same source.
  * @param options.componentIdentity - Compiled worker fingerprint.
  * @param options.configuration - Project's selected package targets.
  * @param options.files - Component npm archive file map.
@@ -42,8 +43,8 @@ export const phpTaskCoordinates=(api,configuration)=>{
  * @param options.root - Private release staging directory.
  * @param options.runtimeIdentity - Exact pthread runtime fingerprint.
  */
-export const attachPhpTaskPackages=async({api,componentIdentity,configuration,files,coordinate,root,runtimeIdentity})=>{
-	const {composer}=phpTaskCoordinates(api,configuration),{files: generated,php,autoload,namespace}=await generatePhpWasmTaskFiles(api,componentIdentity,composer);
+export const attachPhpTaskPackages=async({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity})=>{
+	const {composer}=phpTaskCoordinates(api,configuration),{files: generated,php,autoload,namespace}=await generatePhpWasmTaskFiles(api,componentIdentity,composer,worker);
 	const metadata=configuration.package??{}, pkg=JSON.parse(files.get("package.json"));
 	files.set("component.mjs",files.get("index.mjs"));for(const [k,v] of Object.entries(generated)) files.set(k,v);
 	files.set("index.d.ts","export declare const autoload: string;\ndeclare const host: { readonly autoload: string; readonly extensions: { getLibs(): never[]; getFiles(php: object): never[] }; getLibs(): never[]; getFiles(php: object): {path:string;url:URL}[] };\nexport default host;\n");

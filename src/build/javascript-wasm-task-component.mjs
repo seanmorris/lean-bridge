@@ -3,6 +3,7 @@ import {mkdir, readFile, writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {canonicalJson, sha256} from "../capsule/node.mjs";
 import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
+import {taskWorkerInterface} from "../analyze/host-export-model.mjs";
 import {generateCTaskExports} from "../backends/c/task-exports.mjs";
 import {generateSyncWire} from "../backends/c/sync-wire.mjs";
 import {generateOwnedWasmBroker} from "../backends/javascript/owned-wasm-broker.mjs";
@@ -42,7 +43,7 @@ export const compileJavaScriptTaskComponent = async options => {
 		throw new Error("Expected matching pinned Lean compiler and threaded Wasm runtime");
 	const compiler = await identifyJavaScriptWasmCompiler({sdkRoot: sdk, run});
 	if(kit && canonicalJson(compiler)!==canonicalJson(kit.manifest.compiler)) throw new Error("Installed Emscripten differs from the pthread SDK producer");
-	const built = await compileHostSources({...options, ir: null, environment: env, target: "npm", run});
+	const built = await compileHostSources({...options, ir: null, environment: env, target: options.phpWasm ? "php-wasm" : "npm", run});
 	const {api,evidence,entries} = built;
 	const assets = {"task-notification.h": await sourceAsset("javascript/wasm-task-watch.h")
 		, "wasm-task-notification.h": await sourceAsset("javascript/task-notification.h")
@@ -77,7 +78,7 @@ export const compileJavaScriptTaskComponent = async options => {
 		, wire: sha256(wire.source)
 		, control: sha256(generateTaskControl("lb_js_task_"+"0".repeat(64),wire))
 		, assets: Object.fromEntries(Object.entries(assets).map(([k,v]) => [k,sha256(v)]))}));
-	const abi = javaScriptTaskAbi(api,componentIdentity), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
+	const abi = javaScriptTaskAbi(taskWorkerInterface(api,evidence),componentIdentity), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
 	const leases = abi.leases ?? [], nativeLeases = wire.leases ?? [];
 	if(leases.length !== nativeLeases.length || leases.some((lease,i) =>
 		["name","type","hash","tag"].some(k => lease[k] !== nativeLeases[i][k])))

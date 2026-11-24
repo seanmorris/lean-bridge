@@ -1,5 +1,6 @@
 /** @file Keep a PHP-Wasm caller's task and iterator owners on the Lean pthread runtime's JavaScript agent. */
 import {readPhpTaskValue,writePhpTaskValue} from "./php-wasm-task-wire.mjs";
+import {createPhpCallbackHub,createPhpCallbackMailbox} from "./php-wasm-task-mailbox.mjs";
 
 const fault=JSON.stringify(["fault"]);
 const val=(type,result)=>JSON.stringify(["value",...writePhpTaskValue(type,result)]);
@@ -21,23 +22,34 @@ const guarded=(m,perform,success)=>{
 	catch(e)
 	{return Promise.resolve(failure(m,e));}
 };
-const operation=(m,call)=>(...args)=>{
+const operation=(m,call,hub)=>(...args)=>{
+	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub);
 	try
 	{
 		if(args.length!==m.args.length) return fault;
-		const owner=call(...args.map((v,i)=>readPhpTaskValue(m.args[i],v)));
+		const owner=call(...args.map((v,i)=>m.args[i]==="callback"?value=>box.request(i,value):readPhpTaskValue(m.args[i],v)));
 		if(!m.delivery) return val(m.result,owner);
 		if(m.delivery==="task")
 		{
+			const cleanup=hub.monitor(owner.drained?.then(ok=>ok?'["end"]':fault)??Promise.resolve(fault));
+			if(box)
+			{
+				Promise.resolve(owner).then(v=>val(m.result,v)).catch(e=>box.failure(e)??failure(m,e)).then(box.finish);
+				const cancel=()=>{const stopped=owner.cancel();if(stopped) box.finish('["cancelled"]');return stopped;};
+				const answer=(id,ok,value)=>box.answer(id,ok,value,owner.callbackFailure);
+				const invalid=id=>{if(!box.stop(id)) return false;owner.cancel();return true;};
+				const trap=id=>{const live=box.stop(id);owner.hostTrap();return live;};
+				return Object.freeze({result: box.next,key: ()=>box.key,answer,invalid,trap,cancel,cleanup: ()=>cleanup});
+			}
 			// Install the rejection handler synchronously, even if PHP never awaits.
 			const result=guarded(m,()=>owner,v=>val(m.result,v));
-			return Object.freeze({result: ()=>result,cancel: ()=>owner.cancel()});
+			return Object.freeze({...hub.monitor(result),cancel: ()=>owner.cancel(),cleanup: ()=>cleanup});
 		}
 		const close=()=>guarded(m,()=>owner.return(),()=>'["end"]');
 		const next=()=>guarded(m,()=>owner.next(),step=>step.done?'["end"]':val(m.result,step.value));
-		return Object.freeze({next,close,dispose: ()=>{void close();}});
+		return Object.freeze({pull: ()=>hub.monitor(next()),drain: ()=>hub.monitor(close()),dispose: ()=>{void close();}});
 	} catch(e)
-	{return failure(m,e);}
+	{const packet=failure(m,e);box?.finish(packet);return packet;}
 };
 /**
  * Install private method closures before Zend starts. The PHP surface never
@@ -53,11 +65,12 @@ export const createPhpTaskDescriptor=(definition,bindings,files,ownerRuntime)=>{
 	const {key,namespace}=definition, registry=Symbol.for("lean-bridge.php-wasm.task-host.v1");
 	const methods=definition.methods.map(m=>{
 		if(typeof bindings[m.name]!=="function") throw new Error("Missing installed Lean task binding: "+m.name);
-		return operation(m,bindings[m.name]);
+		return m;
 	});
 	const getFiles=php=>{
 		const registryState=php[registry]??={ownerRuntime,namespaces: new Map()};
 		if(registryState.ownerRuntime!==ownerRuntime) throw new Error("Conflicting PHP-Wasm task runtimes");
+		const hub=registryState.callbackHub??=createPhpCallbackHub();
 		const state=registryState.namespaces, name=namespace.toLowerCase();
 		if(state.has(name))
 		{
@@ -66,7 +79,7 @@ export const createPhpTaskDescriptor=(definition,bindings,files,ownerRuntime)=>{
 		}
 		const names=methods.map((_,i)=>key+"_"+i);
 		if(names.some(n=>n in php.shared)) throw new Error("PHP-Wasm task binding already installed");
-		for(const [i,n] of names.entries()) php.shared[n]=methods[i];
+		for(const [i,n] of names.entries()) php.shared[n]=operation(methods[i],bindings[methods[i].name],hub);
 		state.set(name,key);return files;
 	};
 	return Object.freeze({getLibs: ()=>[],getFiles});

@@ -2,6 +2,7 @@
 import { lstat, mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { canonicalJson } from "../capsule/node.mjs";
+import {hashBindingIr} from "../binding-ir/canonical.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { resolveComponentRuntimeRoot } from "../release/component-runtime-root.mjs";
@@ -52,7 +53,7 @@ export const buildJavaScriptIOProject = async options => {
 		const packages=threaded ? writeJavaScriptTaskPackages : writeJavaScriptIOPackages;
 		const compiler = await prepareHostJavaScriptCompiler({project, engineRoot, environment, runner, intent: {lakeSnapshot}, signal,taskInputs}, async tools => {
 			source = await openHostProjectSource({...tools, project, inventory, component});
-			const compilation = await compile({...tools, ...source, app: work});
+			const compilation = await compile({...tools, ...source, phpWasm, app: work});
 			const root = join(staging, handoff);
 			await mkdir(root, {recursive: true});
 			const receipt = await packages({root,phpWasm
@@ -75,7 +76,7 @@ export const buildJavaScriptIOProject = async options => {
 			, backend: compiler.backend
 			, component
 			, configurationSha256: record.sha256
-			, bindingIrSha256: compilation.abi.bindingIrSha256
+			, bindingIrSha256: phpWasm ? hashBindingIr(compilation.api) : compilation.abi.bindingIrSha256
 			, componentIdentity: compilation.abi.componentIdentity
 			, runtimeIdentity: receipt.profiles[0].runtimeIdentity
 			, source: receipt.source

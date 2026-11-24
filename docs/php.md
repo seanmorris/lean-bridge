@@ -1348,9 +1348,29 @@ foreach (series(BigInteger::of(12)) as $number) {
 }
 ```
 
-`cancel()` returns true once if cancellation wins. A later `await()` then throws `TaskCancelled`. Cancellation stops delivery to PHP; a Lean worker waiting on application input may still need that input before it can exit. A factory failure throws from the function call, a worker failure throws from `await()`, and a returned Lean `Except` remains an `Ok` or `Err` value.
+`cancel()` returns true once if cancellation wins. A later `await()` then throws `TaskCancelled`. Cancellation stops delivery to PHP; a Lean worker waiting on application input may still need that input before it can exit. Call `awaitCleanup()` when you need this task’s native slot back. It does not wait for unrelated workers. A copied-value factory failure throws from the function call, a worker failure throws from `await()`, and a returned Lean `Except` remains an `Ok` or `Err` value.
 
-The Lean workers run in a separate, shared Wasm heap. In a browser, serve the app in a cross-origin-isolated context. This profile copies values across heaps; it does not accept PHP callables or pass object leases to an in-process Zend extension. [Installed task package checks](evidence/php-wasm-task-packages-20261124.md).
+The Lean workers run in a separate, shared Wasm heap. In a browser, serve the app in a cross-origin-isolated context. This profile does not pass object leases to an in-process Zend extension. [Installed task package checks](evidence/php-wasm-task-packages-20261124.md).
+
+#### Pass a PHP callback to a Lean worker
+
+Pass an ordinary unary callable. PHP runs it on its own interpreter stack while waiting for a Lean task, stream pull, or cleanup. A worker cannot interrupt arbitrary PHP code to invoke a callback. An await in one installed package can run a callback from another; the callback may itself await a different task.
+
+```php
+use Brick\Math\BigInteger;
+use function LeanRelay\twice;
+
+$result = twice(
+    BigInteger::of(6),
+    fn (BigInteger $n) => $n->plus(1),
+    fn (BigInteger $n) => $n->multipliedBy(3),
+)->await();
+echo $result; // 21
+```
+
+If the callable throws an `Exception`, Lean can handle it. If Lean propagates that same failure, `await()` throws the original PHP object. A callback invoked inside a Lean factory can suspend, so its failure also arrives through `await()`. An invalid return value fails the task; a PHP engine `Error` thrown by the callback retires the shared runtime. Use the package’s `RetainedCallback` wrapper only if you want to close a registration yourself. Closing it inside a callback permits that invocation to return but rejects subsequent calls.
+
+The shared executor permits two workers to wait for PHP callbacks at once. After a cancellation, `awaitCleanup()` is the point at which the worker has drained. Do not await a task or its cleanup from inside its own callback. See the [installed callback checks](evidence/php-wasm-retained-callback-packages-20261124.md).
 
 #### Call synchronous IO in PHP-Wasm
 

@@ -145,7 +145,9 @@ lean-bridge build --project ./jobs --target php-wasm --output ./release
 lean-bridge verify --receipt ./release/package-set-receipt.json
 ```
 
-The `php-wasm-threaded-task-v1` receipt identifies three archives in `release/packages/php-wasm/`: the npm host component, its exact pthread runtime, and the matching Composer API. Distribute that set together. The installed application needs no compiler or author SDK. The [PHP consumer example](../php.md#await-a-task-in-php-wasm) shows awaiting, cancelling, and early iterator exit. Retained PHP callbacks and cross-heap resources are not part of this copied task profile.
+The `php-wasm-threaded-task-v1` receipt identifies three archives in `release/packages/php-wasm/`: the npm host component, its exact pthread runtime, and the matching Composer API. Distribute that set together. The installed application needs no compiler or author SDK. The [PHP consumer example](../php.md#await-a-task-in-php-wasm) shows awaiting, cancelling, and early iterator exit.
+
+For retained callbacks, give a selected task a parameter of type `α → IO β`, where both types are supported copied scalars. Use the callback-capable [pthread author SDK](npm.md#build-a-threaded-npm-handoff). A copied-task-only SDK lacks the callback entry points; the build rejects it before writing a handoff. Review the PHP interface, not the private JavaScript scheduler: a PHP callable returns a value, not a JavaScript promise. Independently built components must depend on the same runtime archive to share an executor. See [the PHP callback example](../php.md#pass-a-php-callback-to-a-lean-worker). Cross-heap resource leases are not supported by this profile.
 
 ### Export a task that calls PHP
 

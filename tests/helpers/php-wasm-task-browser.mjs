@@ -11,22 +11,24 @@ import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
  * @param options.root - Test-owned browser scratch.
  * @param options.consumer - Relocated application directory.
  * @param options.name - Installed PHP host module's npm coordinate.
+ * @param options.other - Independently installed peer for the retained-callback application.
  */
-export const exercisePhpTaskBrowser=async({root,consumer,name})=>{
-	const imports=Object.fromEntries([name,"@lean-bridge/runtime"].map(n=>[n,"/node_modules/"+n+"/index.mjs"]));
+export const exercisePhpTaskBrowser=async({root,consumer,name,other})=>{
+	const names=other?[name,other]:[name],callbacks=Boolean(other);
+	const imports=Object.fromEntries([...names,"@lean-bridge/runtime"].map(n=>[n,"/node_modules/"+n+"/index.mjs"]));
 	await writeFile(join(consumer,"index.html"),'<!doctype html><link rel="icon" href="data:,"><script type="importmap">'+JSON.stringify({imports})+'</script>',{flag: "wx"});
 	const program=await readFile(join(consumer,"installed.php"),"utf8");
-	const faultProgram=await readFile("tests/fixtures/php-wasm-task-owner/fault.php","utf8");
+	const faultProgram=await readFile("tests/fixtures/php-wasm-task-owner/"+(callbacks?"callback-fault.php":"fault.php"),"utf8");
 	await copyFile("tests/fixtures/php-wasm-task-owner/crash-worker.mjs",join(consumer,"crash-worker.mjs"));
-	const evaluate=async({name,program})=>{
+	const evaluate=async({names,program})=>{
 		if(!globalThis.crossOriginIsolated) throw new Error("Browser test expected cross-origin isolation");
-		const {PhpWeb}=await import("/node_modules/php-wasm/PhpWeb.mjs"),{default: descriptor}=await import(name),rt=await import("@lean-bridge/runtime");
+		const {PhpWeb}=await import("/node_modules/php-wasm/PhpWeb.mjs"),descriptors=await Promise.all(names.map(async n=>(await import(n)).default)),rt=await import("@lean-bridge/runtime");
 		try
 		{
-			const php=new PhpWeb({version: "8.4",autoTransaction: false,sharedLibs: [descriptor]});let stdout="",stderr="";
+			const php=new PhpWeb({version: "8.4",autoTransaction: false,sharedLibs: descriptors});let stdout="",stderr="";
 			php.addEventListener("output",e=>{stdout+=e.detail.join("");});php.addEventListener("error",e=>{stderr+=e.detail.join("");});
 			await php.binary;await php.writeFile("/test.php",program);
-			const rc=await php.run("<?php require '"+descriptor.autoload+"'; require '/test.php';");
+			const rc=await php.run("<?php "+[...descriptors.map(d=>d.autoload),"/test.php"].map(p=>"require '"+p+"';").join(" "));
 			await rt.waitTaskRuntimeIdle();const {frames,pending,allocations,notifications,nativeOwners}=rt.taskRuntimeStats();
 			return {rc,stdout,stderr,counts: [frames,pending,allocations,notifications,nativeOwners]};
 		} finally
@@ -34,8 +36,8 @@ export const exercisePhpTaskBrowser=async({root,consumer,name})=>{
 	};
 	const result=await runInstalledChromium({root,consumer,names: [name]
 		, isolated: true,assembledDirectory: consumer
-		, timeoutMs: 90000,argument: {name,program},evaluate});
-	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.match(result.stdout,/PHP task API: typed await, cancel, release, errors and pull cleanup passed/u);assert.deepEqual(result.counts,[0,0,0,0,0]);
+		, timeoutMs: 90000,argument: {names,program},evaluate});
+	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed");assert.deepEqual(result.counts,[0,0,0,0,0]);
 	const crash=async({name,program})=>{
 		const Native=globalThis.Worker,workers=[];
 		/** Wrap only the Lean SDK's pthreads for this disposable host. */
@@ -55,7 +57,10 @@ export const exercisePhpTaskBrowser=async({root,consumer,name})=>{
 		const {PhpWeb}=await import("/node_modules/php-wasm/PhpWeb.mjs"),{default: descriptor}=await import(name),rt=await import("@lean-bridge/runtime");
 		const testCrash=()=>{
 			if(rt.taskRuntimeStats().pending!==1 || !workers.length) throw new Error("No pending PHP task to interrupt");
-			setTimeout(()=>{for(const w of workers) w.postMessage("test:lose-php-task-worker");},0);
+			return new Promise(done=>{
+				for(const w of workers) w.addEventListener("error",()=>setTimeout(()=>done(true),0),{once: true});
+				setTimeout(()=>{for(const w of workers) w.postMessage("test:lose-php-task-worker");},0);
+			});
 		};
 		const php=new PhpWeb({version: "8.4",autoTransaction: false,sharedLibs: [descriptor],shared: {testCrash}});
 		let out="",err="";php.addEventListener("output",e=>{out+=e.detail.join("");});php.addEventListener("error",e=>{err+=e.detail.join("");});

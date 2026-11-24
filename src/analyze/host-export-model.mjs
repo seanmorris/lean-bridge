@@ -36,6 +36,21 @@ export const pythonHostSelection = ir => {
 };
 
 /**
+ * Derive the private JS scheduler contract from the same inspected Lean
+ * entries as the public Zend contract. Never use this view to validate or
+ * publish the author's PHP review.
+ *
+ * @param api - Source-checked public interface.
+ * @param evidence - Actual compiler selection and elaborated metadata.
+ */
+export const taskWorkerInterface=(api,evidence)=>{
+	if(!evidence.selection.phpTaskCallbacks || !api.types.some(t=>t.kind==="callback")) return api;
+	const selection={...evidence.selection,javascriptTaskCallbacks: true};delete selection.phpTaskCallbacks;
+	return reconcileHostExports({ir: null,component: api.component
+		, metadata: evidence.metadata,selection}).api;
+};
+
+/**
  * Generate the public application Binding IR from actual checked signatures.
  * Reviewed prose may vary; identities, shapes, effects and lifetime claims may not.
  *
