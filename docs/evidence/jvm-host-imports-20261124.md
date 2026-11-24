@@ -132,3 +132,14 @@ languages × two load orders). Package-set receipt and JAR digests:
 | ordinary | workshop-peer | `2e623c7743fa1b101d442f03f808b4dfcd4a09f3e8271f97477bf56dd92f8355` | `6490f8d1ff99d08767005883000d775a1e236da8a45261966c7d8266b052dbb4` |
 | reviewed | workshop | `d853987e8466e45ff76934f3811fe02389afc2c0c068f406edd9d46cd26a3f04` | `512d6faf6fe7f77eba735d1d1f76b3cf1f43fa13be83a2c301d735596e649f7f` |
 | reviewed | workshop-peer | `c9cffd376b507bb0fcefe4f4d9fdfc032db0a8f0c0c2fe0946c54dae87bd5dfd` | `a054da3c5e5080d8ea4d3147153febc893b5396a4464454ccd9489b36bf8d8c0` |
+
+## A caught fatal error stops both installed components
+
+With commit `2c0e01c`, the [Java consumer](../../tests/fixtures/jvm-host-meter/Consumer.java) throws a `LinkageError` from the peer's `read`. Lean tries to map the error; Java receives the original object. A setter in the first component catches it and returns normally. The subsequent getter is never called, the outer update reports an unavailable runtime, and a fresh call through the peer is refused. Both bindings can still close. Ordinary and reviewed package pairs passed in Java and Kotlin, each in both load orders, with JNI checking enabled. These are local installed results, not hosted CI.
+
+| Source | Component | Receipt SHA-256 | JAR SHA-256 |
+| --- | --- | --- | --- |
+| ordinary | workshop | `95acf307b1f27f8b519aab7af1a125b8241230f5f880265905e8c50b0820bc54` | `8bc291a71f16394ab506ba52aca69353ea85d1b9a4dd5c6b01882834d4157c7f` |
+| ordinary | workshop-peer | `86e170557e8edf5e7bb3a3289a91d067cb15aea09350da4351d424b141cc4d45` | `00a7f514fbacfa403c37cc89fdfbdf4b51f94d65c9e0eece5a4d07a7bbec97d8` |
+| reviewed | workshop | `3c7e92ee93d9d61ffca016999c231efe2ff7bcac349f2d8c75c3903826643d9b` | `706874d171364795c8341fac939ccf1cfc957e77090044d0af6772300efaaf04` |
+| reviewed | workshop-peer | `0419bb9f7b8cd19528c21e6df33f626fbb32f594e43f14e2c9c6834e9aa832f1` | `4180d7736e44740472697b8a2664d6d9cddd3e4e4a088fb415fae6e37af0bff0` |
