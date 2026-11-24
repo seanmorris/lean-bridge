@@ -53,7 +53,8 @@ export const generateJvmHostMembers = async ir => {
 		const spec = "new HostMembers.Spec(" + fields.join(", ") + ")";
 		return { id: d.id, symbol: hostMemberSymbol("jvm", t, d), name, mode, owner: i, params, out, spec };
 	}));
-	const implementation = await readFile(new URL("./host-members.java", import.meta.url), "utf8");
+	const implementation = (await readFile(new URL("./host-members.java", import.meta.url), "utf8")) + "\n"
+		+ await readFile(new URL("./host-wire.java", import.meta.url), "utf8");
 	const contract = `final class HostContract {
     private HostContract() {}
     static HostMembers bind(Class<?> unit, Class<?>... supplied) {

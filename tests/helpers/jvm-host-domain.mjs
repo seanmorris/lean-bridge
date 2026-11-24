@@ -4,7 +4,7 @@ import { copyFile, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } 
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
-import { generateJvmHostMembers } from "../../src/backends/jvm/host-members.mjs";
+import { generateJvmNativeMembers } from "../../src/backends/jvm/host-native-members.mjs";
 import { generateLeanHostObjectAdapters } from "../../src/backends/lean/host-object.mjs";
 import { linuxBrokerHeader, linuxBrokerSource } from "../../src/backends/native/runtime-broker.mjs";
 import { compileJvmHostDomain, compileJvmIOOwner } from "../../src/build/jvm-io-owner.mjs";
@@ -37,7 +37,13 @@ test("two independently linked JVM components share nominal Lean wrappers across
 	const method = structuredClone(identity);
 	method.owner = key.id; method.id = key.id + ".identity"; method.overloadKey = "Key.identity";
 	method.result.type.id = key.id; method.receiver.type.id = key.id; method.source.declaration = "Key.identity";
-	input.types = [box, key]; input.declarations = [identity, method];
+	const read = input.declarations.find(d => d.name === "read"), parameter = input.declarations.find(d => d.kind === "constructor").parameters[0];
+	const tags = "unit bool char uint8 uint16 uint32 uint64 usize int8 int16 int32 int64 isize float32 float64 string bytes nat int".split(" ");
+	const scalars = tags.map(tag => {
+		const name = "echo_" + tag, type = { kind: "primitive", name: tag }, decl = "Box." + name;
+		return { ...read, name, id: box.id + "." + name, overloadKey: decl, parameters: [{ ...parameter, type }], result: { ...read.result, type }, source: { ...read.source, declaration: decl } };
+	});
+	input.types = [box, key]; input.declarations = [identity, method, ...scalars];
 	const runtimeIdentity = sha256("jvm-host-domain-test-runtime");
 	const reports = [];
 	for(const component of ["alpha", "beta"])
@@ -51,8 +57,11 @@ test("two independently linked JVM components share nominal Lean wrappers across
 		if(reports.length) assert.deepEqual(hashes, reports[0]);
 		else for(const [i, n] of [owner.name, domain.name].entries()) await save(install, n, binaries[i]);
 		reports.push(hashes);
-		const generated = await generateJvmHostMembers(input);
-		assert.deepEqual(generated.members.map(m => m.symbol), ["lean_bridge_host_jvm_box_identity", "lean_bridge_host_jvm_key_identity"]);
+		const generated = await generateJvmNativeMembers(input);
+		await save(app, "generated-members.inc", generated.native);
+		await save(app, "member-abi.h", generated.header);
+		await copyFile(resolve("src/backends/jvm/host-wire.h"), join(app, "host-wire.h"));
+		assert.equal(generated.members.length, 21);
 		const header = ["#define COMPONENT " + JSON.stringify(component)
 			, "#define CALL Java_experiment_" + component + "_PortImpl_call"
 			, "#define COUNT Java_experiment_" + component + "_PortImpl_count"
@@ -60,14 +69,15 @@ test("two independently linked JVM components share nominal Lean wrappers across
 		await save(app, "component.h", header.join("\n") + "\n");
 		const module = "LeanBridge/Host/Jvm";
 		await save(app, module + ".lean", generateLeanHostObjectAdapters(input)[module + ".lean"]);
-		await copyFile(join(fixture, "SharedRefs.lean"), join(app, "SharedRefs.lean"));
+		await save(app, "SharedRefs.lean", await readFile(join(fixture, "SharedRefs.lean"), "utf8") + "\n" + generated.helpers + "\n");
 		const env = { ...process.env, LEAN_NUM_THREADS: "1", LEAN_PATH: app, LEAN_SRC_PATH: app, LEAN_SYSROOT: lean };
 		for(const [m, c] of [[module, "host.c"], ["SharedRefs", "refs.c"]])
 			await cmd(join(lean, "bin/lean"), ["-j1", "-R", app, "-o", m + ".olean", "-c", c, m + ".lean"], app, env);
 		await save(app, "exports.map", "{ global: Java_experiment_" + component + "_PortImpl_*; local: *; };\n");
 		const build = [...common, ...domain.includes, owner.flag, domain.flag];
+		await save(app, "checked-host.c", '#include "host.c"\n#include "member-abi.h"\n');
 		await cmd(cc, [...build, "-I.", "-I" + shared
-			, "host.c"
+			, "checked-host.c"
 			, "refs.c"
 			, "host-frame.c"
 			, join(fixture, "refs-component.c")

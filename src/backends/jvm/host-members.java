@@ -59,7 +59,7 @@ final class HostMembers {
     static final class BoundaryFailure extends IllegalArgumentException {
         BoundaryFailure(String site, RuntimeException cause) { super("invalid host " + site, cause); }
     }
-    private record Bound(MethodHandle invoke, Site[] args, Site result) {}
+    private record Bound(MethodHandle invoke, Site[] args, int passed, Site result) {}
     private final Bound[] members;
     private final Class<?>[] classes;
     Class<?>[] classes() { return classes.clone(); }
@@ -72,8 +72,10 @@ final class HostMembers {
             try {
                 var lookup = MethodHandles.publicLookup();
                 var owner = lookup.accessClass(s.owner);
-                Class<?>[] args = new Class<?>[s.parameters.length];
-                for (int j = 0; j < args.length; j++) args[j] = s.parameters[j].type;
+                // Unit carries no application value. A Java host method need
+                // not import a component-specific Unit class to serve two JARs.
+                Class<?>[] args = java.util.Arrays.stream(s.parameters)
+                    .filter(p -> !p.kind.equals("unit")).map(Site::type).toArray(Class<?>[]::new);
                 MethodHandle target;
                 boolean instance = s.mode.equals("instance");
                 if (s.mode.equals("new")) {
@@ -88,11 +90,12 @@ final class HostMembers {
                     MethodType mt = MethodType.methodType(m.getReturnType(), args);
                     target = instance ? lookup.findVirtual(owner, s.name, mt) : lookup.findStatic(owner, s.name, mt);
                 }
-                Site[] sites = new Site[args.length + (instance ? 1 : 0)];
+                Site[] sites = new Site[s.parameters.length + (instance ? 1 : 0)];
                 if (instance) sites[0] = new Site("receiver", owner);
-                System.arraycopy(s.parameters, 0, sites, instance ? 1 : 0, args.length);
-                members[i] = new Bound(target.asFixedArity().asSpreader(Object[].class, sites.length)
-                    .asType(MethodType.methodType(Object.class, Object[].class)), sites, s.result);
+                System.arraycopy(s.parameters, 0, sites, instance ? 1 : 0, s.parameters.length);
+                int passed = args.length + (instance ? 1 : 0);
+                members[i] = new Bound(target.asFixedArity().asSpreader(Object[].class, passed)
+                    .asType(MethodType.methodType(Object.class, Object[].class)), sites, passed, s.result);
             } catch (ReflectiveOperationException | IllegalArgumentException e) {
                 throw new IllegalArgumentException("cannot bind " + s.owner.getTypeName() + "." + s.name, e);
             }
@@ -101,12 +104,23 @@ final class HostMembers {
 
     // Private JNI ingress; checked exceptions escape unchanged to the
     // enclosing native call frame, never wrapped in InvocationTargetException.
+    Object invokeWire(int slot, Object[] wire) throws Throwable {
+        Bound b = members[slot];
+        if (wire.length != b.args.length) throw new IllegalArgumentException("wrong host argument count");
+        Object[] args = new Object[wire.length];
+        for(int i=0; i<args.length; i++)
+            args[i]=HostWire.decode(b.args[i].kind,b.args[i].type,wire[i]);
+        return HostWire.encode(b.result.kind,invoke(slot,args));
+    }
     Object invoke(int slot, Object[] input) throws Throwable {
         Bound b = members[slot];
         if (input.length != b.args.length) throw new IllegalArgumentException("wrong host argument count");
-        Object[] args = new Object[input.length];
-        for (int i = 0; i < args.length; i++) {
-            try { args[i] = b.args[i].checked(input[i], false); }
+        Object[] args = new Object[b.passed];
+        for (int i = 0,j = 0; i < input.length; i++) {
+            try {
+                Object v = b.args[i].checked(input[i], false);
+                if (!b.args[i].kind.equals("unit")) args[j++] = v;
+            }
             catch (RuntimeException e) { throw new BoundaryFailure("argument " + i, e); }
         }
         Object result = (Object)b.invoke.invokeExact(args);

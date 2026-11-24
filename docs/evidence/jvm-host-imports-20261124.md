@@ -66,3 +66,15 @@ x86-64, the independently built copies of the owner had SHA-256
 `b627be085eafc1cfdc61d2685a7d5c568176e12ac8a82810bd36df6407367b43`;
 both copies of the shared nominal domain had SHA-256
 `9728e40ff5b5f69e1893524253e12d2055de6cf2aedfadb87eb90e94f77a0436`.
+
+The integration test now generates every imported member's native C
+definition from the contract and compiles its prototype alongside Lean's
+generated C. In both components it exercises all 19 primitive types, not
+just nominal references. Java checks the incoming values and returns changed
+values that Lean checks independently. Cases include the unsigned 64-bit
+maximum, signed minima, 160-bit integers, Unicode with embedded NUL, byte
+array copy isolation, negative zero and signed subnormal floats. For NaN
+the comparison is with Lean's own observer: on 4.32.2, `Float32.toBits`
+reports `0x7fc00000` for a quiet NaN with payload `0x42`, even with no
+bridge involved. A Lean `Unit` input carries no data and is omitted from
+the Java host method's parameters; a `Unit` return uses Java `void`.
