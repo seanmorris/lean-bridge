@@ -200,7 +200,7 @@ Zero-initialize outputs that can own strings. Dispose them with the generated fu
 
 The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
 
-A separate [canonical future embedding test](../evidence/wit-canonical-async-20261124.md) delivers a parked Lean task through an async-enabled engine. It does not change the API of this release.
+A separate [canonical future embedding test](../evidence/wit-canonical-async-20261124.md) runs a Wasm application that awaits two Lean tasks. The second can complete while the first is still pending; the application does not pump the scheduler. The prepared WIT package still uses the task-resource API described here.
 
 ### Give a task a host callback
 
