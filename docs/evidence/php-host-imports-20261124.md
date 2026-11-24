@@ -44,9 +44,17 @@ verifies the installed inventory and runs with no compiler on its path.
 Set `LEAN_BRIDGE_PHP_HOST_INTERPRETERS` to a comma-separated list of absolute
 PHP executable paths. Set `LEAN_BRIDGE_PHP_HOST_OUTPUT` to an existing
 directory to keep the archives, receipts and consumer results for replay.
+To test a newer client against those same package bytes, run:
+
+```sh
+LEAN_BRIDGE_PHP_HOST_REPLAY=/path/to/php-host-handoffs-ID npm run test:php-host-installed
+```
+
+The replay reads the ordinary and reviewed handoffs, verifies their receipts
+and reinstalls them offline. It does not recompile Lean or modify either handoff.
 
 The [installed client](../../tests/fixtures/php-host-members/compiled.php)
-passed 22 checks on PHP 8.2.35 and 8.5.10 for each source route. The first
+initially passed 22 checks on PHP 8.2.35 and 8.5.10 for each source route. The first
 call returns an application-created object unchanged. Lean then constructs and
 mutates a PHP object, handles nested calls, propagates the original exception,
 maps it to a typed failure and carries objects in both value and error
@@ -54,6 +62,16 @@ payloads. Wrong-class and wrongly typed PHP replies stay boundary errors,
 even when Lean maps an IO failure. A later valid call succeeds. An attempted
 close from inside a call leaves the binding usable.
 Explicit close, repeated close and reopening leave zero private PHP references.
+
+The expanded client passed **35 checks on PHP 8.2.35 and 34 on PHP 8.5.10**
+for each of the same two archives. While a member was suspended inside a
+real Lean call, the owner guard refused another caller's read, close and new
+binding. The original Fiber resumed and returned its value. Cloning,
+serialization and attempts to use an uninitialized binding failed.
+A discarded weak-canonical object became unreachable immediately. The
+extra check on PHP 8.2 used an actual fork: neither read nor close worked
+in the child, and the parent binding remained usable. The tested 8.5
+interpreter was built without `pcntl_fork`.
 
 | Source route | Composer ZIP SHA-256 | Package-set receipt SHA-256 |
 | --- | --- | --- |

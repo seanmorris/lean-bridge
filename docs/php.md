@@ -95,6 +95,12 @@ catches the generated exception and reads its `payload`. A returned `Except`
 is an `Ok` or `Err` value, not a thrown exception. This synchronous host-class
 profile is native PHP CLI only; it does not run PHP methods on a Lean worker.
 
+If a PHP member suspends its Fiber while Lean is calling it, resume that
+Fiber before using or closing a binding from another Fiber. The second
+caller gets a `LogicException`; it does not cancel the first call. A
+forked child cannot use or close an inherited binding. Start a fresh PHP
+process if the child needs to call Lean.
+
 ### Call synchronous IO and handle errors
 
 Install the publisher’s native Composer package and require its autoloader.

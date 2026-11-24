@@ -57,9 +57,45 @@ $nested->callback=fn()=>$binding->read($bad);
 check(failure(fn()=>$binding->read($nested))===$bad->exception,'original exception through nested call');
 $nested->callback=function() use($binding) { return failure(fn()=>$binding->close()) instanceof \RuntimeException ? 8 : -1; };
 check($binding->read($nested)===8 && $binding->read($box)===42,'self disposal refused; binding remains usable');
+
+// Suspend the real PHP callback, leaving both the Lean and FFI frames live.
+// Another Fiber must not enter (or retire) the process-wide native registry.
+$nested->callback=static fn()=>\Fiber::suspend('in PHP member');
+$fiber=new \Fiber(fn()=>$binding->read($nested));
+check($fiber->start()==='in PHP member','PHP member suspended inside Lean call');
+foreach ([fn()=>$binding->read($box),fn()=>$binding->close(),fn()=>withHosts(['Box'=>Meter::class])] as $foreign) {
+    $e=failure($foreign);
+    check($e instanceof \LogicException && str_contains($e->getMessage(),'another fiber'),'foreign Fiber refused at owner gate');
+}
+$fiber->resume(31);
+check($fiber->isTerminated() && $fiber->getReturn()===31 && $binding->read($box)===42,'original owner resumes and unwinds cleanly');
+
+check(failure(fn()=>clone $binding) instanceof \Error,'cannot clone an owner');
+check(failure(fn()=>serialize($binding)) instanceof \LogicException,'cannot serialize an owner');
+$empty=(new \ReflectionClass($binding))->newInstanceWithoutConstructor();
+check(failure(fn()=>$empty->read($box)) instanceof \LogicException,'constructor bypass does not create an active binding');
+check(failure(fn()=>$empty->__unserialize([])) instanceof \LogicException,'cannot restore a binding');
+$ephemeral=$binding->make(14); $weak=\WeakReference::create($ephemeral);
+check($binding->identity($ephemeral)===$ephemeral,'weak canonical object is unchanged');
+unset($ephemeral);
+check($weak->get()===null,'registry does not pin discarded weak canonical objects');
+
+$fork=function_exists('pcntl_fork');
+if ($fork) {
+    $pid=pcntl_fork(); if ($pid<0) throw new \RuntimeException('fork failed');
+    if ($pid===0) {
+        foreach ([fn()=>$binding->read($box),fn()=>$binding->close()] as $inherited) {
+            $e=failure($inherited);
+            if (!$e instanceof \LogicException || !str_contains($e->getMessage(),'Inherited')) exit(2);
+        }
+        exit(0);
+    }
+    check(pcntl_waitpid($pid,$status)===$pid && pcntl_wifexited($status) && pcntl_wexitstatus($status)===0,'child refused inherited read and close');
+}
+check($binding->read($box)===42,'original binding remains usable after owner checks');
 $binding->close(); $binding->close();
 check(failure(fn()=>$binding->read($box)) instanceof \LogicException,'closed binding refuses calls');
 check(References::count()===0,'weak binding, class, object and call tokens all released');
 $reopen=withHosts(['Box'=>Meter::class]); check($reopen->identity($box)===$box,'new binding starts clean'); $reopen->close();
 check(References::count()===0,'zero tokens after second binding');
-echo json_encode(['php'=>PHP_VERSION,'checks'=>$checks],JSON_THROW_ON_ERROR),"\n";
+echo json_encode(['php'=>PHP_VERSION,'checks'=>$checks,'fork'=>$fork],JSON_THROW_ON_ERROR),"\n";
