@@ -15,20 +15,31 @@ export const callbackBindings=options=>{
 		if(!types.has(sig))
 		{
 			const index=types.size,name=p+"callback_"+sig,fn=name+"_fn",payload=name+"_payload";
-			const a=kinds[r.arg],b=kinds[r.reply],at=a[0]??p+"text",bt=b[0]??p+"text";
+			const a=kinds[r.arg],b=kinds[r.reply],at=a[0]??p+(r.arg==="bytes"?"byte_view":"text"),bt=b[0]??p+(r.reply==="bytes"?"byte_view":"text");
 			const read=r.arg==="string"?"("+p+"text){arg->of.string.data,arg->of.string.size}":"arg->of."+a[2];
 			const lift=r.reply==="string"?"return lb_fn_message(value,out);"
-				:(r.reply==="char"?"if (!lb_unicode(value)) return "+p+"INVALID; ":"")+"*out=(lb_val){.kind=WASMTIME_COMPONENT_"+b[1]+",.of."+b[2]+"=value}; return "+p+"OK;";
+				:r.reply==="bytes"?"lb_scope budget={.remaining=16u*1024u*1024u}; return lb_pack_bytes(value,out,&budget);"
+					:(r.reply==="char"?"if (!lb_unicode(value)) return "+p+"INVALID; ":"")+"*out=(lb_val){.kind=WASMTIME_COMPONENT_"+b[1]+",.of."+b[2]+"=value}; return "+p+"OK;";
+			const borrowed=r.arg==="bytes";
 			defs.push("typedef struct { uint64_t _private[3]; } "+name+";",
 				"typedef bool (*"+fn+")(void *context, "+at+" argument, "+bt+" *reply, "+p+"text *error);");
 			code.push(`typedef struct { ${fn} fn; void *context; void (*destroy)(void *); } ${payload};
 static void ${name}_destroy(void *data) { ${payload} *v=data; if (v->destroy) v->destroy(v->context); free(v); }
+${borrowed?`static ${p}status ${name}_invoke(${payload} *v,${at} bytes,bool *failed,lb_val *out) {
+    ${bt} value={0}; ${p}text error={0};
+    *failed=!v->fn(v->context,bytes,&value,&error);
+    if (*failed) return lb_fn_message(error,out);
+    ${lift}
+}`:""}
 static ${p}status ${name}_call(void *data,const lb_val *arg,bool *failed,lb_val *out) {
-    ${payload} *v=data; ${bt} value={0}; ${p}text error={0};
+    ${borrowed?`${p}bytes owned={0}; int decoded=lb_unpack_bytes(arg,&owned);
+    if (decoded!=LB_GOOD) return decoded==LB_OVER_BUDGET?${p}LIMIT:${p}TRAPPED;
+    ${p}status rc=${name}_invoke(data,(${at}){owned.data,owned.size},failed,out);
+    ${p}bytes_dispose(&owned); return rc;`:`${payload} *v=data; ${bt} value={0}; ${p}text error={0};
     if (arg->kind!=WASMTIME_COMPONENT_${a[1]}) return ${p}TRAPPED;
     *failed=!v->fn(v->context,${read},&value,&error);
     if (*failed) return lb_fn_message(error,out);
-    ${lift}
+    ${lift}`}
 }`);
 			add("make_callback_"+sig,[p+"session *s",fn+" function","void *context","void (*destroy)(void *)",name+" *out"],
 				`    if (!function || !out || out->_private[0] || out->_private[1] || out->_private[2]) return ${p}INVALID;

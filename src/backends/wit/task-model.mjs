@@ -22,6 +22,7 @@ const scalarNames = new Map(Object.entries({
 	, float32: "f32", float64: "f64", string: "string"
 }));
 const scalar = type => {
+	if(type?.kind==="primitive" && type.name==="bytes") return {scalarName: "bytes",wit: "list<u8>",wat: "(list u8)",fields: []};
 	const wat = type?.kind === "primitive" && scalarNames.get(type.name);
 	if(!wat) throw new TypeError("Unsupported WIT task boundary type");
 	return { scalarName: type.name, wit: wat, wat, fields: [] };

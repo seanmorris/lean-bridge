@@ -188,6 +188,8 @@ Build with `cc main.c $(pkg-config --cflags --libs meter-wit) -o main`. Open and
 
 Each task delivers at most one value. Cancel stops delivery and returns whether this request won; it need not stop the Lean worker immediately. Drop a task to free its slot, or close the session to release all outstanding tasks. A session has 256 resource slots, including completed tasks not yet dropped. Packages that pass Lean objects reserve space for delivery; a borrow temporarily uses a slot. If a start returns `LIMIT`, drop owners you no longer need before retrying. A copied task refers to the same resource; it becomes stale on drop and cannot be used in another session. Returned strings are independent of the task and session; dispose them with the generated `string_dispose` function.
 
+For a Lean `ByteArray`, pass a generated `byte_view`: a pointer to `const uint8_t` plus a byte count. You can reuse your input as soon as start returns. Initialize a returned `bytes` or a result containing bytes to `{0}`, read its `.data` and `.size`, then call its generated dispose function. The bytes remain yours if you drop the task or close the session. Use the state or result tag to distinguish an empty byte array from an error or the end of a cursor; never use `strlen`.
+
 The generated signature tells you where a failure can occur:
 
 | What Lean did | What the installed caller receives |
@@ -243,6 +245,8 @@ show both outcomes. Unlike a standalone future, a stream also runs the
 cursor's close operation when the reader is dropped.
 
 ### Give a task a host callback
+
+For a `ByteArray → IO ByteArray` callback, the argument is a borrowed `byte_view` valid during that invocation. You may return the argument or a subspan as the reply: the adapter copies it before releasing the argument. Do not retain its pointer. The [binary callback example](../../tests/fixtures/wit-pollable-bytes/consumer.c) also shows how a rejected factory callback differs from a rejected worker callback.
 
 [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean) takes a Lean function of type `UInt32 → IO UInt32`. In the installed C package, register a function with that signature and pass its handle to the task. The function runs on the store's main thread, during `poll` or `await`. The Lean worker never calls into your C context from a worker thread.
 

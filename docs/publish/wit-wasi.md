@@ -126,7 +126,9 @@ lets its caller observe cursor cleanup separately from the worker's exit.
 
 ### Typed task resources
 
-Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)` or `EIO ε (Task α)` with `taskExports`. Arguments can be `Bool`, `Char`, `String`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. Results and typed factory errors can also contain nested `Except` over those types. An `IO` or `EIO` factory has a fallible start operation: success yields an owned task, and failure yields the error without creating a task.
+Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)` or `EIO ε (Task α)` with `taskExports`. Arguments can be `Bool`, `Char`, `String`, `ByteArray`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. Results and typed factory errors can also contain nested `Except` over those types. An `IO` or `EIO` factory has a fallible start operation: success yields an owned task, and failure yields the error without creating a task.
+
+`ByteArray` becomes WIT `list<u8>` in task and cursor results, typed errors, and retained callback arguments and replies. It is copied, not decoded as text. The pollable profile’s 16 MiB conversion budget counts Wasmtime’s tagged element storage as well as the packed bytes; it is not a 16 MiB payload allowance.
 
 For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives the message as text. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. External capabilities are not part of this profile.
 

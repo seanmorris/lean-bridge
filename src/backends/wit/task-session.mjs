@@ -8,6 +8,7 @@ const kinds = {
 	bool: ["bool","BOOL","boolean"],char: ["uint32_t","CHAR","character"]
 	, float32: ["float","F32","f32"],float64: ["double","F64","f64"]
 	, string: [null,"STRING","string"]
+	, bytes: [null,"LIST","list"]
 };
 for(const w of [8,16,32,64]) for(const [lean,tag] of [["int","s"],["uint","u"]])
 	kinds[lean+w]=[lean+w+"_t",tag.toUpperCase()+w,tag+w];
@@ -20,20 +21,20 @@ const outputCodecs=(p,defs,code)=>{
 		if(!Array.isArray(shape) && leaves.has(shape)) return leaves.get(shape);
 		const pair=Array.isArray(shape), text=shape==="string", spec=kinds[shape];
 		const a=pair && make(shape[0],name+"_ok"), b=pair && make(shape[1],name+"_err");
-		const type=pair?p+name:text?p+"string":spec[0];
+		const type=pair?p+name:text?p+"string":shape==="bytes"?p+"bytes":spec[0];
 		const reader="lb_read_"+(pair?name:shape);
 		if(pair) defs.push(`typedef struct { bool ok; ${a.type} value; ${b.type} error; } ${type};`);
 		const native=pair?`if (v->kind!=WASMTIME_COMPONENT_RESULT || !v->of.result.val) return LB_MALFORMED;
     out->ok=v->of.result.is_ok;
     return out->ok ? ${a.reader}(v->of.result.val,&out->value) : ${b.reader}(v->of.result.val,&out->error);`
-			: `if (v->kind!=WASMTIME_COMPONENT_${spec[1]}) return LB_MALFORMED;
+			:shape==="bytes"?"return lb_unpack_bytes(v,out);": `if (v->kind!=WASMTIME_COMPONENT_${spec[1]}) return LB_MALFORMED;
     ${text?`size_t n=v->of.string.size;
     if (n>16u*1024u*1024u || (n && !v->of.string.data)) return LB_MALFORMED;
     char *buf=malloc(n+1); if (!buf) return LB_OVER_BUDGET;
     if (n) memcpy(buf,v->of.string.data,n);
     buf[n]=0; *out=(${p}string){buf,n};`:"*out=v->of."+spec[2]+";"} return LB_GOOD;`;
 		code.push(`static int ${reader}(const lb_val *v,${type} *out) { ${native} }`);
-		const paths=pair?[...a.paths.map(k=>".value"+k),...b.paths.map(k=>".error"+k)]:text?[""]:[];
+		const paths=pair?[...a.paths.map(k=>".value"+k),...b.paths.map(k=>".error"+k)]:text||shape==="bytes"?[""]:[];
 		if(pair && paths.length) defs.push(`static inline void ${type}_dispose(${type} *v) {
     if (v) { ${paths.map(k=>"free((*v)"+k+".data);").join(" ")} memset(v,0,sizeof *v); }
 }`);
@@ -45,6 +46,7 @@ const outputCodecs=(p,defs,code)=>{
 };
 
 const bindings = model=>{
+	const binary=model.wire.methods.some(m=>[m.args,m.result,m.error,m.terminal].flat(Infinity).includes("bytes")) || model.methods.some(m=>m.callbacks?.some(c=>c.arg==="bytes"||c.reply==="bytes"));
 	const p=model.name.replaceAll("-","_")+"_wit_", defs=[], code=[],symbols=[];
 	const heap=new Map((model.heap??[]).map((r,kind)=>["lease:"+r.hash,{...r,kind,type: p+"lease_"+r.slug}]));
 	const copy=outputCodecs(p,defs,code);
@@ -63,6 +65,9 @@ const bindings = model=>{
 		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END",...model.methods.some(m=>m.callbacks?.length)?["FACTORY_FAILED","FACTORY_CALLBACK_FAILED","WORKER_CALLBACK_FAILED"]:[]].map(n=>p+n).join(", ")+" } "+p+"state;",
 		"typedef struct { const char *data; size_t size; } "+p+"text;",
 		"typedef struct { char *data; size_t size; } "+p+"string;");
+	if(binary) defs.push("typedef struct { const uint8_t *data; size_t size; } "+p+"byte_view;",
+		"typedef struct { uint8_t *data; size_t size; } "+p+"bytes;",
+		"static inline void "+p+"bytes_dispose("+p+"bytes *v) { if (v) { free(v->data); v->data=NULL; v->size=0; } }");
 	add("open",[p+"session **out"]); add("close",[p+"session **owner"]);
 	for(const r of heap.values())
 	{
@@ -89,13 +94,15 @@ const bindings = model=>{
 		const result=value.type+" *value", state=p+"state *state";
 		defs.push("typedef struct { uint64_t _private[2]; } "+h+";");
 		const calls=(model.methods[i].callbacks??[]).map(r=>sites.get(r.resource)),retained=calls.length>0;
-		const args=m.args.map((a,k)=>(a==="callback"?calls.find(r=>r.slot===k).name:heap.get(a)?.type??kinds[a]?.[0]??p+"text")+" v"+k);
+		const args=m.args.map((a,k)=>(a==="callback"?calls.find(r=>r.slot===k).name:a==="bytes"?p+"byte_view":heap.get(a)?.type??kinds[a]?.[0]??p+"text")+" v"+k);
 		const borrowed=m.args.some(a=>heap.has(a));
-		const init=m.args.map((a,k)=>a==="callback"?null:heap.has(a)?"{0}":a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
+		const slots=m.args.flatMap((a,k)=>a==="callback"?[]:[k]);
+		const bytes=slots.flatMap((k,at)=>m.args[k]==="bytes"?["{"+at+",v"+k+"}"]:[]);
+		const init=m.args.map((a,k)=>a==="callback"?null:heap.has(a)||a==="bytes"?"{0}":a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
 			: "{.kind=WASMTIME_COMPONENT_"+kinds[a][1]+",.of."+kinds[a][2]+"=v"+k+"}").filter(Boolean);
-		const input=borrowed?"args,leases":init.length?"args":"NULL";
-		const call=(borrowed?"lb_start_leases":"lb_start")+"(s,"+i+","+input+",out?out->_private:NULL,"+(error && !retained?"&v":"NULL")+")";
-		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error && !retained?[error.type+" *failure"]:[]],(init.length?"    "+(borrowed?"":"const ")+"lb_val args[]={"+init.join(",")+"};\n":"")
+		const input=bytes.length?"args,"+(borrowed?"leases":"NULL")+",(const lb_bytes_arg[]){"+bytes.join(",")+"},"+bytes.length:borrowed?"args,leases":init.length?"args":"NULL";
+		const call=(bytes.length?"lb_start_bytes":borrowed?"lb_start_leases":"lb_start")+"(s,"+i+","+input+",out?out->_private:NULL,"+(error && !retained?"&v":"NULL")+")";
+		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error && !retained?[error.type+" *failure"]:[]],(init.length?"    "+(borrowed||bytes.length?"":"const ")+"lb_val args[]={"+init.join(",")+"};\n":"")
 			+(borrowed?"    const uint64_t *leases[]={"+m.args.flatMap((a,k)=>a==="callback"?[]:[heap.has(a)?"v"+k+"._private":"NULL"]).join(",")+"};\n":"")
 			+(retained?`    lb_fn_hold *holds=NULL; const lb_fn_arg callbacks[]={${calls.map(r=>"{"+r.site+","+r.index+",v"+r.slot+"._private}").join(",")}};
     ${p}status rc=lb_fn_prepare(s,callbacks,${calls.length},&holds); if (rc!=${p}OK) return rc;
@@ -153,7 +160,10 @@ extern "C" {
  * borrowed value directly to another package built for the same declaration
  * and runtime. Drop each owner exactly once, even after closing its session;
  * copying the struct does not retain it. Use retain_lease for another owner. */`:""}
-${sites.size?`/* A callback-bearing start returns an owner before the factory runs. Poll runs
+${binary?`/* byte_view borrows packed bytes for one call or callback. Returned bytes
+ * and active result/error branches own their data; initialize to zero and dispose
+ * before reuse. Callback replies may borrow their argument, including a subspan. */
+`:""}${sites.size?`/* A callback-bearing start returns an owner before the factory runs. Poll runs
  * at most one host invocation per call; await dispatches until delivery. Drop
  * your registration after start, or revoke to refuse future invocations. The
  * context destructor runs after the last task and active invocation release it.
@@ -166,7 +176,7 @@ static inline void ${p}string_dispose(${p}string *s) { if (s) { free(s->data); s
 #endif
 #endif
 `;
-	return {header,code,symbols,p};
+	return {header,code,symbols,p,binary};
 };
 
 /**
@@ -183,7 +193,7 @@ export const renderWitTaskHeader = model=>bindings(model).header;
  * @param component - Validated binary component.
  */
 export const generateWitTaskSession = async (model,component)=>{
-	const {header,code,symbols,p}=bindings(model), prefix=model.name.replaceAll("-","_");
+	const {header,code,symbols,p,binary}=bindings(model), prefix=model.name.replaceAll("-","_");
 	const callback=model.methods.some(m=>m.callbacks?.length)?await readFile(new URL("task-callback-session.h",import.meta.url),"utf8"):"";
 	const session=(await readFile(new URL("task-session.h",import.meta.url),"utf8")).replace("/* LB_CALLER_DISPATCH */",()=>callback);
 	const heapSession=model.heap?.length?await readFile(new URL("task-lease-session.h",import.meta.url),"utf8"):null;
@@ -200,6 +210,7 @@ export const generateWitTaskSession = async (model,component)=>{
 					const [local,native]=pair.split(":");return "#define LB_WIT_LEASE_"+local+" "+model.prefix+"_"+native;
 				})
 				, heapSession]:[]
+			, ...binary?[await readFile(new URL("task-byte-session.h",import.meta.url),"utf8")]:[]
 			, ...code
 			, ""
 		].join("\n")};

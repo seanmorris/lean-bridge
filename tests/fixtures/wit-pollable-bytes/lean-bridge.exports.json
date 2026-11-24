@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Packet", "Host"],
+  "exports": ["Packet.packet", "Packet.chunks", "Host.wake", "Host.counts", "Host.through"],
+  "taskExports": ["Packet.packet", "Host.wake", "Host.counts", "Host.through"],
+  "taskIOErrors": ["Host.through"],
+  "asyncIterators": [{"open": "Packet.chunks", "next": "Packet.next", "close": "Packet.finish"}],
+  "targets": {"wit-wasi": {"name": "packet", "version": "1.0.0"}}
+}
