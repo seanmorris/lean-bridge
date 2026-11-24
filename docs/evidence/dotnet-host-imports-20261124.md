@@ -107,3 +107,24 @@ open a binding after the installed domain library is modified.
 This evidence covers synchronous host imports on .NET 8/Linux x86-64. It
 does not establish arbitrary dynamic member lookup or asynchronous host
 imports.
+
+Two checks need the installed public API. First, passing `sbyte.MinValue`
+from C# to Lean exercises a different encoder from returning an `sbyte` from
+a C# member called by Lean. The public encoder must send eight bits, not a
+sign-extended 64-bit word; the same rule applies to `short` and `int`.
+Second, each component has a separate native call stack. A callee can retire
+the shared runtime even when its caller catches the original exception. The
+setter/getter case checks for a second application effect, not just the
+exception reported when the outer call returns.
+
+On 2026-11-24 both relocated consumers passed in **both load orders** on
+each source route. A fresh process on each route rejected the modified
+host-domain library. These are local package-set receipt and archive hashes;
+no public registry or hosted runner was used.
+
+| Source | Package | Receipt SHA-256 | NuGet SHA-256 |
+| --- | --- | --- | --- |
+| ordinary | workshop | `2903c45ffc127e51d66d82d13e4aa816b8e43fab2fdf4665923d7a5042a5bdaf` | `f2eab687b569401f726124d356179f17a625c5a8a25d30fb04282f9d8101ba5e` |
+| ordinary | workshop-peer | `774153132b1db3e8da04a1ffa0f0d139cc6b311242a33e14cd4cf5340b5ada1f` | `d81aea66f2f28e1a7cd0b77266cf1570715bb76813c266c91ebf631997d66ef3` |
+| reviewed | workshop | `857716b83edc283e2e2f4dc0aff4b9e1ba17eccebf7ab60154be4b2807bf8c31` | `0574a19ee2f59277f46aae72c29b2c32177d37a798d7e3db1e91564ed0572772` |
+| reviewed | workshop-peer | `aa0c180282adbf355b6761bbfec809d7d7916a7aa7cc1cd778fa5731223c6358` | `3109d83e2f913f9ecc34dc68e54f444b03b7c6afbda9aeae7af798d78046f6ad` |
