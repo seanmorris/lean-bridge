@@ -83,7 +83,15 @@
             }
           }
         },
-        "wit-wasi": {"$ref": "#/$defs/package"}
+        "wit-wasi": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "name": {"$ref": "#/$defs/identifier"},
+            "version": {"$ref": "#/$defs/identifier"},
+            "hostCallbacks": {"type": "boolean"},
+            "asyncAbi": {"const": "canonical"}
+          }
+        }
       }
     }
   },

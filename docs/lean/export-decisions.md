@@ -30,6 +30,8 @@ declarations of the host methods they call.
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
+For WIT tasks, choose the API your caller uses. A native host can use the default [typed task-resource API](../consume/wit-wasi.md#await-a-lean-task). A Wasm guest can await [canonical futures](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application) when the author selects `targets.wit-wasi.asyncAbi: "canonical"`.
+
 ### Select an explicit host-null wrapper
 
 Use a host-null projection only when the public API deliberately gives one Lean

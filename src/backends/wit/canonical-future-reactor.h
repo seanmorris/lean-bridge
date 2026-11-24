@@ -39,7 +39,7 @@ static inline unsigned lb_cf_reserve(lb_cf_reactor *r) {
     return 0;
 }
 static inline bool lb_cf_arm(lb_cf_reactor *r, unsigned key, int fd, void *owner, lb_cf_take_fn take, lb_cf_close_fn close) {
-    if (!key || key>r->capacity || fd<0 || !take || !close || r->rows[key-1].phase!=LB_CF_RESERVED) return false;
+    if (!key || key>r->capacity || fd< -1 || !take || !close || r->rows[key-1].phase!=LB_CF_RESERVED) return false;
     r->rows[key-1]=(lb_cf_row){.phase=LB_CF_NATIVE, .fd=fd, .owner=owner, .take=take, .close=close}; return true;
 }
 /* Native ownership transfers to the embedding's take callback only on success.
@@ -70,18 +70,20 @@ static inline wasmtime_error_t *lb_cf_advance(lb_cf_reactor *r, int timeout) {
         if (row->phase!=LB_CF_WRITER) return lb_cf_fail(r,"canonical writer has no outstanding write");
         *row=(lb_cf_row){0};
     }
-    unsigned live=0;
+    unsigned live=0; bool immediate=false;
     for (unsigned i=0; i<r->capacity; ++i) {
         const lb_cf_row *row=&r->rows[i]; live+=row->phase==LB_CF_NATIVE;
+        immediate |= row->phase==LB_CF_NATIVE && row->fd<0;
         r->fds[i]=(struct pollfd){row->phase==LB_CF_NATIVE ? row->fd : -1,POLLIN,0};
     }
     if (!live) return NULL;
-    int count=poll(r->fds,r->capacity,timeout);
+    int count=poll(r->fds,r->capacity,immediate ? 0 : timeout);
     if (count<0 && errno==EINTR) return NULL; /* outer loop owns the deadline */
     if (count<0) return lb_cf_fail(r,"poll failed on native future descriptors");
-    for (unsigned i=0; count>0 && i<r->capacity; ++i) if (r->fds[i].revents) {
-        --count; lb_cf_row *row=&r->rows[i];
-        if (!(r->fds[i].revents&POLLIN)) return lb_cf_fail(r,"invalid native future descriptor notification");
+    for (unsigned i=0; i<r->capacity; ++i) {
+        lb_cf_row *row=&r->rows[i];
+        if (row->phase!=LB_CF_NATIVE || (row->fd>=0 && !r->fds[i].revents)) continue;
+        if (row->fd>=0 && !(r->fds[i].revents&POLLIN)) return lb_cf_fail(r,"invalid native future descriptor notification");
         wasmtime_component_val_t args[2]={{.kind=WASMTIME_COMPONENT_U32,.of.u32=i+1},{0}}, result={0};
         if (!row->take(row->owner,&args[1])) return lb_cf_fail(r,"could not take notified native future");
         /* take consumed the token. Never call its close if delivery now traps. */

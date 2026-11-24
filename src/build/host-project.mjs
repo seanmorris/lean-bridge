@@ -46,6 +46,9 @@ export const buildHostProject = async options => {
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
+	const canonical=wit && config.targets?.[target]?.asyncAbi==="canonical";
+	if(canonical && (!config.taskExports?.length || config.asyncIterators?.length || config.resources?.length || config.taskIOErrors?.length))
+		fail("Canonical WIT requires selected Task exports; cursor, resource and terminal IO profiles are not yet supported");
 	if(wit && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
 		|| (!witTasks && (config.resources?.length || config.taskIOErrors?.length))))
 		fail("WIT IO requires standalone synchronous exports without leases and explicit nativeEffects, or tasks and cursors without external capabilities");
@@ -55,7 +58,7 @@ export const buildHostProject = async options => {
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
 		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "package", "resources"]
-		, targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+		, targetFields: target === "cpan" ? ["module", "version"] : canonical ? ["name", "version", "asyncAbi"] : ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");
 	const name = wit ? settings.name : target === "cpan" ? ownedPerlNamespace(component, settings) : settings.name ?? (target === "php-native" ? "lean-bridge/" + slug : target === "nuget" ? dotnetComponentAssembly(component) : target === "maven" ? "org.leanbridge:" + slug : "lean-" + slug);
@@ -88,7 +91,7 @@ export const buildHostProject = async options => {
 		let artifact, receipt;
 		if(target !== "pypi")
 		{
-			artifact = await (wit ? buildWitHostPackage : buildCTaskPackage)({ ...common, target }); receipt = artifact.receipt;
+			artifact = await (wit && !canonical ? buildWitHostPackage : buildCTaskPackage)({ ...common, target, canonical }); receipt = artifact.receipt;
 		}
 		else
 		{

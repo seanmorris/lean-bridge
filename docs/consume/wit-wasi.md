@@ -200,7 +200,19 @@ Zero-initialize outputs that can own strings. Dispose them with the generated fu
 
 The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
 
-A separate [canonical future embedding test](../evidence/wit-canonical-async-20261124.md) runs a Wasm application that awaits two Lean tasks. The second can complete while the first is still pending; the application does not pump the scheduler. The prepared WIT package still uses the task-resource API described here.
+### Await a canonical future from a Wasm application
+
+If the release receipt says `native-wit-canonical-task-v1`, use the WIT world and launcher in the archive. This profile is for a Wasm guest; `native-wit-task-v1` above is for a host using the typed task-resource API.
+
+1. Extract the whole archive. Use `wit/application.wit` as your guest’s world. Implement its `run: async func() -> s64` export and compile your application to a Component Model binary.
+2. Call the imported Lean functions by their WIT names. A task factory returns a canonical `future<T>`. Await it like any other future in your guest language. Other tasks can complete while it is pending.
+3. Run the included executable. For the `latches` package:
+
+```sh
+./bin/latches-run /path/to/application.wasm
+```
+
+The command prints the signed 64-bit result of `run`. A trap or incompatible component exits nonzero. Keep `bin/` and `lib/` together when moving the package. You do not need Lean, a Wasmtime installation, or a custom host adapter. This is a Linux x86-64 runner, not a browser or standalone WASI command. See the [application and installed-package checks](../evidence/wit-canonical-async-20261124.md#run-a-prepared-wit-package).
 
 ### Give a task a host callback
 
@@ -1285,7 +1297,7 @@ Profiles: WIT/WASI. Installed checks apply only to the named positions and packa
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [tasks](#await-a-lean-task), [pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows for tasks and asynchronous iterators do not describe `native-wit-task-v1`.
+Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [typed task resources](#await-a-lean-task), [canonical futures](#await-a-canonical-future-from-a-wasm-application), [pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows do not describe these async profiles.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

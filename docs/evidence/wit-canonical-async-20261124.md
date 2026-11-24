@@ -27,6 +27,21 @@ The [installed test](../../tests/helpers/wit-canonical-scheduled.mjs) verifies t
 
 With the native C author toolchain configured, point `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` at the v51 SDK and `WASM_TOOLS` at wasm-tools 1.245.1. Run `npm run test:wit-canonical-scheduled`. The gate builds ordinary and reviewed Latches archives, in sequence, and runs the same consumer against each. To replay existing packages without the Lean compiler, also set `LEAN_BRIDGE_CANONICAL_LATCHES_ORDINARY` and `LEAN_BRIDGE_CANONICAL_LATCHES_REVIEWED` to the respective directories containing their receipts and archives.
 
-These executions use native C providers with a separate async-enabled embedding. They do not add canonical futures to the prepared WIT package, or deliver a Lean pull cursor through a canonical stream.
+These embedding checks use native C providers. The prepared WIT release is exercised separately below. Neither check delivers a Lean pull cursor through a canonical stream.
 
 Verified Latches archive SHA-256: ordinary `212a9d41e98c7a3d3004ba55ffdb345d122a98618e1bf7ad0a3281de869232de`; reviewed `d9ff37b4998b2215d5e280a348ebc3dcb378c87a39f1df70604d3d6d9a9687b7`. Both declare Binding IR `928e66bbd1829148e535734ed567b4d70382cac1247f9fa07fbbe10650845ffb`.
+
+## Run a prepared WIT package
+
+The `native-wit-canonical-task-v1` release contains its own scheduler, Wasmtime runtime and compiled Lean exports. The [guest](../../tests/fixtures/wit-canonical-command/application.wat) imports only `ready`, `parked` and `release` from the public world. First, a Lean `Task.pure` wakes the guest while two other tasks are pending. Then it releases gate 2, waits for its result, and releases gate 1. The guest exits with another worker still parked. The expected result is `99999999999999983`; no application code calls a scheduler or transfers a native handle.
+
+The [installation gate](../../tests/helpers/wit-canonical-command-package.mjs) verifies both receipts, checks the guest against the emitted WIT, moves each installation, verifies the loaded libraries, and runs it with no tools on its path. Run `npm run test:wit-canonical-package` with the publisher toolchain to build both routes. To replay, set `LEAN_BRIDGE_PREPARED_WIT_RELEASES` to a directory containing the `ordinary/` and `reviewed/` release handoffs, and `LEAN_BRIDGE_WASM_TOOLS` to wasm-tools 1.245.1. The gate uses wasm-tools to compile the test guest; the packaged runner takes the binary directly.
+
+| Installed WIT archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary Lean source | 60,912,455 | `e406668098c493bbdde92923b8360e9f4c57b8930b9c2b345da78f6224fb10e6` |
+| Reviewed Binding IR and Lean source | 60,913,298 | `0b3d99b4f807069494af4f74f3535942dec80790f979ec514c1aef613754cdd9` |
+
+A guest that starts no tasks returns `INT64_MIN` immediately. A core Wasm module, a component missing `run`, and a component requesting a private import are rejected. A guest that traps after opening a parked task exits nonzero without waiting for the Lean gate. These cases run inside each installed release.
+
+Compatibility check: an offline-installed CLI built `Immediate.ready` again without `asyncAbi`. Its receipt selected `native-wit-task-v1`; the archive bundled Wasmtime 42.0.1. A C client linked against the installed header and libraries started the task, awaited `READY`, and received `INT64_MIN`.

@@ -79,6 +79,26 @@ for the ordinary and reviewed builds.
 
 ## Export asynchronous tasks
 
+For a Wasm guest that awaits ordinary Component Model futures, opt in with `targets.wit-wasi.asyncAbi`. Omit it for the typed task-resource profile, which also supports cursors, callbacks and declared errors.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "exports": ["Meter.immediate"],
+  "taskExports": ["Meter.immediate"],
+  "targets": {
+    "wit-wasi": {"name": "meter", "version": "1.0.0", "asyncAbi": "canonical"}
+  }
+}
+```
+
+Use the normal native Lean author toolchain and wasm-tools 1.245.1. Set `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the extracted [Wasmtime 51.0.0 Linux x86-64 C SDK](https://github.com/bytecodealliance/wasmtime/releases/tag/v51.0.0), then build with `lean-bridge build --project . --target wit-wasi --output release/wit`. The builder verifies the SDK headers, shared library and license before compiling the launcher. The default profile’s Wasmtime 42 SDK is unchanged.
+
+The canonical profile accepts pure and `BaseIO` task factories and synchronous companion functions. Parameters and results may be Boolean, fixed-width signed or unsigned integers, or 32- and 64-bit floats. Each factory admits up to 64 outstanding futures; a completed write keeps its slot until the guest reads or drops it. Streams, typed failures, external capabilities and retained callbacks are not admitted by this profile. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
+
+### Typed task resources
+
 Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)` or `EIO ε (Task α)` with `taskExports`. Arguments can be `Bool`, `Char`, `String`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. Results and typed factory errors can also contain nested `Except` over those types. An `IO` or `EIO` factory has a fallible start operation: success yields an owned task, and failure yields the error without creating a task.
 
 For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives the message as text. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. External capabilities are not part of this profile.

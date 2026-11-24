@@ -21,14 +21,16 @@ const scalar=site=>{
  *
  * @param d - Compiled Binding IR function declaration.
  * @param slots - Maximum independently owned operations in this component instance.
+ * @param labels - Optional checked public parameter names.
  */
-export const renderCanonicalFutureProducer=(d,slots=64)=>{
+export const renderCanonicalFutureProducer=(d,slots=64,labels=d?.parameters?.map((_,i)=>"arg"+i))=>{
 	if(d?.kind!=="function" || d.source?.producer!=="lean" || d.resultMode!=="promise" || d.source?.extensions?.["lean-lang.org/delivery"]!=="Task"
 		|| !["pure","BaseIO"].includes(d.source.extensions["lean-lang.org/effect"])
 		|| !Array.isArray(d.parameters) || d.parameters.length>16 || d.failure?.mode!=="none" || d.failure.unexpected!=="poison-runtime" || d.capabilities.length || !Number.isSafeInteger(slots) || slots<1 || slots>1024)
 		throw new TypeError("Expected an infallible in-memory Lean task");
 	const [wat,core,width]=scalar(d.result),store=core+".store"+(width<4?width*8:"");
-	const args=d.parameters.map(scalar), params=args.map(([w],i)=>'(param "arg'+i+'" '+w+')').join(" ");
+	if(!Array.isArray(labels) || labels.length!==d.parameters.length || new Set(labels).size!==labels.length || labels.some(x=>typeof x!=="string" || !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u.test(x))) throw new TypeError("Invalid canonical parameter labels");
+	const args=d.parameters.map(scalar), params=args.map(([w],i)=>'(param "'+labels[i]+'" '+w+')').join(" ");
 	const lower=args.map(([,c])=>"(param "+c+")").join(" "),locals=args.map((_,i)=>"(local.get "+i+")").join(" ");
 	return `(component
   (import "begin" (func $begin ${params} (result u32)))

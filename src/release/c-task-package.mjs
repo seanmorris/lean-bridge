@@ -36,6 +36,7 @@ import { compileJvmIOOwner, jvmIOEntry, nativeDeliveryHeader } from "../build/jv
 import { writeJvmIORelease } from "./jvm-io-package.mjs";
 import { validatePerlIOSettings } from "../backends/perl/sync-io.mjs";
 import { writePerlIORelease } from "./perl-io-package.mjs";
+import { writeCanonicalWitRelease } from "./wit-canonical-package.mjs";
 
 const asset = path => readFile(new URL(path, import.meta.url));
 
@@ -48,7 +49,8 @@ export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
 	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo", ruby = target === "rubygems";
 	const dotnet = target === "nuget", jvm = target === "maven", perl = target === "cpan", php = target === "php-native";
-	if(!["c", "cpp", "cargo", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target)) throw new TypeError("Invalid native delivery target");
+	const canonical=target==="wit-wasi" && options.canonical===true;
+	if(!canonical && !["c", "cpp", "cargo", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target)) throw new TypeError("Invalid native delivery target");
 	(php ? validateOrdinaryPhpSettings : perl ? validatePerlIOSettings : rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : jvm ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
@@ -158,6 +160,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
+		if(canonical) return await writeCanonicalWitRelease({ ...options, app, run, gen, prefix: p, files, entries, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, nativeIdentity: componentIdentity });
 		if(php) return await writePhpIORelease({ ...options, prefix: p, wire, phpPort, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(perl) return await writePerlIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, ledgerId, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });

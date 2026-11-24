@@ -269,7 +269,7 @@ export const validateExportConfiguration = configuration => {
 				continue;
 			}
 			closed(settings, target === "cpan" ? ["module", "version"]
-				: target === "wit-wasi" ? ["name", "version", "hostCallbacks"]
+				: target === "wit-wasi" ? ["name", "version", "hostCallbacks", "asyncAbi"]
 					: ["name", "version"], `targets.${target}`);
 			if(target === "npm")
 			{
@@ -286,6 +286,11 @@ export const validateExportConfiguration = configuration => {
 			}
 			for(const [field, value] of Object.entries(settings))
 			{
+				if(target === "wit-wasi" && field === "asyncAbi")
+				{
+					if(value !== "canonical") fail("invalid-export-configuration", "targets.wit-wasi.asyncAbi must be canonical");
+					continue;
+				}
 				if(target === "wit-wasi" && field === "hostCallbacks")
 				{
 					if(typeof value !== "boolean")
