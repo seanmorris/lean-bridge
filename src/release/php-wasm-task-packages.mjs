@@ -16,7 +16,7 @@ export const phpWasmTaskProfile="php-wasm-threaded-task-v1";
  * @param configuration - Checked Lean project settings.
  */
 export const assertPhpWasmTaskConfiguration=configuration=>{
-	assertExportConfigurationCapabilities(configuration,{target: "php-wasm",fields: ["package","modules","exports","nativeEffects","asyncIterators","taskExports","taskIOErrors"],targetFields: ["npm","composer"]});
+	assertExportConfigurationCapabilities(configuration,{target: "php-wasm",fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors"],targetFields: ["npm","composer"]});
 	if(configuration.nativeEffects?.length) throw new Error("PHP-Wasm workers support only in-memory effects");
 };
 /**

@@ -148,7 +148,7 @@ export const writeJavaScriptTaskPackages = async options => {
 			, runtimeIdentity: runtime.runtimeIdentity}}));
 	const descriptor={bindingIr: worker,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity};
 	files.set("internal/runtime.mjs",`import {loadTaskComponent} from "@lean-bridge/runtime";
-${php ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart});" : ""}
+${php ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart,resourceClass:component.resourceClass});" : ""}
 `);
 	files.set("internal/component.wasm",binary);
 	files.set("metadata/compiler.json",canonicalJson(evidence)); files.set("metadata/binding-ir.json",canonicalJson(api));

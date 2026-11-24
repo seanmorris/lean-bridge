@@ -11,21 +11,22 @@ import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
  * @param options.root - Test-owned browser scratch.
  * @param options.consumer - Relocated application directory.
  * @param options.name - Installed PHP host module's npm coordinate.
- * @param options.other - Independently installed peer for the retained-callback application.
+ * @param options.other - Independently installed peer component.
+ * @param options.leases - Run the lease application and its pending-worker fault case.
  */
-export const exercisePhpTaskBrowser=async({root,consumer,name,other})=>{
+export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false})=>{
 	const names=other?[name,other]:[name],callbacks=Boolean(other);
 	const imports=Object.fromEntries([...names,"@lean-bridge/runtime"].map(n=>[n,"/node_modules/"+n+"/index.mjs"]));
 	await writeFile(join(consumer,"index.html"),'<!doctype html><link rel="icon" href="data:,"><script type="importmap">'+JSON.stringify({imports})+'</script>',{flag: "wx"});
 	const program=await readFile(join(consumer,"installed.php"),"utf8");
-	const faultProgram=await readFile("tests/fixtures/php-wasm-task-owner/"+(callbacks?"callback-fault.php":"fault.php"),"utf8");
+	const faultProgram=await readFile("tests/fixtures/php-wasm-task-owner/"+(leases?"lease-fault.php":callbacks?"callback-fault.php":"fault.php"),"utf8");
 	await copyFile("tests/fixtures/php-wasm-task-owner/crash-worker.mjs",join(consumer,"crash-worker.mjs"));
 	const evaluate=async({names,program})=>{
 		if(!globalThis.crossOriginIsolated) throw new Error("Browser test expected cross-origin isolation");
 		const {PhpWeb}=await import("/node_modules/php-wasm/PhpWeb.mjs"),descriptors=await Promise.all(names.map(async n=>(await import(n)).default)),rt=await import("@lean-bridge/runtime");
 		try
 		{
-			const php=new PhpWeb({version: "8.4",autoTransaction: false,sharedLibs: descriptors});let stdout="",stderr="";
+			const php=new PhpWeb({version: "8.4",autoTransaction: false,shared: {testIdle: ()=>rt.waitTaskRuntimeIdle().then(()=>true)},sharedLibs: descriptors});let stdout="",stderr="";
 			php.addEventListener("output",e=>{stdout+=e.detail.join("");});php.addEventListener("error",e=>{stderr+=e.detail.join("");});
 			await php.binary;await php.writeFile("/test.php",program);
 			const rc=await php.run("<?php "+[...descriptors.map(d=>d.autoload),"/test.php"].map(p=>"require '"+p+"';").join(" "));
@@ -37,7 +38,7 @@ export const exercisePhpTaskBrowser=async({root,consumer,name,other})=>{
 	const result=await runInstalledChromium({root,consumer,names: [name]
 		, isolated: true,assembledDirectory: consumer
 		, timeoutMs: 90000,argument: {names,program},evaluate});
-	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed");assert.deepEqual(result.counts,[0,0,0,0,0]);
+	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,leases?"PHP lease API: cross-package identity, error ownership and disposal passed":callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed");assert.deepEqual(result.counts,[0,0,0,0,0]);
 	const crash=async({name,program})=>{
 		const Native=globalThis.Worker,workers=[];
 		/** Wrap only the Lean SDK's pthreads for this disposable host. */

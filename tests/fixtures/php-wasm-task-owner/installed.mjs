@@ -7,7 +7,7 @@ import {closeTaskRuntime,waitTaskRuntimeIdle,taskRuntimeStats} from "@lean-bridg
 const [mode,...names]=process.argv.slice(2),descriptors=await Promise.all(names.map(async n=>(await import(n)).default));
 try
 {
-	const php=new PhpNode({version: "8.4",autoTransaction: false,sharedLibs: descriptors.map(d=>mode==="composer"?d.extensions:d)});
+	const php=new PhpNode({version: "8.4",autoTransaction: false,shared: {testIdle: ()=>waitTaskRuntimeIdle().then(()=>true)},sharedLibs: descriptors.map(d=>mode==="composer"?d.extensions:d)});
 	let stdout="",stderr="";php.addEventListener("output",e=>{stdout+=e.detail.join("");});php.addEventListener("error",e=>{stderr+=e.detail.join("");});
 	await php.binary;
 	const mount=async dir=>{
@@ -23,7 +23,7 @@ try
 	await php.writeFile("/test.php",await readFile("installed.php"));
 	const boot=mode==="composer"?["/vendor/autoload.php"]:descriptors.map(d=>d.autoload);
 	const code=await php.run("<?php "+[...boot,"/test.php"].map(p=>"require '"+p+"';").join(" "));
-	assert.equal(code,0,stderr || stdout); assert.equal(stderr,"");assert.match(stdout,/^PHP (?:task API: typed await, cancel, release, errors and pull cleanup|callback API: reentry, exception identity and cancellation) passed$/u);
+	assert.equal(code,0,stderr || stdout); assert.equal(stderr,"");assert.match(stdout,/^PHP (?:task API: typed await, cancel, release, errors and pull cleanup|callback API: reentry, exception identity and cancellation|lease API: cross-package identity, error ownership and disposal) passed$/u);
 	await waitTaskRuntimeIdle(); const stats=taskRuntimeStats();
 	for(const k of ["frames","allocations","pending","nativeOwners","notifications"]) assert.equal(stats[k],0,k);
 	console.log(mode+": "+stdout+"; zero live owners");

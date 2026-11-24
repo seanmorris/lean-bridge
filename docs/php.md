@@ -1352,6 +1352,28 @@ foreach (series(BigInteger::of(12)) as $number) {
 
 The Lean workers run in a separate, shared Wasm heap. In a browser, serve the app in a cross-origin-isolated context. This profile does not pass object leases to an in-process Zend extension. [Installed task package checks](evidence/php-wasm-task-packages-20261124.md).
 
+#### Share a Lean object between PHP-Wasm packages
+
+When two packages use the same Lean heap and the same resource type, you can pass the PHP object directly between them. In this example, both packages import `Shared.Ticket`. A second handle sees the same mutation, even after the original handle closes.
+
+```php
+use Brick\Math\BigInteger;
+
+$ticket = LeanDepot\make(BigInteger::of(10));
+$keep = $ticket->retain();
+try {
+    $task = LeanPeer\bump($ticket, BigInteger::of(4));
+    $ticket->close();
+    $updated = $task->await();
+    try {
+        echo LeanDepot\read($keep);          // 14
+        var_dump($updated->sameResource($keep)); // true
+    } finally { $updated->close(); }
+} finally { $ticket->close(); $keep->close(); }
+```
+
+`retain()` creates another independently closeable handle, not a copy of the object. A task result, an iterator element, or a declared exception’s resource payload also owns its handle. Repeatedly awaiting the *same* task returns the same PHP object. Closing a handle twice is harmless; using a closed handle fails. A native PHP extension or a different PHP-Wasm interpreter cannot borrow these resources. See the [installed lease checks](evidence/php-wasm-task-leases-20261124.md).
+
 #### Pass a PHP callback to a Lean worker
 
 Pass an ordinary unary callable. PHP runs it on its own interpreter stack while waiting for a Lean task, stream pull, or cleanup. A worker cannot interrupt arbitrary PHP code to invoke a callback. An await in one installed package can run a callback from another; the callback may itself await a different task.

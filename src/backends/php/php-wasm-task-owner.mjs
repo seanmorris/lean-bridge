@@ -1,55 +1,64 @@
 /** @file Keep a PHP-Wasm caller's task and iterator owners on the Lean pthread runtime's JavaScript agent. */
 import {readPhpTaskValue,writePhpTaskValue} from "./php-wasm-task-wire.mjs";
 import {createPhpCallbackHub,createPhpCallbackMailbox} from "./php-wasm-task-mailbox.mjs";
+import {phpTaskLeases} from "./php-wasm-task-leases.mjs";
 
 const fault=JSON.stringify(["fault"]);
-const val=(type,result)=>JSON.stringify(["value",...writePhpTaskValue(type,result)]);
-const failure=(m,e)=>{
+const packet=(leases,phase,type,result)=>leases.has(type)?leases.packet(phase,type,result):JSON.stringify([phase,...writePhpTaskValue(type,result)]);
+const failure=(leases,m,e)=>{
 	try
 	{
 		if(e?.code==="operation-cancelled") return '["cancelled"]';
 		const details=e?.cause?.details;
 		if(!details || details.errorId!==e.code) return fault;
 		for(const [tag,id,type] of [["start",m.startId,m.error],["worker",m.terminalId,m.terminal]])
-			if(id && id===e.code) return JSON.stringify([tag,...writePhpTaskValue(type,details.payload)]);
+			if(id && id===e.code) return packet(leases,tag,type,details.payload);
 	} catch
 	{ return fault; }
 	return fault;
 };
-const guarded=(m,perform,success)=>{
+const guarded=(leases,m,perform,success)=>{
 	try
-	{return Promise.resolve(perform()).then(success).catch(e=>failure(m,e));}
+	{return Promise.resolve(perform()).then(success).catch(e=>failure(leases,m,e));}
 	catch(e)
-	{return Promise.resolve(failure(m,e));}
+	{return Promise.resolve(failure(leases,m,e));}
 };
-const operation=(m,call,hub)=>(...args)=>{
+const operation=(m,call,hub,leases)=>(...args)=>{
 	const box=m.callbacks && createPhpCallbackMailbox(m.callbacks,hub);
+	const val=v=>packet(leases,"value",m.result,v);
 	try
 	{
 		if(args.length!==m.args.length) return fault;
-		const owner=call(...args.map((v,i)=>m.args[i]==="callback"?value=>box.request(i,value):readPhpTaskValue(m.args[i],v)));
-		if(!m.delivery) return val(m.result,owner);
+		const owner=call(...args.map((v,i)=>m.args[i]==="callback"?value=>box.request(i,value):leases.has(m.args[i])?leases.borrow(m.args[i],v):readPhpTaskValue(m.args[i],v)));
+		if(!m.delivery) return val(owner);
 		if(m.delivery==="task")
 		{
 			const cleanup=hub.monitor(owner.drained?.then(ok=>ok?'["end"]':fault)??Promise.resolve(fault));
+			let abandoned=false,undelivered;
+			const track=result=>{
+				if(typeof result==="object")
+				{if(abandoned) result.discard();else undelivered=result;}
+				return result;
+			};
+			const abandon=()=>{abandoned=true;undelivered?.discard();const stopped=owner.cancel();if(stopped) box?.finish('["cancelled"]');};
 			if(box)
 			{
-				Promise.resolve(owner).then(v=>val(m.result,v)).catch(e=>box.failure(e)??failure(m,e)).then(box.finish);
+				Promise.resolve(owner).then(val).catch(e=>box.failure(e)??failure(leases,m,e)).then(v=>{if(!box.finish(track(v))) v?.discard?.();});
 				const cancel=()=>{const stopped=owner.cancel();if(stopped) box.finish('["cancelled"]');return stopped;};
 				const answer=(id,ok,value)=>box.answer(id,ok,value,owner.callbackFailure,()=>owner.cancel());
 				const invalid=id=>{if(!box.stop(id)) return false;owner.cancel();return true;};
 				const trap=id=>{const live=box.stop(id);owner.hostTrap();return live;};
-				return Object.freeze({result: box.next,key: ()=>box.key,answer,invalid,trap,cancel,cleanup: ()=>cleanup});
+				return Object.freeze({form: ()=>"owner",result: box.next,key: ()=>box.key,answer,invalid,trap,cancel,abandon,cleanup: ()=>cleanup});
 			}
 			// Install the rejection handler synchronously, even if PHP never awaits.
-			const result=guarded(m,()=>owner,v=>val(m.result,v));
-			return Object.freeze({...hub.monitor(result),cancel: ()=>owner.cancel(),cleanup: ()=>cleanup});
+			const result=guarded(leases,m,()=>owner,val).then(track);
+			return Object.freeze({form: ()=>"owner",...hub.monitor(result),abandon,cancel: ()=>owner.cancel(),cleanup: ()=>cleanup});
 		}
-		const close=()=>guarded(m,()=>owner.return(),()=>'["end"]');
-		const next=()=>guarded(m,()=>owner.next(),step=>step.done?'["end"]':val(m.result,step.value));
-		return Object.freeze({pull: ()=>hub.monitor(next()),drain: ()=>hub.monitor(close()),dispose: ()=>{void close();}});
+		const close=()=>guarded(leases,m,()=>owner.return(),()=>'["end"]');
+		const next=()=>guarded(leases,m,()=>owner.next(),step=>step.done?'["end"]':val(step.value));
+		return Object.freeze({form: ()=>"owner",pull: ()=>hub.monitor(next()),drain: ()=>hub.monitor(close()),dispose: ()=>{void close().then(v=>v?.discard?.());}});
 	} catch(e)
-	{const packet=failure(m,e);box?.finish(packet);return packet;}
+	{const reply=failure(leases,m,e);box?.finish(reply);return reply;}
 };
 /**
  * Install private method closures before Zend starts. The PHP surface never
@@ -71,6 +80,7 @@ export const createPhpTaskDescriptor=(definition,bindings,files,ownerRuntime)=>{
 		const registryState=php[registry]??={ownerRuntime,namespaces: new Map()};
 		if(registryState.ownerRuntime!==ownerRuntime) throw new Error("Conflicting PHP-Wasm task runtimes");
 		const hub=registryState.callbackHub??=createPhpCallbackHub();
+		const leases=phpTaskLeases(registryState.leaseCaps??=new WeakMap(),definition.leases??[],bindings);
 		const state=registryState.namespaces, name=namespace.toLowerCase();
 		if(state.has(name))
 		{
@@ -79,7 +89,7 @@ export const createPhpTaskDescriptor=(definition,bindings,files,ownerRuntime)=>{
 		}
 		const names=methods.map((_,i)=>key+"_"+i);
 		if(names.some(n=>n in php.shared)) throw new Error("PHP-Wasm task binding already installed");
-		for(const [i,n] of names.entries()) php.shared[n]=operation(methods[i],bindings[methods[i].name],hub);
+		for(const [i,n] of names.entries()) php.shared[n]=operation(methods[i],bindings[methods[i].name],hub,leases);
 		state.set(name,key);return files;
 	};
 	return Object.freeze({getLibs: ()=>[],getFiles});

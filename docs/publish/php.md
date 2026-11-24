@@ -149,6 +149,10 @@ The `php-wasm-threaded-task-v1` receipt identifies three archives in `release/pa
 
 For retained callbacks, give a selected task a parameter of type `α → IO β`, where both types are supported copied scalars. Use the callback-capable [pthread author SDK](npm.md#build-a-threaded-npm-handoff). A copied-task-only SDK lacks the callback entry points; the build rejects it before writing a handoff. Review the PHP interface, not the private JavaScript scheduler: a PHP callable returns a value, not a JavaScript promise. Independently built components must depend on the same runtime archive to share an executor. See [the PHP callback example](../php.md#pass-a-php-callback-to-a-lean-worker). Cross-heap resource leases are not supported by this profile.
 
+### Share a resource between worker packages
+
+For a task that passes a Lean object between packages, list its qualified Lean type in `resources` in each package’s `lean-bridge.exports.json`. Compile both against the same pinned compiler and the same source for the declaring module and its imports. The packages can have different entry points: the compiled identity of the resource, not its PHP alias, determines whether they can exchange it. The generated Composer API supplies the class and lifecycle methods. See [the cross-package consumer example](../php.md#share-a-lean-object-between-php-wasm-packages).
+
 ### Export a task that calls PHP
 
 An exported task can accept a function from a copied scalar to an IO result.

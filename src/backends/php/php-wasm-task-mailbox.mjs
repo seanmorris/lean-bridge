@@ -41,7 +41,7 @@ export const createPhpCallbackMailbox=(slots,hub)=>{
 		const request=current;current=null;
 		if(request) request.reject(new Error("PHP callback owner is closed"));
 	};
-	const finish=packet=>{if(terminal!==undefined) return;terminal=packet;hub.revoke(key);discard();hub.notify();};
+	const finish=packet=>{if(terminal!==undefined) return false;terminal=packet;hub.revoke(key);discard();hub.notify();return true;};
 	const request=(slot,value)=>{
 		const spec=specs.get(slot);
 		if(terminal!==undefined || current || !spec || sequence>=2147483647) throw new Error("Invalid PHP callback request");

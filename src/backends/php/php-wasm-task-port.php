@@ -4,15 +4,41 @@ namespace __LB_PUBLIC__\Internal;
 
 /** @internal Per-declaration functions supply the shape and the private owner key. */
 final class Port {
+    private const LEASES=/*__LB_LEASES__*/[];
+    private static function input(string $kind,mixed $value,Budget $budget): mixed {
+        if (!isset(self::LEASES[$kind])) return base64_encode(WireValues::input($kind,$value,$budget));
+        if (!is_object($value) || $value::class!==self::LEASES[$kind]) throw new \TypeError('Expected a matching Lean resource');
+        $get=\Closure::bind(static fn()=>$value->live(),null,\LeanBridge\WasmHeapV1\Lease::class);
+        return $get();
+    }
+    private static function unpack(object $packet,mixed $expected): object {
+        if (!is_string($expected) || !isset(self::LEASES[$expected])) throw new \UnexpectedValueException('Unexpected Lean resource');
+        $cap=$packet->claim($expected); $class=self::LEASES[$expected];
+        if (!is_object($cap)) throw new \UnexpectedValueException('Missing or already delivered Lean resource');
+        try {
+            $make=\Closure::bind(static fn()=>new $class($cap),null,\LeanBridge\WasmHeapV1\Lease::class);
+            return $make();
+        } catch (\Throwable $error) { $cap->close(); throw $error; }
+    }
     public static function call(string $key, array $args, array $kinds, ?string $delivery, ?string $class,
             string $declaration, array|string $result, ?array $start, ?array $terminal, array $callbacks=[]): mixed {
         $budget=new Budget(); $encoded=[];
         $scope=$callbacks ? new CallbackScope($callbacks,$args) : null;
-        foreach ($args as $i=>$v) $encoded[]=$kinds[$i]==='callback' ? '' : base64_encode(WireValues::input($kinds[$i],$v,$budget));
+        foreach ($args as $i=>$v) $encoded[]=$kinds[$i]==='callback' ? '' : self::input($kinds[$i],$v,$budget);
         $submit=vrzno_shared($key);
         if (!is_callable($submit)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing PHP-Wasm host for '.$declaration);
         $reply=$submit(...$encoded);
         $decode=static function(mixed $packet) use ($declaration,$result,$start,$terminal): mixed {
+            if (is_object($packet)) {
+                try {
+                    $phase=$packet->form();
+                    if ($phase==='value') return self::unpack($packet,$result);
+                    $error=match ($phase) {'start'=>$start,'worker'=>$terminal,default=>null};
+                    if ($error===null) throw new \__LB_PUBLIC__\LeanBridgeError('Undeclared resource error in '.$declaration);
+                    [$type,$origin,$shape]=$error;
+                    throw new $type($origin,self::unpack($packet,$shape));
+                } finally { $packet->discard(); }
+            }
             if (!is_string($packet)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing result from '.$declaration);
             $fields=json_decode($packet,true,flags: JSON_THROW_ON_ERROR);
             if ($fields===['cancelled']) throw new \__LB_PUBLIC__\TaskCancelled($declaration.' was cancelled');
@@ -26,7 +52,7 @@ final class Port {
             [$type,$origin,$shape]=$error;
             throw new $type($origin,WireValues::output($shape,$tags,$bytes));
         };
-        if (is_string($reply) || $delivery===null) return $decode($reply);
+        if (is_string($reply) || $delivery===null || (is_object($reply) && $reply->form()!=='owner')) return $decode($reply);
         if (!is_object($reply)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing task owner for '.$declaration);
         $open=$delivery==='task'
             ? \Closure::bind(static fn()=>new $class($reply,$decode,$scope),null,\__LB_PUBLIC__\Awaitable::class)

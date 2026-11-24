@@ -8,6 +8,7 @@ import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
 import { resolveNativeHostEffects } from "./native-host-effects.mjs";
+import { heapResourceIdentities } from "./heap-resource-identity.mjs";
 
 const doc = summary => ({ summary, details: "" });
 const hostModule = "LeanBridge.Host.Python";
@@ -46,7 +47,9 @@ export const pythonHostSelection = ir => {
 export const taskWorkerInterface=(api,evidence)=>{
 	if(!evidence.selection.phpTaskCallbacks || !api.types.some(t=>t.kind==="callback")) return api;
 	const selection={...evidence.selection,javascriptTaskCallbacks: true};delete selection.phpTaskCallbacks;
+	const resources=evidence.metadata.leanResources??[];
 	return reconcileHostExports({ir: null,component: api.component
+		, owned: resources.length?heapResourceIdentities({...evidence,resources}):[]
 		, metadata: evidence.metadata,selection}).api;
 };
 

@@ -121,7 +121,7 @@ export const compileHostSources = async options => {
 		|| await readFile(request, "utf8") !== canonicalJson(selection)) fail("host inspector or its invocation changed");
 	const evidence = {
 		selection, compilerSha256, extractorSha256, interfaces, metadata
-		, ...(["cpan", "php-native", "npm", "wit-wasi"].includes(options.target) && owned.length ? { resourceImports } : {})
+		, ...(["cpan", "php-native", "php-wasm", "npm", "wit-wasi"].includes(options.target) && owned.length ? { resourceImports } : {})
 		, sourceTreeSha256: projectContract.sourceTreeSha256
 		, configurationSha256: projectContract.configurationSha256
 		, lake: projectContract.lake ?? null

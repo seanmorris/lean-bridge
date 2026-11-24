@@ -22,7 +22,7 @@ abstract class Awaitable {
         if ($stopped) $this->callbacks?->close();
         return $stopped;
     }
-    final public function __destruct() { try { $this->cancel(); } finally { $this->callbacks?->close(); } }
+    final public function __destruct() { try { $this->owner?->abandon(); } finally { $this->callbacks?->close(); } }
     final public function awaitCleanup(): void {
         if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Cannot wait for an active callback on this task');
         if ($this->cleanup===null) return;

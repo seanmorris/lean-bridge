@@ -79,3 +79,36 @@ test("the JS owner never sends a rejected promise or admits conflicting PHP bind
 	const broken={shared: {}};descriptor("b",()=>{throw new Error("unexpected");}).getFiles(broken);assert.equal(broken.shared.b_0(),'["fault"]');
 	const wrong={shared: {a_0: 1}};assert.throws(()=>a.getFiles(wrong),/already installed/u);assert.equal(wrong.shared.a_0,1);
 });
+
+test("only branded capabilities can be borrowed; abandoning an undelivered result releases exactly once",async()=>{
+	const key="lease:"+"a".repeat(64),leases=[{name: "Ticket",type: key}];
+	const runtime=()=>{},a={shared: {}},b={shared: {}};let owners=0;
+	/** Count the underlying owners independently of the transport's JS wrappers. */
+	class Ticket
+{
+		/** Acquire a new test owner. */
+		constructor(){owners++;this.disposed=false;}
+		/** Release the underlying owner at most once. */
+		dispose(){if(this.disposed) return false;this.disposed=true;owners--;return true;}
+}
+	const def=(key,namespace,name,args,result,delivery)=>({key,namespace,leases,methods: [{name,args,result,delivery}]});
+	const descriptor=createPhpTaskDescriptor(def("a","Maker","make",[],key),{Ticket,make: ()=>new Ticket()},[],runtime);
+	descriptor.getFiles(a);descriptor.getFiles(b);
+	const reader=createPhpTaskDescriptor(def("b","Reader","check",[key],"bool"),{Ticket,check: ()=>true},[],runtime);
+	reader.getFiles(a);reader.getFiles(b);
+	const p=a.shared.a_0();assert.equal(p.claim("lease:other"),null);const cap=p.claim(key);
+	assert.equal(p.claim(key),null);p.discard();assert.equal(owners,1);
+	assert.notEqual(a.shared.b_0(cap),'["fault"]');assert.equal(b.shared.b_0(cap),'["fault"]');
+	assert.equal(a.shared.b_0(Object.create(cap)),'["fault"]');
+	assert.equal(cap.close(),true);assert.equal(cap.close(),false);
+	assert.equal(a.shared.b_0(cap),'["fault"]');assert.equal(owners,0);
+	let settle;
+	createPhpTaskDescriptor(def("t","Later","next",[],key,"task"),{Ticket
+	, next: ()=>{
+		const job=Promise.withResolvers();settle=()=>job.resolve(new Ticket());return Object.assign(job.promise,{cancel: ()=>false});
+	}},[],runtime).getFiles(a);
+	const early=a.shared.t_0();early.abandon();settle();await early.result();assert.equal(owners,0);
+	const ready=a.shared.t_0();settle();await ready.result();assert.equal(owners,1);ready.abandon();assert.equal(owners,0);
+	const delivered=a.shared.t_0();settle();const taken=(await delivered.result()).claim(key);
+	delivered.abandon();assert.equal(owners,1);taken.close();assert.equal(owners,0);
+});
