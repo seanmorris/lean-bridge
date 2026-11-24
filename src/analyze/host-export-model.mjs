@@ -139,10 +139,10 @@ export const reconcileHostExports = options => {
 	const js=selection.javascriptTaskCallbacks===true, wit=selection.witTaskCallbacks===true;
 	const schedulerCount = [rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length;
 	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
-	const matchingScheduler = { ruby, jvm, dotnet, python: selection.pythonTaskCallbacks === true }[hostTarget];
+	const matchingScheduler = { ruby, jvm, dotnet, perl, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
-	const importedError = { jvm: ["JvmHostException", "JVM"], ruby: ["RubyHostException", "Ruby"], dotnet: ["DotNetHostException", ".NET"] }[hostTarget];
+	const importedError = { jvm: ["JvmHostException", "JVM"], ruby: ["RubyHostException", "Ruby"], dotnet: ["DotNetHostException", ".NET"], perl: ["PerlHostException", "Perl"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {

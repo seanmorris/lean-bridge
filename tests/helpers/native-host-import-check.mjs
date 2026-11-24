@@ -14,12 +14,13 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 const fixture = resolve("tests/fixtures/ruby-host-meter");
 const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
-const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env });
 const diagnostic = e => [e.message, e.details?.stderr, e.details?.stdout].join("\n");
+const run = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env });
 const hosts = {
 	ruby: { target: "rubygems", label: "Ruby", error: "RubyHostException" }
-	, jvm: { target: "maven", label: "Jvm", error: "JvmHostException" }
-	, dotnet: { target: "nuget", label: "Dotnet", error: "DotNetHostException" }
+	, jvm: { target: "maven", label: "Jvm", error: "JvmHostException", coordinates: {name: "org.leanbridge:workshop", version: "1.0.0"} }
+	, dotnet: { target: "nuget", label: "Dotnet", error: "DotNetHostException", coordinates: {name: "Workshop.Host", version: "1.0.0"} }
+	, perl: { target: "cpan", label: "Perl", error: "PerlHostException", coordinates: {module: "LeanBridge::Workshop", version: "0.001"} }
 };
 
 /**
@@ -34,10 +35,10 @@ export const prepareNativeHostFixture = async (project, backend) => {
 	assert.ok(Object.hasOwn(hosts, backend)); const { label, target } = hosts[backend];
 	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(file, "utf8"));
 	contract.types[0].host.targets = [backend];
-	contract.types[0].documentation.summary = backend === "jvm" ? "A JVM object with a read method." : "A .NET object with a read method.";
+	contract.types[0].documentation.summary = {jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method.", perl: "A Perl object with a read method."}[backend];
 	await writeFile(file, canonicalJson(contract));
 	const cfg = join(project, "lean-bridge.exports.json"), config = JSON.parse(await readFile(cfg, "utf8"));
-	config.targets = { [target]: { name: backend === "jvm" ? "org.leanbridge:workshop" : "Workshop.Host", version: "1.0.0" } };
+	config.targets = { [target]: hosts[backend].coordinates };
 	await writeFile(cfg, canonicalJson(config));
 	const lean = join(project, "Workshop.lean");
 	await writeFile(lean, (await readFile(lean, "utf8")).replaceAll("LeanBridge.Host.Ruby", "LeanBridge.Host." + label));
@@ -74,7 +75,7 @@ export const checkNativeHostImports = backend => {
 			} finally
 			{ await source.dispose(); }
 		};
-		const first = await build(), { api, evidence, ir } = first;
+		const first = await build().catch(e => { throw new Error(diagnostic(e), {cause: e}); }), { api, evidence, ir } = first;
 		assert.equal(evidence.selection.hostModule, host);
 		assert.deepEqual(evidence.lake.resolution.generatedImports, [host]);
 		assert.deepEqual(evidence.interfaces.map(i => i.module), [host, "Workshop"]);

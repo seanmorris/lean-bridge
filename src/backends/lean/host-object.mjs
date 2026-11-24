@@ -36,9 +36,9 @@ const pascal = value => value.replace(/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/g, (_, __,
 /** Generated modules accepted by the native host-object compiler (not a package support list). */
 export const compiledHostModules = Object.freeze({ python: "LeanBridge.Host.Python"
 	, ruby: "LeanBridge.Host.Ruby", jvm: "LeanBridge.Host.Jvm"
-	, dotnet: "LeanBridge.Host.Dotnet" });
+	, dotnet: "LeanBridge.Host.Dotnet", perl: "LeanBridge.Host.Perl" });
 /** Package coordinates select their own checked host namespace. */
-export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet" });
+export const compiledHostTargets = Object.freeze({ pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl" });
 const snake = value => value
   .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
   .replace(/[^A-Za-z0-9]+/g, "_")
