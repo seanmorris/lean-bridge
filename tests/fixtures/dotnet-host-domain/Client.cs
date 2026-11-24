@@ -55,6 +55,29 @@ internal static class Client {
         var binding=build(lib,typeof(Box),typeof(Box)); binding(Open,0,null);
         var x=new Box(1); Check(ReferenceEquals(binding(Self,1,x),x)); return new WeakReference(x);
     }
+    private static void WorkerScopes(Call a,Call same,Call peer) {
+        same(Open,0,null);
+        int baseline=(int)a(Handles,0,null)!;
+        var box=new Box(1); object? token=null;
+        Func<object?> checkForeign=()=>{Fail<InvalidOperationException>(()=>a(14,0,token));return null;};
+        object? Visit(Call binding,Func<object?> body)=>binding(12,0,body);
+        var expected=new FormatException("unwind a transport frame");
+        try {
+            Visit(a,()=>{
+                token=a(13,0,box);
+                Check(ReferenceEquals(a(14,0,token),box));
+                Fail<InvalidOperationException>(()=>a(14,1,token));
+                Visit(same,checkForeign);
+                Visit(peer,()=>{Fail<InvalidOperationException>(()=>peer(14,0,token));return null;});
+                Check(ReferenceEquals(a(14,0,token),box));
+                throw expected;
+            });
+            throw new Exception("transport swallowed the error");
+        } catch(FormatException e) {Check(ReferenceEquals(e,expected));}
+        Visit(a,checkForeign);
+        Check((int)a(Handles,0,null)! == baseline && (int)a(Live,0,null)! == 0);
+        same(Close,0,null);
+    }
     [MethodImpl(MethodImplOptions.NoInlining)]
     static (WeakReference,WeakReference) Pair(string first,string second) {
         var one=new AssemblyLoadContext("A",true); var two=new AssemblyLoadContext("B",true);
@@ -67,6 +90,7 @@ internal static class Client {
         var mismatch=buildB(second+".so",typeof(Box),typeof(Other));
         Fail<ArgumentException>(()=>mismatch(Open,0,null)); Check((int)a(Handles,0,null)! == baseline);
         b(Open,0,null);
+        WorkerScopes(a,buildA(first+".so",typeof(Box),typeof(Box)),b);
         var strong=Exercise(a,b); Collect(); Check(strong.IsAlive);
         b(Close,0,null); Collect(); Check(!strong.IsAlive && (int)b(Live,0,null)! == 0);
         b(Open,0,null); Fail<InvalidOperationException>(()=>b(Recall,1,null)); b(Clear,0,null);

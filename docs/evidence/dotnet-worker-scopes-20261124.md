@@ -35,7 +35,29 @@ ordinary source, then repeats with a reviewed binding IR instead of an export
 list. Lean 4.32.2 compiled the generated worker entry points to C on both
 routes. The identical public IR had SHA-256
 `8f6794cb191b952a2f573e511cd4e41f140c2db56e2dbac55db4b40cf29379d8`.
+Both routes also linked the generated provider, worker entries, shared class
+registry and lease library with undefined native references forbidden. The
+test compared the dynamic symbol table with the generator's private ABI list.
 A third selection called a CLR member indirectly from a Lean worker; the
 compiler rejected it. Carrying a class reference and calling its methods have
 different requirements: the callback that invokes application code must run
 on the CLR owner.
+
+## Native transport lifetime
+
+The [CLR domain test](../../tests/helpers/dotnet-host-domain.mjs) built two
+native components and loaded their managed callers in separate collectible
+assembly contexts. In each load order, two bindings in one assembly and a peer
+binding in the other used the same application classes. The native DSO for
+their shared class registry had the same SHA-256 in both builds:
+`f774da0416adeb36b2061e8485d3a08212d2a9f8b5a49167aeae35c995f512bf`.
+
+Inside one owner call, resolving the transport token returned the original
+CLR object. Neither a nested binding nor a peer could resolve the token, and
+using it with a different class failed. After the nested calls returned, the
+outer operation could still use its own token. The application then threw
+without releasing that token: it caught the same exception object, the next
+operation rejected the stale token, and the reference counts returned to their
+baseline. Both assembly contexts unloaded.
+
+Run `npm run test:dotnet-host-domain` to reproduce these checks.

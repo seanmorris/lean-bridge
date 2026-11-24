@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { generateDotnetNativeMembers } from "../../src/backends/dotnet/host-native-members.mjs";
+import { dotnetWorkerKinds } from "../../src/backends/dotnet/host-members.mjs";
 import { generateLeanHostObjectAdapters } from "../../src/backends/lean/host-object.mjs";
 import { linuxBrokerHeader, linuxBrokerSource } from "../../src/backends/native/runtime-broker.mjs";
 import { compileDotnetHostDomain } from "../../src/build/dotnet-host-domain.mjs";
@@ -40,7 +41,8 @@ test("CLR nominal identity and ownership survive separate Lean components and co
 	await save(root, "lean_bridge_native_runtime.h", linuxBrokerHeader); await save(root, "broker.c", linuxBrokerSource);
 	const flags = ["-std=gnu11", "-O1", "-g0", "-DNDEBUG", "-shared", "-fPIC", "-I" + join(lean, "include")];
 	const libs = ["-L" + join(sdk, "lib"), "-lleanshared", "-Wl,-z,defs", "-Wl,-rpath,$ORIGIN"];
-	await cmd(cc, [...flags, "broker.c", resolve("tests/fixtures/jvm-host-members/refs-witness.c"), ...libs, "-pthread", "-Wl,-soname,libwitness.so", "-o", join(install, "libwitness.so")]);
+	const leaseFlags=["-DLB_LEASE_PREFIX=lb_clr_probe_","-I"+resolve("src/backends/native"),"-I"+root];
+	await cmd(cc, [...flags, ...leaseFlags, "broker.c", resolve("src/backends/native/task-resource-ledger.c"), resolve("tests/fixtures/jvm-host-members/refs-witness.c"), ...libs, "-pthread", "-Wl,-soname,libwitness.so", "-o", join(install, "libwitness.so")]);
 	const ir = JSON.parse(await readFile("tests/fixtures/ruby-host-meter/lean-bridge.hosts.json", "utf8"));
 	const box = ir.types[0]; box.host.targets = ["dotnet"];
 	const key = structuredClone(box); key.id = "host:meter.Key"; key.name = "Key"; key.resource.kindId = "resource:meter.Key"; key.host.identity = "strong-canonical";
@@ -66,11 +68,13 @@ test("CLR nominal identity and ownership survive separate Lean components and co
 			await cmd(join(lean, "bin/lean"), ["-j1", "-R", app, "-o", module + ".olean", "-c", c, module + ".lean"], app, le);
 		await save(app, "checked.c", '#include "host.c"\n#include "externs.h"\n');
 		await save(app, "externs.h", g.header); await save(app, "generated.c", g.native);
-		await save(app, "exports.map", "{ global: test_call; local: *; };\n");
+		await save(app, "exports.map", "{ global: test_call; test_visit; test_object; local: *; };\n");
 		const specs = g.kinds.map(k => "{" + JSON.stringify(k.key) + "," + Number(k.strong) + "}").join(",");
-		await save(app, "component.h", "#define COMPONENT " + JSON.stringify(name) + "\nstatic const lb_dnd_spec specs[]={" + specs + "};\n");
+		const keys=dotnetWorkerKinds(ir).map(k=>JSON.stringify(k.hash)).join(",");
+		await save(app, "component.h", "#define COMPONENT " + JSON.stringify(name) + "\nstatic const lb_dnd_spec specs[]={" + specs + "};\nstatic const char *const worker_keys[]={"+keys+"};\n");
 		await cmd(cc, [...flags, domain.flag, "-I.", "-I" + root
 			, "-I" + backend, "-I" + resolve("src/backends/c")
+			, ...leaseFlags, join(backend,"worker-ledger.c")
 			, "checked.c", "refs.c", "host-frame.c", "generated.c"
 			, join(fixture, "component.c")
 			, "-L."
@@ -81,6 +85,7 @@ test("CLR nominal identity and ownership survive separate Lean components and co
 			, "-Wl,--version-script=exports.map"
 			, "-o"
 			, join(install, name + ".so")], app);
+		await copyFile(join(backend,"host-worker-frame.cs"),join(app,"WorkerFrame.cs"));
 		await save(app, "HostMembers.cs", g.implementation); await save(app, "HostContract.cs", "namespace LeanBridge.GeneratedHost;\n" + g.contract);
 		await copyFile(join(backend, "host-wire.cs"), join(app, "HostWire.cs")); await copyFile(join(fixture, "Port.cs"), join(app, "Port.cs"));
 		await build(app, name, "Library"); await rm(app, { recursive: true });

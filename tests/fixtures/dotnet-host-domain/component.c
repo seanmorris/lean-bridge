@@ -4,6 +4,10 @@
 #include "host-domain.h"
 #include "lean_bridge_native_runtime.h"
 #include "component.h"
+static const char component[]=COMPONENT;
+#define LB_CLR_VISIT test_visit
+#define LB_CLR_OBJECT test_object
+#include "worker-owner.h"
 extern void witness_save(lean_object *);
 extern lean_object *witness_value(void), *initialize_SharedRefs(uint8_t);
 extern lean_object *lb_same(lean_object *,lean_object *), *lb_self(lean_object *), *lb_key(lean_object *);

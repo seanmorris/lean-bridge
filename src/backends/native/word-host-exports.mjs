@@ -19,7 +19,9 @@ export const emitWordHostExports = (o, model, target) => {
 	const module = "Bridge" + name + "Exports", host = "LeanBridge.Host." + name;
 	const { ir, entries, modules, identity } = o;
 	const taskObjects = target==="php" && o.phpTaskLeases===true;
-	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || (!entries.length && !taskObjects))
+	const clrWorkers = target==="dotnet" && o.dotnetTaskLeases===true;
+	if(clrWorkers && (model.workerKeys?.length!==ir.types.length || model.workerKeys.some(k=>!/^[a-f0-9]{64}$/u.test(k)))) throw new TypeError("Invalid CLR worker transport keys");
+	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || (!entries.length && !taskObjects && !clrWorkers))
 		throw new TypeError("Invalid native host component");
 	const prefix = "lb_" + target + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
@@ -43,7 +45,7 @@ export const emitWordHostExports = (o, model, target) => {
 	};
 	for(const [i, e] of entries.entries())
 	{
-		if(!qual.test(e.declaration) || e.delivery || !["pure", "BaseIO", "IO", "EIO"].includes(e.effect) || e.parameters.length > 64 || (e.effect === "pure" && !sum(e.result)))
+		if(!qual.test(e.declaration) || e.delivery || !["pure", "BaseIO", "IO", "EIO"].includes(e.effect) || e.parameters.length > 64 || (e.effect === "pure" && !clrWorkers && !sum(e.result)))
 			throw new TypeError("Invalid synchronous native export: " + e.declaration);
 		const args = e.parameters.map(p => wordHostCarrier(ir.types, p.type)), eio = e.effect === "EIO";
 		const ret = lean(e.result), n = args.length, fn = "lb_dn_export_" + i;
@@ -72,13 +74,18 @@ done: if(io) lean_dec(io); for(size_t j=0;j<n;j++) if(a[j]) lean_dec(a[j]); retu
 	}
 	header.push("extern lean_object *lb_dn_error_text(lean_object *);", "extern lean_object *initialize_" + module + "(uint8_t);");
 	const entryLean = [...modules.map(m => "import " + m), "import " + host, "namespace " + module, "@[export lb_dn_error_text] def errorText (e : IO.Error) : String := toString e", ...defs, "end " + module, ""].join("\n");
+	const clrHeader=clrWorkers?`static const char *const worker_keys[]={${model.workerKeys.map(k=>JSON.stringify(k)).join(",")}};
+#define LB_CLR_VISIT ${prefix}_visit
+#define LB_CLR_OBJECT ${prefix}_object
+#include "worker-owner.h"
+`:"";
 	const source = `#include "lean_bridge_native_runtime.h"
 #include "entry-abi.h"
 #include "host-domain.h"
 ${model.native}
 static const char component[]="${target}host:${identity}";
 static const lb_dnd_spec specs[]={${model.kinds.map(k => "{" + JSON.stringify(k.key) + "," + Number(k.strong) + "}").join(",")}};
-${taskObjects?'#include "host-task-leases.h"\n':""}static void *init(uint8_t b) { return initialize_${module}(b); }
+${clrHeader}${taskObjects?'#include "host-task-leases.h"\n':""}static void *init(uint8_t b) { return initialize_${module}(b); }
 static int available(void) { return lean_bridge_native_component_ready(component); }
 /* A public result outlives the Lean IO object; never return pointers into it. */
 static int dn_output(int kind,lean_object *v,uint64_t *out) {
