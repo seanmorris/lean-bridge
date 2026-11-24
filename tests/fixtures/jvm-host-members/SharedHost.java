@@ -60,8 +60,10 @@ public final class SharedHost {
             for(int i=0;i<50 && ref.get()!=null;i++) { System.gc(); Thread.sleep(15); }
             check(ref.get()==null && b.live()==0);
             var orphan=abandon(l1,args[2]);
+            System.gc(); check(b.live()==1 && orphan.get()!=null); // b still owns this strong kind.
+            b.close();
             for(int i=0;i<50 && orphan.get()!=null;i++) { System.gc(); Thread.sleep(15); b.live(); }
-            check(orphan.get()==null && b.live()==0); b.close();
+            check(orphan.get()==null && b.live()==0);
         }
         System.out.println("shared Lean pointer; distinct equal objects and nominal kinds; partial bind rollback; last close retired strong pin");
     }
