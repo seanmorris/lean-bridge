@@ -54,7 +54,11 @@ const contract = source => {
 			, source: { ...read.source, declaration: "Alpha.Token.read" } });
 		extras.push("def tokenRead (token : Token) : IO UInt32 := token.read"
 			, "def hostPair (box : Box) (token : Token) (limit : UInt8) : IO UInt32 := do\n  let _ ← token.read\n  return (← box.read) + limit.toUInt32");
-		names.push("tokenRead", "hostPair");
+		extras.push("def pickObject (box : Box) (token : Token) (ok : Bool) : Except Token Box := if ok then .ok box else .error token"
+			, "def rejectBox (box : Box) : EIO Box Unit := throw box"
+			, "def rejectSaved : EIO (Except String Box) Unit := do\n  let some box ← held.get | throw (.error \"empty\")\n  throw (.ok box)"
+			, "def mixedFault (box : Box) (token : Token) (mode : UInt8) : EIO (Except String (Except Box Token)) Unit := do\n  if mode == 0 then throw (.error \"outer\")\n  if mode == 1 then throw (.ok (.error box))\n  if mode == 2 then throw (.ok (.ok token))");
+		names.push("tokenRead", "hostPair", "pickObject", "rejectBox", "rejectSaved", "mixedFault");
 	}
 	ir.assurance = [];
 	for(const item of [...ir.types, ...ir.declarations]) item.assurance = [];
@@ -102,15 +106,26 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 			, ...(reviewed ? {} : { exports: corpus.exports })
 			, targets: { pypi: { name: `lean-${name}`, version: "1.0.0" } }
 		}));
+		const build = out => exec(process.execPath, [cli, "build", "--project", project, "--target", "pypi", "--output", out, "--format", "json"]
+			, { env: { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PYTHON: python } });
 		if(reviewed)
 		{
 			files.push("api.binding-ir.json");
+			if(kinds)
+			{
+				const stale = structuredClone({ ...api, component });
+				const site = stale.declarations.find(d => d.name === "mixed_fault").source.extensions["lean-bridge.dev/error-payload-site"];
+				site.ownership = "copy"; site.lifetime = null;
+				const rejected = join(workRoot, "stale-review");
+				await writeFile(join(project, "api.binding-ir.json"), canonicalJson(stale));
+				await assert.rejects(build(rejected), e => /Reviewed API differs from compiled host exports/u.test(e.stdout + e.stderr));
+				await assert.rejects(readFile(join(rejected, packageSetReceiptName)), {code: "ENOENT"});
+			}
 			await writeFile(join(project, "api.binding-ir.json"), canonicalJson({ ...api, component }));
 		}
-		await exec(process.execPath, [cli, "build", "--project", project, "--target", "pypi", "--output", handoff, "--format", "json"]
-			, { env: { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PYTHON: python } })
+		await build(handoff)
 			.catch(error => { throw new Error(`${error.message}\n${error.stdout}\n${error.stderr}`); });
-		const { receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(handoff, packageSetReceiptName) });
+		const { receipt, result } = await readVerifiedPackageSetReceipt({ receiptPath: join(handoff, packageSetReceiptName) });
 		api = JSON.parse(await readFile(join(handoff, "binding-ir.json")));
 		const evidenceRecord = JSON.parse(await readFile(join(handoff, "host-export-evidence.json")));
 		assert.equal(evidenceRecord.reviewedSourceSha256 !== null, reviewed);
@@ -119,6 +134,15 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 		{
 			assert.equal(api.types.find(type => type.id === "lean:Alpha.Box").host.identity, "strong-canonical");
 			assert.equal(api.types.find(type => type.id === "lean:Alpha.Token").host.identity, "weak-canonical");
+			const lookup = n => api.declarations.find(d => d.name === n);
+			const [box, token] = ["Box", "Token"].map(n => ({kind: "named", id: "lean:Alpha." + n})), life = {scope: "explicit", anchor: null};
+			const picked = lookup("pick_object").result, lease = n => lookup(n).source.extensions["lean-bridge.dev/error-payload-site"];
+			assert.deepEqual(picked.type.arguments, [box, token]); assert.equal(picked.ownership, "lease"); assert.deepEqual(picked.lifetime, life);
+			assert.deepEqual(lease("reject_box"), {type: box, ownership: "lease", lifetime: life});
+			const mixed = lease("mixed_fault"); assert.equal(mixed.ownership, "lease"); assert.deepEqual(mixed.lifetime, life);
+			assert.deepEqual(mixed.type.arguments[0].arguments, [token, box]);
+			assert.equal(evidenceRecord.sourceTreeSha256, receipt.source.treeSha256);
+			t.diagnostic(name + " verified receipt " + result.receiptSha256);
 		}
 		const decl = name => api.declarations.find(d => d.name === name);
 		assert.deepEqual(decl("choose").effects, []);
@@ -179,12 +203,22 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 		, "lean-workshop-peer==1.0.0"
 	]);
 	await rm(output, { recursive: true }); await rename(target, relocated);
+	if(kinds) for(const module of ["lean_workshop", "lean_workshop_peer"])
+	{
+		const stub = await readFile(join(relocated, module, "__init__.pyi"), "utf8");
+		assert.match(stub, /def pick_object\(box: Box, token: Token, ok: bool\) -> Ok\[Box\] \| Err\[Token\]/u);
+		assert.match(stub, /payload: [^\n]*Ok\[Ok\[Token\] \| Err\[Box\]\] \| Err\[str\]/u);
+	}
 	const client = kinds ? "strong.py" : "installed.py";
 	for(const file of [client, "host_app.py"]) await copyFile(join(fixture, file), join(root, file));
 	const env = { PATH: "/unavailable", PYTHONPATH: relocated, PYTHONNOUSERSITE: "1", LEAN_NUM_THREADS: "1" };
 	const { stdout, stderr } = await exec(python, ["-S", "-B", client], { cwd: root, env });
 	assert.equal(stderr, "");
-	if(kinds) assert.match(stdout, /strong and weak nominal kinds: both binding orders, no retained objects/u);
+	if(kinds)
+	{
+		assert.match(stdout, /strong and weak nominal kinds: both binding orders, no retained objects/u);
+		assert.match(stdout, /returned and raised leases survive unbind; discarded payloads release objects/u);
+	}
 	else
 	{
 		assert.match(stdout, /peers, 19 scalars, original exceptions, reentry, stale, fork, thread and zero live objects/u);

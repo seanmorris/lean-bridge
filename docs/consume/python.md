@@ -110,6 +110,12 @@ function. If Lean simply propagates an exception from your Python method in
 requires `await`. The [Workshop consumer](../../tests/fixtures/host-object/installed.py)
 exercises all three cases.
 
+When a returned value or declared error contains an application-owned
+object, the active arm holds the original Python object, including inside
+nested `Ok`/`Err` values. You can inspect the value or `exc.payload` after
+`bind_hosts` exits. Holding it is an ordinary Python reference; you do not
+need to keep the binding open or call `close` on the object.
+
 ### Call synchronous IO
 
 Call a `native-python-io-v1` function directly on the process main thread

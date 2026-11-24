@@ -120,3 +120,53 @@ for first, peer in ((a, b), (b, a)):
         first.forget()
 
 print("strong and weak nominal kinds: both binding orders, no retained objects")
+
+
+def saved_leases(first, peer):
+    with first.bind_hosts(Box=Box, Token=Token), peer.bind_hosts(Box=Box, Token=Token):
+        box, token = first.make(17), Token()
+        refused(TypeError, first.pick_object, token, box, False)
+        good = first.pick_object(box, token, True)
+        bad = peer.pick_object(box, token, False)
+        direct = refused(peer.LeanEIOError, peer.reject_box, box)
+        assert direct.declaration == "Workshop.rejectBox"
+        outer = refused(first.LeanEIOError, first.mixed_fault, box, token, 0)
+        assert outer.payload == first.Err("outer")
+        nested_box = refused(first.LeanEIOError, first.mixed_fault, box, token, 1)
+        nested_token = refused(peer.LeanEIOError, peer.mixed_fault, box, token, 2)
+        assert first.mixed_fault(box, token, 3) is None
+        first.keep(box)
+        # Tracebacks hold call arguments. Clear them so they cannot keep either
+        # object alive and accidentally make an unowned payload appear valid.
+        for error in (direct, outer, nested_box, nested_token):
+            error.__traceback__ = None
+        return (ref(box), ref(token)), (good, bad, direct, nested_box, nested_token)
+
+
+def inspect_leases(first, peer, marks, kept):
+    box, token = (mark() for mark in marks)
+    assert box is not None and token is not None
+    good, bad, direct, nested_box, nested_token = kept
+    assert isinstance(good, first.Ok) and good.value is box
+    assert isinstance(bad, peer.Err) and bad.error is token
+    assert direct.payload is box and direct.payload.read() == 17
+    assert isinstance(nested_box.payload, first.Ok) and isinstance(nested_box.payload.value, first.Err)
+    assert nested_box.payload.value.error is box
+    assert isinstance(nested_token.payload, peer.Ok) and isinstance(nested_token.payload.value, peer.Ok)
+    assert nested_token.payload.value.value is token
+    with first.bind_hosts(Box=Box, Token=Token):
+        refused(TypeError, first.reject_saved)
+        first.forget()
+        empty = refused(first.LeanEIOError, first.reject_saved)
+        assert empty.payload == first.Err("empty")
+
+
+for first, peer in ((a, b), (b, a)):
+    marks, kept = saved_leases(first, peer)
+    gc.collect()
+    inspect_leases(first, peer, marks, kept)
+    del kept
+    gc.collect()
+    assert all(mark() is None for mark in marks), "released values or exceptions leaked host objects"
+
+print("returned and raised leases survive unbind; discarded payloads release objects")

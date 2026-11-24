@@ -120,8 +120,10 @@ const syncIOClass = `class LeanIOError(RuntimeError):
 
 _native._io_failure_type = LeanIOError
 `;
-const copied = t => t?.kind === "primitive" ? Object.hasOwn(scalars, t.name)
-	: t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2 && t.arguments.every(copied);
+const payload = (t, host = null) => t?.kind === "primitive" ? Object.hasOwn(scalars, t.name)
+	: t?.kind === "named" ? host?.some(r => !r.hash && r.id === t.id) === true
+		: t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2 && t.arguments.every(v => payload(v, host));
+const delivered = (t, resources) => payload(t) || (t?.kind === "named" && resources.some(r => r.hash && r.id === t.id));
 const asset = path => readFileSync(new URL(path, import.meta.url), "utf8");
 const taskCodec = (i, value, error, checked) => {
 	const task = `(_root_.Task ${checked ? `(_root_.Except _root_.IO.Error ${value.lean})` : value.lean})`;
@@ -150,13 +152,10 @@ const emit = (resources, entry, i, codecs, synchronous, immediate) => {
 	const args = entry.parameters.map(p => carrier(resources, p.type));
 	const effect = entry.effect ?? "IO", task = entry.delivery === "task", stream = entry.delivery === "async-iterator";
 	const bound = resources.some(r => !r.hash) && !task && !stream;
-	const admitted = t => copied(t) || (t?.kind === "named" && resources.some(r => r.hash && r.id === t.id));
 	if(!["pure", "IO", "EIO", ...(task || stream || immediate ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
-	if((task || stream) && (!admitted(entry.result) || entry.parameters.some(p => !admitted(p.type)))) throw new TypeError("Lean tasks require copied carriers or checked Lean resources");
+	if((task || stream) && entry.parameters.some(p => !delivered(p.type, resources))) throw new TypeError("Lean tasks require copied carriers or checked Lean resources");
 	if(stream && (entry.protocol?.open !== entry.declaration || !qualified.test(entry.protocol.next) || !qualified.test(entry.protocol.close)
-		|| (entry.stepError && !admitted(entry.stepError)))) throw new TypeError("invalid async iterator protocol");
-	if((entry.result?.kind === "apply" && !copied(entry.result)) || (effect === "EIO" && !admitted(entry.error)))
-		throw new TypeError("returned sums and EIO errors require copied payloads");
+		|| (entry.stepError && !delivered(entry.stepError, resources)))) throw new TypeError("invalid async iterator protocol");
 	if(!immediate && !task && !stream && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
 	const startError = effect === "EIO" ? returned(resources, entry.error, codecs) : null;
 	const asyncOut = stream ? streamCodec(i, entry, returned(resources, entry.result, codecs), startError, entry.stepError ? returned(resources, entry.stepError, codecs) : null)
@@ -257,6 +256,19 @@ export const generatePythonHostExtension = options => {
 	if(syncIO && [...leaseNames, ...entries.map(e => e.name)].includes("LeanIOError")) throw new TypeError("reserved Python IO error name");
 	const imported = ir?.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python")) ?? [];
 	const resources = [...imported, ...owned];
+	for(const e of entries)
+	{
+		// Only synchronous conversions run inside the application's active binding.
+		// Check both async generator paths, including retained callback factories.
+		if(e.delivery)
+		{
+			if(!delivered(e.result, resources) || (e.effect === "EIO" && !delivered(e.error, resources)))
+				throw new TypeError("Lean tasks require copied carriers or checked Lean resources");
+		}
+		else if((e.result?.kind === "apply" && !payload(e.result, imported)) ||
+			(e.effect === "EIO" && !payload(e.error, imported) && !delivered(e.error, owned)))
+			throw new TypeError("returned sums and EIO errors require copied payloads or declared synchronous host objects");
+	}
 	const codecs = new Map(), slots = new Map();
 	for(const e of entries) for(const p of e.parameters) if(p.type.kind === "io-callback")
 	{
@@ -353,9 +365,9 @@ PyMODINIT_FUNC PyInit__native(void) { ${leased ? `PyObject *m = PyModule_Create(
 		return { bool: "bool", char: "str", string: "str", bytes: "bytes", unit: "None", float32: "float", float64: "float" }[t.name] ?? "int";
 	};
 	const hostNames = provider.resources.join(", ");
-	const payload = types => [...new Set(types.filter(Boolean).map(render))].sort().join(" | ") || "object";
-	const startPayload = payload(entries.filter(e => e.effect === "EIO").map(e => e.error));
-	const stepPayload = payload(entries.filter(e => e.delivery === "async-iterator").map(e => e.stepError));
+	const payloadUnion = types => [...new Set(types.filter(Boolean).map(render))].sort().join(" | ") || "object";
+	const startPayload = payloadUnion(entries.filter(e => e.effect === "EIO").map(e => e.error));
+	const stepPayload = payloadUnion(entries.filter(e => e.delivery === "async-iterator").map(e => e.stepError));
 	const stub = [
 		"from typing import ContextManager as _ContextManager"
 		, ...(leased ? ["from typing import Literal as _Literal, Protocol as _Protocol, Self as _Self, runtime_checkable as _runtime_checkable"

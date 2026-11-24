@@ -130,8 +130,15 @@ test("generated CPython providers refuse dynamic, asynchronous and unimplemented
 	assert.throws(() => generate([entry, entry]), /duplicate/u);
 	assert.throws(() => generate([{ ...entry, name: "bind_hosts" }]), /duplicate/u);
 	assert.throws(() => generate([{ ...entry, parameters: [...entry.parameters, ...entry.parameters] }]), /argument name/u);
-	assert.throws(() => generate([{ ...entry, effect: "EIO", error: entry.parameters[0].type }]), /copied payloads/u);
-	assert.throws(() => generate([{ ...entry, result: { kind: "apply", constructor: "result", arguments: [entry.result, entry.parameters[0].type] } }]), /copied payloads/u);
+	const host = entry.parameters[0].type, sum = { kind: "apply", constructor: "result", arguments: [entry.result, host] };
+	assert.match(generate([{ ...entry, effect: "EIO", error: host, result: sum }]).stub, /Ok\[int\] \| Err\[Box\]/u);
+	const unknown = { ...sum, arguments: [entry.result, {kind: "named", id: "other:Box"}] };
+	assert.throws(() => generate([{ ...entry, result: unknown }]), /copied payloads/u);
+	for(const parameters of [[], [{name: "f", type: {kind: "io-callback", argument: entry.result, reply: entry.result}}]])
+	{
+		for(const [result, error] of [[host, entry.result], [entry.result, sum]])
+			assert.throws(() => generate([{ ...entry, parameters, delivery: "task", effect: "EIO", result, error }]), /copied carriers or checked Lean resources/u);
+	}
 	const result = generate([entry]);
 	assert.match(result.stub, /def read\(box: Box\) -> int:/u);
 	assert.match(result.types, /@level.setter\n +def level\(self, value: int\) -> None:/u);

@@ -96,13 +96,18 @@ test("fresh Lean host signatures and transitive calls reject dishonest reviews a
 	assert.deepEqual(domain.errors[0].payload, { kind: "primitive", name: "string" });
 	domain.errors[0].payload.name = "bytes";
 	await assert.rejects(compile(root, typed, { source: canonicalJson(domain) }), /Reviewed API differs/u);
+	const leased = source.replace(original, "def readLevel (box : Box) : EIO Box (Except String Box) := throw box");
+	const review = (await compile(root, leased)).api, declared = review.declarations[0];
+	const lifetime = {scope: "explicit", anchor: null};
+	assert.deepEqual(declared.source.extensions["lean-bridge.dev/error-payload-site"], {type: row.parameters[0].type, ownership: "lease", lifetime});
+	assert.equal(declared.result.ownership, "lease"); assert.deepEqual(declared.result.lifetime, lifetime);
+	delete declared.source.extensions["lean-bridge.dev/error-payload-site"];
+	await assert.rejects(compile(root, leased, {source: canonicalJson(review)}), /Reviewed API differs/u);
 	for(const [body, diagnostic] of [
 		["def readLevel (_box : Box) : UInt32 := 7", "expected synchronous IO result"]
 		, ["axiom unproved : UInt32\ndef readLevel (_box : Box) : IO UInt32 := pure unproved", "Workshop.unproved.*not supported by code generator"]
 		, ["axiom unproved : UInt32\nnoncomputable def readLevel (_box : Box) : IO UInt32 := pure unproved", "unimplemented application axiom"]
 		, ["@[extern \"unknown_host_member\"] opaque foreignRead : @& Box → IO UInt32\ndef readLevel (box : Box) := foreignRead box", "unreviewed unsafe, partial or foreign"]
-		, ["def readLevel (box : Box) : IO (Except String Box) := pure (.ok box)", "owned host object cannot be a copied"]
-		, ["def readLevel (box : Box) : EIO Box UInt32 := throw box", "owned host object cannot be a copied"]
 		, ["initialize invalid : IO.Ref UInt32 ← IO.mkRef (sorry : UInt32)\ndef readLevel (_box : Box) : IO UInt32 := invalid.get", "depends on sorry"]
 		, ["@[extern \"unknown_host_member\"] opaque badInit : IO Unit\ninitialize badInit\ndef readLevel (box : Box) : IO UInt32 := Internal.level box", "unreviewed unsafe, partial or foreign"]
 	]) {
@@ -139,7 +144,7 @@ test("CLI builds ordinary and reviewed Python host packages and pip consumes the
 	};
 	let publicApi, interfaces;
 	const retained = new Map();
-	await assert.rejects(run("build", "--project", project, "--target", "pypi", "--target", "c", "--output", join(root, "invalid")), /single pypi, rubygems, or maven target/u);
+	await assert.rejects(run("build", "--project", project, "--target", "pypi", "--target", "c", "--output", join(root, "invalid")), /Host imports require a single [^\n]* target/u);
 	await assert.rejects(access(join(root, "invalid")), { code: "ENOENT" });
 	for(const route of ["ordinary", "reviewed"])
 	{

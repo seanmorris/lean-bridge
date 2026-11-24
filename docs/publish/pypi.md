@@ -108,10 +108,13 @@ The Lean signature controls what the Python caller receives:
 | `Except ε α` or `IO (Except ε α)` | Returns `Ok(value)` or `Err(error)`. Returning `.error` does not raise. |
 
 These calls are synchronous. Export arguments may be copied scalars or
-declared host objects. Returned `Except` values may nest; their payloads
-and typed failures must contain only supported copied values. For example,
+declared host objects. Returned `Except` values and `EIO` error payloads may
+nest and contain either supported copied values or the Python classes named
+in your import contract. The generated contract records a lease when a
+result or error can carry a host object. For example,
 `EIO Nat (Except String UInt32)` has two distinct error channels: a thrown
 `Nat` and a returned `String`. See the [compiled example](../../tests/fixtures/host-object/Workshop.lean).
+This does not make Python-owned objects into worker results or stream items.
 This profile builds one target at a time. Python host-member calls themselves
 are synchronous; compound member arguments and custom native objects are not supported.
 
