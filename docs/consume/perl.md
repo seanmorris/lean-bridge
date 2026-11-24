@@ -121,6 +121,31 @@ print $meter->read, "\n";  # 42
 
 `$meter` is the original blessed Perl object, not a handle. The binding closes on return or exception. A new call into these Lean functions needs a new block. If a Perl method dies and Lean propagates that IO error unchanged, the caller receives the original exception. If Lean maps it to a declared `EIO` error, the caller receives the generated exception and its payload.
 
+### Pass a Perl object through a worker
+
+In the [worker version of Workshop](../publish/cpan.md#carry-a-perl-object-through-a-worker),
+`relay` returns a future. Using the same `App::Meter` class as above:
+
+```perl
+use v5.36;
+use LeanBridge::Workshop;
+
+my $meter = LeanBridge::Workshop::with_hosts({Box => 'App::Meter'}, sub {
+    my $original = LeanBridge::Workshop::make(18);
+    return LeanBridge::Workshop::relay($original, sub ($m) {
+        $m->level(42);
+        return $m;
+    })->get;
+});
+say $meter->read;  # 42; this is the object that the callback updated
+```
+
+The callback runs on the Perl event loop, where it can call other exports. Wait for work
+that needs the object **inside** the binding: leaving the block cancels its
+pending futures and closes its cursors, even if the block throws. A different
+component’s binding stays usable. An object already delivered to Perl is an
+ordinary blessed reference and remains usable after the block.
+
 ### Wait for a task or read a stream
 
 A task export returns a `Future` attached to the default loop returned by `IO::Async::Loop->new`. If your application already uses that loop, its timers and I/O continue to run while `get` waits for a result. In event-driven code, register `on_done` and `on_fail` callbacks instead. The component declares its CPAN dependencies; synchronous-only packages do not require an event loop.

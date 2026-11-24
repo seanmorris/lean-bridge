@@ -79,7 +79,7 @@ The [export configuration](../../tests/fixtures/perl-host-project/lean-bridge.ex
 lean-bridge build --project tests/fixtures/perl-host-project --target cpan --output release
 ```
 
-This produces a `native-perl-host-v1` component and its exact shared runtime distribution. Publish the two archives as described [below](#publish-to-cpan). The application [binds its own Perl class](../consume/perl.md#supply-a-perl-class-to-lean). These calls run on the initiating interpreter thread; do not pass imported objects to a Lean worker.
+This produces a `native-perl-host-v1` component and its exact shared runtime distribution. Publish the two archives as described [below](#publish-to-cpan). The application [binds its own Perl class](../consume/perl.md#supply-a-perl-class-to-lean). Calls to the object's members run on the initiating interpreter thread.
 
 ### Export tasks and streams
 
@@ -99,6 +99,34 @@ Use `taskExports` for functions returning an actual Lean `Task` (directly or ins
 Build and publish the same two CPAN distributions as above. The `native-perl-task-v1` component adds `Future` and `IO::Async::Loop` to its runtime prerequisites; the shared runtime archive does not change. A synchronous companion such as `Pulse.release` stays synchronous. The [Perl consumer example](../consume/perl.md#wait-for-a-task-or-read-a-stream) calls the installed package.
 
 The compiler checks the task result and cursor protocol against the Lean source on both ordinary and reviewed builds. An `EIO` factory error, an `IO` factory error, a step failure and a returned `Except` occupy different stages. Use `taskIOErrors` only for a selected task that returns `Except IO.Error α` and should fail the future on a terminal IO error. For a worker that needs to call Perl, [export its callback](#export-a-task-that-calls-perl). For a worker or stream that passes a Lean object by identity, select its resource type as shown below.
+
+### Carry a Perl object through a worker
+
+Keep the Workshop host contract when your task takes or returns an application
+object. A Lean worker can carry the object by identity. It cannot call its
+Perl methods, even indirectly through another Lean function. If you need to
+read or change the object in Perl, pass a callback that runs on the owner's
+event loop:
+
+```lean
+import Workshop
+
+namespace Jobs
+open LeanBridge.Host.Perl
+
+def relay (box : Box) (visit : Box → IO Box) : BaseIO (Task (Except IO.Error Box)) :=
+  IO.asTask (visit box)
+
+end Jobs
+```
+
+Add `Jobs` to the Lake libraries and the configuration's `modules`. Add
+`Jobs.relay` to `exports`, `taskExports` and `taskIOErrors`. Keep
+`hostImports` and the existing CPAN coordinates. Build with the same
+`lean-bridge build --target cpan` command. The resulting component uses the
+task profile; its synchronous companions remain synchronous. See the
+[complete task and cursor source](../../tests/fixtures/perl-host-workers/Jobs.lean)
+and the [Perl caller](../consume/perl.md#pass-a-perl-object-through-a-worker).
 
 ### Export a task that calls Perl
 

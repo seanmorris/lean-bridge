@@ -15,10 +15,13 @@ const exec=promisify(execFile);
  * @param o - Archives keyed by package, installation mode and scratch directory.
  * @param o.scratch - Writable parent for the short-lived installation.
  * @param o.set - Paths to the verified runtime, Workshop and Peer archives.
- * @param o.route - Ordinary prebuilt pair or independently reviewed XS-only pair.
+ * @param o.route - Ordinary or independently reviewed author route.
  * @param o.interpreter - Perl executable whose ABI is being checked.
+ * @param o.workerDeps - Independent Future and IO::Async installation for class-bearing workers.
+ * @param o.componentMode - Override the default install mode to test both modes on each source route.
  */
-export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter}) => {
+export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,workerDeps=null,componentMode=route==="reviewed"?"build-xs":"prebuilt-only"}) => {
+	assert.ok(["build-xs","prebuilt-only"].includes(componentMode));
 	const fs=await statfs(scratch); if(fs.bavail*fs.bsize<500*1024**2) throw new Error("Need 500 MiB for an isolated CPAN consumer");
 	const work=await mkdtemp(join(scratch,"consumer-")), original=join(work,"prefix"), relocated=join(work,"relocated"), tools=join(work,"tools");
 	try
@@ -27,9 +30,10 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter}
 		assert.ok(perl.startsWith("/"));
 		await mkdir(tools);
 		const programs=["make","tar","gzip","sh","cp","mv","rm","chmod","mkdir","touch","true"];
-		if(route==="reviewed") programs.push("cc","gcc","x86_64-linux-gnu-gcc","as","ld");
+		if(componentMode==="build-xs") programs.push("cc","gcc","x86_64-linux-gnu-gcc","as","ld");
 		for(const cmd of programs) await symlink("/usr/bin/"+cmd,join(tools,cmd));
-		const clean={PATH: tools,LD_BIND_NOW: "1"
+		const dependencies=workerDeps?{PERL5LIB: workerDeps}:{};
+		const clean={...dependencies,PATH: tools,LD_BIND_NOW: "1"
 			, LEAN_NUM_THREADS: "1"
 			, MAKEFLAGS: "-j1"
 			, CC: "/unavailable/compiler"
@@ -38,7 +42,7 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter}
 			, LEAN_BRIDGE_NATIVE_ROOT: "/unavailable/runtime"};
 		for(const key of ["runtime","Workshop","Peer"])
 		{
-			const mode=route==="reviewed" && key!=="runtime"?"build-xs":"prebuilt-only";
+			const mode=key==="runtime"?"prebuilt-only":componentMode;
 			try
 			{
 				const environment=mode==="build-xs"?{...clean,CC: "/usr/bin/cc",LD: "/usr/bin/cc"}:clean;
@@ -61,16 +65,23 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter}
 			const name=path.split("/").at(-2), arch=receipt.abi.archname;
 			assert.equal(path,arch+"/LeanBridge/"+name+"/install-receipt.json");
 			checked.add(name);
-			assert.equal(receipt.operation,route==="reviewed" && name!=="Runtime"?"generated-xs-only":"prebuilt-xs");
+			assert.equal(receipt.operation,componentMode==="build-xs" && name!=="Runtime"?"generated-xs-only":"prebuilt-xs");
 			const installedXs=join(lib,arch,"auto/LeanBridge",name,name+".so");
 			assert.equal(sha256(await readFile(installedXs)),receipt.outputSha256);
 		}
 		assert.deepEqual([...checked].sort(),["Peer","Runtime","Workshop"]);
-		const client=join(work,"client.pl");await copyFile(resolve("tests/fixtures/perl-host-meter/installed-pair.pl"),client);
+		const client=join(work,"client.pl");await copyFile(resolve("tests/fixtures",workerDeps?"perl-host-workers":"perl-host-meter","installed-pair.pl"),client);
+		const clientEnv={...dependencies,PATH: "/unavailable",LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1",EXPECT_PERL_LIB: lib};
 		for(const order of [["Workshop","Peer"],["Peer","Workshop"]])
 		{
-			const r=await exec(perl,["-I"+lib,client,...order],{cwd: work,env: {PATH: "/unavailable",LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1",EXPECT_PERL_LIB: lib}});
-			assert.equal(r.stderr,"");assert.match(r.stdout,/errors and reentry passed/u);
+			const r=await exec(perl,["-I"+lib,client,...order],{cwd: work,env: clientEnv,timeout: 90000});
+			assert.equal(r.stderr,"");assert.match(r.stdout,workerDeps?/load order and sibling shutdown passed/u:/errors and reentry passed/u);
+		}
+		if(workerDeps)
+		{
+			await copyFile(resolve("tests/fixtures/perl-host-workers/public.pl"),join(work,"public.pl"));
+			const r=await exec(perl,["-I"+lib,join(work,"public.pl")],{cwd: work,env: clientEnv,timeout: 90000});
+			assert.equal(r.stderr,""); assert.match(r.stdout,/demand, reentry and scoped cancellation/u);
 		}
 	} finally
 	{await rm(work,{recursive: true,force: true});}

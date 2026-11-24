@@ -1306,6 +1306,8 @@
     "test:dotnet-worker-source": "node --test --test-concurrency=1 tests/dotnet-host-worker-wire.test.mjs tests/helpers/dotnet-worker-elaboration.mjs",
     "test:perl-host-imports": "node --test --test-concurrency=1 tests/helpers/perl-host-imports.mjs",
     "test:perl-worker-transport": "node --test --test-concurrency=1 tests/helpers/perl-worker-transport.mjs",
+    "test:perl-worker-packages": "node --test --test-concurrency=1 tests/helpers/perl-worker-packages.mjs",
+    "test:perl-worker-replay": "node --test --test-concurrency=1 tests/helpers/perl-worker-replay.mjs",
     "test:perl-worker-source": "node --test --test-concurrency=1 tests/helpers/perl-worker-elaboration.mjs",
     "test:php-host-imports": "node --test --test-concurrency=1 tests/helpers/php-host-imports.mjs",
     "test:python-host-task-imports": "node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",

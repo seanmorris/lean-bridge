@@ -116,7 +116,7 @@ export const readVerifiedCpanPackage = async packageRoot => {
 		const io = manifest.syncIO ?? manifest.taskDelivery;
 		const ioPayload = files.has("sync-wire.h") || (files.has("binding-manifest.json")
 			&& ["native-perl-io-v1","native-perl-task-v1"].includes(JSON.parse(files.get("binding-manifest.json")).profile));
-		if(Boolean(io || host) !== ioPayload || Boolean(manifest.taskDelivery)!==files.has("task-wire.h") || (manifest.syncIO && manifest.taskDelivery))
+		if(Boolean(io || host) !== ioPayload || Boolean(manifest.taskDelivery || host?.profile==="native-perl-task-v1")!==files.has("task-wire.h") || (manifest.syncIO && manifest.taskDelivery))
 			throw new Error("CPAN IO manifest and payload select different profiles");
 		if(io) verifyPerlIOFiles(manifest, files, await readFile(join(templates, "Build.pm"), "utf8"), await readFile(join(templates, "sync-wire.h")),manifest.taskDelivery ? await perlTaskAssets() : null);
 		if(io?.resourceLedger && io.resourceLedger.id !== (await taskResourceLedger(manifest.nativeRuntimeIdentity)).id)
@@ -131,7 +131,7 @@ export const readVerifiedCpanPackage = async packageRoot => {
 				throw new Error("Owned CPAN callback installer differs from its generated source");
 		}
 		const metadata = JSON.parse(files.get("META.json"));
-		if(manifest.taskDelivery && (metadata.prereqs?.runtime?.requires?.["IO::Async::Loop"] !== "0.805" || metadata.prereqs.runtime.requires.Future !== "0.54"))
+		if((manifest.taskDelivery || host?.profile==="native-perl-task-v1") && (metadata.prereqs?.runtime?.requires?.["IO::Async::Loop"] !== "0.805" || metadata.prereqs.runtime.requires.Future !== "0.54"))
 			throw new Error("CPAN task component lacks its event-loop dependencies");
 		const pin = `== ${manifest.runtimeVersion}`;
 		const pm = files.get(`lib/${manifest.module.replaceAll("::", "/")}.pm`)?.toString("utf8");

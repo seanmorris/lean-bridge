@@ -6,31 +6,45 @@ import {reconcileHostExports} from "../analyze/host-export-model.mjs";
 import {generatePerlHostExports} from "../backends/perl/host-exports.mjs";
 import {renderPerlHostLoader,renderPerlIOBuild,validatePerlIOSettings} from "../backends/perl/sync-io.mjs";
 import {perlHostComponentIdentity,perlHostHeaders} from "../build/perl-host-component.mjs";
+import {perlHostTaskKernel} from "../build/perl-host-task-kernel.mjs";
 import {validateNativeElf} from "../build/native-artifacts.mjs";
 
 const same=(a,b)=>canonicalJson(a)===canonicalJson(b);
 const digest=v=>typeof v==="string" && /^[a-f0-9]{64}$/u.test(v);
 const fail=m=>{throw new TypeError("CPAN host imports: "+m);};
-const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRuntimeIdentity,bytes},pins) => {
+const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRuntimeIdentity,bytes,readLedger},pins) => {
 	validatePerlIOSettings({name,version});
-	const s=evidence.selection, modules=s?.exportModules;
+	const s=evidence.selection, modules=s?.exportModules, mixed=Boolean(s?.taskExports?.length || s?.asyncIterators?.length);
 	if(![nativeRuntimeIdentity,pins.runtimeIdentity,evidence.compilerSha256,evidence.extractorSha256,evidence.sourceTreeSha256,evidence.configurationSha256].every(digest)
 		|| s?.hostModule!=="LeanBridge.Host.Perl" || !Array.isArray(modules) || !modules.length || s.nativeEffectPolicy!==nativeEffectPolicy
-		|| s.taskExports?.length || s.asyncIterators?.length || s.leanResources?.length || s.synchronousIO
+		|| (mixed?s.perlTaskObjects!==true:s.perlTaskObjects!==undefined) || s.leanResources?.length || s.synchronousIO
 		|| !evidence.lake?.resolution?.generatedImports?.includes(s.hostModule) || !evidence.interfaces?.some(i=>i.module===s.hostModule)
 		|| typeof hostSource!=="string" || sha256(hostSource)!==evidence.hostImportsSourceSha256
 		|| (reviewSource===null?null:sha256(reviewSource))!==evidence.reviewedSourceSha256) fail("source evidence differs from the selected profile");
 	const ir=parseBindingIr(hostSource), review=reviewSource===null?null:{source: reviewSource};
 	const checked=reconcileHostExports({...evidence,ir,review,component: api.component});
 	if(!same(checked.api,api)) fail("public API differs from compiler evidence");
-	const headers=await perlHostHeaders(), options={name,version,ir,api,evidence,runtimeIdentity: nativeRuntimeIdentity,modules,entries: checked.entries};
-	const componentIdentity=perlHostComponentIdentity(options,headers), generated=generatePerlHostExports({...options,identity: componentIdentity});
+	const options={name,version,ir,api,evidence,runtimeIdentity: nativeRuntimeIdentity,modules,entries: checked.entries};
+	const worker=mixed?await perlHostTaskKernel({...options,checked: {...checked,evidence}}):null;
+	const headers=await perlHostHeaders(worker), componentIdentity=perlHostComponentIdentity(options,headers,worker);
+	const generated=generatePerlHostExports({...options,entries: checked.entries.filter(e=>!e.delivery),identity: componentIdentity,worker});
+	let ledger=null, ledgerBytes;
+	if(worker)
+	{
+		ledgerBytes=readLedger(worker.ledger.name); validateNativeElf(ledgerBytes);
+		ledger={id: worker.ledger.id,library: worker.ledger.name,sha256: sha256(ledgerBytes)};
+		if(!bytes.includes(Buffer.from("perl-worker-ledger:"+ledger.id+":"+ledger.sha256+"\0"))
+			|| !bytes.includes(Buffer.from(ledger.library+"\0")) || !worker.wire.symbols.every(n=>bytes.includes(Buffer.from(n+"\0")))
+			|| !["begin","end","create","borrow","release"].every(n=>bytes.includes(Buffer.from(worker.scope+n+"\0")))
+			|| !["create","borrow","release"].every(n=>ledgerBytes.includes(Buffer.from("lb_task_resource_"+ledger.id+"_"+n+"\0"))))
+			fail("worker library or ledger differs from the compiled binding");
+	}
 	validateNativeElf(bytes);
 	if(!bytes.includes(Buffer.from(componentIdentity+"\0")) || !generated.symbols.every(sym=>bytes.includes(Buffer.from(sym+"\0"))))
 		fail("native image does not identify this component");
 	const library="liblbc_perl_"+sha256(name)+".so", librarySha256=sha256(bytes);
 	const contract={schemaVersion: 1
-		, profile: "native-perl-host-v1"
+		, profile: mixed?"native-perl-task-v1":"native-perl-host-v1"
 		, component: api.component
 		, componentIdentity
 		, bindingIrSha256: hashBindingIr(api)
@@ -38,11 +52,12 @@ const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRu
 		, hostImportsSha256: sha256(hostSource)
 		, reviewedSourceSha256: evidence.reviewedSourceSha256
 		, library
-		, librarySha256};
+		, librarySha256,...ledger?{resourceLedger: ledger}:{} };
 	const dir="lib/"+name.replaceAll("::","/");
 	const files=new Map(Object.entries(headers));
 	files.set("Component.xs",generated.xsSource); files.set("ph-interface.h",generated.interfaceHeader);
-	files.set(dir+".pm",renderPerlHostLoader({...options,generated,library,librarySha256},pins));
+	files.set(dir+".pm",renderPerlHostLoader({...options,generated,library,librarySha256,resourceLedger: ledger},pins));
+	if(ledger) files.set(dir+"/native/"+ledger.library,ledgerBytes);
 	files.set(dir+"/native/"+library,bytes); files.set("host-imports.json",hostSource);
 	if(reviewSource!==null) files.set("reviewed-api.json",reviewSource);
 	files.set("binding-ir.json",canonicalJson(api)); files.set("elaboration.json",canonicalJson(evidence));
@@ -57,6 +72,7 @@ const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRu
  */
 export const preparePerlHostFiles = async (o,pins) => {
 	const payload=await build({...o
+		, readLedger: ()=>o.ledgerBytes
 		, nativeRuntimeIdentity: o.runtimeIdentity
 		, hostSource: o.projectContract.hostImportsSource
 		, reviewSource: o.projectContract.review?.source??null},pins);
@@ -80,9 +96,9 @@ export const verifyPerlHostFiles = async (manifest,files,installer) => {
 		, evidence: JSON.parse(get("elaboration.json"))
 		, hostSource: get("host-imports.json").toString()
 		, reviewSource: files.get("reviewed-api.json")?.toString()??null
-		, nativeRuntimeIdentity,bytes},{runtimeVersion,runtimeIdentity});
+		, nativeRuntimeIdentity,bytes,readLedger: n=>get("lib/"+name.replaceAll("::","/")+"/native/"+n)},{runtimeVersion,runtimeIdentity});
 	if(manifest.ownedValues || manifest.syncIO || manifest.taskDelivery || manifest.xs!=="Component.xs" || manifest.include!=="."
-		|| !same(payload.contract,manifest.hostImports) || get("LeanBridgeBuild.pm").toString()!==renderPerlIOBuild(installer,name,library,false,null,true)) fail("manifest or installer mismatch");
+		|| !same(payload.contract,manifest.hostImports) || get("LeanBridgeBuild.pm").toString()!==renderPerlIOBuild(installer,name,library,Boolean(payload.contract.resourceLedger),payload.contract.resourceLedger,true)) fail("manifest or installer mismatch");
 	for(const [path,expected] of payload.files) if(!get(path).equals(Buffer.isBuffer(expected)?expected:Buffer.from(expected))) fail("generated payload differs: "+path);
 	const artifacts=new Set(), stem=name.split("::").at(-1);
 	for(const v of manifest.prebuilt)

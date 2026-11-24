@@ -19,7 +19,8 @@ export const writePerlIORelease = async o => {
 		, settings: { module: o.name, version: o.version }
 		, ...(o.ir ? {hostImports: o} : {syncIO: o}) });
 	const model = { component: projectContract.component, bindingIrSha256, sourceIdentity: { sourceTreeSha256: projectContract.sourceTreeSha256 } };
-	const receipt = await writeNativePackageSet({ root: workRoot, model, runtimeIdentity, projections: [projection], perlProfile: o.ir ? "native-perl-host-v1" : o.wire.wait ? "native-perl-task-v1" : "native-perl-io-v1", signal });
+	const perlProfile = o.kernel || o.wire?.wait ? "native-perl-task-v1" : o.ir ? "native-perl-host-v1" : "native-perl-io-v1";
+	const receipt = await writeNativePackageSet({ root: workRoot, model, runtimeIdentity, projections: [projection], perlProfile, signal });
 	return { receipt, api, evidence, runtimeIdentity, bindingIrSha256 };
 };
 
