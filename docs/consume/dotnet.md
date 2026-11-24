@@ -139,7 +139,8 @@ LeanBridge.Workshop.LeanRuntime.Run(async () =>
 Use the binding for any task or stream whose signature carries your class.
 Workers with only copied values stay on `Api`. Closing a binding cancels its
 pending work and invalidates streams created with it, even ones you haven't
-started reading. It leaves other bindings and your C# object alone.
+started reading. It leaves other bindings and your C# object alone. See the
+[installed worker results and package receipts](../evidence/dotnet-worker-packages-20261124.md).
 
 ### Await tasks and pull streams
 

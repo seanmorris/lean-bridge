@@ -61,3 +61,6 @@ operation rejected the stale token, and the reference counts returned to their
 baseline. Both assembly contexts unloaded.
 
 Run `npm run test:dotnet-host-domain` to reproduce these checks.
+
+The [installed NuGet consumer](dotnet-worker-packages-20261124.md) exercises
+these boundaries through the generated public C# API.

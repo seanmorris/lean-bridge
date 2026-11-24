@@ -55,9 +55,18 @@ export const runDotnetHostConsumers = async (root, feed, workers = false) => {
 		assert.equal((await readdir(native)).filter(f => f.startsWith("liblb_dotnet_host_")).length, 3);
 		const launch = arg => run(dotnet, [join(moved, "Client.dll"), arg], moved, { PATH: "/no-publisher-tools", LANG: "C.UTF-8", LEAN_NUM_THREADS: "1", DOTNET_PROCESSOR_COUNT: "1" });
 		const results = [];
-		for(const order of ["ab", "ba"])
+		const repeats = workers ? Number(process.env.LEAN_BRIDGE_DOTNET_WORKER_REPLAYS ?? 1) : 1;
+		assert.ok(Number.isInteger(repeats) && repeats >= 1 && repeats <= 20);
+		for(const order of Array.from({ length: repeats }, () => ["ab", "ba"]).flat())
 		{
-			const line = await launch(order); assert.equal(line, order + (workers ? ": worker identity, callbacks, errors, cursors, cancellation, binding isolation and shared retirement" : ": ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup")); results.push(line);
+			const lines = (await launch(order)).split("\n"), line = lines.pop();
+			if(workers)
+			{
+				assert.equal(lines.length, 1); assert.match(lines[0], /^retired native drain: [0-9]+ -> 0$/u);
+				results.push(order + ": " + lines[0]);
+			}
+			else assert.deepEqual(lines, []);
+			assert.equal(line, order + (workers ? ": worker identity, callbacks, errors, cursors, cancellation, binding isolation and shared retirement" : ": ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup")); results.push(line);
 		}
 		const path = join(native, receipts[0].hostDomain.library);
 		if(workers)

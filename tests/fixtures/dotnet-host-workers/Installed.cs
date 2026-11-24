@@ -29,6 +29,20 @@ internal static class InstalledWorkers
         return (a.Series(value), new WeakReference(value));
     }
     static void Collect() { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); }
+    static async Task DrainNative(string phase)
+    {
+        uint initial = Audit.Read()[5], live = initial;
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        // Unbinding does not join a Lean worker. A pending completion observer
+        // owns its notification lease until the Lean scheduler drops the last ref.
+        while (live != 0) {
+            if (clock.Elapsed > TimeSpan.FromSeconds(10))
+                throw new Exception($"{phase}: {live} live native identities after {clock.Elapsed} (initially {initial})");
+            await Task.Delay(5);
+            live = Audit.Read()[5];
+        }
+        if (phase == "retired") Console.WriteLine($"retired native drain: {initial} -> 0");
+    }
     static async Task Exercise(string order)
     {
         if (order == "ab") Check(await A.Api.Scalar(4) == 5 && await B.Api.Scalar(4) == 6);
@@ -87,16 +101,16 @@ internal static class InstalledWorkers
             await using(var stale = cold.GetAsyncEnumerator())
                 await Fails<ObjectDisposedException>(() => stale.MoveNextAsync().AsTask());
             Check(ReferenceEquals(await reopened.Echo(x), x));
-            for(int i = 0; i < 200 && Audit.Read()[5] != 0; ++i) await Task.Delay(10);
-            Check(Audit.Read()[5] == 0);
+            await DrainNative("active");
             var fatal = new OutOfMemoryException("injected fatal callback");
             Check(ReferenceEquals(await Fails<OutOfMemoryException>(() => reopened.Relay(x, _ => throw fatal)), fatal));
             await Fails<B.RuntimeUnavailableException>(() => b.Echo(x));
         }
-        Check(Audit.Read()[5] == 0);
+        Check(Audit.Read()[1] == 3);
         var refs = AppDomain.CurrentDomain.GetData("lean-bridge.dotnet.private-host-references.v1")
             as Tuple<Dictionary<ulong,object>,Dictionary<ulong,WeakReference<object>>,StrongBox<ulong>>;
         Check(refs != null && refs.Item1.Count == 0 && refs.Item2.Count == 0);
+        await DrainNative("retired");
     }
     public static void Main(string[] args)
     {
