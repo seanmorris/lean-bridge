@@ -167,8 +167,8 @@ The pthread host test compiles the generated Lean declarations and C shims
 into separate components. It exercises constructors, properties, methods,
 nested owner reentry, overlapping failures collected in reverse order,
 and a member queued before its binding closes. This is compiler/runtime
-evidence, not an installed public API: project analysis still rejects that
-combination until the task packager and public result adapters support it.
+evidence, not an installed public API: the npm build does not yet ship
+combined task and host imports.
 
 All 70 assertions passed on each of three owners: Node, a cross-origin
 isolated Chromium page, and a Chromium module worker. Each owner started
@@ -189,3 +189,36 @@ The test applies the package verifier's dynamic import check before linking
 each side module. In particular, the wasm32 minimum `ISize` exercises
 pinned Lean's `lean_isize_of_big_int`: compiling the signed integer
 declarations alone does not make that runtime function available to a DSO.
+
+### What the author compiler can now verify
+
+`npm run test:javascript-threaded-host-project` takes an ordinary Lake
+project with authored host imports, then rebuilds from a separately
+reviewed public interface. Both routes use fresh Lean interfaces and the
+same generated JavaScript host module. The package reconstruction checks
+the original bytes of the import file as well as the source digest of the
+generated module. The public descriptor checks nominal types, ownership,
+error channels and required capabilities against the separate import IR.
+
+| Lean operation in the fixture | What the compiler records |
+| --- | --- |
+| `work`, a task calling both `Box.read` and a retained callback | Two distinct error identities, separate from an ordinary terminal `IO.Error`. |
+| `start`, an IO factory calling `Box.create` | A factory error channel and a task delivering the host object. |
+| `either`, returning `Task (Except Box UInt32)` | A returned value with a leased host-object arm, not a rejected task. |
+| `checked`, an `EIO Box` factory | A typed, leased error payload. |
+| `openCursor` | Opening calls no host members; pulling calls `Box.identity`; closing calls `Box.setLevel`. The setter's capability is still required for the cursor. |
+
+These are dependencies of the selected Lean roots. For a task factory,
+`call` includes code captured by the worker; it does not claim the host
+method ran before the factory returned. The runtime must report the actual
+failure phase when delivering the error.
+
+No other scheduler inherits the JavaScript owner permission. Startup still
+cannot call a host before binding, and a substituted native symbol does
+not inherit permission from a matching Lean name. This test verifies the
+author contract, **not** execution of an installed host-task package.
+Remaining work is the generated task-frame transport for nominal values and
+original exceptions, then public binding, disposal and installed tests on
+Node, a browser page and a browser worker. Those tests must also show that
+a synchronous owner call cannot wait indefinitely on a worker that needs
+the same owner to execute a host method.

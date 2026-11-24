@@ -7,7 +7,7 @@ import { canonicalJson } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { compiledHostModules, hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
-import { resolveNativeHostEffects } from "./native-host-effects.mjs";
+import { hasJavaScriptHostOwner, nativeEffectPolicy, resolveNativeHostEffects } from "./native-host-effects.mjs";
 import { heapResourceIdentities } from "./heap-resource-identity.mjs";
 
 const doc = summary => ({ summary, details: "" });
@@ -81,7 +81,11 @@ export const reconcileHostExports = options => {
 			|| canonicalJson(selection.members) !== canonicalJson(expected.members)) fail("Unverified host import selection");
 	}
 	const synchronous = selection.synchronousIO === true;
-	const immediate = synchronous || (!ir && (selection.taskExports?.length || selection.asyncIterators?.length));
+	const owner=hasJavaScriptHostOwner(selection);
+	if(selection.javascriptThreadedHostMembers!==undefined && (!owner || !ir || selection.nativeEffectPolicy!==nativeEffectPolicy
+		|| selection.nativeEffects?.length || Boolean(selection.taskExports?.length)!==(selection.javascriptTaskCallbacks===true)))
+		fail("Unauthenticated JavaScript host owner");
+	const immediate = synchronous || ((!ir || owner) && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
 		fail("A standalone native IO package requires a checked IO, BaseIO or EIO entry and no host imports or async protocols");
@@ -93,7 +97,25 @@ export const reconcileHostExports = options => {
 		: resolveNativeHostEffects(selection, metadata.nativeEffectAudit, new Map([...members].map(([name, d]) =>
 			[name, hostMemberSymbol(hostTarget, types.find(t => t.id === d.owner), d)])));
 	const phases = e => native?.phases.get(e.declaration) ?? {};
-	const capabilities = e => [...new Set([...Object.values(phases(e)).flat(), ...e.hostMembers.flatMap(n => members.get(n).capabilities)])].sort();
+	const hostPhases=e=>({call: e.hostMembers,...e.protocolHostMembers});
+	const used=e=>[...new Set(Object.values(hostPhases(e)).flat())].sort();
+	for(const e of metadata.entries)
+	{
+		const p=selection.asyncIterators?.find(s=>s.open===e.declaration);
+		const protocol=e.protocolHostMembers;
+		if(owner && p)
+		{
+			if(!protocol || canonicalJson(Object.keys(protocol).sort())!==canonicalJson(["close","pull"])) fail("Invalid cursor host member phases: "+e.declaration);
+		} else if(protocol!==undefined) fail("Unexpected cursor host member phases: "+e.declaration);
+		for(const [phase,names] of Object.entries(hostPhases(e)))
+		{
+			const root=phase==="call"?e.declaration:phase==="pull"?p.next:p.close;
+			if(!Array.isArray(names) || new Set(names).size!==names.length || names.some(n=>!members.has(n))
+				|| owner && native.compiledMembers.get(root)?.some(n=>!names.includes(n)))
+				fail("Unverified host member dependencies for "+root);
+		}
+	}
+	const capabilities = e => [...new Set([...Object.values(phases(e)).flat(), ...used(e).flatMap(n => members.get(n).capabilities)])].sort();
 	const owned = options.owned ?? [];
 	if(canonicalJson(owned.map(r => r.declaration)) !== canonicalJson(selection.leanResources ?? [])
 		|| owned.some(r => !selection.modules.includes(r.module) || !/^[a-f0-9]{64}$/u.test(r.identity))) fail("Unverified application resource identity");
@@ -139,9 +161,9 @@ export const reconcileHostExports = options => {
 	const js=selection.javascriptTaskCallbacks===true, wit=selection.witTaskCallbacks===true;
 	const schedulerCount = [rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length;
 	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
-	if(ir && hostTarget === "javascript" && (js || selection.taskExports?.length || selection.asyncIterators?.length))
+	if(ir && !owner && hostTarget === "javascript" && (js || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail("Synchronous JavaScript host objects must run on their owning agent");
-	const matchingScheduler = { ruby, jvm, dotnet, perl, python: selection.pythonTaskCallbacks === true }[hostTarget];
+	const matchingScheduler = { ruby, jvm, dotnet, perl, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
 	const importedError = { jvm: ["JvmHostException", "JVM"]
@@ -151,6 +173,7 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
+	const callbackError=owner?"error:JavaScriptCallbackError":hostError;
 	const callbackRef = t => {
 		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
 		if(!callbacks.has(id)) callbacks.set(id, {
@@ -163,7 +186,7 @@ export const reconcileHostExports = options => {
 				, parameters: [{ ...signature(t.argument), name: "value", mutability: "immutable", optional: false, default: null }]
 				, result: signature(t.reply)
 				, effects: [...js ? ["async"] : [], "fails", "host-call"]
-				, failure: { mode: "declared", errors: [hostError], unexpected: "poison-runtime" } }
+				, failure: { mode: "declared", errors: [callbackError], unexpected: "poison-runtime" } }
 			, source: { producer: "lean", declaration: name, extensions: { "lean-bridge.dev/callback-scheduler": wit ? "wasmtime-store-owner" : js ? "javascript-owner-agent" : jvm ? "jvm-virtual-thread" : "owner-event-loop" } }
 			, documentation: doc(js ? "A callable on the JavaScript owner that may return a value or a promise; released on task settlement or cancellation." : "A synchronous host callable retained until its exporting task settles or is cancelled.") });
 		return { kind: "named", id };
@@ -176,19 +199,24 @@ export const reconcileHostExports = options => {
 	if(metadata.entries.some(e => e.taskIO)) errors.push({ id: terminal
 		, name: "TaskIOError", category: "domain", payload: null
 		, documentation: doc("A terminal IO failure from the selected Lean task.") });
-	if(metadata.entries.some(e => (e.effect === "IO" && e.hostMembers.length) || hasCallbacks(e))) errors.push({ id: hostError
+	const hostCanEscape=e=>(e.effect==="IO" || e.taskIO) && e.hostMembers.length || e.stepIO && e.protocolHostMembers?.pull?.length;
+	if(owner && metadata.entries.some(hasCallbacks)) errors.push({id: callbackError
+		, name: "JavaScriptCallbackError",category: "domain",payload: null
+		, documentation: doc("A retained JavaScript callback failed with the original thrown value.")});
+	if(metadata.entries.some(e => hostCanEscape(e) || !owner && hasCallbacks(e))) errors.push({ id: hostError
 		, name: publicErrorName
 		, category: "domain"
 		, payload: null
 		, documentation: doc(importedError ? "An exception raised by a bound " + importedError[1] + " object and propagated through the original Lean IO error." : wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through the original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
-		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];
+		: [...new Set(["error:IO.Error", ...(e.hostMembers.length ? [hostError] : []), ...(hasCallbacks(e) ? [callbackError] : [])])];
 	const errorIds = e => {
 		const ids = new Set(startErrors(e));
 		if(e.taskIO)
-		{ ids.add(terminal); if(hasCallbacks(e)) ids.add(hostError); }
-		if(e.stepError) ids.add(`error:AsyncStep.${e.declaration}`);
+		{ ids.add(terminal); if(hasCallbacks(e)) ids.add(callbackError); if(e.hostMembers.length) ids.add(hostError); }
+		if(e.stepError || e.stepIO) ids.add(`error:AsyncStep.${e.declaration}`);
+		if(e.stepIO && e.protocolHostMembers?.pull?.length) ids.add(hostError);
 		return [...ids];
 	};
 	const entries = metadata.entries.map(e => {
@@ -200,9 +228,9 @@ export const reconcileHostExports = options => {
 			fail("Unverified retained-callback selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
-			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)
+			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (!owner && async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
-			|| (!stream && (e.stepError || e.protocol)) || (e.delivery !== undefined && !async)
+			|| (!stream && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!stream || !owner || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async)
 			|| (!async && e.effect === "pure" && ((!immediate && e.result?.constructor !== "result") || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({
@@ -210,10 +238,10 @@ export const reconcileHostExports = options => {
 			, category: "domain", payload: e.error
 			, documentation: doc(`Typed synchronous failure of ${e.declaration}.`)
 		});
-		if(e.stepError) errors.push({
+		if(e.stepError || e.stepIO) errors.push({
 			id: `error:AsyncStep.${e.declaration}`
 			, name: `AsyncStep_${e.declaration.replaceAll(".", "_")}`
-			, category: "domain", payload: e.stepError
+			, category: "domain", payload: e.stepError ?? null
 			, documentation: doc(`Failure while pulling from ${e.declaration}.`)
 		});
 		return { name: snake(e.declaration.split(".").at(-1))
@@ -221,12 +249,12 @@ export const reconcileHostExports = options => {
 			, effect: e.effect
 			, ...(async ? { delivery: e.delivery } : {})
 			, ...(e.taskIO ? { taskIO: true } : {})
-			, ...(stream ? { protocol: e.protocol, ...(e.stepError ? { stepError: e.stepError } : {}) } : {})
+			, ...(stream ? { protocol: e.protocol, ...(e.stepError ? { stepError: e.stepError } : {}), ...(e.stepIO ? {stepIO: true} : {}) } : {})
 			, ...(e.effect === "EIO" ? { error: e.error } : {})
 			, parameters: e.parameters.map(p => ({ name: snake(p.name), type: p.type }))
 			, result: e.result };
 	});
-	const importedCaps = new Set(metadata.entries.flatMap(e => e.hostMembers.flatMap(n => members.get(n).capabilities)));
+	const importedCaps = new Set(metadata.entries.flatMap(e => used(e).flatMap(n => members.get(n).capabilities)));
 	const requiredCaps = [...(native?.capabilities ?? []), ...(ir?.capabilities.filter(c => importedCaps.has(c.id)) ?? [])];
 	const api = {
 		schemaVersion: 3, component
@@ -242,7 +270,7 @@ export const reconcileHostExports = options => {
 				, mutability: isOwned(p.type) ? mayWrite(e) ? "write" : "read" : p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
 			, result: site(e.result), mutability: "immutable"
-			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
+			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...used(e).flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
 			, capabilities: capabilities(e), assurance: []
@@ -250,13 +278,16 @@ export const reconcileHostExports = options => {
 			, source: { producer: "lean", declaration: e.declaration
 				, extensions: {
 					"lean-lang.org/effect": e.effect
-					, ...(e.effect === "EIO" && !e.delivery && hostRef(e.error) ? { "lean-bridge.dev/error-payload-site": leased(e.error) } : {})
+					, ...(e.effect === "EIO" && (!e.delivery || owner) && hostRef(e.error) ? { "lean-bridge.dev/error-payload-site": leased(e.error) } : {})
+					, ...(owner && hostRef(e.stepError) ? {"lean-bridge.dev/step-error-payload-site": leased(e.stepError)} : {})
+					, ...(e.stepIO ? {"lean-bridge.dev/step-failure": "IO.Error"} : {})
 					, ...(Object.keys(phases(e)).length ? { "lean-bridge.dev/native-effects-v1": phases(e) } : {})
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})
 					, ...(e.taskIO ? { "lean-bridge.dev/task-failure": "IO.Error" } : {})
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
-					, "lean-bridge.dev/host-members": e.hostMembers
+					, "lean-bridge.dev/host-members": owner ? used(e) : e.hostMembers
+					, ...(owner ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
 				}
 			}
 		}))

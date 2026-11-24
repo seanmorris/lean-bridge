@@ -72,6 +72,14 @@ const distinct = rows => [...new Set(rows)].sort();
 const strings = v => Array.isArray(v) && v.every(x => typeof x === "string") && new Set(v).size === v.length;
 
 /**
+ * Is this exact selection backed by the heap's JavaScript owner dispatcher?
+ *
+ * @param selection - Captured target and private compiler request, not an author grant.
+ */
+export const hasJavaScriptHostOwner=selection=>selection.javascriptThreadedHostMembers===true
+	&& selection.hostModule==="LeanBridge.Host.Javascript" && Boolean(selection.taskExports?.length || selection.asyncIterators?.length);
+
+/**
  * Bind the compiler's root/leaf records to the exact public selection and generated provider.
  *
  * @param selection - Captured entry points, protocol members, modules and author grants.
@@ -88,19 +96,20 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const asyncRoots = new Set([...(selection.taskExports ?? []), ...selection.asyncIterators.flatMap(p => [p.open, p.next, p.close])]);
 	const names = audit.roots.map(r => r?.declaration);
 	if(!strings(names) || names.length !== roots.length || roots.some(k => !names.includes(k))) fail("compiled roots do not match the export, startup and pull selection");
-	const byRoot = new Map();
+	const byRoot = new Map(), compiledMembers=hasJavaScriptHostOwner(selection)?new Map():null;
 	const violations = new Set();
 	for(const { declaration, leaves } of audit.roots)
 	{
 		if(!Array.isArray(leaves) || !strings(leaves.map(l => l?.name))) fail(`invalid compiler leaves for ${declaration}`);
-		const found = new Set();
+		const found = new Set(), host=compiledMembers?[]:null;
 		for(const { name, module, symbol } of leaves)
 		{
 			if(typeof module !== "string" || typeof symbol !== "string" || !symbol) fail(`unidentified native leaf in ${declaration}`);
 			if(module === (selection.hostModule ?? "LeanBridge.Host.Python") && selection.members.includes(name) && hostSymbols.get(name) === symbol)
 			{
 				if(audit.initializers.includes(declaration)) violations.add(`initializer ${declaration} reaches host member ${name} before it is bound`);
-				if(asyncRoots.has(declaration)) violations.add(`async entry ${declaration} reaches host member ${name} outside its owner`);
+				if(asyncRoots.has(declaration) && !compiledMembers) violations.add(`async entry ${declaration} reaches host member ${name} outside its owner`);
+				host?.push(name);
 				continue;
 			}
 			const exact = exactInMemory.get(symbol);
@@ -115,6 +124,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 			found.add(cap);
 		}
 		byRoot.set(declaration, [...found].sort());
+		if(host) compiledMembers.set(declaration,host.sort());
 	}
 	// Collect every policy violation from this intact compiler audit before
 	// rejecting it. Never emit a partial capability list or package.
@@ -131,5 +141,5 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 		, category: "runtime"
 		, requirement: "required"
 		, documentation: { summary: ambient[cap], details: "" } }));
-	return { capabilities, phases };
+	return { capabilities, phases, ...(compiledMembers?{compiledMembers}:{}) };
 };

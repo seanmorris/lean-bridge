@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import {parseBindingIr} from "../binding-ir/canonical.mjs";
 import { identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { heapResourceIdentities } from "../analyze/heap-resource-identity.mjs";
 import { nativeHostSelection, reconcileHostExports } from "../analyze/host-export-model.mjs";
@@ -16,6 +17,38 @@ import { compiledHostModules, compiledHostTargets, generateLeanHostObjectAdapter
 
 const extractor = fileURLToPath(new URL("../analyze/HostExports.lean", import.meta.url));
 const fail = message => { throw Object.assign(new Error(message), { code: "host-elaboration-drift" }); };
+
+/**
+ * Recover the exact JavaScript host provider from the captured author file.
+ * Never select a module or its generated C object by an archive-supplied name.
+ *
+ * @param contract - Project snapshot with the original UTF-8 host input.
+ * @param evidence - Fresh elaboration record (when reconstructing after compilation).
+ */
+export const threadedHostSource=(contract,evidence)=>{
+	const {ir,hostImportsSource: source,hostImportsSourceSha256: hash}=contract;
+	if(!ir)
+	{
+		if(source!=null || hash!==null || contract.generatedHostModule!=null || evidence
+			&& (evidence.hostImportsSourceSha256!==null || evidence.selection.hostModule!==undefined || evidence.selection.javascriptThreadedHostMembers!==undefined))
+			fail("Unexpected threaded host source without import declarations");
+		return null;
+	}
+	const module=compiledHostModules.javascript;
+	if(typeof source!=="string" || sha256(source)!==hash || contract.generatedHostModule!==module)
+		fail("Unverified threaded JavaScript host source");
+	const parsed=parseBindingIr(source);
+	if(canonicalJson(parsed)!==canonicalJson(ir)) fail("Captured host source differs from threaded JavaScript declarations");
+	if(evidence)
+	{
+		const interfaces=evidence.interfaces.filter(f=>f.module===module);
+		const lean=generateLeanHostObjectAdapters(parsed,{threadedJavaScript: true})[module.replaceAll(".","/")+".lean"];
+		if(evidence.selection.javascriptThreadedHostMembers!==true || evidence.selection.hostModule!==module
+			|| evidence.hostImportsSourceSha256!==hash || interfaces.length!==1 || interfaces[0].sourceSha256!==sha256(lean))
+			fail("Threaded JavaScript provider differs from the elaborated module");
+	}
+	return parsed;
+};
 
 /**
  * Compile in an isolated module path. No project-provided object, interface or C input is linked.
@@ -30,12 +63,14 @@ export const compileHostSources = async options => {
 	const env = { ...options.environment, LEAN_SYSROOT: leanPrefix, LEAN_SRC_PATH: app, LEAN_PATH: app, LEAN_NUM_THREADS: "1" };
 	if(ir && options.target && !Object.hasOwn(compiledHostTargets, options.target)) fail("No host import provider for the selected target");
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
+	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	if(threadedJavaScript && canonicalJson(threadedHostSource(projectContract))!==canonicalJson(ir)) fail("Wrong threaded host compile input");
 	if(projectContract && Object.hasOwn(projectContract, "generatedHostModule")
 		&& projectContract.generatedHostModule !== (ir ? hostModule : null)) fail("Captured host module and compile target differ");
 	if(ir && sources.some(s => s.module === hostModule)) fail("Application source shadows the generated host module");
 	const modules = [...(ir ? [{ module: hostModule
 		, source: target === "python" ? generatePythonHostProvider(ir).lean
-			: generateLeanHostObjectAdapters(ir)[hostModule.replaceAll(".", "/") + ".lean"] }] : [])
+			: generateLeanHostObjectAdapters(ir,{threadedJavaScript})[hostModule.replaceAll(".", "/") + ".lean"] }] : [])
 	, ...sources];
 	const byPath = new Map(), byName = new Map(), built = new Map(), active = new Set(), objects = [];
 	for(const s of modules)
@@ -85,6 +120,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "cpan" && projectContract.taskExports?.length ? { perlTaskCallbacks: true } : {})
 		, ...(["php-native","php-wasm"].includes(options.target) && projectContract.taskExports?.length ? { phpTaskCallbacks: true } : {})
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
+		, ...(threadedJavaScript ? {javascriptThreadedHostMembers: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []

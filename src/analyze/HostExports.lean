@@ -37,6 +37,7 @@ structure Request where
   perlTaskCallbacks : Option Bool := none
   phpTaskCallbacks : Option Bool := none
   javascriptTaskCallbacks : Option Bool := none
+  javascriptThreadedHostMembers : Option Bool := none
   witTaskCallbacks : Option Bool := none
   taskIOErrors : Option (Array String) := none
   nativeEffectPolicy : Option String := none
@@ -51,10 +52,14 @@ def Request.ownerTaskCallbacks (r : Request) : Bool :=
     r.phpTaskCallbacks.getD false || r.javascriptTaskCallbacks.getD false ||
     r.witTaskCallbacks.getD false
 
+def Request.ownerHostMembers (r : Request) : Bool :=
+  r.javascriptThreadedHostMembers == some true && r.hostModule == some "LeanBridge.Host.Javascript" &&
+    (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty)
+
 /-- A task in a package does not change the delivery mode of adjacent exports. -/
 def Request.immediateValues (r : Request) : Bool :=
   r.synchronousIO.getD false ||
-    (r.resources.isEmpty && (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty))
+    ((r.resources.isEmpty || r.ownerHostMembers) && (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty))
 
 def primitives : List (Name × String) := [
   (``Unit, "unit"), (``Bool, "bool"), (``Char, "char"), (``String, "string"),
@@ -85,8 +90,7 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
   if copyOnly && e.constName?.any (fun n => r.leanResources.contains n.toString) then
     throwError "a leased Lean resource cannot be a copied exception payload: {e}"
   if copyOnly && !primitives.any (fun p => e.constName? == some p.1) then
-    -- These synchronous ports retain the active application object before
-    -- releasing the Lean result. Worker payloads do not take this path.
+    -- Only ports with an explicit host lease can expose a nominal result.
     if hostLeases && (r.hostModule.any (fun m =>
         #["LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Ruby", "LeanBridge.Host.Python",
           "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript"].contains m)) &&
@@ -111,7 +115,7 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
       unless [a, v].all (fun t => primitives.any (fun p => t.constName? == some p.1)) do
         throwError "retained task callback arguments and replies must be copied scalars: {e}"
       return Json.mkObj [("kind", toJson "io-callback"), ("argument", ← carrier r a), ("reply", ← carrier r v)]
-  delivered r e
+  delivered r e r.ownerHostMembers
 
 /-- Match the native extractor's definite-heap rule; tagged/scalar values have no stable identity. -/
 def resourceOwner (r : Request) (name : String) : MetaM Json := do
@@ -157,11 +161,12 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
   return seen
 
 def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
+  if r.ownerHostMembers then return
   if r.members.any (fun m => deps.contains m.toName) || r.resources.any (fun t => deps.contains t.lean.toName) then
     throwError "host identities or calls cannot cross this task scheduler: {n}"
 
 /-- Read each protocol member independently; a review cannot authorize a different cursor or an extern. -/
-def cursorMember (r : Request) (memberName : String) (cursor : Expr) : MetaM Expr := do
+def cursorMember (r : Request) (memberName : String) (cursor : Expr) : MetaM (Expr × NameSet) := do
   let n := memberName.toName
   let env ← getEnv
   let info ← getConstInfo n
@@ -172,14 +177,18 @@ def cursorMember (r : Request) (memberName : String) (cursor : Expr) : MetaM Exp
   match info with
   | .defnInfo _ | .opaqueInfo _ => pure ()
   | _ => throwError "expected an executable cursor operation: {n}"
-  noWorkerHost r (← checkDependencies r n {}) n
+  let deps ← checkDependencies r n {}
+  noWorkerHost r deps n
   if (← collectAxioms n).contains ``sorryAx then throwError "cursor operation {n} depends on sorry"
   forallTelescope info.type fun args result => do
     unless args.size == 1 do throwError "cursor operation takes exactly one cursor: {n}"
     let d ← args[0]!.fvarId!.getDecl
     unless d.binderInfo == .default && (← isDefEq d.type cursor) && !result.hasFVar do
       throwError "cursor operation has the wrong cursor or a dependent result: {n}"
-    return result.consumeMData
+    return (result.consumeMData, deps)
+
+def usedMembers (r : Request) (deps : NameSet) : Array String :=
+  r.members.filter (fun m => deps.contains m.toName)
 
 def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet) : MetaM (List (String × Json)) := do
   noWorkerHost r deps p.open.toName
@@ -188,17 +197,17 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   let (effect, cursor, extra) ← if (head == some ``IO || head == some ``BaseIO) && args.size == 1 then
     pure (head.get!.toString, args[0]!, [])
   else if head == some ``EIO && args.size == 2 then
-    pure ("EIO", args[1]!, [("error", ← delivered r args[0]!)])
+    pure ("EIO", args[1]!, [("error", ← delivered r args[0]! r.ownerHostMembers)])
   else pure ("pure", result, [])
   let env ← getEnv
   let some cn := cursor.getAppFn.constName? | throwError "expected an application-owned cursor"
   let some idx := env.getModuleIdxFor? cn | throwError "expected an application-owned cursor: {cn}"
   unless r.modules.contains env.header.modules[idx.toNat]!.module.toString && !cursor.hasFVar do
     throwError "expected a concrete application-owned cursor: {cn}"
-  let stop ← cursorMember r p.close cursor
+  let (stop, closeDeps) ← cursorMember r p.close cursor
   unless (← isDefEq stop (← mkAppM ``BaseIO #[mkConst ``Unit])) do
     throwError "cursor close must return BaseIO Unit: {p.close}"
-  let step ← cursorMember r p.next cursor
+  let (step, pullDeps) ← cursorMember r p.next cursor
   unless step.getAppFn.constName? == some ``BaseIO && step.getAppArgs.size == 1 do
     throwError "cursor next must return BaseIO (Task ...): {p.next}"
   let task := step.getAppArgs[0]!
@@ -206,12 +215,17 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
     throwError "cursor next must return a real Task: {p.next}"
   let v := task.getAppArgs[0]!
   let (item, failure) ← if v.getAppFn.constName? == some ``Except && v.getAppArgs.size == 2 then
-    pure (v.getAppArgs[1]!, [("stepError", ← delivered r v.getAppArgs[0]!)])
+    let err := v.getAppArgs[0]!
+    if r.ownerHostMembers && err.isConstOf ``IO.Error then
+      pure (v.getAppArgs[1]!, [("stepIO", toJson true)])
+    else pure (v.getAppArgs[1]!, [("stepError", ← delivered r err r.ownerHostMembers)])
   else pure (v, [])
   unless item.getAppFn.constName? == some ``Option && item.getAppArgs.size == 1 do
     throwError "cursor step must distinguish exhaustion with Option: {p.next}"
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
-    ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]!)] ++ extra ++ failure
+    ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]! r.ownerHostMembers)] ++ extra ++ failure ++
+    (if r.ownerHostMembers then [("protocolHostMembers", Json.mkObj [
+      ("pull", toJson (usedMembers r pullDeps)), ("close", toJson (usedMembers r closeDeps))])] else [])
 
 /-- Module-system imports store code in the IR section; classic application modules
     store it alongside their declarations. Look up the exact symbol in either case. -/
@@ -250,6 +264,8 @@ private partial def nativeLeaves (env : Environment) (root : Name) (pending : Li
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  if r.javascriptThreadedHostMembers.isSome && !r.ownerHostMembers then
+    throwError "invalid JavaScript owner-dispatch selection"
   if let some m := r.hostModule then
     unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet",
              "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript"].contains m &&
@@ -308,7 +324,7 @@ def extract (r : Request) : MetaM Json := do
       for arg in args do
         let decl ← arg.fvarId!.getDecl
         unless decl.binderInfo == .default do throwError "explicit application parameters required: {n}"
-        if r.taskExports.contains publicName || r.asyncIterators.any (·.open == publicName) then
+        if !r.ownerHostMembers && (r.taskExports.contains publicName || r.asyncIterators.any (·.open == publicName)) then
           if let some ty := (← instantiateMVars decl.type).consumeMData.constName? then
             if r.resources.any (·.lean == ty.toString) then
               throwError "host identities or calls cannot cross this task scheduler: {n}"
@@ -319,7 +335,7 @@ def extract (r : Request) : MetaM Json := do
       let resultArgs := result.getAppArgs
       let fields ← if let some protocol := r.asyncIterators.find? (·.open == publicName) then do
         for a in args do
-          let _ ← delivered r (← a.fvarId!.getDecl).type
+          let _ ← delivered r (← a.fvarId!.getDecl).type r.ownerHostMembers
         pullFields r protocol result deps
       else if r.taskExports.contains publicName then do
         let (effect, task, extra) ← if head == ``Task then
@@ -327,7 +343,7 @@ def extract (r : Request) : MetaM Json := do
         else if (head == ``IO || head == ``BaseIO) && resultArgs.size == 1 then
           pure (head.toString, resultArgs[0]!, [])
         else if head == ``EIO && resultArgs.size == 2 then
-          pure ("EIO", resultArgs[1]!, [("error", ← delivered r resultArgs[0]!)])
+          pure ("EIO", resultArgs[1]!, [("error", ← delivered r resultArgs[0]! r.ownerHostMembers)])
         else throwError "taskExports requires a real Lean Task result: {n}"
         unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
           throwError "taskExports requires a real Lean Task result: {n}"
@@ -339,7 +355,7 @@ def extract (r : Request) : MetaM Json := do
             throwError "taskIOErrors requires Task (Except IO.Error value): {n}"
           pure (payload.getAppArgs[1]!, [("taskIO", toJson true)])
         else pure (payload, [])
-        pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value)] ++ extra ++ terminal
+        pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value r.ownerHostMembers)] ++ extra ++ terminal
       else if (head == ``IO || (head == ``BaseIO && r.immediateValues)) && resultArgs.size == 1 then
         pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]! false true)]
       else if head == ``EIO && resultArgs.size == 2 then
@@ -351,7 +367,7 @@ def extract (r : Request) : MetaM Json := do
         pure [("effect", toJson "pure"), ("result", ← returned r result)]
       else throwError "expected synchronous IO result, typed EIO or returned Except: {n}"
       return Json.mkObj <| fields ++ [("declaration", toJson publicName), ("module", toJson owner),
-        ("parameters", toJson params), ("hostMembers", toJson (r.members.filter (fun m => deps.contains m.toName)))]
+        ("parameters", toJson params), ("hostMembers", toJson (usedMembers r deps))]
     rows := rows.push row
   let mut extra := []
   if let some policy := r.nativeEffectPolicy then

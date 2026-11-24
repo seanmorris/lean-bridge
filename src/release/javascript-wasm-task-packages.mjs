@@ -6,6 +6,7 @@ import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
 import {reconcileHostExports,taskWorkerInterface} from "../analyze/host-export-model.mjs";
 import {hashBindingIr} from "../binding-ir/canonical.mjs";
 import {heapResourceIdentities} from "../analyze/heap-resource-identity.mjs";
+import {threadedHostSource} from "../build/host-elaboration.mjs";
 import {npmPackageMetadata} from "../analyze/package-metadata.mjs";
 import {assertExportConfigurationCapabilities} from "../analyze/export-configuration.mjs";
 import {generateJavaScriptPackage} from "../backends/javascript/generate.mjs";
@@ -35,6 +36,9 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, "runtime/pending-operations"
 		, "abi/wasm-task-frame"
 		, "abi/javascript-wasm-tasks"
+		, "abi/javascript-task-hosts"
+		, "abi/host-member-names"
+		, "backends/javascript/host-members"
 		, "abi/component-scalars"
 		, "release/wasm-word-codecs"
 		, "binding-ir/canonical"
@@ -98,11 +102,13 @@ export const writeJavaScriptTaskPackages = async options => {
 	const php=options.phpWasm===true;
 	signal?.throwIfAborted(); (php?assertPhpWasmTaskConfiguration:assertJavaScriptTaskConfiguration)(configuration);
 	const {api,evidence,componentIdentity,binary,integrity}=compilation;
-	const worker=taskWorkerInterface(api,evidence),abi=javaScriptTaskAbi(worker,componentIdentity),publicHash=hashBindingIr(api);
+	const hosts=threadedHostSource(projectContract,evidence);
+	if(Boolean(hosts)!==Boolean(configuration.hostImports) || php && hosts) throw new Error("Task host import configuration mismatch");
+	const worker=taskWorkerInterface(api,evidence),abi=javaScriptTaskAbi(worker,componentIdentity,hosts),publicHash=hashBindingIr(api);
 	if(api.types.some(t=>t.kind==="callback") && (php ? !evidence.selection.phpTaskCallbacks : !evidence.selection.javascriptTaskCallbacks))
 		throw new Error("Retained callback contract does not match the target host");
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
-		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null) || evidence.hostImportsSourceSha256!==null
+		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null)
 		|| canonicalJson(evidence.lake)!==canonicalJson(projectContract.lake) || canonicalJson(evidence.selection.exports)!==canonicalJson(projectContract.exports)
 		|| sha256(binary)!==integrity || canonicalJson(abi)!==canonicalJson(compilation.abi))
 		throw new Error("Task package differs from checked Lean project");
@@ -110,7 +116,7 @@ export const writeJavaScriptTaskPackages = async options => {
 	if(canonicalJson(resources.map(r => r.declaration).sort())!==canonicalJson([...(configuration.resources ?? [])].sort()))
 		throw new Error("Task resource selection differs from the compiler metadata");
 	const owned=resources.length ? heapResourceIdentities({...evidence,resources}) : [];
-	const reconstructed=reconcileHostExports({ir: null, owned
+	const reconstructed=reconcileHostExports({ir: hosts, owned
 		, selection: evidence.selection
 		, metadata: evidence.metadata
 		, component: projectContract.component

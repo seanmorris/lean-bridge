@@ -1,6 +1,7 @@
 /** @file Reconstruct pthread delivery, nominal leases and their error channels from public Binding IR. */
 import {canonicalizeJsonValue,hashBindingIr} from "../binding-ir/canonical.mjs";
 import {componentScalarTypes} from "./component-scalars.mjs";
+import {javaScriptTaskHosts,jsMemberFailure} from "./javascript-task-hosts.mjs";
 
 const shape = (t,level=0) => {
 	if(t?.kind === "primitive" && componentScalarTypes.includes(t.name)) return t.name;
@@ -17,12 +18,14 @@ const same = (a,b) => canonicalizeJsonValue(a) === canonicalizeJsonValue(b);
  *
  * @param ir - Validated, compiler-checked public binding contract.
  * @param componentIdentity - Digest of the compiled inputs and adapter.
+ * @param hostImports - Separate authored member contract, required for a JS host component.
  */
-export const javaScriptTaskAbi = (ir,componentIdentity) => {
+export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null) => {
 	const bindingIrSha256 = hashBindingIr(ir);
-	if(!/^[0-9a-f]{64}$(?![\s\S])/u.test(componentIdentity) || ir.capabilities.length)
+	const hosts=hostImports===null?null:javaScriptTaskHosts(ir,hostImports);
+	if(!/^[0-9a-f]{64}$(?![\s\S])/u.test(componentIdentity) || !hosts && ir.capabilities.length)
 		throw new TypeError("Expected an in-memory Wasm task component");
-	const leases=ir.types.filter(t => t.kind!=="callback").map((t,i) => {
+	const leases=ir.types.filter(t => t.kind!=="callback" && !(hosts && t.host)).map((t,i) => {
 		const hash=t.source?.extensions?.["lean-bridge.dev/resource-identity"];
 		if(t.kind!=="resource" || t.host!==null || t.source?.producer!=="lean" || t.id!=="lean:"+t.source.declaration
 			|| t.representation!=="identity" || t.mutability!=="write" || t.resource?.disposal!=="required"
@@ -57,35 +60,51 @@ export const javaScriptTaskAbi = (ir,componentIdentity) => {
 			|| [...callbackTypes.keys()].some(id => !ir.declarations.some(d => d.parameters.some(p => p.type.kind==="named" && p.type.id===id))))
 			throw new TypeError("Unbound retained JavaScript callback contract");
 	}
-	const valueShape=t => resource(t)?.type ?? shape(t);
+	const valueShape=(t,level=0) => {
+		const nominal=hosts?.nominal(t) ?? (level===0 && resource(t));
+		if(nominal) return nominal.type;
+		return level<32 && t?.kind==="apply" && t.constructor==="result" && t.arguments?.length===2
+			? t.arguments.map(v=>valueShape(v,level+1)) : shape(t,level);
+	};
 	const methods = ir.declarations.map(d => {
 		const declaration = d.source?.declaration, ext = d.source?.extensions ?? {};
 		const effect = ext["lean-lang.org/effect"], task = ext["lean-lang.org/delivery"], protocol = ext["lean-bridge.dev/pull-protocol"];
 		const terminal = ext["lean-bridge.dev/task-failure"], delivery = task ? "task" : protocol ? "async-iterator" : null;
 		const mode = task ? "promise" : protocol ? "async-iterator" : "value";
+		const phases=hosts?.method(d,Boolean(protocol)),stepIO=ext["lean-bridge.dev/step-failure"];
+		const validSite=x=>{
+			const cb=callback(x.type);
+			if(cb && (!task || x===d.result)) return false;
+			if(cb || hosts?.contains(x.type) || x===d.result && resource(x.type))
+				return x.ownership==="lease" && x.lifetime?.scope==="explicit" && x.lifetime.anchor===null;
+			if(resource(x.type)) return x.ownership==="borrow" && x.lifetime?.scope==="call" && x.lifetime.anchor===null;
+			return x.ownership==="copy" && x.lifetime===null;
+		};
 		if(!declaration || d.source.producer !== "lean" || !["IO","EIO","BaseIO","pure"].includes(effect) || d.kind !== "function" || d.owner !== null
 			|| d.receiver !== null || d.typeParameters.length || d.parameters.some(p => p.optional || p.default !== null || p.mutability
-				!== (resource(p.type) ? effect!=="pure" || protocol ? "write" : "read" : "immutable"))
-			|| d.capabilities.length || d.resultMode !== mode || d.failure.unexpected !== "poison-runtime"
+				!== (resource(p.type) ? effect!=="pure" || protocol ? "write" : "read" : hosts?.nominal(p.type)?.mutability ?? "immutable"))
+			|| !hosts && d.capabilities.length || d.resultMode !== mode || d.failure.unexpected !== "poison-runtime"
 			|| (task !== undefined && (task !== "Task" || protocol)) || (protocol !== undefined && (!protocol || protocol.open !== declaration
 				|| ![protocol.next,protocol.close].every(n => typeof n === "string" && n.length)
 				|| new Set([protocol.open,protocol.next,protocol.close]).size !== 3))
-			|| (terminal !== undefined && (terminal !== "IO.Error" || !task)) || ext["lean-bridge.dev/host-members"]?.length
-			|| ext["lean-bridge.dev/native-effects-v1"] || ext["lean-bridge.dev/host-imports-sha256"]
-			|| [...d.parameters,d.result].some(x => callback(x.type) ? !task || x===d.result || x.ownership!=="lease" || x.lifetime?.scope!=="explicit" || x.lifetime.anchor!==null : resource(x.type) ? x.ownership!==(x===d.result ? "lease" : "borrow")
-				|| x.lifetime?.scope!==(x===d.result ? "explicit" : "call") || x.lifetime.anchor!==null : x.ownership !== "copy" || x.lifetime !== null))
+			|| (terminal !== undefined && (terminal !== "IO.Error" || !task)) || stepIO!==undefined && (!hosts || !protocol || stepIO!=="IO.Error")
+			|| !hosts && (ext["lean-bridge.dev/host-members"]?.length || ext["lean-bridge.dev/host-imports-sha256"] || ext["lean-bridge.dev/host-member-phases"])
+			|| ext["lean-bridge.dev/native-effects-v1"]
+			|| ![...d.parameters,d.result].every(validSite))
 			throw new TypeError("Inconsistent copied Wasm task declaration: " + d.id);
 		const startId = effect === "IO" ? "error:IO.Error" : effect === "EIO" ? "error:EIO."+declaration : null;
 		const step = "error:AsyncStep."+declaration;
 		const terminalId = terminal ? "error:TaskIO.Error" : protocol && d.failure.errors.includes(step) ? step : null;
 		const callbacks=d.parameters.flatMap((p,i) => callback(p.type) ? [[i,...callback(p.type)]] : []);
-		if(!same([...d.failure.errors].sort(),[startId,terminalId,callbacks.length && (effect==="IO" || terminal) ? hostError : null].filter(Boolean).sort()))
+		const memberEscapes=phases && ((effect==="IO" || terminal) && phases.call.length || stepIO && phases.pull.length);
+		if((stepIO && !terminalId) || d.failure.mode!==(d.failure.errors.length?"declared":"none")
+			|| !same([...d.failure.errors].sort(),[startId,terminalId,memberEscapes?jsMemberFailure:null,callbacks.length && (effect==="IO" || terminal) ? hostError : null].filter(Boolean).sort()))
 			throw new TypeError("Inconsistent Wasm task failure channels: " + d.id);
 		const errorShape = id => {
 			if(!id) return null;
 			const error = ir.errors.find(x => x.id === id);
 			if(!error) throw new TypeError("Missing declared error: "+id);
-			if(["error:IO.Error","error:TaskIO.Error"].includes(id))
+			if(["error:IO.Error","error:TaskIO.Error"].includes(id) || stepIO && id===step)
 			{
 				if(error.payload !== null) throw new TypeError("Unexpected typed payload for "+id);
 				return "string";
@@ -94,12 +113,16 @@ export const javaScriptTaskAbi = (ir,componentIdentity) => {
 		};
 		const result = valueShape(d.result.type), args = d.parameters.map(p => callback(p.type) ? "callback" : valueShape(p.type));
 		const error = errorShape(startId), terminalShape = errorShape(terminalId);
+		hosts?.checkErrorSite(ext["lean-bridge.dev/error-payload-site"],ir.errors.find(e=>e.id===startId)?.payload);
+		hosts?.checkErrorSite(ext["lean-bridge.dev/step-error-payload-site"],ir.errors.find(e=>e.id===terminalId)?.payload);
 		if(args.some(Array.isArray)) throw new TypeError("Wasm task arguments must be copied scalars or nominal leases");
 		return {id: d.id
 			, name: d.name
 			, declaration
 			, args
 			, ...callbacks.length ? {callbacks} : {}
+			, ...(phases ? {hostPhases: phases} : {})
+			, ...(stepIO ? {stepIO: true} : {})
 			, result
 			, effect
 			, delivery
@@ -111,5 +134,6 @@ export const javaScriptTaskAbi = (ir,componentIdentity) => {
 			, stepDeclaration: protocol?.next ?? null};
 	});
 	if(!methods.some(m => m.delivery)) throw new TypeError("Expected a Task or async iterator");
-	return {profile: "javascript-wasm-threaded-task-v1",componentIdentity,bindingIrSha256,controlSymbol: "lb_js_task_"+componentIdentity,methods,...leases.length ? {leases} : {}};
+	hosts?.finish();
+	return {profile: "javascript-wasm-threaded-task-v1",componentIdentity,bindingIrSha256,controlSymbol: "lb_js_task_"+componentIdentity,methods,...leases.length ? {leases} : {},...hosts?{hostIrSha256: hosts.hash}:{}};
 };
