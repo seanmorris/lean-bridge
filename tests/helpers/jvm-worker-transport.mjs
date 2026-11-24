@@ -78,13 +78,15 @@ extern int TEST_INVOKE(int,const uint64_t *,uint64_t *,uint8_t *);
 		{ const name=basename(path); shared.push(name); await save(name,src); }
 		await save("Unit.java",pkg+"enum Unit { INSTANCE }");
 		await save("NativeAssets.java",pkg+"final class NativeAssets { static java.lang.foreign.SymbolLookup lookup(){return java.lang.foreign.SymbolLookup.loaderLookup();} static void ensureProcess(){} }");
-		await save("NativePort.java",pkg+"import java.nio.ByteBuffer;\nfinal class NativePort { static native Object work(HostMembers p,Object[] classes,int method,int op,ByteBuffer args,ByteBuffer h,ByteBuffer out,ByteBuffer tags,ByteBuffer ctl); }");
+		await save("NativePort.java",pkg+"import java.nio.ByteBuffer;\nfinal class NativePort { static native Object[] invoke(HostMembers p,int op,Object[] args) throws Exception; static native Object work(HostMembers p,Object[] classes,int method,int op,ByteBuffer args,ByteBuffer h,ByteBuffer out,ByteBuffer tags,ByteBuffer ctl); }");
 		await save("HostContract.java",pkg+gen.model.contract); await save("HostMembers.java",pkg+gen.model.implementation);
-		await save("Methods.java",pkg+"final class Methods {"+kernel.wire.methods.map((m,i)=>"static final int "+m.name.replaceAll("_","").toUpperCase()+"="+i+";").join("\n")+"}");
+		const syncRead=checked.entries.filter(e=>!e.delivery).findIndex(e=>e.declaration==="Workshop.read"); assert.ok(syncRead>=0);
+		await save("Methods.java",pkg+"final class Methods { static final int SYNCREAD="+syncRead+";"+kernel.wire.methods.map((m,i)=>"static final int "+m.name.replaceAll("_","").toUpperCase()+"="+i+";").join("\n")+"}");
 		await copyFile(join(fixture,"WorkerProbe.java"),join(app,"WorkerProbe.java"));
 		await copyFile(join(fixture,"BoundDeliveryProbe.java"),join(app,"BoundDeliveryProbe.java"));
+		await copyFile(join(fixture,"ScopeProbe.java"),join(app,"ScopeProbe.java"));
 		const vm=["-XX:ActiveProcessorCount=1","-XX:+UseSerialGC","-Xmx96m"];
-		await run(javac,[...vm.map(s=>"-J"+s),"--release","22","-d",".","HostContract.java","HostMembers.java","Methods.java","NativePort.java","NativeAssets.java","Unit.java",...shared,"WorkerProbe.java","BoundDeliveryProbe.java"]);
+		await run(javac,[...vm.map(s=>"-J"+s),"--release","22","-d",".","HostContract.java","HostMembers.java","Methods.java","NativePort.java","NativeAssets.java","Unit.java",...shared,"WorkerProbe.java","BoundDeliveryProbe.java","ScopeProbe.java"]);
 		const env={...process.env,LD_LIBRARY_PATH: [app,join(runtimeRoot,"lib")].join(":")};
 		const result=await run(join(javaHome,"bin/java"),[...vm,"--enable-native-access=ALL-UNNAMED","-Xcheck:jni","-cp",app,"probe.WorkerProbe",join(app,"libprobe.so")],app,env);
 		assert.equal(result.stdout.trim(),"JVM owner round-tripped class workers, callback arguments/replies, typed errors and cursors; zero native identities");

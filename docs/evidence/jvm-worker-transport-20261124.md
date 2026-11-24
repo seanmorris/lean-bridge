@@ -29,6 +29,15 @@ callback is blocked prevents a late reply from replacing cancellation.
 A `Flow.Publisher` starts the Lean cursor on demand, emits one item for the
 first request, and reports exhaustion on the second.
 
+The [binding shutdown check](../../tests/fixtures/jvm-host-workers/ScopeProbe.java)
+closes a binding with a blocked callback, a subscribed but never requested
+cursor, and a cursor parked after one item. The future is cancelled and both
+subscribers receive a terminal error. A blocked application completion handler
+does not delay shutdown; a sibling binding finishes its own callback. A member
+or retained callback cannot close the binding during its own call. An abandoned
+cold publisher releases its argument before unbind; one kept by the application
+releases its argument at unbind, and cannot start against a reopened binding.
+
 The [generator compatibility check](../../tests/helpers/jvm-lease-tasks-compat.mjs)
 compared 48 generated files against the original, receipt-verified JARs:
 17 from copied tasks, 17 from retained callbacks, and 14 from synchronous
@@ -37,5 +46,5 @@ resource bindings. All matched byte-for-byte.
 Run `npm run test:jvm-worker-transport` with the pinned Lean toolchain and a
 JDK 22 compiler. This is a local bridge test, **not** an installed Maven
 package. The test knows private operations; application consumers must not.
-Public Java and Kotlin signatures, binding-scoped shutdown, and installations
+Public Java and Kotlin signatures, installed binding shutdown, and installations
 from ordinary and reviewed source still need their own package-level evidence.

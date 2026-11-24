@@ -11,7 +11,8 @@ public final class WorkerProbe {
     public static final class Box {
         long v;
         public Box(long v) { this.v=v; }
-        public long read(){return v;}
+        Runnable onRead;
+        public long read(){if(onRead!=null)onRead.run(); return v;}
         public long getLevel(){return v;}
         public void setLevel(long x){v=x;}
         public Box identity(){return this;}
@@ -72,7 +73,8 @@ public final class WorkerProbe {
         bind(a,-2); bind(b,-2); var x=new Box(47);
         try {
             confined(a,x);
-            BoundDeliveryProbe.run(a,b,x);
+            BoundDeliveryProbe.run(new HostTaskScope(a),new HostTaskScope(b),x);
+            ScopeProbe.run();
             try(var c=new Call(a,Methods.ECHO)) {
                 try { c.call(0,new Object()); throw new AssertionError(); } catch(IllegalArgumentException expected) {}
                 try { c.call(0,(Object)null); throw new AssertionError(); } catch(NullPointerException expected) {}

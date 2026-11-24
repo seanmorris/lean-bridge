@@ -16,6 +16,9 @@ JNIEXPORT jobject JNICALL Java_probe_NativePort_work(JNIEnv *e,jclass cls,jobjec
         jobject args,jobject h,jobject out,jobject tags,jobject status) {
     (void)cls; return TEST_WORK(e,b,objects,method,op,args,h,out,tags,status);
 }
+JNIEXPORT jobjectArray JNICALL Java_probe_NativePort_invoke(JNIEnv *e,jclass cls,jobject b,jint op,jobjectArray args) {
+    (void)cls; return (jobjectArray)TEST_BIND(e,b,op,args);
+}
 JNIEXPORT jint JNICALL Java_probe_WorkerProbe_plain(JNIEnv *e,jclass cls,jint method,jint op,
         jobject args,jobject h,jobject out,jobject tags,jobject control) {
     (void)cls;

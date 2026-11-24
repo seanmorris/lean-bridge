@@ -9,17 +9,17 @@ import static probe.WorkerProbe.check;
 // Test the generated Java delivery machinery. Maven installation and the public
 // generated declaration names belong to the separate package-consumer gate.
 final class BoundDeliveryProbe {
-    static CompletableFuture<Box> echo(HostMembers b, Box x) {
+    static CompletableFuture<Box> echo(HostTaskScope b, Box x) {
         return Delivery.task(new TaskPort<Box>(Methods.ECHO,1,1,f->f.host.input(0,Box.class,x),
             (f,s)->Wire.success(s),(f,s)->{Wire.success(s);return f.host.output(Box.class);}).bound(b));
     }
-    static CompletableFuture<Box> relay(HostMembers b, Box x, Function<Box,Box> fn) {
+    static CompletableFuture<Box> relay(HostTaskScope b, Box x, Function<Box,Box> fn) {
         var slot=CallbackPort.<Box,Box>bind(f->f.host.output(Box.class),fn,(f,r)->f.host.input(0,Box.class,r));
         return Delivery.task(new CallbackPort<Box>(Methods.RELAY,2,1,f->f.host.input(0,Box.class,x),
             (f,s,state)->{if(s==14)throw state.original(f.scalar());Wire.success(s);return f.host.output(Box.class);},
             new CallbackPort.Slot[]{null,slot}).bound(b));
     }
-    static void run(HostMembers a, HostMembers b, Box x) throws Exception {
+    static void run(HostTaskScope a, HostTaskScope b, Box x) throws Exception {
         var y=new Box(101); var callbacks=new AtomicInteger();
         check(relay(a,x,v->{
             check(v==x && Thread.currentThread().isVirtual()); callbacks.incrementAndGet();
@@ -41,9 +41,9 @@ final class BoundDeliveryProbe {
         var factories=new AtomicInteger(); var count=new AtomicInteger();
         var subscription=new CompletableFuture<Flow.Subscription>(); var item=new CompletableFuture<Box>();
         var end=new CompletableFuture<Void>();
-        Flow.Publisher<Box> items=Delivery.stream(()->new TaskPort<Box>(Methods.BOXES,2,1,
+        Flow.Publisher<Box> items=a.stream(()->new TaskPort<Box>(Methods.BOXES,2,1,
             f->{factories.incrementAndGet();f.host.input(0,Box.class,x);f.word(1,0);},
-            (f,s)->Wire.success(s),(f,s)->{if(s==2)return null;Wire.success(s);return f.host.output(Box.class);}).bound(a));
+            (f,s)->Wire.success(s),(f,s)->{if(s==2)return null;Wire.success(s);return f.host.output(Box.class);}));
         items.subscribe(new Flow.Subscriber<Box>() {
             public void onSubscribe(Flow.Subscription s){subscription.complete(s);}
             public void onNext(Box v){count.incrementAndGet();item.complete(v);}

@@ -27,14 +27,22 @@ export const jvmHostTaskRuntime = async o => {
 	files[p] = change(files[p], "            case 5:", '            case 6: throw new IllegalStateException("Lean worker is closed");\n            case 5:');
 	await installJvmTaskRuntime({ files, ns, dir, retained, owned: false, java, options });
 	files[base + "HostWorkerFrame.java"] = (await asset("host-worker-frame.java")).replace("__PACKAGE__", ns);
+	files[base + "HostTaskScope.java"] = (await asset("host-task-scope.java")).replace("__PACKAGE__", ns);
 	files[p] = change(files[p], "    private final Arena arena;", "    final HostWorkerFrame host;\n    private final Arena arena;");
 	files[p] = change(files[p], "        arena = Arena.ofConfined();", "        host = new HostWorkerFrame(slots);\n        arena = Arena.ofConfined();");
 	files[p] = change(files[p], "port.call(op, arena,", "port.call(op, host, arena,");
 	files[port] = change(files[port], "    private long id, domain;", `    private HostMembers binding;
-    synchronized TaskPort<T> bound(HostMembers b) {
+    private HostTaskScope scope;
+    private Runnable shutdown;
+    synchronized TaskPort<T> bound(HostTaskScope s) {
         if (binding != null || input == null || closed) throw new IllegalStateException("Cannot rebind Lean worker");
-        binding=java.util.Objects.requireNonNull(b); return this;
+        binding=s.binding(); scope=s; return this;
     }
+    synchronized void track(Runnable stop) {
+        check();
+        if (scope != null) { scope.track(stop); shutdown=stop; }
+    }
+    synchronized HostTaskScope scope() { return scope; }
     private long id, domain;`);
 	files[port] = change(files[port], "int call(int op, Arena", "int call(int op, HostWorkerFrame frame, Arena");
 	files[port] = change(files[port], "        var dest = arena.allocate(JAVA_INT);", `        if (binding != null && (op == 0 || op == 2 || op == 7 || op == 8)) {
@@ -46,11 +54,51 @@ export const jvmHostTaskRuntime = async o => {
 	// Completed futures must not keep the binder or user objects alive through their private port.
 	files[port] = change(files[port], "final BiConsumer<Wire,Integer> factory", "BiConsumer<Wire,Integer> factory");
 	files[port] = change(files[port], "final BiFunction<Wire,Integer,T> result", "BiFunction<Wire,Integer,T> result");
-	files[port] = change(files[port], "closed = true; input = null;", "closed = true; input = null; binding = null; factory = null; result = null;");
+	files[port] = change(files[port], "closed = true; input = null;", `closed = true; input = null; binding = null; factory = null; result = null;
+        if (scope != null && shutdown != null) scope.forget(shutdown);
+        scope=null; shutdown=null;`);
+	const delivery = base + "Delivery.java";
+	files[delivery] = change(files[delivery], "            port.start();\n            Thread.startVirtualThread", "            port.track(future::unbind); port.start();\n            Thread.startVirtualThread");
+	files[delivery] = change(files[delivery], "        @Override public boolean cancel", `        private void unbind() {
+            if (settled.compareAndSet(false,true)) {
+                Throwable failure=null;
+                try { port.close(); } catch(Throwable e) { failure=e; }
+                final Throwable problem=failure;
+                // Stock CompletableFuture runs arbitrary user continuations inside cancel().
+                // Wait only for the published result, never for those continuations to return.
+                Thread.startVirtualThread(() -> {
+                    if (problem==null) super.cancel(false); else super.completeExceptionally(problem);
+                });
+            } else port.close();
+            while (!isDone()) java.util.concurrent.locks.LockSupport.parkNanos(500000);
+        }
+        @Override public boolean cancel`);
+	files[delivery] = change(files[delivery], "            var s = new Pull<T>(make.get(), subscriber);", `            Pull<T> s;
+            try {
+                s = new Pull<T>(make.get(), subscriber);
+                s.track();
+            } catch (RuntimeException stale) {
+                var stopped=new AtomicBoolean();
+                try { subscriber.onSubscribe(new Flow.Subscription() {
+                    public void request(long n) {} public void cancel() { stopped.set(true); }
+                }); } catch(Throwable ignored) { return; }
+                if(!stopped.get()) subscriber.onError(stale);
+                return;
+            }`);
+	files[delivery] = change(files[delivery], "        synchronized void subscribed()", `        void track() {
+            try { port.track(this::unbind); } catch(RuntimeException e) { port.close(); throw e; }
+        }
+        private synchronized void unbind() {
+            if (done) return;
+            if (invalid==null) invalid=new CancellationException("JVM host binding closed");
+            try { port.close(); } finally { signal(); }
+        }
+        synchronized void subscribed()`);
 	if(retained)
 	{
 		files[cb] = change(files[cb], "int call(int op, Arena", "int call(int op, HostWorkerFrame frame, Arena");
 		files[cb] = change(files[cb], "super.call(op, a,", "super.call(op, frame, a,");
+		files[cb] = change(files[cb], "Thread.startVirtualThread(this::serve);", "var s=scope(); Thread.startVirtualThread(s==null ? this::serve : () -> s.serve(this::serve));");
 	}
 	return files;
 };
