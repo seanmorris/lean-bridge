@@ -7,6 +7,7 @@ import { wordHostFrame } from "../backends/native/word-host-frame.mjs";
 import { compileHostSources } from "./host-elaboration.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "./native-artifacts.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
+import { phpHostTaskKernel, stagePhpHostTasks } from "./php-host-task-kernel.mjs";
 
 /**
  * Compile in a new, caller-owned staging directory. The two shared libraries
@@ -14,10 +15,17 @@ import { processBuildRunner } from "./process-runner.mjs";
  *
  * @param o - Captured PHP project, verified native SDK, toolchain and private staging.
  */
-export const compilePhpHostComponent = async o => {
+export const compilePhpHostComponent = o => compile(o,false);
+/**
+ * Compile the private object-aware native kernel; not yet a Composer handoff.
+ *
+ * @param o - Captured PHP project and native SDK, as for the member compiler.
+ */
+export const compilePhpHostTaskComponent = o => compile(o,true);
+const compile = async (o,taskObjects) => {
 	const { app, ir, projectContract, runtimeRoot, leanPrefix, environment, signal } = o;
 	if(!ir || !projectContract || !projectContract.modules?.length || !projectContract.hostImportsSource
-		|| projectContract.taskExports?.length || projectContract.asyncIterators?.length || projectContract.leanResources?.length)
+		|| Boolean(projectContract.taskExports?.length || projectContract.asyncIterators?.length)!==taskObjects || projectContract.leanResources?.length)
 		throw new TypeError("Expected synchronous PHP host imports with no independent resource or scheduler");
 	const run = (command, args, cwd = app, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
 	const save = (name, data) => writeFile(join(app, name), data, { flag: "wx" });
@@ -46,12 +54,14 @@ export const compilePhpHostComponent = async o => {
 	}
 	const runtimeIdentity = sdk.identity, domainId = sha256(canonicalJson({ runtimeIdentity, domainParts }));
 	const domain = "liblb_php_host_domain_" + runtimeIdentity + ".so", domainFlag = "-DLB_DN_DOMAIN_PREFIX=lb_php_d_" + domainId + "_";
-	const spec = { ir, entries: checked.entries, modules: projectContract.modules };
+	const kernel=taskObjects && await phpHostTaskKernel({ir,checked,runtimeIdentity,modules: projectContract.modules,name: o.name});
+	const spec = { ir, entries: checked.entries.filter(e=>!e.delivery), modules: projectContract.modules,phpTaskLeases: taskObjects };
 	const baseline = generatePhpHostExports({ ...spec, identity: "0".repeat(64) });
 	const identity = sha256(canonicalJson({ runtimeIdentity, domainId, hashes
 		, api: checked.api, evidence: checked.evidence
 		, header: baseline.header
 		, source: baseline.source
+		, ...kernel ? {taskKernel: kernel.fingerprint} : {}
 		, entry: baseline.entryLean
 		, name: o.name
 		, version: o.version }));
@@ -66,6 +76,7 @@ export const compilePhpHostComponent = async o => {
 	const libs = ["-L" + join(runtimeRoot, "lib"), "-lleanshared", "-Wl,-z,defs,-z,nodelete", "-Wl,--build-id=none", "-Wl,-rpath,$ORIGIN"];
 	const cc = environment.CC ?? "cc";
 	await run(cc, [...flags, "host-domain.c", ...libs, "-Wl,-soname," + domain, "-o", domain]);
+	const taskUnits=kernel ? await stagePhpHostTasks({kernel,identity,save,run,app,cc,leanPrefix,runtimeRoot,env: checked.env}) : [];
 	await save("BridgePhpExports.lean", gen.entryLean); await save("entry-abi.h", gen.header); await save("provider.c", gen.source);
 	await run(join(leanPrefix, "bin/lean"), ["-j1", "-c", "entry.c", "BridgePhpExports.lean"], app, checked.env);
 	const units = [];
@@ -73,15 +84,18 @@ export const compilePhpHostComponent = async o => {
 	{
 		const file = "checked" + index + ".c"; await save(file, '#include "' + object + '"\n#include "entry-abi.h"\n'); units.push(file);
 	}
-	await save("provider.map", "{ global: " + gen.prefix + "_call; " + gen.prefix + "_clear; local: *; };\n");
-	await run(cc, [...flags, ...units, "provider.c", "host-frame.c", "-L."
+	const extraSymbols=kernel?" "+kernel.port.symbols.join("; ")+";":"";
+	await save("provider.map", "{ global: " + gen.prefix + "_call; " + gen.prefix + "_clear;"+extraSymbols+" local: *; };\n");
+	await run(cc, [...flags, ...units, ...taskUnits
+		, "provider.c", "host-frame.c", "-L."
+		, ...kernel?[kernel.ledger.flag,"-l:"+kernel.ledger.name,"-pthread"]:[]
 		, "-l:" + domain, ...libs, "-llean_bridge_native"
 		, "-Wl,--version-script=provider.map"
 		, "-Wl,-soname," + component
 		, "-o"
 		, component]);
 	const binaries = {};
-	for(const name of [component, domain])
+	for(const name of [component, domain,...kernel?[kernel.ledger.name]:[]])
 	{
 		const bytes = await readFile(join(app, name)); validateNativeElf(bytes); binaries[name] = sha256(bytes);
 	}
@@ -90,6 +104,7 @@ export const compilePhpHostComponent = async o => {
 		, prefix: gen.prefix
 		, component
 		, domain
+		, ...kernel?{task: {methods: kernel.methods,port: kernel.port,ledger: kernel.ledger.name}}:{}
 		, binaries
 		, kinds: gen.model.kinds
 		, members: gen.model.members };

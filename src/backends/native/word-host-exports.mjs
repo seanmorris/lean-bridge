@@ -18,7 +18,8 @@ export const emitWordHostExports = (o, model, target) => {
 	if(!name) throw new TypeError("Unknown native host owner");
 	const module = "Bridge" + name + "Exports", host = "LeanBridge.Host." + name;
 	const { ir, entries, modules, identity } = o;
-	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || !entries.length)
+	const taskObjects = target==="php" && o.phpTaskLeases===true;
+	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || (!entries.length && !taskObjects))
 		throw new TypeError("Invalid native host component");
 	const prefix = "lb_" + target + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
@@ -77,7 +78,7 @@ done: if(io) lean_dec(io); for(size_t j=0;j<n;j++) if(a[j]) lean_dec(a[j]); retu
 ${model.native}
 static const char component[]="${target}host:${identity}";
 static const lb_dnd_spec specs[]={${model.kinds.map(k => "{" + JSON.stringify(k.key) + "," + Number(k.strong) + "}").join(",")}};
-static void *init(uint8_t b) { return initialize_${module}(b); }
+${taskObjects?'#include "host-task-leases.h"\n':""}static void *init(uint8_t b) { return initialize_${module}(b); }
 static int available(void) { return lean_bridge_native_component_ready(component); }
 /* A public result outlives the Lean IO object; never return pointers into it. */
 static int dn_output(int kind,lean_object *v,uint64_t *out) {
@@ -106,11 +107,11 @@ __attribute__((visibility("default"))) int ${prefix}_call(uint64_t id,lb_dn_disp
     else {
         lb_dnd_session *s=LB_DND(enter)(&f,component); if(!s) status=14;
         else { f.domain_session=s; f.available=available;
-            switch(op) { ${entries.map((_,i) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")} default: status=5; }
+            switch(op) { ${taskObjects?"case PHP_HOST_PIN: case PHP_HOST_RESOLVE: case PHP_HOST_ADMIT: status=php_host_lease(&f,s,op,args,n,out); break; ":""}${entries.map((_,i) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")} default: status=5; }
             LB_DND(leave)(&f,s);
         }
     }
-    if(f.fatal || (op>=0 && !lean_bridge_native_component_ready(component))) status=10;
+    if(f.fatal || (${taskObjects?"(op>=0 || op<=PHP_HOST_PIN)":"op>=0"} && !lean_bridge_native_component_ready(component))) status=10;
     lb_dn_leave(&f); return status;
 }
 `;

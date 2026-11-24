@@ -36,6 +36,7 @@ structure Request where
   jvmTaskCallbacks : Option Bool := none
   perlTaskCallbacks : Option Bool := none
   phpTaskCallbacks : Option Bool := none
+  phpNativeTaskObjects : Option Bool := none
   javascriptTaskCallbacks : Option Bool := none
   javascriptThreadedHostMembers : Option Bool := none
   witTaskCallbacks : Option Bool := none
@@ -56,10 +57,19 @@ def Request.ownerHostMembers (r : Request) : Bool :=
   r.javascriptThreadedHostMembers == some true && r.hostModule == some "LeanBridge.Host.Javascript" &&
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty)
 
+/-- Native PHP workers may carry opaque objects to an owner callback, but may
+    not invoke PHP members themselves. Do not grant the JS dispatcher here. -/
+def Request.phpTaskObjects (r : Request) : Bool :=
+  r.phpNativeTaskObjects == some true && r.hostModule == some "LeanBridge.Host.Php" &&
+    (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
+    (r.phpTaskCallbacks == some true) == !r.taskExports.isEmpty
+
+def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects
+
 /-- A task in a package does not change the delivery mode of adjacent exports. -/
 def Request.immediateValues (r : Request) : Bool :=
   r.synchronousIO.getD false ||
-    ((r.resources.isEmpty || r.ownerHostMembers) && (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty))
+    ((r.resources.isEmpty || r.hostValues) && (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty))
 
 def primitives : List (Name × String) := [
   (``Unit, "unit"), (``Bool, "bool"), (``Char, "char"), (``String, "string"),
@@ -114,15 +124,17 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
       let v := b.getAppArgs[0]!
       let admitted := fun (t : Expr) =>
         primitives.any (fun p => t.constName? == some p.1) ||
-        (r.ownerHostMembers && r.javascriptTaskCallbacks == some true &&
+        (((r.ownerHostMembers && r.javascriptTaskCallbacks == some true) || r.phpTaskObjects) &&
           t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)))
       unless [a, v].all admitted do
         if r.ownerHostMembers then
           throwError "retained task callback arguments and replies must be copied scalars or declared JavaScript owner classes: {e}"
+        else if r.phpTaskObjects then
+          throwError "retained task callback arguments and replies must be copied scalars or declared PHP owner classes: {e}"
         else
           throwError "retained task callback arguments and replies must be copied scalars: {e}"
       return Json.mkObj [("kind", toJson "io-callback"), ("argument", ← carrier r a), ("reply", ← carrier r v)]
-  delivered r e r.ownerHostMembers
+  delivered r e r.hostValues
 
 /-- Match the native extractor's definite-heap rule; tagged/scalar values have no stable identity. -/
 def resourceOwner (r : Request) (name : String) : MetaM Json := do
@@ -169,6 +181,10 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
 
 def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
   if r.ownerHostMembers then return
+  if r.phpTaskObjects then
+    if r.members.any (fun m => deps.contains m.toName) then
+      throwError "native PHP task calls a PHP member outside its owner: {n}"
+    return
   if r.members.any (fun m => deps.contains m.toName) || r.resources.any (fun t => deps.contains t.lean.toName) then
     throwError "host identities or calls cannot cross this task scheduler: {n}"
 
@@ -204,7 +220,7 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   let (effect, cursor, extra) ← if (head == some ``IO || head == some ``BaseIO) && args.size == 1 then
     pure (head.get!.toString, args[0]!, [])
   else if head == some ``EIO && args.size == 2 then
-    pure ("EIO", args[1]!, [("error", ← delivered r args[0]! r.ownerHostMembers)])
+    pure ("EIO", args[1]!, [("error", ← delivered r args[0]! r.hostValues)])
   else pure ("pure", result, [])
   let env ← getEnv
   let some cn := cursor.getAppFn.constName? | throwError "expected an application-owned cursor"
@@ -223,14 +239,14 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   let v := task.getAppArgs[0]!
   let (item, failure) ← if v.getAppFn.constName? == some ``Except && v.getAppArgs.size == 2 then
     let err := v.getAppArgs[0]!
-    if r.ownerHostMembers && err.isConstOf ``IO.Error then
+    if r.hostValues && err.isConstOf ``IO.Error then
       pure (v.getAppArgs[1]!, [("stepIO", toJson true)])
-    else pure (v.getAppArgs[1]!, [("stepError", ← delivered r err r.ownerHostMembers)])
+    else pure (v.getAppArgs[1]!, [("stepError", ← delivered r err r.hostValues)])
   else pure (v, [])
   unless item.getAppFn.constName? == some ``Option && item.getAppArgs.size == 1 do
     throwError "cursor step must distinguish exhaustion with Option: {p.next}"
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
-    ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]! r.ownerHostMembers)] ++ extra ++ failure ++
+    ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]! r.hostValues)] ++ extra ++ failure ++
     (if r.ownerHostMembers then [("protocolHostMembers", Json.mkObj [
       ("pull", toJson (usedMembers r pullDeps)), ("close", toJson (usedMembers r closeDeps))])] else [])
 
@@ -273,6 +289,8 @@ def extract (r : Request) : MetaM Json := do
   let env ← getEnv
   if r.javascriptThreadedHostMembers.isSome && !r.ownerHostMembers then
     throwError "invalid JavaScript owner-dispatch selection"
+  if r.phpNativeTaskObjects.isSome && !r.phpTaskObjects then
+    throwError "invalid native PHP task object selection"
   if let some m := r.hostModule then
     unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet",
              "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&
@@ -331,7 +349,7 @@ def extract (r : Request) : MetaM Json := do
       for arg in args do
         let decl ← arg.fvarId!.getDecl
         unless decl.binderInfo == .default do throwError "explicit application parameters required: {n}"
-        if !r.ownerHostMembers && (r.taskExports.contains publicName || r.asyncIterators.any (·.open == publicName)) then
+        if !r.hostValues && (r.taskExports.contains publicName || r.asyncIterators.any (·.open == publicName)) then
           if let some ty := (← instantiateMVars decl.type).consumeMData.constName? then
             if r.resources.any (·.lean == ty.toString) then
               throwError "host identities or calls cannot cross this task scheduler: {n}"
@@ -342,7 +360,7 @@ def extract (r : Request) : MetaM Json := do
       let resultArgs := result.getAppArgs
       let fields ← if let some protocol := r.asyncIterators.find? (·.open == publicName) then do
         for a in args do
-          let _ ← delivered r (← a.fvarId!.getDecl).type r.ownerHostMembers
+          let _ ← delivered r (← a.fvarId!.getDecl).type r.hostValues
         pullFields r protocol result deps
       else if r.taskExports.contains publicName then do
         let (effect, task, extra) ← if head == ``Task then
@@ -350,7 +368,7 @@ def extract (r : Request) : MetaM Json := do
         else if (head == ``IO || head == ``BaseIO) && resultArgs.size == 1 then
           pure (head.toString, resultArgs[0]!, [])
         else if head == ``EIO && resultArgs.size == 2 then
-          pure ("EIO", resultArgs[1]!, [("error", ← delivered r resultArgs[0]! r.ownerHostMembers)])
+          pure ("EIO", resultArgs[1]!, [("error", ← delivered r resultArgs[0]! r.hostValues)])
         else throwError "taskExports requires a real Lean Task result: {n}"
         unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
           throwError "taskExports requires a real Lean Task result: {n}"
@@ -362,7 +380,7 @@ def extract (r : Request) : MetaM Json := do
             throwError "taskIOErrors requires Task (Except IO.Error value): {n}"
           pure (payload.getAppArgs[1]!, [("taskIO", toJson true)])
         else pure (payload, [])
-        pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value r.ownerHostMembers)] ++ extra ++ terminal
+        pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value r.hostValues)] ++ extra ++ terminal
       else if (head == ``IO || (head == ``BaseIO && r.immediateValues)) && resultArgs.size == 1 then
         pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]! false true)]
       else if head == ``EIO && resultArgs.size == 2 then

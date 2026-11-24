@@ -65,6 +65,7 @@ export const compileHostSources = async options => {
 	if(ir && options.target && !Object.hasOwn(compiledHostTargets, options.target)) fail("No host import provider for the selected target");
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	const phpNativeTaskObjects=Boolean(ir && options.target==="php-native" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	if(ir && target==="php")
 	{
 		if(projectContract)
@@ -132,6 +133,7 @@ export const compileHostSources = async options => {
 		, ...(["php-native","php-wasm"].includes(options.target) && projectContract.taskExports?.length ? { phpTaskCallbacks: true } : {})
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
 		, ...(threadedJavaScript ? {javascriptThreadedHostMembers: true} : {})
+		, ...(phpNativeTaskObjects ? {phpNativeTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []

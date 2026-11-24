@@ -50,6 +50,7 @@ export const nativeHostSelection = (ir, target) => {
  * @param evidence - Actual compiler selection and elaborated metadata.
  */
 export const taskWorkerInterface=(api,evidence)=>{
+	if(evidence.selection.phpNativeTaskObjects) throw new TypeError("Native PHP task object carriers cannot use the JavaScript worker interface");
 	if(!evidence.selection.phpTaskCallbacks || !api.types.some(t=>t.kind==="callback")) return api;
 	const selection={...evidence.selection,javascriptTaskCallbacks: true};delete selection.phpTaskCallbacks;
 	const resources=evidence.metadata.leanResources??[];
@@ -84,13 +85,18 @@ export const reconcileHostExports = options => {
 	const synchronous = selection.synchronousIO === true;
 	if(ir && hostTarget==="php" && selection.nativeEffectPolicy!==nativeEffectPolicy)
 		fail("PHP host imports require compiled member evidence");
-	if(ir && hostTarget==="php" && (selection.phpTaskCallbacks===true || selection.taskExports?.length || selection.asyncIterators?.length))
+	const phpObjects=selection.phpNativeTaskObjects===true;
+	if(selection.phpNativeTaskObjects!==undefined && (!phpObjects || !ir || hostTarget!=="php" || selection.nativeEffectPolicy!==nativeEffectPolicy
+		|| !(selection.taskExports?.length || selection.asyncIterators?.length) || Boolean(selection.taskExports?.length)!==(selection.phpTaskCallbacks===true)))
+		fail("Unauthenticated native PHP task objects");
+	if(ir && hostTarget==="php" && !phpObjects && (selection.phpTaskCallbacks===true || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail("PHP host objects require synchronous owner calls, not a worker scheduler");
 	const owner=hasJavaScriptHostOwner(selection);
 	if(selection.javascriptThreadedHostMembers!==undefined && (!owner || !ir || selection.nativeEffectPolicy!==nativeEffectPolicy
 		|| selection.nativeEffects?.length || Boolean(selection.taskExports?.length)!==(selection.javascriptTaskCallbacks===true)))
 		fail("Unauthenticated JavaScript host owner");
-	const immediate = synchronous || ((!ir || owner) && (selection.taskExports?.length || selection.asyncIterators?.length));
+	const hostValues=owner || phpObjects;
+	const immediate = synchronous || ((!ir || hostValues) && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
 		fail("A standalone native IO package requires a checked IO, BaseIO or EIO entry and no host imports or async protocols");
@@ -168,7 +174,7 @@ export const reconcileHostExports = options => {
 	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
 	if(ir && !owner && hostTarget === "javascript" && (js || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail("Synchronous JavaScript host objects must run on their owning agent");
-	const matchingScheduler = { ruby, jvm, dotnet, perl, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
+	const matchingScheduler = { ruby, jvm, dotnet, perl, php: phpObjects && php, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
 	const importedError = { jvm: ["JvmHostException", "JVM"]
@@ -179,10 +185,10 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
-	const callbackError=owner?"error:JavaScriptCallbackError":hostError;
+	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":hostError;
 	const callbackCarrier=t=>{
 		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};
-		const kind=owner && js && t?.kind==="named" && types.find(k=>k.id===t.id);
+		const kind=((owner && js) || (phpObjects && php)) && t?.kind==="named" && types.find(k=>k.id===t.id);
 		if(!kind) fail("Unauthenticated retained callback carrier");
 		return {label: callbackHostName(kind.name),mutability: kind.mutability};
 	};
@@ -213,10 +219,12 @@ export const reconcileHostExports = options => {
 		, name: "TaskIOError", category: "domain", payload: null
 		, documentation: doc("A terminal IO failure from the selected Lean task.") });
 	const hostCanEscape=e=>(e.effect==="IO" || e.taskIO) && e.hostMembers.length || e.stepIO && e.protocolHostMembers?.pull?.length;
-	if(owner && metadata.entries.some(hasCallbacks)) errors.push({id: callbackError
-		, name: "JavaScriptCallbackError",category: "domain",payload: null
-		, documentation: doc("A retained JavaScript callback failed with the original thrown value.")});
-	if(metadata.entries.some(e => hostCanEscape(e) || !owner && hasCallbacks(e))) errors.push({ id: hostError
+	if(hostValues && metadata.entries.some(hasCallbacks)) errors.push({id: callbackError
+		, name: owner?"JavaScriptCallbackError":"PhpCallbackException"
+		, category: "domain"
+		, payload: null
+		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":"A retained PHP callback propagated its original exception.")});
+	if(metadata.entries.some(e => hostCanEscape(e) || !hostValues && hasCallbacks(e))) errors.push({ id: hostError
 		, name: publicErrorName
 		, category: "domain"
 		, payload: null
@@ -243,7 +251,7 @@ export const reconcileHostExports = options => {
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (!owner && async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
-			|| (!stream && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!stream || !owner || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async)
+			|| (!stream && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!stream || !hostValues || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async)
 			|| (!async && e.effect === "pure" && ((!immediate && e.result?.constructor !== "result") || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({
@@ -291,8 +299,8 @@ export const reconcileHostExports = options => {
 			, source: { producer: "lean", declaration: e.declaration
 				, extensions: {
 					"lean-lang.org/effect": e.effect
-					, ...(e.effect === "EIO" && (!e.delivery || owner) && hostRef(e.error) ? { "lean-bridge.dev/error-payload-site": leased(e.error) } : {})
-					, ...(owner && hostRef(e.stepError) ? {"lean-bridge.dev/step-error-payload-site": leased(e.stepError)} : {})
+					, ...(e.effect === "EIO" && (!e.delivery || hostValues) && hostRef(e.error) ? { "lean-bridge.dev/error-payload-site": leased(e.error) } : {})
+					, ...(hostValues && hostRef(e.stepError) ? {"lean-bridge.dev/step-error-payload-site": leased(e.stepError)} : {})
 					, ...(e.stepIO ? {"lean-bridge.dev/step-failure": "IO.Error"} : {})
 					, ...(Object.keys(phases(e)).length ? { "lean-bridge.dev/native-effects-v1": phases(e) } : {})
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})

@@ -31,8 +31,9 @@ const max=16*1024*1024;
  * @param model.methods - Reconciled method shapes in wire order.
  * @param model.wire - Underlying generated C calls and result disposer.
  * @param model.phpWasm - Require the synchronous wasm32 symbol family.
+ * @param model.phpHostKinds - Ordered class keys from the native PHP import contract.
  */
-export const generatePhpIOPort=({prefix,methods,wire,phpWasm=false})=>{
+export const generatePhpIOPort=({prefix,methods,wire,phpWasm=false,phpHostKinds=[]})=>{
 	if(!(phpWasm ? /^lbc_php_wasm_[0-9a-f]{64}$/u : /^lbc_php_[0-9a-f]{64}$/u).test(prefix)
 		|| (phpWasm && (wire.wait || wire.leases)) || wire.clear!=="lbwire_"+prefix+"_v1_clear" || !methods.length)
 		throw new TypeError("Expected checked PHP IO wire");
@@ -40,8 +41,12 @@ export const generatePhpIOPort=({prefix,methods,wire,phpWasm=false})=>{
 	const symbols=[dispose], type="lbphp_buffer";
 	const signature=(symbol,types,async)=>`int ${symbol}(const ${type} *args, uint64_t argc, ${type} *out, uint8_t *tags, uint64_t tagcap${async ? ", uint64_t *h" : ""})${types}`;
 	const leases = wire.leases ?? [], has = leases.length > 0;
+	if(phpHostKinds.length && (phpWasm || !wire.wait || phpHostKinds.length!==leases.length))
+		throw new TypeError("PHP host leases require the matching native owner");
 	const kinds = new Map(leases.map((r,i) => {
-		if(r.type !== "lease:"+r.hash || !/^[a-f0-9]{64}$/u.test(r.hash) || r.tag !== i+3 || r.symbol !== wire.clear.slice(0,-6)+"_lease_"+i)
+		const host=phpHostKinds[i];
+		if(Boolean(host)!==Boolean(r.host) || host && (host.hash!==r.hash || host.name!==r.name)
+			|| r.type !== (host?"host:":"lease:")+r.hash || !/^[a-f0-9]{64}$/u.test(r.hash) || r.tag !== i+3 || r.symbol !== wire.clear.slice(0,-6)+"_lease_"+i)
 			throw new TypeError("Invalid PHP resource wire");
 		return [r.type,16+r.tag];
 	}));
@@ -141,7 +146,7 @@ finish:
 			{
 				taskSymbols.push(names.pull); taskDeclarations.push(`int ${names.pull}(uint64_t *h);`);
 			}
-			const terminal=m.delivery==="task" ? "IO_ERROR" : "TYPED_ERROR";
+			const terminal=m.delivery==="task" || m.stepIO ? "IO_ERROR" : "TYPED_ERROR";
 			source.push(`extern int ${names.take}(uint64_t *,uint64_t *,uint8_t *);
 ${prototype} {
     if (!h || ${occupied} || !tags || tagcap!=${m.tagBytes}) return ${prefix}_INVALID;
@@ -165,7 +170,7 @@ finish:
 				for(const [slot,from,to] of m.callbacks)
 				{
 					if(!Number.isSafeInteger(slot)||slot<0||slots.has(slot)||m.args[slot]!=="callback") throw new TypeError("Invalid PHP callback slot");
-					slots.add(slot); args.push(`case ${slot}: kind=${shape(from)}; break;`);
+					slots.add(slot); args.push(`case ${slot}: kind=${kinds.get(from) ?? shape(from)}; break;`);
 					replies.push(`case ${slot}: ${input(to,0)} break;`);
 				}
 				const get=fn+"_arg", put=fn+"_reply", reject=fn+"_fail";

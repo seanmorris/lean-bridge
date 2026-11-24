@@ -22,6 +22,11 @@ distribute the Composer ZIP as usual. The receipt identifies this synchronous
 profile as `native-php-host-v1`. The [PHP consumer example](../php.md#let-lean-call-an-application-object)
 shows how an application binds its classes; no consumer writes FFI code.
 
+This Composer profile supports synchronous calls on imported classes. The
+[native worker kernel](../evidence/php-host-task-kernel-20261124.md) also
+tests class-valued tasks and callbacks, but those combinations are not yet
+available through a published package interface.
+
 For a borrowed member result, name the object that must outlive it. Use
 `{"scope":"receiver","anchor":"receiver"}` for the receiving object, or
 `{"scope":"parameter","anchor":"parent"}` for a nominal argument named

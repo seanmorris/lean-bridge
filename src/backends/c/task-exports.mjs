@@ -24,14 +24,17 @@ export const generateCTaskExports = options => {
 		|| !modules?.length || !modules.every(m => qualified.test(m))
 		|| (synchronous ? entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
-	const hostKinds=options.wasmHostKinds??[];
-	if(hostKinds.length && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds);
+	const wasmHost=!!options.wasmHostKinds?.length,phpHost=!!options.phpHostKinds?.length;
+	const hostKinds=(phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
+	if(wasmHost && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,phpHost?"php":"javascript");
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
 	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery];
+	if(phpHost && (!options.phpDelivery || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || options.wasmCallbacks || options.witCallbacks))
+		throw new TypeError("PHP host objects require the exclusive native PHP task owner and word carriers");
 	if((options.witCallbacks && !options.witDelivery) || (options.witDelivery
 		&& (synchronous || wasm || options.wasmCallbacks || gmp || (retained && !options.witCallbacks) || hosts.filter(Boolean).length!==1)))
 		throw new TypeError("WIT task delivery requires native word carriers, one store owner and an explicit retained callback adapter");
@@ -83,7 +86,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost: hostKinds.length>0, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: wasmHost || phpHost, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
@@ -157,7 +160,7 @@ export const generateCTaskExports = options => {
     if (!lb_watch_ready(&e->watch)) return LB(PENDING);
     lean_object *v = lean_task_get(e->watch.source);
     ${ioTerminal ? `if (!lean_obj_tag(v)) {
-        lean_object *err = lean_ctor_get(v, 0); ${hostKinds.length?"s = lb_host_io_error(err,message);":`lean_inc(err); lean_object *text = lb_c_error_text(err);
+        lean_object *err = lean_ctor_get(v, 0); ${wasmHost?"s = lb_host_io_error(err,message);":`lean_inc(err); lean_object *text = lb_c_error_text(err);
         s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(${publicC ? "TASK_IO_ERROR" : "IO_ERROR"});`}
     } else { v = lean_ctor_get(v, 0);` : ""}
     ${step ? `if (!lean_obj_tag(v)) { s = ${step.read}(lean_ctor_get(v, 0), error); if (s == LB(OK)) s = LB(TYPED_ERROR); }
@@ -184,7 +187,7 @@ extern "C" {
 #endif
 typedef enum { ${statuses.flatMap((s, i) => synchronous ? ["PENDING", "END", "IDLE"].includes(s) ? [] : [`${p}_${s} = ${i}`] : [`${p}_${s}`]).join(", ")} } ${p}_status;
 typedef struct { const uint8_t *data; size_t len; } ${p}_view;
-typedef struct { uint8_t *data; size_t len;${hostKinds.length?" uint32_t host_ticket;":""} } ${p}_buffer;
+typedef struct { uint8_t *data; size_t len;${wasmHost?" uint32_t host_ticket;":""} } ${p}_buffer;
 void ${p}_buffer_dispose(${p}_buffer *v);${exact && !gmp ? `
 typedef struct { const uint64_t *words; size_t len; bool negative; } ${p}_integer_view;
 typedef struct { uint64_t *words; size_t len; bool negative; } ${p}_integer;
@@ -202,7 +205,7 @@ ${wasm && retained ? "#include <pthread.h>\n#define LB_WASM_CALLBACK_PORT 1\n#de
 #define LB_SYNC_ONLY ${Number(synchronous)}
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
-${hostKinds.length?"#define LB_WASM_HOST_ERRORS 1\n":""}#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
+${wasmHost?"#define LB_WASM_HOST_ERRORS 1\n":""}#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
 ${values.bodies.join("\n")}
 ${host ? '#include "task-host-callback.h"\n' + host.helpers.join("\n") : ""}
 ${functions.join("\n")}

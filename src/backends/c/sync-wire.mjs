@@ -60,23 +60,25 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.wasmTasks - Use owner notifications for threaded wasm32 task and pull handles.
  * @param options.wasmCallbacks - Enable owner-agent requests only for checked pthread task declarations.
  * @param options.wasmHostKinds - Authenticated JavaScript nominal classes for this component.
+ * @param options.phpHostKinds - Authenticated classes for the native PHP owner.
  * @param options.witCallbacks - Preserve factory versus worker failures when dispatching on a Wasmtime store owner.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[] } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[] } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if(witCallbacks && (!tasks || checkedWasm || wasmCallbacks)) throw new TypeError("Wasmtime callbacks require a native task wire");
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
 	if(wasmTasks && (!tasks || phpWasm || wasm32 || !wasmCallbacks && entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
 		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
-	const wasmHost=wasmHostKinds.length>0;
+	const wasmHost=wasmHostKinds.length>0,phpHost=phpHostKinds.length>0,hostValues=wasmHost || phpHost;
+	if(phpHost && (!tasks || checkedWasm || wasmHost || wasmCallbacks || witCallbacks)) throw new TypeError("PHP host objects require a native PHP task wire");
 	if(wasmHost && !wasmTasks) throw new TypeError("JavaScript host objects require threaded Wasm");
-	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,wasmHostKinds), values = cTaskValues(p, false, kinds);
+	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,phpHost?phpHostKinds:wasmHostKinds,phpHost?"php":"javascript"), values = cTaskValues(p, false, kinds);
 	const leases = kinds.map((r, i) => ({ ...r, type: (r.host?"host:":"lease:") + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
 	const wireShape = t => leases.find(r => t?.kind === "named" && t.id === r.id)?.type
-		?? (wasmHost && t?.kind==="apply" && t.constructor==="result" && t.arguments.length===2?t.arguments.map(wireShape):shape(t));
+		?? (hostValues && t?.kind==="apply" && t.constructor==="result" && t.arguments.length===2?t.arguments.map(wireShape):shape(t));
 	const move = (t, v, prefix,index=0) => {
-		if(wasmHost && Array.isArray(t)) return `if (${v}.ok) { tags[${index}]=1; ${move(t[0],v+".as.value",prefix,index+1)} }
+		if(hostValues && Array.isArray(t)) return `if (${v}.ok) { tags[${index}]=1; ${move(t[0],v+".as.value",prefix,index+1)} }
         else { tags[${index}]=0; ${move(t[1],v+".as.error",prefix,index+1)} }`;
 		const r = leases.find(x => x.type === t);
 		return r ? `out[0] = ${v}._private[0]; out[1] = ${v}._private[1]; out[3] = ${r.tag}; ${v} = (${r.raw}){0};` : emit(t, v, prefix,index);
@@ -90,7 +92,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
 			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
-			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks, wasmHost });
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks, wasmHost, hostValues });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		const args = e.parameters.map(a => wireShape(a.type));
