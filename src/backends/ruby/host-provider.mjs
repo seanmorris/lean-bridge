@@ -1,11 +1,24 @@
 /** @file Generate a synchronous MRI extension for compiler-selected Lean calls and Ruby-owned members. */
 import { hostMemberSymbol } from "../lean/host-object.mjs";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { isReservedRubyName } from "./copied-model.mjs";
 
 const fail = m => { throw new TypeError("Ruby host provider: " + m); };
 const simple = /^[A-Za-z][A-Za-z0-9_]*$/u, qualified = /^[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$/u;
 const snake = s => s.replace(/([a-z0-9])([A-Z])/gu, "$1_$2").toLowerCase();
 const text = JSON.stringify;
+const domainKey = (ir, r) => JSON.stringify([ir.component.id, r.id, r.resource.kindId]);
+/**
+ * Derive worker keys from the same nominal coordinate as the shared MRI domain.
+ *
+ * @param ir - Authenticated Ruby import contract.
+ */
+export const rubyWorkerKinds = ir => {
+	const resources = ir.types;
+	if(!resources.length || resources.length > 64 || resources.some(r => r.kind !== "resource" || !r.host?.targets.includes("ruby") || r.host.dynamic || !/^[A-Z][A-Za-z0-9]*$/u.test(r.name))
+		|| new Set(resources.map(r => r.resource.kindId)).size !== resources.length) fail("expected distinct statically declared host classes");
+	return resources.map(r => ({name: r.name, id: r.id, hash: sha256(canonicalJson(["lean-bridge/ruby-host-lease/v1", domainKey(ir,r)]))}));
+};
 const scalar = {
 	unit: ["Unit", "lean_object *", "lb_unit(x)", "unit", "x", "x"]
 	, bool: ["Bool", "uint8_t", "lean_box(lb_bool(x))", "(lean_unbox(x)?Qtrue:Qfalse)", "lean_box(x)", "lean_unbox(x)"]
@@ -99,13 +112,13 @@ const output = (resources, t) => {
 	}
 	const k = project(resources, t); return { lean: "_root_." + k.lean, to: k.to };
 };
-const entry = (resources, e, i) => {
-	if(!qualified.test(e.declaration) || !simple.test(e.name) || e.delivery || !["IO", "EIO", "pure"].includes(e.effect) || (e.effect === "pure" && e.result?.constructor !== "result")) fail("expected synchronous IO/EIO or a returned Except");
+const entry = (resources, e, i, immediate) => {
+	if(!qualified.test(e.declaration) || !simple.test(e.name) || e.delivery || !["IO", "EIO", "pure", ...immediate ? ["BaseIO"] : []].includes(e.effect) || (!immediate && e.effect === "pure" && e.result?.constructor !== "result")) fail("expected synchronous IO/EIO or a returned Except");
 	const args = e.parameters.map(p => project(resources, p.type)), out = output(resources, e.result), err = e.effect === "EIO" ? output(resources, e.error) : null;
 	const symbol = "lb_ruby_host_invoke_" + i, call = "(_root_." + e.declaration + " " + args.map((_, j) => "v" + j).join(" ") + ")";
 	const ret = err ? "(_root_.Except " + err.lean + " " + out.lean + ")" : out.lean;
 	return {
-		lean: `@[export ${symbol}] def invoke${i} ${args.map((k, j) => "(v" + j + " : _root_." + k.lean + ")").join(" ")} : IO ${ret} := ${err ? "EIO.toIO' " : e.effect === "pure" ? "pure " : ""}${call}`
+		lean: `@[export ${symbol}] def invoke${i} ${args.map((k, j) => "(v" + j + " : _root_." + k.lean + ")").join(" ")} : IO ${ret} := ${err ? "EIO.toIO' " : e.effect === "pure" ? "pure " : e.effect === "BaseIO" ? "liftM " : ""}${call}`
 		, proto: "extern lean_object *" + symbol + "(" + (args.map(k => k.c).join(",") || "void") + ");"
 		, c: `static VALUE lb_entry_${i}(VALUE data) {
     lb_call *a=(lb_call *)data;
@@ -139,13 +152,13 @@ static VALUE lb_invoke_${i}(int argc,VALUE *argv,VALUE mod) { (void)mod; rb_chec
  * @param options.namespace - Public Ruby component module under LeanBridge.
  * @param options.extension - Native extension basename used by MRI's loader.
  * @param options.identity - Hash binding the component to its source and runtime.
+ * @param options.workerObjects - Include fiber-owned task leases in this extension.
  */
-export const generateRubyHostProvider = ({ ir, entries, modules, namespace, extension, identity }) => {
+export const generateRubyHostProvider = ({ ir, entries, modules, namespace, extension, identity, workerObjects = false }) => {
 	if(!/^[A-Z][A-Za-z0-9]*$/u.test(namespace) || !/^[a-z][a-z0-9_]*$/u.test(extension) || !/^[a-f0-9]{64}$/u.test(identity)
 		|| !modules.length || modules.some(m => !/^([A-Z][A-Za-z0-9_]*)(\.[A-Z][A-Za-z0-9_]*)*$/u.test(m))) fail("invalid extension coordinates");
 	const resources = ir.types;
-	if(!resources.length || resources.length > 64 || resources.some(r => r.kind !== "resource" || !r.host?.targets.includes("ruby") || r.host.dynamic || !/^[A-Z][A-Za-z0-9]*$/u.test(r.name))
-		|| new Set(resources.map(r => r.resource.kindId)).size !== resources.length) fail("expected distinct statically declared host classes");
+	const kinds = rubyWorkerKinds(ir);
 	if(entries.some(e => isReservedRubyName(e.name) || ["bind_hosts", "__bind", "__unbind", "__live", "singleton_class", "name", "block_given"].includes(e.name))) fail("reserved public operation");
 	const keywords = resources.map(r => snake(r.name));
 	if(keywords.some(isReservedRubyName) || new Set(keywords).size !== keywords.length) fail("reserved or duplicate Ruby binder keyword");
@@ -158,7 +171,7 @@ export const generateRubyHostProvider = ({ ir, entries, modules, namespace, exte
 		if(dispatch.has(key)) fail("ambiguous Ruby member " + name);
 		dispatch.add(key);
 	}
-	const members = ir.declarations.map((d, i) => member(resources, resources.find(r => r.id === d.owner), d, i)), exports = entries.map((e, i) => entry(resources, e, i));
+	const members = ir.declarations.map((d, i) => member(resources, resources.find(r => r.id === d.owner), d, i)), exports = entries.map((e, i) => entry(resources, e, i, workerObjects));
 	const arity = Math.max(1, ...ir.declarations.map(d => d.parameters.length + Number(d.receiver !== null)), ...entries.map(e => e.parameters.length));
 	if(arity > 64) fail("too many arguments");
 	return {
@@ -167,26 +180,37 @@ export const generateRubyHostProvider = ({ ir, entries, modules, namespace, exte
 			, "@[export lb_ruby_host_error_text] def errorText (e : IO.Error) : String := toString e"
 			, ...["Nat", "Int"].map(k => "@[export lb_ruby_host_" + k.toLowerCase() + "_text] def text" + k + " (v : " + k + ") : String := toString v")
 			, ...exports.map(e => e.lean), "end BridgeRubyHost", ""].join("\n")
+		, ...workerObjects ? {workerKinds: kinds} : {}
 		, header: [...members, ...exports].map(x => x.proto).concat(["extern lean_object *lb_ruby_host_error_text(lean_object *);", "extern lean_object *lb_ruby_host_nat_text(lean_object *);", "extern lean_object *lb_ruby_host_int_text(lean_object *);", "extern lean_object *initialize_BridgeRubyExports(uint8_t);"]).join("\n")
 		, source: `#include "host-domain.h"
 #include "lean_bridge_native_runtime.h"
 #include <ruby/encoding.h>
 #include <limits.h>
-#include "entry-declarations.h"
-static lb_rh_session *session;
+#include "entry-declarations.h"${workerObjects ? '\n#include "worker-ledger.h"' : ""}
+static lb_rh_session *session;${workerObjects ? `
+static VALUE binding_fiber;
+static void lb_worker_sweep(void) {
+    lb_rh_owner();
+    if (session && binding_fiber==rb_fiber_current()) {
+        lb_rh_frame f; lb_rh_enter(session,&f); lb_rh_leave(&f);
+    }
+}` : ""}
 static _Thread_local lb_rh_frame *top;
 static VALUE declared_error,io_error,unit,ok_value,err_value;
 static VALUE rb_structured(VALUE klass,VALUE value) { return rb_funcallv_public(klass,rb_intern("new"),1,&value); }
-static const lb_rh_spec specs[]={${resources.map(r => "{" + text(JSON.stringify([ir.component.id, r.id, r.resource.kindId])) + "," + Number(r.host.identity === "strong-canonical") + "}").join(",")}};
+static const lb_rh_spec specs[]={${resources.map(r => "{" + text(domainKey(ir, r)) + "," + Number(r.host.identity === "strong-canonical") + "}").join(",")}};
 typedef struct { VALUE *args; lean_object *values[${arity}], *io, *msg; } lb_call;
 #include "host-scalars.h"
 static void *init_component(uint8_t b) { return initialize_BridgeRubyExports(b); }
 static VALUE bind(int argc,VALUE *argv,VALUE mod) {
     (void)mod; lb_rh_owner();
     if(!lean_bridge_native_process_valid() || !lean_bridge_native_component_initialize("rubyhost:${identity}",init_component)) rb_raise(rb_eRuntimeError,"Lean runtime unavailable");
-    if(session) rb_raise(rb_eRuntimeError,"component already bound"); session=lb_rh_bind(specs,sizeof(specs)/sizeof(*specs),argc,argv); return Qnil;
+    if(session) rb_raise(rb_eRuntimeError,"component already bound"); session=lb_rh_bind(specs,sizeof(specs)/sizeof(*specs),argc,argv);${workerObjects ? " binding_fiber=rb_fiber_current(); lb_ruby_worker_begin();" : ""} return Qnil;
 }
-static VALUE unbind(VALUE mod) { (void)mod; lb_rh_unbind(&session); return Qnil; }
+static VALUE unbind(VALUE mod) { (void)mod;${workerObjects ? `
+    (void)lb_rh_type(session,0);
+    if (top) rb_raise(rb_eRuntimeError,"cannot unbind inside an active Lean call");
+    lb_ruby_worker_end(); lb_worker_sweep(); binding_fiber=Qnil;` : ""} lb_rh_unbind(&session); return Qnil; }
 static VALUE count(VALUE mod) { (void)mod; return SIZET2NUM(lb_rh_live()); }
 static VALUE lb_invoke(VALUE (*fn)(VALUE),VALUE *args) {
     lb_rh_owner(); if(!lean_bridge_native_component_ready("rubyhost:${identity}")) rb_raise(rb_eRuntimeError,"Lean component unavailable");
@@ -195,7 +219,7 @@ static VALUE lb_invoke(VALUE (*fn)(VALUE),VALUE *args) {
     if(a.msg) lean_dec(a.msg); if(a.io) lean_dec(a.io); for(unsigned i=0;i<${arity};i++) if(a.values[i]) lean_dec(a.values[i]);
     top=previous; lb_rh_leave(&f); if(state) rb_jump_tag(state); return result;
 }
-${members.map(m => m.c).concat(exports.map(e => e.c)).join("\n")}
+${members.map(m => m.c).concat(exports.map(e => e.c)).join("\n")}${workerObjects ? '\nstatic const char *const worker_keys[]={' + kinds.map(r => text(r.hash)).join(",") + '};\n#include "worker-host-leases.h"' : ""}
 __attribute__((visibility("default"))) void Init_${extension}(void) {
     lb_rh_owner(); VALUE parent=rb_define_module("LeanBridge"), mod=rb_define_module_under(parent,"${namespace}");
     declared_error=rb_const_get_at(mod,rb_intern("DeclaredError")); rb_global_variable(&declared_error);
@@ -204,7 +228,7 @@ __attribute__((visibility("default"))) void Init_${extension}(void) {
     ok_value=rb_const_get_at(mod,rb_intern("Ok")); rb_global_variable(&ok_value);
     err_value=rb_const_get_at(mod,rb_intern("Err")); rb_global_variable(&err_value);
     rb_define_singleton_method(mod,"__bind",bind,-1); rb_define_singleton_method(mod,"__unbind",unbind,0);
-    rb_define_singleton_method(mod,"__live",count,0);
+    rb_define_singleton_method(mod,"__live",count,0);${workerObjects ? "\n    binding_fiber=Qnil; rb_global_variable(&binding_fiber); lb_rh_worker_methods(mod);" : ""}
     ${exports.map(e => e.method).join("\n    ")}
 }
 `
@@ -235,16 +259,16 @@ __attribute__((visibility("default"))) void Init_${extension}(void) {
       raise ArgumentError, "bind_hosts requires a block" unless block_given?
       ::Thread.handle_interrupt(::Exception => :never) do
         __bind(${resources.map(r => snake(r.name)).join(", ")})
-        begin
+        begin${workerObjects ? "\n          TaskRuntimeV1.bind_scope" : ""}
           ::Thread.handle_interrupt(::Exception => :immediate) { yield }
         ensure
-          __unbind
+${workerObjects ? "          begin\n            TaskRuntimeV1.end_scope\n          ensure\n            __unbind\n          end" : "          __unbind"}
         end
       end
     end
   end
 end
 `
-		, privateMethods: `LeanBridge::${namespace}.singleton_class.send(:private, :__bind, :__unbind, :__live)\n`
+		, privateMethods: `LeanBridge::${namespace}.singleton_class.send(:private, :__bind, :__unbind, :__live${workerObjects ? ", :__worker_collect, :__worker_call, :__worker_pin, :__worker_resolve, :__worker_admit, :__worker_drop" : ""})\n`
 	};
 };

@@ -31,13 +31,19 @@ def update (box : Box) (value : UInt32) : IO UInt32 := do
 Build with `lean-bridge build --project . --target rubygems --output release`.
 The publisher needs Ruby 3.3 development headers; the consumer only needs the
 matching Ruby runtime. For a reviewed build, keep the import contract and Lean
-sources: the build checks the review against freshly compiled members. This
-profile is synchronous; it does not schedule Ruby method calls on Lean workers.
+sources: the build checks the review against freshly compiled members.
+You can select a `taskExports` or `asyncIterators` entry that carries the class.
+For example, the [worker fixture](../../tests/fixtures/ruby-host-workers/Workers.lean)
+takes a `Box → IO Box` callback and passes its original box to it. The Ruby
+consumer services the callback when it awaits the task. Calling a Ruby member
+from the Lean worker, even through a helper function, fails the build.
 Use an imported class in `Except` results or `EIO` errors when callers need
 the original Ruby object. The generated contract records a lease on the
 result or error payload, including when the object is nested in another
 `Except`. This does not change the copied-value or task profiles.
 See [how the Ruby application supplies the class](../consume/ruby.md#supply-a-ruby-object-to-lean).
+The [worker qualification](../evidence/ruby-worker-gems-20261124.md) includes
+the ordinary and reviewed gem receipts and the checks run after installation.
 
 ## Build an ordinary Lean project
 

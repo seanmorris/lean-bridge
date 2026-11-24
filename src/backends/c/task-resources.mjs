@@ -12,8 +12,9 @@
  * @param owner - Host namespace that supplies those kinds.
  */
 export const taskResourceTypes = (definitions = [],hostKinds=[],owner="javascript") => {
-	if(!["javascript","php"].includes(owner)) throw new TypeError("Unknown task object owner");
-	const php=owner==="php";
+	const names={javascript: ["js","Javascript"],php: ["php","Php"],ruby: ["ruby","Ruby"]};
+	if(!Object.hasOwn(names,owner)) throw new TypeError("Unknown task object owner");
+	const [prefix,module]=names[owner];
 	const seen = new Set();
 	const resources=definitions.map(t => {
 		const hash = t.source?.extensions?.["lean-bridge.dev/resource-identity"], lean = t.source?.declaration;
@@ -27,10 +28,10 @@ export const taskResourceTypes = (definitions = [],hostKinds=[],owner="javascrip
 	});
 	for(const [i,k] of hostKinds.entries())
 	{
-		const {name,id,hash}=k,slug=(php?"php_host_":"js_host_")+i;
+		const {name,id,hash}=k,slug=prefix+"_host_"+i;
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || !/^[a-f0-9]{64}$(?![\s\S])/u.test(hash) || typeof id!=="string" || !id || seen.has(slug)
-			|| resources.some(r=>r.hash===hash || r.id===id)) throw new TypeError("Invalid "+(php?"PHP":"JavaScript")+" host lease layout");
-		resources.push({id,name,hash,slug,lean: (php?"LeanBridge.Host.Php.":"LeanBridge.Host.Javascript.")+name,raw: "lb_lease_"+hash,host: true});
+			|| resources.some(r=>r.hash===hash || r.id===id)) throw new TypeError("Invalid "+({php: "PHP",javascript: "JavaScript",ruby: "Ruby"}[owner])+" host lease layout");
+		resources.push({id,name,hash,slug,lean: "LeanBridge.Host."+module+"."+name,raw: "lb_lease_"+hash,host: true});
 		seen.add(slug);
 	}
 	return resources;

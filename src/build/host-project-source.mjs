@@ -50,7 +50,7 @@ const captureContracts = async (project, inventory, target) => {
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
 	return { ir, review, exports, taskExports, asyncIterators, generatedHostModule
-		, ...(["cpan", "npm", "php-native", "php-wasm", "pypi"].includes(target) && ir ? {hostImportsSource} : {})
+		, ...(["cpan", "npm", "php-native", "php-wasm", "pypi", "rubygems"].includes(target) && ir ? {hostImportsSource} : {})
 		, ...(!ir && !selected.length ? { synchronousIO: true } : {})
 		, nativeEffects: config.nativeEffects?.toSorted() ?? []
 		, ...(config.taskIOErrors ? { taskIOErrors: config.taskIOErrors.toSorted() } : {})

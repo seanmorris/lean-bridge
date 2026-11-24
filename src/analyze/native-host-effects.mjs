@@ -104,7 +104,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const names = audit.roots.map(r => r?.declaration);
 	if(!strings(names) || names.length !== roots.length || roots.some(k => !names.includes(k))) fail("compiled roots do not match the export, startup and pull selection");
 	const workerOwner=hasJavaScriptHostOwner(selection);
-	const byRoot = new Map(), compiledMembers=workerOwner || selection.hostModule==="LeanBridge.Host.Php" || selection.pythonTaskObjects===true?new Map():null;
+	const byRoot = new Map(), compiledMembers=workerOwner || selection.hostModule==="LeanBridge.Host.Php" || (selection.pythonTaskObjects===true || selection.rubyTaskObjects===true)?new Map():null;
 	const violations = new Set();
 	for(const { declaration, leaves } of audit.roots)
 	{
@@ -127,8 +127,8 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 				continue;
 				}
 			const cap = exact ? null : catalog.get(symbol);
-			if((workerOwner || selection.phpWasmTaskObjects===true || selection.pythonTaskObjects===true) && ownerBlocking.has(symbol))
-				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the ${workerOwner?"JavaScript":selection.pythonTaskObjects?"Python":"PHP-Wasm"} host owner; return or compose the task without waiting synchronously`);
+			if((workerOwner || selection.phpWasmTaskObjects===true || selection.pythonTaskObjects===true || selection.rubyTaskObjects===true) && ownerBlocking.has(symbol))
+				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the ${workerOwner?"JavaScript":selection.pythonTaskObjects?"Python":selection.rubyTaskObjects?"Ruby":"PHP-Wasm"} host owner; return or compose the task without waiting synchronously`);
 			if(cap === null) continue;
 			if(!allowed.includes(cap)) violations.add(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);
 			found.add(cap);

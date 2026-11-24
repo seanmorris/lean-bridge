@@ -39,7 +39,7 @@ const asyncMethod = m => `      OPS${m.i} = {
         clear: CLEAR, open_wait: WAIT_OPEN, wake: WAIT_WAKE, end_wait: WAIT_CLOSE,
         decl: ${literal(m.declaration)}, step: ${literal(m.stepDeclaration)},
         args: ${literal(m.args)}, result: ${literal(m.result)}, error: ${literal(m.error)},
-        terminal: ${literal(m.terminal)},${callbacks(m)} depth: ${m.tagBytes}
+        terminal: ${literal(m.terminal)},${m.scoped ? " scoped: true," : ""}${callbacks(m)} depth: ${m.tagBytes}
       }.freeze
       def self.call${m.i}(${m.params})
         TaskRuntimeV1.start(OPS${m.i}, [${m.params}])
@@ -58,7 +58,12 @@ export const generateRubySyncSources = async options => {
 		throw new TypeError("Invalid or reserved Ruby component namespace");
 	if(wire.wait && reservedTasks.includes(ns))
 		throw new TypeError("Reserved Ruby task namespace");
-	const leases = wire.leases ?? [];
+	const hosts = (wire.leases ?? []).filter(r => r.host), leases = (wire.leases ?? []).filter(r => !r.host);
+	const provider = options.hostProvider;
+	if(Boolean(provider) !== Boolean(hosts.length) || provider && provider.workerKinds?.length !== hosts.length
+		|| hosts.some((r,i) => r.type !== "host:" + r.hash || !/^[a-f0-9]{64}$/u.test(r.hash) || r.tag !== i+3
+			|| r.hash !== provider?.workerKinds?.[i]?.hash || r.name !== provider?.workerKinds?.[i]?.name) || (hosts.length && leases.length))
+		throw new TypeError("Ruby worker wire does not match the MRI provider");
 	if(leases.length && (!/^[a-f0-9]{64}$/u.test(options.ledgerId) || leases.some(r => !/^[A-Z][A-Za-z0-9_]*$/u.test(r.name)
 		|| r.name === ns || isReservedRubyName(r.name) || reservedIO.includes(r.name) || reservedTasks.includes(r.name))))
 		throw new TypeError("Invalid Ruby resource ledger or reserved resource class name");
@@ -72,19 +77,21 @@ export const generateRubySyncSources = async options => {
 		const block = trailing ? `      raise ::ArgumentError, "Pass a callable or a block, not both" if block && !${last}.nil?
       ${last} = block if block
 ` : m.callbacks ? '      raise ::ArgumentError, "Pass callbacks in their declared positions" if block_given?\n' : "";
-		seen.add(field); return { ...m, field, i, params, signature, block };
+		if(provider && (provider.names.includes(field) || ["bind_hosts", "name","singleton_class"].includes(field) || field.startsWith("__"))) throw new TypeError("Ruby host and worker operations collide: " + field);
+		const scoped = [m.args,m.result,m.error,m.terminal,m.callbacks].flat(Infinity).some(t => typeof t === "string" && t.startsWith("host:"));
+		seen.add(field); return { ...m, scoped, field, i, params, signature, block };
 	});
 	const retained = methods.some(m => m.callbacks);
 	const pub = `# frozen_string_literal: true
 module LeanBridge
   module ${ns}
-    UNIT = ::Object.new.freeze
+    ${provider ? "" : `UNIT = ::Object.new.freeze
     Ok = ::Data.define(:value)
-    Err = ::Data.define(:value)
+    Err = ::Data.define(:value)`}
     class BoundaryError < ::StandardError; end
     class WrongContext < BoundaryError; end
     class Unavailable < BoundaryError; end${leases.length ? "\n    class ClosedResource < BoundaryError; end" : ""}
-    class IOError < ::IOError
+    ${provider ? "" : `class IOError < ::IOError
       attr_reader :declaration
       def initialize(declaration, message)
         @declaration = declaration
@@ -97,7 +104,7 @@ module LeanBridge
         @declaration, @payload = declaration, payload
         super("Lean EIO failed in #{declaration}")
       end
-    end
+    end`}
 ${methods.map(m => `    def self.${m.field}(${m.signature})
       raise WrongContext, "Lean calls require the main Ractor and main thread" unless ::Ractor.current.equal?(::Ractor.main) && ::Thread.current.equal?(::Thread.main)
 ${m.block}${leases.length ? "      Native.drain_resources\n" : ""}      Native.call${m.i}(${m.params})
@@ -115,7 +122,18 @@ module LeanBridge
   module ${ns}
     module Native
 ${verifiedRubyAssets(evidence)}
-      P = ::Fiddle::TYPE_VOIDP${leaseBindings(leases, options.ledgerId, ns)}
+      P = ::Fiddle::TYPE_VOIDP${leaseBindings(leases, options.ledgerId, ns)}${provider ? `
+      API = ::LeanBridge::${ns}
+      HOSTS = {${hosts.map((h,i) => literal(h.type) + " => [" + i + ", " + h.tag + "].freeze").join(", ")}}.freeze
+      def self.pin_host(type, value) = API.__send__(:__worker_pin, HOSTS.fetch(type)[0], value)
+      def self.admit_host(type, token) = API.__send__(:__worker_admit, HOSTS.fetch(type)[0], token)
+      def self.drop_host(type, token) = API.__send__(:__worker_drop, HOSTS.fetch(type)[0], token)
+      def self.collect_hosts = API.__send__(:__worker_collect)
+      def self.resolve_host(type, out, tag)
+        index, expected = HOSTS.fetch(type)
+        raise BoundaryError, "Unexpected Ruby worker class" unless tag == expected
+        API.__send__(:__worker_resolve, index, out[0, 16])
+      end` : ""}
       CLEAR = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(wire.clear)}], [P], ::Fiddle::TYPE_VOID)${wire.wait ? `
       WAIT_OPEN = ${bind(wire.wait.open, "::Fiddle::TYPE_INT, ::Fiddle::TYPE_INT, P")}
       WAIT_WAKE = ${bind(wire.wait.wake, "P", "VOID")}
@@ -135,7 +153,8 @@ end
 	const runtime = wire.wait && (await readFile(new URL("task-runtime.rb", import.meta.url), "utf8")).replaceAll("LeanBridge::GeneratedTaskComponent", "LeanBridge::" + ns);
 	const retainedSource = retained && (await readFile(new URL("retained-task.rb", import.meta.url), "utf8")).replaceAll("LeanBridge::GeneratedTaskComponent", "LeanBridge::" + ns);
 	return { namespace: "LeanBridge::" + ns, requirePath: path
-		, files: { [`lib/${path}.rb`]: pub, [`lib/${path}/native.rb`]: native
+		, files: { [`lib/${path}.rb`]: (provider?.ruby ?? "") + pub + (provider ? 'require_relative "' + slug + '/native/linux-x64/' + provider.extension + '"\n' + provider.privateMethods : "")
+			, [`lib/${path}/native.rb`]: native
 			, "lib/lean_bridge/native_copied_runtime_v1.rb": copiedRubyRuntime
 			, ...leases.length ? { "lib/lean_bridge/native_resource_lease_v1.rb": await readFile(new URL("resource-lease.rb", import.meta.url), "utf8") } : {}
 			, [`lib/${path}/sync_wire.rb`]: helper

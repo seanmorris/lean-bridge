@@ -50,6 +50,7 @@ export const nativeHostSelection = (ir, target) => {
  * @param evidence - Actual compiler selection and elaborated metadata.
  */
 export const taskWorkerInterface=(api,evidence)=>{
+	if(evidence.selection.rubyTaskObjects) throw new TypeError("Ruby task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.pythonTaskObjects) throw new TypeError("Python task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.phpNativeTaskObjects) throw new TypeError("Native PHP task object carriers cannot use the JavaScript worker interface");
 	// Nominal Zend workers have their own checked ABI; never turn their
@@ -105,7 +106,11 @@ export const reconcileHostExports = options => {
 	if(selection.pythonTaskObjects!==undefined && (!pythonObjects || !ir || selection.hostModule!==compiledHostModules.python
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || !(selection.taskExports?.length || selection.asyncIterators?.length)
 		|| Boolean(selection.taskExports?.length)!==(selection.pythonTaskCallbacks===true))) fail("Unauthenticated Python task objects");
-	const hostValues=owner || phpObjects || pythonObjects;
+	const rubyObjects=selection.rubyTaskObjects===true;
+	if(selection.rubyTaskObjects!==undefined && (!rubyObjects || !ir || selection.hostModule!==compiledHostModules.ruby
+		|| selection.nativeEffectPolicy!==nativeEffectPolicy || !(selection.taskExports?.length || selection.asyncIterators?.length)
+		|| Boolean(selection.taskExports?.length)!==(selection.rubyTaskCallbacks===true))) fail("Unauthenticated Ruby task objects");
+	const localObjects=pythonObjects || rubyObjects, hostValues=owner || phpObjects || localObjects;
 	const immediate = synchronous || ((!ir || hostValues) && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
@@ -124,7 +129,7 @@ export const reconcileHostExports = options => {
 	{
 		const p=selection.asyncIterators?.find(s=>s.open===e.declaration);
 		const protocol=e.protocolHostMembers;
-		if((owner || phpWasm || pythonObjects) && p)
+		if((owner || phpWasm || localObjects) && p)
 		{
 			if(!protocol || canonicalJson(Object.keys(protocol).sort())!==canonicalJson(["close","pull"])) fail("Invalid cursor host member phases: "+e.declaration);
 		} else if(protocol!==undefined) fail("Unexpected cursor host member phases: "+e.declaration);
@@ -195,10 +200,10 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
-	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":hostError;
+	const callbackError=owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":rubyObjects?"error:RubyCallbackException":hostError;
 	const callbackCarrier=t=>{
 		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};
-		const kind=((owner && js) || (phpObjects && php) || pythonObjects) && t?.kind==="named" && types.find(k=>k.id===t.id);
+		const kind=((owner && js) || (phpObjects && php) || localObjects) && t?.kind==="named" && types.find(k=>k.id===t.id);
 		if(!kind) fail("Unauthenticated retained callback carrier");
 		return {label: callbackHostName(kind.name),mutability: kind.mutability};
 	};
@@ -233,7 +238,7 @@ export const reconcileHostExports = options => {
 		, name: callbackError.slice("error:".length)
 		, category: "domain"
 		, payload: null
-		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
+		, documentation: doc(owner?"A retained JavaScript callback failed with the original thrown value.":rubyObjects?"A retained Ruby callback propagated its original exception.":pythonObjects?"A retained Python callback propagated its original exception.":"A retained PHP callback propagated its original exception.")});
 	if(metadata.entries.some(e => hostCanEscape(e) || !hostValues && hasCallbacks(e))) errors.push({ id: hostError
 		, name: publicErrorName
 		, category: "domain"
@@ -320,7 +325,7 @@ export const reconcileHostExports = options => {
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
 					, "lean-bridge.dev/host-members": owner ? used(e) : e.hostMembers
-					, ...(owner || phpWasm || pythonObjects ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
+					, ...(owner || phpWasm || localObjects ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})
 				}
 			}
 		}))

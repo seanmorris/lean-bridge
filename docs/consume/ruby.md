@@ -85,6 +85,25 @@ until the last matching binding closes. Passing an object to a call that
 fails argument validation does not pin it. Once the call enters Lean, a
 later exception does not undo that admission.
 
+A gem can also use the bound class in tasks and pull streams. Keep that work
+inside the same block and on the same fiber:
+
+```ruby
+api.bind_hosts(box: Box) do
+  box = Box.new(4)
+  task = api.relay(box) { |original| api.update(original, 17); original }
+  puts task.await.equal?(box) # true
+  api.open_cursor(box).each { |item| break item }
+end
+```
+
+The Lean worker carries an opaque reference. The Ruby callback runs on the
+fiber calling `await`. Leaving the binding cancels its outstanding work;
+entering a new block with the same class does not revive an old task.
+Another gem with an open binding can still use the same Ruby object.
+The [installed-gem checks](../evidence/ruby-worker-gems-20261124.md) exercise
+this with two independent components and both strong and weak imports.
+
 ### Call synchronous IO
 
 Install the prepared platform gem as above. For a package marked

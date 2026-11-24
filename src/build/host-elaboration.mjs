@@ -70,6 +70,14 @@ export const compileHostSources = async options => {
 	const target = compiledHostTargets[options.target] ?? "python", hostModule = compiledHostModules[target];
 	const threadedJavaScript=Boolean(ir && options.target==="npm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const phpNativeTaskObjects=Boolean(ir && options.target==="php-native" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	const rubyTaskObjects=Boolean(ir && options.target==="rubygems" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
+	if(rubyTaskObjects)
+	{
+		const source=projectContract.hostImportsSource;
+		if(projectContract.generatedHostModule!==compiledHostModules.ruby || typeof source!=="string"
+			|| sha256(source)!==projectContract.hostImportsSourceSha256 || canonicalJson(parseBindingIr(source))!==canonicalJson(ir))
+			fail("Ruby worker declarations differ from the captured host source");
+	}
 	// Probe the actual exported Lean types, not the project's package name or
 	// a claim in its review. A scalar worker next to a synchronous host import
 	// retains its existing, binding-independent Python API.
@@ -153,6 +161,7 @@ export const compileHostSources = async options => {
 		, ...(threadedJavaScript ? {javascriptThreadedHostMembers: true} : {})
 		, ...(phpNativeTaskObjects ? {phpNativeTaskObjects: true} : {})
 		, ...(pythonTaskObjects ? {pythonTaskObjects: true} : {})
+		, ...(rubyTaskObjects ? {rubyTaskObjects: true} : {})
 		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
@@ -169,6 +178,13 @@ export const compileHostSources = async options => {
 		if(error.code === "build-command-failed")
 		{
 			const output = [error.details?.stderr, error.details?.stdout].filter(Boolean).join("\n").split("\n");
+			if(rubyTaskObjects)
+				for(const name of [...selection.taskExports,...selection.asyncIterators.flatMap(p=>[p.open,p.next,p.close])])
+				{
+					const message="Ruby task calls a Ruby member outside its owner: "+name;
+					if(output.some(line=>line.trimEnd().endsWith(message)))
+						throw Object.assign(new Error(message),{code: "invalid-task-export",cause: error,details: error.details});
+				}
 			for(const name of selection.taskExports)
 			{
 				const message = "taskExports requires a real Lean Task result: " + name;

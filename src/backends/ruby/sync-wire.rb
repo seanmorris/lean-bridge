@@ -29,7 +29,25 @@ module LeanBridge::GeneratedSyncComponent
         p
       end
       def close
-        @memory.reverse_each(&:call_free)
+        begin
+          @hosts&.reverse_each { |type, token| Native.drop_host(type, token) }
+        ensure
+          @memory.reverse_each(&:call_free)
+        end
+      end
+      def pin_host(type, value)
+        @hosts ||= []
+        token = Native.pin_host(type, value)
+        begin
+          @hosts << [type, token]
+        rescue ::Exception
+          Native.drop_host(type, token)
+          raise
+        end
+        [*token.unpack("Q<2"), 0]
+      end
+      def admit_hosts
+        @hosts&.each { |type, token| Native.admit_host(type, token) }
       end
     end
     def self.number(type, value)
@@ -55,6 +73,7 @@ module LeanBridge::GeneratedSyncComponent
       copy.ord
     end
     def self.encode(type, value, frame, unit)
+      return frame.pin_host(type, value) if type.start_with?("host:")
       return Native.borrow_resource(type, value) if type.start_with?("lease:")
       case type
       when "unit"
@@ -90,6 +109,7 @@ module LeanBridge::GeneratedSyncComponent
         return (arm == 1 ? api::Ok : api::Err).new(value)
       end
       a, n, sign, owner = words
+      return Native.resolve_host(type, out, owner) if type.start_with?("host:")
       return Native.take_resource(type, out, owner) if type.start_with?("lease:")
       case type
       when "unit" then api::UNIT

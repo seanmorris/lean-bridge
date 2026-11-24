@@ -99,7 +99,7 @@ module LeanBridge::GeneratedTaskComponent
       frame = NativeSyncWireV1::Frame.new
       begin
         begin
-          answer = invoke(fn, value)
+          answer = slot.scope ? TaskRuntimeV1::API.__send__(:__worker_call) { invoke(fn, value) } : invoke(fn, value)
         rescue ::StandardError => err
           fail_request(slot, err, frame) unless slot.state
           return
@@ -114,6 +114,7 @@ module LeanBridge::GeneratedTaskComponent
         return if slot.state
         code = @ops[:reply].call(slot.h, index, words)
         TaskRuntimeV1.status(code) unless code.zero?
+        frame.admit_hosts if slot.scope
       ensure
         frame.close
       end

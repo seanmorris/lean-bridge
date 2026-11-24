@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "io/wait"
+require "weakref"
 
 module LeanBridge::GeneratedTaskComponent
   class Cancelled < BoundaryError; end
@@ -11,7 +12,7 @@ module LeanBridge::GeneratedTaskComponent
     API = ::LeanBridge::GeneratedTaskComponent
     PID = ::Process.pid
     SLOTS = {}.compare_by_identity
-    Slot = ::Struct.new(:h, :ops, :gates, :abandoned, :state, :value, :pulling, :iterating, :dispatcher)
+    Slot = ::Struct.new(:h, :ops, :gates, :abandoned, :state, :value, :pulling, :iterating, :dispatcher, :scope, :calls)
     END_OF_STREAM = ::Object.new.freeze
 
     def self.context
@@ -20,6 +21,25 @@ module LeanBridge::GeneratedTaskComponent
       end
     end
     def self.atomic(&block) = ::Thread.handle_interrupt(::Exception => :never, &block)
+    def self.bind_scope
+      @owner_fiber, @scope = ::Fiber.current, ::Object.new.freeze
+    end
+    def self.require_scope(expected = @scope)
+      unless expected && expected.equal?(@scope) && @owner_fiber.equal?(::Fiber.current)
+        raise WrongContext, "Enter the original bind_hosts block on its owning fiber"
+      end
+      expected
+    end
+    def self.end_scope
+      return unless @scope
+      scope, @scope, @owner_fiber = @scope, nil, nil
+      SLOTS.each_key do |slot|
+        next unless slot.scope.equal?(scope)
+        slot.state, slot.value = slot.ops[:pull] ? [:closed, nil] : [:error, Cancelled.new("Ruby host binding ended")]
+        slot.calls.__getobj__.clear if slot.calls&.weakref_alive?
+        release(slot)
+      end
+    end
     def self.finalizer(flag) = proc { flag[0] = true }
     def self.release(slot)
       return unless slot.h
@@ -34,6 +54,7 @@ module LeanBridge::GeneratedTaskComponent
       slot.h.call_free
       slot.h = nil
       SLOTS.delete(slot)
+      Native.collect_hosts if slot.ops[:scoped]
     end
     def self.drain
       context
@@ -65,6 +86,7 @@ module LeanBridge::GeneratedTaskComponent
           yield frame, out, tags
         ensure
           ops[:clear].call(out)
+          Native.collect_hosts if ops[:scoped]
         end
       ensure
         frame.close
@@ -73,11 +95,14 @@ module LeanBridge::GeneratedTaskComponent
     def self.decode(type, out, tags) = NativeSyncWireV1.decode(API, type, out[0, 32].unpack("Q<4"), tags, out)
     def self.start(ops, args)
       drain
+      scope = require_scope if ops[:scoped]
       atomic do
         h = ::Fiddle::Pointer.malloc(16, ::Fiddle::RUBY_FREE); h[0, 16] = "\0" * 16
         slot = Slot.new(h, ops, [], [false])
+        slot.scope = scope
         begin
           callbacks = ops[:callbacks] && RetainedRuntimeV1.new(ops, args)
+          slot.calls = ::WeakRef.new(callbacks) if scope && callbacks
           SLOTS[slot] = true
           output(ops) do |frame, out, tags|
             input = frame.bytes(24 * args.size)
@@ -86,6 +111,7 @@ module LeanBridge::GeneratedTaskComponent
               input[24 * i, 24] = NativeSyncWireV1.encode(type, args[i], frame, UNIT).pack("Q<3")
             end
             code = ops[:start].call(input, h, out, tags)
+            frame.admit_hosts if ops[:scoped] && [0, 3, 4].include?(code)
             case code
             when 0 then nil
             when 3 then raise DeclaredError.new(ops[:decl], decode(ops[:error], out, tags))
@@ -147,7 +173,7 @@ module LeanBridge::GeneratedTaskComponent
         when 3
           raise DeclaredError.new(ops[:decl], decode(ops[:error], out, tags)) if callbacks
           raise StepError.new(ops[:step], decode(ops[:terminal], out, tags))
-        when 4 then raise TaskIOError.new(ops[:decl], decode("string", out, tags))
+        when 4 then raise TaskIOError.new(ops[:step] || ops[:decl], decode("string", out, tags))
         when 13 then raise IOError.new(ops[:decl], decode("string", out, tags))
         when 14 then raise callbacks.original(out[0, 8].unpack1("Q<"))
         else status(code)
@@ -167,6 +193,7 @@ module LeanBridge::GeneratedTaskComponent
     def _dump(*) = raise(::TypeError, "Lean delivery owners cannot be serialized")
     def with
       TaskRuntimeV1.context
+      TaskRuntimeV1.require_scope(@slot.scope) if @slot.scope
       begin
         yield self
       ensure
@@ -178,6 +205,7 @@ module LeanBridge::GeneratedTaskComponent
   class Task < DeliveryOwner
     def await
       TaskRuntimeV1.drain
+      TaskRuntimeV1.require_scope(@slot.scope) if @slot.scope
       TaskRuntimeV1.atomic do
         raise Busy, "A callback cannot await its own task" if !@slot.state && @slot.dispatcher == ::Fiber.current.object_id
         begin
@@ -194,6 +222,7 @@ module LeanBridge::GeneratedTaskComponent
     end
     def cancel
       TaskRuntimeV1.context
+      TaskRuntimeV1.require_scope(@slot.scope) if @slot.scope && !@slot.state
       TaskRuntimeV1.atomic { @slot.state ? false : settle(:error, Cancelled.new("Lean task cancelled")) }
     end
     alias close cancel
@@ -209,6 +238,7 @@ module LeanBridge::GeneratedTaskComponent
     include ::Enumerable
     def next
       TaskRuntimeV1.drain
+      TaskRuntimeV1.require_scope(@slot.scope) if @slot.scope
       TaskRuntimeV1.atomic do
         raise ::StopIteration if @slot.state == :closed
         raise Busy, "Another fiber is already pulling this stream" if @slot.pulling || (@slot.iterating && @slot.iterating != ::Fiber.current.object_id)
@@ -235,6 +265,7 @@ module LeanBridge::GeneratedTaskComponent
     def each
       return enum_for(:each) unless block_given?
       TaskRuntimeV1.drain
+      TaskRuntimeV1.require_scope(@slot.scope) if @slot.scope
       TaskRuntimeV1.atomic do
         raise Busy, "Another enumeration is active" if @slot.pulling || @slot.iterating
         # Do not retain an Enumerator's suspended Fiber (and therefore its owner).
@@ -259,6 +290,7 @@ module LeanBridge::GeneratedTaskComponent
     end
     def close
       TaskRuntimeV1.context
+      TaskRuntimeV1.require_scope(@slot.scope) if @slot.scope && !@slot.state
       TaskRuntimeV1.atomic do
         return false if @slot.state == :closed
         @slot.state = :closed; TaskRuntimeV1.release(@slot); true
