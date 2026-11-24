@@ -17,8 +17,9 @@ import {exercisePhpTaskBrowser} from "./php-wasm-task-browser.mjs";
  * @param t - Test context for diagnostics and cleanup.
  * @param peer - Independently built peer package when calls cross components.
  * @param leases - Exercise a nominal resource peer instead of retained callbacks.
+ * @param zend - Exercise the generated application class bindings.
  */
-export const exercisePhpTaskRelease=async(release,t,peer,leases=false)=>{
+export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false)=>{
 	const host=process.env.LEAN_BRIDGE_PHP_WASM_HOST;assert.ok(host);
 	const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(release,"package-set-receipt.json")});
 	await assertJsonSchema("package-set-receipt",receipt);
@@ -49,22 +50,25 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false)=>{
 	await writeFile(join(app,"composer.json"),JSON.stringify({name: "test/tasks",config: {platform: {php: "8.4.1"}},require: Object.fromEntries(composer.map(p=>[p.name,p.version])),repositories: [...composer.map(p=>({type: "package",package: p})),await brickMathRepository(feed),{packagist: false}]}));
 	await run("composer",["--no-plugins","--no-scripts","--no-interaction","--no-cache","install","--prefer-dist"],app,{...env,COMPOSER_DISABLE_NETWORK: "1",COMPOSER_ALLOW_SUPERUSER: "1",COMPOSER_HOME: join(root,"composer-home")});
 	await symlink(resolve(host),join(app,"node_modules/php-wasm"),"dir");
-	await cp(resolve("tests/fixtures/php-wasm-task-owner",leases?"leases.php":peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
+	await cp(resolve("tests/fixtures/php-wasm-task-owner",zend?"zend-installed.php":leases?"leases.php":peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
 	await cp(resolve("tests/fixtures/php-wasm-task-owner/installed.mjs"),join(app,"installed.mjs"));
-	if(peer && !leases) for(const file of ["trap.php","trap.mjs","malformed.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,file));
+	if(peer && !leases && !zend) for(const file of ["trap.php","trap.mjs","malformed.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,file));
+	if(zend) for(const [file,dest] of [["zend-trap.php","trap.php"],["trap.mjs","trap.mjs"]])
+		await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,dest));
 	await rename(app,moved);await rm(feed,{recursive: true});
 	for(const mode of ["embedded","composer"])
 	{
 		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools"});
 		assert.equal(result.stderr,"");assert.match(result.stdout,/zero live owners/u);t.diagnostic(result.stdout.trim());
 	}
-	t.diagnostic(await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases}));
+	t.diagnostic(await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend}));
 	if(peer && !leases)
 	{
 		const result=await run(process.execPath,["trap.mjs",...components],moved,{PATH: "/no-producer-tools"});
 		assert.equal(result.stderr,"");t.diagnostic(result.stdout.trim());
+		if(zend) return;
 		const corrupt=await run(process.execPath,["malformed.mjs",name],moved,{PATH: "/no-producer-tools"});
 		assert.equal(corrupt.stderr,"");t.diagnostic(corrupt.stdout.trim());
 	}
 };
-if(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE) test("installed PHP-Wasm task API survives relocation",t=>exercisePhpTaskRelease(resolve(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE),t,process.env.LEAN_BRIDGE_PHP_TASK_PEER,process.env.LEAN_BRIDGE_PHP_WASM_TASK_LEASES==="1"));
+if(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE) test("installed PHP-Wasm task API survives relocation",t=>exercisePhpTaskRelease(resolve(process.env.LEAN_BRIDGE_PHP_WASM_TASK_RELEASE),t,process.env.LEAN_BRIDGE_PHP_TASK_PEER,process.env.LEAN_BRIDGE_PHP_WASM_TASK_LEASES==="1",process.env.LEAN_BRIDGE_PHP_WASM_ZEND_PACKAGES==="1"));

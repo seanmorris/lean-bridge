@@ -33,6 +33,16 @@ test("a nested returned Except exposes only the active Zend object branch",()=>{
 		assert.throws(()=>domain.tagged("value",shape,invalid),TypeError);
 });
 
+test("independent interpreters share nominal prototypes but cannot redeem each other's objects",()=>{
+	const pool=new Map(),kind="host:"+"d".repeat(64);
+	const left=phpWasmObjectDomain([kind],pool),right=phpWasmObjectDomain([],pool);
+	right.register(kind);right.register(kind);
+	assert.equal(left.classFor(kind),right.classFor(kind));assert.notEqual(left.id,right.id);
+	const cap=right.mint(kind),mirror=right.borrow(kind,cap);
+	assert.ok(mirror instanceof left.classFor(kind));
+	assert.throws(()=>left.borrow(kind,cap),TypeError);assert.throws(()=>left.packet("value",kind,mirror),TypeError);
+});
+
 test("synchronous Zend member tickets stay with their call and cannot name another scope's exception",()=>{
 	const key="a".repeat(64),kind="host:"+key,domain=phpWasmObjectDomain([kind]);
 	const model={zend: true,kinds: [{key}],members: [{args: [0],result: "uint32"},{args: ["uint32"],result: 0}]};

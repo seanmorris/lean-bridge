@@ -21,7 +21,7 @@ final class Port {
                 if (!is_array($type) || ($tag!=='0' && $tag!=='1')) throw new \UnexpectedValueException('Unexpected Zend object branch');
                 $type=$type[$tag==='1'?0:1];
             }
-            if (!$objects->has($type)) throw new \UnexpectedValueException('Missing Zend object result branch');
+            if (!is_string($type) || (!$objects->has($type) && !isset(self::LEASES[$type]))) throw new \UnexpectedValueException('Missing object result branch');
             $value=self::unpack($packet,$type,$objects);
             for ($i=strlen($tags)-1;$i>=0;--$i) $value=$tags[$i]==='1'?new \__LB_PUBLIC__\Ok($value):new \__LB_PUBLIC__\Err($value);
             return $value;
@@ -39,14 +39,14 @@ final class Port {
             return $make();
         } catch (\Throwable $error) { $cap->close(); throw $error; }
     }
-    public static function call(string $key, array $args, array $kinds, ?string $delivery, ?string $class,
+    public static function call(string|\Closure $key, array $args, array $kinds, ?string $delivery, ?string $class,
             string $declaration, array|string $result, ?array $start, ?array $terminal, array $callbacks=[],
-            ?\LeanBridge\Internal\PhpWasmObjectsV1\Domain $domain=null,?ZendMembers $members=null): mixed {
+            ?\LeanBridge\Internal\PhpWasmObjectsV1\Domain $domain=null,?ZendMembers $members=null,?object $binding=null): mixed {
         $budget=new Budget(); $encoded=[];
         $objects=$domain?->open();$scope=$callbacks ? new CallbackScope($callbacks,$args,$objects) : null;
         foreach ($args as $i=>$v) $encoded[]=$kinds[$i]==='callback' ? '' :
             ($objects?->has($kinds[$i])?$objects->pin($kinds[$i],$v):self::input($kinds[$i],$v,$budget));
-        $submit=vrzno_shared($key);
+        $submit=is_string($key)?vrzno_shared($key):$key;
         if (!is_callable($submit)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing PHP-Wasm host for '.$declaration);
         $decode=static function(mixed $packet) use ($declaration,$result,$start,$terminal,$objects): mixed {
             if (is_object($packet)) {
@@ -91,8 +91,8 @@ final class Port {
         if (is_string($reply) || $delivery===null || (is_object($reply) && $reply->form()!=='owner')) return $decode($reply);
         if (!is_object($reply)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing task owner for '.$declaration);
         $open=$delivery==='task'
-            ? \Closure::bind(static fn()=>new $class($reply,$decode,$scope,$objects),null,\__LB_PUBLIC__\Awaitable::class)
-            : \Closure::bind(static fn()=>new $class($reply,$decode,$objects),null,\__LB_PUBLIC__\PullStream::class);
+            ? \Closure::bind(static fn()=>new $class($reply,$decode,$scope,$objects,$binding),null,\__LB_PUBLIC__\Awaitable::class)
+            : \Closure::bind(static fn()=>new $class($reply,$decode,$objects,$binding),null,\__LB_PUBLIC__\PullStream::class);
         return $open();
     }
 }

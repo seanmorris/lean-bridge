@@ -71,19 +71,19 @@ const operation=(m,call,hub,leases,objects,memberFailure)=>(...args)=>{
 	{const reply=memberFailure?.(e)??failure(leases,m,e);box?.finish(reply);return reply;}
 };
 /**
- * Connect a worker to a bound Zend class table. This internal entry is not
- * selected by a public release profile.
+ * Connect a compiled worker to the class table of its installed PHP binding.
  *
  * @param m - Compiler-derived worker method.
  * @param call - That method on the actual bound component.
  * @param hub - Interpreter's shared callback queue.
  * @param objects - Interpreter-local nominal domain.
  * @param members - Synchronous Zend dispatch for a method that actually imports members.
+ * @param leases - Combined Lean resource and PHP object carriers for this component.
  */
-export const phpZendTaskOperation=(m,call,hub,objects,members)=>{
-	if(!m.hostPhases?.call.length) return operation(m,call,hub,objects,objects);
+export const phpZendTaskOperation=(m,call,hub,objects,members,leases=objects)=>{
+	if(!m.hostPhases?.call.length) return operation(m,call,hub,leases,objects);
 	if(m.delivery || !members) throw new TypeError("PHP members require a synchronous owner");
-	return (invoke,...args)=>members.enter(invoke,restore=>operation(m,call,hub,objects,objects,restore)(...args));
+	return (invoke,...args)=>members.enter(invoke,restore=>operation(m,call,hub,leases,objects,restore)(...args));
 };
 
 /**

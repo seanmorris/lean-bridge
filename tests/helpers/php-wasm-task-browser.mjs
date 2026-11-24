@@ -13,8 +13,9 @@ import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
  * @param options.name - Installed PHP host module's npm coordinate.
  * @param options.other - Independently installed peer component.
  * @param options.leases - Run the lease application and its pending-worker fault case.
+ * @param options.zend - Run the class-bound PHP consumer.
  */
-export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false})=>{
+export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false,zend=false})=>{
 	const names=other?[name,other]:[name],callbacks=Boolean(other);
 	const imports=Object.fromEntries([...names,"@lean-bridge/runtime"].map(n=>[n,"/node_modules/"+n+"/index.mjs"]));
 	await writeFile(join(consumer,"index.html"),'<!doctype html><link rel="icon" href="data:,"><script type="importmap">'+JSON.stringify({imports})+'</script>',{flag: "wx"});
@@ -38,7 +39,8 @@ export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false
 	const result=await runInstalledChromium({root,consumer,names: [name]
 		, isolated: true,assembledDirectory: consumer
 		, timeoutMs: 90000,argument: {names,program},evaluate});
-	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,leases?"PHP lease API: cross-package identity, error ownership and disposal passed":callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed");assert.deepEqual(result.counts,[0,0,0,0,0]);
+	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,zend?"PHP Zend API: installed class bindings, typed errors, scoped cancellation and cursors passed":leases?"PHP lease API: cross-package identity, error ownership and disposal passed":callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed");assert.deepEqual(result.counts,[0,0,0,0,0]);
+	if(zend) return "Chromium: "+result.stdout+"; zero live owners";
 	const crash=async({name,program})=>{
 		const Native=globalThis.Worker,workers=[];
 		/** Wrap only the Lean SDK's pthreads for this disposable host. */

@@ -26,8 +26,9 @@ To reproduce the four runs, use `npm run test:php-wasm-zend-author` with the
 Lean toolchain, verified pthread SDK, PHP-Wasm interpreter, and Chromium
 [described here](php-wasm-zend-author-20261124.md#reproduce).
 
-This tests the internal PHP owner adapter. It does not yet establish that a
-consumer can install a matching host-object package from npm and Composer.
+This test covers the internal PHP owner adapter. The subsequent
+[installed package checks](php-wasm-zend-packages-20261124.md) exercise the
+generated PHP API from matching npm and Composer archives.
 The compiler still rejects worker-side direct PHP calls and blocking the PHP
 owner on `Task.get`.
 

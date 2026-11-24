@@ -16,7 +16,7 @@ export const phpWasmTaskProfile="php-wasm-threaded-task-v1";
  * @param configuration - Checked Lean project settings.
  */
 export const assertPhpWasmTaskConfiguration=configuration=>{
-	assertExportConfigurationCapabilities(configuration,{target: "php-wasm",fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors"],targetFields: ["npm","composer"]});
+	assertExportConfigurationCapabilities(configuration,{target: "php-wasm",fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors","hostImports"],targetFields: ["npm","composer"]});
 	if(configuration.nativeEffects?.length) throw new Error("PHP-Wasm workers support only in-memory effects");
 };
 /**
@@ -42,14 +42,16 @@ export const phpTaskCoordinates=(api,configuration)=>{
  * @param options.coordinate - Matching npm name and version.
  * @param options.root - Private release staging directory.
  * @param options.runtimeIdentity - Exact pthread runtime fingerprint.
+ * @param options.hosts - Captured PHP class import contract, when present.
  */
-export const attachPhpTaskPackages=async({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity})=>{
-	const {composer}=phpTaskCoordinates(api,configuration),{files: generated,php,autoload,namespace}=await generatePhpWasmTaskFiles(api,componentIdentity,composer,worker);
+export const attachPhpTaskPackages=async({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity,hosts=null})=>{
+	const {composer}=phpTaskCoordinates(api,configuration),{files: generated,php,autoload,namespace}=await generatePhpWasmTaskFiles(api,componentIdentity,composer,worker,hosts);
 	const metadata=configuration.package??{}, pkg=JSON.parse(files.get("package.json"));
-	files.set("component.mjs",files.get("index.mjs"));for(const [k,v] of Object.entries(generated)) files.set(k,v);
+	if(!hosts) files.set("component.mjs",files.get("index.mjs"));
+	for(const [k,v] of Object.entries(generated)) files.set(k,v);
 	files.set("index.d.ts","export declare const autoload: string;\ndeclare const host: { readonly autoload: string; readonly extensions: { getLibs(): never[]; getFiles(php: object): never[] }; getLibs(): never[]; getFiles(php: object): {path:string;url:URL}[] };\nexport default host;\n");
 	files.set("README.md","# "+coordinate.name+"\n\nImport the default PHP-Wasm descriptor, include it in sharedLibs, then require "+autoload+" from PHP. The Composer companion supplies the same API; use the descriptor's extensions member when mounting Composer's vendor directory.\n");
-	files.set("package.json",canonicalJson({...pkg,files: [...new Set([...pkg.files,"component.mjs","php","bridge"])],leanBridge: {...pkg.leanBridge,profile: phpWasmTaskProfile}}));
+	files.set("package.json",canonicalJson({...pkg,files: [...new Set([...pkg.files,...hosts?[]:["component.mjs"],"php","bridge"])],leanBridge: {...pkg.leanBridge,profile: phpWasmTaskProfile}}));
 	const temp=await mkdtemp(join(root,".composer-api-"));
 	try
 	{

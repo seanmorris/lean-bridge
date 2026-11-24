@@ -1434,6 +1434,33 @@ foreach (series(BigInteger::of(12)) as $number) {
 
 The Lean workers run in a separate, shared Wasm heap. In a browser, serve the app in a cross-origin-isolated context. This profile does not pass object leases to an in-process Zend extension. [Installed task package checks](evidence/php-wasm-task-packages-20261124.md).
 
+#### Let Lean call methods on your PHP objects
+
+If the package imports a PHP class, its namespace exposes `withHosts()` instead of free functions. Pass the application class that implements each imported name. The generated binding checks its constructors, methods and properties when you open it. Use the same npm descriptor and optional Composer autoloader as for a task package.
+
+```php
+use Brick\Math\BigInteger;
+use function LeanWorkshop\withHosts;
+
+class AppBox {
+    public function __construct(public BigInteger $level) {}
+    public static function fromValue(BigInteger $value): self { return new self($value); }
+    public function identity(): self { return $this; }
+    public function read(): BigInteger { return $this->level; }
+}
+
+$api = withHosts(['Box' => AppBox::class]);
+try {
+    $box = $api->make_box(BigInteger::of(7));
+    var_dump($api->same_box($box) === $box); // true
+    echo $api->project($box, fn (AppBox $b) => $b->level)->await(); // 7
+} finally {
+    $api->close();
+}
+```
+
+The constructor returns your PHP instance; Lean does not copy it into a record. Two packages in the same interpreter that import the same nominal type can use that instance. Bind the same application class in both. Closing one binding cancels and drains its outstanding deliveries without closing the other. A PHP method called synchronously by Lean can call another immediate export, but it cannot wait for a worker. Use an exported task callback for work that needs to suspend. See the [installed examples and checks](evidence/php-wasm-zend-packages-20261124.md).
+
 #### Share a Lean object between PHP-Wasm packages
 
 When two packages use the same Lean heap and the same resource type, you can pass the PHP object directly between them. In this example, both packages import `Shared.Ticket`. A second handle sees the same mutation, even after the original handle closes.

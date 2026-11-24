@@ -13,7 +13,7 @@ abstract class Awaitable {
     private ?\Throwable $failure=null;
     private ?object $cleanup;
     final protected function __construct(private ?object $owner, private readonly \Closure $decode, private ?Internal\CallbackScope $callbacks=null,
-            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null) {
+            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null,private ?object $binding=null) {
         $this->cleanup=$owner->cleanup(); $callbacks?->attach($owner);
     }
     private function __clone() {}
@@ -29,6 +29,7 @@ abstract class Awaitable {
         try {$this->callbacks?->close();} catch (\Throwable $e) {$first=$e;}
         $this->callbacks=null;
         try {$this->objects?->close($suppress || $first!==null);} catch (\Throwable $e) {$first??=$e;}
+        $this->binding=null;
         if (!$suppress && $first!==null) throw $first;
     }
     final public function __destruct() { try { $this->owner?->abandon(); } finally { $this->release(true); } }
@@ -36,12 +37,12 @@ abstract class Awaitable {
         if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Cannot wait for an active callback on this task');
         if ($this->cleanup===null) return;
         MemberStack::assertCanWait();
-        if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->cleanup)!=='["end"]')
-            throw new LeanBridgeError('Failed to drain Lean task owner');
-        $this->cleanup=null;
+        $drained=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->cleanup)==='["end"]';
+        if ($drained) $this->cleanup=null;
         // Capture the terminal result and release Zend callables even when the
         // application keeps this owner and calls await() much later.
         if (!$this->observed) { try { $this->take(); } catch (\Throwable) { /* Cached for await(). */ } }
+        if (!$drained) throw new LeanBridgeError('Failed to drain Lean task owner');
     }
     final protected function take(): mixed {
         if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Reentrant observation of the same Lean task');
@@ -70,24 +71,26 @@ abstract class Awaitable {
 /** A one-pass, demand-driven sequence. Breaking a foreach closes its Lean cursor. */
 final class PullStream implements \IteratorAggregate {
     private bool $started=false;
+    private bool $pulling=false;
     private function __construct(private ?object $owner, private readonly \Closure $decode,
-            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null) {}
+            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null,private ?object $binding=null) {}
     private function __clone() {}
     public function __serialize(): array { throw new \LogicException('Cannot serialize a Lean cursor'); }
     public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean cursor'); }
     public function close(): void {
         if ($this->owner===null) return;
+        if ($this->pulling) throw new \LogicException('Cannot close a cursor during its own pull');
         MemberStack::assertCanWait();
         $owner=$this->owner; $this->owner=null;
         $failed=true;
         try {
             if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($owner->drain())!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
             $failed=false;
-        } finally { $this->objects?->close($failed); }
+        } finally { try {$this->objects?->close($failed);} finally {$this->binding=null;} }
     }
     private function abandon(): void {
         $owner=$this->owner;$this->owner=null;
-        try {$owner?->dispose();} finally {$this->objects?->close(true);}
+        try {$owner?->dispose();} finally {try {$this->objects?->close(true);} finally {$this->binding=null;}}
     }
     public function __destruct() {$this->abandon();}
     public function getIterator(): \Traversable {
@@ -97,7 +100,9 @@ final class PullStream implements \IteratorAggregate {
         try {
             while ($this->owner!==null) {
                 MemberStack::assertCanWait();
-                $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner->pull());
+                $this->pulling=true;
+                try {$packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner->pull());}
+                finally {$this->pulling=false;}
                 if ($packet==='["end"]') break;
                 yield ($this->decode)($packet);
             }

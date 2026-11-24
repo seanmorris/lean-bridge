@@ -5,14 +5,34 @@ namespace LeanBridge\Internal\PhpWasmObjectsV1;
 if (!class_exists(Domain::class,false)) {
     /** @internal One interpreter and authenticated runtime, never process-global tokens. */
     final class Domain {
+        private static array $shared=[];
         private readonly \WeakMap $canonical;
-        public function __construct(private readonly array $classes, private readonly \Closure $mint) {
+        private ?string $registry=null;
+        public function __construct(private readonly array $classes, private readonly \Closure $mint,?string $registry=null) {
             foreach ($classes as $kind=>$class) {
                 if (!is_string($kind) || !preg_match('/^host:[0-9a-f]{64}$/D',$kind) ||
-                    !is_string($class) || !class_exists($class)) throw new \TypeError('Invalid PHP worker object binding');
+                    !is_string($class) || (!class_exists($class) && !interface_exists($class))) throw new \TypeError('Invalid PHP worker object binding');
             }
-            $this->canonical=new \WeakMap();
+            if ($registry===null) {$this->canonical=new \WeakMap();return;}
+            if (preg_match('/^[0-9a-f]{32}$/D',$registry)!==1) throw new \TypeError('Invalid PHP worker identity domain');
+            $row=self::$shared[$registry]??['objects'=>new \WeakMap(),'classes'=>[]];
+            foreach ($classes as $kind=>$class) {
+                $name=(new \ReflectionClass($class))->getName();
+                [$old,$uses]=$row['classes'][$kind]??[$name,0];
+                if ($old!==$name) throw new \TypeError('Incompatible PHP host classes for one shared nominal kind');
+                $row['classes'][$kind]=[$name,$uses+1];
+            }
+            $this->canonical=$row['objects'];self::$shared[$registry]=$row;$this->registry=$registry;
         }
+        public function release(): void {
+            $key=$this->registry;if ($key===null) return;$this->registry=null;
+            foreach ($this->classes as $kind=>$_) if (--self::$shared[$key]['classes'][$kind][1]===0) unset(self::$shared[$key]['classes'][$kind]);
+            if (!self::$shared[$key]['classes']) unset(self::$shared[$key]);
+        }
+        public function __destruct() {$this->release();}
+        private function __clone() {}
+        public function __serialize(): array {throw new \LogicException('Cannot serialize a Zend host binding');}
+        public function __unserialize(array $data): void {throw new \LogicException('Cannot restore a Zend host binding');}
         public function has(mixed $kind): bool {return is_string($kind) && isset($this->classes[$kind]);}
         public function open(): Scope {return new Scope($this);}
         public function capability(string $kind,mixed $value): array {

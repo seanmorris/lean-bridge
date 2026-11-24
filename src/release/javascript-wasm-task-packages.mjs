@@ -111,9 +111,9 @@ export const writeJavaScriptTaskPackages = async options => {
 	const php=options.phpWasm===true;
 	signal?.throwIfAborted(); (php?assertPhpWasmTaskConfiguration:assertJavaScriptTaskConfiguration)(configuration);
 	const {api,evidence,componentIdentity,binary,integrity}=compilation;
-	const hosts=threadedHostSource(projectContract,evidence);
-	if(Boolean(hosts)!==Boolean(configuration.hostImports) || php && hosts) throw new Error("Task host import configuration mismatch");
-	const worker=taskWorkerInterface(api,evidence),abi=javaScriptTaskAbi(worker,componentIdentity,hosts),publicHash=hashBindingIr(api);
+	const hosts=threadedHostSource(projectContract,evidence,php?"php":"javascript"),zend=Boolean(php && hosts);
+	if(Boolean(hosts)!==Boolean(configuration.hostImports)) throw new Error("Task host import configuration mismatch");
+	const worker=taskWorkerInterface(api,evidence),abi=javaScriptTaskAbi(worker,componentIdentity,hosts,zend),publicHash=hashBindingIr(api);
 	if(api.types.some(t=>t.kind==="callback") && (php ? !evidence.selection.phpTaskCallbacks : !evidence.selection.javascriptTaskCallbacks))
 		throw new Error("Retained callback contract does not match the target host");
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
@@ -147,7 +147,8 @@ export const writeJavaScriptTaskPackages = async options => {
 	const profile=abi.profile, runtime=await taskRuntime(mainModule,mainWasm,profile);
 	const coordinate=php?phpTaskCoordinates(api,configuration).npm:componentNpmIdentity(api.component,configuration.targets?.npm);
 	if(coordinate.name==="@lean-bridge/runtime") throw new TypeError("Component cannot replace its shared task runtime");
-	const files=new Map(Object.entries(hosts?generateJavaScriptHostPackage(api,hosts,componentIdentity,{threaded: true}):generateJavaScriptPackage(worker,componentIdentity)));
+	const phpHostBase={"package.json": canonicalJson({type: "module",exports: {".": {types: "./index.d.ts",default: "./index.mjs"}},files: ["index.mjs","index.d.ts","internal","README.md"]})};
+	const files=new Map(Object.entries(zend?phpHostBase:hosts?generateJavaScriptHostPackage(api,hosts,componentIdentity,{threaded: true}):generateJavaScriptPackage(worker,componentIdentity)));
 	const pkg=JSON.parse(files.get("package.json")), metadata=configuration.package ?? {};
 	files.set("package.json",canonicalJson({...pkg
 		, ...coordinate
@@ -163,18 +164,18 @@ export const writeJavaScriptTaskPackages = async options => {
 			, bindingIrSha256: publicHash
 			, componentIdentitySha256: componentIdentity
 			, runtimeIdentity: runtime.runtimeIdentity}}));
-	const descriptor={bindingIr: worker,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity};
+	const descriptor={bindingIr: worker,bindingIrSha256: abi.bindingIrSha256,componentIdentity,integrity,...zend?{zendObjects: true}:{}};
 	if(hosts)
 	{descriptor.hostImports=hosts;files.set("metadata/host-imports.json",projectContract.hostImportsSource);}
 	files.set("internal/runtime.mjs",`import {loadTaskComponent} from "@lean-bridge/runtime";
-${php ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart,resourceClass:component.resourceClass});" : ""}
+${php && !zend ? "const component" : "export const runtime"}=await loadTaskComponent({...${canonicalJson(descriptor).trimEnd()},sideModule:new URL("./component.wasm",import.meta.url)});${php && !zend ? "\nexport const runtime=Object.freeze({invoke:component.invokeWithSynchronousStart,resourceClass:component.resourceClass});" : ""}
 `);
 	files.set("internal/component.wasm",binary);
 	files.set("metadata/compiler.json",canonicalJson(evidence)); files.set("metadata/binding-ir.json",canonicalJson(api));
 	if(projectContract.review) files.set("metadata/review.binding-ir.json",projectContract.review.source);
 	for(const [path,bytes] of captured.files) files.set("notices/"+path,bytes);
 	files.set("notices/lean-bridge.txt",await readFile(new URL("../../LICENSE",import.meta.url)));
-	const composer=php?await attachPhpTaskPackages({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity: runtime.runtimeIdentity}):null;
+	const composer=php?await attachPhpTaskPackages({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity: runtime.runtimeIdentity,hosts}):null;
 	const outputProfile=php?phpWasmTaskProfile:profile;
 	const delivery=archiveSharedJavaScriptPackages({runtime,files,coordinate,profile: outputProfile});
 	const packages=delivery.packages;

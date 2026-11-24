@@ -1,6 +1,6 @@
 /** @file Compile genuine Lean PHP host imports on the ordinary and reviewed Wasm author routes. */
 import assert from "node:assert/strict";
-import {mkdir,mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
+import {mkdir,mkdtemp,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
@@ -15,7 +15,7 @@ import {readTaskInputs} from "../../src/release/javascript-wasm-task-inputs.mjs"
 import {javaScriptTaskAbi} from "../../src/abi/javascript-wasm-tasks.mjs";
 import {phpWasmHostMembers} from "../../src/backends/php/host-members.mjs";
 import {processBuildRunner} from "../../src/build/process-runner.mjs";
-import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
+import {prepareZendAuthorProject} from "./php-wasm-zend-project.mjs";
 
 const diagnostic=e=>[e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n");
 test("PHP-Wasm workers keep the authored Zend contract and cannot directly call a PHP member",async t=>{
@@ -23,25 +23,7 @@ test("PHP-Wasm workers keep the authored Zend contract and cannot directly call 
 	const sdk=env.LEAN_BRIDGE_TEST_TASK_INPUTS?await readTaskInputs(resolve(env.LEAN_BRIDGE_TEST_TASK_INPUTS)):null;
 	if(!keep) t.after(()=>rm(root,{recursive: true,force: true}));
 	if(env.LEAN_BRIDGE_PHP_ZEND_INTERPRETER && !sdk) assert.fail("Executing the Zend helpers requires a verified threaded task SDK");
-	const project=join(root,"source"),configPath=join(project,"lean-bridge.exports.json"),main=join(project,"Workshop.lean");
-	await prepareNativeHostFixture(project,"php");
-	const fixture=resolve("tests/fixtures/php-host-tasks"),source="prelude\n"+await readFile(join(fixture,"Workshop.lean"),"utf8");
-	const cfg=JSON.parse(await readFile(join(fixture,"lean-bridge.exports.json"),"utf8"));
-	const imports=join(project,cfg.hostImports),hosts=JSON.parse(await readFile(imports,"utf8"));
-	const ctor=hosts.declarations.find(d=>d.kind==="constructor");
-	hosts.declarations.push({...ctor
-		, id: ctor.owner+".fromValue"
-		, name: "fromValue"
-		, kind: "static-method"
-		, overloadKey: "Box.fromValue"
-		, documentation: {summary: "Call the PHP class factory.",details: ""}
-		, source: {...ctor.source,declaration: "Box.fromValue"}});
-	await writeFile(imports,canonicalJson(hosts));
-	const lake=join(project,"lakefile.toml");await writeFile(lake,await readFile(lake,"utf8")+'\n[[lean_lib]]\nname = "ZendMembers"\n');
-	cfg.modules.push("ZendMembers");cfg.exports.push(...["makeBox","fromClass","getLevel","setLevel","sameBox","recoverRead"].map(n=>"Workshop."+n));
-	await writeFile(join(project,"ZendMembers.lean"),await readFile(resolve("tests/fixtures/php-wasm-task-owner/ZendMembers.lean")));
-	cfg.targets={"php-wasm": {npm: {name: "@example/php-workshop",version: "1.0.0"},composer: {name: "example/php-workshop",version: "1.0.0"}}};
-	await writeFile(main,source);await writeFile(configPath,canonicalJson(cfg));
+	const {project,configPath,main,source,cfg}=await prepareZendAuthorProject(root);
 	const compile=async label=>{
 		const inventory=await inspectLeanProject(project),component=elaboratedComponent(inventory.project);
 		const src=await openHostProjectSource({project,inventory,component,targets: ["php-wasm"]});
