@@ -65,6 +65,16 @@ test("NuGet uses source-named resource types and unambiguous private CLR accesso
 	}
 	assert.doesNotMatch(files["Api.cs"], /UnsafeAccessor|NativeLibrary|stackalloc/u);
 	await assert.rejects(generateDotnetIO({ api, wire, evidence: { ...evidence, ledgerId: null } }), /resource kind or ledger/u);
+	// The same nominal kind at the wrong stage is not the declared failure.
+	const typed = { ...entries[0], effect: "EIO", error: entries[0].result };
+	const failureWire = generateSyncWire("lbc_lab", [typed], { resources: types });
+	const factory = "error:EIO." + typed.declaration, step = "error:AsyncStep." + typed.declaration;
+	const checked = id => ({ ...api, errors: [factory, step].map(i => ({id: i, payload: typed.error})),
+		declarations: [{ ...api.declarations[0], failure: {errors: [id]} }] });
+	await generateDotnetIO({api: checked(factory), wire: failureWire, evidence});
+	await assert.rejects(generateDotnetIO({api: checked(step), wire: failureWire, evidence}), /resource error stage/u);
+	const shifted = {...failureWire, methods: failureWire.methods.map(m => ({...m, terminal: m.error, error: null}))};
+	await assert.rejects(generateDotnetIO({api: checked(factory), wire: shifted, evidence}), /resource error stage/u);
 });
 test("build .NET resource IO and task handoffs from ordinary and compiler-reviewed Lean", { skip: !build, timeout: 3_600_000 }, async t => {
 	const root = resolve(build);

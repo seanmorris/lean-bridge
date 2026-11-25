@@ -139,6 +139,12 @@ const verifyLeaseSites = (m, d, api, leases) => {
 	const payloads = new Set(d.failure?.errors?.map(id => api.errors.find(e => e.id === id)?.payload?.id).filter(id => byId.has(id)));
 	const errors = new Set([m.error, m.terminal].map(t => leases.get(t)?.id).filter(Boolean));
 	if(errors.size !== payloads.size || [...errors].some(id => !payloads.has(id))) throw new TypeError("Unverified .NET resource error: " + m.declaration);
+	for(const [stage, shape] of [["EIO", m.error], [m.delivery === "iterator" ? "Step" : "AsyncStep", m.terminal]])
+	{
+		const id = "error:" + stage + "." + m.declaration;
+		const expected = d.failure?.errors.includes(id) ? byId.get(api.errors.find(e => e.id === id)?.payload?.id) : undefined;
+		if(expected !== leases.get(shape)) throw new TypeError("Unverified .NET resource error stage: " + m.declaration);
+	}
 };
 const callbackSetup = (m, codecs, bound) => {
 	const {type,args,decode}=codecs;
