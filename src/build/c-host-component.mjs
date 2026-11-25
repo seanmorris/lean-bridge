@@ -24,7 +24,7 @@ export const compileCHostComponent=async o=>{
 	const target=o.target==="cargo"?"rust":o.target??"c",cpp=target==="cpp",rust=target==="rust",lang=cpp?"Cpp":rust?"Rust":"C";
 	const requested=Boolean(contract?.taskExports?.length || contract?.asyncIterators?.length);
 	const workers=o.workerTransport===true && requested;
-	const publicWorkers=workers && o.publicWorkers===true && target==="c";
+	const publicWorkers=workers && o.publicWorkers===true && !rust;
 	if(!["cpp","c","rust"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
 		|| (requested!==workers) || contract.leanResources.length)
 		throw new TypeError("Expected synchronous application-owned C host imports");
@@ -43,11 +43,13 @@ export const compileCHostComponent=async o=>{
 	const domainInputs=["dotnet/host-domain.c","dotnet/host-domain.h","dotnet/host-frame.h",...rust?["rust/host-owner-cookie.c"]:["c/host-registry.h","c/host-registry.c"]];
 	if(cpp) domainInputs.push("cpp/host-shared.cpp","cpp/host-shared.hpp");
 	const support={};
-	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h"]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
+	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h",...cpp?["cpp/host-worker-readiness.h","cpp/host-async.hpp","cpp/task-callback.hpp","cpp/task-loop.hpp","cpp/task-routine.hpp","cpp/task-values.hpp"]:[]]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
 	{
 		const bytes=await readFile(new URL("../backends/"+f,import.meta.url));
 		hashes[f]=sha256(bytes); await save(f.split("/").at(-1),bytes);
 		if(cpp && ["cpp/host-binding.hpp","cpp/sync-values.hpp"].includes(f)) support["lean_bridge/sync_v1/"+f.slice(4)]=bytes;
+		if(cpp && f==="cpp/host-async.hpp") support["lean_bridge/host_async_v1/host-async.hpp"]=bytes;
+		if(cpp && f.startsWith("cpp/task-") && f.endsWith(".hpp")) support["lean_bridge/async_v2/"+f.slice(4)]=bytes;
 	}
 	const frame=await wordHostFrame(target); hashes.frame=sha256(frame); await save("host-frame.c",frame);
 	let abi=null;
@@ -75,7 +77,7 @@ export const compileCHostComponent=async o=>{
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
 	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp,...publicWorkers?{domainId,workerWire:kernel.wire,workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
-	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi});
+	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi,...publicWorkers?{workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
 		domainId

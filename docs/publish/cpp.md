@@ -60,8 +60,12 @@ receipt. The consumer uses the actual class as a template argument: a
 constructor uses `std::make_shared`, a method calls the declared member, and
 a property calls its named getter or setter. See [the consumer example](../consume/cpp.md#pass-application-objects-to-lean).
 The archive records the producing libstdc++ ABI and its header checks
-compatibility at compile time. This is a synchronous profile; a plain `IO`
-entry does not return a future.
+compatibility at compile time. A plain `IO` entry does not return a future.
+To return a task or cursor on the same binding, select it in `taskExports` or
+`asyncIterators`. The generated C++20 member returns a future or a pull stream
+and the archive includes the dispatcher headers. A Lean worker may carry an
+imported object; call its C++ operations in an owner-thread callback, not from
+the Lean worker thread. See [awaiting work on an application object](../consume/cpp.md#await-work-on-an-application-object).
 
 When a member returns a borrowed object, set its result ownership to
 `borrow` and name the owner: `{ "scope": "receiver", "anchor": "receiver" }`

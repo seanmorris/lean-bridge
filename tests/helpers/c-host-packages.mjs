@@ -14,7 +14,7 @@ import {addStaticWorkerJobs} from "./static-worker-project.mjs";
 const cpp=process.env.LEAN_BRIDGE_CPP_HOST_TEST==="1",target=cpp?"cpp":"c",label=cpp?"C++":"C";
 const workers=process.env.LEAN_BRIDGE_C_HOST_WORKERS==="1";
 const variable="LEAN_BRIDGE_"+target.toUpperCase()+"_HOST_"+(workers?"WORKER_":""),replay=process.env[variable+"REPLAY"];
-const success=workers?/installed C workers: identity, callbacks, errors and cleanup/u:cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u;
+const success=workers?(cpp?/installed C\+\+ bound futures and streams/u:/installed C workers: identity, callbacks, errors and cleanup/u):cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u;
 test(label+(replay?" retained host archives replay without Lean":" offline CLI publishes ordinary and reviewed packages sharing one owner"),{timeout: 3600000},async t=>{
 	const env=process.env,root=await mkdtemp(join(tmpdir(),"c-host-publisher-"));
 	t.after(()=>rm(root,{recursive: true,force: true}));
@@ -26,7 +26,7 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 		await mkdir(tools);
 		await run("npm",["install","--offline","--prefix",tools,"--ignore-scripts","--no-audit","--no-fund","--cache",join(root,"cache"),candidate.archive],root,env);
 	}
-	const cli=join(tools,"node_modules/.bin/lean-bridge"),prefixes={},reports=[];
+	const cli=join(tools,"node_modules/.bin/lean-bridge"),prefixes={},manifests={},reports=[];
 	let review=null;
 	for(const route of ["ordinary","peer","reviewed",...replay?[]:["rejected"]])
 	{
@@ -91,13 +91,16 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 		{
 			assert.equal(ev.selection.staticTaskOwner,target);assert.match(manifest.workerLedger,/^liblb_task_resources_[a-f0-9]{64}\.so$/u);
 			const stdout=await run("nm",["-D","--defined-only",join(dest,"lib",manifest.library)],dest,env);
-			assert.match(stdout,/\b(?:workshop|peer)_relay_start\b/u);assert.doesNotMatch(stdout,/\b(?:lbwire_|lbc_|lb_c_host_)/u);
+			assert.match(stdout,cpp?/\blb_cpp_detail_[a-f0-9]+_relay_start\b/u:/\b(?:workshop|peer)_relay_start\b/u);assert.doesNotMatch(stdout,/\b(?:lbwire_|lbc_|lb_(?:c|cpp)_host_)/u);
+			assert.ok(manifest.files["lib/"+manifest.workerLedger]);
+			assert.ok(manifest.files["share/lean-bridge/generated-workers.lean"]);
+			if(cpp){assert.equal(manifest.cppTaskSupportAbi,2);assert.ok(manifest.files["include/lean_bridge/host_async_v1/host-async.hpp"]);}
 		}
 		for(const [path,expected] of Object.entries(manifest.files))
 		{
 			const bytes=await readFile(join(dest,path)); assert.equal(bytes.length,expected.bytes); assert.equal(sha256(bytes),expected.sha256);
 		}
-		prefixes[route]=dest;reports.push({route,receipt: result.receiptSha256,archive: pkg.artifacts[0].sha256});
+		manifests[route]=manifest;prefixes[route]=dest;reports.push({route,receipt: result.receiptSha256,archive: pkg.artifacts[0].sha256});
 	}
 	if(!replay) await rm(tools,{recursive: true});
 	const client=join(root,"consumer"); await mkdir(client);
@@ -105,8 +108,8 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 	await copyFile(resolve("tests/fixtures/c-host-members",main),join(client,main));
 	if(workers)
 	{
-		await rename(join(client,main),join(client,"sync-owners.c"));
-		await copyFile("tests/fixtures/static-host-workers/consumer.c",join(client,main));
+		if(!cpp)await rename(join(client,main),join(client,"sync-owners.c"));
+		await copyFile(join("tests/fixtures/static-host-workers",main),join(client,main));
 	}
 	for(const route of ["ordinary","reviewed"])
 	{
@@ -126,7 +129,9 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 					if(!m) continue;
 					const path=await realpath(m[2]); assert.ok(dirs.some(d=>path.startsWith(d+"/lib/")),path); names.push(m[1]);
 				}
-				assert.equal(names.length,workers?6:5,"unexpected installed native library graph: "+names);
+				const m=manifests[route],peer=manifests.peer;
+				assert.equal(m.hostDomain,peer.hostDomain);assert.equal(m.workerLedger,peer.workerLedger);
+				assert.deepEqual(names.sort(),[m.library,peer.library,m.hostDomain,...workers?[m.workerLedger]:[],"liblean_bridge_native.so","libleanshared.so"].sort());
 			};
 			await loaded(bin);
 			assert.match(await run(bin,[],client,isolated),success);

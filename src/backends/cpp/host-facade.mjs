@@ -2,6 +2,7 @@
 import {cIdentifier,cKeywords} from "../c/generate.mjs";
 import {hostDeclarationName} from "../../abi/host-member-names.mjs";
 import {cppHostCodecs} from "./host-codecs.mjs";
+import {cppHostWorkers} from "./host-worker-api.mjs";
 
 const id=s=>cKeywords.has(s)?s+"_":s;
 const bigSupport=[
@@ -46,9 +47,15 @@ export const cppHostFacade=o=>{
 			+(borrowed?"if(!hd::anchored(value,anchor)) return UINT32_MAX; ":"")
 			+(unit?"":r.write("value","*out"))+" return 0; } catch(...) { return UINT32_MAX; } }");
 	}
+	const names=new Set(["close","binding","require","state","pin","share","reset","methods","frame","check","limbs","read_integer","write_integer","dispose","release_types",
+		...o.workerEntries?.length?["worker_check"]:[],...classes.flatMap((_,i)=>["pin"+i,"share"+i]),...model.members.map((_,i)=>"member"+i)]);
+	for(const e of [...entries,...o.workerEntries??[]]){
+		const n=id(cIdentifier(e.name));
+		if(names.has(n)) throw new TypeError("C++ binding member name is reserved: "+n);
+		names.add(n);
+	}
 	const exports=entries.map(e=>{
-		const name=cIdentifier(e.name),reserved=new Set(["close","binding","require","state","pin","share","reset","methods","frame","check","limbs","read_integer","write_integer"]);
-		if(reserved.has(name)) throw new TypeError("C++ binding member name is reserved: "+name);
+		const name=cIdentifier(e.name);
 		const args=e.parameters.map(t=>ref(t.type,name+"_arg")),value=ref(e.result,name+"_value"),error=e.effect==="EIO"?ref(e.error,name+"_failure"):null;
 		const unit=value.n==="unit",guard=(v,n)=>v.clear(n)?"hd::Finally "+n+"_end([&]{ "+v.clear(n)+" });":"";
 		return (unit?"void":value.type)+" "+id(name)+"("+args.map((a,j)=>"const "+a.type+"& v"+j).join(",")+") const {\n"
@@ -62,11 +69,14 @@ export const cppHostFacade=o=>{
 			+"check(rc); "+(unit?"return;":"return "+value.read("value")+";")+"\n}";
 	});
 	const stdlib=Object.entries(abi).map(([k,v])=>"!defined("+k+") || "+(k==="__GLIBCXX__"?k+" < "+v:k+" != "+v)).join(" || ");
+	const workers=o.workerEntries?.length?cppHostWorkers({entries:o.workerEntries,ir,p,ref,id}):[];
+	const async=workers.length>0;
 	const guard="LB_CPP_BINDING_"+identity.toUpperCase(), ns=id(cIdentifier(o.name));
 	return [
 		"#ifndef "+guard
 		, "#define "+guard
 		, "#include <lean_bridge/sync_v1/host-binding.hpp>"
+		, ...async?["#include <lean_bridge/host_async_v1/host-async.hpp>"]:[]
 		, ...integers()?["#include <boost/multiprecision/cpp_int.hpp>"]:[]
 		, "#if "+stdlib
 		, '#error "C++ host package needs its compatible Linux libstdc++ ABI"'
@@ -78,19 +88,21 @@ export const cppHostFacade=o=>{
 		, "int "+owner+"bind_type(const char*,const std::type_info*) noexcept;"
 		, "int "+owner+"unbind_type(const char*,const std::type_info*) noexcept;","}"
 		, "namespace lean_bridge::"+ns+" { namespace sv=::lean_bridge::sync_v1; namespace hd=sv::host_detail;"
+		, ...async?["namespace av=::lean_bridge::async_v2; namespace ha=::lean_bridge::host_async_v1;"]:[]
 		, "template<"+classes.map(T=>"class "+T).join(",")+"> class Binding {"
-		, "struct State : hd::Pending { "+p+"binding binding{}; hd::Frame *frame=nullptr; size_t claimed=0; bool open=false; };"
+		, "struct State"+(async?" final":"")+" : hd::Pending"+(async?", av::detail::Deferred":"")+" { "+p+"binding binding{}; hd::Frame *frame=nullptr; size_t claimed=0; bool open=false; "+(async?"bool closing=false; ha::Group jobs; av::detail::Loop& loop=av::detail::Loop::main(); void deliver() noexcept override { dispose(this); }":"")+"};"
 		, "std::shared_ptr<State> state;"
 		, "static void check("+p+"status rc) { switch(rc) {case "+p+"OK:return; case "+p+"INVALID:throw std::invalid_argument(\"invalid C++ host value\"); case "+p+"STALE:throw sv::Closed{}; case "+p+"LIMIT:throw std::length_error(\"C++ host budget\"); case "+p+"BUSY:throw sv::Busy{}; default:throw sv::Unavailable{};} }"
 		, "static void release_types(State& s) noexcept { while(s.claimed) switch(--s.claimed) { "+classes.map((T,i)=>'case '+i+': (void)'+owner+'unbind_type('+keys[i]+',&typeid('+T+')); break;').join(" ")+" } }"
-		, "static void dispose(hd::Pending *ptr) noexcept { auto *s=static_cast<State*>(ptr); if(s->open && "+p+"close(&s->binding)!="+p+"OK) return; release_types(*s); delete s; }"
-		, "std::shared_ptr<State> require() const { hd::drain(); if(!state || !state->open) throw sv::Closed{}; if(state->pid!=getpid()) throw sv::WrongContext{}; return state; }"
+		, "static void dispose(hd::Pending *ptr) noexcept { auto *s=static_cast<State*>(ptr); "+(async?"s->closing=true; s->jobs.close(); ":"")+"if(s->open && "+p+"close(&s->binding)!="+p+"OK) return; release_types(*s); delete s; }"
+		, "std::shared_ptr<State> require() const { hd::drain(); if(!state || !state->open) throw sv::Closed{}; if(state->pid!=getpid()) throw sv::WrongContext{}; "+(async?"if(state->closing) throw sv::Busy{}; ":"")+"return state; }"
 		, ...adapt,...integers()?[bigSupport]:[],...handlers
-		, "public: Binding() { hd::drain(); auto *raw=new State{}; raw->dispose=&dispose; state=std::shared_ptr<State>(raw,[](State *s){ hd::retire(s); });"
+		, ...async?["static void worker_check("+p+"status rc){ switch(rc){case "+p+"OK:return;case "+p+"CANCELLED:throw av::Cancelled{};case "+p+"CALLBACK_CLOSED:throw av::CallbackClosed{};case "+p+"STALE:throw av::Closed{};case "+p+"BUSY:throw av::Busy{};case "+p+"UNAVAILABLE:throw av::Unavailable{};default:check(rc);}}"]:[]
+		, "public: Binding() { hd::drain(); auto *raw=new State{}; raw->dispose=&dispose; state=std::shared_ptr<State>(raw,[](State *s){ "+(async?"if(s->loop.local())s->deliver();else if(s->loop.same_process())s->loop.post(*s);":"hd::retire(s);")+" });"
 		, ...classes.map((T,i)=>"hd::registry("+owner+"bind_type("+keys[i]+",&typeid("+T+"))); ++state->claimed;")
 		, p+"hosts methods{}; "+table.join(" ")+" check("+p+"with_hosts(&methods,state.get(),&state->binding)); state->open=true; }"
 		, "Binding(const Binding&)=delete; Binding& operator=(const Binding&)=delete; Binding(Binding&&) noexcept=default; Binding& operator=(Binding&&) noexcept=default;"
-		, "void close() { if(!state) return; auto s=require(); check("+p+"close(&s->binding)); s->open=false; release_types(*s); state.reset(); }"
-		, ...exports,"}; }","#endif",""
+		, "void close() { if(!state) return; auto s=require(); "+(async?"if(s->frame) throw sv::Busy{}; s->closing=true; hd::Finally restore([&]{s->closing=false;}); s->jobs.close(); ":"")+"check("+p+"close(&s->binding)); s->open=false; release_types(*s); state.reset(); }"
+		, ...exports,...workers,"}; }","#endif",""
 	].join("\n");
 };

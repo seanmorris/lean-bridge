@@ -34,6 +34,7 @@ export const cHostWorkers=(o,api)=>{
 	const declOpaque=name=>{
 		reserve(name);defs.push("typedef struct { uint64_t _private[2]; } "+p+name+";");
 	};
+	if(o.cpp)priv.push('#include "host-worker-readiness.h"');
 	const unpack=(v,target,bad)=>`if(q.out[3]!=(uint64_t)(${v.wireTag})){ ${bad} } ${v.unpack(target,"q.out",()=>bad)} q.out[3]=0;`;
 	const internal="lean_bridge_native_runtime_retire();s="+p+"UNAVAILABLE;goto done;";
 	const asArg=(v,exp)=>v.dyn?"("+v.arg+"){"+exp+".data,"+exp+".len"+(v.integer?","+exp+".negative":"")+"}":exp;
@@ -104,6 +105,8 @@ done: lw_discard(q.out); ${v.clear("arg")} ${r.clear("reply")} LBW(diagnostic_cl
     ${e.effect==="IO"&&!cb.length?"else if(rc==4){"+io+"}":""}
 done:lw_discard(q.out);lw_end(j);if(s)lw_finish(j);return s;`);
 		add(name+"_poll",p+"status",h+" handle, int *fd","return lw_poll(&"+ops+",handle._private,fd);");
+		if(o.cpp && cb.length)for(const [suffix,callback] of [["interest",0],["callback_fd",1]])
+			add(name+"_"+suffix,p+"status",h+" handle, int *fd","return lcpp_watch(&"+ops+",handle._private,fd,"+callback+");");
 		add(name+"_close",p+"status",h+" *handle","return handle?lw_close(&"+ops+",handle->_private):LBW(INVALID);");
 		if(stream)add(name+"_pull",p+"status",h+" handle",`lw_job *j=NULL;lw_status s=lw_lookup(&${ops},handle._private,&j);if(s || (s=lw_begin(j)))return s;
     lw_call q={0};s=lw_status_of(lw_run(j,&q,LW_PULL));lw_end(j);if(j->cancel){lw_finish(j);return LBW(CANCELLED);}return s;`);

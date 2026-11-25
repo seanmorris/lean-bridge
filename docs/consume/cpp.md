@@ -137,10 +137,28 @@ invalid reply makes further Lean calls unavailable. The [two-class
 client](../../tests/fixtures/cpp-host-anchors/client.cpp) exercises both cases.
 
 Call or explicitly close the binding on the process main thread. Destroying
-a binding on another thread queues its cleanup for the next owner-thread
+a synchronous-only binding on another thread queues its cleanup for the next owner-thread
 entry; call `lean_bridge::sync_v1::drain_host_closes()` there if no more
 calls are expected. Link the package's CMake target or pkg-config name;
 both include the matching reference registry and Lean runtime.
+
+### Await work on an application object
+
+When the package exports a task on its binding, pass your `shared_ptr` as
+usual. Await the result in a coroutine, or call `.get()` on the main thread.
+In the [two-package example](../../tests/fixtures/static-host-workers/consumer.cpp),
+`auto same = co_await workshop.echo(meter);` returns the same meter and control
+block. A retained callback takes and returns ordinary C++ values. It runs on
+the binding thread and may call a peer binding. If Lean propagates a callback's
+`std::exception`, the future rethrows the original exception, not a copy of its
+message. A nonstandard thrown object retires the runtime.
+
+Call `.next()` on a stream to request one item. It returns a future of
+`std::optional<T>`; an empty optional means normal completion. Stop early with
+`.close()`. Closing the binding cancels its outstanding operations without
+closing other bindings. Dropping a worker-enabled binding on another thread
+queues its cleanup on the coroutine dispatcher; `.get()` pumps it, or your main
+loop can call `lean_bridge::async_v2::run_one(0)`. See the [installed C++ worker checks](../evidence/static-host-workers-20261125.md#installed-c20-futures-and-streams-on-application-objects).
 
 ## Await a task or pull a stream
 
