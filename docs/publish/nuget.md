@@ -124,8 +124,20 @@ The prepared archive includes the managed assembly, compiled component,
 runtime, licenses and package receipt. See [calling the installed package](../consume/dotnet.md#call-synchronous-io).
 The [offline install results](../evidence/dotnet-sync-io-20261122.json) identify the
 ordinary and reviewed archives and record the matching public interface digest.
-Use the task profile below for task factories and iterators. Both profiles
+Use the task profile below for task factories and asynchronous iterators. Both profiles
 accept [explicit Lean resources](#export-a-shared-lean-resource).
+
+For a synchronous pull, select its factory in `exports` and register its
+three Lean declarations under `iterators`:
+
+```json
+"iterators": [{"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"}]
+```
+
+The [Dials source](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+returns an immediate optional item from each pull. Its close operation writes
+a file, so the fixture also declares `nativeEffects: ["filesystem"]`. Consumers
+use [ordinary C# iteration](../consume/dotnet.md#pull-items-synchronously).
 
 ## Export tasks and pull streams
 

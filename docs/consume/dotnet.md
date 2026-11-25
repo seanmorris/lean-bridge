@@ -84,6 +84,28 @@ and loads the matching native runtime; no scheduler or interop setup is
 needed. See [how to export this API](../publish/nuget.md#export-synchronous-io)
 and the [installed results for both load orders](../evidence/dotnet-sync-io-20261122.json).
 
+### Pull items synchronously
+
+Use ordinary `foreach` for an immediate Lean iterator. For example, the Dials
+package opens a cursor on the process main thread and pulls one value each
+time the loop advances:
+
+```csharp
+using System;
+using LeanBridge.Dials;
+
+foreach (var n in Api.Sequence(4)) {
+    Console.WriteLine(n);
+    if (n == 1) break;
+}
+```
+
+`break`, exhaustion, and leaving the loop through an exception close the
+cursor. Use `using var cursor = Api.Sequence(4);` if you call `MoveNext()`
+yourself. The cursor is single-pass. If its item is an owned resource,
+reading `Current` transfers that lease to you; dispose the item separately.
+No `await` or event loop is involved. See the [installed C# checks](../evidence/native-sync-iterators-20261125.md#net).
+
 ### Let Lean call your C# class
 
 Some packages import a class that your application implements. The package

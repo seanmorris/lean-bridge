@@ -12,6 +12,22 @@ import { cHostCallbacks } from "./task-host-callback.mjs";
 const baseStatuses = "OK PENDING END TYPED_ERROR IO_ERROR INVALID CLOSED BUSY IDLE WRONG_CONTEXT UNAVAILABLE NO_MEMORY LIMIT".split(" ");
 const qualified = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
 
+// The CLR runs its managed shutdown event on a foreign thread. Normal
+// process return runs libc exit handlers on the original native owner. This
+// list belongs to a standalone component (no callbacks into managed code).
+const clrCursorExit = `
+static int lb_cursor_exit_armed;
+static void lb_cursor_exit(void) {
+    if (!lb_context()) return;
+    while (lb_entries && !lb_entries->pulling) lb_drop(lb_entries);
+}
+static int lb_arm_cursor_exit(void) {
+    if (!lb_cursor_exit_armed && atexit(lb_cursor_exit)) return 0;
+    lb_cursor_exit_armed = 1;
+    return 1;
+}
+`;
+
 /**
  * Give each declaration a distinct handle type and reject stale or foreign IDs at runtime.
  *
@@ -21,6 +37,8 @@ export const generateCTaskExports = options => {
 	const { name, modules, entries, componentIdentity } = options;
 	const synchronous = options.synchronousIO === true;
 	const directCursors = entries.some(e => e.delivery === "iterator");
+	const clrExit = options.dotnetCursorExit===true;
+	if(clrExit && (!synchronous || !directCursors || options.wasmTasks || options.dotnetHostKinds?.length)) throw new TypeError("CLR cursor exit requires standalone direct cursors");
 	if(directCursors && !synchronous) throw new TypeError("Immediate cursors require a synchronous C delivery contract");
 	if(!/^[a-z][a-z0-9]*(?:[-_.][a-z0-9]+)*$/u.test(name) || !/^[0-9a-f]{64}$/u.test(componentIdentity)
 		|| !modules?.length || !modules.every(m => qualified.test(m))
@@ -155,7 +173,7 @@ export const generateCTaskExports = options => {
     ${args.some(a => a.buffer) ? "size_t budget = 0;" : ""}
     ${checkedArgs}
     LB(status) s = lb_prepare(); if (s != LB(OK)) return s;${args.flatMap((a, k) => a.bind ? ["\n    " + a.bind(`v${k}`)] : []).join("")}
-    ${handle ? `lb_entry *owner; s = lb_reserve(${i}, &owner); if (s != LB(OK)) return s;` : ""}
+    ${direct && clrExit ? "if (!lb_arm_cursor_exit()) return LB(UNAVAILABLE);\n    " : ""}${handle ? `lb_entry *owner; s = lb_reserve(${i}, &owner); if (s != LB(OK)) return s;` : ""}
     lean_object *io = ${entry}(${args.map((a, k) => a.argument(`v${k}`)).join(", ")});
     if (!lean_io_result_is_ok(io)) s = lb_io_failure(io, ${ioError ? "io_error" : "NULL"});
     else {
@@ -259,7 +277,7 @@ ${wasm && retained ? "#include <pthread.h>\n#define LB_WASM_CALLBACK_PORT 1\n#de
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
 ${wasmHost?"#define LB_WASM_HOST_ERRORS 1\n":""}#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
-${values.bodies.join("\n")}
+${clrExit ? clrCursorExit : ""}${values.bodies.join("\n")}
 ${host ? '#include "task-host-callback.h"\n' + host.helpers.join("\n") : ""}
 ${functions.join("\n")}
 `;

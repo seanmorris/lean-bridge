@@ -77,6 +77,7 @@ export const buildCTaskPackage = async options => {
 		if(jvm && !synchronous) config.jvmDelivery = true;
 		if(perl && !synchronous) config.perlDelivery = true;
 		if(php && !synchronous) config.phpDelivery = true;
+		if(dotnet && synchronous && entries.some(e=>e.delivery==="iterator")) config.dotnetCursorExit = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
 		const wire = (ruby || dotnet || jvm || perl || php) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
 		const phpSurface = synchronous ? compilePhpSyncSurface : compilePhpTaskSurface;

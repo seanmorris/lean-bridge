@@ -194,3 +194,28 @@ callbacks and scopes.
 Run `LEAN_BRIDGE_IMMEDIATE_TARGET=cpan npm run test:native-immediate-cursor`.
 Set `LEAN_BRIDGE_PERLS` to a JSON array of absolute Perl paths. These local
 Linux x86-64 builds used the test-only glibc 2.36 floor.
+
+## .NET
+
+The [offline NuGet test](../../tests/helpers/native-immediate-dotnet.mjs)
+checked the restored archive against its receipt, built a .NET 8 client,
+removed its sources, feed and package cache, and ran the relocated application
+without author tools. Both ordinary and reviewed Lean source passed:
+
+| Ordinary package-set receipt | Reviewed package-set receipt |
+| --- | --- |
+| `9eea730773078fc672d0a7d33edf098d023578eef89ac3e093247391584fddb3` | `3c1b66ae0730aa7cf389a31e10b6edd219adae85f7743a32c5474265a4d23296` |
+
+The [C# client](../../tests/fixtures/native-immediate-cursor/InstalledCursor.cs)
+recorded seven opens, eleven pulls and seven closes. It exercised exhaustion,
+early exit, the caller's original exception, a wrong-thread pull, and an
+abandoned cursor reclaimed on the next owner call. A separate process exited
+normally with a live cursor; its parent observed the finalizer's file.
+Constructor EIO, typed step failure and IO step failure identified their own
+Lean declarations. A yielded ticket and an error carrying that ticket had
+independent leases. Closing without reading a prefetched ticket released it;
+the runtime ended with zero live identities.
+
+Run `LEAN_BRIDGE_IMMEDIATE_TARGET=nuget npm run test:native-immediate-cursor`
+with the .NET 8 SDK selected by `LEAN_BRIDGE_DOTNET`. This checks direct pulls
+on Linux x86-64, not asynchronous cancellation or forced process termination.

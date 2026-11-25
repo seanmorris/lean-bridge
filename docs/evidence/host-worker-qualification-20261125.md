@@ -125,8 +125,10 @@ leases for a resource item and a declared step error. The [threaded and
 unthreaded Perl clients](native-sync-iterators-20261125.md#perl) exercised
 both source routes with no event loop. [Five installed npm clients](javascript-immediate-iterators-20261125.md)
 add Node JavaScript, Node TypeScript, browser JavaScript, React, and browser
-workers. That gives **14 of 17** locally exercised direct iterator profiles.
-The remaining three are .NET, PHP-Wasm, and WIT/WASI.
+workers. The [installed .NET client](native-sync-iterators-20261125.md#net)
+pulls directly and disposes unread owned items. That gives **15 of 17**
+locally exercised direct iterator profiles on both routes. PHP-Wasm and
+WIT/WASI remain.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
 starts with constructed IR; it cannot stand in for an installed source package
 on another profile. Check each profile for one pull per demand, value versus

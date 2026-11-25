@@ -146,6 +146,33 @@ const verifyLeaseSites = (m, d, api, leases) => {
 		if(expected !== leases.get(shape)) throw new TypeError("Unverified .NET resource error stage: " + m.declaration);
 	}
 };
+const verifyDirectCursor = (d, m, i, wire, api, leases) => {
+	const ext=d.source.extensions, p=ext?.["lean-bridge.dev/pull-protocol"], step=ext?.["lean-bridge.dev/pull-effect"];
+	const byId=new Map([...leases].map(([word,lease])=>[lease.id,word]));
+	const fail=()=>{throw new TypeError("Unverified .NET immediate pull: "+m.declaration);};
+	const shape=ref=>ref?.kind==="primitive" && Object.hasOwn(primitive,ref.name)?ref.name
+		:ref?.kind==="named" && byId.has(ref.id)?byId.get(ref.id)
+			:ref?.kind==="apply" && ref.constructor==="result" && ref.arguments?.length===2?ref.arguments.map(shape):fail();
+	const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+	const required=[];
+	const error=(effect,phase)=>{
+		if(!["EIO","IO"].includes(effect)) return null;
+		const id=phase==="open" ? effect==="IO"?"error:IO.Error":"error:EIO."+m.declaration : "error:Step."+m.declaration;
+		required.push(id);
+		const e=api.errors.find(o=>o.id===id);
+		if(e?.category!=="domain" || (effect==="IO" && e.payload!==null)) fail();
+		return effect==="IO"?"string":shape(e.payload);
+	};
+	const depth=t=>Array.isArray(t)?1+Math.max(...t.map(depth)):0;
+	if(d.name!==m.name || p?.open!==m.declaration || p?.next!==m.stepDeclaration || !p?.close || !["BaseIO","IO","EIO"].includes(step)
+		|| Boolean(m.stepIO)!==(step==="IO") || ext["lean-bridge.dev/step-failure"]!==(step==="IO"?"IO.Error":undefined)
+		|| m.effect!==ext["lean-lang.org/effect"] || d.effects.includes("async") || d.failure.unexpected!=="poison-runtime"
+		|| !same(m.args,d.parameters.map(arg=>shape(arg.type))) || !same(m.result,shape(d.result.type))
+		|| !same(m.error,error(m.effect,"open")) || !same(m.terminal,error(step,"next")) || !same(d.failure.errors,required)
+		|| m.tagBytes!==Math.max(1,depth(m.result),depth(m.error),depth(m.terminal))
+		|| m.symbol!==wire.clear.slice(0,-6)+"_"+i || Object.keys(m.names??{}).sort().join()!=="close,next,open"
+		|| ["open","next","close"].some(op=>m.names[op]!==m.symbol+"_"+op)) fail();
+};
 const callbackSetup = (m, codecs, bound) => {
 	const {type,args,decode}=codecs;
 	const ns = ["callbacks", "next", "arg", "reply", "fail", "trap"].map(k => {
@@ -175,18 +202,19 @@ const callbackSetup = (m, codecs, bound) => {
 const taskMethod = options => {
 	const { m, i, params, argTypes, signature, method, runtimeClass, assembly, wire, codecs, bound } = options;
 	const { type, args, decode, keep, drain } = codecs;
-	const value = type(m.result), stream = m.delivery === "async-iterator", call = params.map(n => "@" + n).join(", ");
+	const direct = m.delivery === "iterator";
+	const value = type(m.result), stream = direct || m.delivery === "async-iterator", call = params.map(n => "@" + n).join(", ");
 	let token = "cancellationToken";
 	while(params.includes(token)) token += "_";
-	const output = stream ? `global::System.Collections.Generic.IAsyncEnumerable<${value}>`
+	const output = direct ? `global::${assembly}.LeanCursor<${value}>` : stream ? `global::System.Collections.Generic.IAsyncEnumerable<${value}>`
 		: "global::System.Threading.Tasks.Task" + (m.result === "unit" ? "" : `<${value}>`);
 	const publicArgs = [signature, ...stream ? [] : ["global::System.Threading.CancellationToken " + token + " = default"]].filter(Boolean).join(", ");
 	const binder=bound?`new ${runtimeClass}.BoundWorker(this.Binding,this.scope)`:"";
 	const invocation=[binder,call].filter(Boolean).join(", ");
 	const factory=`() => ${runtimeClass}.Port${i}${bound?.g??""}(${invocation})`;
 	const make=bound && stream?`this.scope.Defer(${factory})`:factory;
-	const delivery=`global::${assembly}.Delivery<${value}>.${stream?"Sequence":"Value"}(${make}${stream?"":", "+token}${bound?", this.scope.Track":""})`;
-	const pub = `    /// <summary>${stream ? "Pull items from" : "Await"} ${m.declaration} on the Lean owner loop.</summary>
+	const delivery=direct ? `${runtimeClass}.Port${i}(${call})` : `global::${assembly}.Delivery<${value}>.${stream?"Sequence":"Value"}(${make}${stream?"":", "+token}${bound?", this.scope.Track":""})`;
+	const pub = `    /// <summary>${stream ? "Pull items from" : "Await"} ${m.declaration} ${direct?"synchronously":"on the Lean owner loop"}.</summary>
     public ${bound?"":"static "}${output} ${method}(${publicArgs}) => ${bound?`this.scope.Invoke(() => ${delivery})`:delivery};`;
 	const name = JSON.stringify;
 	const cb = m.callbacks?.length && callbackSetup(m,codecs,bound);
@@ -202,13 +230,13 @@ ${cb.cases.join("\n")}
         });
         return new(h =>` : " =>\n        new(h =>";
 	const formals=[...bound?["BoundWorker binding"]:[],...argTypes.map((t,j)=>t+" v"+j)];
-	const impl = `    internal static Port<${value}> Port${i}${bound?.g??""}(${formals.join(", ")})${bound?" "+bound.constraints:""}${construct}${bound?" binding.Visit(() =>":""}
+	const impl = `    internal static ${direct?output:"Port<"+value+">"} Port${i}${bound?.g??""}(${formals.join(", ")})${bound?" "+bound.constraints:""}${construct}${bound?" binding.Visit(() =>":""}
         {
             ${drain ? drain + "\n            " : ""}using var frame = new Frame();
             ulong* input = stackalloc ulong[${Math.max(1, m.args.length * 3)}];
             new global::System.Span<ulong>(input, ${Math.max(1, m.args.length * 3)}).Clear();
             ${m.args.flatMap((t, j) => t === "callback" ? [] : [args(t, "v" + j, j)]).join("\n            ")}
-            var fn = (delegate* unmanaged[Cdecl]<ulong*, ulong*, ulong*, byte*, int>)Symbol(${name(m.names.start)});
+            var fn = (delegate* unmanaged[Cdecl]<ulong*, ulong*, ulong*, byte*, int>)Symbol(${name(direct?m.names.open:m.names.start)});
             var clear = (delegate* unmanaged[Cdecl]<ulong*, void>)Symbol(${name(wire.clear)});
             ulong* output = stackalloc ulong[4]; new global::System.Span<ulong>(output, 4).Clear();
             byte* tags = stackalloc byte[${m.tagBytes}];
@@ -222,7 +250,7 @@ ${cb.cases.join("\n")}
             finally { clear(output);${keep(m)} }
         }${bound?")":""}, h =>${bound?` binding.Visit<(bool,${value})>(() =>`:""}
         {
-            var fn = (delegate* unmanaged[Cdecl]<ulong*, ulong*, byte*, int>)Symbol(${name(m.names.take)});
+            var fn = (delegate* unmanaged[Cdecl]<ulong*, ulong*, byte*, int>)Symbol(${name(direct?m.names.next:m.names.take)});
             var clear = (delegate* unmanaged[Cdecl]<ulong*, void>)Symbol(${name(wire.clear)});
             ulong* output = stackalloc ulong[4]; new global::System.Span<ulong>(output, 4).Clear();
             byte* tags = stackalloc byte[${m.tagBytes}];
@@ -235,11 +263,11 @@ ${cb.cases.join("\n")}
                 if (s == 4) throw new TaskIOException(${name(m.declaration)}, ${decode("string")});${m.effect === "EIO" ? `
                 if (s == 3) throw new DeclaredError<${type(m.error)}>(${name(m.declaration)}, ${decode(m.error)});` : ""}` : ""}
                 ${stream ? "if (s == 2) return (false, default!);" : ""}
-                ${m.terminal ? stream && !m.stepIO ? `if (s == 3) throw new DeclaredError<${type(m.terminal)}>(${name(m.stepDeclaration)}, ${decode(m.terminal)});` : `if (s == 4) throw new TaskIOException(${name(stream?m.stepDeclaration:m.declaration)}, ${decode("string")});` : ""}
+                ${m.terminal ? stream && !m.stepIO ? `if (s == 3) throw new DeclaredError<${type(m.terminal)}>(${name(m.stepDeclaration)}, ${decode(m.terminal)});` : `if (s == 4) throw new ${direct?"LeanIOException":"TaskIOException"}(${name(stream?m.stepDeclaration:m.declaration)}, ${decode("string")});` : ""}
                 throw Failure(s);
             }
             finally { clear(output); }
-        }${bound?")":""}, ${name(m.names.poll)}, ${name(m.names.close)}, ${name(m.names.pull ?? null)}${cb ? ", callbacks);\n    }" : ");"}`;
+        }${bound?")":""}, ${direct?name(m.names.close):[m.names.poll,m.names.close,m.names.pull??null].map(op=>name(op)).join(", ")}${cb ? ", callbacks);\n    }" : ");"}`;
 	return { pub, impl };
 };
 
@@ -255,8 +283,10 @@ export { parameterTypes as dotnetTaskParameters, taskMethod as renderDotnetTaskM
  * @param tasks - Require a native readiness interface and actual asynchronous declarations.
  */
 const generate = async ({ api, wire, evidence }, tasks) => {
-	if(!tasks && (wire.wait || wire.methods.some(m => m.delivery)))
-		throw new TypeError("The .NET IO profile requires synchronous copied values");
+	const direct = wire.methods.some(m=>m.delivery==="iterator");
+	if(!tasks && (wire.wait || wire.methods.some(m => m.delivery && m.delivery!=="iterator")))
+		throw new TypeError("The .NET IO profile requires synchronous copied values, resources or immediate iterators");
+	if(tasks && direct) throw new TypeError("A direct .NET cursor cannot run on the task dispatcher");
 	if(tasks && (!wire.wait || !wire.methods.some(m => m.delivery))) throw new TypeError("The .NET task profile requires real native delivery");
 	const leases = leaseModels(api, wire, evidence), codecs = resourceCodecs(leases);
 	const { type, args, decode, keep, drain } = codecs;
@@ -268,11 +298,12 @@ const generate = async ({ api, wire, evidence }, tasks) => {
 	for(const [i, m] of wire.methods.entries())
 	{
 		const d = api.declarations.find(s => s.source.declaration === m.declaration), method = pascal(m.name);
-		const expected = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? m.delivery : "value";
+		const expected = m.delivery === "task" ? "promise" : ["iterator","async-iterator"].includes(m.delivery) ? m.delivery : "value";
 		if(!d || (m.delivery && expected === "value") || d.resultMode !== expected || names.has(method) || !/^[A-Z][A-Za-z0-9]*$/u.test(method)
 			|| !["pure", "BaseIO", "IO", "EIO"].includes(m.effect) || d.parameters.length !== m.args.length)
 			throw new TypeError("Invalid, asynchronous or colliding .NET IO method: " + m.name);
 		names.add(method);
+		if(m.delivery==="iterator") verifyDirectCursor(d,m,i,wire,api,leases);
 		verifyLeaseSites(m, d, api, leases);
 		const params = d.parameters.map(p => p.name);
 		if(params.some(n => !/^[a-z][a-z0-9_]*$/u.test(n)) || new Set(params).size !== params.length) throw new TypeError("Invalid .NET parameter names");
@@ -287,7 +318,7 @@ const generate = async ({ api, wire, evidence }, tasks) => {
     public static ${output} ${method}(${signature}) => ${runtimeClass}.Call${i}(${params.map(n => "@" + n).join(", ")});`);
 		impl.push(`    internal static ${output} Call${i}(${m.args.map((t, j) => type(t) + " v" + j).join(", ")})
     {
-        ${drain ? drain + "\n        " : ""}using var frame = new Frame();
+        ${direct ? "DrainCursors();\n        " : ""}${drain ? drain + "\n        " : ""}using var frame = new Frame();
         ulong* input = stackalloc ulong[${Math.max(1, m.args.length * 3)}];
         new global::System.Span<ulong>(input, ${Math.max(1, m.args.length * 3)}).Clear();
         ${m.args.map((t, j) => args(t, "v" + j, j)).join("\n        ")}
@@ -336,6 +367,7 @@ ${verifiedDotnetAssets(evidence)}
 ${leases.size ? [...leases.values()].map(resourcePort).join("\n") + "\n" : ""}${tasks ? `    private const string WaitOpen = "${wire.wait.open}", WaitClose = "${wire.wait.close}";\n` : ""}${impl.join("\n")}
 }
 ` };
+	if(direct) files["LeanCursor.cs"] = (await readFile(new URL("sync-cursor.cs",import.meta.url),"utf8")).replace("namespace LeanBridge.GeneratedIO;", "namespace "+assembly+";");
 	if(tasks)
 	{
 		const templates = [["task-delivery.cs", "TaskDelivery.cs"]

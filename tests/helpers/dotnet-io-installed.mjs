@@ -48,6 +48,36 @@ test("NuGet IO exposes typed synchronous methods, rejects name collisions and sh
 		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/backends/dotnet/task-callbacks.cs", "src/backends/dotnet/task-delivery.cs", "src/backends/dotnet/task-loop.cs", "src/backends/dotnet/resource-contract.cs", "src/backends/dotnet/resource-wire.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
 	}
 });
+test("NuGet authenticates the synchronous iterator payload, phase and private operations", async () => {
+	const scalar = name => ({kind: "primitive", name});
+	const t = scalar("uint32"), text = scalar("string"), protocol = {open: "Lab.read", next: "Lab.next", close: "Lab.close"};
+	const entry = {name: "read", declaration: protocol.open
+		, delivery: "iterator", protocol, effect: "EIO"
+		, parameters: [], result: t, error: text, stepError: t};
+	const ids = ["error:EIO.Lab.read", "error:Step.Lab.read"];
+	const api = {component: {id: "cursor-lab@1.0.0", name: "Lab"}, types: []
+		, errors: ids.map((id,i) => ({id, category: "domain", payload: i ? t : text}))
+		, declarations: [{name: "read"
+		, source: {declaration: protocol.open
+		, extensions: {
+			"lean-lang.org/effect": "EIO"
+			, "lean-bridge.dev/pull-effect": "EIO"
+			, "lean-bridge.dev/pull-protocol": protocol}}
+			, resultMode: "iterator"
+			, result: {type: t, ownership: "copy"}
+			, parameters: []
+			, effects: []
+			, failure: {unexpected: "poison-runtime", errors: ids}}]};
+	const wire = generateSyncWire("lbc_test", [entry]), [method] = wire.methods;
+	const gen = changes => generateDotnetIO({api, wire: {...wire, methods: [{...method,...changes}]}, evidence: null});
+	const {files} = await gen({});
+	assert.match(files["Api.cs"], /LeanCursor<uint> Read\(/u);
+	for(const mutation of [{stepDeclaration: protocol.close}
+		, {tagBytes: 2}, {result: "uint16"}
+		, {terminal: method.error}
+		, {names: {...method.names, next: method.names.close}}])
+		await assert.rejects(gen(mutation), /Unverified .NET immediate pull/u);
+});
 test("NuGet checks OS grants, real task factories and concrete resource declarations", {
 	skip: !env.LEAN_BRIDGE_DOTNET_IO_POLICY, timeout: 600_000
 }, async t => {
