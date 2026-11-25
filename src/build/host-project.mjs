@@ -56,8 +56,8 @@ export const buildHostProject = async options => {
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
 	const canonical=wit && config.targets?.[target]?.asyncAbi==="canonical";
 	const witObjects=wit && Boolean(config.hostImports);
-	if(witObjects && (witTasks || canonical || config.resources?.length || config.nativeEffects?.length || config.taskIOErrors?.length))
-		fail("Application-owned WIT packages support synchronous exports without Lean-owned resources or native OS capabilities; task and cursor packaging is not yet available");
+	if(witObjects && (config.resources?.length || config.nativeEffects?.length || (!witTasks && config.taskIOErrors?.length)))
+		fail("Application-owned WIT packages require guest-defined resources, no external OS capabilities, and selected tasks for task IO errors");
 	if(canonical && (!witTasks || config.resources?.length))
 		fail("Canonical WIT requires selected Task or cursor exports without resources");
 	if(wit && !witObjects && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)

@@ -160,5 +160,5 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	assert.match(asynchronous.stdout,/trapped Wasm callback poisoned its session; shutdown did not call guest destructors/u);
 	assert.match(asynchronous.stdout,/Wasm pulled its original boxes, distinguished a typed final error from EOF, and closed parked or abandoned Lean cursors once/u);
 	await exerciseWitApplicationTurn({app,b,fixture,kit: resolve(asyncSdk),wasm,runtimeRoot,run});
-	await exerciseMixedWitComposition({app,b,wasm,run: (command,args,cwd)=>processBuildRunner.capture({command,args,cwd,env: process.env})});
+	await exerciseMixedWitComposition({app,b,wasm,sdk: resolve(asyncSdk),runtimeRoot,run: (command,args,cwd,env=process.env)=>processBuildRunner.capture({command,args,cwd,env})});
 };

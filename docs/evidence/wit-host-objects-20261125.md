@@ -1,6 +1,6 @@
 # Guest-owned WIT objects in compiled Lean workers
 
-The [application](../../tests/fixtures/static-host-workers/guest-box.wat.in) defines a mutable resource; only the defining guest knows where it keeps the value. A [second, independently compiled guest](../../tests/fixtures/static-host-workers/guest-peer.wat.in) imports the resource via WIT and returns an independently droppable alias. The worker checks below use private integrations; the [synchronous release check](#run-the-installed-synchronous-object-package) uses ordinary and reviewed archives.
+The [application](../../tests/fixtures/static-host-workers/guest-box.wat.in) defines a mutable resource; only the defining guest knows where it keeps the value. A [second, independently compiled guest](../../tests/fixtures/static-host-workers/guest-peer.wat.in) imports the resource via WIT and returns an independently droppable alias. The worker checks below use private integrations. The [synchronous](#run-the-installed-synchronous-object-package) and [mixed async](#run-the-installed-mixed-object-package) release checks use ordinary and reviewed archives.
 
 The [integration probe](../../tests/fixtures/static-host-workers/guest-box.c) runs the composed component under Wasmtime 42 and calls the actual compiled Lean library. A Lean task returns the original object. A retained callback re-enters Lean, changes its value, and leaves a second, equal-valued object untouched. Rebinding the same resource type preserves identity; a distinct defining instance in the same store and an instance in a different store are rejected.
 
@@ -42,7 +42,7 @@ The app passes binary data with embedded zero bytes, UTF-8 text, a 385-bit natur
 
 Passing a borrowed box alongside an integer with a zero high limb produces a boundary-validation error, not a Lean `IO` or `EIO` failure. The defining guest notifies a test-only observer from its destructor: the staged box owner is released exactly once before the trap retires the binding. The test does not reenter the poisoned graph to read the counter. It also rejects a changed `EIO` payload and an invented failure on a pure function before generating a facade.
 
-The clean run produced 53 native exports; the worker SHA-256 is `8c3ac7651f0f42c794096e4551248a7e311da31fb01193e260391c175fffc64e`. This is still a locally composed integration. The public object-bearing asynchronous interface, ordinary and reviewed package installations, and their release receipts remain outstanding.
+The clean run produced 53 native exports; the worker SHA-256 is `8c3ac7651f0f42c794096e4551248a7e311da31fb01193e260391c175fffc64e`. That milestone tested a local composition, before the public task interface and installed packages below.
 
 ## A canonical future returns the original guest object
 
@@ -131,7 +131,7 @@ The [install test](../../tests/helpers/wit-installed-object-packages.mjs) builds
 
 For each archive the test validates the receipt schema and file hashes, extracts it under a path with spaces, and builds the two consumer components against its public WIT. It deletes the source and original release directory before running the installed command with no tools on `PATH`. The application checks the original boxes, mutation, object and error ownership, UTF-8, binary buffers, and wide integers. The defining guest counts three destructor calls on the successful path and two more on the error path. Swapping the components or importing the bridge's private exchange prevents the application from starting. Run `npm run test:wit-host-object-packages` with the publisher toolchains.
 
-The synchronous profile does not advertise canonical task or cursor factories. A separate composition experiment reached `Jobs.series` from a real guest’s **async** `run`; Wasmtime 51 rejected the native adapter’s blocking re-entry into the same store. The [Wasmtime call documentation](https://github.com/bytecodealliance/wasmtime/blob/v51.0.0/crates/wasmtime/src/runtime/component/func.rs) distinguishes this case from entering the same guest from a synchronous host call. Passing the private worker checks does not resolve that scheduling boundary.
+The synchronous profile does not advertise canonical task or cursor factories. A separate composition experiment reached `Jobs.series` from a real guest’s **async** `run`; Wasmtime 51 rejected the native adapter’s blocking re-entry into the same store. The [Wasmtime call documentation](https://github.com/bytecodealliance/wasmtime/blob/v51.0.0/crates/wasmtime/src/runtime/component/func.rs) distinguishes this case from entering the same guest from a synchronous host call. This failure motivated the owner-thread transport used in the mixed release below.
 
 ## A synchronous Lean update inside an async guest
 
@@ -141,7 +141,7 @@ The guest verifies that updating one box from 42 to 73 leaves a second box uncha
 
 The native binding receives a private lease ticket, not a Wasm resource representation. For both the setter and getter the driver resolves the ticket supplied by the native call and acquires the original object from the defining guest. It holds the original error in the same table until Lean selects the error to return. The two calls finish with no table entries. The [lease audit](../../tests/fixtures/static-host-workers/guest-lease-audit.wat.in) also checks out-of-order moves, rejected stale, foreign and wrong-kind tickets, slot reuse and capacity exhaustion. Closing the full table twice produced no double drops: the original guest counted exactly 70 destructors across the audit.
 
-The property-call regression exercises one borrowed-object signature. A [separate composition check](../../tests/helpers/wit-application-command-client.mjs) links an independent object provider, registration provider and async application using the compiler's complete task inventory. A guest importing a private scheduling hook fails validation. Linking that full graph does not run it. The mixed installed package remains unavailable.
+The property-call regression exercises one borrowed-object signature. The [release launcher check](../../tests/helpers/wit-application-command-client.mjs) links an independent object provider, registration provider and async application using the compiler's complete task inventory, then runs that application. A guest importing the private scheduler function `turn-series` fails validation.
 
 ## Canonical streams read by an async guest
 
@@ -179,4 +179,15 @@ The [member adapter](../../src/backends/wit/application-turn-members.mjs) genera
 
 The [mixed worker test](../../tests/helpers/wit-application-turn-callbacks.mjs) also runs the other direction: **the guest calls all 19 public operations on Lean**. The [generated Wasm adapter](../../src/backends/wit/application-turn-sync-graph.mjs) and [native dispatcher](../../src/backends/wit/application-turn-sync-host.mjs) use the same owner as the nine task and cursor methods. The independent WIT consumer changes a box from 42 to 73, selects either of two boxes through a 17-argument operation, and asks Lean to catch two different constructor errors and rethrow the first. Reversing the inputs reverses which original exception reaches the consumer. A separate run makes the guest destructor trap while Lean is waiting for it. The native frame unwinds and its copied values are released without calling the trapped guest again.
 
-The fresh build checked 75 native exports; its worker SHA-256 is `cdc5a758babd32a3110d50ab247e8bea2d47c87e864dfae2d4b0ca6982342a80`. This is evidence for the compiled worker and the private composition. The installed synchronous package has its own checks above. The mixed **release launcher** still needs to compose these adapters and run the downstream application from ordinary and reviewed archives.
+The fresh build checked 75 native exports; its worker SHA-256 is `cdc5a758babd32a3110d50ab247e8bea2d47c87e864dfae2d4b0ca6982342a80`. The installed synchronous package has its own checks above.
+
+## Run the installed mixed object package
+
+The [mixed install test](../../tests/helpers/wit-installed-mixed-packages.mjs) builds the complete Workshop project through the public CLI, once from ordinary Lean source and once against independently supplied Binding IR. It verifies the package-set receipt and its file hashes, relocates the extraction under a path with spaces, and builds the three guest components from the installed WIT. With the source project and original release directory gone, the installed launcher returns `73` from the stream → retained callback → synchronous update → future application. In the same two installations a second application exercised all 19 public sync operations, including the two possible original error objects; a third returned `17` after releasing a stream reader early. A trapping callback made the command exit nonzero with the original `unreachable` diagnostic. A private scheduler import and a missing component were both rejected. Neither route needs Lean, wasm-tools or Wasmtime on the deployment machine.
+
+| Workshop 1.0.0 mixed release | Archive bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 61,040,557 | `3e167a7c4f6596b8a3c40d4b92f1b38b82c1aae7319dfbdb391a00f1db14a19e` |
+| Reviewed | 61,044,375 | `6f612f39d7574a65f95246774abd25dfe75f9b47bedc4400aacc74a677a7037f` |
+
+Run `npm run test:wit-host-object-packages` with the publisher toolchains specified above. The receipts are from local Linux x86-64 builds with the test glibc floor of 2.36, not hosted CI or a registry release.

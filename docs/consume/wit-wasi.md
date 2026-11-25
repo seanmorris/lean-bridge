@@ -139,6 +139,18 @@ See the [installed library-isolation checks](../evidence/wit-host-isolation-2026
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
 
+### Run an async application with guest-owned objects
+
+If your receipt lists `native-wit-object-task-v1`, extract the whole archive. Build your object provider against the `owner` world in `wit/deps/objects.wit` and your application against the `application` world in `wit/`. Its `run: async func() -> s64` can await Lean futures, read streams, and call synchronous operations on the same objects.
+
+If the package includes a `registrations` world, build a third component for it. That component defines the application’s callback resources and can call back into the synchronous Lean API. For example:
+
+```sh
+./bin/workshop-run objects.wasm callbacks.wasm application.wasm
+```
+
+Without a callback provider, pass just `objects.wasm application.wasm`. The archive README and launcher usage text give the input order. The launcher prints the signed result. There is no event loop for you to run and no SDK dependency on the deployment machine.
+
 ### Call synchronous IO
 
 If the receipt lists `native-wit-object-io-v1`, the application supplies the objects. Build one Wasm component for the `owner` world in `wit/deps/objects.wit`, and a separate component for the `application` world in `wit/`. The first component defines the resources and their methods. The second imports those same resource types and the compiled Lean API, and exports `run: func() -> s64`.

@@ -41,12 +41,13 @@ export const buildWitApplicationTemplate=async o=>{
 	modules.owner=await compile("owner","wit/deps/objects.wit","owner");
 	modules.exchange=await compile("cells","bridge/deps/objects.wit","exchange-storage",await read("exchange.wat"));
 	modules.facade=await compile("api","bridge","bridge",await read("operations.wat"));
-	if(registered)
+	if(registered)modules.callbacks=await compile("callbacks","wit","callback-provider");
+	if(async)
 	{
-		modules.callbacks=await compile("callbacks","wit","callback-provider");
-		modules.callbackExchange=await read("callback-exchange.wat");
+		if(!delivery || delivery.remaining?.length)throw new Error("WIT application contains an unsupported task or cursor");
+		modules.tasks=await read("object-turn-tasks.wat");modules.syncPorts=await read("turn-sync-ports.wat");
+		modules.members=await read("turn-members.wat");modules.native=await read("turn-native.wat");
 	}
-	if(async)modules.tasks=await read("object-tasks.wat");
 	modules.application=async?witness:syncWitness;
 	const result=witApplicationCommand({descriptor: b.witImports,ops,delivery,callbacks,entries: b.entries,modules,name,version});
 	await save("wit/application.wit",result.world);publicFiles["application.wit"]=result.world;
@@ -67,14 +68,15 @@ export const buildWitApplicationTemplate=async o=>{
 export const compileWitApplicationCommand=async o=>{
 	const {app,out,b,name,template,cc,sdk,runtimeRoot,run}=o,binary=name+"-run";
 	await writeFile(join(out,"application-command.h"),witCommandHeader(template,b.entries,name),{flag: "wx"});
-	await copyFile(new URL("../backends/wit/application-command.c",import.meta.url),join(out,"application-command.c"));
-	if(!template.methods.length)await copyFile(new URL("../backends/wit/canonical-future-reactor.h",import.meta.url),join(out,"canonical-future-reactor.h"));
+	const mixed=template.methods.length>0;
+	await copyFile(new URL("../backends/wit/"+(mixed?"application-command-turn.c":"application-command.c"),import.meta.url),join(out,"application-command.c"));
+	await copyFile(new URL("../backends/wit/application-command-inputs.h",import.meta.url),join(out,"application-command-inputs.h"));
 	await run(cc,[
 		"-std=gnu11"
 		, "-O1","-g0","-Wall","-Wextra","-Werror","-I"+app,"-I"+join(sdk,"include")
 		, "-ffile-prefix-map="+out+"=/build/wit-command"
 		, "-ffile-prefix-map="+app+"=/build/wit-provider"
-		, "application-command.c"
+		, ...mixed?["-pthread"]:[], "application-command.c"
 		, "-L"+app
 		, "-L"+join(sdk,"lib")
 		, "-l:"+b.component

@@ -1,4 +1,4 @@
-/** @file Ship original guest-owned WIT objects with their compiled synchronous Lean application. */
+/** @file Ship original guest-owned WIT objects with their compiled synchronous or canonical asynchronous Lean application. */
 import {mkdtemp,mkdir,readFile,rm,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {hashBindingIr} from "../binding-ir/canonical.mjs";
@@ -11,28 +11,31 @@ import {canonicalWasmtimeIdentity,snapshotSdk} from "./wit-canonical-package.mjs
 import {createDeterministicTarGzFromFiles} from "./deterministic-archive.mjs";
 import {writePackageSetReceipt} from "./package-set-receipt.mjs";
 
-const profile="native-wit-object-io-v1",target="wit-wasi",share="share/lean-bridge";
+const target="wit-wasi",share="share/lean-bridge";
 const digest=b=>({bytes: b.length,sha256: sha256(b)});
 /**
- * Build only the fully synchronous profile. Never omit selected task or
- * iterator declarations to turn a mixed package into a synchronous release.
+ * Ship the complete selected world. Mixed packages include the same compiled
+ * synchronous operations, plus their canonical future and stream interfaces.
  *
  * @param o - Captured Lean project, import IR, private staging and pinned SDK.
  */
 export const buildWitObjectPackage=async o=>{
 	const {name,version,projectContract: contract,runtimeRoot,environment,signal}=o;
-	if(!contract?.ir || contract.taskExports?.length || contract.asyncIterators?.length || contract.leanResources?.length)throw new TypeError("Expected synchronous application-owned WIT objects");
+	if(!contract?.ir || contract.leanResources?.length)throw new TypeError("Expected application-owned WIT objects");
+	const mixed=Boolean(contract.taskExports?.length || contract.asyncIterators?.length);
+	const profile=mixed?"native-wit-object-task-v1":"native-wit-object-io-v1";
 	const app=await mkdtemp(join(o.workRoot,".wit-object-")),out=join(app,"command"),sdk=join(app,"sdk");
 	try
 	{
 		await mkdir(out);
-		const b=await compileCHostComponent({...o,app,target});
+		const b=await compileCHostComponent({...o,app,target,workerTransport: mixed,publicWorkers: mixed});
 		const {identity: runtimeIdentity,manifest}=await readVerifiedNativeRuntime(runtimeRoot);
 		if(b.runtimeIdentity!==runtimeIdentity)throw new Error("WIT application runtime changed during compilation");
 		const run=(command,args,cwd)=>processBuildRunner.capture({command,args,cwd,env: environment,signal});
 		const sdkFiles=await snapshotSdk(environment.LEAN_BRIDGE_ASYNC_WASMTIME_C_API,sdk);
 		const common={app,out,b,name,version,wasm: environment.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools",run};
 		const template=await buildWitApplicationTemplate(common);
+		if(Boolean(template.methods.length)!==mixed)throw new Error("Selected task declarations differ from WIT release template");
 		const binary=await compileWitApplicationCommand({...common,template,cc: environment.CC??"cc",sdk,runtimeRoot});
 		const files=new Map(),floor=environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR??"2.38";
 		if(!/^2\.(?:3[0-9]|[4-9][0-9])$/u.test(floor))throw new TypeError("Invalid WIT object glibc floor");
@@ -62,7 +65,7 @@ export const buildWitObjectPackage=async o=>{
 		for(const n of ["LICENSE","LICENSES"])files.set(share+"/licenses/Lean-"+n,await readFile(join(o.leanPrefix,n)));
 		for(const [n,bytes] of Object.entries(contract.notices))files.set(share+"/licenses/"+n,bytes);
 		files.set("package-metadata.json",canonicalJson(contract.metadata??{}));
-		files.set("README.md",`# ${name} ${version}\n\nBuild an object provider for the owner world in wit/deps/objects.wit and an application for the application world in wit/. Extract the entire archive, then run:\n\n    bin/${binary} objects.wasm application.wasm\n\nThe program prints the signed 64-bit result of the application's synchronous run function. Its WIT imports use the provider's own resources and the compiled Lean operations. All native libraries are included for Linux x86-64 with glibc ${floor} or later. Running the package requires neither a Lean compiler, a Wasm SDK nor a network connection.\n`);
+		files.set("README.md",`# ${name} ${version}\n\nBuild an object provider for the owner world in wit/deps/objects.wit and an application for the application world in wit/.${template.roles.includes("callbacks")?" Build a callback provider for the registrations world in wit/.":""} Extract the entire archive, then run:\n\n    bin/${binary} ${template.roles.map(role=>role+".wasm").join(" ")}\n\nThe program prints the signed 64-bit result of the application's ${mixed?"asynchronous":"synchronous"} run function. Its WIT imports use the provider's own resources and the compiled Lean operations. All native libraries are included for Linux x86-64 with glibc ${floor} or later. Running the package requires neither a Lean compiler, a Wasm SDK nor a network connection.\n`);
 		const commandIdentity=sha256(canonicalJson({component: b.identity,template: template.parts.map(sha256),roles: template.roles,runner: sha256(files.get("bin/"+binary)),wasmtime: canonicalWasmtimeIdentity}));
 		const records=[...files].map(([path,value])=>({path,bytes: Buffer.from(value),mode: path==="bin/"+binary?0o755:0o644}));
 		const inner={
