@@ -55,3 +55,16 @@ The [full-build comparison](../../tests/helpers/perl-filtered-worker-package.mjs
 On November 25 both publishers produced component `a9a5a6a822a0643c2c87693759386c6517fecaa6c6e060db08f0ed8ef7842c0b`, runtime `44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9`, and package-set receipt `526dc07e9b371e4d0b88188b43b5cf575fa8d20f695f7375c101d64289c8e25b`. The test verified all four selected Perl ABIs and compared the entire receipt. Elapsed: 7 minutes 57 seconds at the local CPU limit. This is a filtered-source build, not an evaluation of a Nix derivation.
 
 Use the **same publisher revision** when supplying a saved reference through `LEAN_BRIDGE_PERL_FILTERED_REFERENCE`. The filtered build reproduced the runtime from the November 24 receipt exactly (`44164075…`), but two later filtered runs produced component `a9a5a6a8…` instead of the earlier `628b3f40…`. The source-project and binding IR digests match. The older component records the November 24 `HostExports.lean` and `ResolveLakeWorkspace.lean` digests; the newer one records the changed sources' digests. The verifier must not ignore that difference.
+
+## Granted effects through a worker and cursor
+
+The [installed Perl application](../../tests/fixtures/perl-host-workers/effects.pl) runs inside the package's normal `with_hosts` scope. An environment read during Lean initialization sees the deployment value, not a later change. An ordinary IO call reads a real file synchronously. A Perl `Future` reads it from a Lean worker. Two successive cursor pulls see different contents after the application edits the file between them. Closing the cursor early writes `closed`. After the client overwrites that marker, a further pull, a second close and destruction leave it untouched. This observes finalization through its public effect, not an internal destructor counter.
+
+The [package test](../../tests/helpers/perl-host-worker-effects.mjs) also removes the filesystem grant. The producer names the worker, pull and close roots and emits no release. With both grants, the compiler records environment access at startup and filesystem access on the worker call, pull and close. Both source routes have Binding IR digest `9bd1039a1ca52787551a98218e04b79aa43c6df74bd138101ecea3206da55672`. All eight relocated, prebuilt-only installations passed: ordinary and reviewed packages × Perl 5.36.3 and 5.38.2 × threaded and unthreaded. The runtime archive remained `44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9`.
+
+| CPAN worker | Component bytes | Component SHA-256 | Package-set receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary | 251,626 | `74f5648da6e4ff7785108bdba94ecedb1194fbe5949efc9e9c8377c40a87d0c1` | `e2e312269dc6cb8bcc87cc845e43d12f0467f41a3f22c290a9df81882f5ffc24` |
+| Reviewed | 254,859 | `6a582bd1cbed415282f1396b216c964ea0c08e8de812c08d26b727e401bfc361` | `c5c921c14ddd9754a1a70d9eef856d61d2c8aec5bb9ffe32e960060344f19f05` |
+
+With the same Perl toolchains and offline Perl modules, run `npm run test:perl-worker-effects`. Set `LEAN_BRIDGE_HOST_EFFECT_HANDOFFS` to an existing directory to keep the archives, receipts and compiler evidence. Set `LEAN_BRIDGE_HOST_EFFECT_REPLAY` to the resulting handoff directory to re-run the installed clients without building. Replay does not repeat the producer's missing-grant test.
