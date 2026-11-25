@@ -11,14 +11,16 @@
  */
 export const taskWireEntry = a => {
 	const { p, n, symbol, e, args, codecs, values, shape, depth, input, emit, checks } = a;
-	const stream = e.delivery === "async-iterator", item = values.codec(e.result), result = shape(e.result);
+	const direct = e.delivery === "iterator", stream = e.delivery === "async-iterator", item = values.codec(e.result), result = shape(e.result);
 	const start = e.effect === "EIO" ? values.codec(e.error) : null, io = e.effect === "IO";
 	const error = start ? shape(e.error) : io ? "string" : null;
 	const step = e.stepError ? values.codec(e.stepError) : null;
-	if(e.stepIO!==undefined && (e.stepIO!==true || !stream || step)) throw new TypeError("Invalid cursor IO failure contract");
+	if(e.stepIO!==undefined && (e.stepIO!==true || !(stream || direct) || step)) throw new TypeError("Invalid cursor IO failure contract");
 	const ioTerminal=e.taskIO || e.stepIO;
 	const terminal = step ? shape(e.stepError) : ioTerminal ? "string" : null;
-	const names = Object.fromEntries(["start", "take", ...a.wasmTasks ? ["listen", "cancel"] : ["poll"], "close", ...stream ? ["pull"] : []].map(k => [k, symbol + "_" + k]));
+	const openName = direct ? "open" : "start", takeName = direct ? "next" : "take", startAlias = direct ? "error" : "start_error";
+	const operations = direct ? [openName, takeName, "close"] : ["start", "take", ...a.wasmTasks ? ["listen", "cancel"] : ["poll"], "close", ...stream ? ["pull"] : []];
+	const names = Object.fromEntries(operations.map(k => [k, symbol + "_" + k]));
 	const pass = (declared, text) => declared || text ? ["&error"] : [];
 	const slot = (c, t, alias) => c ? n + "_" + alias + " error = {0};" : t ? p + "_buffer error = {0};" : "";
 	const clear = (c, t, alias) => c?.dispose ? n + "_" + alias + "_dispose(&error);" : !c && t ? p + "_buffer_dispose(&error);" : "";
@@ -27,23 +29,23 @@ export const taskWireEntry = a => {
 	const owner = `${n}_handle owner = {h[0], h[1]};`;
 	const startArgs = [...codecs.map((c, i) => input(c, args[i], i)), "&owner", ...pass(start, io)];
 	const takeArgs = ["&owner", "&value", ...pass(step, ioTerminal)];
-	const source = `int ${names.start}(const uint64_t *args, uint64_t *h, uint64_t *out, uint8_t *tags) {
+	const source = `int ${names[openName]}(const uint64_t *args, uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (!h || h[0] || !out || !tags${args.length ? " || !args" : ""}) return ${p}_INVALID;
     (void)args; memset(out, 0, 4 * sizeof(*out)); ${checks.join("\n    ")}
-    ${n}_handle owner = {0}; ${slot(start, io, "start_error")}
-    ${p}_status s = ${n}_start(${startArgs.join(", ")}); ${save}
-    ${failure(start, io, error,2)} ${clear(start, io, "start_error")} return (int)s;
+    ${n}_handle owner = {0}; ${slot(start, io, startAlias)}
+    ${p}_status s = ${n}_${openName}(${startArgs.join(", ")}); ${save}
+    ${failure(start, io, error,2)} ${clear(start, io, startAlias)} return (int)s;
 }
-int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
+int ${names[takeName]}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (!h || !out || !tags) return ${p}_INVALID;
     memset(out, 0, 4 * sizeof(*out)); ${owner}
     ${n}_value value = {0}; ${slot(step, ioTerminal, "step_error")}
-    ${p}_status s = ${n}_take(${takeArgs.join(", ")}); ${save}
+    ${p}_status s = ${n}_${takeName}(${takeArgs.join(", ")}); ${save}
     if (s == ${p}_OK) { ${emit(result, "value", p)} }
-    ${failure(step, ioTerminal, terminal,stream?4:3)}
+    ${failure(step, ioTerminal, terminal,stream || direct?4:3)}
     ${item.dispose ? n + "_value_dispose(&value);" : ""} ${clear(step, ioTerminal, "step_error")} return (int)s;
 }
-${a.wasmTasks ? `int ${names.listen}(uint64_t *h, uint32_t token) { if (!h) return ${p}_INVALID; ${owner} return ${n}_listen(owner, token); }
+${direct ? "" : a.wasmTasks ? `int ${names.listen}(uint64_t *h, uint32_t token) { if (!h) return ${p}_INVALID; ${owner} return ${n}_listen(owner, token); }
 int ${names.cancel}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} return ${n}_cancel(owner); }` : `int ${names.poll}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_poll(owner, fd); }`}
 int ${names.close}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} int s = ${n}_close(&owner); ${save} return s; }
 ${stream ? `int ${names.pull}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} return ${n}_pull(owner); }` : ""}`;

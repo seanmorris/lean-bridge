@@ -91,6 +91,9 @@ routes with a typed handle and a real file-writing finalizer. The separate
 The [C++20 installs](native-sync-iterators-20261125.md#c20) exercise a
 single-pass range through both CMake and pkg-config, including deferred
 destruction on the owning thread and at process exit.
+The [MRI gems](native-sync-iterators-20261125.md#ruby) implement ordinary
+`Enumerable` iteration with no task runtime; both routes closed on block
+exit, application exceptions, collection and shutdown.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
 starts with constructed IR; it cannot stand in for an installed source package
 on another profile. Check each profile for one pull per demand, value versus

@@ -150,6 +150,26 @@ A thrown `EIO` raises the package's `DeclaredError` with its Lean
 the package's `Unavailable`; another call cannot restart it. See the
 [installed Ruby caller](../../tests/fixtures/ruby-sync-io/consumer.rb).
 
+### Read a synchronous iterator
+
+When the gem exposes a synchronous Lean iterator, use Ruby's `Enumerable`
+on the main thread. Each request runs one Lean pull; there is no task to
+await. For the [Dials example](../../tests/fixtures/native-immediate-cursor/Dials.lean):
+
+```ruby
+require "lean_bridge/dials"
+
+LeanBridge::Dials.sequence(10).each do |n|
+  puts n
+  break if n == 2
+end
+```
+
+The block form closes the cursor on exhaustion, `break` or a raised exception.
+When calling `cursor.next` yourself, exhaustion raises `StopIteration`;
+use `ensure` to call `cursor.close` if you stop early. A yielded Lean unit
+is the gem's `UNIT` object, not an end marker.
+
 ### Await a task or read a stream
 
 A gem marked `native-ruby-task-v1` returns a `Task` for a selected Lean task

@@ -12,6 +12,14 @@ const bind = (name, params, result = "INT") => `::Fiddle::Function.new(LIBRARY[$
 const literal = v => v == null ? "nil" : rubyLiteral(v);
 const reservedIO = ["DeclaredError", "IOError", "BoundaryError", "WrongContext", "Unavailable", "Ok", "Err", "NativeSyncWireV1", "NativeResourceLeaseV1", "ClosedResource"];
 const reservedTasks = ["Task", "PullStream", "TaskRuntimeV1", "Cancelled", "Busy", "StepError", "TaskIOError", "DeliveryOwner", "RetainedRuntimeV1", "RetainedCallback", "CallbackClosed"];
+const cursorMethod = m => `      OPS${m.i} = {
+        open: ${bind(m.names.open, "P, P, P, P")}, next: ${bind(m.names.next, "P, P, P")}, close: ${bind(m.names.close, "P")}, clear: CLEAR,
+        decl: ${literal(m.declaration)}, step: ${literal(m.stepDeclaration)}, args: ${literal(m.args)},
+        result: ${literal(m.result)}, error: ${literal(m.error)}, terminal: ${literal(m.terminal)}, depth: ${m.tagBytes}
+      }.freeze
+      def self.call${m.i}(${m.params})
+        ImmediatePullV1.open(OPS${m.i}, [${m.params}])
+      end`;
 const leaseBindings = (leases, ledger, ns) => !leases.length ? "" : `
       API = ::LeanBridge::${ns}
       LEASES = {${leases.map(r => `
@@ -59,6 +67,10 @@ export const generateRubySyncSources = async options => {
 	if(wire.wait && reservedTasks.includes(ns))
 		throw new TypeError("Reserved Ruby task namespace");
 	const hosts = (wire.leases ?? []).filter(r => r.host), leases = (wire.leases ?? []).filter(r => !r.host);
+	const direct = wire.methods.some(m => m.delivery === "iterator");
+	const cursorNames = ["Cursor", "ImmediatePullV1"];
+	if(direct && (wire.wait || hosts.length || cursorNames.includes(ns) || leases.some(r => cursorNames.includes(r.name))))
+		throw new TypeError("Immediate Ruby iterators require a synchronous package and distinct public names");
 	const provider = options.hostProvider;
 	if(Boolean(provider) !== Boolean(hosts.length) || provider && provider.workerKinds?.length !== hosts.length
 		|| hosts.some((r,i) => r.type !== "host:" + r.hash || !/^[a-f0-9]{64}$/u.test(r.hash) || r.tag !== i+3
@@ -117,7 +129,7 @@ LeanBridge::${ns}.private_constant :Native
 	const native = `# frozen_string_literal: true
 require "fiddle"
 require "digest/sha2"
-require_relative "sync_wire"${wire.wait ? '\nrequire_relative "task_runtime"' : ""}${retained ? '\nrequire_relative "retained_task"' : ""}${leases.length ? '\nrequire "lean_bridge/native_resource_lease_v1"' : ""}
+require_relative "sync_wire"${direct ? '\nrequire_relative "sync_iterator"' : ""}${wire.wait ? '\nrequire_relative "task_runtime"' : ""}${retained ? '\nrequire_relative "retained_task"' : ""}${leases.length ? '\nrequire "lean_bridge/native_resource_lease_v1"' : ""}
 module LeanBridge
   module ${ns}
     module Native
@@ -138,11 +150,11 @@ ${verifiedRubyAssets(evidence)}
       WAIT_OPEN = ${bind(wire.wait.open, "::Fiddle::TYPE_INT, ::Fiddle::TYPE_INT, P")}
       WAIT_WAKE = ${bind(wire.wait.wake, "P", "VOID")}
       WAIT_CLOSE = ${bind(wire.wait.close, "P", "VOID")}` : ""}
-${methods.map(m => m.delivery ? asyncMethod(m) : `      CALL${m.i} = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(m.symbol)}], [P, P, P], ::Fiddle::TYPE_INT)
+${methods.map(m => m.delivery === "iterator" ? cursorMethod(m) : m.delivery ? asyncMethod(m) : `      CALL${m.i} = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(m.symbol)}], [P, P, P], ::Fiddle::TYPE_INT)
       def self.call${m.i}(${m.params})
         if (reason = NativeCopiedRuntimeV1.context_error)
           raise WrongContext, reason
-        end${wire.wait ? "\n        TaskRuntimeV1.drain" : ""}
+        end${direct ? "\n        ImmediatePullV1.drain" : ""}${wire.wait ? "\n        TaskRuntimeV1.drain" : ""}
         NativeSyncWireV1.call(::LeanBridge::${ns}, CALL${m.i}, CLEAR, ${rubyLiteral(m.declaration)}, ${rubyLiteral(m.args)}, ${rubyLiteral(m.result)}, ${m.error ? rubyLiteral(m.error) : "nil"}, ${rubyLiteral(m.effect)}, ${m.tagBytes}, [${m.params}])
       end`).join("\n")}
     end
@@ -155,6 +167,7 @@ end
 	return { namespace: "LeanBridge::" + ns, requirePath: path
 		, files: { [`lib/${path}.rb`]: (provider?.ruby ?? "") + pub + (provider ? 'require_relative "' + slug + '/native/linux-x64/' + provider.extension + '"\n' + provider.privateMethods : "")
 			, [`lib/${path}/native.rb`]: native
+			, ...direct ? { [`lib/${path}/sync_iterator.rb`]: (await readFile(new URL("sync-iterator.rb", import.meta.url), "utf8")).replaceAll("LeanBridge::GeneratedSyncComponent", "LeanBridge::" + ns) } : {}
 			, "lib/lean_bridge/native_copied_runtime_v1.rb": copiedRubyRuntime
 			, ...leases.length ? { "lib/lean_bridge/native_resource_lease_v1.rb": await readFile(new URL("resource-lease.rb", import.meta.url), "utf8") } : {}
 			, [`lib/${path}/sync_wire.rb`]: helper

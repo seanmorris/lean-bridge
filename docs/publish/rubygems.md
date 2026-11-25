@@ -110,8 +110,13 @@ The `native-ruby-io-v1` receipt identifies one MRI 3.3 Linux x86-64 gem
 with its matching runtime. It supports copied primitive inputs and outputs,
 including exact integers, and nested `Except` values in results and typed
 errors. Add [explicit resource types](#export-a-shared-lean-resource) for
-identity-bearing inputs or results. Tasks and iterators use the task
-profile instead. Distribute
+identity-bearing inputs or results. For an immediate iterator, list the
+three declarations under `iterators`, for example
+`{"open":"Dials.sequence","next":"Dials.next","close":"Dials.finish"}`.
+The pull must return an immediate `Option` inside its declared Lean effect.
+Build the synchronous gem normally; Ruby consumes it with
+[`each` or `next`](../consume/ruby.md#read-a-synchronous-iterator).
+Tasks and task-backed iterators use the task profile below. Distribute
 the original archive using the same RubyGems workflow as the pure package.
 See [calling synchronous IO](../consume/ruby.md#call-synchronous-io).
 

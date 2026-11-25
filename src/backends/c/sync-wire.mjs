@@ -100,7 +100,9 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 	const errorWord=(code,phase)=>wasmHost?`if (error.host_ticket) { out[0]=error.host_ticket; out[1]=${phase}; s=15; } else { ${code} }`:code;
 	const symbols = [stem + "_clear"], methods = [];
 	const functions = entries.map((e, i) => {
-		if((!tasks && (e.delivery || e.taskIO)) || (e.delivery && !["task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
+		const direct = e.delivery === "iterator";
+		if((!tasks && ((e.delivery && !direct) || e.taskIO)) || (direct && (tasks || checkedWasm || hostValues))
+			|| (e.delivery && !["iterator", "task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
 			|| !/^[a-z][a-z0-9_]*$/u.test(e.name)) throw new TypeError("Expected an authenticated synchronous function");
 		const n = p + "_" + e.name, symbol = stem + "_" + i;
 		if(e.parameters.some(a => a.type.kind === "io-callback"))

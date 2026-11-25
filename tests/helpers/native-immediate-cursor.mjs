@@ -1,6 +1,6 @@
 /** @file Exercise synchronous cursors through the installed public headers. */
 import assert from "node:assert/strict";
-import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -11,7 +11,7 @@ import { runEffectConsumers, runNativeTool } from "./native-effect-consumers.mjs
 
 const fixture = resolve("tests/fixtures/native-immediate-cursor");
 const target = process.env.LEAN_BRIDGE_IMMEDIATE_TARGET ?? "c";
-const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1"};
+const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1", rubygems: "native-ruby-io-v1"};
 if(!Object.hasOwn(profiles, target)) throw new Error("Unsupported immediate cursor consumer: " + target);
 const json = async file => JSON.parse(await readFile(file, "utf8"));
 const check = async (handoff, ordinary) => {
@@ -72,6 +72,12 @@ test(target + " installs pull immediate Lean iterators without a poller", async 
 const installed = {
 		cmakeProject: target === "cpp" ? join(fixture, "CMakeLists.txt") : null,
 		inspectPackage: async (_, prefix) => {
+			if(target === "rubygems")
+			{
+				await access(join(prefix, "lib/lean_bridge/dials/sync_iterator.rb"));
+				await assert.rejects(access(join(prefix, "lib/lean_bridge/dials/task_runtime.rb")), {code: "ENOENT"});
+				return;
+			}
 			if(target === "cargo")
 			{
 				const api = await readFile(join(prefix, "src/lib.rs"), "utf8");

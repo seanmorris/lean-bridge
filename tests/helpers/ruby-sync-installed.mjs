@@ -49,6 +49,21 @@ test("only a real callback-taking Ruby task exposes block or callable delivery",
 	assert.ok(!(await generateRubySyncSources({ name: "sample", wire: plain })).files["lib/lean_bridge/sample/retained_task.rb"]);
 	await assert.rejects(generateRubySyncSources({ name: "retained-callback", wire }), /Reserved Ruby task namespace/u);
 });
+test("Ruby immediate iterators expose no scheduler entrypoints", async () => {
+	const entry = { name: "sequence", declaration: "Dials.sequence", delivery: "iterator", effect: "IO",
+		parameters: [], result: { kind: "primitive", name: "unit" }, stepIO: true, protocol: { next: "Dials.pull" } };
+	const wire = generateSyncWire("lbc_dials", [entry]), method = wire.methods[0];
+	assert.deepEqual(Object.keys(method.names).sort(), ["close", "next", "open"]);
+	assert.equal(method.stepDeclaration, "Dials.pull"); assert.equal(wire.wait, undefined);
+	assert.doesNotMatch(wire.source, /_poll\(|_take\(|_wait_open\(/u);
+	const {files} = await generateRubySyncSources({name: "dials", wire});
+	assert.ok(files["lib/lean_bridge/dials/sync_iterator.rb"]);
+	assert.ok(!files["lib/lean_bridge/dials/task_runtime.rb"]);
+	assert.doesNotMatch(files["lib/lean_bridge/dials.rb"], /Fiddle|lbwire_|TaskRuntime/u);
+	await assert.rejects(generateRubySyncSources({name: "cursor", wire}), /distinct public names/u);
+	for(const options of [{tasks: true}, {wasm32: true}])
+		assert.throws(() => generateSyncWire("lbc_dials", [entry], options), /authenticated synchronous/u);
+});
 test("Ruby IO packages include their runtime in the CLI and keep native details private", async () => {
 	for(const manifest of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
@@ -57,6 +72,7 @@ test("Ruby IO packages include their runtime in the CLI and keep native details 
 			, "src/backends/c/task-wire.mjs"
 			, "src/backends/ruby/sync-io.mjs"
 			, "src/backends/ruby/sync-wire.rb"
+			, "src/backends/ruby/sync-iterator.rb"
 			, "src/backends/ruby/task-runtime.rb"
 			, "src/backends/ruby/retained-task.rb"
 			, "src/backends/ruby/resource-lease.rb"

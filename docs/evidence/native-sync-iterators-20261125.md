@@ -80,3 +80,26 @@ another at process exit. Each execution finished with seven opens, thirteen
 pulls and seven closes. The application also observed the finalizer's file
 write. To repeat, use `LEAN_BRIDGE_IMMEDIATE_TARGET=cpp` with the command
 above and set `LEAN_BRIDGE_CMAKE` if CMake is not on `PATH`.
+
+## Ruby
+
+MRI 3.3.12 installed both platform gems offline, then ran the
+[Ruby client](../../tests/fixtures/native-immediate-cursor/consumer.rb)
+after relocation, with no compiler on its path. The gem contained the direct
+iterator adapter and no task runtime.
+
+| Ordinary source | Reviewed interface (without an export list) |
+| --- | --- |
+| `ccf58b7a95e8895119d00b56fa098a738773ebe7d44f5f5609df14d0e7cbf1e7` | `b3adda954e49a8faa6aed54329463160ebd5907c6ba38445d771b303da6d6a98` |
+
+Each gem produced eight opens, fourteen pulls and eight closes. A block
+could break or raise its own exception without an extra pull. Reentry,
+copying and wrong-thread use were refused; the cursor remained usable by
+its owner. A typed factory error, a typed step error and a step's IO error
+retained their declarations. A unit item was not mistaken for exhaustion.
+A weak reference confirmed an abandoned Ruby cursor was collected; a
+subsequent owner call reclaimed the native state. Normal shutdown closed
+the remaining live cursor. The test also checked the finalizer's file.
+
+Use `LEAN_BRIDGE_IMMEDIATE_TARGET=rubygems` with the native test command
+above. Set `LEAN_BRIDGE_RUBY` to the MRI executable for the platform gem.
