@@ -625,6 +625,37 @@ operation while the borrow is live. Keep that separate owner until you have
 finished using the function. The [complete callback client](../../tests/fixtures/structured-types/tariff-exchange.c)
 also shows reentry, invalid replies, and recovery from a nested callback failure.
 
+### Return a Lean function directly from a callback
+
+`flatQuote` calls your C callback with `base` and `units` and expects a number.
+`stagedQuote` calls it with just `base` and expects a Lean function. Lean then
+calls that function with `units`. The reply is a typed function handle from
+the same session, not a C function pointer.
+
+For example, a pricing callback can create a tariff and hand its function
+and result owner back together:
+
+```c
+static tariff_quotes_status choose_quote(void *context, tariff_quotes_session *s,
+        uint32_t base, tariff_quotes_pack_quote_argument0_t *out,
+        tariff_quotes_result **owner) {
+    (void)context;
+    tariff_quotes_tariff_t tariff = {0};
+    tariff_quotes_status status = tariff_quotes_make_tariff(s, base, &tariff, owner);
+    if (status == TARIFF_QUOTES_OK) *out = tariff.quote;
+    return status;
+}
+```
+
+The bridge releases that owner after consuming the reply, even when the
+callback fails. To return a function your application already owns, keep
+its independent owner alive through the call, assign the handle to `*out`
+and leave `*owner` null. Set the host callback's `recovery` pointer to a
+live function of the same type before calling `stagedQuote`. Missing recovery
+prevents the callback from running; on failure, the caller gets an error and
+its output stays unchanged. See the [complete C client](../../tests/fixtures/structured-types/tariff-staged.c)
+for construction, cleanup, and both reply forms.
+
 ### Transferred inputs
 
 An export can consume a result owner instead of borrowing its input. Its generated

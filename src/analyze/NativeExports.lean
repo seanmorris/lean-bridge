@@ -955,9 +955,18 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       (value.getObjValAs? (Array Json) "parameters").toOption
     let resultDecision := callableDecision.bind fun value =>
       (value.getObjVal? "result").toOption
+    let nextStage := resultDecision.bind fun site => (site.getObjVal? "callable").toOption
+    -- Lean's arrow associates to the right. Only an explicit callable result
+    -- splits off another callable; a parameter list alone never changes the ABI.
+    let stageArity ← if nextStage.isSome then do
+      let some args := decisions | reject e "a staged callback result requires its outer parameter list"
+      if args.isEmpty || args.size > 16 then reject e "a callback stage requires 1 to 16 parameters"
+      pure (some args.size)
+    else pure none
     let host := callbackSite == some false
     repeat
       result ← whnf result
+      if stageArity == some parameters.size then break
       match result with
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
@@ -965,8 +974,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         -- Arguments of a host callback come from Lean and therefore project their proof;
         -- arguments of a returned closure come from the host and require the selected
         -- checked constructor. Checked records inside a top-level callback follow the same
-        -- direction through `recordSite`. A callback nested in a callback stays unsupported.
+        -- direction through `recordSite`. A nested signature does not implicitly
+        -- inherit its parent's checked-refinement decisions.
         let decision := decisions.bind fun values => values[parameters.size]?
+        let nested := decision.bind fun site => (site.getObjVal? "callable").toOption
         let selection := decision.bind fun site => do
           let refinement ← (site.getObjVal? "refinement").toOption
           if refinement == str "reject" then none else some refinement
@@ -976,9 +987,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           (checked := if host then none else selection) (containerFin := containerFin)
           (structural := callbackSite.isSome) (subtypeStructural := callbackSite.isSome)
           (subtypeResult := host)
-          (recordSite := if callbackSite.isSome then some host else none))
+          (recordSite := if callbackSite.isSome then some host else none) (callableDecision := nested))
         result := rest
       | _ => break
+    if nextStage.isSome && (stageArity != some parameters.size || !result.isForall) then
+      reject e "declared callback stages do not match the remaining Lean function type"
     let resultSelection := resultDecision.bind fun site => do
       let refinement ← (site.getObjVal? "refinement").toOption
       if refinement == str "reject" then none else some refinement
@@ -991,7 +1004,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         (checked := if producedResult then none else resultSelection) (containerFin := containerFin)
         (structural := callbackSite.isSome) (hostReply := host)
         (subtypeStructural := callbackSite.isSome) (subtypeResult := producedResult)
-        (recordSite := if callbackSite.isSome then some producedResult else none)), ("abi", ← abi e)]
+        (recordSite := if callbackSite.isSome then some producedResult else none)
+        (callableDecision := nextStage)), ("abi", ← abi e)]
   let reduced ← whnf e
   if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult) (callableDecision := callableDecision)
   reject e "unsupported native export type"

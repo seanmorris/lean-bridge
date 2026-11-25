@@ -1,0 +1,21 @@
+{
+  "parameters": [
+    {
+      "ownership": "borrow",
+      "lifetime": { "scope": "call", "anchor": null },
+      "callable": {
+        "parameters": [{ "ownership": "copy", "lifetime": null }],
+        "result": {
+          "ownership": "lease",
+          "lifetime": { "scope": "explicit", "anchor": null },
+          "callable": {
+            "parameters": [{ "ownership": "copy", "lifetime": null }],
+            "result": { "ownership": "copy", "lifetime": null }
+          }
+        }
+      }
+    },
+    { "ownership": "copy", "lifetime": null },
+    { "ownership": "copy", "lifetime": null }
+  ]
+}

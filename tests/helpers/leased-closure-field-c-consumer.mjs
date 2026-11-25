@@ -14,6 +14,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 const fixtures = resolve("tests/fixtures/structured-types");
 const cases = ["copy and project", "repack and retain", "foreign session", "last lease", "wrong kind", "expired borrow and recovery"];
 const exchanges = ["borrowed reply", "owned replacement", "explicit retain", "error with owned reply", "foreign reply", "nested failure recovered"];
+const staged = ["flat scalar reply", "returned function invoked", "caller retains independent function", "missing function recovery", "host failure releases function reply", "foreign function reply"];
 const parse = stdout => {
 	const scenarios = stdout.trimEnd().split("\n");
 	assert.deepEqual(scenarios, cases);
@@ -53,14 +54,24 @@ export const checkCFieldHandoff = async ({ dir, route, t }) => {
 	const transform = model.bindingIr.types.find(type => type.id === exchange.parameters[0].type.id).callable;
 	assert.equal(transform.parameters[0].type.id, "lean:Owned.Tariff"); assert.equal(transform.parameters[0].ownership, "borrow");
 	assert.equal(transform.result.type.id, "lean:Owned.Tariff"); assert.equal(transform.result.ownership, "lease");
+	const callback = name => {
+		const site = model.bindingIr.declarations.find(fn => fn.name === name).parameters[0];
+		return model.bindingIr.types.find(type => type.id === site.type.id).callable;
+	};
+	const stage = callback("stagedQuote"), flat = callback("flatQuote");
+	assert.equal(stage.parameters.length, 1); assert.equal(flat.parameters.length, 2);
+	assert.equal(stage.result.ownership, "lease"); assert.equal(flat.result.type.name, "uint32");
+	assert.deepEqual(stage.result.type, model.bindingIr.types.find(type => type.name === "Tariff").fields[0].type);
 	await cp(join(fixtures, "leased-closure-field-leases.c"), join(root, "leases.c"));
-	for(const file of ["tariff-exchange.c", "tariff-exchange-probe.c"]) await cp(join(fixtures, file), join(root, file));
+	for(const file of ["tariff-exchange.c", "tariff-exchange-probe.c", "tariff-staged.c"]) await cp(join(fixtures, file), join(root, file));
 	await saveLakeFile(root, "CMakeLists.txt", `cmake_minimum_required(VERSION 3.20)
 project(TariffConsumer C)
 find_package(${manifest.cmakePackage} 1.0.0 EXACT CONFIG REQUIRED)
 add_executable(consumer consumer.c leases.c)
 add_executable(exchange tariff-exchange.c tariff-exchange-probe.c)
-foreach(client consumer exchange)
+add_executable(staged tariff-staged.c tariff-exchange-probe.c)
+target_compile_definitions(staged PRIVATE TARIFF_PROBE_CLIENT=tariff_staged_consumer)
+foreach(client consumer exchange staged)
   target_link_libraries(\${client} PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
   target_compile_features(\${client} PRIVATE c_std_11)
   target_compile_definitions(\${client} PRIVATE TARIFF_LIFETIME_PROBE)
@@ -70,14 +81,6 @@ endforeach()
 	const env = { ...copiedCleanEnvironment, PATH: join(root, "tools") };
 	const pcEnv = { ...env, PKG_CONFIG_PATH: "", PKG_CONFIG_LIBDIR: join(relocated, "lib/pkgconfig") };
 	const flags = await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", manifest.pkgConfig], root, pcEnv);
-	const compile = ["-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG"
-		, "tariff-exchange.c", ...flags.stdout.trim().split(/\s+/)
-		, "-o", "exchange-pkg-config"];
-	await runCopied("/usr/bin/cc", compile, root, env);
-	const pcRun = await runCopied(join(root, "exchange-pkg-config"), [], root);
-	assert.equal(pcRun.stderr, "");
-	const pcScenarios = pcRun.stdout.trimEnd().split("\n");
-	assert.deepEqual(pcScenarios, exchanges);
 	const cmake = process.env.LEAN_BRIDGE_CMAKE ?? "/usr/bin/cmake";
 	const configure = ["-S", root, "-B", "build", "-G", "Unix Makefiles"
 		, "-DCMAKE_C_COMPILER=/usr/bin/cc", "-DCMAKE_MAKE_PROGRAM=/usr/bin/make"
@@ -91,19 +94,30 @@ endforeach()
 	const identities = countsLine.slice("identities:".length).split(",").map(Number);
 	assert.deepEqual(identities, [0, 1, 2, 1, 0]);
 	const cmakeResult = parse(lines.join("\n")), evidence = resolve("build/leased-closure-fields-c");
-	const exchangeRun = await runCopied(join(root, "build/exchange"), [], root);
-	assert.equal(exchangeRun.stderr, "");
-	const exchangeLines = exchangeRun.stdout.trimEnd().split("\n"), baseline = exchangeLines.pop();
-	assert.match(baseline, /^identities:\d+(?:,\d+){6}$/);
-	const live = baseline.slice("identities:".length).split(",").map(Number);
-	assert.deepEqual(live, [1, 1, 1, 1, 1, 1, 0]);
-	assert.deepEqual(exchangeLines, exchanges);
-	await saveLakeFile(evidence, `${route}.exchange.json`, canonicalJson({
-		schemaVersion: 1, route, packageSetSha256: verified.receiptSha256
-		, consumerSha256: sha256(await readFile(join(root, "tariff-exchange.c")))
-		, probeSha256: sha256(await readFile(join(root, "tariff-exchange-probe.c")))
-		, pkgConfig: pcScenarios, relocatedCMake: exchangeLines, identities: live
-	}));
+	for(const [client, expected] of [["exchange", exchanges], ["staged", staged]])
+	{
+		const filename = `tariff-${client}.c`, pcBinary = `${client}-pkg-config`;
+		const compile = ["-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG"
+			, filename, ...flags.stdout.trim().split(/\s+/), "-o", pcBinary];
+		await runCopied("/usr/bin/cc", compile, root, env);
+		const pcRun = await runCopied(join(root, pcBinary), [], root);
+		assert.equal(pcRun.stderr, "");
+		const pkgConfig = pcRun.stdout.trimEnd().split("\n");
+		assert.deepEqual(pkgConfig, expected);
+		const run = await runCopied(join(root, "build", client), [], root);
+		assert.equal(run.stderr, "");
+		const relocatedCMake = run.stdout.trimEnd().split("\n"), baseline = relocatedCMake.pop();
+		assert.match(baseline, /^identities:\d+(?:,\d+){6}$/);
+		const live = baseline.slice("identities:".length).split(",").map(Number);
+		assert.deepEqual(live, [1, 1, 1, 1, 1, 1, 0]);
+		assert.deepEqual(relocatedCMake, expected);
+		await saveLakeFile(evidence, `${route}.${client}.json`, canonicalJson({
+			schemaVersion: 1, route, packageSetSha256: verified.receiptSha256
+			, consumerSha256: sha256(await readFile(join(root, filename)))
+			, probeSha256: sha256(await readFile(join(root, "tariff-exchange-probe.c")))
+			, pkgConfig, relocatedCMake, identities: live
+		}));
+	}
 	await saveLakeFile(evidence, `${route}.package-set.json`, receiptBytes);
 	await saveLakeFile(evidence, `${route}.execution.json`, canonicalJson({
 		schemaVersion: 1, route, packageSetSha256: verified.receiptSha256
@@ -112,5 +126,5 @@ endforeach()
 		, pkgConfig: observed.result.scenarios
 		, relocatedCMake: cmakeResult.scenarios, identities
 	}));
-	t.diagnostic(`${route} C11 pkg-config and relocated CMake: ${cases.length} field and ${exchanges.length} exchange cases each; package-set ${sha256(receiptBytes)}`);
+	t.diagnostic(`${route} C11 pkg-config and relocated CMake: ${cases.length} field, ${exchanges.length} exchange, ${staged.length} staged cases each; package-set ${sha256(receiptBytes)}`);
 };

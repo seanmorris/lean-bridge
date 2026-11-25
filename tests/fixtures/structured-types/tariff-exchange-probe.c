@@ -21,12 +21,15 @@ static void checkpoint(void) {
     counts[i++] = live();
     assert(counts[i-1] == 1); /* Client session only, before it closes. */
 }
-int tariff_exchange_consumer(tariff_quotes_session *, void (*)(void));
+#ifndef TARIFF_PROBE_CLIENT
+#define TARIFF_PROBE_CLIENT tariff_exchange_consumer
+#endif
+int TARIFF_PROBE_CLIENT(tariff_quotes_session *, void (*)(void));
 int main(void) {
     assert(live() == 0);
     tariff_quotes_session *s = NULL;
     assert(tariff_quotes_session_open(&s) == TARIFF_QUOTES_OK && live() == 1);
-    int result = tariff_exchange_consumer(s, checkpoint);
+    int result = TARIFF_PROBE_CLIENT(s, checkpoint);
     assert(i == 6 && tariff_quotes_session_close(&s) == TARIFF_QUOTES_OK);
     uint32_t after = live();
     assert(after == 0);

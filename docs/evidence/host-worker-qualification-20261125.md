@@ -134,6 +134,11 @@ rejection of the borrow and continued use of the retained handle.
 This evidence is for a pure Lean identity function over a resource-bearing
 record, as a **callback parameter**. It does not establish a direct function
 **returned by** a host callback, nor a host function registered for later use.
+For the return direction, the [installed C11 staged callback](c-staged-callback-results-20261125.md)
+returns a typed Lean function on both author routes. Lean applies it to a second
+argument. The two build-system clients distinguish a fresh owned reply from
+a caller-owned function, missing recovery, a host failure and a foreign reply.
+This does not register a C function for use after the callback returns.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)

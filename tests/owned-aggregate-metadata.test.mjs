@@ -318,4 +318,14 @@ test("fresh Lean owned graphs match the independent resource contract, including
 	contract.result = { ownership: "copy", lifetime: null };
 	const wrong = await run({ ...selection, exports: ["Owned.echoRecord"], arities: [], contracts: { "Owned.echoRecord": contract } });
 	assert.equal(wrong.metadata.modules[0].declarations.find(item => item.selected).projection.reason, "export-contract-mismatch");
+	// callbackRecord takes Bundle → Bundle. A policy can choose where to split
+	// a real Lean arrow; it cannot turn the final Bundle into another function.
+	const inner = { parameters: [borrowed], result: leased };
+	const impossible = { ...borrowed, callable: { parameters: [borrowed], result: { ...leased, callable: inner } } };
+	const mismatch = await run({ ...selection
+		, exports: ["Owned.callbackRecord"], arities: []
+		, contracts: { "Owned.callbackRecord": { parameters: [borrowed, impossible] } } });
+	const declined = mismatch.metadata.modules[0].declarations.find(item => item.selected).projection;
+	assert.equal(declined.status, "unsupported");
+	assert.match(declined.expression, /declared callback stages do not match the remaining Lean function type/);
 });

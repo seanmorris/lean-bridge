@@ -330,29 +330,31 @@ export const reviewedOwnedSourceSelection = review => {
 			, ...callable ? { callable } : {}
 			, ...(selected === null ? {} : { refinement: selected }) };
 	};
-	const callableDecision = type => {
+	const callableDecision = (type, signature = false) => {
 		if(type.kind !== "named" || !callbacks.has(type.id)) return undefined;
-		if(selected.has(type.id)) return selected.get(type.id);
+		const key = `${type.id}:${signature ? "signature" : "policy"}`;
+		if(selected.has(key)) return selected.get(key);
 		if(active.has(type.id)) unsupported("Recursive callable signatures require a finite compiler signature", { type: type.id });
 		active.add(type.id);
 		const callable = types.get(type.id).callable;
 		const refinements = types.get(type.id).source.extensions["lean-lang.org/refinements"];
 		const parameters = callable.parameters.map(value => callableDecision(value.type));
-		const result = callableDecision(callable.result.type);
-		const value = parameters.some(Boolean) || result
+		const staged = callable.result.type.kind === "named" && callbacks.has(callable.result.type.id);
+		const result = callableDecision(callable.result.type, staged);
+		const value = signature || parameters.some(Boolean) || result
 			|| callable.result.ownership === "borrow" || refinements ? {
-				...parameters.some(Boolean) || refinements ? {
+				...signature || staged || parameters.some(Boolean) || refinements ? {
 					parameters: callable.parameters.map((value, index) => decision(
 						value, callable.parameters, parameters[index]
 						, refinements?.parameters[index]
 					))
 				} : {}
-				, ...result || callable.result.ownership === "borrow" || refinements ? {
+				, ...signature || result || callable.result.ownership === "borrow" || refinements ? {
 					result: decision(callable.result, callable.parameters, result
 						, refinements?.result)
 				} : {}
 			} : undefined;
-		active.delete(type.id); selected.set(type.id, value); return value;
+		active.delete(type.id); selected.set(key, value); return value;
 	};
 	const contracts = Object.fromEntries(document.declarations
 		.map(item => {

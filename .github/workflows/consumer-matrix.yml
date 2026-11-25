@@ -3629,6 +3629,8 @@ jobs:
           test -s build/leased-closure-fields-c/reviewed.execution.json
           test -s build/leased-closure-fields-c/ordinary.exchange.json
           test -s build/leased-closure-fields-c/reviewed.exchange.json
+          test -s build/leased-closure-fields-c/ordinary.staged.json
+          test -s build/leased-closure-fields-c/reviewed.staged.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-callbacks.test.mjs
           test -s build/owned-host-callbacks/ordinary.json
           test -s build/owned-host-callbacks/reviewed.json

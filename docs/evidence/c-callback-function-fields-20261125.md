@@ -30,7 +30,7 @@ The client tests six cases, in order:
    input remains valid and the outer call returns the expected replacement price.
 
 In both error cases, the previous output value is unchanged and no output owner
-is published. The [test-only observer](../../tests/fixtures/structured-types/tariff-exchange-probe.c)
+is published. The [observer used for these receipts](https://github.com/seanmorris/lean-bridge/blob/8407c0eb19e60ad0fb192e149a43b003e3b8b0f5/tests/fixtures/structured-types/tariff-exchange-probe.c)
 reads one live identity after **each** scenario, while the client session is
 still open, and zero after session close. Each execution record binds the
 public client and observer hashes to the actual installed archive's receipt.

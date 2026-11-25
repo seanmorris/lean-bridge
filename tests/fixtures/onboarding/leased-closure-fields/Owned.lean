@@ -18,4 +18,8 @@ def packQuote (quote : UInt32 → UInt32) : Tariff := ⟨quote⟩
 def exchangeTariff (revise : Tariff → Tariff) (base units : UInt32) : UInt32 :=
   (revise (makeTariff base)).quote units
 
+-- Identical Lean types and bodies; the export contract selects the host call boundary.
+def stagedQuote (choose : UInt32 → UInt32 → UInt32) (base units : UInt32) : UInt32 := choose base units
+def flatQuote (choose : UInt32 → UInt32 → UInt32) (base units : UInt32) : UInt32 := choose base units
+
 end Owned

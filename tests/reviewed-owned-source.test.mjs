@@ -12,6 +12,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { canonicalizeJsonValue, parseBindingIr } from "../src/binding-ir/canonical.mjs";
 import { checkedRefinementSelection } from "../src/analyze/checked-refinement-selection.mjs";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { validateReviewedSource, assertReviewedSourceConfiguration } from "../src/analyze/reviewed-source.mjs";
 import { validateReviewedOwnedSource, reviewedOwnedSourceSelection, readReviewedOwnedSource
 	, verifyReviewedOwnedSourceInputs, reconcileReviewedOwnedSource } from "../src/analyze/reviewed-owned-source.mjs";
@@ -85,6 +86,28 @@ test("a callback exchanging function-bearing records borrows its input and lease
 	assert.deepEqual(transform.result.lifetime, { scope: "explicit", anchor: null });
 	transform.result.ownership = "copy"; transform.result.lifetime = null;
 	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "aggregate-ownership" });
+});
+
+test("reviewed higher-order results preserve their call boundary without splitting flat siblings", async () => {
+	const document = leasedClosureFieldReviewedIr({ exchange: true, staged: true });
+	const expected = JSON.parse(await readFile("tests/fixtures/structured-types/tariff-staged-contract.json"));
+	for(const reverse of [false, true])
+	{
+		if(reverse) document.declarations.reverse();
+		const selection = reviewedOwnedSourceSelection(capture(document));
+		assert.deepEqual(selection.contracts, { "Owned.stagedQuote": expected });
+		assert.deepEqual(selection.arities, [["Owned.unpackQuote", 1]]);
+	}
+	for(const boundary of [[], undefined])
+	{
+		const contract = structuredClone(expected);
+		if(boundary) contract.parameters[0].callable.parameters = boundary;
+		else delete contract.parameters[0].callable.parameters;
+		assert.throws(() => validateExportConfiguration({ schemaVersion: 1
+			, modules: ["Owned"], exports: ["Owned.stagedQuote"]
+			, ownedAggregates: document.aggregatePolicy
+			, contracts: { "Owned.stagedQuote": contract } }), /nonempty outer parameter list/);
+	}
 });
 
 test("owned review owns resource selection and policy without admitting v4 to v3", () => {

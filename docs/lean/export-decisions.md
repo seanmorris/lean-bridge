@@ -790,6 +790,24 @@ its call, or apply to another field, a variant case, or an array of functions.
 For a consumer example, see [Python's callable wrapper](../consume/python.md#calling-a-function-stored-in-a-record)
 or [C's record and result owner](../consume/c.md#keep-a-function-stored-in-a-record).
 
+### Return a function from a callback
+
+For a host callback of type `UInt32 → UInt32 → UInt32`, decide when the host
+should run. By default it receives both numbers in one call and returns a
+number. If the host should receive the first number and return a Lean
+function to apply to the second, give its outer `callable.parameters` one
+entry and describe the returned function in `callable.result.callable`.
+The [complete export contract](../../tests/fixtures/structured-types/tariff-staged-contract.json)
+declares the outer callback borrowed for the call and its function reply
+leased. The [two Lean exports](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean)
+have the same Lean type and body; only `stagedQuote` selects that split.
+
+The ordered outer parameter list specifies where the next function starts.
+A parameter list alone does not split the call, and adding a nested signature
+cannot turn a non-function result into a function. The installed
+[C example](../consume/c.md#return-a-lean-function-directly-from-a-callback)
+shows the difference in the generated API.
+
 ## Declarations the analyzer skips
 
 The default public proposal excludes private and protected declarations, theorems, and type declarations. Selected unsafe, partial, admitted, and unreviewed foreign implementations produce diagnostics. Duplicate unqualified host names require a naming decision.

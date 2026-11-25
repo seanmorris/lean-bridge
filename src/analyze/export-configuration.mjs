@@ -177,6 +177,8 @@ export const validateExportConfiguration = configuration => {
 					const { parameters, result } = site.callable;
 					if(parameters !== undefined && (!Array.isArray(parameters) || parameters.length > 16))
 						fail("invalid-export-configuration", `Contract ${name} callable requires at most 16 ordered parameter sites`);
+					if(result?.callable && !parameters?.length)
+						fail("invalid-export-configuration", `Contract ${name}: a staged callback result requires its nonempty outer parameter list`);
 					for(const site of parameters ?? []) sites.push({ site, parameters, depth: depth + 1 });
 					if(result !== undefined) sites.push({ site: result, parameters, depth: depth + 1 });
 				}
