@@ -42,6 +42,11 @@ for(const owner of Object.keys(staticSourceOwners)) test(owner+" private worker 
 	const root=await mkdtemp(join(tmpdir(),"word-worker-kernel-")); t.after(()=>rm(root,{recursive: true,force: true}));
 	const project=join(root,"src"), runtimeRoot=join(root,"runtime"), app=join(root,"component");
 	await mkdir(app); await prepareStaticWorkerProject(project,owner); const target=staticSourceOwners[owner][1];
+	if(owner==="wit-wasi")
+	{
+		const {extendWitApplication}=await import("./wit-application-project.mjs");
+		await extendWitApplication(project);
+	}
 	const inventory=await inspectLeanProject(project), component=elaboratedComponent(inventory.project);
 	const captured=await openHostProjectSource({project,inventory,component,targets: [target],leanPrefix});
 	try

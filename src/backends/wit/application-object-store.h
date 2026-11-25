@@ -9,10 +9,13 @@
 #include <string.h>
 
 typedef struct lwit_owner lwit_owner;
+typedef struct lwit_box lwit_box;
 typedef struct {
     wasmtime_context_t *ctx;
     wasmtime_component_instance_t instance;
     lwit_owner *owners;
+    uint64_t revision;
+    unsigned active;
     bool failed, closing;
 } lwit_store;
 typedef struct {
@@ -27,6 +30,7 @@ struct lwit_owner {
     lwit_store *source;
     wasmtime_component_resource_any_t *any;
     lwit_owner **prev,*next;
+    lwit_box *box;
 };
 
 static inline bool lwit_open(const lwit_store *s) {
@@ -79,17 +83,28 @@ static inline bool lwit_class_bind(lwit_store *s,const wasmtime_component_export
 }
 /* Only the result of a successful call in 'source' can enter here. Ownership
  * moves from the Wasmtime result on success and stays with it on failure. */
-static inline bool lwit_take(lwit_store *source,lwit_class *k,wasmtime_component_val_t *v,lwit_owner *out) {
-    if(!lwit_open(source) || !k || !lwit_open(k->store) || source->ctx!=k->store->ctx || !k->type || !v || !out || out->source || out->any ||
+static inline bool lwit_take_type(lwit_store *source,const wasmtime_component_resource_type_t *type,wasmtime_component_val_t *v,lwit_owner *out) {
+    if(!lwit_open(source) || !type || !v || !out || out->source || out->any ||
        v->kind!=WASMTIME_COMPONENT_RESOURCE || !v->of.resource || !wasmtime_component_resource_any_owned(v->of.resource))return false;
     wasmtime_component_resource_type_t *actual=wasmtime_component_resource_any_type(v->of.resource);
-    bool ok=wasmtime_component_resource_type_equal(k->type,actual);wasmtime_component_resource_type_delete(actual);
+    bool ok=wasmtime_component_resource_type_equal(type,actual);wasmtime_component_resource_type_delete(actual);
     if(ok){
         *out=(lwit_owner){.source=source,.any=v->of.resource,.prev=&source->owners,.next=source->owners};
         if(out->next)out->next->prev=&out->next;
         source->owners=out;*v=(wasmtime_component_val_t){0};
     }
     return ok;
+}
+static inline bool lwit_take(lwit_store *source,lwit_class *k,wasmtime_component_val_t *v,lwit_owner *out) {
+    return lwit_open(source) && k && lwit_open(k->store) && source->ctx==k->store->ctx && lwit_take_type(source,k->type,v,out);
+}
+/* Move out the canonical owner, without running a destructor. Its receiver
+ * must consume or drop it. Never move a slot published in the native registry. */
+static inline bool lwit_give(lwit_owner *v,wasmtime_component_val_t *out) {
+    if(!v || v->box || !lwit_open(v->source) || !v->any || !out)return false;
+    *v->prev=v->next;if(v->next)v->next->prev=v->prev;
+    *out=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_RESOURCE,.of.resource=v->any};
+    *v=(lwit_owner){0};return true;
 }
 static inline wasmtime_error_t *lwit_drop(lwit_owner *v) {
     if(!v || !v->any)return NULL;
@@ -107,6 +122,7 @@ static inline wasmtime_error_t *lwit_drop(lwit_owner *v) {
  * for the caller and release wrappers without executing more guest code. */
 static inline wasmtime_error_t *lwit_shutdown(lwit_store *s) {
     if(!s || !s->ctx || s->closing)return NULL;
+    if(s->active)return wasmtime_error_new("cannot close an active WIT application binding");
     s->closing=true;
     wasmtime_error_t *first=NULL;
     while(s->owners){

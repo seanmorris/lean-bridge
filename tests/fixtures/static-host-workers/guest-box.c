@@ -1,7 +1,6 @@
 /* Integration fixture for the private Wasmtime adapter and compiled Lean
  * worker. Consumers of a released package must not implement this plumbing. */
-#include "public.h"
-#include "application-members.h"
+#include "application-dispatch.h"
 #include <assert.h>
 #include <poll.h>
 #include <stdio.h>
@@ -57,37 +56,50 @@ static void new_box(session *s,uint32_t n,lwit_owner *out){
     V arg=u32(n),v=result(s,&s->checked.on_box.m_create,&arg,1);
     assert(lwit_take(&s->store,&s->box,v.of.result.val,out));wasmtime_component_val_delete(&v);
 }
-static lwit_owner *unbox(workshop_box box){
-    void *p=NULL;assert(workshop_box_data(box,&p)==workshop_OK);return p;
-}
-static void dispose(void *p){ok(lwit_drop(p));free(p);}
-static uint32_t make(void *ctx,uint32_t n,workshop_box *out){
-    lwit_owner *owner=calloc(1,sizeof *owner);assert(owner);
-    new_box(ctx,n,owner);assert(workshop_box_adopt(owner,dispose,out)==workshop_OK);return 0;
-}
-static uint32_t read_box(void *ctx,workshop_box box,uint32_t *out){
-    session *s=ctx;lwit_owner *o=unbox(box);assert(lwit_is(&s->box,o));
-    V a=resource(o),v=result(s,&s->checked.on_box.m_read,&a,1);
-    assert(v.of.result.val->kind==WASMTIME_COMPONENT_U32);*out=v.of.result.val->of.u32;
-    wasmtime_component_val_delete(&v);return 0;
-}
-static uint32_t set_box(void *ctx,workshop_box box,uint32_t n){
-    session *s=ctx;V a[]={resource(unbox(box)),u32(n)},v=result(s,&s->checked.on_box.m_set_level,a,2);
-    assert(!v.of.result.val);wasmtime_component_val_delete(&v);return 0;
-}
-static uint32_t identity(void *ctx,workshop_box box,workshop_box *out){
-    session *s=ctx;lwit_owner *original=unbox(box),alias={0};bool equal=false;
-    V a=resource(original),v=result(s,&s->checked.on_box.m_identity,&a,1);
-    assert(lwit_take(&s->store,&s->box,v.of.result.val,&alias));wasmtime_component_val_delete(&v);
-    ok(lwit_same(&s->second_binding,original,&alias,&equal));assert(equal);ok(lwit_drop(&alias));
-    assert(workshop_box_clone(box,out)==workshop_OK);return 0;
-}
-typedef struct {session *s;workshop_binding b;unsigned visits;} callback;
+typedef struct {session *s;lwit_bridge *bridge;unsigned visits;} callback;
 static workshop_status relay(void *ctx,workshop_box box,workshop_box *out,workshop_diagnostic *d){
     callback *c=ctx;uint32_t observed=0;
-    assert(lwit_is(&c->s->second_binding,unbox(box)));
-    assert(workshop_update(c->b,box,73,&observed,d)==workshop_OK && observed==73);
+    assert(lwit_is(&c->s->second_binding,lwit_from_box(&c->bridge->members,box)));
+    lwit_owner error={0};assert(lwit_sync_update(c->bridge,box,73,&observed,&error,d)==workshop_OK && observed==73 && !error.any);
     c->visits++;return workshop_box_clone(box,out);
+}
+static void multiple_errors(session *s,lwit_bridge *bridge){
+    lwit_owner error={0};workshop_box out={0};workshop_diagnostic d={0};
+    for(unsigned i=0;i<2;i++){
+        uint32_t a=i?UINT32_MAX-1:UINT32_MAX,b=i?UINT32_MAX:UINT32_MAX-1,before=drops(s);
+        assert(lwit_sync_first_error(bridge,a,b,&out,&error,&d)==workshop_HOST_ERROR);
+        assert(error.any && !d.host_code && drops(s)==before+1);
+        V arg=resource(&error),msg=checked(s,&bridge->members.message,&arg,1);
+        assert(msg.kind==WASMTIME_COMPONENT_STRING && msg.of.string.size==11);
+        assert(!memcmp(msg.of.string.data,i?"other error":"invalid box",11));
+        wasmtime_component_val_delete(&msg);ok(lwit_drop(&error));assert(drops(s)==before+2);
+    }
+}
+static void values(lwit_bridge *bridge,workshop_box a,workshop_box other){
+    lwit_owner error={0};workshop_diagnostic d={0};workshop_buffer bytes={0};
+    const uint8_t text[]="snow \xe2\x98\x83";workshop_view utf={text,sizeof text-1};
+    assert(lwit_sync_text(bridge,a,utf,&bytes,&error,&d)==workshop_OK);
+    assert(bytes.len==utf.len && !memcmp(bytes.data,text,utf.len));workshop_buffer_clear(&bytes);
+    const uint8_t raw[]={255,0,1,0,7};workshop_view blob={raw,sizeof raw};
+    assert(lwit_sync_bytes(bridge,a,blob,&bytes,&error,&d)==workshop_OK);
+    assert(bytes.len==sizeof raw && !memcmp(bytes.data,raw,bytes.len));workshop_buffer_clear(&bytes);
+    uint64_t limbs[7]={UINT64_MAX,42,0,0,0,0,1};workshop_integer_view large={limbs,7,true};workshop_integer result={0};
+    assert(lwit_sync_shift(bridge,a,large,&result,&error,&d)==workshop_OK);
+    assert(result.negative && result.len==7 && !memcmp(result.data,limbs,sizeof limbs));workshop_integer_clear(&result);
+    workshop_box alias={0};bool same=false;
+    assert(lwit_sync_keep_other(bridge,a,other,&alias,&error,&d)==workshop_OK);
+    assert(workshop_box_same(other,alias,&same)==workshop_OK && same);workshop_box_drop(&alias);
+    assert(lwit_sync_take_other(bridge,a,other,&alias,&error,&d)==workshop_OK);
+    assert(workshop_box_same(other,alias,&same)==workshop_OK && same);workshop_box_drop(&alias);
+    assert(lwit_sync_anchored(bridge,a,&alias,&error,&d)==workshop_OK);
+    assert(workshop_box_same(a,alias,&same)==workshop_OK && same);workshop_box_drop(&alias);
+    /* A valid native ticket can still refer to another integration. Reject
+     * it before guest entry; do not interpret the payload as a WIT slot. */
+    int opaque=0;workshop_box alien={0};uint32_t untouched=123;
+    assert(workshop_box_adopt(&opaque,NULL,&alien)==workshop_OK);
+    assert(lwit_sync_read(bridge,alien,&untouched,&error,&d)==workshop_INVALID && untouched==123 && !error.any);
+    assert(workshop_box_drop(&alien)==workshop_OK);
+    assert(lwit_sync_read(bridge,a,&untouched,&error,&d)==workshop_OK && untouched==42);
 }
 #define READY(fn,h) do { \
     workshop_status state;int fd=-1;unsigned attempts=0; \
@@ -96,28 +108,39 @@ static workshop_status relay(void *ctx,workshop_box box,workshop_box *out,worksh
     }assert(state==workshop_OK); \
 } while(0)
 static void workers(session *s){
-    workshop_hosts hosts={.box_create=make,.box_read=read_box,.box_get_level=read_box,.box_set_level=set_box,.box_identity=identity};
-    workshop_binding b={0};workshop_box a={0},other={0},returned={0};workshop_diagnostic d={0};
-    assert(workshop_with_hosts(&hosts,s,&b)==workshop_OK);
+    lwit_bridge bridge={0};assert(lwit_bridge_open(&s->store,&bridge));
+    workshop_binding b=bridge.binding;workshop_box a={0},other={0},returned={0};workshop_diagnostic d={0};lwit_owner error={0};
+    assert(lwit_sync_make(&bridge,UINT32_MAX,&returned,&error,&d)==workshop_HOST_ERROR && error.any && !d.host_code);
+    V err=resource(&error),msg=checked(s,&s->checked.message,&err,1);
+    assert(msg.kind==WASMTIME_COMPONENT_STRING && msg.of.string.size==11 && !memcmp(msg.of.string.data,"invalid box",11));
+    wasmtime_component_val_delete(&msg);ok(lwit_drop(&error));
+    multiple_errors(s,&bridge);
+    assert(lwit_sync_make(&bridge,64206,&returned,&error,&d)==workshop_OK);
+    uint32_t sentinel=12345;workshop_buffer mapped={0};uint32_t mark=drops(s);
+    assert(lwit_sync_mapped(&bridge,returned,&sentinel,&mapped,&error,&d)==workshop_DECLARED_ERROR);
+    assert(sentinel==12345 && !error.any && mapped.len==16 && !memcmp(mapped.data,"host read failed",16));
+    assert(drops(s)==mark+1);workshop_buffer_clear(&mapped);workshop_box_drop(&returned);
     uint32_t before=drops(s);bool same=true;
-    assert(workshop_make(b,42,&a,&d)==workshop_OK && workshop_make(b,42,&other,&d)==workshop_OK);
-    ok(lwit_same(&s->box,unbox(a),unbox(other),&same));assert(!same);
+    assert(lwit_sync_make(&bridge,42,&a,&error,&d)==workshop_OK && lwit_sync_make(&bridge,42,&other,&error,&d)==workshop_OK);
+    ok(lwit_same(&s->box,lwit_from_box(&bridge.members,a),lwit_from_box(&bridge.members,other),&same));assert(!same);
+    values(&bridge,a,other);assert(drops(s)==before+3);before=drops(s);
     workshop_echo_handle h={0};assert(workshop_echo_start(b,a,&h,&d)==workshop_OK);
     READY(echo,h);assert(workshop_echo_take(&h,&returned,&d)==workshop_OK);
-    ok(lwit_same(&s->box,unbox(a),unbox(returned),&same));assert(same);
+    ok(lwit_same(&s->box,lwit_from_box(&bridge.members,a),lwit_from_box(&bridge.members,returned),&same));assert(same);
     assert(workshop_box_drop(&returned)==workshop_OK);
-    workshop_relay_handle job={0};workshop_callback_box_to_box cb={0};callback state={.s=s,.b=b};
+    workshop_relay_handle job={0};workshop_callback_box_to_box cb={0};callback state={.s=s,.bridge=&bridge};
     assert(workshop_callback_box_to_box_new(relay,&state,NULL,&cb)==workshop_OK);
     assert(workshop_relay_start(b,a,cb,&job,&d)==workshop_OK);assert(workshop_callback_box_to_box_drop(&cb)==workshop_OK);
     READY(relay,job);assert(workshop_relay_take(&job,&returned,&d)==workshop_OK && state.visits==1);
     assert(workshop_box_drop(&returned)==workshop_OK);
-    uint32_t n=0;assert(workshop_read(b,a,&n,&d)==workshop_OK && n==73);
-    assert(workshop_read(b,other,&n,&d)==workshop_OK && n==42);
-    assert(workshop_identity(b,a,&returned,&d)==workshop_OK);
+    uint32_t n=0;assert(lwit_sync_read(&bridge,a,&n,&error,&d)==workshop_OK && n==73);
+    assert(lwit_sync_read(&bridge,other,&n,&error,&d)==workshop_OK && n==42);
+    assert(lwit_sync_identity(&bridge,a,&returned,&error,&d)==workshop_OK);
+    assert(workshop_box_same(a,returned,&same)==workshop_OK && same);
     assert(workshop_box_drop(&a)==workshop_OK && workshop_box_drop(&other)==workshop_OK);
     assert(drops(s)==before+2);assert(workshop_box_drop(&returned)==workshop_OK);
     assert(drops(s)==before+3 && !s->store.owners);
-    assert(workshop_close(&b)==workshop_OK);
+    assert(lwit_bridge_close(&bridge)==workshop_OK);
 }
 static wasmtime_component_t *load_component(wasm_engine_t *engine,const char *path){
     FILE *f=fopen(path,"rb");assert(f && !fseek(f,0,SEEK_END));long n=ftell(f);

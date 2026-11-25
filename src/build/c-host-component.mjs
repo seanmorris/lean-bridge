@@ -6,6 +6,7 @@ import {cHostFacade} from "../backends/c/host-facade.mjs";
 import {cppHostFacade} from "../backends/cpp/host-facade.mjs";
 import {witApplicationHostImports} from "../backends/wit/application-host-imports.mjs";
 import {witApplicationMemberBindings} from "../backends/wit/application-member-bindings.mjs";
+import {witApplicationDispatch} from "../backends/wit/application-member-dispatch.mjs";
 import {staticHostMembers} from "../backends/native/static-host-members.mjs";
 import {emitWordHostMembers} from "../backends/native/word-host-members.mjs";
 import {emitWordHostExports} from "../backends/native/word-host-exports.mjs";
@@ -47,13 +48,15 @@ export const compileCHostComponent=async o=>{
 	const support={};
 	if(wit)
 	{
-		for(const file of ["application-object-store.h","application-member-types.h"])
+		for(const file of ["application-object-store.h","application-member-types.h","application-member-runtime.h","sync-io-values.h"])
 		{
 			const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
 			hashes[file]=sha256(bytes);await save(file,bytes);
 		}
 		const binding=witApplicationMemberBindings(witImports);
 		hashes.memberBinding=sha256(binding);await save("application-members.h",binding);
+		const dispatch=witApplicationDispatch({ir,model,entries:direct,descriptor:witImports,name:o.name});
+		hashes.memberDispatch=sha256(dispatch);await save("application-dispatch.h",dispatch);
 	}
 	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h",...cpp?["cpp/host-worker-readiness.h","cpp/host-async.hpp","cpp/task-callback.hpp","cpp/task-loop.hpp","cpp/task-routine.hpp","cpp/task-values.hpp"]:[]]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
 	{

@@ -1,0 +1,15 @@
+namespace Workshop
+open LeanBridge.Host.WitWasi
+
+def keepOther (box other : Box) : IO Box := box.keepOther other
+def takeOther (box other : Box) : IO Box := box.takeOther other
+def anchored (box : Box) : IO Box := box.anchored
+
+def firstError (a b : UInt32) : IO Box := do
+  try Box.create a catch original =>
+    try
+      let _ ← Box.create b
+    catch _ => pure ()
+    throw original
+
+end Workshop
