@@ -58,7 +58,7 @@ static bool lb_input(enum lb_kind k, const lb_val *v, lb_scope *s, uint64_t *w) 
     if (w) w[0]=bits;
     return true;
 }
-static int lb_result(lb_val *out, bool ok, lb_val **child, lb_scope *s) {
+static inline int lb_result(lb_val *out, bool ok, lb_val **child, lb_scope *s) {
     if (!lb_charge(s,1,sizeof(lb_val))) return LB_OVER_BUDGET;
     lb_val empty={0}; *child=wasmtime_component_val_new(&empty);
     if (!*child) return LB_OVER_BUDGET;

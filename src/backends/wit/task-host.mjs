@@ -95,7 +95,7 @@ export const renderWitTaskImports = async model => {
 		, "extern void "+wire.wait.close+"(int *);"
 		, "#define LB_TASK_UNWAIT "+wire.wait.close
 		, witConversionPrelude
-		, (await asset("sync-io-values.h")).replace("static int lb_result(", "static inline int lb_result(")
+		, await asset("sync-io-values.h")
 		, imports
 		, ""].join("\n");
 };

@@ -191,3 +191,12 @@ The [mixed install test](../../tests/helpers/wit-installed-mixed-packages.mjs) b
 | Reviewed | 61,044,375 | `6f612f39d7574a65f95246774abd25dfe75f9b47bedc4400aacc74a677a7037f` |
 
 Run `npm run test:wit-host-object-packages` with the publisher toolchains specified above. The receipts are from local Linux x86-64 builds with the test glibc floor of 2.36, not hosted CI or a registry release.
+
+## One object future, no synchronous API or callback provider
+
+The [task-only install test](../../tests/helpers/wit-installed-object-task-only.mjs) selects only `Jobs.echo`. Both package receipts identify the object-task profile and both launchers require exactly two inputs: the defining object guest and the application. The reviewed build takes its public selection from the Binding IR with no `exports` list in the project configuration. The [independent consumer](../../tests/fixtures/static-host-workers/installed-echo.wat.in) awaits the future, compares the returned box with the original by guest identity, drops the original, and reads **83** through the surviving owner. It runs after the producer source and release directory have been removed, with no tools on its search path.
+
+| Workshop 1.0.0 task-only release | Archive bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 60,966,846 | `b9599f691dcb4906f85cc759cb1d9e0351726d0f8b94aaaea32a5edf7fbc7bce` |
+| Reviewed | 60,966,826 | `6407cffe7783d24d13dac3024418f71928bd83bd0c98adffecd48b7c21b223fe` |

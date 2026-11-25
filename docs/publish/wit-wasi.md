@@ -68,6 +68,8 @@ Distribute the archive and package-set receipt together. Synchronous selections 
 
 For guest-defined objects used by tasks, keep `hostImports`, include each public factory in `exports`, and select it with `taskExports` or `asyncIterators`. Set `taskIOErrors` for a selected task whose worker can fail with an IO error. This combination builds `native-wit-object-task-v1`: the application consumes canonical WIT futures and streams, while ordinary IO operations stay synchronous. You can explicitly set `targets.wit-wasi.asyncAbi` to `"canonical"`. If a registration is needed, the release also supplies the `registrations` world for the application’s callback provider. Check the selected signatures: this profile supports object-returning futures, a returned `Except` or immediate `EIO` failure carrying an object with a `UInt32` success, an object-to-object retained callback with IO failure, and cursors yielding objects with an optional object-valued step error. Selecting an unrelated copied-value task alongside these is not yet supported; the build rejects the whole selection rather than leaving declarations out. See [running the mixed application](../consume/wit-wasi.md#run-an-async-application-with-guest-owned-objects).
 
+You can publish a single object task without a synchronous companion or callback provider. For example, for an echo factory over an application-owned box, select `["Jobs.echo"]` in both `exports` and `taskExports`. In the reviewed route the public selection may come from the Binding IR; keep the task selection and host contract in the configuration.
+
 ### Without application-owned objects
 
 Use ordinary `exports` for `BaseIO`, `IO` or `EIO`. Declare the native host

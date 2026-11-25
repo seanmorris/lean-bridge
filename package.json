@@ -1373,7 +1373,7 @@
     "test:static-host-worker-source": "node --test --test-concurrency=1 tests/helpers/static-worker-elaboration.mjs",
     "test:static-host-worker-components": "node --test --test-concurrency=1 tests/helpers/static-worker-components.mjs",
     "test:wit-host-object-source": "node --test --test-concurrency=1 tests/helpers/wit-host-imports.mjs",
-    "test:wit-host-object-packages": "node --test --test-concurrency=1 tests/helpers/wit-installed-object-packages.mjs tests/helpers/wit-installed-mixed-packages.mjs",
+    "test:wit-host-object-packages": "node --test --test-concurrency=1 tests/helpers/wit-installed-object-packages.mjs tests/helpers/wit-installed-mixed-packages.mjs tests/helpers/wit-installed-object-task-only.mjs",
     "test:wit-host-object-workers": "node --test --test-concurrency=1 --test-name-pattern='wit-wasi private worker' tests/helpers/static-worker-components.mjs",
     "test:cpp-host-registry": "node --test tests/helpers/cpp-host-registry.mjs",
     "test:wit-task-host": "LEAN_BRIDGE_WIT_TASK_HOST=1 node --test --test-concurrency=1 tests/helpers/wit-task-resource-world.mjs",

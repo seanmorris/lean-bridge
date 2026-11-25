@@ -102,10 +102,10 @@ ${witConversionPrelude}
 #include "application-turn-sync.h"
 ${code.join("\n")}
 static const ${p}hosts lb_ts_hosts={${members.join(",")}};
-enum {${methods.map(m=>"LB_TS_I_"+cIdentifier(m.entry.name)).join(",")},LB_TS_COUNT};
-static bool (*const lb_ts_operations[])(lb_ts_bus *,${p}binding,lb_ts_slot *)={${ops.join(",")}};
+enum {${[...methods.map(m=>"LB_TS_I_"+cIdentifier(m.entry.name)),"LB_TS_COUNT"].join(",")}};
+static bool (*const lb_ts_operations[])(lb_ts_bus *,${p}binding,lb_ts_slot *)={${ops.length?ops.join(","):"NULL"}};
 static inline bool lb_ts_dispatch(lb_ts_bus *b,${p}binding binding,lb_wit_message in,lb_wit_message *out){
-    if(!b || b->poisoned || in.op!=LB_TS_ENTER || in.words[0]>=LB_WIT_TURN_DEPTH || in.words[1]>=LB_TS_COUNT || in.words[2])return false;
+    if(!b || b->poisoned || in.op!=LB_TS_ENTER || in.words[0]>=LB_WIT_TURN_DEPTH || ${methods.length?"in.words[1]>=LB_TS_COUNT":"true"} || in.words[2])return false;
     unsigned k=(unsigned)in.words[0],i=(unsigned)in.words[1];lb_ts_slot *s=b->slots+k;
     if(!s->occupied || s->method!=i || (b->frame && b->frame->index>=k))return false;
     lb_ts_frame frame={.parent=b->frame,.index=k};b->frame=&frame;

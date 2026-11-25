@@ -149,7 +149,7 @@ If the package includes a `registrations` world, build a third component for it.
 ./bin/workshop-run objects.wasm callbacks.wasm application.wasm
 ```
 
-Without a callback provider, pass just `objects.wasm application.wasm`. The archive README and launcher usage text give the input order. The launcher prints the signed result. There is no event loop for you to run and no SDK dependency on the deployment machine.
+Without a callback provider, pass just `objects.wasm application.wasm`. For a package that exports only an object task, your application imports the object interface and the task interface; it needs no synchronous Lean functions. The archive README and launcher usage text give the input order. The launcher prints the signed result. There is no event loop for you to run and no SDK dependency on the deployment machine.
 
 ### Call synchronous IO
 
