@@ -1,0 +1,17 @@
+;; A real Box constructor supplies the existing independent canonical reader.
+  (component $source
+    (import "b" (type $b (sub resource))) (import "e" (type $e (sub resource)))
+    (import "make" (func $make (param "value" u32) (result (result (own $b) (error (own $e))))))
+    (core module $m (memory (export "m") 1)) (core instance $m (instantiate $m))
+    (core func $make (canon lower (func $make) (memory $m "m")))
+    (core module $f (import "" "m" (memory 1)) (import "" "make" (func $f (param i32 i32)))
+      (func (export "run") (result i32) (call $f (i32.const 42) (i32.const 0))
+        (if (i32.load8_u (i32.const 0)) (then unreachable)) (i32.load (i32.const 4))))
+    (core instance $f (instantiate $f (with "" (instance (export "m" (memory $m "m")) (export "make" (func $make))))))
+    (func (export "run") (result (own $b)) (canon lift (core func $f "run"))))
+  (instance $src (instantiate $source (with "b" (type $box)) (with "e" (type $err)) (with "make" (func $obj "[static]box.create"))))
+  @READER@
+  (instance $reader (instantiate $reader-code (with "@TASKS@" (instance $jobs)) (with "source" (func $src "run"))
+    (with "register" (func $cb "[static]call-box-to-box.make")) (with "same" (func $obj "same-box")) (with "message" (func $obj "[method]member-error.message"))))
+  (export "user-begin" (func $reader "begin")) (export "user-request" (func $reader "request")) (export "user-collect" (func $reader "collect"))
+  (export "user-receive" (func $reader "receive")) (export "user-discard" (func $reader "discard"))

@@ -7,6 +7,8 @@
 #include <stddef.h>
 enum { LB_TC_OPEN,LB_TC_PULL,LB_TC_CHECK,LB_TC_CLOSE,LB_TC_PEEK,LB_TC_ACK,LB_TC_REPLY,LB_TC_DRAIN };
 enum { LB_TC_DONE,LB_TC_RELEASE,LB_TC_SAME };
+enum { LB_TC_INVOKE=3,LB_TC_CALLBACK_REPLY=8 };
+enum {LB_TF_OPEN,LB_TF_POLL,LB_TF_PEEK,LB_TF_TEXT,LB_TF_CLOSE,LB_TF_DRAIN};
 enum { LB_TC_FREE,LB_TC_LIVE,LB_TC_RETIRED };
 typedef struct { unsigned state,kind,pins; uint64_t ticket; } lb_tc_ref;
 typedef struct { lb_wit_turns *turns; lb_tc_ref rows[256]; } lb_tc_refs;
@@ -31,6 +33,15 @@ static inline bool lb_tc_flush(lb_tc_refs *s){
     }
     return true;
 }
+/* Independent owners, such as callback registrations and non-copyable
+ * exceptions, require release but must not be interned by object equality. */
+static inline lb_tc_ref *lb_tc_own(lb_tc_refs *s,unsigned kind,uint64_t token){
+    if(!token)return NULL;
+    for(unsigned i=0;i<256;i++)if(s->rows[i].state==LB_TC_FREE){
+        s->rows[i]=(lb_tc_ref){.state=LB_TC_LIVE,.kind=kind,.ticket=token};return &s->rows[i];
+    }
+    (void)lb_tc_release(s,kind,token);return NULL;
+}
 static inline lb_tc_ref *lb_tc_acquire(lb_tc_refs *s,unsigned kind,uint64_t token){
     if(!token || !lb_tc_flush(s))return NULL;
     for(unsigned i=0;i<256;i++){
@@ -48,10 +59,7 @@ static inline lb_tc_ref *lb_tc_acquire(lb_tc_refs *s,unsigned kind,uint64_t toke
         if(same){r->state=LB_TC_LIVE;return r;}
     }
     /* Never cache an empty row across a guest call. */
-    for(unsigned i=0;i<256;i++)if(s->rows[i].state==LB_TC_FREE){
-        s->rows[i]=(lb_tc_ref){.state=LB_TC_LIVE,.kind=kind,.ticket=token};return &s->rows[i];
-    }
-    (void)lb_tc_release(s,kind,token);return NULL;
+    return lb_tc_own(s,kind,token);
 }
 static inline bool lb_tc_token(const lb_tc_refs *s,unsigned kind,const void *ptr,uint64_t *token){
     for(unsigned i=0;i<256;i++){

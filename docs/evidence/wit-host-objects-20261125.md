@@ -153,4 +153,14 @@ A second run cancels the finite read while the promise is unresolved. Lean's own
 
 A separate native protocol test opens a third cursor while the second is waiting for the owner to compare two objects. Before the fix both opens chose the same free slot. The factory now reserves its slot before invoking the owner. All three cursors close independently and each original lease is released once.
 
-These are private end-to-end executions with a real async Wasm application and compiled Lean, not an installed mixed release. The full command still needs generated synchronous member dispatch and callback-bearing future delivery on the two-owner runtime, plus ordinary and reviewed installed tests.
+These are private executions with a real async Wasm application and compiled Lean. The next check uses a stream and a retained callback together.
+
+## A stream feeds a retained callback
+
+The [downstream application](../../tests/fixtures/static-host-workers/installed-application.wat.in) creates a box with value 42. It reads the box from `Jobs.series`, checks the original identity on both the item and terminal error, and starts `Jobs.relay`. It drops its registration handle before awaiting the canonical Wasm future. The defining guest's callback re-enters compiled `Workshop.update`, changing the box to 73. The future delivers the original box; the application checks its identity and returns **73**. The source opened one cursor, pulled twice, closed once and invoked the callback once. Both ownership tables ended empty.
+
+The [generated callback adapter](../../src/backends/wit/application-turn-callback.mjs) calls the defining Wasm guest on the store thread, while the native owner keeps the Lean task and its callback alive. A registration extends the existing object table rather than creating a second identity for its box. The [canonical reader](../../tests/fixtures/static-host-workers/lean-relay-consumer.wat.in) checks four outcomes: the original object, the original callback exception with message `other error`, a later Lean IO failure, and that same IO failure after Lean catches a callback exception. The IO message is `late λ` in both cases.
+
+The reader exercises each outcome four ways: receive after the write blocks, drop the blocked result, drop before callback invocation, and request before settlement. A separate guest traps inside its callback. Its parked native frame unwinds before the store is destroyed; the host does not re-enter the trapped store to inspect it.
+
+The application source is unchanged; its stream, callback, mutable object and future are real. The [test composition](../../tests/helpers/wit-application-turn-callbacks.mjs) still supplies a fixture-specific synchronous update adapter. This is not a mixed install receipt. The release command must generate all synchronous operations and remaining task factories on this runtime and pass both ordinary and reviewed installed runs. The synchronous package remains separately installable.

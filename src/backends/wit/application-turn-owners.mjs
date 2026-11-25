@@ -38,7 +38,10 @@ const body=(k,i)=>{
  * Generate a private Component Model table from the checked object/registration
  * layout. Each nominal kind has its own bounded array. Reusing a row issues a
  * new serial; neither serial nor domain is silently wrapped. The error type
- * has no clone contract, so it can be moved and released but not copied.
+ * has no clone contract, so it can be moved and released but not copied. With
+ * callbacks, extend the pre-existing object table: the registration provider
+ * can already use it to re-enter synchronous Lean. Both layers allocate
+ * serials from that same table, and close disables both before running drops.
  *
  * @param descriptor - Compiled guest-defined resource contract.
  * @param callbacks - Optional compiled callback contract.
@@ -48,7 +51,8 @@ export const witTurnOwners=(descriptor,callbacks)=>{
 	const registered=callbacks?.exchange.slots.map(({type: name})=>({name,retain: "retain-"+name,same: "same-"+name}))??[];
 	const kinds=[...objectKinds,...registered];
 	const groups=[[descriptor.interfaceName,objectKinds,0],...registered.length?[[callbacks.interfaceName,registered,objectKinds.length]]:[]];
-	const imports=[],intrinsics=[],lower=[],links=[],lift=[];
+	const imports=[],intrinsics=[],lower=[],links=[],lift=[],parent=[],delegated=registered.length>0;
+	const local=kinds.map((k,i)=>({k,i})).filter(({i})=>!delegated || i>=objectKinds.length);
 	for(const [g,[iface,group,first]] of groups.entries())
 	{
 		const fields=[],aliases=[];
@@ -57,25 +61,49 @@ export const witTurnOwners=(descriptor,callbacks)=>{
 			const i=first+j,r="$r"+i;
 			fields.push(`(export "${k.name}" (type ${r} (sub resource)))`);
 			aliases.push(`(alias export $iface${g} "${k.name}" (type ${r}))`);
-			intrinsics.push(`(core func $drop${i} (canon resource.drop ${r}))`);
+			const inherited=delegated && !g;
+			if(!inherited)intrinsics.push(`(core func $drop${i} (canon resource.drop ${r}))`);
 			const funcs=[["drop","(param i32)"]];
 			if(k.retain)
 			{
 				fields.push(`(export "${k.retain}" (func (param "value" (borrow ${r})) (result (own ${r}))))`,
 					`(export "${k.same}" (func (param "left" (borrow ${r})) (param "right" (borrow ${r})) (result bool)))`);
-				for(const [n,f] of [["retain",k.retain],["same",k.same]])intrinsics.push(`(core func $${n}${i} (canon lower (func $iface${g} "${f}")))`);
+				if(!inherited)for(const [n,f] of [["retain",k.retain],["same",k.same]])intrinsics.push(`(core func $${n}${i} (canon lower (func $iface${g} "${f}")))`);
 				funcs.push(["retain","(param i32) (result i32)"],["same","(param i32 i32) (result i32)"]);
 			}
-			for(const [n,t] of funcs)
+			if(!inherited)for(const [n,t] of funcs)
 			{
 				lower.push(`(import "" "${n}${i}" (func $${n}${i} ${t}))`);links.push(`(export "${n}${i}" (func $${n}${i}))`);
 			}
 			const token='(param "ticket" u64)',owned=`(own ${r})`;
 			const exports=[["hold",`(param "value" ${owned}) (result u64)`],["take",`${token} (result (option ${owned}))`],["release",token+" (result bool)"]];
 			if(k.retain)exports.push(["lease",`(param "value" (borrow ${r})) (result u64)`],["copy",`${token} (result (option ${owned}))`],["same",token+' (param "other" u64) (result bool)']);
-			for(const [n,t] of exports)lift.push(`(func (export "${n}-k${i}") ${t} (canon lift (core func $i "${n}-${i}") (memory $i "m")))`);
+			for(const [n,t] of exports)
+			{
+				const label=n+"-k"+i;
+				if(inherited)
+				{
+					parent.push(`(export "${label}" (func ${t}))`);lift.push(`(export "${label}" (func $base "${label}"))`);
+				}
+				else lift.push(`(func (export "${label}") ${t} (canon lift (core func $i "${n}-${i}") (memory $i "m")))`);
+			}
 		}
 		imports.push(`(import "${iface}" (instance $iface${g} ${fields.join(" ")}))`,...aliases);
+	}
+	if(delegated)
+	{
+		const shared=[["issue","(result u32)","(result i32)"]
+			, ["bind",'(param "domain" u32) (result bool)',"(param i32) (result i32)"]
+			, ["count","(result u32)","(result i32)"]
+			, ["close","",""]
+			, ["release-lease",'(param "kind" u32) (param "ticket" u64) (result bool)',"(param i32 i64) (result i32)"]
+			, ["same-lease",'(param "kind" u32) (param "left" u64) (param "right" u64) (result bool)',"(param i32 i64 i64) (result i32)"]];
+		for(const [n,t,c] of shared)
+		{
+			parent.push(`(export "${n}" (func ${t}))`);intrinsics.push(`(core func $base-${n} (canon lower (func $base "${n}")))`);
+			lower.push(`(import "" "base-${n}" (func $base-${n} ${c}))`);links.push(`(export "base-${n}" (func $base-${n}))`);
+		}
+		imports.push(`(import "object-owners" (instance $base ${parent.join(" ")}))`);
 	}
 	return `(component
     ${imports.join("\n")} ${intrinsics.join("\n")}
@@ -85,14 +113,19 @@ export const witTurnOwners=(descriptor,callbacks)=>{
       (global $live (mut i32) (i32.const 0))
       (func (export "bind") (param $d i32) (result i32)
         (if (i32.or (i32.or (global.get $closed) (global.get $domain)) (i32.eqz (local.get $d))) (then (return (i32.const 0))))
+        ${delegated?"(if (i32.eqz (call $base-bind (local.get $d))) (then (return (i32.const 0))))":""}
         (global.set $domain (local.get $d)) (i32.const 1))
-      (func $save (param $base i32) (param $v i32) (result i64) (local $p i32)
-        (if (i32.or (i32.eqz (global.get $domain)) (i32.eq (global.get $last) (i32.const -1))) (then (return (i64.const 0))))
+      (func $issue (export "issue") (result i32) ${delegated?"(call $base-issue)":`
+        (if (i32.or (i32.eqz (global.get $domain)) (i32.eq (global.get $last) (i32.const -1))) (then (return (i32.const 0))))
+        (global.set $last (i32.add (global.get $last) (i32.const 1))) (global.get $last)`})
+      (func $save (param $base i32) (param $v i32) (result i64) (local $p i32) (local $serial i32)
+        (if (i32.eqz (global.get $domain)) (then (return (i64.const 0))))
         (local.set $p (local.get $base))
         (loop $scan (if (i32.eqz (i32.load (local.get $p))) (then
-          (global.set $last (i32.add (global.get $last) (i32.const 1))) (global.set $live (i32.add (global.get $live) (i32.const 1)))
-          (i32.store (local.get $p) (global.get $last)) (i32.store offset=4 (local.get $p) (local.get $v))
-          (return (i64.or (i64.shl (i64.extend_i32_u (global.get $domain)) (i64.const 32)) (i64.extend_i32_u (global.get $last))))))
+          (local.set $serial (call $issue)) (if (i32.eqz (local.get $serial)) (then (return (i64.const 0))))
+          (global.set $live (i32.add (global.get $live) (i32.const 1)))
+          (i32.store (local.get $p) (local.get $serial)) (i32.store offset=4 (local.get $p) (local.get $v))
+          (return (i64.or (i64.shl (i64.extend_i32_u (global.get $domain)) (i64.const 32)) (i64.extend_i32_u (local.get $serial))))))
           (local.set $p (i32.add (local.get $p) (i32.const 8)))
           (br_if $scan (i32.lt_u (local.get $p) (i32.add (local.get $base) (i32.const ${capacity*8})))))
         (i64.const 0))
@@ -107,15 +140,19 @@ export const witTurnOwners=(descriptor,callbacks)=>{
       (func $remove (param $p i32) (result i32) (local $v i32)
         (local.set $v (i32.load offset=4 (local.get $p))) (i64.store (local.get $p) (i64.const 0))
         (global.set $live (i32.sub (global.get $live) (i32.const 1))) (local.get $v))
-      ${kinds.map(body).join("\n")}
+      ${local.map(({k,i})=>body(k,i)).join("\n")}
       (func (export "release-lease") (param $kind i32) (param $ticket i64) (result i32)
-        ${kinds.map((_,i)=>`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $release${i} (local.get $ticket)))))`).join(" ")} (i32.const 0))
+        ${local.map(({i})=>`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $release${i} (local.get $ticket)))))`).join(" ")}
+        ${delegated?"(call $base-release-lease (local.get $kind) (local.get $ticket))":"(i32.const 0)"})
       (func (export "same-lease") (param $kind i32) (param $left i64) (param $right i64) (result i32)
-        ${kinds.flatMap((k,i)=>k.retain?[`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $sameTickets${i} (local.get $left) (local.get $right)))))`]:[]).join(" ")} (i32.const 0))
-      (func (export "count") (result i32) (global.get $live))
-      (func (export "close") (global.set $closed (i32.const 1)) (global.set $domain (i32.const 0)) ${kinds.map((_,i)=>`(call $drain${i})`).join(" ")}))
+        ${local.flatMap(({k,i})=>k.retain?[`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $sameTickets${i} (local.get $left) (local.get $right)))))`]:[]).join(" ")}
+        ${delegated?"(call $base-same-lease (local.get $kind) (local.get $left) (local.get $right))":"(i32.const 0)"})
+      (func (export "count") (result i32) (global.get $live) ${delegated?"(call $base-count) i32.add":""})
+      (func (export "close") (global.set $closed (i32.const 1)) (global.set $domain (i32.const 0))
+        ${delegated?"(call $base-close)":""} ${local.map(({i})=>`(call $drain${i})`).join(" ")}))
     (core instance $i (instantiate $m (with "" (instance ${links.join(" ")}))))
     (func (export "bind") (param "domain" u32) (result bool) (canon lift (core func $i "bind")))
+    ${delegated?"":'(func (export "issue") (result u32) (canon lift (core func $i "issue")))'}
     (func (export "release-lease") (param "kind" u32) (param "ticket" u64) (result bool) (canon lift (core func $i "release-lease")))
     (func (export "same-lease") (param "kind" u32) (param "left" u64) (param "right" u64) (result bool) (canon lift (core func $i "same-lease")))
     (func (export "count") (result u32) (canon lift (core func $i "count")))

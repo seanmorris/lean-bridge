@@ -4,6 +4,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { callbackHostName } from "../../abi/host-member-names.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 import { objectCallbackBinding } from "./application-callback-host.mjs";
+import { witTurnCallbackHost,witTurnCallbackInvoke } from "./application-turn-callback.mjs";
 import { witCallbackExchange } from "./application-exchange.mjs";
 
 /**
@@ -71,6 +72,8 @@ export const witObjectCallbackProjection=options=>{
 		, "callback-exchange.wat": exchange.wat
 		, "application-callbacks.h": objectCallbackBinding({sigs,jobs,prefix,iface,rs,exchange})
 		, "object-callbacks.json": canonicalJson(layout)};
+	for(const [i,s] of sigs.entries())files[s.label+"-turn-invoke.wat"]=witTurnCallbackInvoke({...s,err: rs.length,cb: rs.length+1+i});
+	if(sigs.length)files["application-turn-callbacks.h"]=witTurnCallbackHost({prefix,sigs,errorKind: rs.length});
 	return {files,layout};
 };
 /**

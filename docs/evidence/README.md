@@ -19,6 +19,7 @@ The [Wasm guest callback and future check](wit-host-objects-20261125.md#the-wasm
 The [object stream check](wit-host-objects-20261125.md#a-wasm-reader-pulls-guest-owned-objects-from-a-lean-cursor) follows the same ownership across demand, a typed final error, cancellation, and shutdown with unread items.
 The [installed synchronous WIT check](wit-host-objects-20261125.md#run-the-installed-synchronous-object-package) runs ordinary and reviewed releases with independently compiled guests and counts destructor calls in the defining guest.
 The [async Wasm cursor reader](wit-host-objects-20261125.md#canonical-streams-read-by-an-async-guest) distinguishes a typed terminal error from EOF and cancels a real parked Lean pull without stalling another reader.
+The [stream-to-callback application](wit-host-objects-20261125.md#a-stream-feeds-a-retained-callback) gets its original box back through a canonical future after the callback re-enters Lean and changes its value from 42 to 73.
 
 [Zero-payload checked records in C and C++](zero-payload-checked-record-native-20261021.md)
 record four hosted native package selections for proof-only `Witness`,

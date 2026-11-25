@@ -5,7 +5,10 @@
 #include "public.h"
 #include "series-turn-stream.h"
 #include "finite-turn-stream.h"
+#include "relay-turn-future.h"
+#include "relay-late-turn-future.h"
 #include "application-turn-cursor-link.h"
+#include "application-turn-future-link.h"
 #include <poll.h>
 #include <wasmtime.h>
 #include <assert.h>
@@ -16,7 +19,7 @@
 
 enum { UPDATE=1,SET=2,GET=3,RESULT=4,MEMBER_ERROR=5 };
 typedef struct { lb_wit_turns turns; workshop_binding binding; bool bound,audit_aliases; unsigned drops,sets,gets,starts,pulls,closes;
-    lb_tc_refs refs;lb_tc_series series;lb_tc_finite finite; } session;
+    lb_tc_refs refs;lb_tc_series series;lb_tc_finite finite;lb_tf_relay relay;lb_tf_relay_late late; } session;
 typedef struct { session *s; uint64_t ticket,fault; } box_arg;
 static void dispose(void *p){++((box_arg *)p)->s->drops;}
 static uint32_t member(void *ctx,workshop_box box,unsigned op,uint32_t arg,uint32_t *out){
@@ -43,7 +46,7 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
     if(arg.op==242){
         assert(s->bound && workshop_close(&s->binding)==workshop_OK);s->bound=false;*out=(lb_wit_message){0};return true;
     }
-    bool drain=arg.op>=256 && (arg.op-256)%16==LB_TC_DRAIN;
+    bool drain=arg.op>=512?(arg.op-512)%16==LB_TF_DRAIN:arg.op>=256 && (arg.op-256)%16==LB_TC_DRAIN;
     if(!s->bound && !drain){
         workshop_hosts h={.box_read=get,.box_get_level=get,.box_set_level=set,.box_create=make,.box_identity=own,
             .box_anchored=own,.box_keep_other=pair,.box_take_other=pair,.box_echo_text=bytes,.box_echo_bytes=bytes,.box_shift=integer};
@@ -58,6 +61,10 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
         workshop_diagnostic d={0};uint32_t outval=0;
         assert(workshop_cursor_gate(s->binding,arg.words[0]!=0,&outval,&d)==workshop_OK);
         workshop_diagnostic_clear(&d);*out=(lb_wit_message){0};return true;
+    }
+    if(arg.op>=512){
+        unsigned ch=(arg.op-512)/16;arg.op=(arg.op-512)%16;assert(ch<2);s->refs.turns=turns;
+        return ch?lb_tf_relay_late_call(&s->late,&s->refs,s->binding,arg,out):lb_tf_relay_call(&s->relay,&s->refs,s->binding,arg,out);
     }
     if(arg.op>=256){
         unsigned channel=(arg.op-256)/16;arg.op=(arg.op-256)%16;assert(channel<2);s->refs.turns=turns;
@@ -80,6 +87,7 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
 }
 static void finish(void *ctx){
     session *s=ctx;assert(lb_tc_series_shutdown(&s->series) && lb_tc_finite_shutdown(&s->finite));
+    assert(lb_tf_relay_shutdown(&s->relay) && lb_tf_relay_late_shutdown(&s->late));
     if(s->bound){assert(workshop_close(&s->binding)==workshop_OK);s->bound=false;}
 }
 static void check(wasmtime_error_t *e){
@@ -87,7 +95,7 @@ static void check(wasmtime_error_t *e){
     wasm_name_t m;wasmtime_error_message(e,&m);fprintf(stderr,"%.*s\n",(int)m.size,m.data);
     wasm_name_delete(&m);wasmtime_error_delete(e);abort();
 }
-typedef struct { session s; lb_wit_ticket current; lb_tc_port ports[2];bool waited; } host;
+typedef struct { session s; lb_wit_ticket current; lb_tc_port ports[2];lb_tf_driver future,late;bool waited; } host;
 static wasmtime_error_t *bridge(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
     (void)ctx;(void)ft;host *h=ptr;assert(argc==2 && retc==1 && in->kind==WASMTIME_COMPONENT_U64 && in[1].kind==WASMTIME_COMPONENT_U64);
@@ -149,7 +157,8 @@ static bool nested_open(lb_wit_turns *s,void *ctx){
     assert(!finish_cursor_event(s,a,&released) && released==7);
     return lb_wit_turn_retire(s);
 }
-typedef struct {host *h;const char *wasm;bool trap,streams,cancel;} input;
+enum scenario {PROPERTY,TRAP,CURSORS,CANCEL,REGISTRATIONS,MIXED,FUTURE_ERROR,FUTURE_TRAP};
+typedef struct {host *h;const char *wasm;enum scenario mode;} input;
 static wasmtime_component_func_t lookup(wasmtime_component_instance_t *instance,wasmtime_context_t *ctx,const char *name){
     wasmtime_component_export_index_t *idx=wasmtime_component_instance_get_export_index(instance,ctx,NULL,name,strlen(name));
     wasmtime_component_func_t func;assert(idx && wasmtime_component_instance_get_func(instance,ctx,idx,&func));
@@ -218,6 +227,64 @@ static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context
     check(wasmtime_component_func_call(&live,ctx,NULL,0,&got,1));assert(got.kind==WASMTIME_COMPONENT_U32 && !got.of.u32);
     check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
 }
+#include "guest-turn-relay.h"
+static void relay_driver(lb_tf_driver *d,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,const char *prefix){
+    const char *names[]={"poll","deliver","reap","retire","close","drain"};
+    wasmtime_component_func_t *fs[]={&d->poll,&d->deliver,&d->reap,&d->retire,&d->close,&d->drain};d->ctx=ctx;
+    for(unsigned i=0;i<6;i++){char name[48];int n=snprintf(name,sizeof name,"%s-%s",prefix,names[i]);assert(n>0 && (size_t)n<sizeof name);*fs[i]=lookup(inst,ctx,name);}
+}
+static void future_cases(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,bool trap){
+    relay_driver(&h->future,inst,ctx,"relay");relay_driver(&h->late,inst,ctx,"relay-late");
+    relay_probe p={h,inst,ctx};wasmtime_component_func_t start=lookup(inst,ctx,"user-begin");
+    for(unsigned stepno=0;stepno<(trap?1u:4u);stepno++)for(unsigned mode=trap?4:0;mode<(trap?5u:4u);mode++){
+        lb_tf_driver *d=(mode==2 || mode==3)?&h->late:&h->future;
+        unsigned before=rcount(&p,"visits"),drops=rcount(&p,"cb-drops"),changed=0;RV arg=ru32(mode);
+        check(wasmtime_component_func_call(&start,ctx,&arg,1,NULL,0));assert(rcount(&p,"visits")==before && rcount(&p,"cb-drops")==drops+1);
+        unsigned i=0;while(i<64 && !d->port.port.active[i])i++;assert(i<64);
+        if(stepno==3){wasmtime_component_func_t request=lookup(inst,ctx,"user-request");step(&request,ctx);}
+        for(unsigned n=0;;n++){
+            assert(n<32 && d->port.port.fd[i]>=0);struct pollfd fd={.fd=d->port.port.fd[i],.events=POLLIN};
+            assert(poll(&fd,1,5000)==1 && (fd.revents&(POLLIN|POLLHUP)));if(stepno==2)break;
+            wasmtime_error_t *e=lb_tf_advance(d,&changed);
+            if(trap){
+                assert(e);wasm_name_t msg;wasmtime_error_message(e,&msg);const char cause[]="unreachable";bool found=false;
+                for(size_t k=0;k+sizeof cause-1<=msg.size;k++)if(!memcmp(msg.data+k,cause,sizeof cause-1))found=true;
+                assert(found);wasm_name_delete(&msg);wasmtime_error_delete(e);return; /* Never re-enter the poisoned store. */
+            }
+            check(e);if(!d->port.port.active[i] || d->port.delivered[i])break;
+        }
+        if(stepno!=2)assert(d->port.delivered[i]==(stepno!=3));
+        wasmtime_component_func_t end=lookup(inst,ctx,stepno==3?"user-collect":stepno?"user-discard":"user-receive");step(&end,ctx);
+        check(lb_tf_reap(d,&changed));assert(!d->port.port.active[i]);
+        assert(rcount(&p,"visits")==before+(stepno!=2) && rcount(&p,"cb-drops")==drops+2+(stepno!=2));
+    }
+    check(lb_tf_retire(&h->future));check(lb_tf_retire(&h->late));lb_wit_event ev={0};
+    assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
+    check(wasmtime_component_func_call(&h->future.drain,ctx,NULL,0,NULL,0));assert(!rcount(&p,"live-owners"));
+    wasmtime_component_func_t close=lookup(inst,ctx,"close-owners");check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
+}
+static void run_mixed(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx){
+    lb_tf_driver *d=&h->future;relay_driver(d,inst,ctx,"relay");
+    wasmtime_component_func_t launch=lookup(inst,ctx,"launch"),tick=lookup(inst,ctx,"tick"),done=lookup(inst,ctx,"done"),take=lookup(inst,ctx,"take");
+    wasmtime_component_func_t pump=lookup(inst,ctx,"series-pump"),retire=lookup(inst,ctx,"series-retire"),close=lookup(inst,ctx,"close-owners");
+    step(&launch,ctx);RV got={0};unsigned changed=0;struct timespec pause={0,1000000};
+    for(unsigned i=0;;i++){
+        assert(i<2000);step(&tick,ctx);check(wasmtime_component_func_call(&done,ctx,NULL,0,&got,1));
+        assert(got.kind==WASMTIME_COMPONENT_BOOL);if(got.of.boolean)break;
+        for(unsigned k=0;k<64;k++)if(h->ports[0].active[k]){
+            RV key=ru32(k+1);check(wasmtime_component_func_call(&pump,ctx,&key,1,&got,1));
+        }
+        check(lb_tf_advance(d,&changed));nanosleep(&pause,NULL);
+    }
+    check(wasmtime_component_func_call(&take,ctx,NULL,0,&got,1));assert(got.kind==WASMTIME_COMPONENT_S64 && got.of.s64==73 && changed);
+    for(unsigned k=0;k<64;k++)if(h->ports[0].active[k]){
+        RV key=ru32(k+1);check(wasmtime_component_func_call(&retire,ctx,&key,1,NULL,0));
+    }
+    check(lb_tf_retire(d));lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
+    check(wasmtime_component_func_call(&d->drain,ctx,NULL,0,NULL,0));
+    relay_probe p={h,inst,ctx};assert(rcount(&p,"visits")==1 && rcount(&p,"cb-drops")==3 && !rcount(&p,"live-owners"));
+    check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
+}
 static bool application(lb_wit_turns *s,void *ptr){
     input *in=ptr;host *h=in->h;assert(s==&h->s.turns);
     wasm_config_t *cfg=wasm_config_new();wasmtime_config_wasm_component_model_set(cfg,true);
@@ -225,10 +292,12 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasm_engine_t *engine=wasm_engine_new_with_config(cfg);wasmtime_store_t *store=wasmtime_store_new(engine,NULL,NULL);
     wasmtime_component_linker_t *link=wasmtime_component_linker_new(engine);
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
-    if(in->streams){
+    if(in->mode==CURSORS || in->mode==CANCEL || in->mode>=MIXED){
         check(lb_tc_link(root,"turn-series",s,256,h->ports));
-        check(lb_tc_link(root,"turn-finite",s,272,h->ports+1));
-    }else check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
+        if(in->mode<MIXED)check(lb_tc_link(root,"turn-finite",s,272,h->ports+1));
+        else{check(lb_tf_link(root,"turn-relay",s,512,&h->future.port));check(lb_tf_link(root,"turn-relay-late",s,528,&h->late.port));}
+    }
+    if(in->mode!=CURSORS && in->mode!=CANCEL)check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
     wasmtime_component_linker_instance_delete(root);
     FILE *f=fopen(in->wasm,"rb");assert(f && !fseek(f,0,SEEK_END));long n=ftell(f);assert(n>0 && !fseek(f,0,SEEK_SET));
     uint8_t *b=malloc((size_t)n);assert(b && fread(b,1,(size_t)n,f)==(size_t)n);fclose(f);
@@ -238,7 +307,10 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasmtime_component_func_t bind=lookup(&instance,ctx,"bind-owners");
     wasmtime_error_t *err=NULL;wasmtime_component_val_t value={0},domain={.kind=WASMTIME_COMPONENT_U32,.of.u32=19};
     check(wasmtime_component_func_call(&bind,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && value.of.boolean);
-    if(in->streams){streams(h,&instance,ctx,in->cancel);goto finished;}
+    if(in->mode==CURSORS || in->mode==CANCEL){streams(h,&instance,ctx,in->mode==CANCEL);goto finished;}
+    if(in->mode==REGISTRATIONS){run_relays(h,&instance,ctx);goto finished;}
+    if(in->mode==MIXED){run_mixed(h,&instance,ctx);goto finished;}
+    if(in->mode>=FUTURE_ERROR){future_cases(h,&instance,ctx,in->mode==FUTURE_TRAP);goto finished;}
     wasmtime_component_func_t run=lookup(&instance,ctx,"run");
     wasmtime_call_future_t *fut=wasmtime_component_func_call_async(&run,ctx,NULL,0,&value,1,&err);
     assert(fut);struct timespec begin,now,pause={0,1000000};assert(!clock_gettime(CLOCK_MONOTONIC,&begin));
@@ -246,7 +318,7 @@ static bool application(lb_wit_turns *s,void *ptr){
         assert(!clock_gettime(CLOCK_MONOTONIC,&now) && now.tv_sec-begin.tv_sec<20);nanosleep(&pause,NULL);
     }
     wasmtime_call_future_delete(fut);
-    if(in->trap){
+    if(in->mode==TRAP){
         assert(err);wasm_name_t m;wasmtime_error_message(err,&m);
         const char reason[]="unreachable";bool found=false;
         for(size_t i=0;i+sizeof(reason)-1<=m.size;i++)if(!memcmp(m.data+i,reason,sizeof(reason)-1)){found=true;break;}
@@ -267,21 +339,21 @@ finished:
     return true;
 }
 int main(int argc,char **argv){
-    assert(argc==5);session trial={0};assert(lb_wit_turn_run(&trial.turns,enter,finish,&trial,protocol,NULL));
+    assert(argc==7);session trial={0};assert(lb_wit_turn_run(&trial.turns,enter,finish,&trial,protocol,NULL));
     assert(!trial.bound && trial.drops==3 && trial.sets==3 && trial.gets==2);
-    host h={0};input in={&h,argv[1],false,false,false};assert(lb_wit_turn_run(&h.s.turns,enter,finish,&h.s,application,&in));
+    host h={0};input in={&h,argv[1],PROPERTY};assert(lb_wit_turn_run(&h.s.turns,enter,finish,&h.s,application,&in));
     assert(!h.s.bound && h.s.drops==2 && h.s.sets==2 && h.s.gets==2);
     puts("async guest: original box 42 -> 73; original getter error; two Lean frames disposed");
-    host failed={0};input trap={&failed,argv[2],true,false,false};
+    host failed={0};input trap={&failed,argv[2],TRAP};
     assert(lb_wit_turn_run(&failed.s.turns,enter,finish,&failed.s,application,&trap));
     assert(!failed.s.bound && failed.s.drops==1 && failed.s.sets==1 && !failed.s.gets);
     puts("trapped async guest: parked Lean call unwound once on its owner before store destruction");
-    host cursors={.s={.audit_aliases=true}};input run_cursors={&cursors,argv[3],false,true,false};
+    host cursors={.s={.audit_aliases=true}};input run_cursors={&cursors,argv[3],CURSORS};
     assert(lb_wit_turn_run(&cursors.s.turns,enter,finish,&cursors.s,application,&run_cursors));
     assert(cursors.s.starts==4 && cursors.s.pulls==6 && cursors.s.closes==4 && !cursors.s.bound);
     for(unsigned k=0;k<256;k++)assert(cursors.s.refs.rows[k].state==LB_TC_FREE);
     puts("canonical guest-owned cursors: four open, six pulls, one abandoned before demand, four closed");
-    host cancelled={.s={.audit_aliases=true}};input cancel={&cancelled,argv[4],false,true,true};
+    host cancelled={.s={.audit_aliases=true}};input cancel={&cancelled,argv[4],CANCEL};
     assert(lb_wit_turn_run(&cancelled.s.turns,enter,finish,&cancelled.s,application,&cancel));
     assert(cancelled.s.starts==4 && cancelled.s.pulls==5 && cancelled.s.closes==4);
     for(unsigned k=0;k<256;k++)assert(cancelled.s.refs.rows[k].state==LB_TC_FREE);
@@ -290,4 +362,21 @@ int main(int argc,char **argv){
     assert(lb_wit_turn_run(&nested.turns,enter,finish,&nested,nested_open,NULL));
     assert(nested.starts==3 && nested.closes==3 && !nested.pulls && !nested.bound);
     puts("reentrant cursor open during owner comparison: three independent cursors, three releases");
+    host relay={0};input callbacks={&relay,argv[5],REGISTRATIONS};
+    assert(lb_wit_turn_run(&relay.s.turns,enter,finish,&relay.s,application,&callbacks));
+    assert(!relay.s.bound && relay.s.sets==1 && relay.s.gets==1);
+    for(unsigned i=0;i<256;i++)assert(relay.s.refs.rows[i].state==LB_TC_FREE);
+    puts("retained native tasks: reentrant original object, owned callback exception, caught exception then independent IO error, cancelled pending callback");
+    host mixed={0};input app={&mixed,argv[6],MIXED};
+    assert(lb_wit_turn_run(&mixed.s.turns,enter,finish,&mixed.s,application,&app));
+    assert(!mixed.s.bound && mixed.s.starts==1 && mixed.s.pulls==2 && mixed.s.closes==1 && mixed.s.sets==1 && mixed.s.gets==1);
+    for(unsigned i=0;i<256;i++)assert(mixed.s.refs.rows[i].state==LB_TC_FREE);
+    puts("unchanged downstream application: series to retained relay to nested Lean update to canonical future: 73");
+    host errors={0};input cases={&errors,argv[6],FUTURE_ERROR};
+    assert(lb_wit_turn_run(&errors.s.turns,enter,finish,&errors.s,application,&cases));
+    for(unsigned i=0;i<256;i++)assert(errors.s.refs.rows[i].state==LB_TC_FREE);
+    host trapped={0};input traps={&trapped,argv[6],FUTURE_TRAP};
+    assert(lb_wit_turn_run(&trapped.s.turns,enter,finish,&trapped.s,application,&traps) && !trapped.s.bound);
+    for(unsigned i=0;i<256;i++)assert(trapped.s.refs.rows[i].state!=LB_TC_LIVE && !trapped.s.refs.rows[i].pins);
+    puts("canonical callback futures: sixteen scheduling/error combinations and native teardown on a guest trap");
 }

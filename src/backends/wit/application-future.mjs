@@ -12,6 +12,8 @@ import { relayComponents } from "./application-relay.mjs";
 import { canonicalStream } from "./canonical-stream.mjs";
 import { objectStreamHost } from "./application-stream-host.mjs";
 import { witTurnCursorGraph,witTurnCursorHost,witTurnCursorPorts } from "./application-turn-cursor.mjs";
+import { witTurnRelayHost } from "./application-turn-callback.mjs";
+import { witTurnRelayGraph } from "./application-turn-future.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -155,6 +157,8 @@ export const witObjectFutureFiles=options=>{
 				, from: rs[a].name.replaceAll("-","_")
 				, to: rs[z].name.replaceAll("-","_")};
 			const wasm=relayComponents(m);
+			files[label+"-turn-future.h"]=witTurnRelayHost(m);
+			files[label+"-turn-future.wat"]=witTurnRelayGraph(m,wasm.future);
 			files[label+"-ports.wat"]=wasm.ports;files[label+"-future.wat"]=wasm.future;files[label+"-future.h"]=objectFutureHost(m);
 			supported.push(row);continue;
 		}

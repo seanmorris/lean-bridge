@@ -58,7 +58,9 @@ export const witApplicationCommand=o=>{
 	if(registered)
 	{
 		const cx=callbacks.exchange.name;
-		parts.push(nested(modules.callbacks,"registrations","callbacks"),nested(modules.callbackExchange,"cb-cells"),
+		parts.push(nested(witTurnOwners(descriptor,null),"object-table"),
+			`(instance $object-owners (instantiate $object-table ${appImports[0]}))`,
+			nested(modules.callbacks,"registrations","callbacks"),nested(modules.callbackExchange,"cb-cells"),
 			`(instance $c (instantiate $registrations ${appImports.join(" ")})) (alias export $c "${cb}" (instance $cb))`,
 			`(export "${cb}" (instance $cb)) (instance $cc (instantiate $cb-cells (with "${cb}" (instance $cb))))`,
 			`(alias export $cc "${cx}" (instance $cx)) (export "${cx}" (instance $cx))`);
@@ -68,7 +70,7 @@ export const witApplicationCommand=o=>{
 	if(methods.length)
 	{
 		parts.push(nested(witTurnOwners(descriptor,registered?callbacks:null),"turn-owners"),
-			`(instance $owners (instantiate $turn-owners ${appImports[0]} ${registered?`(with "${cb}" (instance $cb))`:""}))`,
+			`(instance $owners (instantiate $turn-owners ${appImports[0]} ${registered?`(with "${cb}" (instance $cb)) (with "object-owners" (instance $object-owners))`:""}))`,
 			'(export "bind-owners" (func $owners "bind"))','(export "close-owners" (func $owners "close"))');
 		parts.push(nested(modules.tasks,"tasks"),`(instance $jobs (instantiate $tasks ${taskImports.join(" ")} ${channels.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`);
 		for(const m of methods)for(const p of (m.shape==="stream"?["pump","retire"]:["deliver","reap","retire"]))
