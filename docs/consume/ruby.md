@@ -72,6 +72,25 @@ the references Lean retained, not the Ruby object itself. If the Ruby method
 raises and Lean propagates that failure unchanged, the caller gets the original
 Ruby exception, including its identity. Lean can also catch or replace it.
 
+A gem can return a Lean function that remembers the Ruby instance. For
+example, the [reader factory](../../tests/fixtures/ruby-host-closures/Closures.lean)
+captures a box, but reads its current value only when you call the function:
+
+```ruby
+api.bind_hosts(box: Box) do
+  box = api.make(40)
+  read_plus = api.reader(box)
+  puts read_plus.call(2)     # 42
+  box.level = 50
+  p [1, 2].map(&read_plus)   # [51, 52]
+  read_plus.close
+end
+```
+
+Call and close it on the creating fiber. Leaving the block closes any
+remaining functions, including ones converted to a Ruby block. Closing from
+inside a call lets that invocation finish but rejects further calls.
+
 A synchronous export may return your object in an `Ok` or `Err`, or raise
 `api::DeclaredError` with the object in `payload`. Read the active arm of a
 nested result through `value`. These are ordinary Ruby references: they still

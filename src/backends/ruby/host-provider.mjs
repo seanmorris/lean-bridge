@@ -2,6 +2,7 @@
 import { hostMemberSymbol } from "../lean/host-object.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { isReservedRubyName } from "./copied-model.mjs";
+import { readFileSync } from "node:fs";
 
 const fail = m => { throw new TypeError("Ruby host provider: " + m); };
 const simple = /^[A-Za-z][A-Za-z0-9_]*$/u, qualified = /^[A-Z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$/u;
@@ -112,13 +113,13 @@ const output = (resources, t) => {
 	}
 	const k = project(resources, t); return { lean: "_root_." + k.lean, to: k.to };
 };
-const entry = (resources, e, i, immediate) => {
+const entry = (resources, e, i, immediate, custom={}) => {
 	if(!qualified.test(e.declaration) || !simple.test(e.name) || e.delivery || !["IO", "EIO", "pure", ...immediate ? ["BaseIO"] : []].includes(e.effect) || (!immediate && e.effect === "pure" && e.result?.constructor !== "result")) fail("expected synchronous IO/EIO or a returned Except");
-	const args = e.parameters.map(p => project(resources, p.type)), out = output(resources, e.result), err = e.effect === "EIO" ? output(resources, e.error) : null;
-	const symbol = "lb_ruby_host_invoke_" + i, call = "(_root_." + e.declaration + " " + args.map((_, j) => "v" + j).join(" ") + ")";
+	const args = custom.args??e.parameters.map(p => project(resources, p.type)), out = custom.out??output(resources, e.result), err = e.effect === "EIO" ? output(resources, e.error) : null;
+	const symbol = "lb_ruby_host_invoke_" + i, call = custom.call??("(_root_." + e.declaration + " " + args.map((_, j) => "v" + j).join(" ") + ")");
 	const ret = err ? "(_root_.Except " + err.lean + " " + out.lean + ")" : out.lean;
 	return {
-		lean: `@[export ${symbol}] def invoke${i} ${args.map((k, j) => "(v" + j + " : _root_." + k.lean + ")").join(" ")} : IO ${ret} := ${err ? "EIO.toIO' " : e.effect === "pure" ? "pure " : e.effect === "BaseIO" ? "liftM " : ""}${call}`
+		lean: `@[export ${symbol}] def invoke${i} ${args.map((k, j) => "(v" + j + " : " + (k.type??("_root_."+k.lean)) + ")").join(" ")} : IO ${ret} := ${err ? "EIO.toIO' " : e.effect === "pure" ? "pure " : e.effect === "BaseIO" ? "liftM " : ""}${call}`
 		, proto: "extern lean_object *" + symbol + "(" + (args.map(k => k.c).join(",") || "void") + ");"
 		, c: `static VALUE lb_entry_${i}(VALUE data) {
     lb_call *a=(lb_call *)data;
@@ -138,9 +139,23 @@ const entry = (resources, e, i, immediate) => {
     if(!ok) { VALUE fields[2]={rb_utf8_str_new_cstr(${text(e.declaration)}),${err.to("v")}}; rb_exc_raise(rb_class_new_instance(2,fields,declared_error)); }` : ""}
     return ${out.to("v")};
 }
-static VALUE lb_invoke_${i}(int argc,VALUE *argv,VALUE mod) { (void)mod; rb_check_arity(argc,${args.length},${args.length}); return lb_invoke(lb_entry_${i},argv); }`
+${custom.invoke??`static VALUE lb_invoke_${i}(int argc,VALUE *argv,VALUE mod) { (void)mod; rb_check_arity(argc,${args.length},${args.length}); return lb_invoke(lb_entry_${i},argv); }`}`
 		, method: `rb_define_singleton_method(mod,${text(e.name)},lb_invoke_${i},-1);`
 	};
+};
+// Both the factory and its invocation use the ordinary protected MRI entry
+// frame. The second Lean wrapper typechecks the captured function's exact ABI.
+const closureEntry=(resources,e,i,immediate)=>{
+	if(e.effect!=="IO" || e.delivery) fail("expected a synchronous IO factory");
+	const arg=project(resources,e.result.argument),reply=project(resources,e.result.reply),apply="lb_ticket_apply_"+i;
+	const type=`(_root_.${arg.lean} → _root_.IO _root_.${reply.lean})`;
+	const ticket={type,lean: type,c: "lean_object *",from: v=>`borrow_ticket(${v},${apply})`,unbox: v=>v,to: v=>`new_ticket(${apply},${v})`};
+	const factory=entry(resources,e,i,immediate,{out: ticket});
+	const invoke=entry(resources,{...e,result: e.result.reply},"apply"+i,immediate,{
+		args: [ticket,arg],call: "(v0 v1)"
+		, invoke: `static VALUE ${apply}(VALUE self,VALUE arg) { VALUE args[]={self,arg}; return lb_invoke(lb_entry_apply${i},args); }`
+	});
+	return {...factory,lean: factory.lean+"\n"+invoke.lean,proto: factory.proto+"\n"+invoke.proto,c: "static VALUE "+apply+"(VALUE,VALUE);\n"+factory.c+"\n"+invoke.c};
 };
 /**
  * Generate both sides from the same verified import contract and application entries.
@@ -171,8 +186,10 @@ export const generateRubyHostProvider = ({ ir, entries, modules, namespace, exte
 		if(dispatch.has(key)) fail("ambiguous Ruby member " + name);
 		dispatch.add(key);
 	}
-	const members = ir.declarations.map((d, i) => member(resources, resources.find(r => r.id === d.owner), d, i)), exports = entries.map((e, i) => entry(resources, e, i, workerObjects));
-	const arity = Math.max(1, ...ir.declarations.map(d => d.parameters.length + Number(d.receiver !== null)), ...entries.map(e => e.parameters.length));
+	const closures=entries.some(e=>e.result?.kind==="io-closure");
+	if(closures && resources.some(r=>r.name==="LeanClosure")) fail("reserved Ruby LeanClosure type");
+	const members = ir.declarations.map((d, i) => member(resources, resources.find(r => r.id === d.owner), d, i)), exports = entries.map((e, i) => (e.result?.kind==="io-closure"?closureEntry:entry)(resources,e,i,workerObjects));
+	const arity = Math.max(closures?2:1, ...ir.declarations.map(d => d.parameters.length + Number(d.receiver !== null)), ...entries.map(e => e.parameters.length));
 	if(arity > 64) fail("too many arguments");
 	return {
 		entryLean: [...modules.map(m => "import " + m)
@@ -200,21 +217,21 @@ static VALUE declared_error,io_error,unit,ok_value,err_value;
 static VALUE rb_structured(VALUE klass,VALUE value) { return rb_funcallv_public(klass,rb_intern("new"),1,&value); }
 static const lb_rh_spec specs[]={${resources.map(r => "{" + text(domainKey(ir, r)) + "," + Number(r.host.identity === "strong-canonical") + "}").join(",")}};
 typedef struct { VALUE *args; lean_object *values[${arity}], *io, *msg; } lb_call;
-#include "host-scalars.h"
+#include "host-scalars.h"${closures?"\n"+readFileSync(new URL("./host-closures.h",import.meta.url),"utf8"):""}
 static void *init_component(uint8_t b) { return initialize_BridgeRubyExports(b); }
 static VALUE bind(int argc,VALUE *argv,VALUE mod) {
     (void)mod; lb_rh_owner();
     if(!lean_bridge_native_process_valid() || !lean_bridge_native_component_initialize("rubyhost:${identity}",init_component)) rb_raise(rb_eRuntimeError,"Lean runtime unavailable");
     if(session) rb_raise(rb_eRuntimeError,"component already bound"); session=lb_rh_bind(specs,sizeof(specs)/sizeof(*specs),argc,argv);${workerObjects ? " binding_fiber=rb_fiber_current(); lb_ruby_worker_begin();" : ""} return Qnil;
 }
-static VALUE unbind(VALUE mod) { (void)mod;${workerObjects ? `
+static VALUE unbind(VALUE mod) { (void)mod;${workerObjects || closures ? `
     (void)lb_rh_type(session,0);
     if (top) rb_raise(rb_eRuntimeError,"cannot unbind inside an active Lean call");
-    lb_ruby_worker_end(); lb_worker_sweep(); binding_fiber=Qnil;` : ""} lb_rh_unbind(&session); return Qnil; }
+    ${workerObjects?"lb_ruby_worker_end(); lb_worker_sweep(); binding_fiber=Qnil;":""}${closures?" collect_tickets(1);":""}` : ""} lb_rh_unbind(&session); return Qnil; }
 static VALUE count(VALUE mod) { (void)mod; return SIZET2NUM(lb_rh_live()); }
 static VALUE lb_invoke(VALUE (*fn)(VALUE),VALUE *args) {
     lb_rh_owner(); if(!lean_bridge_native_component_ready("rubyhost:${identity}")) rb_raise(rb_eRuntimeError,"Lean component unavailable");
-    lb_rh_frame f,*previous=top; lb_rh_enter(session,&f); top=&f;
+    lb_rh_frame f,*previous=top; lb_rh_enter(session,&f); top=&f;${closures?" collect_tickets(0);":""}
     int state=0; lb_call a={.args=args}; VALUE result=rb_protect(fn,(VALUE)&a,&state);
     if(a.msg) lean_dec(a.msg); if(a.io) lean_dec(a.io); for(unsigned i=0;i<${arity};i++) if(a.values[i]) lean_dec(a.values[i]);
     top=previous; lb_rh_leave(&f); if(state) rb_jump_tag(state); return result;
@@ -228,7 +245,7 @@ __attribute__((visibility("default"))) void Init_${extension}(void) {
     ok_value=rb_const_get_at(mod,rb_intern("Ok")); rb_global_variable(&ok_value);
     err_value=rb_const_get_at(mod,rb_intern("Err")); rb_global_variable(&err_value);
     rb_define_singleton_method(mod,"__bind",bind,-1); rb_define_singleton_method(mod,"__unbind",unbind,0);
-    rb_define_singleton_method(mod,"__live",count,0);${workerObjects ? "\n    binding_fiber=Qnil; rb_global_variable(&binding_fiber); lb_rh_worker_methods(mod);" : ""}
+    rb_define_singleton_method(mod,"__live",count,0);${closures?" init_tickets(mod);":""}${workerObjects ? "\n    binding_fiber=Qnil; rb_global_variable(&binding_fiber); lb_rh_worker_methods(mod);" : ""}
     ${exports.map(e => e.method).join("\n    ")}
 }
 `

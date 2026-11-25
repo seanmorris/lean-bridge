@@ -11,7 +11,7 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | C++ | [C++20 consumer](static-host-workers-20261125.md#installed-c20-futures-and-streams-on-application-objects): generated futures and streams, both build systems and link orders. |
 | NuGet | [.NET 8 packages](dotnet-worker-packages-20261124.md): two assemblies share the host-class registry; cancellation is scoped to the binding. |
 | Maven | [Java and Kotlin](jvm-worker-packages-20261124.md): separate client programs run against relocated Maven packages, including both component load orders. |
-| RubyGems | [MRI platform gems](ruby-worker-gems-20261124.md): ordinary and reviewed APIs, independently packaged peer and original Ruby object identity. |
+| RubyGems | [MRI platform gems](ruby-worker-gems-20261124.md) exercise an independently packaged peer. [Three installed closure configurations](ruby-host-closures-20261125.md) cover captured Ruby objects, original exceptions, self-disposal, fiber ownership and stale Proc conversion. |
 | CPAN | [Perl distributions](perl-worker-packages-20261124.md): threaded and unthreaded Perl 5.36.3 and 5.38.2, with prebuilt and locally compiled generated XS. |
 | Native PHP | [Composer client](php-host-task-packages-20261124.md): application objects and closures through Amp futures and `foreach`. |
 | PHP-Wasm | [Zend interpreter packages](php-wasm-zend-packages-20261124.md): PHP class identity, pending work and isolation between two interpreters. A JavaScript object test alone does not establish this. |

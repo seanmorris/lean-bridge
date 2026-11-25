@@ -172,10 +172,10 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
 
-/-- A function delivered by a factory is not a retained host callback. Only
-    the Python owner can currently lease and invoke this kind of IO closure. -/
+/-- A function delivered by a factory is not a retained host callback.
+    Only admit a host with a binding-owned invocation and revocation path. -/
 def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
-  if effect == ``IO && r.hostModule == some "LeanBridge.Host.Python" &&
+  if effect == ``IO && r.hostModule.any (fun m => m == "LeanBridge.Host.Python" || m == "LeanBridge.Host.Ruby") &&
       r.nativeEffectPolicy == some "native-host-io-v1" then
     if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
       let b := b.consumeMData
@@ -185,7 +185,7 @@ def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
       let admitted := fun (t : Expr) => primitives.any (fun p => t.isConstOf p.1) ||
         t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString))
       unless admitted a && admitted reply do
-        throwError "returned host closure arguments and replies must be copied scalars or declared Python objects: {e}"
+        throwError "returned host closure arguments and replies must be copied scalars or declared host objects: {e}"
       return Json.mkObj [("kind", toJson "io-closure"), ("argument", ← carrier r a), ("reply", ← carrier r reply)]
   returned r e false true
 

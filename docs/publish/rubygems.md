@@ -42,6 +42,20 @@ the original Ruby object. The generated contract records a lease on the
 result or error payload, including when the object is nested in another
 `Except`. This does not change the copied-value or task profiles.
 See [how the Ruby application supplies the class](../consume/ruby.md#supply-a-ruby-object-to-lean).
+
+To return a function that captures a Ruby instance, export a synchronous
+factory of type `IO (α → IO β)`. The argument and reply can be copied scalars
+or imported Ruby classes. For example:
+
+```lean
+def reader (captured : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun extra => do return (← captured.read) + extra
+```
+
+The generated callable belongs to the creating `bind_hosts` block. Its
+signature and required capabilities appear in the reviewed interface. An IO
+effect inside the function body needs the same grant as an immediate export.
+This is distinct from accepting a Ruby block as a task argument.
 The [worker qualification](../evidence/ruby-worker-gems-20261124.md) includes
 the ordinary and reviewed gem receipts and the checks run after installation.
 

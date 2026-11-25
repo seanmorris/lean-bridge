@@ -39,3 +39,13 @@ test("Ruby borrowers need a real nominal anchor; dynamic or worker imports canno
 	ir.types[0].host.dynamic = true;
 	assert.throws(() => generate(ir), /statically declared host classes/u);
 });
+
+test("only typed, binding-owned synchronous IO factories produce MRI callables",async()=>{
+	const ir=await contract(),box={kind: "named",id: ir.types[0].id},value={kind: "primitive",name: "uint32"};
+	const fn={kind: "io-closure",argument: value,reply: box},factory={name: "remember",declaration: "Workshop.remember",effect: "IO",parameters: [{name: "box",type: box}],result: fn};
+	const build=over=>generate(ir,[{...factory,...over}]);
+	assert.match(build({}).entryLean,/UInt32 → _root_\.IO _root_\.LeanBridge\.Host\.Ruby\.Box/u);
+	assert.doesNotMatch(generate(ir).source,/lb_ticket|LeanClosure/u);
+	for(const fields of [{effect: "pure"},{delivery: "task"}])assert.throws(()=>build(fields),/synchronous IO factory/u);
+	assert.throws(()=>build({result: {...fn,argument: {kind: "named",id: "unknown:Box"}}}),/unknown host resource/u);
+});
