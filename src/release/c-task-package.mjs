@@ -183,7 +183,7 @@ export const buildCTaskPackage = async options => {
 					await save(src, value);
 				}
 			}
-			const headers = synchronous ? ["sync-values.hpp", ...ledger ? ["sync-resource.hpp", "task-loop.hpp", "task-resource.hpp"] : []]
+			const headers = synchronous ? ["sync-values.hpp", ...entries.some(e => e.delivery === "iterator") ? ["sync-iterator.hpp"] : [], ...ledger ? ["sync-resource.hpp", "task-loop.hpp", "task-resource.hpp"] : []]
 				: ["task-loop.hpp", "task-values.hpp", "task-routine.hpp", ...ledger ? ["task-resource.hpp"] : [], ...callbackHeaders.size ? ["task-callback.hpp"] : []];
 			for(const base of headers)
 			{

@@ -1,21 +1,24 @@
 /** @file Exercise synchronous cursors through the installed public headers. */
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { runEffectConsumers } from "./native-effect-consumers.mjs";
+import { runEffectConsumers, runNativeTool } from "./native-effect-consumers.mjs";
 
 const fixture = resolve("tests/fixtures/native-immediate-cursor");
+const target = process.env.LEAN_BRIDGE_IMMEDIATE_TARGET ?? "c";
+const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1"};
+if(!Object.hasOwn(profiles, target)) throw new Error("Unsupported immediate cursor consumer: " + target);
 const json = async file => JSON.parse(await readFile(file, "utf8"));
 const check = async (handoff, ordinary) => {
 	const {receipt, result} = await readVerifiedPackageSetReceipt({receiptPath: join(handoff, "package-set-receipt.json")});
 	const api = await json(join(handoff, "binding-ir.json"));
 	const evidence = await json(join(handoff, "host-export-evidence.json"));
-	assert.equal(receipt.profiles[0].id, "native-c-io-v1");
+	assert.equal(receipt.profiles[0].id, profiles[target]);
 	assert.equal(evidence.reviewedSourceSha256, ordinary ? sha256(canonicalJson(ordinary)) : null);
 	assert.equal(evidence.selection.synchronousIO, true);
 	assert.deepEqual(evidence.selection.taskExports, []);
@@ -30,32 +33,65 @@ const check = async (handoff, ordinary) => {
 	}
 	return {receipt, api, report: {receiptSha256: result.receiptSha256}};
 };
-test("C11 installs pull immediate Lean iterators without a poller", async t => {
+test(target + " installs pull immediate Lean iterators without a poller", async t => {
+	if(installed.cmakeProject)
+		await runNativeTool(process.env.LEAN_BRIDGE_CMAKE ?? process.env.LEAN_BRIDGE_C_TASK_CMAKE ?? "cmake", ["--version"], fixture, process.env);
 	const root = await mkdtemp(join(tmpdir(), "lean-direct-c-"));
 	t.after(() => rm(root, {recursive: true, force: true}));
 	let ordinary;
 	for(const route of ["ordinary", "reviewed"])
 	{
-		const dir = join(root, "c", route), source = join(dir, "source"), output = join(dir, "handoff");
-		await mkdir(dir, {recursive: true});
-		await cp(fixture, source, {recursive: true, filter: path => !/\/consumer\.[^/]+$/u.test(path)});
+		const dir = join(root, target, route), source = join(dir, "source"), output = join(dir, "handoff");
+		await mkdir(source, {recursive: true});
+		for(const name of ["Dials.lean", "lean-toolchain", "lakefile.toml", "lean-bridge.exports.json"])
+			await copyFile(join(fixture, name), join(source, name));
 		const config = join(source, "lean-bridge.exports.json");
+		const cfg = await json(config);
+		if(target !== "c") cfg.targets = {[target]: {name: "dials", version: "1.0.0"}};
 		if(ordinary)
 		{
-			const cfg = await json(config); delete cfg.exports;
-			await writeFile(config, canonicalJson(cfg));
+			delete cfg.exports;
 			await writeFile(join(source, "dials.binding-ir.json"), canonicalJson(ordinary));
 		}
-		await buildCanonicalProject({projectRoot: source, targets: ["c"], outputRoot: output})
+		if(target !== "c" || ordinary) await writeFile(config, canonicalJson(cfg));
+		await buildCanonicalProject({projectRoot: source, targets: [target], outputRoot: output})
 			.catch(e => { throw new Error(e.message + " " + JSON.stringify(e.details), {cause: e}); });
-		const {api} = await check(output, ordinary); ordinary ??= api;
 		await rm(source, {recursive: true});
+		const previous = ordinary;
+		const reports = await runEffectConsumers(root, root, target, process.env, {
+			...installed, routes: [route], clients: fixture, check: async handoff => {
+				const result = await check(handoff, previous);
+				ordinary ??= result.api;
+				return result;
+			}
+		});
+		t.diagnostic(route + ": " + reports[0].receiptSha256);
+		await rm(output, {recursive: true});
 	}
-	const reports = await runEffectConsumers(root, root, "c", process.env, {clients: fixture, check,
+});
+const installed = {
+		cmakeProject: target === "cpp" ? join(fixture, "CMakeLists.txt") : null,
 		inspectPackage: async (_, prefix) => {
+			if(target === "cargo")
+			{
+				const api = await readFile(join(prefix, "src/lib.rs"), "utf8");
+				assert.match(api, /pub use native::Cursor/u);
+				assert.doesNotMatch(api, /\b(?:Task|Stream|Future)\b/u);
+				return;
+			}
 			const header = await readFile(join(prefix, "include/lbc_dials.h"), "utf8");
 			assert.match(header, /lbc_dials_sequence_next\(/u);
 			assert.doesNotMatch(header, /_poll\(|_take\(|_PENDING|lean_object/u);
-		}});
-	for(const {route, receiptSha256} of reports) t.diagnostic(route + ": " + receiptSha256);
-});
+			if(target === "cpp")
+			{
+				const api = await readFile(join(prefix, "include/lbc_dials.hpp"), "utf8");
+				assert.match(api, /Cursor<std::uint32_t> sequence/u);
+				assert.doesNotMatch(api, /coroutine|async_v2|Future|_poll\(/u);
+			}
+		}, checkCargoGraph: (graph, runtime) => {
+			const id = graph.packages.find(p => p.name === runtime.name && p.version === runtime.version).id;
+			const node = graph.resolve.nodes.find(n => n.id === id);
+			assert.deepEqual(node.features, []); assert.deepEqual(node.deps, []);
+			assert.ok(!graph.packages.some(p => ["futures-core", "async-io", "polling"].includes(p.name)));
+		}
+};

@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(dials_consumer LANGUAGES CXX)
+find_package(LeanBridgeLbcDials CONFIG REQUIRED)
+find_package(Threads REQUIRED)
+add_executable(client main.cpp)
+target_link_libraries(client PRIVATE LeanBridge::lbc_dials Threads::Threads)
+target_compile_options(client PRIVATE -Wall -Wextra -Werror)

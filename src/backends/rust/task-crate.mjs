@@ -30,13 +30,15 @@ const quote = JSON.stringify;
 export const generateRustTaskSources = async options => {
 	const { prefix, entries, resources = [], evidence } = options;
 	const synchronous = options.synchronousIO === true, errorType = synchronous ? "CallError" : "Error";
-	if(synchronous && (entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect))))
+	const cursors = entries.some(e => e.delivery === "iterator");
+	if(cursors && !synchronous || synchronous && (entries.some(e => (e.delivery && e.delivery !== "iterator") || e.taskIO) || !(cursors || entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect)))))
 		throw new TypeError("Invalid standalone Rust IO delivery contract");
 	if(!/^lbc_[a-z0-9_]+$/u.test(prefix) || evidence?.library !== "lib" + prefix + ".so"
 		|| !/^[a-f0-9]{64}$/u.test(evidence.runtimeIdentity) || !/^[a-f0-9]{64}$/u.test(evidence.libraries?.[evidence.library]))
 		throw new TypeError("Rust task generation requires its checked native adapter identity");
 	const ffi = new Map(), models = new Map(), raw = [], funcs = [], pub = [];
 	const names = new Set(["native", "abi", "Task", "Items", "Stream", "Error", "Fault", "BigInt", "BigUint", "CallbackTask", "CallbackTaskError", "CallbackError", "RetainedCallback", ...synchronous ? ["CallError"] : []]);
+	if(cursors) names.add("Cursor");
 	const rs = taskResourceTypes(resources), c = cTaskValues(prefix, false, rs);
 	const sym = (name, args, out = "i32") => {
 		const sig = 'unsafe extern "C" fn(' + args.join(",") + ")->" + out;
@@ -116,20 +118,36 @@ export const generateRustTaskSources = async options => {
 		// disposers and their ABI layouts agree with the compiled component.
 		const args = e.parameters.map(x => shape(x.type)), value = shape(e.result);
 		const error = e.effect === "EIO" ? shape(e.error) : null, step = e.stepError ? shape(e.stepError) : null;
-		const async = Boolean(e.delivery), stream = e.delivery === "async-iterator", io = e.effect === "IO", base = prefix + "_" + e.name;
-		if(!["task", "async-iterator", undefined].includes(e.delivery)) throw new TypeError("Unsupported Rust delivery");
-		const out = async ? stream ? `Items<${value.host},${step?.host ?? "std::convert::Infallible"}>` : `Task<${value.host}>` : value.host;
+		const direct = e.delivery === "iterator", handle = Boolean(e.delivery), stream = e.delivery === "async-iterator", io = e.effect === "IO", base = prefix + "_" + e.name;
+		if(!["task", "iterator", "async-iterator", undefined].includes(e.delivery)) throw new TypeError("Unsupported Rust delivery");
+		const stepType = step?.host ?? "std::convert::Infallible";
+		const out = direct ? `Cursor<${value.host},${stepType}>` : handle ? stream ? `Items<${value.host},${stepType}>` : `Task<${value.host}>` : value.host;
 		const returnType = `Result<${out},${errorType}${error ? "<" + error.host + ">" : ""}>`;
 		const fn = ident(e.name);
 		if(names.has(fn)) throw new TypeError("Rust export name collides: " + fn); names.add(fn);
 		const argNames = e.parameters.map(p => ident(p.name));
 		if(new Set(argNames).size !== argNames.length) throw new TypeError("Colliding Rust parameter names");
 		pub.push(`/// Lean declaration: \`${e.declaration}\`.\npub fn ${fn}(${args.map((x, j) => argNames[j] + ":" + x.input).join(",")})->${returnType}{native::call${i}(${argNames.join(",")})}`);
-		const start = sym(base + (async ? "_start" : "_call"), [...args.map(x => x.arg), "*mut " + (async ? "Handle" : value.raw), ...error ? ["*mut " + error.raw] : io ? ["*mut Buffer"] : []]);
+		const start = sym(base + (direct ? "_open" : handle ? "_start" : "_call"), [...args.map(x => x.arg), "*mut " + (handle ? "Handle" : value.raw), ...error ? ["*mut " + error.raw] : io ? ["*mut Buffer"] : []]);
 		const prepared = args.map((v, j) => v.prepare("v" + j));
-		const call = `let s=unsafe{(a.${start})(${[...prepared.map(p => p[1]), async ? "&mut h" : "&mut out.v", ...error || io ? ["&mut err.v"] : []].join(",")})};`;
+		const call = `let s=unsafe{(a.${start})(${[...prepared.map(p => p[1]), handle ? "&mut h" : "&mut out.v", ...error || io ? ["&mut err.v"] : []].join(",")})};`;
 		let success;
-		if(async)
+		if(direct)
+		{
+			const release = sym(base + "_close", ["*mut Handle"]);
+			const next = sym(base + "_next", ["*mut Handle", "*mut " + value.raw, ...step ? ["*mut " + step.raw] : [], ...e.stepIO ? ["*mut Buffer"] : []]);
+			funcs.push(`fn next${i}(a:&Api,h:&mut Handle)->Result<Option<${value.host}>,CallError<${stepType}>> {
+    ${guard(value, "out")} ${step ? guard(step, "err") : ""}
+    ${e.stepIO ? `let mut msg:Guard<Buffer>=unsafe{Guard::zero(Clear::Void(a.${bufFree}))};` : ""}
+    let s=unsafe{(a.${next})(h,&mut out.v${step ? ",&mut err.v" : ""}${e.stepIO ? ",&mut msg.v" : ""})};
+    if s==2 {return Ok(None);}
+    ${step ? `if s==3 {return Err(CallError::Declared{declaration:${quote(e.protocol.next)},payload:${step.read}(a,&mut err.v)?});}` : ""}
+    ${e.stepIO ? `if s==4 {return Err(CallError::Io{declaration:${quote(e.protocol.next)},message:text(&msg.v)?});}` : ""}
+    abi::status(s)?; Ok(Some(${value.read}(a,&mut out.v)?))
+}`);
+			success = `Ok(Cursor::new(a,h,next${i},a.${release}))`;
+		}
+		else if(handle)
 		{
 			const pull = stream && sym(base + "_pull", ["Handle"]);
 			const poll = sym(base + "_poll", ["Handle", "*mut i32"]), close = sym(base + "_close", ["*mut Handle"]);
@@ -145,7 +163,7 @@ export const generateRustTaskSources = async options => {
 			success = `Ok(${stream ? "Items" : "Task"}::from_source(Channel{api:a,h,poll:a.${poll},close:a.${close},pull:${pull ? "Some(a." + pull + ")" : "None"},take:take${i},callbacks:None}))`;
 		} else success = `Ok(${value.read}(a,&mut out.v)?)`;
 		funcs.push(`pub(super) fn call${i}(${args.map((x, j) => "v" + j + ":" + x.input).join(",")})->${returnType} {
-    let a=runtime()?; ${prepared.map(p => p[0]).join("\n")} ${async ? "let mut h=Handle::default();" : guard(value, "out")}
+    let a=runtime()?; ${prepared.map(p => p[0]).join("\n")} ${handle ? "let mut h=Handle::default();" : guard(value, "out")}
     ${error ? guard(error, "err") : io ? `let mut err:Guard<Buffer>=unsafe{Guard::zero(Clear::Void(a.${bufFree}))};` : ""} ${call}
     ${error ? `if s==3{let payload=${error.read}(a,&mut err.v)?;return Err(${synchronous ? `CallError::Declared{declaration:${quote(e.declaration)},payload}` : "Error::Start(payload)"});}` : ""}
     ${io ? `if s==4{return Err(Fault::Io{declaration:${quote(e.declaration)},message:text(&err.v)?}.into());}` : ""}
@@ -153,7 +171,8 @@ export const generateRustTaskSources = async options => {
 }`);
 	}
 	const driver = await readFile(new URL("./task-native.rs", import.meta.url), "utf8");
-	const delivery = synchronous ? "" : await readFile(new URL("./task-channel.rs", import.meta.url), "utf8");
+	const delivery = cursors ? await readFile(new URL("./sync-iterator.rs", import.meta.url), "utf8") : synchronous ? "" : await readFile(new URL("./task-channel.rs", import.meta.url), "utf8");
+	if(cursors) pub.unshift("pub use native::Cursor;");
 	const fields = [...ffi.values()].map(x => x.field + ":" + x.sig);
 	const loads = [...ffi].map(([n, x]) => `${x.field}:sym!(${quote(n)},${x.sig})`);
 	return { "src/lib.rs": `//! Generated bindings to compiled Lean. All native calls belong on the process main thread.\npub use lean_bridge_task_runtime::{${synchronous ? "CallError,Fault" : "Task,Items,Error,Fault,Stream,CallbackTask,CallbackTaskError,CallbackError,RetainedCallback"}};\npub use num_bigint::{BigUint,BigInt};\nmod native;\n${pub.join("\n")}\n`

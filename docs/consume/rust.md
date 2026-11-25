@@ -71,6 +71,24 @@ Two compatible packages use the same Rust type for the same Lean resource.
 An `EIO` error whose payload is a resource owns that lease; it can be passed
 to the other package just like a successful return value.
 
+### Iterate without an executor
+
+The Dials package returns a standard Rust `Iterator`. Opening can fail;
+once it succeeds, each `next()` runs one Lean step. For example:
+
+```rust
+fn first_two() -> Result<Vec<u32>, dials::CallError> {
+    dials::sequence(10)?.take(2).collect()
+}
+```
+
+`None` means exhaustion. `Some(Ok(()))` is a real item. A throwing step
+yields one `Some(Err(...))` and ends the iterator; the error names the
+Lean pull declaration, not the factory. Dropping the cursor closes it,
+including after early exit. A cursor is neither `Send` nor `Sync`.
+The [client](../../tests/fixtures/native-immediate-cursor/consumer.rs)
+shows the typed and IO error cases.
+
 ### Let Lean call your Rust objects
 
 A `native-rust-host-v1` release lets a Lean function call inherent methods on your application's Rust types. Add the component crate as a normal Cargo dependency. Cargo selects its exact runtime; you do not need to enable async, pass native handles or install Lean.

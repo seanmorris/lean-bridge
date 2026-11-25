@@ -45,6 +45,13 @@ reactor. Publish the exact runtime archive once even if multiple components
 need it. A real task component enables async on that same version. See
 [calling synchronous IO](../consume/rust.md#call-synchronous-io).
 
+To publish a synchronous iterator, select its Lean factory and name
+`open`, `next` and `close` under `iterators`. The [Dials example](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+returns an immediate `Option` from the pull function and writes a file
+in its `BaseIO Unit` finalizer, so it needs the filesystem grant.
+Set your Cargo coordinates under `targets.cargo`. The generated cursor uses
+the standard `Iterator` trait without the runtime's async feature.
+
 ## Import application-owned Rust objects
 
 Point `hostImports` in `lean-bridge.exports.json` at the host declarations. For each imported type, include `rust` in its host targets and declare how object identity works. For a borrowed member result, name its receiver or parameter anchor. Import `LeanBridge.Host.Rust` in Lean and use the generated types and members directly:

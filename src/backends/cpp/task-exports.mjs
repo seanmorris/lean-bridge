@@ -61,11 +61,12 @@ export const generateCppTaskHeader = options => {
 	const { prefix: p, entries } = options, names = new Set();
 	const resources = taskResourceTypes(options.resources);
 	const synchronous = options.synchronousIO === true;
-	if(synchronous && (entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect))))
+	const cursors = entries.some(e => e.delivery === "iterator");
+	if(cursors && !synchronous || synchronous && (entries.some(e => (e.delivery && e.delivery !== "iterator") || e.taskIO) || !(cursors || entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect)))))
 		throw new TypeError("Invalid standalone C++ IO delivery contract");
 	for(const r of resources)
 		if(reserved.has(r.name) || r.name.startsWith("_") || r.name.includes("__")
-			|| (synchronous && r.name === "DeclaredError")
+			|| (synchronous && r.name === "DeclaredError") || (cursors && r.name === "Cursor")
 			|| "Int Nat Future Stream Routine Ok Err Result StartError StepError IOError TaskIOError RetainedCallback CallbackTrap CallbackClosed Cancelled Closed Busy Unavailable WrongContext".split(" ").includes(r.name))
 			throw new TypeError("Reserved C++ resource class name");
 		else names.add(r.name);
@@ -75,7 +76,8 @@ export const generateCppTaskHeader = options => {
 		const name = reserved.has(e.name) ? e.name + "_" : e.name;
 		if(!/^[a-z][a-z0-9_]*$/u.test(name) || name.includes("__") || names.has(name)) throw new TypeError("Invalid or colliding C++ task name");
 		names.add(name);
-		const c = `${p}_${e.name}`, stream = e.delivery === "async-iterator", async = stream || e.delivery === "task";
+		const c = `${p}_${e.name}`, stream = e.delivery === "async-iterator", async = stream || e.delivery === "task", direct = e.delivery === "iterator";
+		if(e.delivery && !async && !direct) throw new TypeError("Unsupported C++ delivery protocol");
 		if(e.taskIO && e.delivery !== "task") throw new TypeError("Terminal IO errors require a real Task");
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
@@ -89,12 +91,32 @@ export const generateCppTaskHeader = options => {
 		const er = e.effect === "EIO" ? value(e.error) : null, step = e.stepError ? value(e.stepError) : null, io = e.effect === "IO";
 		bigint ||= [item, er, step, ...args].some(t => t?.bigint);
 		const guards = inputGuards(args);
-		const startArgs = [...args.map((a, i) => a.input(`v${i}`)), async ? "&owner->handle" : "&value.value"];
+		const startArgs = [...args.map((a, i) => a.input(`v${i}`)), direct ? "handle" : async ? "&owner->handle" : "&value.value"];
 		if(er || io) startArgs.push("&error.value");
 		const startError = er ? slot(c + (synchronous ? "_error" : "_start_error"), "error", er) : io ? `detail::Slot<${p}_buffer> error{&${p}_buffer_dispose};` : "";
 		const catchStart = er ? `if (s == ${p}_TYPED_ERROR) throw ${synchronous ? "DeclaredError" : "StartError"}<${er.type}>{"${e.declaration}", ${er.read("error.value")}};`
 			: io ? `if (s == ${p}_IO_ERROR) throw IOError{"${e.declaration}", detail::text(error.value)};` : "";
 		const read = slot(c + "_value", "value", item);
+		if(direct)
+		{
+			return `inline Cursor<${item.type}> ${name}(${args.map((a, i) => `${a.arg} v${i}`).join(", ")}) {
+    ${resources.length ? "sync_v1::detail::enter_leases();" : ""}
+    return sync_v1::detail::make_cursor<${item.type}, WrongContext, ${c}_handle, ${c}_close>(
+        [&](auto *handle) {
+            ${guards}${startError}
+            auto s = ${c}_open(${startArgs.join(", ")}); ${catchStart}
+            detail::check(s);
+        }, [](auto *handle) -> std::optional<${item.type}> {
+            ${read} ${step ? slot(c + "_step_error", "error", step) : ""}
+            ${e.stepIO ? `detail::Slot<${p}_buffer> msg{&${p}_buffer_dispose};` : ""}
+            auto s = ${c}_next(handle, &value.value${step ? ", &error.value" : ""}${e.stepIO ? ", &msg.value" : ""});
+            if (s == ${p}_END) return {};
+            ${step ? `if (s == ${p}_TYPED_ERROR) throw DeclaredError<${step.type}>{"${e.protocol.next}", ${step.read("error.value")}};` : ""}
+            ${e.stepIO ? `if (s == ${p}_IO_ERROR) throw IOError{"${e.protocol.next}", detail::text(msg.value)};` : ""}
+            detail::check(s); return std::optional<${item.type}>{${item.read("value.value")}};
+        });
+}`;
+		}
 		const take = `[owner] {
         ${read} ${step ? slot(c + "_step_error", "error", step) : ""}
         ${e.taskIO ? `detail::Slot<${p}_buffer> terminal{&${p}_buffer_dispose};` : ""}
@@ -114,7 +136,7 @@ export const generateCppTaskHeader = options => {
 			: unit ? "return;" : `return ${item.read("value.value")};`;
 		return `inline ${out} ${name}(${args.map((a, i) => `${a.arg} v${i}`).join(", ")}) {
     ${synchronous ? resources.length ? "sync_v1::detail::enter_leases();" : "" : "auto &loop = async_v2::detail::Loop::main(); loop.enter();"}
-    ${guards}${async ? `auto owner = std::make_shared<detail::Owner<${c}_handle, ${c}_close>>();` : read}
+    ${cursors ? "sync_v1::detail::enter_cursors<WrongContext>(); " : ""}${guards}${async ? `auto owner = std::make_shared<detail::Owner<${c}_handle, ${c}_close>>();` : read}
     ${startError}
     auto s = ${c}_${async ? "start" : "call"}(${startArgs.join(", ")}); ${catchStart}
     detail::check(s); ${finish}
@@ -124,7 +146,7 @@ export const generateCppTaskHeader = options => {
 	return `#ifndef ${guard}
 #define ${guard}
 #include "${p}.h"
-#include <lean_bridge/${synchronous ? "sync_v1/sync-values.hpp" : "async_v2/task-routine.hpp"}>
+#include <lean_bridge/${synchronous ? "sync_v1/sync-values.hpp" : "async_v2/task-routine.hpp"}>${cursors ? "\n#include <lean_bridge/sync_v1/sync-iterator.hpp>" : ""}
 #include <span>${retained ? "\n#include <lean_bridge/async_v2/task-callback.hpp>" : ""}${resources.length ? `\n#include <lean_bridge/${synchronous ? "sync_v1/sync-resource.hpp" : "async_v2/task-resource.hpp"}>` : ""}${bigint ? `
 #ifndef BOOST_MP_STANDALONE
 #define BOOST_MP_STANDALONE
@@ -141,7 +163,7 @@ using async_v2::StartError; using async_v2::StepError; using async_v2::IOError;
 using async_v2::TaskIOError;${retained ? "\nusing async_v2::RetainedCallback; using async_v2::CallbackTrap; using async_v2::CallbackClosed;" : ""}
 using async_v2::Cancelled; using async_v2::Closed; using async_v2::Busy;
 using async_v2::Unavailable; using async_v2::WrongContext; using async_v2::run_one; using async_v2::shutdown;`}
-namespace detail {${bigint ? `
+${cursors ? "template<class T> using Cursor = sync_v1::Cursor<T, WrongContext>;\n" : ""}namespace detail {${bigint ? `
 inline void charge(std::size_t &available, std::size_t bytes) {
     if (bytes > available) throw std::length_error("Lean copy budget exceeded");
     available -= bytes;

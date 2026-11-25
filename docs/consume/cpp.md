@@ -103,6 +103,27 @@ type as a task package built for that runtime. You can pass the resource to
 either package. If a worker thread drops a lease, the next call into the
 resource package on the owner thread drains the pending release.
 
+### Iterate without a dispatcher
+
+The [Dials client](../../tests/fixtures/native-immediate-cursor/consumer.cpp)
+uses a move-only, single-pass C++20 range. The factory opens a Lean cursor;
+incrementing the iterator requests the next item on the main thread.
+
+```cpp
+for (auto value : lean_bridge::lbc_dials::sequence(10)) {
+    if (value == 2) break;
+}
+```
+
+The temporary range closes at loop exit. If you keep the range in a
+variable, you can resume it or call `close()`. Its `next()` returns
+`std::optional<T>`; an empty optional means exhaustion. Factory and step
+failures carry the declaration that threw, and an unsuccessful step closes
+the range. Pull and close on the main thread. If another thread destroys
+the range, the next main-thread call into the cursor API drains the pending
+close. Normal main-thread process exit drains outstanding deferred closes
+after workers have joined. No event loop is involved.
+
 ## Pass application objects to Lean
 
 A `native-cpp-host-v1` archive calls your existing C++ classes. Include the

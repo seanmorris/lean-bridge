@@ -47,7 +47,7 @@ test("standalone IO generates no polling or awaitable API and rejects a mixed de
 			assert.throws(() => gen({ ...common, entries: [e] }), /delivery contract/u);
 });
 test("the packaged CLI and isolated engine include synchronous C++ and feature-gated Rust support", async () => {
-	const sources = ["cpp/sync-resource.hpp", "cpp/sync-values.hpp", "rust/sync-component.lock", "rust/task-channel.rs", "rust/task-runtime/src/delivery.rs"];
+	const sources = ["cpp/sync-resource.hpp", "cpp/sync-values.hpp", "cpp/sync-iterator.hpp", "python/sync-iterator.py", "python/sync-iterator.pyi", "rust/sync-component.lock", "rust/sync-iterator.rs", "rust/task-channel.rs", "rust/task-runtime/src/delivery.rs"];
 	for(const manifest of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const index = await json(manifest);

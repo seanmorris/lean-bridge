@@ -44,6 +44,12 @@ using copied values has no coroutine or dispatcher header. If it returns
 nominal resources, it includes the ownership support needed to share leases
 with task packages and handle off-thread destruction. See [calling synchronous IO](../consume/cpp.md#call-synchronous-io).
 
+For a synchronous C++ range, declare the factory, the immediate pull and
+the `BaseIO Unit` finalizer under `iterators`. Export the factory; the cursor
+type and helper declarations stay private. The C++ package includes the
+range and owner-thread cleanup support. Use `asyncIterators` for a pull
+that returns a real Lean task. See [the C++ range example](../consume/cpp.md#iterate-without-a-dispatcher).
+
 ## Call C++ objects from Lean
 
 The [meter project](../../tests/fixtures/cpp-host-workshop/Workshop.lean)

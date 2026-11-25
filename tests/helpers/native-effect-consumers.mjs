@@ -52,6 +52,7 @@ export const runEffectConsumers = async (work, releases, target, env, sample = {
 		const component = receipt.packages.find(p => p.role === "component");
 		const build = await mkdtemp(join(work, "install-")), app = await mkdtemp(join(work, "deployed-"));
 		const bin = join(app, "client"), isolated = { PATH: "/unavailable", LANG: "C", LEAN_NUM_THREADS: "1", LEAN_BRIDGE_EFFECT_BOOT: "from-app", TMPDIR: app };
+		const cmakeClient = sample.cmakeProject ? join(app, "client-cmake") : null;
 		let installed;
 		try
 		{
@@ -87,7 +88,9 @@ export const runEffectConsumers = async (work, releases, target, env, sample = {
 						installed = { ...installed, ...sample.checkCargoGraph(graph, runtime) };
 					}
 					await run(cargo, ["build", "--locked", "--offline", "-j1"], build, rust);
-					await copyFile(join(build, "target/debug/installed-effects-client"), bin);
+					// Both directories belong to this disposable workspace. Move the
+					// executable; its embedded runtime need not occupy disk twice.
+					await rename(join(build, "target/debug/installed-effects-client"), bin);
 				}
 				else
 				{
@@ -95,11 +98,26 @@ export const runEffectConsumers = async (work, releases, target, env, sample = {
 					const flags = (await run("pkg-config", ["--cflags", "--libs", component.name], build, pc)).split(/\s+/u);
 					const cpp = target === "cpp";
 					await run(cpp ? env.CXX ?? "c++" : env.CC ?? "cc", [cpp ? "-std=c++20" : "-std=c11", "-Wall", "-Wextra", "-Werror", client, ...flags, ...cpp ? [] : ["-pthread"], "-ldl", "-o", bin], build, env);
+					if(cmakeClient)
+					{
+						const cmake = env.LEAN_BRIDGE_CMAKE ?? env.LEAN_BRIDGE_C_TASK_CMAKE ?? "cmake";
+						await copyFile(sample.cmakeProject, join(build, "CMakeLists.txt"));
+						await copyFile(client, join(build, cpp ? "main.cpp" : "main.c"));
+						await run(cmake, ["-S", ".", "-B", "cmake-out", "-DCMAKE_PREFIX_PATH=" + prefix], build, env);
+						await run(cmake, ["--build", "cmake-out", "--parallel", "1"], build, env);
+						await rename(join(build, "cmake-out/client"), cmakeClient);
+					}
 					await rename(prefix, join(app, "installed")); isolated.LD_LIBRARY_PATH = join(app, "installed/lib");
 				}
 				// The executable cannot rely on the Cargo tree / build prefix or producer tools.
 				await rm(build, { recursive: true }); await writeFile(join(app, "state"), "open");
 				await run(bin, [], app, isolated, target === "cargo" ? sample.rustClientTimeoutMs ?? 45_000 : 45_000);
+				if(cmakeClient)
+				{
+					assert.equal(await readFile(join(app, "state"), "utf8"), "closed");
+					await writeFile(join(app, "state"), "open");
+					await run(cmakeClient, [], app, isolated, 45_000);
+				}
 			}
 			assert.equal(await readFile(join(app, "state"), "utf8"), "closed");
 			reports.push({ target, route, ...report, consumerSha256: sha256(await readFile(client)), ...installed ? { installed } : {} });

@@ -84,8 +84,13 @@ The [source configuration](../../src/analyze/export-configuration.mjs) distingui
 for an immediate option or a task-backed result, respectively.
 [Installed Python wheels](python-sync-iterators-20261125.md) exercise immediate
 iteration from ordinary source and a reviewed interface on CPython 3.11 and 3.12.
-[Installed C11 libraries](native-sync-iterators-20261125.md) exercise both
-routes with a typed handle and a real file-writing finalizer.
+[Installed C11 libraries](native-sync-iterators-20261125.md#c11) exercise both
+routes with a typed handle and a real file-writing finalizer. The separate
+[Rust installs](native-sync-iterators-20261125.md#rust) use Rust's standard
+`Iterator` and complete without async Cargo features.
+The [C++20 installs](native-sync-iterators-20261125.md#c20) exercise a
+single-pass range through both CMake and pkg-config, including deferred
+destruction on the owning thread and at process exit.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
 starts with constructed IR; it cannot stand in for an installed source package
 on another profile. Check each profile for one pull per demand, value versus
