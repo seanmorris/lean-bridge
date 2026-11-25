@@ -65,7 +65,7 @@ export const cHostFacade=o=>{
 		:hasResult?result.pack("result","out",()=>("goto done_"+i+";")):"out[0]=0;"}
     rc=0;
 done_${i}:
-    ${result.nominal && m.resultOwnership!=="borrow"?result.clear("result"):""}
+    ${result.nominal && (o.cpp || m.resultOwnership!=="borrow")?result.clear("result"):""}
     ${cleanup.join(" ")} (void)called; (void)budget; return rc;
 }`);
 	}

@@ -34,6 +34,11 @@ const hosts = {
  * @param backend - Compiler host target.
  */
 export const prepareNativeHostFixture = async (project, backend) => {
+	if(backend==="cpp")
+	{
+		await cp(resolve("tests/fixtures/cpp-host-workshop"),project,{recursive: true});
+		return;
+	}
 	if(backend === "perl" || backend === "javascript")
 	{
 		const path=backend==="perl"?"perl-host-project":"javascript-host-meter";
