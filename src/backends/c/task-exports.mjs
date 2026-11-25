@@ -27,15 +27,18 @@ export const generateCTaskExports = options => {
 	const wasmHost=!!options.wasmHostKinds?.length,phpHost=!!options.phpHostKinds?.length;
 	const rubyHost=!!options.rubyHostKinds?.length, dotnetHost=!!options.dotnetHostKinds?.length;
 	const jvmHost=!!options.jvmHostKinds?.length, perlHost=!!options.perlHostKinds?.length;
-	const hostKinds=(perlHost?options.perlHostKinds:jvmHost?options.jvmHostKinds:dotnetHost?options.dotnetHostKinds:rubyHost?options.rubyHostKinds:phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
+	const selected=options.staticHost;
+	const hostKinds=(selected?selected.kinds:perlHost?options.perlHostKinds:jvmHost?options.jvmHostKinds:dotnetHost?options.dotnetHostKinds:rubyHost?options.rubyHostKinds:phpHost?options.phpHostKinds:options.wasmHostKinds)??[];
 	if(options.wasmZendObjects && (!wasmHost || phpHost)) throw new TypeError("Zend worker objects require the Wasm host ABI");
 	if(wasmHost && !options.wasmTasks) throw new TypeError("JavaScript host objects require the Wasm owner");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,perlHost?"perl":jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || options.wasmZendObjects?"php":"javascript");
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources,hostKinds,selected?selected.owner:perlHost?"perl":jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || options.wasmZendObjects?"php":"javascript");
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
-	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery];
+	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery, Boolean(selected)];
+	if(selected && (!["c","cpp","rust"].includes(selected.owner) || !Array.isArray(selected.kinds) || !selected.kinds.length || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost || options.wasmCallbacks || options.witCallbacks))
+		throw new TypeError("Static host workers require one native owner and private word carriers");
 	if(perlHost && (options.perlDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || options.wasmCallbacks || options.witCallbacks))
 		throw new TypeError("Perl host objects require the exclusive native Perl task owner and word carriers");
 	if(jvmHost && (options.jvmDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || options.wasmCallbacks || options.witCallbacks))
@@ -97,7 +100,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: Boolean(hostKinds.length), witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: Boolean(hostKinds.length), witCallbacks: options.witCallbacks, wordAliases: Boolean(selected) || wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");

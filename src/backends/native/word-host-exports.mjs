@@ -20,8 +20,10 @@ export const emitWordHostExports = (o, model, target) => {
 	const { ir, entries, modules, identity } = o;
 	const taskObjects = target==="php" && o.phpTaskLeases===true;
 	const clrWorkers = target==="dotnet" && o.dotnetTaskLeases===true;
+	const staticWorkers = o.staticTaskLeases!==undefined;
+	if(staticWorkers && (!["c","cpp","rust"].includes(target) || o.staticTaskLeases!==target || model.workerKeys?.length!==ir.types.length || !model.workerKeys.length || model.workerKeys.some(k=>!/^[a-f0-9]{64}$/u.test(k)))) throw new TypeError("Invalid static worker transport keys");
 	if(clrWorkers && (model.workerKeys?.length!==ir.types.length || model.workerKeys.some(k=>!/^[a-f0-9]{64}$/u.test(k)))) throw new TypeError("Invalid CLR worker transport keys");
-	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || (!entries.length && !taskObjects && !clrWorkers))
+	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || (!entries.length && !taskObjects && !clrWorkers && !staticWorkers))
 		throw new TypeError("Invalid native host component");
 	const prefix = "lb_" + target + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
@@ -74,11 +76,24 @@ done: if(io) lean_dec(io); for(size_t j=0;j<n;j++) if(a[j]) lean_dec(a[j]); retu
 	}
 	header.push("extern lean_object *lb_dn_error_text(lean_object *);", "extern lean_object *initialize_" + module + "(uint8_t);");
 	const entryLean = [...modules.map(m => "import " + m), "import " + host, "namespace " + module, "@[export lb_dn_error_text] def errorText (e : IO.Error) : String := toString e", ...defs, "end " + module, ""].join("\n");
-	const clrHeader=clrWorkers?`static const char *const worker_keys[]={${model.workerKeys.map(k=>JSON.stringify(k)).join(",")}};
-#define LB_CLR_VISIT ${prefix}_visit
-#define LB_CLR_OBJECT ${prefix}_object
+	const workerPrefix=staticWorkers && target==="rust"?prefix+"_private":prefix;
+	const clrHeader=clrWorkers || staticWorkers?`static const char *const worker_keys[]={${model.workerKeys.map(k=>JSON.stringify(k)).join(",")}};
+#define LB_CLR_VISIT ${workerPrefix}_visit
+#define LB_CLR_OBJECT ${workerPrefix}_object
 #include "worker-owner.h"
-`:"";
+${workerPrefix===prefix?"":`#include <stdatomic.h>
+extern int LB_DND(rust_owner)(uintptr_t);
+static _Atomic uintptr_t worker_owner;
+static int bound_worker(uintptr_t cookie) {
+    return cookie && atomic_load_explicit(&worker_owner,memory_order_relaxed)==cookie && LB_DND(rust_owner)(cookie);
+}
+__attribute__((visibility("default"))) int ${prefix}_visit(uintptr_t cookie,uint64_t id,lb_dn_dispatch dispatch,int cleanup,int (*invoke)(uint64_t)) {
+    return bound_worker(cookie) ? LB_CLR_VISIT(id,dispatch,cleanup,invoke) : 15;
+}
+__attribute__((visibility("default"))) int ${prefix}_object(uintptr_t cookie,int op,unsigned kind,uint64_t input,uint64_t *h,uint64_t *out) {
+    return bound_worker(cookie) ? LB_CLR_OBJECT(op,kind,input,h,out) : 15;
+}
+`}`:"";
 	const source = `#include "lean_bridge_native_runtime.h"
 #include "entry-abi.h"
 #include "host-domain.h"
@@ -119,7 +134,7 @@ ${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__
         }
     }
     if(f.fatal || (${taskObjects?"(op>=0 || (op<=PHP_HOST_PIN && op!=PHP_HOST_SWEEP))":"op>=0"} && !lean_bridge_native_component_ready(component))) status=10;
-    lb_dn_leave(&f); return status;
+    ${staticWorkers && target==="rust"?"if(op==-2 && !status) atomic_store_explicit(&worker_owner,owner,memory_order_relaxed);\n    ":""}lb_dn_leave(&f); return status;
 }
 `;
 	return { entryLean, header: header.join("\n"), model, prefix, source };

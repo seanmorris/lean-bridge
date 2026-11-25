@@ -67,8 +67,9 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.jvmHostKinds - Authenticated classes for the native JVM owner.
  * @param options.dotnetHostKinds - Authenticated classes for the native CLR owner.
  * @param options.witCallbacks - Preserve factory versus worker failures when dispatching on a Wasmtime store owner.
+ * @param options.staticHost - Verified C, C++ or Rust owner and its domain-qualified class keys.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[],rubyHostKinds=[],dotnetHostKinds=[],jvmHostKinds=[],perlHostKinds=[],wasmZendObjects=false } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[],rubyHostKinds=[],dotnetHostKinds=[],jvmHostKinds=[],perlHostKinds=[],wasmZendObjects=false, staticHost } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if(witCallbacks && (!tasks || checkedWasm || wasmCallbacks)) throw new TypeError("Wasmtime callbacks require a native task wire");
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
@@ -76,7 +77,9 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const wasmHost=wasmHostKinds.length>0,phpHost=phpHostKinds.length>0,rubyHost=rubyHostKinds.length>0,dotnetHost=dotnetHostKinds.length>0;
-	const perlHost=perlHostKinds.length>0, jvmHost=jvmHostKinds.length>0, hostValues=perlHost || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost;
+	const perlHost=perlHostKinds.length>0, jvmHost=jvmHostKinds.length>0, hostValues=Boolean(staticHost) || perlHost || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost;
+	if(staticHost && (!["c","cpp","rust"].includes(staticHost.owner) || !Array.isArray(staticHost.kinds) || !staticHost.kinds.length || !tasks || checkedWasm || wasmCallbacks || witCallbacks || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost))
+		throw new TypeError("Static host objects require an exclusive native task wire");
 	if(perlHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || dotnetHost || jvmHost || wasmCallbacks || witCallbacks)) throw new TypeError("Perl host objects require a native Perl task wire");
 	if(jvmHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || dotnetHost || wasmCallbacks || witCallbacks)) throw new TypeError("JVM host objects require a native JVM task wire");
 	if(dotnetHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || wasmCallbacks || witCallbacks)) throw new TypeError("CLR host objects require a native CLR task wire");
@@ -84,7 +87,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 	if(wasmZendObjects && (!wasmHost || phpHost || !wasmTasks)) throw new TypeError("Zend worker objects require the Wasm host ABI");
 	if(phpHost && (!tasks || checkedWasm || wasmHost || wasmCallbacks || witCallbacks)) throw new TypeError("PHP host objects require a native PHP task wire");
 	if(wasmHost && !wasmTasks) throw new TypeError("JavaScript host objects require threaded Wasm");
-	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,perlHost?perlHostKinds:jvmHost?jvmHostKinds:dotnetHost?dotnetHostKinds:rubyHost?rubyHostKinds:phpHost?phpHostKinds:wasmHostKinds,perlHost?"perl":jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || wasmZendObjects?"php":"javascript"), values = cTaskValues(p, false, kinds);
+	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources,staticHost?staticHost.kinds:perlHost?perlHostKinds:jvmHost?jvmHostKinds:dotnetHost?dotnetHostKinds:rubyHost?rubyHostKinds:phpHost?phpHostKinds:wasmHostKinds,staticHost?staticHost.owner:perlHost?"perl":jvmHost?"jvm":dotnetHost?"dotnet":rubyHost?"ruby":phpHost || wasmZendObjects?"php":"javascript"), values = cTaskValues(p, false, kinds);
 	const leases = kinds.map((r, i) => ({ ...r, type: (r.host?"host:":"lease:") + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
 	const wireShape = t => leases.find(r => t?.kind === "named" && t.id === r.id)?.type
 		?? (hostValues && t?.kind==="apply" && t.constructor==="result" && t.arguments.length===2?t.arguments.map(wireShape):shape(t));

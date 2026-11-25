@@ -11,6 +11,7 @@ import {wordHostFrame} from "../backends/native/word-host-frame.mjs";
 import {compileHostSources} from "./host-elaboration.mjs";
 import {readVerifiedNativeRuntime,validateNativeElf} from "./native-artifacts.mjs";
 import {processBuildRunner} from "./process-runner.mjs";
+import {stageWordHostTasks,wordHostTaskKernel} from "./word-host-task-kernel.mjs";
 
 /**
  * Compile the application and its generated members against one shared reference
@@ -21,8 +22,10 @@ import {processBuildRunner} from "./process-runner.mjs";
 export const compileCHostComponent=async o=>{
 	const {app,ir,projectContract: contract,runtimeRoot,leanPrefix,environment,signal}=o;
 	const target=o.target==="cargo"?"rust":o.target??"c",cpp=target==="cpp",rust=target==="rust",lang=cpp?"Cpp":rust?"Rust":"C";
+	const requested=Boolean(contract?.taskExports?.length || contract?.asyncIterators?.length);
+	const workers=o.workerTransport===true && requested;
 	if(!["cpp","c","rust"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
-		|| contract.taskExports.length || contract.asyncIterators.length || contract.leanResources.length)
+		|| (requested!==workers) || contract.leanResources.length)
 		throw new TypeError("Expected synchronous application-owned C host imports");
 	const run=(cmd,args,cwd=app,env=environment)=>processBuildRunner.capture({command: cmd,args,cwd,env,signal});
 	const save=(name,data)=>writeFile(join(app,name),data,{flag: "wx"});
@@ -31,8 +34,10 @@ export const compileCHostComponent=async o=>{
 		throw new Error("C host requires matching Lean runtime and compiler");
 	const checked=await compileHostSources({...o,target: rust?"cargo":target,run});
 	const model=staticHostMembers(ir,target);
+	const direct=workers?checked.entries.filter(e=>!e.delivery):checked.entries;
+	if(workers && checked.evidence.selection.staticTaskOwner!==target) throw new TypeError("Missing compiled static worker owner");
 	const members=emitWordHostMembers(ir,{...model,kinds: model.kinds.map(k=>({...k,strong: k.identity==="strong-canonical"}))},target);
-	const gen=id=>emitWordHostExports({ir,entries: checked.entries,modules: contract.modules,identity: id},members,target);
+	const gen=id=>emitWordHostExports({ir,entries: direct,modules: contract.modules,identity: id,...workers?{staticTaskLeases: target}:{}},members,target);
 	const hashes={};
 	const domainInputs=["dotnet/host-domain.c","dotnet/host-domain.h","dotnet/host-frame.h",...rust?["rust/host-owner-cookie.c"]:["c/host-registry.h","c/host-registry.c"]];
 	if(cpp) domainInputs.push("cpp/host-shared.cpp","cpp/host-shared.hpp");
@@ -59,10 +64,17 @@ export const compileCHostComponent=async o=>{
 	const domainId=sha256(canonicalJson({runtimeIdentity,...cpp?{abi}:{},hashes: Object.fromEntries(domainInputs.map(k=>[k,hashes[k]]))}));
 	const domain="liblb_"+target+"_host_domain_"+domainId+".so";
 	const domainPrefix="lb_cd_"+domainId+"_",refPrefix="lb_cr_"+domainId+"_";
+	let kernel;
+	if(workers)
+	{
+		members.workerKeys=model.kinds.map(k=>sha256(canonicalJson(["static-worker-object/v1",target,domainId,k.key])));
+		const kinds=ir.types.map((t,i)=>({id: t.id,name: t.name,hash: members.workerKeys[i]})), staticHost={owner: target,kinds};
+		kernel=await wordHostTaskKernel({name: target+"-"+sha256(o.name),modules: contract.modules,entries: checked.entries.filter(e=>e.delivery),runtimeIdentity,adapter: {staticHost},layout: {staticHost}});
+	}
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
-	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: checked.entries,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp});
-	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: checked.entries,model,name: o.name,identity,facade,ownerPrefix,abi});
+	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp});
+	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
 		domainId
@@ -70,6 +82,7 @@ export const compileCHostComponent=async o=>{
 		, evidence: checked.evidence
 		, hashes
 		, publicBase
+		, ...kernel?{worker: kernel.fingerprint}:{}
 		, ...cpp?{cppHeader: wrapper("0".repeat(64),publicBase)}:{}
 		, header: base.header
 		, source: base.source
@@ -98,12 +111,14 @@ export const compileCHostComponent=async o=>{
 	}
 	await save("public.h",facade.header);
 	await save("provider.c",actual.source+"\n"+facade.source);
-	await save("public.map","{ global: "+facade.symbols.join("; ")+"; local: *; };\n");
-	await run(cc,[...flags,...units,"provider.c","host-frame.c","-L.","-l:"+domain,...libs,"-llean_bridge_native","-Wl,--version-script=public.map","-Wl,-soname,"+component,"-o",component]);
+	const symbols=[...facade.symbols,...kernel?[actual.prefix+"_visit",actual.prefix+"_object",...kernel.wire.symbols]:[]];
+	await save("public.map","{ global: "+symbols.join("; ")+"; local: *; };\n");
+	if(kernel) units.push(...await stageWordHostTasks({kernel,identity,app,save,run,cc,leanPrefix,runtimeRoot,env: checked.env}));
+	await run(cc,[...flags,...kernel?[kernel.ledger.flag]:[],...units,"provider.c","host-frame.c","-L.","-l:"+domain,...kernel?["-l:"+kernel.ledger.name]:[],...libs,"-llean_bridge_native","-Wl,--version-script=public.map","-Wl,-soname,"+component,"-o",component]);
 	const binaries={};
-	for(const lib of [component,domain])
+	for(const lib of [component,domain,...kernel?[kernel.ledger.name]:[]])
 	{
 		const bytes=await readFile(join(app,lib)); validateNativeElf(bytes); binaries[lib]=sha256(bytes);
 	}
-	return {...checked,identity,component,domain,domainId,domainPrefix,refPrefix,runtimeIdentity,binaries,prefix: actual.prefix,publicHeader: cpp?wrapper(identity,facade):facade.header,symbols: facade.symbols,model,...cpp?{support,abi}:{}};
+	return {...checked,identity,component,domain,domainId,domainPrefix,refPrefix,runtimeIdentity,binaries,prefix: actual.prefix,publicHeader: cpp?wrapper(identity,facade):facade.header,symbols,model,...kernel?{workerWire: kernel.wire,workerLedger: kernel.ledger.name}: {},...cpp?{support,abi}:{}};
 };

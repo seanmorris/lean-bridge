@@ -18,7 +18,7 @@ export const prepareStaticWorkerProject = async (project, owner) => {
 	const source=await readFile("tests/fixtures/static-host-workers/Jobs.lean","utf8");
 	await writeFile(join(project,"Jobs.lean"),source.replace("LeanBridge.Host.Rust","LeanBridge.Host."+module));
 	await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "Jobs"\n');
-	const cfg=JSON.parse(await readFile(select,"utf8")), declared={open:"Jobs.series",next:"Jobs.next",close:"Jobs.close"};
+	const cfg=JSON.parse(await readFile(select,"utf8")), declared={open: "Jobs.series",next: "Jobs.next",close: "Jobs.close"};
 	cfg.modules.push("Jobs"); cfg.taskExports=["Jobs.echo","Jobs.relay","Jobs.reject","Jobs.outcome"]; cfg.taskIOErrors=["Jobs.relay"];
 	cfg.asyncIterators=[declared]; cfg.exports.push(...cfg.taskExports,declared.open);
 	const save=()=>writeFile(select,canonicalJson(cfg)); await save();

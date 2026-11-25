@@ -234,7 +234,7 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
-	const staticCallback={c:"error:CCallbackError",cpp:"error:CppCallbackException",rust:"error:RustCallbackError"};
+	const staticCallback={c: "error:CCallbackError",cpp: "error:CppCallbackException",rust: "error:RustCallbackError"};
 	const callbackError=staticObjects?staticCallback[hostTarget]:owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":rubyObjects?"error:RubyCallbackException":dotnetObjects?"error:DotNetCallbackException":jvmObjects?"error:JvmCallbackException":perlObjects?"error:PerlCallbackException":hostError;
 	const callbackCarrier=t=>{
 		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};
