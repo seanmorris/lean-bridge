@@ -103,6 +103,37 @@ type as a task package built for that runtime. You can pass the resource to
 either package. If a worker thread drops a lease, the next call into the
 resource package on the owner thread drains the pending release.
 
+## Pass application objects to Lean
+
+A `native-cpp-host-v1` archive calls your existing C++ classes. Include the
+installed header and instantiate its `Binding` with those classes, in the
+order listed in the header. You don't inherit from a bridge class, implement
+a dispatch table, or install Lean.
+
+For the [meter example](../../tests/fixtures/c-host-members/consumer.cpp),
+`M` is the application's meter type:
+
+```cpp
+lean_bridge::workshop::Binding<M> workshop;
+auto meter = std::make_shared<M>(12);
+workshop.update(meter, 41);
+auto same = workshop.identity(meter);
+assert(same.get() == meter.get() && workshop.read(same) == 41);
+```
+
+An independently built package using the same host contract can use that
+same `shared_ptr`. A returned object preserves its control block as well as
+its address. A member exception that Lean lets escape is rethrown as the
+original C++ exception. If Lean maps it to `EIO String`, catch
+`lean_bridge::sync_v1::DeclaredError<std::string>` instead. A returned
+`Except` remains a value.
+
+Call or explicitly close the binding on the process main thread. Destroying
+a binding on another thread queues its cleanup for the next owner-thread
+entry; call `lean_bridge::sync_v1::drain_host_closes()` there if no more
+calls are expected. Link the package's CMake target or pkg-config name;
+both include the matching reference registry and Lean runtime.
+
 ## Await a task or pull a stream
 
 For a package marked `native-cpp-task-v1`, include the C++ header and link

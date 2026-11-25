@@ -48,7 +48,7 @@ const absent = async path => {
 export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
-	if(config.hostImports && (targets.length !== 1 || !["c", "pypi", "rubygems", "maven", "nuget", "cpan", "php-native"].includes(target))) fail("Host imports require a single c, pypi, rubygems, maven, nuget, cpan, or php-native target");
+	if(config.hostImports && (targets.length !== 1 || !["c", "cpp", "pypi", "rubygems", "maven", "nuget", "cpan", "php-native"].includes(target))) fail("Host imports require a single c, cpp, pypi, rubygems, maven, nuget, cpan, or php-native target");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
@@ -97,7 +97,7 @@ export const buildHostProject = async options => {
 		let artifact, receipt;
 		if(target !== "pypi")
 		{
-			const hosts = { c: buildCHostPackage, maven: buildJvmHostPackage, nuget: buildDotnetHostPackage, rubygems: buildRubyHostPackage, cpan: buildPerlHostPackage, "php-native": buildPhpHostPackage };
+			const hosts = { c: buildCHostPackage, cpp: buildCHostPackage, maven: buildJvmHostPackage, nuget: buildDotnetHostPackage, rubygems: buildRubyHostPackage, cpan: buildPerlHostPackage, "php-native": buildPhpHostPackage };
 			const builder = (contract.ir && hosts[target]) || (wit && !canonical ? buildWitHostPackage : buildCTaskPackage);
 			artifact = await builder({ ...common, target, canonical }); receipt = artifact.receipt;
 		}

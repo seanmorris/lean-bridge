@@ -44,6 +44,25 @@ using copied values has no coroutine or dispatcher header. If it returns
 nominal resources, it includes the ownership support needed to share leases
 with task packages and handle off-thread destruction. See [calling synchronous IO](../consume/cpp.md#call-synchronous-io).
 
+## Call C++ objects from Lean
+
+The [meter project](../../tests/fixtures/cpp-host-workshop/Workshop.lean)
+imports `LeanBridge.Host.Cpp` and calls real C++ methods. Its
+[host contract](../../tests/fixtures/cpp-host-workshop/lean-bridge.hosts.json)
+describes the nominal type, mutable property, methods, and ownership of
+their results. The [export configuration](../../tests/fixtures/cpp-host-workshop/lean-bridge.exports.json)
+selects that contract with `hostImports` and names the functions to publish.
+
+Build the package with `lean-bridge build --project . --target cpp --output release-cpp`.
+The `native-cpp-host-v1` archive includes a C++20 header, the compiled
+libraries, CMake and pkg-config metadata. Distribute the archive and its
+receipt. The consumer uses the actual class as a template argument: a
+constructor uses `std::make_shared`, a method calls the declared member, and
+a property calls its named getter or setter. See [the consumer example](../consume/cpp.md#pass-application-objects-to-lean).
+The archive records the producing libstdc++ ABI and its header checks
+compatibility at compile time. This is a synchronous profile; a plain `IO`
+entry does not return a future.
+
 ## Export tasks and streams
 
 If the Lean code uses files, environment variables, or other OS facilities,
