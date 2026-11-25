@@ -40,10 +40,12 @@ test("a CPAN worker can carry a Perl object but cannot call its members on a Lea
 	const callback=api.types.find(t=>t.id===lookup("Jobs.relay").parameters[1].type.id);
 	assert.equal(callback.source.extensions["lean-bridge.dev/callback-scheduler"],"owner-event-loop");
 	assert.deepEqual(callback.callable.failure.errors,["error:PerlCallbackException"]);
-	for(const site of [lookup("Jobs.echo").result,callback.callable.parameters[0],callback.callable.result
+	for(const site of [lookup("Jobs.echo").result
+		, callback.callable.parameters[0]
+		, callback.callable.result
 		, lookup("Jobs.refuse").source.extensions["lean-bridge.dev/error-payload-site"]
-		, lookup("Jobs.boxes").source.extensions["lean-bridge.dev/step-error-payload-site"]])
-	{
+		, lookup("Jobs.boxes").source.extensions["lean-bridge.dev/step-error-payload-site"]
+	]){
 		assert.equal(site.type.id,"host:meter.Box"); assert.equal(site.ownership,"lease");
 		assert.deepEqual(site.lifetime,{scope: "explicit",anchor: null});
 	}

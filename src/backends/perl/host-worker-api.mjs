@@ -12,6 +12,11 @@ const host=t=>Array.isArray(t)?t.some(host):typeof t==="string" && t.startsWith(
  * before generating XS. A scalar-only method does not require with_hosts.
  *
  * @param o - Compiler-authenticated wire, import kinds and public Binding IR.
+ * @param o.api - Reviewed public Lean declarations.
+ * @param o.wire - Private task and cursor transfer contract.
+ * @param o.kinds - Nominal Perl resources in wire order.
+ * @param o.name - Installed Perl module name.
+ * @param o.assets - Verified worker scheduler assets.
  */
 export const perlHostWorkerApi=({api,wire,kinds,name,assets})=>{
 	const methods=projectPerlNames(name,wire.methods), byId=new Map(), byType=new Map();
@@ -89,5 +94,6 @@ export const perlHostWorkerApi=({api,wire,kinds,name,assets})=>{
 		xs.push(taskXs(m,name,i,input,value,scope));
 	}
 	return {prelude: `extern void ${wire.clear}(uint64_t *);\nstatic void lbs_clear(pTHX_ void *frame) { ${wire.clear}((uint64_t *)frame); Safefree(frame); }\n${taskDeclarations(wire)}\n`
-		, xs: xs.join("\n"), module: assets.scopeModule.replaceAll("__LBNS__",name)+"\n"+taskModules(name,methods,assets,scoped)};
+		, xs: xs.join("\n")
+		, module: assets.scopeModule.replaceAll("__LBNS__",name)+"\n"+taskModules(name,methods,assets,scoped)};
 };

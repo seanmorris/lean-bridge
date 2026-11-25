@@ -18,8 +18,10 @@ const verify=dir=>readVerifiedPackageSetReceipt({receiptPath: join(dir,receiptNa
 const readJson=async path=>JSON.parse(await readFile(path,"utf8"));
 const preserve=async (from,to)=>{
 	await mkdir(dirname(to),{recursive: true});
-	try { await link(from,to); }
-	catch(e) { if(e.code!=="EXDEV") throw e; await copyFile(from,to); }
+	try
+	{ await link(from,to); }
+	catch(e)
+	{ if(e.code!=="EXDEV") throw e; await copyFile(from,to); }
 };
 const checkTampering=async (manifest,files)=>{
 	const installer=await readFile("src/backends/perl/Build.pm","utf8");

@@ -96,7 +96,9 @@ export const verifyPerlHostFiles = async (manifest,files,installer) => {
 		, evidence: JSON.parse(get("elaboration.json"))
 		, hostSource: get("host-imports.json").toString()
 		, reviewSource: files.get("reviewed-api.json")?.toString()??null
-		, nativeRuntimeIdentity,bytes,readLedger: n=>get("lib/"+name.replaceAll("::","/")+"/native/"+n)},{runtimeVersion,runtimeIdentity});
+		, nativeRuntimeIdentity
+		, bytes
+		, readLedger: n=>get("lib/"+name.replaceAll("::","/")+"/native/"+n)},{runtimeVersion,runtimeIdentity});
 	if(manifest.ownedValues || manifest.syncIO || manifest.taskDelivery || manifest.xs!=="Component.xs" || manifest.include!=="."
 		|| !same(payload.contract,manifest.hostImports) || get("LeanBridgeBuild.pm").toString()!==renderPerlIOBuild(installer,name,library,Boolean(payload.contract.resourceLedger),payload.contract.resourceLedger,true)) fail("manifest or installer mismatch");
 	for(const [path,expected] of payload.files) if(!get(path).equals(Buffer.isBuffer(expected)?expected:Buffer.from(expected))) fail("generated payload differs: "+path);

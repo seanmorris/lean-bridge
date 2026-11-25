@@ -14,6 +14,11 @@ import { compileTaskResourceLedger, taskResourceLedger } from "./task-resource-l
  * Bind the private wire and its lease namespace to the original import.
  *
  * @param options - Verified compilation result, import IR, export modules, CPAN module and runtime.
+ * @param options.checked - Freshly elaborated worker declarations and source evidence.
+ * @param options.ir - Original Perl host import contract.
+ * @param options.modules - Lean modules that supply the exports.
+ * @param options.name - CPAN component module.
+ * @param options.runtimeIdentity - Shared runtime digest for the resource ledger.
  */
 export const perlHostTaskKernel = async ({checked,ir,modules,name,runtimeIdentity}) => {
 	const {selection}=checked.evidence, expected=nativeHostSelection(ir,"perl");
@@ -22,17 +27,28 @@ export const perlHostTaskKernel = async ({checked,ir,modules,name,runtimeIdentit
 		|| canonicalJson(selection.members)!==canonicalJson(expected.members)) throw new TypeError("Missing authenticated Perl host-worker selection");
 	const entries=checked.entries.filter(e=>e.delivery), kinds=perlWorkerKinds(ir);
 	const coordinate=sha256(name), scope="lbpw_"+coordinate+"_";
-	const generate=componentIdentity=>generateCTaskExports({name: "perl-"+coordinate,componentIdentity
-		, modules,entries,integerMode: "words",perlDelivery: true,perlHostKinds: kinds});
+	const generate=componentIdentity=>generateCTaskExports({name: "perl-"+coordinate
+		, componentIdentity
+		, modules
+		, entries
+		, integerMode: "words"
+		, perlDelivery: true
+		, perlHostKinds: kinds});
 	const skeleton=generate("0".repeat(64)), wire=generateSyncWire(skeleton.prefix,entries,{tasks: true,perlHostKinds: kinds});
 	wire.methods.forEach((m,i)=>{ if(entries[i].stepIO) m.stepIO=true; });
 	const ledger=await taskResourceLedger(runtimeIdentity), headers={"task-delivery.h": await nativeDeliveryHeader(false)};
-	for(const f of ["native/task-notification.h","native/task-callback-queue.h","c/task-callback-port.h"
+	for(const f of ["native/task-notification.h"
+		, "native/task-callback-queue.h"
+		, "c/task-callback-port.h"
 		, "c/task-integers.h","perl/worker-ledger.h","perl/worker-ledger.c"])
 		headers[f.split("/").at(-1)]=await readFile(new URL("../backends/"+f,import.meta.url));
 	const assets=await perlHostWorkerAssets();
 	const assetHashes=Object.fromEntries(Object.entries(assets).map(([n,b])=>[n,sha256(b)]));
-	const fingerprint={skeleton,scope,assetHashes,wire: sha256(wire.source),ledger: ledger.id
+	const fingerprint={skeleton
+		, scope
+		, assetHashes
+		, wire: sha256(wire.source)
+		, ledger: ledger.id
 		, headers: Object.fromEntries(Object.entries(headers).map(([n,b])=>[n,sha256(b)]))};
 	return {wire,ledger,generate,kinds,api: checked.api,assets,headers,fingerprint,scope,flag: "-DLBP_WORKER_PREFIX="+scope};
 };

@@ -18,10 +18,11 @@ test("C member contracts preserve distinct constructor, property and anchored re
 	assert.equal(php.kinds[0].key,originalKey);
 	assert.equal(phpWasmHostMembers(ir).kinds[0].key,sha256Text("php-wasm-zend-v1:"+originalKey));
 	assert.notEqual(c.kinds[0].key,originalKey);
-	assert.deepEqual(c.members.map(({symbol,...m})=>m),php.members.map(({symbol,...m})=>m));
+	const common=members=>members.map(m=>({...m,symbol: undefined}));
+	assert.deepEqual(common(c.members),common(php.members));
 	assert.deepEqual(c.members.map(m=>[m.op,m.args,m.result]),[
-		["method",[0],"uint32"],["constructor",["uint32"],0],["get",[0],"uint32"],
-		["set",[0,"uint32"],"unit"],["method",[0],0]
+		["method",[0],"uint32"],["constructor",["uint32"],0],["get",[0],"uint32"]
+		, ["set",[0,"uint32"],"unit"],["method",[0],0]
 	]);
 	const native=emitWordHostMembers(ir,c,"c");
 	assert.equal(c.members.at(-1).anchor,0);

@@ -22,8 +22,10 @@ test("the Perl interpreter, not the Lean worker, owns application objects and sc
 	const deps=process.env.LEAN_BRIDGE_PERL_TASK_DEPS, localDeps=deps?{PERL5LIB: deps}:{};
 	for(const perl of paths)
 	{
-		try { await exec(perl,["-e",'use Future 0.54; use IO::Async::Loop 0.805;'],{env: {PATH: "/unavailable",...localDeps}}); }
-		catch(e) { throw new Error(perl+": set LEAN_BRIDGE_PERL_TASK_DEPS to the offline worker dependencies.\n"+e.stderr,{cause: e}); }
+		try
+		{ await exec(perl,["-e",'use Future 0.54; use IO::Async::Loop 0.805;'],{env: {PATH: "/unavailable",...localDeps}}); }
+		catch(e)
+		{ throw new Error(perl+": set LEAN_BRIDGE_PERL_TASK_DEPS to the offline worker dependencies.\n"+e.stderr,{cause: e}); }
 	}
 	const root=await mkdtemp(join(tmpdir(),"perl-worker-transport-"));
 	t.after(()=>rm(root,{recursive: true,force: true}));
@@ -34,11 +36,13 @@ test("the Perl interpreter, not the Lean worker, owns application objects and sc
 	const inventory=await inspectLeanProject(project), component=elaboratedComponent(inventory.project);
 	const source=await openHostProjectSource({project,inventory,component,targets: ["cpan"],leanPrefix});
 	t.after(()=>source.dispose());
-	const built=await compilePerlHostComponent({...source,ir: source.projectContract.ir,name,version: cfg.targets.cpan.version
+	const built=await compilePerlHostComponent({...source, ir: source.projectContract.ir
+		, name
+		, version: cfg.targets.cpan.version
 		, workRoot: root,runtimeRoot: sdk,environment: process.env}).catch(e=>{
 		if(e.details?.stderr || e.details?.stdout) t.diagnostic([e.details.stderr,e.details.stdout].filter(Boolean).join("\n"));
 		throw e;
-	});
+		});
 	await source.verify();
 	const {kernel,generated}=built, {wire}=kernel, probe=resolve("tests/fixtures/perl-host-workers");
 	assert.equal(built.evidence.selection.perlTaskObjects,true);
@@ -51,7 +55,9 @@ test("the Perl interpreter, not the Lean worker, owns application objects and sc
 	{
 		const {names}=wire.methods.find(m=>m.name===method);
 		for(const [op,args] of Object.entries({start: "const uint64_t *,uint64_t *,uint64_t *,uint8_t *"
-			, poll: "uint64_t *,int *",take: "uint64_t *,uint64_t *,uint8_t *",close: "uint64_t *"}))
+			, poll: "uint64_t *,int *"
+			, take: "uint64_t *,uint64_t *,uint8_t *"
+			, close: "uint64_t *"}))
 			headers.push(`extern int ${names[op]}(${args});\n#define TEST_${method.toUpperCase()}_${op.toUpperCase()} ${names[op]}`);
 	}
 	const hook='#include "host-scope.h"'; assert.equal(generated.xsSource.split(hook).length,2);
@@ -61,8 +67,10 @@ test("the Perl interpreter, not the Lean worker, owns application objects and sc
 	{
 		const app=join(root,"abi"+i), pkg=join(app,"LeanBridge"); await mkdir(pkg,{recursive: true});
 		const run=async (cmd,args,options={})=>{
-			try { return await exec(cmd,args,{cwd: app,...options}); }
-			catch(e) { throw new Error([e.message,e.stderr,e.stdout].join("\n"),{cause: e}); }
+			try
+			{ return await exec(cmd,args,{cwd: app,...options}); }
+			catch(e)
+			{ throw new Error([e.message,e.stderr,e.stdout].join("\n"),{cause: e}); }
 		};
 		const [core,flags,arch]=(await run(perl,["-MConfig","-e","print join qq(\\n),$Config{archlibexp}.'/CORE',$Config{ccflags},$Config{archname}"])).stdout.split("\n");
 		await writeFile(join(app,"Workshop.xs"),xs); await writeFile(join(app,"ph-interface.h"),generated.interfaceHeader);
@@ -72,19 +80,54 @@ test("the Perl interpreter, not the Lean worker, owns application objects and sc
 		for(const unit of ["Runtime","Workshop"])
 		{
 			const dest=join(app,"auto/LeanBridge",unit); await mkdir(dest,{recursive: true});
-			await run(perl,["-MExtUtils::ParseXS","-e","ExtUtils::ParseXS::process_file(filename=>$ARGV[0],output=>$ARGV[1],prototypes=>0)"
+			await run(perl,["-MExtUtils::ParseXS"
+				, "-e"
+				, "ExtUtils::ParseXS::process_file(filename=>$ARGV[0],output=>$ARGV[1],prototypes=>0)"
 				, join(unit==="Runtime"?backend:app,unit+".xs"),join(app,unit+".c")]);
 			const deps=unit==="Runtime"?[]:["-L"+join(app,"auto/LeanBridge/Runtime"),"-l:Runtime.so","-Wl,-rpath,$ORIGIN/../Runtime","-L"+root,"-l:"+built.library];
-			await run(cc,[...flags.split(/\s+/u).filter(Boolean),"-shared","-fPIC","-O1","-g0","-pthread","-Werror=implicit-function-declaration"
-				, "-I"+app,"-I"+backend,"-I"+core,"-I"+probe,"-I"+join(sdk,"include"),unit+".c",...deps
-				, "-L"+join(sdk,"lib"),"-llean_bridge_native","-lleanshared","-ldl","-Wl,-soname,"+unit+".so","-o",join(dest,unit+".so")]);
+			await run(cc,[...flags.split(/\s+/u).filter(Boolean)
+				, "-shared"
+				, "-fPIC"
+				, "-O1"
+				, "-g0"
+				, "-pthread"
+				, "-Werror=implicit-function-declaration"
+				, "-I"+app
+				, "-I"+backend
+				, "-I"+core
+				, "-I"+probe
+				, "-I"+join(sdk,"include")
+				, unit+".c"
+				, ...deps
+				, "-L"+join(sdk,"lib")
+				, "-llean_bridge_native"
+				, "-lleanshared"
+				, "-ldl"
+				, "-Wl,-soname,"+unit+".so"
+				, "-o"
+				, join(dest,unit+".so")]);
 		}
-		const {stdout,stderr}=await run(perl,["-I"+app,join(probe,"private.pl")],{timeout: 90000,env: {PATH: "/unavailable",LANG: "C"
-			, LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1",LD_LIBRARY_PATH: root+":"+join(sdk,"lib")}});
+		const {stdout,stderr}=await run(perl,["-I"+app,join(probe,"private.pl")],{timeout: 90000
+			, env: {
+				PATH: "/unavailable"
+				, LANG: "C"
+				, LD_BIND_NOW: "1"
+				, LEAN_NUM_THREADS: "1"
+				, LD_LIBRARY_PATH: root+":"+join(sdk,"lib")
+			}
+		});
 		assert.equal(stderr,""); assert.match(stdout,/returned original objects, rejected wrong-class input, and retired leases on return and die/u);
 		t.diagnostic(perl+" ("+arch+"): "+stdout.trim());
-		const live=await run(perl,["-I"+app,join(probe,"public.pl")],{timeout: 90000,env: {PATH: "/unavailable",LANG: "C",...localDeps
-			, LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1",LD_LIBRARY_PATH: root+":"+join(sdk,"lib")}});
+		const live=await run(perl,["-I"+app,join(probe,"public.pl")],{timeout: 90000
+			, env: {
+				PATH: "/unavailable"
+				, LANG: "C"
+				, ...localDeps
+				, LD_BIND_NOW: "1"
+				, LEAN_NUM_THREADS: "1"
+				, LD_LIBRARY_PATH: root+":"+join(sdk,"lib")
+			}
+		});
 		assert.equal(live.stderr,""); assert.match(live.stdout,/demand, reentry and scoped cancellation/u);
 		t.diagnostic(perl+" ("+arch+"): "+live.stdout.trim());
 	}
