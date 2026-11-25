@@ -18,6 +18,14 @@ on a borrowed result, a changed nominal kind, and distinct C and PHP domains.
 These are compile-time checks; cross-component runtime identity still needs
 an installed C consumer.
 
+The ordinary and reviewed C application then passed fresh Lake resolution and
+elaboration (`node --test tests/helpers/c-host-source.mjs`). Both routes
+produced the same public IR (`d242f63103f3b5153d45bbae660bfa2065ee29a81519d655a7d2845224b47df0`).
+The compiled member audit distinguished the C host failure from a mapped
+`EIO` error and identified both property accesses. Removing the setter
+dependency, substituting a foreign symbol, changing the captured import,
+or shadowing the generated module failed before release.
+
 With the pinned compiler on PATH or `LEAN_BRIDGE_LEAN_PREFIX` set, run:
 
 ```sh

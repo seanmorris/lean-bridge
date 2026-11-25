@@ -146,7 +146,7 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
     -- Only ports with an explicit host lease can expose a nominal result.
     if hostLeases && (r.hostModule.any (fun m =>
         #["LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Ruby", "LeanBridge.Host.Python",
-          "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m)) &&
+          "LeanBridge.Host.C", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m)) &&
         e.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)) then return t
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
@@ -382,7 +382,7 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid PHP-Wasm task object selection"
   if let some m := r.hostModule then
     unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet",
-             "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&
+             "LeanBridge.Host.C", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&
         r.modules.contains m && !r.exportModules.contains m && !r.resources.isEmpty &&
         r.resources.all (fun t => t.lean.startsWith (m ++ ".")) &&
         r.members.all (fun n => n.startsWith (m ++ ".")) do

@@ -95,8 +95,10 @@ export const reconcileHostExports = options => {
 	if(selection.witCursorIO!==undefined && (!witCursorIO || ir || synchronous || !selection.asyncIterators?.length
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && k!=="witTaskCallbacks")))
 		fail("Unauthenticated WIT cursor IO selection");
-	if(ir && hostTarget==="php" && selection.nativeEffectPolicy!==nativeEffectPolicy)
-		fail("PHP host imports require compiled member evidence");
+	if(ir && ["php","c"].includes(hostTarget) && selection.nativeEffectPolicy!==nativeEffectPolicy)
+		fail((hostTarget==="c"?"C":"PHP")+" host imports require compiled member evidence");
+	if(ir && hostTarget==="c" && (selection.cTaskCallbacks!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
+		fail("C host imports require synchronous owner calls until a worker binding is selected");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
 	if(selection.phpWasmTaskObjects!==undefined && (!phpWasm || selection.phpNativeTaskObjects!==undefined || selection.nativeEffects?.length))
 		fail("Unauthenticated PHP-Wasm task objects");
@@ -214,7 +216,7 @@ export const reconcileHostExports = options => {
 	const matchingScheduler = { ruby, jvm, dotnet, perl, php: phpObjects && php, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
-	const importedError = { jvm: ["JvmHostException", "JVM"]
+	const importedError = { c: ["CHostError","C"], jvm: ["JvmHostException", "JVM"]
 		, ruby: ["RubyHostException", "Ruby"]
 		, dotnet: ["DotNetHostException", ".NET"]
 		, perl: ["PerlHostException", "Perl"]

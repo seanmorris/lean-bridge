@@ -13,7 +13,7 @@ import { heapResourceIdentities } from "../analyze/heap-resource-identity.mjs";
 import { nativeHostSelection, reconcileHostExports } from "../analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../analyze/native-host-effects.mjs";
 import { generatePythonHostProvider } from "../backends/python/host-provider.mjs";
-import { phpHostMembers } from "../backends/php/host-members.mjs";
+import { staticHostMembers } from "../backends/native/static-host-members.mjs";
 import { compiledHostModules, compiledHostTargets, generateLeanHostObjectAdapters } from "../backends/lean/host-object.mjs";
 
 const extractor = fileURLToPath(new URL("../analyze/HostExports.lean", import.meta.url));
@@ -96,15 +96,16 @@ export const compileHostSources = async options => {
 			fail("Python worker declarations differ from the captured host source");
 	}
 	const phpWasmTaskObjects=Boolean(ir && options.target==="php-wasm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	if(ir && target==="php")
+	if(ir && (target==="php" || target==="c"))
 	{
+		if(target==="c" && !projectContract) fail("C host members require a captured import source");
 		if(projectContract)
 		{
 			const {hostImportsSource: text,hostImportsSourceSha256: hash}=projectContract;
 			if(typeof text!=="string" || sha256(text)!==hash || canonicalJson(parseBindingIr(text))!==canonicalJson(ir))
-				fail("PHP host declarations differ from the captured import source");
+				fail((target==="c"?"C":"PHP")+" host declarations differ from the captured import source");
 		}
-		phpHostMembers(ir);
+		staticHostMembers(ir,target);
 	}
 	if(threadedJavaScript && canonicalJson(threadedHostSource(projectContract))!==canonicalJson(ir)) fail("Wrong threaded host compile input");
 	if(projectContract && Object.hasOwn(projectContract, "generatedHostModule")
