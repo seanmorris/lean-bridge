@@ -14,8 +14,9 @@ const identifier=/^[A-Za-z][A-Za-z0-9_]*$(?![\s\S])/u;
  * @param target - Native host owning these resources.
  */
 export const staticHostMembers=(ir,target)=>{
-	if(!["php","c","cpp"].includes(target)) throw new TypeError("Unsupported native member owner");
-	const cFamily=target==="c" || target==="cpp",label=cFamily?(target==="c"?"C":"C++"):"PHP";
+	const labels={c: "C", cpp: "C++", rust: "Rust", php: "PHP"};
+	if(!Object.hasOwn(labels,target)) throw new TypeError("Unsupported native member owner");
+	const privateSymbols=target!=="php",label=labels[target];
 	const fail=why=>{throw new TypeError(label+" host members: "+why);};
 	validateBindingIr(ir);
 	const types=ir.types;
@@ -23,7 +24,7 @@ export const staticHostMembers=(ir,target)=>{
 		|| !identifier.test(t.name) || !t.host?.targets.includes(target) || t.host.dynamic)
 		|| new Set(types.map(t=>t.name.toLowerCase())).size!==types.length
 		|| new Set(types.map(t=>t.resource.kindId)).size!==types.length) fail("expected distinct statically declared "+label+" classes");
-	const kinds=types.map(t=>({name: t.name,key: sha256Text(JSON.stringify([...(cFamily?["lean-bridge/"+target+"-host-object/v1"]:[]),ir.component.id,t.id,t.resource.kindId],null,2)+"\n"),identity: t.host.identity}));
+	const kinds=types.map(t=>({name: t.name,key: sha256Text(JSON.stringify([...(privateSymbols?["lean-bridge/"+target+"-host-object/v1"]:[]),ir.component.id,t.id,t.resource.kindId],null,2)+"\n"),identity: t.host.identity}));
 	const carrier=s=>{
 		const t=s.type;
 		if(t.kind==="primitive" && componentScalarTypes.includes(t.name) && s.ownership==="copy" && s.lifetime===null) return t.name;
@@ -40,9 +41,9 @@ export const staticHostMembers=(ir,target)=>{
 		const op=d.kind==="property"?(d.parameters.length?"set":"get"):d.kind;
 		const sites=self?[d.receiver,...d.parameters]:d.parameters, args=sites.map(carrier),result=carrier(d.result);
 		if(op==="constructor" && result!==owner || op==="set" && (d.parameters.length!==1 || result!=="unit")) fail("invalid constructor or setter");
-		if(cFamily && !d.effects.includes("host-call")) fail("missing host-call effect: "+d.id);
+		if(privateSymbols && !d.effects.includes("host-call")) fail("missing host-call effect: "+d.id);
 		const symbol=hostMemberSymbol(target,types[owner],d);
-		const selector=cFamily?symbol:owner+":"+(op==="constructor"?"new":d.kind==="property"?op+":"+d.name:"method:"+d.name.toLowerCase());
+		const selector=privateSymbols?symbol:owner+":"+(op==="constructor"?"new":d.kind==="property"?op+":"+d.name:"method:"+d.name.toLowerCase());
 		if(symbols.has(symbol) || selectors.has(selector)) fail("ambiguous member "+d.id);
 		symbols.add(symbol);selectors.add(selector);
 		for(const [i,s] of sites.entries()) if(typeof args[i]==="number"

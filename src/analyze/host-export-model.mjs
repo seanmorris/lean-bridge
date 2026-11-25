@@ -95,10 +95,10 @@ export const reconcileHostExports = options => {
 	if(selection.witCursorIO!==undefined && (!witCursorIO || ir || synchronous || !selection.asyncIterators?.length
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && k!=="witTaskCallbacks")))
 		fail("Unauthenticated WIT cursor IO selection");
-	const cFamily=hostTarget==="c" || hostTarget==="cpp",ownerLabel=hostTarget==="cpp"?"C++":hostTarget==="c"?"C":"PHP";
-	if(ir && (hostTarget==="php" || cFamily) && selection.nativeEffectPolicy!==nativeEffectPolicy)
+	const syncOwners={c: "C",cpp: "C++",rust: "Rust"},syncOwner=Object.hasOwn(syncOwners,hostTarget),ownerLabel=syncOwners[hostTarget]??"PHP";
+	if(ir && (hostTarget==="php" || syncOwner) && selection.nativeEffectPolicy!==nativeEffectPolicy)
 		fail(ownerLabel+" host imports require compiled member evidence");
-	if(ir && cFamily && (selection[hostTarget+"TaskCallbacks"]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
+	if(ir && syncOwner && (selection[hostTarget+"TaskCallbacks"]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail(ownerLabel+" host imports require synchronous owner calls until a worker binding is selected");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
 	if(selection.phpWasmTaskObjects!==undefined && (!phpWasm || selection.phpNativeTaskObjects!==undefined || selection.nativeEffects?.length))
@@ -219,6 +219,7 @@ export const reconcileHostExports = options => {
 		fail("Host imports and retained callbacks require the same runtime");
 	const importedError = { c: ["CHostError","C"]
 		, cpp: ["CppHostException","C++"]
+		, rust: ["RustHostError","Rust"]
 		, jvm: ["JvmHostException", "JVM"]
 		, ruby: ["RubyHostException", "Ruby"]
 		, dotnet: ["DotNetHostException", ".NET"]
@@ -270,7 +271,7 @@ export const reconcileHostExports = options => {
 		, name: publicErrorName
 		, category: "domain"
 		, payload: null
-		, documentation: doc(importedError ? "An exception raised by a bound " + importedError[1] + " object and propagated through the original Lean IO error." : wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through the original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+		, documentation: doc(hostTarget==="rust" && importedError ? "An error returned by a Rust host member and propagated through the original Lean IO error." : importedError ? "An exception raised by a bound " + importedError[1] + " object and propagated through the original Lean IO error." : wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through the original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: [...new Set(["error:IO.Error", ...(e.hostMembers.length ? [hostError] : []), ...(hasCallbacks(e) ? [callbackError] : [])])];

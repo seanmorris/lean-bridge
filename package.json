@@ -1306,6 +1306,7 @@
     "test:cpp-host-anchors": "node --test tests/helpers/cpp-host-anchors.mjs",
     "test:cpp-host-packages": "LEAN_BRIDGE_CPP_HOST_TEST=1 node --test tests/helpers/c-host-packages.mjs",
     "test:cpp-host-source": "node --test tests/helpers/cpp-host-source.mjs",
+    "test:rust-host-source": "node --test tests/helpers/rust-host-source.mjs",
     "test:cpp-host-registry": "node --test tests/helpers/cpp-host-registry.mjs",
     "test:wit-task-host": "LEAN_BRIDGE_WIT_TASK_HOST=1 node --test --test-concurrency=1 tests/helpers/wit-task-resource-world.mjs",
     "test:wit-canonical-transport": "node --test --test-concurrency=1 tests/helpers/wit-canonical-async.mjs",

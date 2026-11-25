@@ -96,9 +96,9 @@ export const compileHostSources = async options => {
 			fail("Python worker declarations differ from the captured host source");
 	}
 	const phpWasmTaskObjects=Boolean(ir && options.target==="php-wasm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	if(ir && ["c","cpp","php"].includes(target))
+	if(ir && ["c","cpp","rust","php"].includes(target))
 	{
-		const label=target==="cpp"?"C++":target==="c"?"C":"PHP";
+		const label={c: "C",cpp: "C++",rust: "Rust",php: "PHP"}[target];
 		if(target!=="php" && !projectContract) fail(label+" host members require a captured import source");
 		if(projectContract)
 		{

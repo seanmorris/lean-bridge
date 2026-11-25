@@ -19,6 +19,7 @@ const run = (command, args, cwd, env) => processBuildRunner.capture({ command, a
 const hosts = {
 	c: { target: "c", label: "C", error: "CHostError", coordinates: {name: "workshop",version: "1.0.0"} }
 	, cpp: {target: "cpp",label: "Cpp",error: "CppHostException",coordinates: {name: "workshop",version: "1.0.0"}}
+	, rust: {target: "cargo", label: "Rust", error: "RustHostError", coordinates: {name: "workshop", version: "1.0.0"}}
 	, ruby: { target: "rubygems", label: "Ruby", error: "RubyHostException" }
 	, jvm: { target: "maven", label: "Jvm", error: "JvmHostException", coordinates: {name: "org.leanbridge:workshop", version: "1.0.0"} }
 	, dotnet: { target: "nuget", label: "Dotnet", error: "DotNetHostException", coordinates: {name: "Workshop.Host", version: "1.0.0"} }
@@ -50,14 +51,14 @@ export const prepareNativeHostFixture = async (project, backend) => {
 	assert.ok(Object.hasOwn(hosts, backend)); const { label, target } = hosts[backend];
 	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(backend==="c"?resolve("tests/fixtures/c-host-members/lean-bridge.hosts.json"):file, "utf8"));
 	contract.types[0].host.targets = [backend];
-	contract.types[0].documentation.summary = {c: "An application-owned C object with a read method.", cpp: "An application-owned C++ object with a read method.", jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method.", php: "A PHP object with a read method."}[backend];
+	contract.types[0].documentation.summary = {c: "An application-owned C object with a read method.", cpp: "An application-owned C++ object with a read method.", rust: "An application-owned Rust object with a read method.", jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method.", php: "A PHP object with a read method."}[backend];
 	await writeFile(file, canonicalJson(contract));
 	const cfg = join(project, "lean-bridge.exports.json"), config = JSON.parse(await readFile(cfg, "utf8"));
 	config.targets = { [target]: hosts[backend].coordinates };
-	if(["c","cpp","php"].includes(backend)) config.exports.push("Workshop.choose","Workshop.failWith");
+	if(["c","cpp","rust","php"].includes(backend)) config.exports.push("Workshop.choose","Workshop.failWith");
 	await writeFile(cfg, canonicalJson(config));
 	const lean = join(project, "Workshop.lean");
-	if(["c","cpp","php"].includes(backend))
+	if(["c","cpp","rust","php"].includes(backend))
 	{
 		const sample=await readFile(resolve("tests/fixtures/php-host-members/Workshop.lean"),"utf8");
 		await writeFile(lean,sample.replaceAll("LeanBridge.Host.Php","LeanBridge.Host."+label));
@@ -91,7 +92,7 @@ export const checkNativeHostImports = backend => {
 			{
 				const app = await mkdtemp(join(root, "objects-"));
 				const compiled = { ...source, app, ir: source.projectContract.ir };
-				if(["c","cpp","php"].includes(backend) && !source.projectContract.review)
+				if(["c","cpp","rust","php"].includes(backend) && !source.projectContract.review)
 				{
 					const options = { ...compiled, target, environment: process.env, run: () => assert.fail("unexpected Lean invocation") };
 					const original = source.projectContract;
@@ -122,7 +123,7 @@ export const checkNativeHostImports = backend => {
 		assert.ok(entry("update").effects.includes("writes-resource"));
 		assert.deepEqual(entry("read").failure.errors, ["error:IO.Error", "error:" + error]);
 		assert.deepEqual(entry("mapped").failure.errors, ["error:EIO.Workshop.mapped"]);
-		if(["c","cpp","php"].includes(backend))
+		if(["c","cpp","rust","php"].includes(backend))
 		{
 			const leased={type: {kind: "named",id: api.types[0].id},ownership: "lease",lifetime: {scope: "explicit",anchor: null}};
 			assert.deepEqual(entry("failWith").source.extensions["lean-bridge.dev/error-payload-site"],leased);
@@ -144,7 +145,7 @@ export const checkNativeHostImports = backend => {
 		const replay = (selection, metadata) => reconcileHostExports({ selection, metadata, ir, component: api.component });
 		assert.throws(() => replay({ ...evidence.selection, hostModule: "LeanBridge.Host.Python" }, evidence.metadata), /host import/i);
 		assert.throws(() => replay({ ...evidence.selection, pythonTaskCallbacks: true }, evidence.metadata), /same runtime/u);
-		if(["c","cpp","php"].includes(backend))
+		if(["c","cpp","rust","php"].includes(backend))
 		{
 			assert.throws(()=>replay({...evidence.selection,[backend+"TaskCallbacks"]: true},evidence.metadata),/synchronous owner/u);
 			assert.throws(()=>replay({...evidence.selection,taskExports: ["Workshop.identity"]},evidence.metadata),/synchronous owner/u);
