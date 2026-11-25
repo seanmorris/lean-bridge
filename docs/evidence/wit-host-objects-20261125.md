@@ -163,4 +163,12 @@ The [generated callback adapter](../../src/backends/wit/application-turn-callbac
 
 The reader exercises each outcome four ways: receive after the write blocks, drop the blocked result, drop before callback invocation, and request before settlement. A separate guest traps inside its callback. Its parked native frame unwinds before the store is destroyed; the host does not re-enter the trapped store to inspect it.
 
-The application source is unchanged; its stream, callback, mutable object and future are real. The [test composition](../../tests/helpers/wit-application-turn-callbacks.mjs) still supplies a fixture-specific synchronous update adapter. This is not a mixed install receipt. The release command must generate all synchronous operations and remaining task factories on this runtime and pass both ordinary and reviewed installed runs. The synchronous package remains separately installable.
+## Check all nine task and cursor factories together
+
+The [generated task interface](../../src/backends/wit/application-turn-task-graph.mjs) links seven future factories and two stream factories from the source inventory to the same native owner. Two independent Wasm readers start `Jobs.echo` with distinct boxes of equal value. While both are pending, the guest calls `Jobs.reject` 65 times, exceeding the native table's capacity of 64. Each call returns its original box as a factory error, leaves no active row and has no future to await. The echo readers then receive their own boxes in reverse order. A third reader requests its box before settlement.
+
+The [result reader](../../tests/fixtures/static-host-workers/lean-failure-consumer.wat.in) distinguishes three other cases: `Jobs.accept` successfully creates a future of `4294967295`; `Jobs.completed` delivers `ok 0`; and `Jobs.outcome` delivers an error containing the original box **inside** a successfully created future. The driver repeats each case with a reader that drops before delivery and one that drops while the write is pending. The native and guest ownership tables return to zero after shutdown.
+
+The clean integration build checked 75 native exports; worker SHA-256: `a513b022edcef034558d050dc1d64db58057b1ac4dc74b24498549897d78b890`.
+
+The [test composition](../../tests/helpers/wit-application-turn-callbacks.mjs) still supplies a fixture-specific synchronous update adapter. The release command needs to run all synchronous operations on this runtime and pass ordinary and reviewed mixed installs. The synchronous package remains separately installable.

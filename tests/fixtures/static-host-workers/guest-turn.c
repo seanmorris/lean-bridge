@@ -7,6 +7,11 @@
 #include "finite-turn-stream.h"
 #include "relay-turn-future.h"
 #include "relay-late-turn-future.h"
+#include "accept-turn-future.h"
+#include "completed-turn-future.h"
+#include "echo-turn-future.h"
+#include "outcome-turn-future.h"
+#include "reject-turn-future.h"
 #include "application-turn-cursor-link.h"
 #include "application-turn-future-link.h"
 #include <poll.h>
@@ -19,7 +24,8 @@
 
 enum { UPDATE=1,SET=2,GET=3,RESULT=4,MEMBER_ERROR=5 };
 typedef struct { lb_wit_turns turns; workshop_binding binding; bool bound,audit_aliases; unsigned drops,sets,gets,starts,pulls,closes;
-    lb_tc_refs refs;lb_tc_series series;lb_tc_finite finite;lb_tf_relay relay;lb_tf_relay_late late; } session;
+    lb_tc_refs refs;lb_tc_series series;lb_tc_finite finite;lb_tf_relay relay;lb_tf_relay_late late;
+    lb_tf_accept accept;lb_tf_completed completed;lb_tf_echo echo;lb_tf_outcome outcome;lb_tf_reject reject; } session;
 typedef struct { session *s; uint64_t ticket,fault; } box_arg;
 static void dispose(void *p){++((box_arg *)p)->s->drops;}
 static uint32_t member(void *ctx,workshop_box box,unsigned op,uint32_t arg,uint32_t *out){
@@ -63,8 +69,17 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
         workshop_diagnostic_clear(&d);*out=(lb_wit_message){0};return true;
     }
     if(arg.op>=512){
-        unsigned ch=(arg.op-512)/16;arg.op=(arg.op-512)%16;assert(ch<2);s->refs.turns=turns;
-        return ch?lb_tf_relay_late_call(&s->late,&s->refs,s->binding,arg,out):lb_tf_relay_call(&s->relay,&s->refs,s->binding,arg,out);
+        unsigned ch=(arg.op-512)/16;arg.op=(arg.op-512)%16;s->refs.turns=turns;
+        switch(ch){
+        case 0:return lb_tf_relay_call(&s->relay,&s->refs,s->binding,arg,out);
+        case 1:return lb_tf_relay_late_call(&s->late,&s->refs,s->binding,arg,out);
+        case 2:return lb_tf_accept_call(&s->accept,&s->refs,s->binding,arg,out);
+        case 3:return lb_tf_completed_call(&s->completed,&s->refs,s->binding,arg,out);
+        case 4:return lb_tf_echo_call(&s->echo,&s->refs,s->binding,arg,out);
+        case 5:return lb_tf_outcome_call(&s->outcome,&s->refs,s->binding,arg,out);
+        case 6:return lb_tf_reject_call(&s->reject,&s->refs,s->binding,arg,out);
+        default:return false;
+        }
     }
     if(arg.op>=256){
         unsigned channel=(arg.op-256)/16;arg.op=(arg.op-256)%16;assert(channel<2);s->refs.turns=turns;
@@ -88,6 +103,7 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
 static void finish(void *ctx){
     session *s=ctx;assert(lb_tc_series_shutdown(&s->series) && lb_tc_finite_shutdown(&s->finite));
     assert(lb_tf_relay_shutdown(&s->relay) && lb_tf_relay_late_shutdown(&s->late));
+    assert(lb_tf_accept_shutdown(&s->accept) && lb_tf_completed_shutdown(&s->completed) && lb_tf_echo_shutdown(&s->echo) && lb_tf_outcome_shutdown(&s->outcome) && lb_tf_reject_shutdown(&s->reject));
     if(s->bound){assert(workshop_close(&s->binding)==workshop_OK);s->bound=false;}
 }
 static void check(wasmtime_error_t *e){
@@ -95,7 +111,9 @@ static void check(wasmtime_error_t *e){
     wasm_name_t m;wasmtime_error_message(e,&m);fprintf(stderr,"%.*s\n",(int)m.size,m.data);
     wasm_name_delete(&m);wasmtime_error_delete(e);abort();
 }
-typedef struct { session s; lb_wit_ticket current; lb_tc_port ports[2];lb_tf_driver future,late;bool waited; } host;
+enum { ACCEPT,COMPLETED,ECHO,OUTCOME,REJECT,PLAIN_COUNT };
+static const char *const plain_names[PLAIN_COUNT]={"accept","completed","echo","outcome","reject"};
+typedef struct { session s; lb_wit_ticket current; lb_tc_port ports[2];lb_tf_driver future,late,plain[PLAIN_COUNT];bool waited; } host;
 static wasmtime_error_t *bridge(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
     (void)ctx;(void)ft;host *h=ptr;assert(argc==2 && retc==1 && in->kind==WASMTIME_COMPONENT_U64 && in[1].kind==WASMTIME_COMPONENT_U64);
@@ -233,6 +251,7 @@ static void relay_driver(lb_tf_driver *d,wasmtime_component_instance_t *inst,was
     wasmtime_component_func_t *fs[]={&d->poll,&d->deliver,&d->reap,&d->retire,&d->close,&d->drain};d->ctx=ctx;
     for(unsigned i=0;i<6;i++){char name[48];int n=snprintf(name,sizeof name,"%s-%s",prefix,names[i]);assert(n>0 && (size_t)n<sizeof name);*fs[i]=lookup(inst,ctx,name);}
 }
+#include "guest-turn-plain.h"
 static void future_cases(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,bool trap){
     relay_driver(&h->future,inst,ctx,"relay");relay_driver(&h->late,inst,ctx,"relay-late");
     relay_probe p={h,inst,ctx};wasmtime_component_func_t start=lookup(inst,ctx,"user-begin");
@@ -280,7 +299,8 @@ static void run_mixed(host *h,wasmtime_component_instance_t *inst,wasmtime_conte
     for(unsigned k=0;k<64;k++)if(h->ports[0].active[k]){
         RV key=ru32(k+1);check(wasmtime_component_func_call(&retire,ctx,&key,1,NULL,0));
     }
-    check(lb_tf_retire(d));lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
+    check(lb_tf_retire(d));plain_cases(h,inst,ctx);
+    lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
     check(wasmtime_component_func_call(&d->drain,ctx,NULL,0,NULL,0));
     relay_probe p={h,inst,ctx};assert(rcount(&p,"visits")==1 && rcount(&p,"cb-drops")==3 && !rcount(&p,"live-owners"));
     check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
@@ -294,8 +314,15 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
     if(in->mode==CURSORS || in->mode==CANCEL || in->mode>=MIXED){
         check(lb_tc_link(root,"turn-series",s,256,h->ports));
-        if(in->mode<MIXED)check(lb_tc_link(root,"turn-finite",s,272,h->ports+1));
-        else{check(lb_tf_link(root,"turn-relay",s,512,&h->future.port));check(lb_tf_link(root,"turn-relay-late",s,528,&h->late.port));}
+        check(lb_tc_link(root,"turn-finite",s,272,h->ports+1));
+        if(in->mode>=MIXED){
+            check(lb_tf_link(root,"turn-relay",s,512,LB_TF_RETAINED,&h->future.port));
+            check(lb_tf_link(root,"turn-relay-late",s,528,LB_TF_RETAINED,&h->late.port));
+            for(unsigned i=0;i<PLAIN_COUNT;i++){
+                char name[48];snprintf(name,sizeof name,"turn-%s",plain_names[i]);
+                check(lb_tf_link(root,name,s,544+16*i,i==ACCEPT || i==REJECT?LB_TF_FACTORY:LB_TF_SINGLE,&h->plain[i].port));
+            }
+        }
     }
     if(in->mode!=CURSORS && in->mode!=CANCEL)check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
     wasmtime_component_linker_instance_delete(root);

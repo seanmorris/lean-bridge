@@ -1,6 +1,30 @@
 /** @file Canonical future bridge for a Lean task with a retained guest callback. */
 
 /**
+ * Service native owner requests until the specific suspended turn completes.
+ * Only callback-bearing task channels can invoke a registration.
+ *
+ * @param idx - Checked callback slot, or null for an object-only future.
+ */
+export const witTurnFutureDrive=idx=>`          (func $drive (param $op i32) (param $key i32) (param $x i64) (param $y i64)
+            (local $kind i32) (local $rc i32)
+            (loop $next
+              (call $turn (local.get $op) (local.get $key) (local.get $x) (local.get $y) (i32.const 0))
+              (local.set $op (i32.load (i32.const 0))) (if (i32.eqz (local.get $op)) (then (return)))
+              (local.set $kind (i32.load (i32.const 4))) (local.set $x (i64.load (i32.const 8))) (local.set $y (i64.load (i32.const 16)))
+              (if (i32.eq (local.get $op) (i32.const 3)) (then
+                ${idx==null?"unreachable":`(if (i32.ne (local.get $kind) (i32.const ${idx})) (then unreachable))
+                (call $invoke (local.get $x) (local.get $y) (i32.const 32))
+                (local.set $key (i32.load8_u (i32.const 32))) (local.set $x (i64.load (i32.const 40)))
+                (local.set $op (i32.const 8))`}) (else
+                (if (i32.eq (local.get $op) (i32.const 1)) (then
+                  (local.set $rc (call $release (local.get $kind) (local.get $x))) (if (i32.eqz (local.get $rc)) (then unreachable)))
+                  (else (if (i32.ne (local.get $op) (i32.const 2)) (then unreachable))
+                    (local.set $rc (call $same (local.get $kind) (local.get $x) (local.get $y)))))
+                (local.set $key (local.get $rc)) (local.set $x (i64.const 0)) (local.set $op (i32.const 6))))
+              (local.set $y (i64.const 0)) (br $next)))`;
+
+/**
  * Keep the signature and writer from the checked declaration. The native
  * owner parks when it needs the callback; only this component invokes the
  * defining guest. The consumer receives an ordinary canonical future.
@@ -34,23 +58,7 @@ export const witTurnRelayGraph=(m,writer)=>{
         (core module $body (import "" "m" (memory 1 257))
           (import "" "end-a" (func $end-a (param i32))) (import "" "end-c" (func $end-c (param i32)))
           ${fs.map(([n,,sig])=>`(import "" "${n}" (func $${n} ${sig}))`).join(" ")}
-          (func $drive (param $op i32) (param $key i32) (param $x i64) (param $y i64)
-            (local $kind i32) (local $rc i32)
-            (loop $next
-              (call $turn (local.get $op) (local.get $key) (local.get $x) (local.get $y) (i32.const 0))
-              (local.set $op (i32.load (i32.const 0))) (if (i32.eqz (local.get $op)) (then (return)))
-              (local.set $kind (i32.load (i32.const 4))) (local.set $x (i64.load (i32.const 8))) (local.set $y (i64.load (i32.const 16)))
-              (if (i32.eq (local.get $op) (i32.const 3)) (then
-                (if (i32.ne (local.get $kind) (i32.const ${idx})) (then unreachable))
-                (call $invoke (local.get $x) (local.get $y) (i32.const 32))
-                (local.set $key (i32.load8_u (i32.const 32))) (local.set $x (i64.load (i32.const 40)))
-                (local.set $op (i32.const 8))) (else
-                (if (i32.eq (local.get $op) (i32.const 1)) (then
-                  (local.set $rc (call $release (local.get $kind) (local.get $x))) (if (i32.eqz (local.get $rc)) (then unreachable)))
-                  (else (if (i32.ne (local.get $op) (i32.const 2)) (then unreachable))
-                    (local.set $rc (call $same (local.get $kind) (local.get $x) (local.get $y)))))
-                (local.set $key (local.get $rc)) (local.set $x (i64.const 0)) (local.set $op (i32.const 6))))
-              (local.set $y (i64.const 0)) (br $next)))
+          ${witTurnFutureDrive(idx)}
           (func (export "begin") (param i32 i32) (result i32) (local $a i64) (local $c i64)
             (local.set $a (call $pin-box (local.get 0))) (call $end-a (local.get 0))
             (local.set $c (call $pin-reg (local.get 1))) (call $end-c (local.get 1))

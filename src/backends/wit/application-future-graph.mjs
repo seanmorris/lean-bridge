@@ -1,5 +1,6 @@
 /** @file Compose the resource-owning task interface without redefining its resource types. */
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
+import { witTurnTaskAssembly } from "./application-turn-task-graph.mjs";
 
 /**
  * Private native hooks only transport readiness. The consumer sees the
@@ -70,5 +71,6 @@ export const objectFutureGraph=o=>{
 		, ...relays.length?[`  use callbacks.{${uses(registrations)}};`,`  variant %${failure} { callback(own<%${aliases.get(orig.length)}>), io(string) }`]:[]
 		, ...methods.map(m=>`  %${m.name}: func(%${m.param}: borrow<%${aliases.get(m.input)}>${m.shape==="callback"?`, %${m.callbackParam}: borrow<%${aliases.get(m.cb)}>`:""}) -> ${type(m)};`)
 		, "}","world task-consumer { import object-tasks; }"].join("\n");
-	return {api,wit,wat: parts.join("\n")};
+	const turn=o.complete && methods.length?witTurnTaskAssembly({methods,files,rs,iface,callbacks,objects,registrations,slots,api,aliases,failure,methodSlots}):null;
+	return {api,wit,wat: parts.join("\n"),turn};
 };

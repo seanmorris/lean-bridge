@@ -7,8 +7,9 @@
 #include <poll.h>
 typedef struct {
     lb_tc_port port;
-    unsigned expected[LB_WIT_TURN_DEPTH];bool delivered[64];
+    unsigned expected[LB_WIT_TURN_DEPTH],kind;bool delivered[64];
 } lb_tf_port;
+enum { LB_TF_SINGLE,LB_TF_FACTORY,LB_TF_RETAINED };
 static inline wasmtime_error_t *lb_tf_wasm(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
     (void)ctx;(void)ft;lb_tf_port *f=data;lb_tc_port *p=&f->port;
@@ -21,7 +22,7 @@ static inline wasmtime_error_t *lb_tf_wasm(void *data,wasmtime_context_t *ctx,co
             return wasmtime_error_new("invalid future owner reply");
         op=p->frames[p->depth-1].op;key=p->frames[p->depth-1].key;
     }else{
-        if(op>LB_TF_DRAIN || p->depth>=LB_WIT_TURN_DEPTH || (op==LB_TF_OPEN ? key || !x || !y :
+        if(op>LB_TF_DRAIN || p->depth>=LB_WIT_TURN_DEPTH || (op==LB_TF_OPEN ? key || !x || !!y!=(f->kind==LB_TF_RETAINED) :
            op==LB_TF_DRAIN ? key || x || y : !key || key>64 || !p->active[key-1] || y || (op!=LB_TF_TEXT && x)))
             return wasmtime_error_new("invalid future request");
         if(!lb_wit_turn_begin(p->turns,(lb_wit_message){p->base+op,{key,x,y}},&ev))return wasmtime_error_new("compiled Lean future rejected request");
@@ -35,13 +36,14 @@ static inline wasmtime_error_t *lb_tf_wasm(void *data,wasmtime_context_t *ctx,co
         if(op==LB_TF_OPEN || op==LB_TF_POLL){
             if(last>(uint64_t)INT_MAX+1)return wasmtime_error_new("invalid future readiness");
             if(op==LB_TF_OPEN){
-                if(!tag || tag>64 || p->active[tag-1])return wasmtime_error_new("invalid new future");
+                if(!tag || tag>64 || p->active[tag-1] || (ev.message.words[1] && (f->kind!=LB_TF_FACTORY || last)))
+                    return wasmtime_error_new("invalid new future");
                 key=(unsigned)tag;p->active[key-1]=true;f->delivered[key-1]=false;
             }else if(tag>1 || (!tag)!=!!last)return wasmtime_error_new("invalid poll status");
             p->fd[key-1]=last?(int)(last-1):-1;last=0;
         }else if(op==LB_TF_CLOSE){p->active[key-1]=false;f->delivered[key-1]=false;p->fd[key-1]=-1;}
     }else{
-        if(ev.message.op!=LB_TC_INVOKE && ev.message.op!=LB_TC_SAME && ev.message.op!=LB_TC_RELEASE)return wasmtime_error_new("invalid future owner request");
+        if((ev.message.op!=LB_TC_INVOKE || f->kind!=LB_TF_RETAINED) && ev.message.op!=LB_TC_SAME && ev.message.op!=LB_TC_RELEASE)return wasmtime_error_new("invalid future owner request");
         f->expected[p->depth-1]=ev.message.op==LB_TC_INVOKE?LB_TC_CALLBACK_REPLY:LB_TC_REPLY;p->frames[p->depth-1].ticket=ev.ticket;
     }
     *out=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_TUPLE};wasmtime_component_valtuple_new_uninit(&out->of.tuple,4);
@@ -51,9 +53,9 @@ static inline wasmtime_error_t *lb_tf_wasm(void *data,wasmtime_context_t *ctx,co
     v[2]=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U64,.of.u64=ev.message.words[1]};
     v[3]=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U64,.of.u64=last};return NULL;
 }
-static inline wasmtime_error_t *lb_tf_link(wasmtime_component_linker_instance_t *root,const char *name,lb_wit_turns *s,unsigned base,lb_tf_port *f){
-    if(!f || f->port.turns || !s || !root || !name || base>UINT32_MAX-LB_TF_DRAIN)return wasmtime_error_new("invalid future binding");
-    f->port.turns=s;f->port.base=base;
+static inline wasmtime_error_t *lb_tf_link(wasmtime_component_linker_instance_t *root,const char *name,lb_wit_turns *s,unsigned base,unsigned kind,lb_tf_port *f){
+    if(!f || f->port.turns || !s || !root || !name || base>UINT32_MAX-LB_TF_DRAIN || kind>LB_TF_RETAINED)return wasmtime_error_new("invalid future binding");
+    f->port.turns=s;f->port.base=base;f->kind=kind;
     for(unsigned k=0;k<64;k++)f->port.fd[k]=-1;
     return wasmtime_component_linker_instance_add_func(root,name,strlen(name),lb_tf_wasm,f,NULL);
 }

@@ -74,17 +74,16 @@ export const compileCHostComponent=async o=>{
 			hashes.callbackReadiness=sha256(wake);await save("callback-readiness.h",wake);
 			const reactor=await readFile(new URL("../backends/wit/canonical-future-reactor.h",import.meta.url));
 			hashes.futureReactor=sha256(reactor);await save("canonical-future-reactor.h",reactor);
-			if(checked.entries.some(e=>e.delivery==="async-iterator" || e.parameters.some(p=>p.type.kind==="io-callback")))for(const file of ["application-turn.h","application-turn-cursor.h","application-turn-cursor-link.h"])
-			{
+			const futures=witObjectFutureFiles({ir,model,api: checked.api,entries: checked.entries.filter(e=>e.delivery),descriptor: witImports,name: o.name,version: o.version});
+			const turnFiles=Object.keys(futures),hasFuture=turnFiles.some(n=>n.endsWith("-turn-future.h"));
+			if(hasFuture || turnFiles.some(n=>n.endsWith("-turn-stream.h")))for(const file of [
+				"application-turn.h"
+				, "application-turn-cursor.h"
+				, "application-turn-cursor-link.h"
+				, ...hasFuture?["application-turn-future-link.h"]:[]]){
 				const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
 				hashes[file]=sha256(bytes);await save(file,bytes);
-			}
-			const futures=witObjectFutureFiles({ir,model,api: checked.api,entries: checked.entries.filter(e=>e.delivery),descriptor: witImports,name: o.name,version: o.version});
-			if(futures["application-turn-callbacks.h"])
-			{
-				const file="application-turn-future-link.h",bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
-				hashes[file]=sha256(bytes);await save(file,bytes);
-			}
+				}
 			for(const [file,data] of Object.entries(futures))
 			{hashes[file]=sha256(data);await save(file,data);}
 		}

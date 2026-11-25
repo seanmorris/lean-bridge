@@ -14,6 +14,7 @@ import { objectStreamHost } from "./application-stream-host.mjs";
 import { witTurnCursorGraph,witTurnCursorHost,witTurnCursorPorts } from "./application-turn-cursor.mjs";
 import { witTurnRelayHost } from "./application-turn-callback.mjs";
 import { witTurnRelayGraph } from "./application-turn-future.mjs";
+import { witTurnPlainGraph,witTurnPlainHost } from "./application-turn-plain.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -189,11 +190,14 @@ export const witObjectFutureFiles=options=>{
 			:factory?"":`(call $drop-r${z} (i32.load offset=16 (local.get $p)))`;
 		const ownership={slots,borrows: [[0,a]],abandon};
 		files[label+"-future.wat"]=richCanonicalFuture({params,args,payload,ownership,failure: factory?nominal:null},capacity);
+		files[label+"-turn-future.wat"]=witTurnPlainGraph(m,files[label+"-future.wat"]);
+		files[label+"-turn-future.h"]=witTurnPlainHost({...m,nominal: byRef(owner,n+"_owner").type});
 		files[label+"-future.h"]=objectFutureHost(m);
 		supported.push({name: label,declaration: e.declaration,input: a,owner: z,param,shape});
 	}
-	const graph=objectFutureGraph({...options,methods: supported,files,callbacks: layout});
+	const graph=objectFutureGraph({...options,methods: supported,files: {...files,...callbacks.files},callbacks: layout,complete: !remaining.length});
 	files["object-tasks.wit"]=graph.wit;files["object-tasks.wat"]=graph.wat;
+	if(graph.turn)files["object-turn-tasks.wat"]=graph.turn;
 	files["object-delivery.json"]=canonicalJson({schemaVersion: 2,publicName: graph.api,supported,remaining});
 	return {...files,...callbacks.files};
 };

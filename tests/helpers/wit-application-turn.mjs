@@ -57,7 +57,7 @@ export const exerciseWitApplicationTurn=async o=>{
 		await run(wasm,["parse",id+".wat","-o",id+".wasm"]);
 		await run(wasm,["validate","--features","cm-async,cm-async-builtins",id+".wasm"]);
 	}
-	await buildTurnCallbackGuests({...o,owner,update,programs});
+	await buildTurnCallbackGuests({...o,owner,update});
 	const flags=["-std=gnu11","-O1","-g0","-Wall","-Wextra","-Werror","-pthread","-I."];
 	const includes=["-I"+resolve("src/backends/wit"),"-I"+join(kit,"include")];
 	const libs=["-L.","-l:"+b.component,"-L"+join(kit,"lib"),"-lwasmtime"];
@@ -73,5 +73,6 @@ export const exerciseWitApplicationTurn=async o=>{
 	assert.match(r.stdout,/reentrant cursor open during owner comparison: three independent cursors, three releases/u);
 	assert.match(r.stdout,/retained native tasks: reentrant original object, owned callback exception, caught exception then independent IO error, cancelled pending callback/u);
 	assert.match(r.stdout,/unchanged downstream application: series to retained relay to nested Lean update to canonical future: 73/u);
+	assert.match(r.stdout,/canonical object tasks: 65 immediate factory rejections, returned errors, both u32 bounds, independent readers and early drops/u);
 	assert.match(r.stdout,/canonical callback futures: sixteen scheduling\/error combinations and native teardown on a guest trap/u);
 };
