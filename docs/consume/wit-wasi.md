@@ -151,6 +151,8 @@ If the package includes a `registrations` world, build a third component for it.
 
 Without a callback provider, pass just `objects.wasm application.wasm`. For a package that exports only an object task, your application imports the object interface and the task interface; it needs no synchronous Lean functions. The archive README and launcher usage text give the input order. The launcher prints the signed result. There is no event loop for you to run and no SDK dependency on the deployment machine.
 
+In this launcher, malformed values in a synchronous call are boundary errors, not Lean `IO` or `EIO` results. For example, passing an `Int` with a trailing zero limb to `shift` stops the command with `invalid WIT argument or conversion limit: shift`. If the defining guest itself traps while releasing the staged argument, the command reports that trap instead.
+
 ### Call synchronous IO
 
 If the receipt lists `native-wit-object-io-v1`, the application supplies the objects. Build one Wasm component for the `owner` world in `wit/deps/objects.wit`, and a separate component for the `application` world in `wit/`. The first component defines the resources and their methods. The second imports those same resource types and the compiled Lean API, and exports `run: func() -> s64`.

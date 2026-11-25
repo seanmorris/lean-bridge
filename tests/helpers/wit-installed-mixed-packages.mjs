@@ -47,6 +47,7 @@ test("installed mixed WIT applications run original objects, callbacks, futures 
 		const guest=id=>[...paths.slice(0,2),join(consumer,id+".wasm")];
 		assert.equal((await invoke(guest("sync-suite"))).stdout.trim(),"1");
 		assert.equal((await invoke(guest("early"))).stdout.trim(),"17");
+		await assert.rejects(invoke(guest("bad-argument")),e=>e.code===1 && /invalid WIT argument or conversion limit: shift/u.test(e.stderr));
 		await assert.rejects(invoke(guest("trap")),e=>e.code===1 && /unreachable/u.test(e.stderr));
 		await assert.rejects(invoke([...paths.slice(0,2),join(consumer,"private.wasm")]),e=>e.code===1 && /turn-series/u.test(e.stderr));
 		await assert.rejects(invoke(paths.slice(1)),e=>e.code===2 && /objects.wasm.*callbacks.wasm.*application.wasm/u.test(e.stderr));

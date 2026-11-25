@@ -20,6 +20,7 @@
   (import "cm32p2|@OPS@" "shift" (func $shift (param i32 i32 i32 i32 i32)))
   (import "cm32p2|@OPS@" "pick-wide" (func $wide (param i32 i32)))
   (import "cm32p2|@IFACE@" "same-box" (func $same (param i32 i32) (result i32)))
+  (import "cm32p2|@IFACE@" "[static]box.create" (func $guest-box (param i32 i32)))
   (import "cm32p2|@IFACE@" "box_drop" (func $drop (param i32)))
   (import "cm32p2|@IFACE@" "member-error_drop" (func $release-error (param i32)))
   (import "cm32p2|@IFACE@" "[method]member-error.message" (func $message (param i32 i32)))
@@ -39,12 +40,16 @@
     (call $expect (i32.eqz (i32.load8_u (i32.const 0)))) (i32.load (i32.const 4)))
   (func $alias (param $a i32) (param $b i32)
     (call $expect (call $same (local.get $a) (local.get $b))) (call $drop (local.get $b)))
-  (func (export "cm32p2||bad-input") (param $value i32)
+  (func $bad-input (export "cm32p2||bad-input") (param $value i32)
     ;; Not a canonical Lean Int. The facade must release the temporary
     ;; guest owner it already staged before diagnosing the copied argument.
     (i32.store (i32.const 80) (i32.const 0))
     (call $shift (local.get $value) (i32.const 0) (i32.const 80) (i32.const 1) (i32.const 0))
     (call $drop (local.get $value)))
+  ;; Construct directly in the guest so that no destructor runs before the
+  ;; invalid call. Its borrowed receiver stages exactly one independent lease.
+  (func $probe-invalid (export "cm32p2||probe-invalid")
+    (call $guest-box (i32.const 42) (i32.const 0)) (call $bad-input (call $ok)))
   (func $contents (param $pair i32) (param $expected i32) (param $n i32) (param $stride i32)
     (local $p i32) (local $i i32)
     (call $expect (i32.eq (i32.load offset=4 (local.get $pair)) (local.get $n)))

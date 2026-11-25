@@ -7,7 +7,7 @@
 #include "application-turn-cursor.h"
 #include <stdlib.h>
 enum {LB_TS_ENTER=4096,LB_TS_MEMBER,LB_TS_MEMBER_REPLY,LB_TS_CLONE,LB_TS_CLONED};
-typedef struct {lb_val args,result,request,reply;unsigned method;bool occupied;} lb_ts_slot;
+typedef struct {lb_val args,result,request,reply;const char *invalid;unsigned method;bool occupied;} lb_ts_slot;
 typedef struct lb_ts_fault {struct lb_ts_fault *next;uint64_t token;uint32_t id;} lb_ts_fault;
 typedef struct lb_ts_frame {
     struct lb_ts_frame *parent;lb_ts_fault *faults;unsigned count,index;
@@ -18,6 +18,11 @@ typedef struct {
 static inline bool lb_ts_read_token(const lb_val *v,uint64_t *out){
     if(!v || v->kind!=WASMTIME_COMPONENT_U64 || !v->of.u64)return false;
     *out=v->of.u64;return true;
+}
+/* Wasm held these argument tickets before entering the native frame. If a
+ * copied argument fails validation, none have been adopted into Lean. */
+static inline bool lb_ts_discard_input(lb_ts_bus *b,unsigned kind,const lb_val *v){
+    uint64_t t=0;return lb_ts_read_token(v,&t) && lb_tc_release(b->refs,kind,t);
 }
 static inline bool lb_ts_clone(lb_ts_bus *b,unsigned kind,uint64_t ticket,lb_val *out){
     lb_wit_message r={0};

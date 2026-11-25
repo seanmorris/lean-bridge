@@ -24,7 +24,7 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 	await copyFile(join(app,"operations.wit"),join(app,"wit-api/api.wit"));
 	await copyFile(join(app,"api.wit"),join(app,"wit-user/deps/api.wit"));
 	await writeFile(join(app,"wit-user/user.wit"),`package demo:consumer; world application {
-  import ${name}; use ${name}.{box}; import ${ops}; export exercise: func(seed: u32, next: u32) -> u32; export suite: func() -> u32; export bad-input: func(value: borrow<box>);
+  import ${name}; use ${name}.{box}; import ${ops}; export exercise: func(seed: u32, next: u32) -> u32; export suite: func() -> u32; export bad-input: func(value: borrow<box>); export probe-invalid: func();
 }`);
 	const compile=async(world,source,path)=>{
 		await writeFile(join(app,world+".wat"),source);

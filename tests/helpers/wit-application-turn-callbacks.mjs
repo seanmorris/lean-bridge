@@ -62,11 +62,22 @@ export const buildTurnCallbackGuests=async o=>{
 		, `(instance $sync-client (instantiate $application (with "${obj}" (instance $obj)) (with "box" (type $box)) (with "${ops.publicName}" (instance $api))))`
 		, '(export "sync-suite" (func $sync-client "suite")) (export "sync-exercise" (func $sync-client "exercise"))'
 		, '(export "arm-sync-trap" (func $o "arm-drop"))'
+		, '(export "probe-invalid" (func $sync-client "probe-invalid"))'
 		, '(export "sync-counts" (func $api "cursor-counts")) (export "sync-gate" (func $api "cursor-gate"))'];
 	const bound=reg.replace(/;; @update-start@[\s\S]*?;; @update-end@/u,()=>generated.join("\n"));
 	assert.notEqual(bound,reg);
-	const mixed=[...graphParts.slice(0,-2).map(part=>part===send?`(import "sync-ports" (instance $transport (type $sync-type)))\n${channel.join("\n")}`:part)];
-	mixed.splice(1,0,`(type $sync-type ${await read("turn-sync-ports.wat")})`);mixed.push(bound.trimEnd().slice(0,-1),assembly);
+	const mixed=[
+		"(component"
+		, `(type $sync-type ${await read("turn-sync-ports.wat")})`
+		, '(import "sync-ports" (instance $transport (type $sync-type)))'
+		, ...channel
+		, '(import "observe-drop" (func $observe))'
+		, await component("observed")
+		, '(instance $o (instantiate $observed (with "observe-drop" (func $observe))))'
+		, ...graphParts.slice(4,-2)
+		, bound.trimEnd().slice(0,-1)
+		, assembly
+	];
 	mixed.push(`(instance $all (instantiate $all-code (with "${b.witImports.interfaceName}" (instance $obj)) (with "${callbacks.interfaceName}" (instance $cb))`);
 	mixed.push(`(with "leases" (instance $ext)) ${bindings.join(" ")})) (alias export $all "${taskName}" (instance $jobs))`);
 	for(const {name,shape} of supported)

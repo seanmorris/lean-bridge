@@ -63,6 +63,9 @@ static inline wasmtime_error_t *lb_ts_step(void *data,wasmtime_context_t *ctx,co
     if(ev.done?(ev.message.op!=LB_TC_DONE || ev.message.words[0]!=k):
         (ev.message.op!=LB_TC_SAME && ev.message.op!=LB_TC_RELEASE && ev.message.op!=LB_TS_CLONE && ev.message.op!=LB_TS_MEMBER))
         return wasmtime_error_new("invalid synchronous owner event");
+    if(ev.done && s->invalid){
+        wasmtime_error_t *e=wasmtime_error_new(s->invalid);lb_ts_slot_clear(s);--c->depth;return e;
+    }
     c->frames[k].ev=ev;*out=(lb_val){.kind=WASMTIME_COMPONENT_TUPLE};wasmtime_component_valtuple_new_uninit(&out->of.tuple,5);
     lb_val *v=out->of.tuple.data;
     v[0]=(lb_val){.kind=WASMTIME_COMPONENT_U64,.of.u64=c->frames[k].id};

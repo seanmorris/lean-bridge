@@ -200,3 +200,16 @@ The [task-only install test](../../tests/helpers/wit-installed-object-task-only.
 | --- | ---: | --- |
 | Ordinary | 60,966,846 | `b9599f691dcb4906f85cc759cb1d9e0351726d0f8b94aaaea32a5edf7fbc7bce` |
 | Reviewed | 60,966,826 | `6407cffe7783d24d13dac3024418f71928bd83bd0c98adffecd48b7c21b223fe` |
+
+## Malformed synchronous arguments inside an async application
+
+The installed consumer passes a borrowed box followed by a noncanonical Lean integer (one zero limb) to `shift`. The earlier launcher reported only `synchronous Lean frame failed to resume`. Both rebuilt releases now report `invalid WIT argument or conversion limit: shift`, before entering the Lean function. The original member failures, Lean IO errors, and callback traps still follow their separate paths.
+
+The [native fault probe](../../tests/fixtures/static-host-workers/guest-turn.c) observes a destructor without calling back into a trapped store. It counts exactly one release for the staged receiver. In a second run the defining guest traps during that release: the store reports the original `unreachable`, not an argument error. Both runs retire their frames and leave the native reference table empty.
+
+| Workshop mixed release with argument diagnostics | Archive bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 61,041,889 | `5265125efe9205efb46938fbba8e572d1647caa570f9365621d219b3e60f64ee` |
+| Reviewed | 61,045,848 | `9cfdf9fe174bc2fface6516dfa4e8e61efe0b7d66b1aa869b1e62ab49d1ecc9e` |
+
+For the other runtimes, see the [installed host-worker evidence by target](host-worker-qualification-20261125.md).

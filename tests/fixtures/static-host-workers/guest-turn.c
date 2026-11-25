@@ -91,7 +91,12 @@ static void check(wasmtime_error_t *e){
     wasm_name_t m;wasmtime_error_message(e,&m);fprintf(stderr,"%.*s\n",(int)m.size,m.data);
     wasm_name_delete(&m);wasmtime_error_delete(e);abort();
 }
-typedef struct { session s; lb_wit_ticket current; lb_tg_store tasks;lb_ts_linker sync;bool waited; } host;
+typedef struct { session s; lb_wit_ticket current; lb_tg_store tasks;lb_ts_linker sync;bool waited;unsigned observed; } host;
+/* Inspect native state after a trap, never call back into the trapped guest. */
+static wasmtime_error_t *observe_drop(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
+    wasmtime_component_val_t *in,size_t n,wasmtime_component_val_t *out,size_t m){
+    (void)ctx;(void)ft;(void)in;(void)out;assert(!n && !m);++((host *)ptr)->observed;return NULL;
+}
 static wasmtime_error_t *bridge(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
     (void)ctx;(void)ft;host *h=ptr;assert(argc==2 && retc==1 && in->kind==WASMTIME_COMPONENT_U64 && in[1].kind==WASMTIME_COMPONENT_U64);
@@ -153,7 +158,7 @@ static bool nested_open(lb_wit_turns *s,void *ctx){
     assert(!finish_cursor_event(s,a,&released) && released==7);
     return lb_wit_turn_retire(s);
 }
-enum scenario {PROPERTY,TRAP,CURSORS,CANCEL,REGISTRATIONS,MIXED,FUTURE_ERROR,FUTURE_TRAP,SYNC_TRAP};
+enum scenario {PROPERTY,TRAP,CURSORS,CANCEL,REGISTRATIONS,MIXED,FUTURE_ERROR,FUTURE_TRAP,SYNC_TRAP,INVALID,INVALID_DROP_TRAP};
 typedef struct {host *h;const char *wasm;enum scenario mode;} input;
 static wasmtime_component_func_t lookup(wasmtime_component_instance_t *instance,wasmtime_context_t *ctx,const char *name){
     wasmtime_component_export_index_t *idx=wasmtime_component_instance_get_export_index(instance,ctx,NULL,name,strlen(name));
@@ -292,7 +297,10 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasm_engine_t *engine=wasm_engine_new_with_config(cfg);wasmtime_store_t *store=wasmtime_store_new(engine,NULL,NULL);
     wasmtime_component_linker_t *link=wasmtime_component_linker_new(engine);
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
-    if(in->mode>=MIXED){h->s.sync_host=true;check(lb_ts_link(&h->sync,&h->s.sync,s,root));}
+    if(in->mode>=MIXED){
+        h->s.sync_host=true;check(lb_ts_link(&h->sync,&h->s.sync,s,root));
+        check(wasmtime_component_linker_instance_add_func(root,"observe-drop",12,observe_drop,h,NULL));
+    }
     if(in->mode==CURSORS || in->mode==CANCEL || in->mode>=MIXED){
         check(lb_tg_link_all(&h->tasks,root,s));
     }
@@ -310,6 +318,16 @@ static bool application(lb_wit_turns *s,void *ptr){
     if(in->mode==CURSORS || in->mode==CANCEL){streams(h,&instance,ctx,in->mode==CANCEL);goto finished;}
     if(in->mode==REGISTRATIONS){check_members(h,&instance,ctx);run_relays(h,&instance,ctx);goto finished;}
     if(in->mode==MIXED){run_mixed(h,&instance,ctx);goto finished;}
+    if(in->mode==INVALID || in->mode==INVALID_DROP_TRAP){
+        bool trap=in->mode==INVALID_DROP_TRAP;
+        if(trap){wasmtime_component_func_t arm=lookup(&instance,ctx,"arm-sync-trap");step(&arm,ctx);}
+        wasmtime_component_func_t bad=lookup(&instance,ctx,"probe-invalid");unsigned before=h->observed;
+        wasmtime_error_t *e=wasmtime_component_func_call(&bad,ctx,NULL,0,NULL,0);assert(e);
+        wasm_name_t m;wasmtime_error_message(e,&m);const char *reason=trap?"unreachable":"invalid WIT argument or conversion limit: shift";
+        bool found=false;for(size_t i=0;i+strlen(reason)<=m.size;i++)if(!memcmp(m.data+i,reason,strlen(reason)))found=true;
+        assert(found && h->observed==before+(trap?0:1) && h->sync.ctl.depth==(trap?1u:0u));
+        wasm_name_delete(&m);wasmtime_error_delete(e);goto finished;
+    }
     if(in->mode==SYNC_TRAP){
         wasmtime_component_func_t arm=lookup(&instance,ctx,"arm-sync-trap"),exercise=lookup(&instance,ctx,"sync-exercise");
         step(&arm,ctx);
@@ -395,4 +413,12 @@ int main(int argc,char **argv){
     assert(!sync_trap.s.bound && !sync_trap.sync.ctl.depth && !sync_trap.s.sync.frame);
     for(unsigned i=0;i<LB_WIT_TURN_DEPTH;i++)assert(!sync_trap.s.sync.slots[i].occupied);
     puts("trapped synchronous member cleanup: native frame retired and copied slots released without guest reentry");
+    for(unsigned i=0;i<2;i++){
+        host bad={0};input malformed={&bad,argv[6],i?INVALID_DROP_TRAP:INVALID};
+        assert(lb_wit_turn_run(&bad.s.turns,enter,finish,&bad.s,application,&malformed));
+        assert(!bad.s.bound && !bad.sync.ctl.depth && !bad.s.sync.frame);
+        for(unsigned j=0;j<LB_WIT_TURN_DEPTH;j++)assert(!bad.s.sync.slots[j].occupied);
+        for(unsigned j=0;j<256;j++)assert(bad.s.refs.rows[j].state==LB_TC_FREE);
+    }
+    puts("malformed Int: one staged owner released; destructor trap takes precedence over argument failure");
 }

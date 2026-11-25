@@ -66,14 +66,15 @@ done:
 		const nominal=(k,v,d)=>`{uint64_t ticket=0;if(!lb_ts_token${k}(b,${v},&ticket) || !lb_ts_clone(b,${k},ticket,${d}))goto done;}`;
 		const emit=(t,v,d)=>witOpEmit(t,v,d,resources,0,nominal);
 		const success=emit(m.result,"value","dest"),failure=emit(m.declared??{k: "string"},m.declared?"failure":"diag.message","detail");
+		const owned=m.params.flatMap(({type},j)=>type.slot==null?[]:[{j,kind: type.slot}]);
 		ops.push("lb_ts_op"+m.index);ports.push(["begin-f"+m.index,"LB_TS_BEGIN",m.index],["take-f"+m.index,"LB_TS_TAKE",m.index]);
 		code.push(`static bool lb_ts_op${m.index}(lb_ts_bus *b,${p}binding binding,lb_ts_slot *slot){
     lb_scope scope={.remaining=16u*1024u*1024u};lb_val result={0},*dest=&result,*fault_out=NULL;uint32_t fault_id=0;
     bool ok=false,invalid=false;${p}diagnostic diag={0};${r.type} value={0};${f?f.type+" failure={0};":""}
     ${args.map((a,j)=>a.arg+" a"+j+"={0};").join("")}
     if(slot->args.kind!=WASMTIME_COMPONENT_TUPLE || slot->args.of.tuple.size!=${args.length})goto done;
-    ${m.params.map(({type: t},j)=>t.slot==null?witOpInbound(t,names[j],args[j].arg,"slot->args.of.tuple.data["+j+"]")
-		:`if(!lb_ts_import${t.slot}(b,slot->args.of.tuple.data+${j},&a${j}))goto done;`).join("\n    ")}
+    ${m.params.flatMap(({type: t},j)=>t.slot==null?[witOpInbound(t,names[j],args[j].arg,"slot->args.of.tuple.data["+j+"]")]:[]).join("\n    ")}
+    ${owned.map(({j,kind})=>`if(!lb_ts_import${kind}(b,slot->args.of.tuple.data+${j},&a${j}))goto done;`).join("\n    ")}
     ${p}status rc=${p}${n}(${["binding",...names,"&value",...f?["&failure"]:[],"&diag"].join(",")});
     if(b->poisoned)goto done;
     ${m.errors.length?`if(lb_result(&result,rc==${p}OK,&dest,&scope)!=LB_GOOD)goto done;
@@ -84,11 +85,16 @@ done:
     ${success}`}
     ok=true;
 done:
-    if(invalid)ok=false;
-    ${m.params.flatMap(({type: t},j)=>t.slot==null?[]:[`if(${args[j].type}_drop(&a${j})!=${p}OK)ok=false;`]).join("\n    ")}
+    if(invalid){
+        ok=true;${owned.map(({j,kind})=>`if(ok && !lb_ts_discard_input(b,${kind},slot->args.of.tuple.data+${j}))ok=false;`).join("\n        ")}
+    }else{
+        ${owned.map(({j})=>`if(${args[j].type}_drop(&a${j})!=${p}OK)ok=false;`).join("\n        ")}
+    }
     ${r.clear("value")}${f?f.clear("failure"):""}${p}diagnostic_clear(&diag);
     if(!lb_ts_finish(b,${err},fault_id,fault_out) || !lb_tc_flush(b->refs) || b->poisoned)ok=false;
-    lb_scope_close(&scope);if(ok)slot->result=result;else wasmtime_component_val_delete(&result);return ok;
+    lb_scope_close(&scope);
+    if(ok && invalid)slot->invalid="invalid WIT argument or conversion limit: ${m.name}";
+    if(ok && !invalid)slot->result=result;else wasmtime_component_val_delete(&result);return ok;
 }`);
 	}
 	return `#ifndef LB_WIT_APPLICATION_TURN_SYNC_HOST_H

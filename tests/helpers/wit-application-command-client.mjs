@@ -40,14 +40,18 @@ export const buildInstalledWitGuests=async({wit,out,wasm,run})=>{
 	const app=(await consumer("installed-application")).replaceAll("@OBJECTS@",obj).replaceAll("@CALLBACKS@",calls).replaceAll("@TASKS@",pkg+"object-tasks"+version);
 	await save("app.wat",app);await cli("parse","app.wat","-o","application.wasm");
 	await cli("component","targets","app-wit","--world","application","application.wasm");
-	const suite=(await consumer("lean-consumer")).replaceAll("@IFACE@",witCoreInterface(obj)).replaceAll("@OPS@",witCoreInterface(ops))
-		.replace(";; @worker-observers@",`(import "cm32p2|${witCoreInterface(ops)}" "cursor-counts" (func $counts (result i64))) (import "cm32p2|${witCoreInterface(ops)}" "cursor-gate" (func $gate (param i32) (result i32)))`)
-		.replace(";; @installed-drop-checks@",`(drop (call $gate (i32.const 0))) (call $expect (i64.eqz (call $counts)))
+	const syncClient=(await consumer("lean-consumer")).replaceAll("@IFACE@",witCoreInterface(obj)).replaceAll("@OPS@",witCoreInterface(ops))
+		.replace(";; @worker-observers@",`(import "cm32p2|${witCoreInterface(ops)}" "cursor-counts" (func $counts (result i64))) (import "cm32p2|${witCoreInterface(ops)}" "cursor-gate" (func $gate (param i32) (result i32)))`);
+	const suite=syncClient.replace(";; @installed-drop-checks@",`(drop (call $gate (i32.const 0))) (call $expect (i64.eqz (call $counts)))
         (call $expect (i32.eq (call $exercise (i32.const 42) (i32.const 73)) (i32.const 73)))
         (call $expect (i32.eq (call $exercise (i32.const -1) (i32.const -2)) (i32.const 105)))
         (call $expect (i32.eq (call $exercise (i32.const -2) (i32.const -1)) (i32.const 111)))`);
 	await build("sync-suite","application",suite);
 	await cli("component","targets",wit,"--world","application","sync-suite.wasm");
+	const malformed=syncClient.replace(";; @installed-drop-checks@","(call $probe-invalid) unreachable");
+	assert.notEqual(malformed,syncClient);
+	await build("bad-argument","application",malformed);
+	await cli("component","targets",wit,"--world","application","bad-argument.wasm");
 	const early=app.replace("(then (return (call $read)))","(then (call $ds (global.get $r)) (call $del (global.get $s)) (call $box (global.get $orig)) (call $return (i64.const 17)) (return (i32.const 0)))");
 	const trap=app.replace("(call $register (i32.const 0))","(call $register (i32.const 2))");
 	assert.notEqual(early,app);assert.notEqual(trap,app);
@@ -91,6 +95,7 @@ export const exerciseMixedWitComposition=async o=>{
 	const guest=file=>[...paths.slice(0,2),join(client,file+".wasm")];
 	assert.equal((await run(command,guest("sync-suite"),client,env)).stdout.trim(),"1");
 	assert.equal((await run(command,guest("early"),client,env)).stdout.trim(),"17");
+	await assert.rejects(run(command,guest("bad-argument"),client,env),e=>/invalid WIT argument or conversion limit: shift/u.test(e.details?.stderr??e.stderr));
 	await assert.rejects(run(command,guest("trap"),client,env),e=>/unreachable/u.test([e.message,e.details?.stderr,e.stderr].join(" ")));
 	await assert.rejects(run(command,[...paths.slice(0,2),join(client,"private.wasm")],client,env),e=>/turn-series/u.test([e.message,e.details?.stderr,e.stderr].join(" ")));
 	await assert.rejects(graph("private.wasm",[...paths.slice(0,2),join(client,"private.wasm")]),e=>
