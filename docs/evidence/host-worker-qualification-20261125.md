@@ -26,11 +26,13 @@ evidence: C, C++, Cargo, CPAN, Maven (Java and Kotlin), npm, NuGet, native PHP, 
 factory only with the native PHP owner; the shared PHP namespace alone
 does not qualify the Zend Wasm runtime.
 
-The remaining targets for this case are **PHP-Wasm and WIT/WASI**.
-Receiving a callback from
-one of those hosts is the opposite direction; returning a function over
-copied values does not test a captured application object. Neither counts
-as installed evidence for this case.
+For **WIT/WASI**, [installed synchronous and worker packages](wit-host-closures-20261125.md)
+now exercise captured objects, owned failures and disposal. Two independent
+worker packages passed 80 pending-callback cancellation cases; the separate
+synchronous peer and active self-disposal checks are still outstanding.
+**PHP-Wasm** still needs installed evidence for its Zend return path. Receiving
+a callback from PHP is the opposite direction; returning a function over
+copied values does not test a captured application object.
 
 ## Which installed profiles exercised OS access?
 

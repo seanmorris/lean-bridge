@@ -10,7 +10,7 @@ import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {installWitAuthor} from "./wit-installed-author.mjs";
 import {prepareStaticWorkerProject} from "./static-worker-project.mjs";
-import {extendWitApplication} from "./wit-application-project.mjs";
+import {extendWitApplication,extendWitFunctions} from "./wit-application-project.mjs";
 import {buildInstalledWitGuests} from "./wit-application-command-client.mjs";
 import {prepareGaugeWorker,buildAsyncPeerApplication,checkAsyncPeerWorld,buildAsyncPeerFailure} from "./wit-async-peer-project.mjs";
 import {buildRegistrationCancellation,checkRegistrationCounts} from "./wit-peer-registration-cancel.mjs";
@@ -30,7 +30,7 @@ const prepareClient=async(root,a,b,dual)=>{
 	const [owner]=await buildInstalledWitGuests({out: client,wit: join(a.installed,"wit"),wasm,run});
 	await buildAsyncPeerApplication(client,tool);await checkAsyncPeerWorld(client,join(b.installed,"wit"),tool,dual);
 	if(!dual)await buildAsyncPeerFailure(client,tool);
-	await buildRegistrationCancellation(client,tool,dual);
+	await buildRegistrationCancellation(client,tool,dual,functions);
 	const provider=join(client,"peer-provider.wasm");
 	const env={PATH: "/no-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1"};
 	const invoke=(dirs,inputs)=>exec(join(dirs[0],"bin/lean-bridge-wit-run"),[...dirs,"--",...inputs],{env,cwd: client,timeout: 30000});
@@ -65,7 +65,8 @@ const prepareClient=async(root,a,b,dual)=>{
 	};
 	return {invoke,bothOrders,owner,provider,count: ()=>checkedRegistrations};
 };
-const dual=process.env.LEAN_BRIDGE_WIT_INDEPENDENT_REGISTRATIONS==="1";
+const functions=process.env.LEAN_BRIDGE_WIT_REGISTRATION_FUNCTIONS==="1";
+const dual=functions || process.env.LEAN_BRIDGE_WIT_INDEPENDENT_REGISTRATIONS==="1";
 test(dual?"separately published WIT callback owners cancel only their own registration":"installed async WIT peers share an original box and cancel only the selected reader", {timeout: 3600000},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"wit-async-pair-"));t.after(()=>rm(root,{recursive: true,force: true}));
 	const replay=process.env.LEAN_BRIDGE_WIT_ASYNC_PEER_REPLAY,keep=process.env.LEAN_BRIDGE_WIT_ASYNC_PEER_HANDOFFS;
@@ -89,6 +90,7 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 			if(name==="gauge")await prepareGaugeWorker(src,dual);
 			else
 			{await prepareStaticWorkerProject(src,"wit-wasi");await extendWitApplication(src);}
+			if(functions)await extendWitFunctions(src);
 			if(route==="reviewed")await writeFile(join(src,name+".binding-ir.json"),canonicalJson(reviews[name]));
 			const args=[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"];
 			await exec(process.execPath,args,{cwd: work,maxBuffer: 4194304}).catch(e=>{
@@ -112,6 +114,7 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 		await exec("tar",["-xzf",join(handoff,a.path),"-C",work,"--no-same-owner","--no-same-permissions"]);
 		await rename(join(work,basename(a.path,".tar.gz")),installed);
 		const meta=await json(join(installed,"lean-bridge-package.json")),ir=await json(join(installed,"share/lean-bridge/binding-ir.json"));
+		if(functions)assert.ok(ir.declarations.some(d=>d.source.declaration==="Closures.remember"),key+" must publish its own function factory");
 		if(route==="ordinary")
 		{assert.equal(meta.reviewedSourceSha256,undefined);if(reviews[name])assert.deepEqual(ir,reviews[name]);reviews[name]=ir;}
 		else
@@ -146,6 +149,7 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 	if(dual)
 	{
 		t.diagnostic("80 cross-package cases: 64 distinct-box first-read/factory orders and 16 same-box cancellations; both defining guests balance their own acquisitions and drops");
+		if(functions)t.diagnostic("Each pending registration owned a returned Lean function; only the survivor invoked it, with a different input box; both captures were released.");
 		return;
 	}
 	t.diagnostic("8 release/order combinations: one parked Gauge pull, one close, original Workshop callback result 73");

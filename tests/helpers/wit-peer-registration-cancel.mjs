@@ -12,13 +12,18 @@ import {registrationGuest} from "./wit-registration-guest.mjs";
  * @param dir - Independent client's sources and previously checked provider.
  * @param run - Pinned wasm-tools command in the client's directory.
  * @param dual - Both releases provide retained callbacks through separate guest instances.
+ * @param [functions] - Each registration owns a returned function until its last canonical drop.
  */
-export const buildRegistrationCancellation=async(dir,run,dual=false)=>{
+export const buildRegistrationCancellation=async(dir,run,dual=false,functions=false)=>{
+	if(functions && !dual)throw new TypeError("The capture test needs independent registration owners");
 	const world=join(dir,"registration-audit-world");
 	await cp(join(dir,"combined-world"),world,{recursive: true});
 	const file=join(world,"deps/workshop/callbacks.wit"),wit=await readFile(file,"utf8");
 	assert.equal(wit.split("interface callbacks {").length,2);
-	const audit=src=>src.replace("interface callbacks {","interface callbacks {\n  audit: func(field: u32) -> u32;");
+	const audit=src=>{
+		const observed=src.replace("interface callbacks {","interface callbacks {\n  audit: func(field: u32) -> u32;");
+		return functions?observed.replace("resource %call-box-to-box {","resource %call-box-to-box { make-capturing: static func(mode: u32, box: borrow<%box>) -> own<%call-box-to-box>;"):observed;
+	};
 	await writeFile(file,audit(wit));
 	if(dual)
 	{
@@ -56,25 +61,35 @@ export const buildRegistrationCancellation=async(dir,run,dual=false)=>{
       (i32.load (i32.add (i32.const 128) (i32.shl (local.get $field) (i32.const 2)))))`);
 	add("(global.set $drops","(call $counted-drop (call $slot (local.get 0)))");
 	add(";; @test-callback-visit@","(call $inc (i32.add (call $slot (local.get $self)) (i32.const 8)))");
-	await writeFile(join(dir,"registration-provider.wat"),provider);
+	const contract=await readFile(join(world,"deps/objects.wit"),"utf8"),[,name]=/^package ([^;]+)@1\.0\.0;/u.exec(contract);
+	if(functions)
+	{
+		const template=await readFile("tests/fixtures/static-host-workers/registration-functions.wat.in","utf8");
+		const [imports,code]=template.replaceAll("@HOST@",witCoreInterface(name+"/objects@1.0.0")).replaceAll("@CALLS@",api).split(";; @capture-code@");
+		assert.ok(code);add("(memory (export",imports);add("(global $next",code);
+		add("(global.set $drops","(call $release-last (call $slot (local.get 0)))");
+		add(";; @test-callback-visit@","(call $invoke-held (call $slot (local.get $self)) (local.get $box))");
+		add("(if (i32.ge_u (local.get $field)","(call $check-held (i32.const 128)) (call $check-held (i32.const 144))");
+	}
+	const owned=(source,pkg)=>source.replaceAll("@FACTORY@",witCoreInterface("lean-bridge:"+pkg+"/api@1.0.0"));
+	await writeFile(join(dir,"registration-provider.wat"),owned(provider,"workshop"));
 	await run("component","embed",world,"--world","registrations","registration-provider.wat","-o","registration-provider.core");
 	await run("component","new","registration-provider.core","-o","registration-provider.wasm");
 	await run("component","targets",world,"--world","registrations","registration-provider.wasm");
 	if(dual)
 	{
 		const gauge=witCoreInterface("lean-bridge:gauge/callbacks@1.0.0");
-		await writeFile(join(dir,"gauge-provider.wat"),provider.replaceAll(api,gauge));
+		await writeFile(join(dir,"gauge-provider.wat"),owned(provider.replaceAll(api,gauge),"gauge"));
 		await run("component","embed",world,"--world","gauge-registrations","gauge-provider.wat","-o","gauge-provider.core");
 		await run("component","new","gauge-provider.core","-o","gauge-provider.wasm");
 		await run("component","targets",world,"--world","gauge-registrations","gauge-provider.wasm");
 	}
-	const contract=await readFile(join(world,"deps/objects.wit"),"utf8"),[,name]=/^package ([^;]+)@1\.0\.0;/u.exec(contract);
 	const src=await readFile("tests/fixtures/static-host-workers/peer-registration-cancel.wat.in","utf8");
 	const assignments=dual?[["workshop","gauge"],["gauge","workshop"]]:[["workshop","workshop"]];
 	for(const owners of assignments)for(const same of dual?[0,1]:[0])for(const createOrder of same?[1]:[0,1])for(const readOrder of same?[0]:[0,1])
 	{
 		const file="cancel-registration-"+(dual?owners[1]+"-":"")+(same?"shared-":"")+createOrder+readOrder;
-		const client=registrationGuest(src,name+"/objects@1.0.0",owners);
+		const client=registrationGuest(src,name+"/objects@1.0.0",owners,functions);
 		await writeFile(join(dir,file+".wat"),client.replaceAll("@SAME_BOX@",String(same)).replaceAll("@VICTIM_FIRST@",String(createOrder)).replaceAll("@READ_VICTIM_FIRST@",String(readOrder)));
 		await run("parse",file+".wat","-o",file+".wasm");
 		await run("component","targets",world,"--world","instruments",file+".wasm");

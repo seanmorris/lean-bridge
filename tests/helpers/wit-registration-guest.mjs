@@ -1,8 +1,9 @@
 /** @file Generate the public canonical-ABI bindings for the cancellation client. */
 const roles=["keep","victim"];
-const interfaces=p=>`(import "lean-bridge:${p}/callbacks@1.0.0" (instance $callbacks-${p}
+const interfaces=(p,functions)=>`(import "lean-bridge:${p}/callbacks@1.0.0" (instance $callbacks-${p}
+    ${functions?'(export "box" (type $input (eq $b)))':""}
     (export "call-box-to-box" (type $c (sub resource)))
-    (export "[static]call-box-to-box.make" (func (param "mode" u32) (result (own $c))))
+    (export "[static]call-box-to-box.${functions?"make-capturing":"make"}" (func (param "mode" u32) ${functions?'(param "box" (borrow $input))':""} (result (own $c))))
     (export "audit" (func (param "field" u32) (result u32)))))
   (alias export $callbacks-${p} "call-box-to-box" (type $c-${p}))
   (import "lean-bridge:${p}/object-tasks@1.0.0" (instance $jobs-${p}
@@ -22,8 +23,9 @@ const interfaces=p=>`(import "lean-bridge:${p}/callbacks@1.0.0" (instance $callb
  * @param src - Common guest control flow.
  * @param objects - Installed application object interface.
  * @param owners - Package names for the surviving and canceled calls.
+ * @param [functions] - Each pending registration owns a function from its own package.
  */
-export const registrationGuest=(src,objects,owners)=>{
+export const registrationGuest=(src,objects,owners,functions=false)=>{
 	const pkgs=[...new Set(owners)];
 	if(owners.length!==2 || pkgs.some(n=>!["workshop","gauge"].includes(n)))throw new TypeError("Unknown cancellation owner");
 	const lower=[],imports=[],exports=[],starts=[];
@@ -36,7 +38,7 @@ export const registrationGuest=(src,objects,owners)=>{
 			imports.push(`(import "" "${key}" (func $${key} ${signature}))`);
 			exports.push(`(export "${key}" (func $${key}))`);
 		};
-		op("register","(param i32) (result i32)",`lower (func $callbacks-${pkg} "[static]call-box-to-box.make")`);
+		op("register",functions?"(param i32 i32) (result i32)":"(param i32) (result i32)",`lower (func $callbacks-${pkg} "[static]call-box-to-box.${functions?"make-capturing":"make"}")`);
 		op("audit","(param i32) (result i32)",`lower (func $callbacks-${pkg} "audit")`);
 		op("relay","(param i32 i32) (result i32)",`lower (func $jobs-${pkg} "relay")`);
 		op("dc","(param i32)",`resource.drop $c-${pkg}`);
@@ -44,12 +46,12 @@ export const registrationGuest=(src,objects,owners)=>{
 		if(role==="victim")op("cancel","(param i32) (result i32)",`future.cancel-read $t-${pkg}`);
 		op("drop","(param i32)",`future.drop-readable $t-${pkg}`);
 		starts.push(`(func $start-${role} (param $box i32) (result i32) (local $cb i32) (local $r i32)
-          (local.set $cb (call $register-${role} (i32.const ${i*2})))
+          (local.set $cb (call $register-${role} (i32.const ${i*2}) ${functions?"(local.get $box)":""}))
           (local.set $r (call $relay-${role} (local.get $box) (local.get $cb)))
           (call $dc-${role} (local.get $cb)) (local.get $r))`);
 	}
 	const fields={
-		OBJECTS: objects, INTERFACES: pkgs.map(interfaces), LOWER: lower
+		OBJECTS: objects, INTERFACES: pkgs.map(p=>interfaces(p,functions)), LOWER: lower
 		, PORT_IMPORTS: imports, PORT_EXPORTS: exports, START_FUNCTIONS: starts
 		, CHECK_UNUSED_COUNTERS: pkgs.length===1?"":`(call $eq (if (result i32) (i32.lt_u (local.get $field) (i32.const 4))
             (then (call $audit-victim (local.get $field))) (else (call $audit-keep (local.get $field)))) (i32.const 0))`};

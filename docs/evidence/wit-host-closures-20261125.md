@@ -41,5 +41,26 @@ subsequent reentrant update completed the future with value 73. Both installs
 also passed the synchronous function checks, early stream exit, malformed
 argument, callback trap, and refusal of private scheduler imports.
 
-These are local single-package results. They do not establish what happens
-to a function held across cancellation of an independently installed peer.
+## Two worker packages with pending callbacks
+
+The [two-package client](../../tests/helpers/wit-installed-async-peers.mjs)
+installed Workshop and an independently built Gauge. Each guest registration
+owned a function returned by **its own** Lean package. With both future reads
+pending, the application canceled one. The canceled registration never
+invoked its function. The survivor invoked its function with a distinct box
+containing the same value and received the original object. Each callback
+owner released the function at its last canonical drop; each recorded zero
+live registrations and as many drops as acquisitions.
+
+All 80 cases passed: 64 with distinct source boxes, varying creation and
+read order, and 16 with a shared source box. Both cancellation directions,
+all four ordinary/reviewed release pairs, and both load orders ran. The
+Workshop archive hashes match the worker table above. Gauge's archives were:
+
+| Source route | Archive bytes | Archive SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 61,067,880 | `069c4e9fc13184749409773ab87d8304795685a500a423b8867f1c6e59f89863` |
+| Reviewed | 61,070,074 | `6a110d7d1c5eb6f56376313634de5c63d3b5a46535465dd7372643787e256591` |
+
+Run `npm run test:wit-registration-functions` with the pinned WIT author tools.
+The run used locally verified handoffs, not hosted CI.
