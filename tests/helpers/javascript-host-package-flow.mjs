@@ -13,6 +13,7 @@ import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-recei
 import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
 
 test("packed author CLI and offline installed independent npm host classes",async t=>{
+	const functions=process.env.LEAN_BRIDGE_TEST_JS_FUNCTIONS==="1";
 	const root=await mkdtemp(join(tmpdir(),"js-host-packages-"));t.after(()=>rm(root,{recursive: true,force: true}));
 	const env={...process.env,npm_config_offline: "true",npm_config_cache: join(root,"cache")};delete env.NODE_TEST_CONTEXT;
 	const run=(cmd,args,cwd=root,extra={})=>processBuildRunner.capture({command: cmd,args,cwd,env: {...env,...extra}});
@@ -23,7 +24,8 @@ test("packed author CLI and offline installed independent npm host classes",asyn
 		const output=join(root,name), dir=join(output,"packages/npm");
 		await call(["build","--project",project,"--target","npm","--output",output,"--json","--progress","none"]);
 		await call(["verify","--receipt",join(output,"package-set-receipt.json")]);
-		const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(dir,"package-set-receipt.json")});
+		const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(dir,"package-set-receipt.json")});
+		if(functions) t.diagnostic(name+" verified npm handoff "+result.receiptSha256);
 		const row=role=>receipt.packages.find(p=>p.role===role),component=row("component"),runtime=row("runtime");
 		assert.equal(component.profile,"javascript-wasm-host-io-v1");assert.equal(component.requires[0].version,runtime.version);
 		const tar=join(dir,component.artifacts[0].path),member=p=>run("tar",["-xzOf",tar,"package/metadata/"+p]).then(r=>r.stdout);
@@ -55,6 +57,12 @@ test("packed author CLI and offline installed independent npm host classes",asyn
 		await writeFile(join(peer,"lakefile.toml"),(await readFile(join(peer,"lakefile.toml"),"utf8")).replaceAll("workshop","peer").replaceAll("Workshop","Peer"));
 		await rename(join(peer,"Workshop.lean"),join(peer,"Peer.lean"));
 		await writeFile(join(peer,"Peer.lean"),(await readFile(join(peer,"Peer.lean"),"utf8")).replaceAll("Workshop","Peer"));
+		if(functions) for(const [dir,c] of [[source,workshop],[peer,config]])
+		{
+			const lean=(await readFile("tests/fixtures/c-host-closures/Closures.lean","utf8")).replaceAll("LeanBridge.Host.C","LeanBridge.Host.Javascript");
+			await writeFile(join(dir,"Closures.lean"),lean);await appendFile(join(dir,"lakefile.toml"),'\n[[lean_lib]]\nname = "Closures"\n');
+			c.modules.push("Closures");c.exports.push("Closures.remember","Closures.reader","Closures.identityReader");await writeFile(join(dir,cfg),canonicalJson(c));
+		}
 		const a=await handoff(source,"ordinary"),unreviewed=await handoff(peer,"peer-ordinary");
 		const api=JSON.parse(await unreviewed.member("binding-ir.json"));api.documentation.summary="Reviewed owner-agent peer.";
 		const review=JSON.stringify(api,null,4)+"\n";await writeFile(join(peer,"peer.binding-ir.json"),review);
@@ -64,12 +72,14 @@ test("packed author CLI and offline installed independent npm host classes",asyn
 		const consumer=join(root,"consumer");await mkdir(consumer);await writeFile(join(consumer,"package.json"),'{"private":true,"type":"module"}');
 		await install(consumer,[a.runtime,a.tar,b.tar]);
 		await copyFile(resolve("tests/helpers/javascript-host-installed-calls.mjs"),join(consumer,"calls.mjs"));
+		await copyFile(resolve("tests/helpers/javascript-host-functions.mjs"),join(consumer,"javascript-host-functions.mjs"));
 		const entries=order=>order.map((n,i)=>"const p"+i+"=await import("+JSON.stringify(n)+");").join("\n")
 			+'\nimport {exercise} from "./calls.mjs";\nexport const result=exercise(p0,p1);\n';
 		await writeFile(join(consumer,"run.mjs"),entries(names)+"console.log(JSON.stringify(result));");
 		const noTools={PATH: join(root,"no-author-tools"),LEAN_BRIDGE_LEAN_PREFIX: "/absent",LEAN_BRIDGE_RUNTIME_ROOT: "/absent",LEAN_BRIDGE_JS_EMSDK: "/absent"};
 		const node=JSON.parse((await run(process.execPath,["run.mjs"],consumer,noTools)).stdout);
 		assert.equal(node.reading,31);assert.equal(node.typedOutcomes,true);
+		if(functions) assert.equal(node.returnedFunctions,true);
 		const reversed=names.toReversed();await writeFile(join(consumer,"reverse.mjs"),entries(reversed)+"console.log(JSON.stringify(result));");
 		assert.deepEqual(JSON.parse((await run(process.execPath,["reverse.mjs"],consumer,noTools)).stdout),node);
 		const types=`import {withHosts} from "${names[0]}";
@@ -85,9 +95,19 @@ api.read({level:7,read(){return 1},identity(){return this}});
 // @ts-expect-error -- Box must implement read, identity and level
 withHosts({Box:class {}});
 api.dispose();`;
-		await writeFile(join(consumer,"consume.mts"),types);
+		await writeFile(join(consumer,"consume.mts"),types+(functions?`
+const returned=api.remember(box), original:Box=returned(box);
+const closed:boolean=returned.dispose(), value2:number=api.reader(original)(1);
+// @ts-expect-error -- returned function accepts the original application's Box
+returned(42);
+// @ts-expect-error -- synchronous IO is not a JavaScript promise
+returned(box).then(()=>{});
+`:""));
 		const tsc=createRequire(import.meta.url).resolve("typescript/bin/tsc");
-		await run(process.execPath,[tsc,"--strict","--noEmit","--target","es2022","--module","nodenext","consume.mts"],consumer,noTools);
+		// This consumer imports only the installed packages. In workspace-backed
+		// scratch, do not implicitly load ancestor @types for unrelated apps.
+		await writeFile(join(consumer,"tsconfig.json"),JSON.stringify({files: ["consume.mts"],compilerOptions: {strict: true,noEmit: true,target: "ES2022",module: "NodeNext",types: []}}));
+		await run(process.execPath,[tsc,"--project","tsconfig.json"],consumer,noTools);
 		await writeFile(join(consumer,"worker.mjs"),entries(reversed)+"self.postMessage(result);");
 		await writeFile(join(consumer,"page.mjs"),entries(names));
 		await writeFile(join(consumer,"app.mjs"),`globalThis.replay=async()=>({page:(await import("./page.mjs")).result,worker:await new Promise((ok,no)=>{

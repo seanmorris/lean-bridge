@@ -3,6 +3,7 @@ import {canonicalizeJsonValue,hashBindingIr} from "../binding-ir/canonical.mjs";
 import {componentScalarTypes} from "./component-scalars.mjs";
 import {javaScriptTaskHosts,jsMemberFailure} from "./javascript-task-hosts.mjs";
 import {callbackHostName} from "./host-member-names.mjs";
+import {checkedWasmHostFunction,wasmWorkerLeases} from "./wasm-host-factories.mjs";
 
 const shape = (t,level=0) => {
 	if(t?.kind === "primitive" && componentScalarTypes.includes(t.name)) return t.name;
@@ -50,8 +51,11 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 			return {name: callbackHostName(hostImports.types[k.index].name),type: k.type,mutability: k.mutability};
 		throw new TypeError("Inconsistent retained JavaScript callback contract");
 	};
+	const factories=new Map();
 	for(const t of ir.types.filter(t => t.kind==="callback"))
 	{
+		if(hosts && Object.hasOwn(t.source.extensions,"lean-bridge.dev/closure-owner"))
+		{factories.set(t.id,t);continue;}
 		const c=t.callable, arg=c?.parameters[0], result=c?.result;
 		const a=callbackSite(arg),b=callbackSite(result);
 		if(t.source?.producer!=="lean" || t.source.declaration!==t.name || t.id!=="bridge:"+t.name
@@ -84,10 +88,12 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 		const terminal = ext["lean-bridge.dev/task-failure"], delivery = task ? "task" : protocol ? "async-iterator" : null;
 		const mode = task ? "promise" : protocol ? "async-iterator" : "value";
 		const phases=hosts?.method(d,Boolean(protocol)),stepIO=ext["lean-bridge.dev/step-failure"];
+		const fn=d.result.type.kind==="named" && factories.get(d.result.type.id);
+		if(fn && (delivery || effect!=="IO")) throw new TypeError("Returned host functions require a synchronous factory");
 		const validSite=x=>{
 			const cb=callback(x.type);
 			if(cb && (!task || x===d.result)) return false;
-			if(cb || hosts?.contains(x.type) || x===d.result && resource(x.type))
+			if(cb || hosts?.contains(x.type) || x===d.result && (fn || resource(x.type)))
 				return x.ownership==="lease" && x.lifetime?.scope==="explicit" && x.lifetime.anchor===null;
 			if(resource(x.type)) return x.ownership==="borrow" && x.lifetime?.scope==="call" && x.lifetime.anchor===null;
 			return x.ownership==="copy" && x.lifetime===null;
@@ -124,7 +130,9 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 			}
 			return valueShape(error.payload);
 		};
-		const result = valueShape(d.result.type), args = d.parameters.map(p => callback(p.type) ? "callback" : valueShape(p.type));
+		const returnedFunction=fn && checkedWasmHostFunction(ir,hostImports,hosts.hash,d,fn,valueShape,zend);
+		if(fn) factories.delete(fn.id);
+		const result = fn?"lease:"+returnedFunction.hash:valueShape(d.result.type), args = d.parameters.map(p => callback(p.type) ? "callback" : valueShape(p.type));
 		const error = errorShape(startId), terminalShape = errorShape(terminalId);
 		hosts?.checkErrorSite(ext["lean-bridge.dev/error-payload-site"],ir.errors.find(e=>e.id===startId)?.payload);
 		hosts?.checkErrorSite(ext["lean-bridge.dev/step-error-payload-site"],ir.errors.find(e=>e.id===terminalId)?.payload);
@@ -138,6 +146,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 			, ...(phases ? {hostPhases: phases} : {})
 			, ...(stepIO ? {stepIO: true} : {})
 			, result
+			,...fn?{returnedFunction}:{}
 			, effect
 			, delivery
 			, error
@@ -147,11 +156,14 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 			, tagBytes: Math.max(1,depth(result),depth(error),depth(terminalShape))
 			, stepDeclaration: protocol?.next ?? null};
 	});
+	if(factories.size) throw new TypeError("Unbound returned host function in worker contract");
 	if(!methods.some(m => m.delivery)) throw new TypeError("Expected a Task or async iterator");
 	hosts?.finish();
+	const privateAndPublic=wasmWorkerLeases({methods,leases});
+	if(new Set(privateAndPublic.map(r=>r.hash)).size!==privateAndPublic.length) throw new TypeError("Duplicate worker lease kind");
 	const hostKinds=hostImports?.types.map((t,index)=>{
 		const {type}=hosts.nominal({kind: "named",id: t.id});
-		return {name: t.name,id: t.id,index,type,hash: type.slice(5),tag: 3+leases.length+index};
+		return {name: t.name,id: t.id,index,type,hash: type.slice(5),tag: 3+privateAndPublic.length+index};
 	});
 	return {profile: "javascript-wasm-threaded-task-v1",componentIdentity,bindingIrSha256,controlSymbol: "lb_js_task_"+componentIdentity,methods,...leases.length ? {leases} : {},...hosts?{hostIrSha256: hosts.hash,hostKinds}:{}};
 };

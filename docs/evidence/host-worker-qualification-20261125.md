@@ -4,7 +4,7 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 
 | Target | Installed consumer evidence |
 | --- | --- |
-| npm | [Node, Node worker, Chromium, bundled page and module worker](javascript-host-imports-20261124.md#retained-callbacks-with-application-objects): a retained callback carries the actual JavaScript object; a peer sees the same object. |
+| npm | [Retained callbacks](javascript-host-imports-20261124.md#retained-callbacks-with-application-objects) and [returned Lean functions](npm-host-closures-20261125.md) preserve the original application object in Node, Chromium and their workers. Canceling one binding's pending callback does not revoke its sibling's functions. |
 | PyPI | [CPython workers](python-worker-wheels-20261124.md) share a registry between packages. [Returned Lean closures](python-host-closures-20261125.md) separately check captured Python object identity, self-close, foreign threads and expired binding contexts. |
 | Cargo | [Rust futures and streams](static-host-workers-20261125.md#installed-rust-futures-and-streams): an installed executable receives the original `Rc` and distinguishes a factory failure from a later task or stream failure. [Returned Lean functions](rust-host-closures-20261125.md) preserve the application object and error, allow an active call to finish after owner disposal, and release captures after a panic. |
 | C | The [C11 worker client](static-host-workers-20261125.md#installed-c11-workers-on-application-objects) tests both build systems and peer link orders. [Returned C callables](c-host-closures-20261125.md) check original object identity, stale aliases, independent bindings, self-drop and destructor counts after failure. |
@@ -19,14 +19,14 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 
 ### Returned functions that capture application objects
 
-For a signature such as `Box → IO (Box → IO Box)`, nine of the twelve
+For a signature such as `Box → IO (Box → IO Box)`, ten of the twelve
 package targets above have installed ordinary, reviewed and worker-package
-evidence: C, C++, Cargo, CPAN, Maven (Java and Kotlin), NuGet, native PHP, PyPI and RubyGems.
+evidence: C, C++, Cargo, CPAN, Maven (Java and Kotlin), npm, NuGet, native PHP, PyPI and RubyGems.
 [The source elaborator](../../src/analyze/HostExports.lean) admits the PHP
 factory only with the native PHP owner; the shared PHP namespace alone
 does not qualify the Zend Wasm runtime.
 
-The remaining targets for this case are **PHP-Wasm, npm and WIT/WASI**.
+The remaining targets for this case are **PHP-Wasm and WIT/WASI**.
 Receiving a callback from
 one of those hosts is the opposite direction; returning a function over
 copied values does not test a captured application object. Neither counts

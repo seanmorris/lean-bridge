@@ -113,6 +113,19 @@ heap. The application supplies its classes via [`withHosts`](../javascript-types
 This profile is for synchronous, in-memory calls. It does not grant filesystem
 access or move application objects onto a Lean task thread.
 
+### Return a function that captures an application object
+
+Select the factory in `exports`. For example,
+`remember (captured : Box) : IO (Box → IO Box)` returns a reusable function
+whose lifetime is bounded by its creating `withHosts` binding. The argument
+and result of the inner function can each be a supported scalar or an imported
+JavaScript class. Do not add the returned function to `resources` or
+`taskExports`: it is neither a public resource class nor a task. The same
+factory can accompany a real task that accepts it as a callback. See the
+[Lean declarations](../../tests/fixtures/javascript-threaded-host-functions/Workshop.lean),
+[export selection](../../tests/fixtures/javascript-threaded-host-functions/lean-bridge.exports.json)
+and [JavaScript usage](../javascript-typescript.md#pass-application-objects-to-lean).
+
 ## Build a threaded npm handoff
 
 Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures.

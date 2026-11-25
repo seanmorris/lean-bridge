@@ -130,8 +130,8 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 	if(!module.FS || !module._bridge_scalar_frame_clear) throw new Error("Shared runtime does not implement scalar ABI 2");
 	const loaded = new Map();
 	const callables = module._bridge_callable_abi ? createComponentCallableRuntime(module) : null;
-	let poisoned = false;
-	const poison = () => { poisoned = true; callables?.poison(); };
+	let poisoned = false,hostDomain;
+	const poison = () => { poisoned = true; hostDomain?.abandon();callables?.poison(); };
 	const assertOpen = () => {
 		if(poisoned) throw new Error("Component runtime is poisoned");
 		if(module._bridge_lean_runtime_status && module._bridge_lean_runtime_status() !== 2)
@@ -300,7 +300,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 				{
 					hostBrokerIntegrity = descriptor.broker.integrity;
 					try
-					{ domain = await installWasmHostDomain(module, broker, { assertOpen, poison }); assertOpen(); }
+					{ hostDomain=domain = await installWasmHostDomain(module, broker, { assertOpen, poison }); assertOpen(); }
 					catch(error)
 					{ poison(); throw error; }
 				}

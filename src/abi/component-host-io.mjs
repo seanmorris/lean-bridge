@@ -2,6 +2,7 @@
 import { canonicalizeJsonValue, hashBindingIr } from "../binding-ir/canonical.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
 import { componentScalarTypes } from "./component-scalars.mjs";
+import { checkedWasmHostFunction } from "./wasm-host-factories.mjs";
 
 export const componentHostIOAbi = 17;
 export const hostCallMagic = 0x4a484331;
@@ -13,6 +14,7 @@ const checkSite = (s,t) => {
 	const lease=nominal(t);
 	if(s.ownership!==(lease?"lease":"copy") || !same(s.lifetime,lease?{scope: "explicit",anchor: null}:null)) fail();
 };
+
 /**
  * Derive the descriptor from independently checked public and import IR, not
  * a packaged list of C signatures. Nested arrays are the two Except branches
@@ -23,12 +25,13 @@ const checkSite = (s,t) => {
  * @param identity - Compiler and source identity of the side module.
  */
 export const javaScriptHostIOAbi = (api,hosts,identity) => {
-	const bindingIrSha256=hashBindingIr(api),hostIrSha256=hashBindingIr(hosts);
+	const bindingIrSha256=hashBindingIr(api),hostIrSha256=hashBindingIr(hosts),nominals=api.types.filter(t=>t.host);
+	const functions=new Map(api.types.filter(t=>!t.host).map(t=>[t.id,t]));
 	if(!/^[a-f0-9]{64}$(?![\s\S])/u.test(identity) || api.capabilities.length || !hosts.types.length
-		|| api.types.length!==hosts.types.length || !api.declarations.length) fail();
+		|| nominals.length!==hosts.types.length || !api.declarations.length) fail();
 	for(const [i,t] of hosts.types.entries())
 	{
-		const p=api.types[i];
+		const p=nominals[i];
 		if(t.kind!=="resource" || !t.host?.targets.includes("javascript") || t.host.dynamic
 			|| p.id!==t.id || p.name!==t.name || !same(p.resource,t.resource) || p.host?.identity!==t.host.identity
 			|| !same(p.host.targets,["javascript"]) || p.source.declaration!=="LeanBridge.Host.Javascript."+t.name) fail();
@@ -50,7 +53,9 @@ export const javaScriptHostIOAbi = (api,hosts,identity) => {
 			|| !/^[a-z][a-z0-9_]*$/u.test(d.name) || names.has(d.name)) fail();
 		names.add(d.name);
 		const args=d.parameters.map(p=>{const t=shape(p.type); if(Array.isArray(t) || p.optional || p.default!==null) fail(); checkSite(p,t);return t;});
-		const result=shape(d.result.type);checkSite(d.result,result);
+		const fn=d.result.type.kind==="named" && functions.get(d.result.type.id);
+		const result=fn?checkedWasmHostFunction(api,hosts,hostIrSha256,d,fn,shape):shape(d.result.type);
+		if(fn) functions.delete(fn.id);else checkSite(d.result,result);
 		const errorId=effect==="EIO"?"error:EIO."+decl:effect==="IO"?"error:IO.Error":null;
 		const expected=errorId?[errorId]:[];
 		if(effect==="IO" && x["lean-bridge.dev/host-members"].length) expected.push("error:JavaScriptHostException");
@@ -62,6 +67,7 @@ export const javaScriptHostIOAbi = (api,hosts,identity) => {
 		else if(site!==undefined) fail();
 		return {id: d.id,name: d.name,declaration: decl,args,result,effect,errorId,error};
 	});
+	if(functions.size) fail();
 	const key=sha256Text("javascript-wasm-host-io-v1:"+identity+":"+bindingIrSha256+":"+hostIrSha256);
 	return {version: componentHostIOAbi,componentIdentity: identity,bindingIrSha256,hostIrSha256,controlSymbol: "lbjs_component_"+key.slice(0,20)+"_control",methods};
 };

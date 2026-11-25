@@ -1,4 +1,5 @@
 /** @file Ordinary downstream code used unchanged in Node, Chromium, and a module worker. */
+import {exerciseHostFunctions} from "./javascript-host-functions.mjs";
 /**
  * Exercise two independently installed packages with one application's class.
  *
@@ -65,7 +66,8 @@ export const exercise = (first,second) => {
 		check(a.dispose() && !a.dispose(),"idempotent disposal");
 		box.read=()=>box.level;
 		check(b.read(box)===31,"other package remains usable");
-		return {reading: box.level,identity: true,originalThrow: true,payload: caught.payload,typedOutcomes};
+		const returnedFunctions=typeof b.remember==="function" && exerciseHostFunctions(first,second,Box);
+		return {reading: box.level,identity: true,originalThrow: true,payload: caught.payload,typedOutcomes,...returnedFunctions?{returnedFunctions}:{}};
 	} finally
 	{a.dispose();b.dispose();}
 };

@@ -16,7 +16,16 @@ static int dn_closure_save(lb_dnd_session *s,unsigned site,lean_object *fn,uint6
     if (dn_live==dn_capacity) {
         if (dn_capacity==DN_SLOTS) return 12;
         size_t n=dn_capacity?dn_capacity*2:8;
+#ifdef DN_HOST_FIXED_WASM_ALLOCATOR
+        /* The prepared single-threaded heap exports malloc/free, not realloc.
+         * Keep the old table intact if growth fails. Slots contain owned Lean
+         * references; moving their bytes does not acquire or release them. */
+        dn_closure_slot *p=malloc(n*sizeof(*p)); if(!p) return 11;
+        if(dn_capacity) memcpy(p,dn_closures,dn_capacity*sizeof(*p));
+        free(dn_closures);
+#else
         dn_closure_slot *p=realloc(dn_closures,n*sizeof(*p)); if(!p) return 11;
+#endif
         memset(p+dn_capacity,0,(n-dn_capacity)*sizeof(*p));
         dn_next=dn_capacity; dn_closures=p; dn_capacity=n;
     }

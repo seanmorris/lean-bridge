@@ -3,11 +3,13 @@ import {mkdir, readFile, writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {canonicalJson, sha256} from "../capsule/node.mjs";
 import {javaScriptTaskAbi} from "../abi/javascript-wasm-tasks.mjs";
+import {wasmWorkerLeases,wasmWorkerMethods} from "../abi/wasm-host-factories.mjs";
 import {taskWorkerInterface} from "../analyze/host-export-model.mjs";
 import {generateCTaskExports} from "../backends/c/task-exports.mjs";
 import {generateSyncWire} from "../backends/c/sync-wire.mjs";
 import {generateOwnedWasmBroker} from "../backends/javascript/owned-wasm-broker.mjs";
 import {generateTaskControl} from "../backends/javascript/task-control.mjs";
+import {lowerWorkerHostFunctions} from "../backends/javascript/worker-host-functions.mjs";
 import {compileHostSources,threadedHostSource} from "./host-elaboration.mjs";
 import {generateJavaScriptHostExterns} from "../backends/javascript/host-wasm-externs.mjs";
 import {identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders} from "./javascript-wasm-toolchain.mjs";
@@ -55,10 +57,12 @@ export const compileJavaScriptTaskComponent = async options => {
 		, "task-owner-policy.h": owner
 		, "lean_bridge_native_runtime.h": generateOwnedWasmBroker().header};
 	const headers = {}, include = join(app,"include/lean");
-	const resources=api.types.filter(t => t.kind==="resource" && !t.host), wasmCallbacks=api.types.some(t => t.kind==="callback");
+	const publicResources=api.types.filter(t => t.kind==="resource" && !t.host), wasmCallbacks=entries.some(e=>e.parameters.some(p=>p.type.kind==="io-callback"));
 	const dummy="0".repeat(64), hostGen=id=>generateJavaScriptHostExterns(ir,id,{threaded: true,phpWasmTaskObjects: zend});
 	const provider=ir?hostGen(dummy):null;
 	const wasmHostKinds=ir?ir.types.map((t,i)=>({name: t.name,id: t.id,hash: provider.model.kinds[i].key})):[];
+	const worker=taskWorkerInterface(api,evidence),layout=javaScriptTaskAbi(worker,dummy,ir,zend);
+	const {entries: wireEntries,resources,definitions}=lowerWorkerHostFunctions(api,layout,entries,publicResources);
 	if(resources.length || ir) assets["task-resource-ledger.h"]=await wasmTaskLedgerHeader();
 	if(wasmCallbacks)
 	{
@@ -73,9 +77,9 @@ export const compileJavaScriptTaskComponent = async options => {
 			throw new Error("Expected threaded wasm32 headers, not host headers");
 		headers[name] = sha256(bytes); await writeFile(join(include,name),bytes,{flag: "wx"});
 	}
-	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries, resources, wasmTasks: true, wasmCallbacks,wasmHostKinds,wasmZendObjects: zend,integerMode: "words"};
+	const config = {name: "javascript-task-"+sha256(api.component.id), modules: evidence.selection.exportModules, entries: wireEntries, resources, wasmTasks: true, wasmCallbacks,wasmHostKinds,wasmZendObjects: zend,integerMode: "words",wasmFunctionDefinitions: definitions};
 	const skeleton = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	const wire = generateSyncWire(skeleton.prefix, entries, {tasks: true, wasmTasks: true,resources,wasmCallbacks,wasmHostKinds,wasmZendObjects: zend});
+	const wire = generateSyncWire(skeleton.prefix, wireEntries, {tasks: true, wasmTasks: true,resources,wasmCallbacks,wasmHostKinds,wasmZendObjects: zend});
 	const componentIdentity = sha256(canonicalJson({evidence
 		, compiler
 		, stamp
@@ -85,12 +89,12 @@ export const compileJavaScriptTaskComponent = async options => {
 		, wire: sha256(wire.source)
 		, control: sha256(generateTaskControl("lb_js_task_"+"0".repeat(64),wire))
 		, assets: Object.fromEntries(Object.entries(assets).map(([k,v]) => [k,sha256(v)]))}));
-	const abi = javaScriptTaskAbi(taskWorkerInterface(api,evidence),componentIdentity,ir,zend), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
-	const leases = [...abi.leases??[],...abi.hostKinds??[]], nativeLeases = wire.leases ?? [];
+	const abi = javaScriptTaskAbi(worker,componentIdentity,ir,zend), {controlSymbol} = abi, gen = generateCTaskExports({...config, componentIdentity});
+	const methods=wasmWorkerMethods(abi),leases = [...wasmWorkerLeases(abi),...abi.hostKinds??[]], nativeLeases = wire.leases ?? [];
 	if(leases.length !== nativeLeases.length || leases.some((lease,i) =>
 		["name","type","hash","tag"].some(k => lease[k] !== nativeLeases[i][k])))
 		throw new Error("Generated Wasm resource layout differs from the public lease contract");
-	if(abi.methods.length !== wire.methods.length || abi.methods.some((m,i) =>
+	if(methods.length !== wire.methods.length || methods.some((m,i) =>
 		["name","declaration","effect","delivery","args","result","error","terminal","stepDeclaration","tagBytes"].some(k =>
 			canonicalJson(m[k]) !== canonicalJson(wire.methods[i][k] ?? null))
 			|| canonicalJson(m.callbacks ?? [])!==canonicalJson(wire.methods[i].callbacks ?? [])))

@@ -12,11 +12,12 @@ import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
 import {javaScriptTaskAbi} from "../../src/abi/javascript-wasm-tasks.mjs";
 
 const ports=process.env.LEAN_BRIDGE_JS_NOMINAL_CALLBACK_TEST==="1";
-test(ports?"offline npm retained callbacks transport application objects in both directions":"offline npm host objects survive tasks and cursor delivery in Node, page and module workers", {
-	skip: !ports && process.env.LEAN_BRIDGE_JS_THREADED_HOST_TEST!=="1"
+const functions=process.env.LEAN_BRIDGE_TEST_JS_FUNCTIONS==="1";
+test(functions?"offline worker functions retain their original objects across callbacks and cancellation":ports?"offline npm retained callbacks transport application objects in both directions":"offline npm host objects survive tasks and cursor delivery in Node, page and module workers", {
+	skip: !functions && !ports && process.env.LEAN_BRIDGE_JS_THREADED_HOST_TEST!=="1"
 	, timeout: 1200000
 },async t=>{
-	const baseFixture="javascript-threaded-host",fixture=ports?baseFixture+"-callbacks":baseFixture,fixtures=resolve("tests/fixtures",fixture),checks=ports?25:36;
+	const baseFixture="javascript-threaded-host",fixture=functions?baseFixture+"-functions":ports?baseFixture+"-callbacks":baseFixture,fixtures=resolve("tests/fixtures",fixture),checks=functions?25:ports?25:36;
 	try
 {
 		const h=await installedTaskHarness(t,fixtures),src=join(h.root,"workshop"),other=join(h.root,"peer");
@@ -30,7 +31,7 @@ test(ports?"offline npm retained callbacks transport application objects in both
 		await rename(join(other,"Workshop.lean"),join(other,"Peer.lean"));
 		const ordinary=await h.release(src,"ordinary"),peer=await h.release(other,"peer-release");
 		assert.notEqual(peer.manifest.componentIdentity,ordinary.manifest.componentIdentity);
-		if(ports)
+		if(ports && !functions)
 {
 			const hosts=JSON.parse(await ordinary.extract("host-imports.json")),identity=ordinary.manifest.componentIdentity;
 			const abi=javaScriptTaskAbi(ordinary.ir,identity,hosts),type=abi.hostKinds[0].type;
@@ -47,6 +48,8 @@ test(ports?"offline npm retained callbacks transport application objects in both
 			}
 }
 		const {reviewed}=await h.review(src,config,structuredClone(ordinary.ir),"Reviewed application-owned task objects.");
+		if(functions) for(const p of [ordinary,reviewed,peer])
+			t.diagnostic(p.label+" worker package-set receipt "+sha256(await readFile(join(p.out,"packages/npm",packageSetReceiptName))));
 		assert.notEqual(reviewed.manifest.componentIdentity,ordinary.manifest.componentIdentity);
 		const runs={};
 		for(const pkg of [ordinary,reviewed])
@@ -84,7 +87,7 @@ test(ports?"offline npm retained callbacks transport application objects in both
 					, artifacts: manifest.packages.map(p=>({role: p.role,name: p.name,...p.artifacts[0]}))};
 }
 			const evidence={schemaVersion: 1,profile: ordinary.manifest.profile
-				, command: ports?"npm run test:javascript-threaded-host-callbacks":"npm run test:javascript-threaded-host-installed"
+				, command: functions?"npm run test:javascript-threaded-host-functions":ports?"npm run test:javascript-threaded-host-callbacks":"npm run test:javascript-threaded-host-installed"
 				, sdkManifestSha256: ordinary.manifest.taskInputsSha256
 				, runtimeIdentity: ordinary.manifest.runtimeIdentity
 				, rejectedBeforePackaging: "Workshop.blocked reaches Task.get"

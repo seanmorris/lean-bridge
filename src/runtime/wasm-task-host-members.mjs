@@ -90,6 +90,9 @@ export const installWasmTaskHostMembers=(wasm,lifecycle)=>{
 		catch(error)
 		{abandon();lifecycle?.poison?.(error);throw error;}
 	};
-	return Object.freeze({bind,abandon,takeError: errors.take
+	return Object.freeze({bind
+		, abandon
+		, takeError: errors.take
+		, retains: arena.retains
 		, heldErrors: errors.size,live: arena.live,collect});
 };

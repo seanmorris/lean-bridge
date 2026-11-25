@@ -165,6 +165,32 @@ The binding belongs to the JavaScript agent that supplied the classes. A
 module worker supplies its own classes. The synchronous Workshop above
 returns its values directly.
 
+If a package returns a Lean function, you can call it like any other JavaScript
+function. In the [worker example](../tests/fixtures/javascript-threaded-host-functions/Workshop.lean),
+`remember` captures one `Box`. Both a direct call and a task callback give
+you that same instance back, even when you pass a different box:
+
+```js
+const workshop = withHosts({ Box });
+try {
+  const original = new Box(7), other = new Box(7);
+  const remember = workshop.remember(original);
+  try {
+    console.log(remember(other) === original);                // true
+    console.log((await workshop.map_box(other, remember)) === original); // true
+  } finally {
+    remember.dispose();
+  }
+} finally {
+  await workshop.dispose();
+}
+```
+
+The factory and the returned function are synchronous; only the task needs
+`await`. Keep the creating binding alive while using the function. Disposing
+the binding revokes its functions, not another package's. Disposing a function
+during one of its own calls lets that call finish and rejects subsequent calls.
+
 A **threaded** package can also call those members from a Lean task or
 cursor. Your method still runs on the JavaScript owner, with the original
 object as its receiver. With the [threaded Workshop](../tests/fixtures/javascript-threaded-host/Workshop.lean)

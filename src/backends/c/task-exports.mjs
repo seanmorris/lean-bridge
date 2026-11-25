@@ -36,6 +36,16 @@ export const generateCTaskExports = options => {
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
+	const functionTypes=(options.wasmFunctionDefinitions??[]).flatMap(({hash,argument,reply,owner})=>{
+		const ns="BridgeHostFactory"+hash,type=ns+".Fn"+hash;
+		if(!wasm || !wasmHost || owner!==(options.wasmZendObjects?"php-wasm-zend-binding":"javascript-host-binding") || !/^[a-f0-9]{64}$/u.test(hash)
+			|| !resources.some(r=>r.lean===type && !r.host && r.hash===hash)
+			|| [argument,reply].some(t=>t.kind!=="primitive" && !(t.kind==="named" && resources.some(r=>r.host && r.id===t.id))))
+			throw new TypeError("Invalid private JavaScript worker function type");
+		const a=values.codec(argument).lean,b=values.codec(reply).lean;
+		return ["abbrev "+type+" := "+a+" → _root_.IO "+b
+			, "def "+ns+".apply (f : "+type+") (v : "+a+") : _root_.IO "+b+" := f v"];
+	});
 	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery, Boolean(selected)];
 	if(selected && (!["c","cpp","rust","wit-wasi"].includes(selected.owner) || !Array.isArray(selected.kinds) || !selected.kinds.length || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost || options.wasmCallbacks || options.witCallbacks))
 		throw new TypeError("Static host workers require one native owner and private word carriers");
@@ -76,6 +86,7 @@ export const generateCTaskExports = options => {
 		, ...modules.map(m => `import ${m}`)
 		, ...retained ? ["import Init.System.Promise"] : []
 		, "set_option autoImplicit false"
+		, ...functionTypes
 		, "namespace " + namespace
 		, `@[export ${entryPrefix}_error_text] def errorText (e : IO.Error) : String := toString e`
 		, ...synchronous ? [] : [streamEntryLean]

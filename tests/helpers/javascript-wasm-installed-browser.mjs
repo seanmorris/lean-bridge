@@ -57,8 +57,8 @@ export const runInstalledChromium = async options => {
 	// Chrome puts its singleton socket in TMPDIR, even with a separate profile.
 	// Linux sockaddr_un has 108 bytes including the terminator. Keep builds and
 	// the profile on their selected volume; shorten only the browser's temp path.
-	const shortTemp = process.platform === "linux" &&
-		Buffer.byteLength(join(tmpdir(), "org.chromium.Chromium.XXXXXX/SingletonSocket")) >= 108
+	const shortTemp = process.platform === "linux"
+		&& Buffer.byteLength(join(tmpdir(), "org.chromium.Chromium.XXXXXX/SingletonSocket")) >= 108
 		? await mkdtemp("/tmp/lb-chr-") : null;
 	const proc = spawn(process.env.LEAN_BRIDGE_CHROMIUM ?? chromium.executablePath()
 		, ["--headless"

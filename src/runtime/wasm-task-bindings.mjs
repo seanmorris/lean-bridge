@@ -4,6 +4,8 @@ import {isWasmTaskDeclaredFailure,openWasmTaskFrame,phpTaskCallbackFailure,wasmH
 import {createWasmTaskLeases} from "./wasm-task-leases.mjs";
 import {createWasmTaskCallbacks} from "./wasm-task-callbacks.mjs";
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
+import {wasmWorkerMethods,wasmWorkerLeases,workerFunctionNames} from "../abi/wasm-host-factories.mjs";
+import {createWasmTaskFunctions} from "./wasm-task-functions.mjs";
 
 /**
  * A session owns the heap, not a single component. Disposal rejects public
@@ -29,7 +31,10 @@ export const createWasmTaskSession = options => {
 		if(live())
 		{
 			state="poisoned"; cause=failure;
-			hostRuntime?.abandon();hostScopes.clear();
+			hostRuntime?.abandon();
+			for(const h of hostScopes)
+			{ h.open=false;h.functions?.revoke(); }
+			hostScopes.clear();
 			for(const row of rows)
 			{
 				row.work?.sub.detach();
@@ -159,10 +164,11 @@ export const createWasmTaskSession = options => {
 	};
 	const bind = (abi,invoke,model) => {
 		assertOpen();
-		const entries=new Map(abi.methods.map((m,i) => [m.id,{m,i}]));
+		const methods=wasmWorkerMethods(abi),physical=wasmWorkerLeases(abi);
+		const entries=new Map(methods.map((m,i) => [m.id,{m,i}]));
 		const leaseTypes=new Map();
-		for(const [i,r] of (abi.leases ?? []).entries())
-		{ leases.register(r,abi.methods.length+i,invoke); leaseTypes.set(r.type,r); }
+		for(const [i,r] of physical.entries())
+		{ leases.register(r,methods.length+i,invoke); leaseTypes.set(r.type,r); }
 		const invokePublic=(id,args,translate,syncStart,host) => {
 			const entry=entries.get(id); if(!entry) throw new TypeError("Unknown Lean task method");
 			const mapError = e => {
@@ -179,7 +185,7 @@ export const createWasmTaskSession = options => {
 		if(model)
 		{
 			hostRuntime??=options.installHost({assertOpen,poison: retire});
-			const defs=new Map(abi.hostKinds.map(r=>[r.type,{...r,local: r.index,index: abi.methods.length+(abi.leases?.length??0)+r.index,invoke}]));
+			const defs=new Map(abi.hostKinds.map(r=>[r.type,{...r,local: r.index,index: methods.length+physical.length+r.index,invoke}]));
 			let prepared=false;
 			const bindClasses=(classes,translate,syncStart,memberBridge)=>{
 				assertOpen();
@@ -196,6 +202,7 @@ export const createWasmTaskSession = options => {
 					host.open=false;session.disable();
 					disposing=Promise.resolve().then(async()=>{
 						if(state==="poisoned") throw cause;
+						host.functions?.revoke();
 						await Promise.all([...rows].filter(r=>r.host===host).map(end));
 						if(state==="poisoned") throw cause;
 						try
@@ -205,23 +212,43 @@ export const createWasmTaskSession = options => {
 					});
 					return disposing;
 				};
-				hostScopes.add(host);
 				const bound=Object.create(null);
+				if(abi.methods.some(m=>m.returnedFunction))
+				{
+					try
+					{
+						host.functions=createWasmTaskFunctions(bound,{open: ()=>host.open && state==="open"
+							, dispose: host.dispose
+							, apply: (id,args)=>{try
+							{ return invokePublic(id,args,translate,syncStart,host); } finally
+							{ if(live()) hostRuntime.collect(); }}
+							, collect: ()=>{if(live()) hostRuntime.collect();}});
+					} catch(error)
+					{session.close();throw error;}
+				}
+				hostScopes.add(host);
 				for(const m of abi.methods) bound[m.name]=(...args)=>{
 					try
-					{return invokePublic(m.id,args,translate,syncStart,host);}
+					{
+						const value=invokePublic(m.id,args,translate,syncStart,host);
+						return m.returnedFunction?host.functions.publish("private:"+workerFunctionNames(m.returnedFunction.hash).apply,value):value;
+					}
 					finally
 					{if(live()) hostRuntime.collect();}
 				};
 				bound.dispose=host.dispose;return Object.freeze(bound);
 			};
-			const constructors=model.zend?{withZendOwner: (classes,translate,bridge)=>{
+			const constructors=model.zend?{zendRetains: (type,mirror)=>{
+				const def=defs.get(type);if(!live() || !def) return false;
+				hostRuntime.collect();return hostRuntime.retains(def.hash,mirror);
+			}
+			, withZendOwner: (classes,translate,bridge)=>{
 				if(typeof bridge!=="function") throw new TypeError("Missing Zend owner dispatch");
 				return bindClasses(classes,translate,true,bridge);
 			}}:{withHosts: (classes,translate)=>bindClasses(classes,translate,false)
 				, withHostsAndSynchronousStart: (classes,translate)=>bindClasses(classes,translate,true)};
 			return Object.freeze({...constructors
-				, resourceClass: type=>leaseTypes.has(type)?leases.resourceClass(type):undefined});
+				, resourceClass: type=>abi.leases?.some(r=>r.type===type)?leases.resourceClass(type):undefined});
 		}
 		return Object.freeze({invoke: (id,args,translate)=>invokePublic(id,args,translate,false)
 			, invokeWithSynchronousStart: (id,args,translate)=>invokePublic(id,args,translate,true)

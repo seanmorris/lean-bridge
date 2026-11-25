@@ -53,9 +53,11 @@ const init = async (wasm,bytes,lifecycle) => {
 	{ await wasm.loadDynamicLibrary(path,{global: true,loadAsync: true,nodelete: true}); }
 	finally
 	{ wasm.FS.unlink(path); }
+	let serial=0,abandoned=false;
 	const bind=(id,model,supplied)=>{
 		if(!/^[a-f0-9]{64}$(?![\s\S])/u.test(id)) throw new TypeError("Invalid JavaScript host component identity");
-		const session=arena.bind(model,supplied);
+		if(serial===0xffff_ffff) throw new RangeError("JavaScript host bindings exhausted");
+		const owner=++serial,session=arena.bind(model,supplied);
 		let wire;
 		try
 		{ wire=createWasmHostWire(wasm,model,session.classes,session,lifecycle); }
@@ -66,11 +68,16 @@ const init = async (wasm,bytes,lifecycle) => {
 			try
 			{ return fn(); }
 			finally
-			{ stack.pop();session.leave(); }
+			{ stack.pop();if(!abandoned) session.leave(); }
 		};
-		return Object.freeze({during,close: session.close,pin: session.pin,release: session.release,resolve: session.resolve,kind: session.kind});
+		return Object.freeze({id: owner,during,close: ()=>!abandoned && session.close(),pin: session.pin,release: t=>{if(!abandoned) session.release(t);},resolve: session.resolve,kind: session.kind});
 	};
-	return Object.freeze({bind,takeError: errors.take,live: arena.live,heldErrors: errors.size});
+	return Object.freeze({bind
+		, takeError: errors.take
+		, live: arena.live
+		, heldErrors: errors.size
+		, abandoned: ()=>abandoned
+		, abandon: ()=>{abandoned=true;arena.abandon();errors.clear();}});
 };
 
 /**

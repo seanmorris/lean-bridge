@@ -27,8 +27,9 @@ export const generateJavaScriptHostPackage = (api,ir,identity,options={}) => {
 	const ids=kinds.map((_,i)=>"_I"+i),args="<"+ids.join(", ")+">",bases=kinds.map((_,i)=>ids[i]+" extends _Host"+i+args);
 	const errors=[];
 	const render=t=>Array.isArray(t)?"(Readonly<{ok: "+render(t[0])+"}> | Readonly<{error: "+render(t[1])+"}>)"
-		: typeof t==="string" && t.startsWith("host:")?"_I"+abi.hostKinds.find(k=>k.type===t).index
-			: typeof t==="string" && t.startsWith("lease:")?abi.leases.find(k=>k.type===t).name:ts(t);
+		: t!==null && typeof t==="object"?"{ (value: "+render(t.argument)+"): "+render(t.reply)+"; dispose(): boolean }"
+			: typeof t==="string" && t.startsWith("host:")?"_I"+abi.hostKinds.find(k=>k.type===t).index
+				: typeof t==="string" && t.startsWith("lease:")?abi.leases.find(k=>k.type===t).name:ts(t);
 	for(const r of abi.leases??[])
 	{
 		if(names.has(r.name) || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(r.name)) throw new Error("Conflicting task resource "+r.name);
@@ -84,7 +85,7 @@ export const generateJavaScriptHostPackage = (api,ir,identity,options={}) => {
 	dts.push("export declare function withHosts<"+bases.join(", ")+">(classes: { "+constructorTypes.join(" ")+" }): {");
 	for(const [i,m] of abi.methods.entries())
 	{
-		const value=render(m.result),result=m.delivery==="task"?"Promise<"+value+"> & {cancel(): boolean}"
+		const value=render(m.returnedFunction??m.result),result=m.delivery==="task"?"Promise<"+value+"> & {cancel(): boolean}"
 			:m.delivery==="async-iterator"?"AsyncIterableIterator<"+value+"> & {return(value?: unknown): Promise<IteratorResult<"+value+">>}":value;
 		const arg=(t,j)=>{
 			if(t!=="callback")return render(t);

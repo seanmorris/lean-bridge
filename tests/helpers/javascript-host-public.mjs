@@ -12,6 +12,8 @@ import {compileJavaScriptHostComponent} from "../../src/build/javascript-wasm-ho
 import {canonicalJson} from "../../src/capsule/node.mjs";
 import {assembleComponentNpmRuntime} from "../../src/release/component-npm-package.mjs";
 import {javascriptSharedRuntimeRequirement} from "../../src/release/owned-javascript-npm-package.mjs";
+import {javaScriptHostIOAbi} from "../../src/abi/component-host-io.mjs";
+import {exerciseHostFunctions} from "./javascript-host-functions.mjs";
 
 test("source-checked Wasm public calls separate object identity, nested Except, EIO, IO.Error and original JavaScript throws", {timeout: 480_000}, async t=>{
 	const root=await mkdtemp(join(tmpdir(),"js-host-public-"));t.after(()=>rm(root,{recursive: true,force: true}));
@@ -21,6 +23,13 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 	await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "Outcomes"\n');
 	const cfg=join(project,"lean-bridge.exports.json"), config=JSON.parse(await readFile(cfg));
 	config.modules.push("Outcomes");config.exports.push("Outcomes.branch","Outcomes.typed","Outcomes.ordinaryFailure");
+	const functions=process.env.LEAN_BRIDGE_TEST_JS_FUNCTIONS==="1";
+	if(functions)
+{
+		const lean=(await readFile("tests/fixtures/c-host-closures/Closures.lean","utf8")).replaceAll("LeanBridge.Host.C","LeanBridge.Host.Javascript");
+		await writeFile(join(project,"Closures.lean"),lean);await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "Closures"\n');
+		config.modules.push("Closures");config.exports.push("Closures.remember","Closures.reader","Closures.identityReader");
+}
 	await writeFile(cfg,canonicalJson(config));
 	const inventory=await inspectLeanProject(project), component=elaboratedComponent(inventory.project);
 	let source,compiled,hostImports;
@@ -69,6 +78,18 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 	await assert.rejects(loadComponent({...desc,broker: {...desc.broker,integrity: "0".repeat(64)}}),/broker integrity/);
 	await assert.rejects(loadComponent({...desc,privateAbi: {...desc.privateAbi,controlSymbol: "wrong"}}),/descriptor mismatch/);
 	await assert.rejects(loadComponent({...desc,sideModule: desc.broker.url,integrity: desc.broker.integrity}),/Wasm interface/);
+	if(functions) for(const mutate of [
+		k=>{k.source.extensions["lean-bridge.dev/closure-owner"]="php-host-binding";}
+		, k=>{k.source.declaration="Closures.reader";}
+		, k=>{k.callable.parameters[0].ownership="borrow";k.callable.parameters[0].lifetime={scope: "call",anchor: null};}
+		, k=>{k.callable.resultMode="promise";}
+		, k=>{k.callable.failure.errors=["error:IO.Error"];}
+		, k=>{k.callable.effects=["fails","nondeterministic"];}
+		, (k,ir)=>{ir.declarations.find(d=>d.source.declaration==="Closures.remember").result.type.id=ir.types.find(t=>t.source.declaration==="Closures.reader").id;}
+	]) {
+		const bad=structuredClone(compiled.api);mutate(bad.types.find(k=>k.source.declaration==="Closures.remember"),bad);
+		assert.throws(()=>javaScriptHostIOAbi(bad,hostImports,compiled.abi.componentIdentity));
+	}
 	assert.deepEqual(links,[]);
 	const pending=loadComponent(desc);
 	assert.equal(loadComponent(desc),pending);
@@ -96,6 +117,28 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 	const api=factory.withHosts({Box});
 	try
 	{
+		if(functions)
+{
+			assert.equal(exerciseHostFunctions(factory,factory,Box),true);
+			assert.equal(domain.live(),0);assert.equal(domain.heldErrors(),0);
+			const captured=new Box(7),f=api.remember(captured);
+			assert.equal(domain.live(),1);assert.equal(f(captured),captured);
+			assert.equal(f.dispose(),true);assert.equal(domain.live(),0);
+			if(globalThis.gc)
+{
+				const drain=async()=>{
+					for(let i=0;i<60 && domain.live();i++)
+{
+						await new Promise(done=>setImmediate(done));globalThis.gc();await new Promise(done=>setImmediate(done));
+}
+					assert.equal(domain.live(),0,"unreachable JS owner retained a native capture");
+				};
+				api.remember(new Box(8));assert.equal(domain.live(),1);await drain();
+				const orphan=(()=>{const owner=factory.withHosts({Box});return owner.remember(new Box(9));})();
+				assert.equal(domain.live(),1);await drain();assert.throws(()=>orphan(captured),/closed/i);
+}
+			creates=0;
+}
 		assert.throws(()=>api.make(-1),RangeError);assert.equal(creates,0);
 		const b=api.make(41);assert.ok(b instanceof Box);assert.equal(creates,1);
 		assert.equal(api.identity(b),b);assert.equal(api.update(b,42),42);assert.equal(b.level,42);
@@ -116,6 +159,16 @@ test("source-checked Wasm public calls separate object identity, nested Except, 
 		b.read=()=>api.update(b,51);assert.equal(api.read(b),51);
 		assert.equal(domain.live(),0);assert.equal(domain.heldErrors(),0);
 		assert.equal(api.dispose(),true);assert.equal(api.dispose(),false);assert.throws(()=>api.read(b),/closed/);
+		if(functions)
+{
+			const left=factory.withHosts({Box}),right=factory.withHosts({Box}),captured=new Box(4),arg=new Box(5);
+			const fn=left.remember(captured),sibling=right.remember(arg);
+			let further=0;captured.read=()=>{further++;return 4;};
+			arg.read=()=>{wasm._bridge_lean_runtime_retire();return 5;};
+			assert.throws(()=>fn(arg),/retired|poisoned/i);
+			assert.equal(further,0);assert.equal(domain.live(),0);assert.equal(domain.heldErrors(),0);
+			assert.throws(()=>sibling(captured),/retired|poisoned/i);assert.throws(()=>factory.withHosts({Box}),/retired|poisoned/i);
+}
 		t.diagnostic("Compiled public IR "+compiled.abi.bindingIrSha256+"; "+compiled.abi.methods.length+" source-derived methods.");
 	} finally
 	{api.dispose();}

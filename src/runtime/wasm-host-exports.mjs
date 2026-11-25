@@ -2,6 +2,7 @@
 import { hostCallMagic } from "../abi/component-host-io.mjs";
 import { scalarCopyLimit } from "../abi/component-scalars.mjs";
 import { readComponentScalarSlot, writeComponentScalarSlot } from "../release/component-scalar-codec.mjs";
+import { bindWasmHostFunctions } from "./wasm-host-functions.mjs";
 
 const malformed=()=>new Error("Malformed compiled JavaScript host export reply");
 const declared=(id,payload)=>Object.assign(new Error(id==="error:IO.Error"?payload:"Lean raised "+id),{
@@ -20,7 +21,7 @@ export const bindJavaScriptHostExports = o => {
 	const span=(p,n)=>Number.isInteger(p) && p>0 && p+n<=wasm.HEAP8.length;
 	const bind=(supplied,makeError=declared)=>{
 		assertOpen();const s=domain.bind(abi.componentIdentity,model,supplied);
-		const invoke=(m,index,values)=>{
+		const invoke=(m,index,values,owner=0,ticket=0n)=>{
 			assertOpen();
 			if(values.length!==m.args.length) throw new TypeError(m.name+" expects "+m.args.length+" arguments");
 			const bytes=32+16*m.args.length, pins=[], allocations=[];
@@ -71,6 +72,7 @@ export const bindJavaScriptHostExports = o => {
 					frame=allocate(bytes);wasm.HEAP8.fill(0,frame,frame+bytes);
 					view().setUint32(frame,hostCallMagic,true);view().setUint32(frame+4,bytes,true);
 					view().setUint32(frame+12,index,true);
+					view().setUint32(frame+20,owner,true);view().setBigUint64(frame+24,ticket,true);
 					for(const [i,t] of m.args.entries())
 					{
 						const p=frame+32+16*i;
@@ -82,9 +84,14 @@ export const bindJavaScriptHostExports = o => {
 					}
 					assertOpen();
 					const status=native(()=>operation(frame));
-					const d=view(),token=d.getUint32(frame+16,true);
+					const d=view(),token=d.getUint32(frame+16,true),returned=d.getBigUint64(frame+24,true);
+					const factory=owner && !ticket;
 					if(d.getUint32(frame,true)!==hostCallMagic || d.getUint32(frame+4,true)!==bytes || d.getUint32(frame+8,true)!==status
-						|| d.getUint32(frame+12,true)!==index || d.getUint32(frame+20,true) || d.getBigUint64(frame+24,true)) broken();
+						|| d.getUint32(frame+12,true)!==index || d.getUint32(frame+20,true)!==owner
+						|| (!(factory && !status && !token && !reply) && returned!==ticket)) broken();
+					if(factory && !status && !token && !reply && returned) return {ch: 0,result: returned};
+					if(factory && (status===11 || status===12) && !token && !reply) throw new RangeError("Lean function capacity exceeded");
+					if(ticket && status===16 && !token && !reply) throw new TypeError("Closed Lean function");
 					if(status===6 && !token && reply && Object.hasOwn(reply,"conversion")) throw reply.conversion;
 					if(status!==0 || Boolean(token)===Boolean(reply) || reply?.corrupt) broken();
 					if(token)
@@ -105,6 +112,33 @@ export const bindJavaScriptHostExports = o => {
 			if(outcome.ch!==0) throw makeError(outcome.ch===1?m.errorId:"error:IO.Error",outcome.result,m);
 			return outcome.result;
 		};
+		if(abi.methods.some(m=>m.result!==null && typeof m.result==="object" && !Array.isArray(m.result)))
+		{
+			const control=(index,ticket)=>!domain.abandoned() && s.during(()=>{
+				assertOpen();
+				try
+				{
+					const frame=wasm._malloc(32)>>>0;
+					if(!frame || frame%8 || !span(frame,32)) throw malformed();
+					wasm.HEAP8.fill(0,frame,frame+32);
+					const v=view();v.setUint32(frame,hostCallMagic,true);v.setUint32(frame+4,32,true);
+					v.setUint32(frame+12,index,true);v.setUint32(frame+20,s.id,true);v.setBigUint64(frame+24,ticket,true);
+					const status=operation(frame);assertOpen();
+					const d=view();
+					if(status!==0 || d.getUint32(frame,true)!==hostCallMagic || d.getUint32(frame+4,true)!==32 || d.getUint32(frame+8,true)
+						|| d.getUint32(frame+12,true)!==index || d.getUint32(frame+16,true) || d.getUint32(frame+20,true)!==s.id || d.getBigUint64(frame+24,true)!==ticket) throw malformed();
+					wasm._free(frame);
+				} catch(error)
+				{
+					// Never reenter a heap that failed to complete or release the frame.
+					poison();throw error;
+				}
+			});
+			try
+			{ return bindWasmHostFunctions(abi,s.id,invoke,control,s.close); }
+			catch(error)
+			{ s.close();throw error; }
+		}
 		const api=Object.create(null);
 		for(const [i,m] of abi.methods.entries()) api[m.name]=(...args)=>invoke(m,i,args);
 		api.dispose=()=>{assertOpen();return s.close();};return Object.freeze(api);

@@ -7,8 +7,16 @@
 static int pub_frame(const uint32_t *f) {
     uint64_t p=(uintptr_t)f, limit=(uint64_t)__builtin_wasm_memory_size(0)*65536u;
     return p && !(p%8) && p+32<=limit && f[0]==PUB_MAGIC && f[1]>=32 && p+f[1]<=limit
-        && !f[2] && !f[4] && !f[5] && !f[6] && !f[7];
+        && !f[2] && !f[4];
 }
+#ifdef PUB_FUNCTIONS
+static uint64_t pub_ticket(const uint32_t *f) { return (uint64_t)f[7]<<32 | f[6]; }
+static uint32_t pub_drop(uint32_t *f,unsigned site) {
+    if(f[1]!=32 || !f[5]) return 4;
+    uint64_t words[3]={pub_ticket(f),0,0};
+    return dn_closure_drop((void *)(uintptr_t)f[5],site,words,1);
+}
+#endif
 static int pub_branch(b_lean_obj_arg v) {
     return !lean_is_scalar(v) && lean_is_ctor(v) && lean_ctor_num_objs(v)==1 && lean_obj_tag(v)<=1;
 }
@@ -36,8 +44,9 @@ static uint32_t pub_out(uint32_t *f,unsigned channel,int node,b_lean_obj_arg v,u
     return status;
 }
 static uint32_t pub_call(uint32_t *f,unsigned n,const uint8_t *tags,int result,int error,
-                         lean_object *(*invoke)(lean_object **)) {
+                         lean_object *(*invoke)(lean_object **,lean_object *),int save,int apply) {
     if (n>64 || f[1]!=32+16*n) return 4;
+    if((save>=0 || apply>=0) != (f[5]!=0) || (apply<0 && (f[6] || f[7]))) return 4;
     bridge_scalar_slot *args=(bridge_scalar_slot *)(f+8);
     lean_object *v[64]={0}; uint32_t status=0,budget=16u*1024u*1024u;
     for (unsigned i=0;i<n;i++) {
@@ -56,8 +65,16 @@ static uint32_t pub_call(uint32_t *f,unsigned n,const uint8_t *tags,int result,i
         if (!v[i]) { status=4; goto cleanup; }
     }
     for (unsigned i=0;i<n;i++) if (tags[i]>=64 && !lb_jsh_domain_admit_v1(PUB_KIND(tags[i]-64),v[i])) { status=4; goto cleanup; }
+    lean_object *fn=NULL;
+#ifdef PUB_FUNCTIONS
+    if(apply>=0) {
+        dn_closure_slot *slot=dn_closure_find((void *)(uintptr_t)f[5],apply,pub_ticket(f));
+        if(!slot) { status=DN_CLOSURE_STALE; goto cleanup; }
+        fn=slot->fn; /* invoke retains before entering application code */
+    }
+#endif
     lb_jsh_error_scope scope; lb_jsh_domain_enter_v1(&scope);
-    lean_object *r=invoke(v), *val=lean_ctor_get(r,0);
+    lean_object *r=invoke(v,fn), *val=lean_ctor_get(r,0);
     uint32_t escaped=lb_jsh_domain_leave_v1(&scope,lean_io_result_is_error(r)?val:NULL);
     if (escaped) f[4]=escaped;
     else if (lean_io_result_is_error(r)) {
@@ -65,7 +82,15 @@ static uint32_t pub_call(uint32_t *f,unsigned n,const uint8_t *tags,int result,i
     } else if (error>=0) {
         if (!pub_branch(val)) status=5;
         else { int ok=lean_obj_tag(val); status=pub_out(f,ok?0:1,ok?result:error,lean_ctor_get(val,0),&budget); }
-    } else status=pub_out(f,0,result,val,&budget);
+    }
+#ifdef PUB_FUNCTIONS
+    else if(save>=0) {
+        uint64_t ticket=0;
+        status=dn_closure_save((void *)(uintptr_t)f[5],save,val,&ticket);
+        if(!status) { f[6]=(uint32_t)ticket; f[7]=(uint32_t)(ticket>>32); }
+    }
+#endif
+    else status=pub_out(f,0,result,val,&budget);
     lean_dec(r);
 cleanup:
     for (unsigned i=0;i<n;i++) if (v[i]) lean_dec(v[i]);

@@ -24,7 +24,14 @@ const engine=createWasmTaskLoader(createModule);
 export const loadTaskComponent=engine.load, closeTaskRuntime=engine.close,
   taskRuntimeStats=engine.stats, waitTaskRuntimeIdle=engine.whenIdle;
 `;
-const taskRuntime = async (mainModule,mainWasm,profile) => {
+/**
+ * Assemble the closed ESM graph used by both JavaScript and Zend worker releases.
+ *
+ * @param mainModule - Prepared Emscripten owner module.
+ * @param mainWasm - Matching compiled runtime bytes.
+ * @param profile - Verified worker ABI profile.
+ */
+export const assembleJavaScriptTaskRuntime = async (mainModule,mainWasm,profile) => {
 	const files=new Map([["index.mjs",index]
 		, ["internal/task.mjs",mainModule]
 		, ["internal/task.wasm",mainWasm]
@@ -37,6 +44,7 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, "runtime/wasm-host-members"
 		, "release/component-scalar-codec"
 		, "runtime/wasm-task-bindings"
+		, "runtime/wasm-task-functions"
 		, "runtime/wasm-task-callbacks"
 		, "runtime/wasm-task-frames"
 		, "runtime/wasm-task-notifications"
@@ -44,9 +52,11 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 		, "abi/wasm-task-frame"
 		, "abi/javascript-wasm-tasks"
 		, "abi/javascript-task-hosts"
+		, "abi/wasm-host-factories"
 		, "abi/host-member-names"
 		, "backends/javascript/host-members"
 		, "backends/php/host-members"
+		, "backends/native/static-host-members"
 		, "abi/component-scalars"
 		, "release/wasm-word-codecs"
 		, "binding-ir/canonical"
@@ -114,7 +124,7 @@ export const writeJavaScriptTaskPackages = async options => {
 	const hosts=threadedHostSource(projectContract,evidence,php?"php":"javascript"),zend=Boolean(php && hosts);
 	if(Boolean(hosts)!==Boolean(configuration.hostImports)) throw new Error("Task host import configuration mismatch");
 	const worker=taskWorkerInterface(api,evidence),abi=javaScriptTaskAbi(worker,componentIdentity,hosts,zend),publicHash=hashBindingIr(api);
-	if(api.types.some(t=>t.kind==="callback") && (php ? !evidence.selection.phpTaskCallbacks : !evidence.selection.javascriptTaskCallbacks))
+	if(api.types.some(t=>t.kind==="callback" && !Object.hasOwn(t.source.extensions,"lean-bridge.dev/closure-owner")) && (php ? !evidence.selection.phpTaskCallbacks : !evidence.selection.javascriptTaskCallbacks))
 		throw new Error("Retained callback contract does not match the target host");
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
 		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null)
@@ -144,7 +154,7 @@ export const writeJavaScriptTaskPackages = async options => {
 		|| !WebAssembly.Module.imports(side).some(e => e.module==="env" && e.name==="lean_bridge_wasm_task_subscribe_v1" && e.kind==="function"))
 		throw new Error("Invalid separation of compiled component and task runtime");
 	assertWasmSideImports({side,runtimeExports,sideExports,profile: "task"});
-	const profile=abi.profile, runtime=await taskRuntime(mainModule,mainWasm,profile);
+	const profile=abi.profile, runtime=await assembleJavaScriptTaskRuntime(mainModule,mainWasm,profile);
 	const coordinate=php?phpTaskCoordinates(api,configuration).npm:componentNpmIdentity(api.component,configuration.targets?.npm);
 	if(coordinate.name==="@lean-bridge/runtime") throw new TypeError("Component cannot replace its shared task runtime");
 	const phpHostBase={"package.json": canonicalJson({type: "module",exports: {".": {types: "./index.d.ts",default: "./index.mjs"}},files: ["index.mjs","index.d.ts","internal","README.md"]})};

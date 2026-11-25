@@ -159,9 +159,11 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
 	for(const path of ["abi/component-host-io", "abi/host-member-names"
+		, "abi/wasm-host-factories"
 		, "backends/javascript/host-members"
 		, "runtime/wasm-host-domain"
 		, "runtime/wasm-host-exports"
+		, "runtime/wasm-host-functions"
 		, "runtime/wasm-host-loader"
 		, "runtime/wasm-host-members"
 		, "runtime/wasm-host-wire"])

@@ -121,6 +121,7 @@ export const createWasmHostDomain = retire => {
 			, kind: i => kind(i).id, strong: i => kind(i).policy==="strong-canonical"});
 	};
 	return Object.freeze({bind,attach,detach,live: ()=>tokens.size
+		, retains: (key,value)=>!poisoned && kinds.get(key)?.byObject.get(value)?.native===true
 		, abandon: ()=>{poisoned=true;tokens.clear();kinds.clear();}
 		, strong: (kind,token)=>rowFor(kind,token).kind.policy==="strong-canonical"});
 };
