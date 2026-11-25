@@ -36,6 +36,19 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	const invented=structuredClone(b.api);
 	invented.declarations.find(d=>d.source.declaration==="Workshop.choose").failure.errors.push("error:IO.Error");
 	assert.throws(()=>witApplicationOperations({...options,api: invented}),/unrecognized failure channels/u);
+	for(const [name,alter] of [
+		["series",d=>{d.parameters[0].mutability="read";}]
+		, ["series",d=>{d.source.extensions["lean-bridge.dev/step-error-payload-site"].ownership="copy";}]
+		, ["series",d=>{d.source.extensions["lean-bridge.dev/pull-protocol"].close="Jobs.next";}]
+		, ["series",d=>{d.source.extensions["lean-bridge.dev/step-failure"]="IO.Error";}]
+		, ["series",d=>{d.failure.errors=[];}]
+		, ["series",(d,api)=>{api.errors.find(v=>v.id===d.failure.errors[0]).payload={kind: "primitive",name: "uint32"};}]
+		, ["finite",d=>{d.source.extensions["lean-bridge.dev/step-error-payload-site"]=d.result;}]
+		, ["finite",d=>{d.failure={mode: "declared",errors: ["error:AsyncStep.Jobs.series"],unexpected: "poison-runtime"};}]
+	]){
+		const api=structuredClone(b.api);alter(api.declarations.find(d=>d.name===name),api);
+		assert.throws(()=>witObjectFutureFiles({...options,ir,model: b.model,api,entries: b.entries.filter(e=>e.delivery)}),/inconsistent nominal cursor contract/u);
+	}
 	for(const alter of [
 		d=>{d.parameters[0].ownership="transfer";}
 		, d=>{d.parameters[1].optional=true;}
@@ -143,4 +156,5 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	assert.match(asynchronous.stdout,/guest distinguished immediate EIO errors from delivered Except values and released each selected branch/u);
 	assert.match(asynchronous.stdout,/Wasm started compiled Lean relays: box, original callback exception, terminal IO text; delivered, discarded and cancelled/u);
 	assert.match(asynchronous.stdout,/trapped Wasm callback poisoned its session; shutdown did not call guest destructors/u);
+	assert.match(asynchronous.stdout,/Wasm pulled its original boxes, distinguished a typed final error from EOF, and closed parked or abandoned Lean cursors once/u);
 };

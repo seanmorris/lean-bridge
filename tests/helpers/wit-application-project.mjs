@@ -34,5 +34,7 @@ export const extendWitApplication = async project => {
 	const success=["Jobs.accept","Jobs.completed","Jobs.relayLate"];
 	config.taskIOErrors.push("Jobs.relayLate");
 	config.taskExports.push(...success);config.exports.push(...success);
+	config.asyncIterators.push({open: "Jobs.finite",next: "Jobs.nextFinite",close: "Jobs.closeFinite"});
+	config.exports.push("Jobs.finite","Jobs.cursorCounts","Jobs.cursorGate");
 	await writeFile(path,canonicalJson(config));
 };

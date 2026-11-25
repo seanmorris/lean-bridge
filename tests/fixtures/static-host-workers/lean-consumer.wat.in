@@ -2,6 +2,8 @@
 ;; it can borrow, inspect, and drop the same objects as the original guest.
 (module
   (import "cm32p2|@OPS@" "first-error" (func $create (param i32 i32 i32)))
+  (import "cm32p2|@OPS@" "cursor-counts" (func $counts (result i64)))
+  (import "cm32p2|@OPS@" "cursor-gate" (func $gate (param i32) (result i32)))
   (import "cm32p2|@OPS@" "update" (func $update (param i32 i32 i32)))
   (import "cm32p2|@OPS@" "make" (func $make (param i32 i32)))
   (import "cm32p2|@OPS@" "read" (func $value (param i32 i32)))

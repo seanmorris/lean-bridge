@@ -103,4 +103,19 @@ The [downstream guest](../../tests/fixtures/static-host-workers/lean-relay-consu
 
 The [integration test](../../tests/fixtures/static-host-workers/lean-relay-consumer.h) reads both before and after the writer is ready, abandons unread results, and cancels with a callback request already queued. Two independent guest instances share one producer and consume different result arms in reverse order. On non-trapping paths the test accounts for every box, exception and registration destructor before deleting the store. On cancellation it checks that the guest callback was never invoked.
 
-The clean build contained 68 native exports; worker SHA-256: `95d5dd589ee27505465e9f359d94830c99037d1b3e183c789cc8b862496b5daa`. Its private inventory selects all seven task factories and leaves one declaration, `Jobs.series`, the object-valued iterator, outstanding. These are compiled integration checks, not ordinary or reviewed installed-package receipts.
+The callback build contained 68 native exports; worker SHA-256: `95d5dd589ee27505465e9f359d94830c99037d1b3e183c789cc8b862496b5daa`. It selected all seven task factories. The next check covers the object-valued iterator.
+
+## A Wasm reader pulls guest-owned objects from a Lean cursor
+
+`Jobs.finite` returns a `stream<own<box>>`: the first read yields the original box and the second reaches EOF. `Jobs.series` returns a `stream<result<own<box>, own<box>>>`: it delivers a box, then one declared error carrying the original box, then ends. The [Wasm caller](../../tests/fixtures/static-host-workers/lean-stream-consumer.wat.in) checks both the result tag and object identity. It reads a standard Component Model stream; it does not advance the Lean scheduler.
+
+| When the reader stops | What the [host test](../../tests/fixtures/static-host-workers/lean-stream-consumer.h) measures |
+| --- | --- |
+| Before requesting anything, or after withdrawing demand before the producer runs | No Lean pull. Dropping the reader closes the cursor once. |
+| With a Lean pull waiting on a promise | Cancellation closes the cursor without waiting for the promise. The fixture releases the promise afterward; no late item is delivered. |
+| After signaling readiness without accepting an item | The producer drops the unread guest owner. The test repeats this with a typed error as the unread frame. |
+| With two readers alive at shutdown | One writer holds an item and the other holds an error. Both readers see EOF; all original guest destructors are counted before deleting the store. |
+
+The fixture counts real calls to Lean’s `nextFinite` and `closeFinite`: pumping without demand does not prefetch. Separate guest instances can advance different cursors without exchanging boxes. Generation rejects changes to the close declaration, error channel, payload type or ownership, and input mutability.
+
+This private integration selects seven task factories and two cursor factories with no missing asynchronous exports in the fixture. The clean build checked 75 native exports; worker SHA-256: `5faf5fdf54f58e220b12d1a5c78d1f221176c92ae7b350768241314a55ab737d`. Installing the **application-owned object** profile from ordinary and reviewed release archives is a separate gate.

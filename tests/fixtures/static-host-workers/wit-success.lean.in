@@ -17,4 +17,23 @@ def relayLate (box : Box) (f : Box → IO Box) : BaseIO (Task (Except IO.Error B
     catch _ => pure ()
     throw (IO.userError "late λ")
 
+def finite (box : Box) : BaseIO Cursor := series box
+initialize finitePulls : IO.Ref UInt32 ← IO.mkRef 0
+initialize finiteCloses : IO.Ref UInt32 ← IO.mkRef 0
+initialize finiteGate : IO.Ref (Option (IO.Promise Bool)) ← IO.mkRef none
+def cursorCounts : BaseIO UInt64 := do
+  return (← finitePulls.get).toUInt64 * 4294967296 + (← finiteCloses.get).toUInt64
+def cursorGate (hold : Bool) : BaseIO UInt32 := do
+  if let some gate ← finiteGate.swap none then gate.resolve true
+  if hold then finiteGate.set (some (← IO.Promise.new))
+  return 0
+def nextFinite (c : Cursor) : BaseIO (Task (Option Box)) := do
+  finitePulls.modify (· + 1)
+  let value := if (← c.first.swap false) then some c.box else none
+  if let some gate ← finiteGate.get then return gate.result?.map (fun _ => value)
+  return Task.pure value
+def closeFinite (c : Cursor) : BaseIO Unit := do
+  finiteCloses.modify (· + 1)
+  close c
+
 end Jobs

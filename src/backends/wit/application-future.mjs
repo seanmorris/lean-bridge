@@ -1,4 +1,4 @@
-/** @file Source-selected canonical futures carrying guest-defined resources. */
+/** @file Source-selected canonical futures and streams carrying guest-defined resources. */
 import { canonicalJson } from "../../capsule/node.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { cIdentifier } from "../c/generate.mjs";
@@ -9,6 +9,8 @@ import { objectFutureHost } from "./application-future-host.mjs";
 import { objectFutureGraph } from "./application-future-graph.mjs";
 import { witObjectCallbackProjection } from "./application-callback.mjs";
 import { relayComponents } from "./application-relay.mjs";
+import { canonicalStream } from "./canonical-stream.mjs";
+import { objectStreamHost } from "./application-stream-host.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -16,17 +18,20 @@ const capacity=64;
 // sees a readiness key, never an i32 masquerading as a guest resource.
 const ports=m=>{
 	const {a,z,slots,param,shape}=m,returned=shape==="returned",factory=shape==="factory";
-	const result=`(result u32 (error (own $r${z})))`,payload=returned?result:factory?"u32":`(own $r${z})`;
-	const stageType=returned?"(result (option u32))":factory?"(result u32)":"";
+	const stream=shape==="stream",typed=stream && m.err!==null;
+	const result=`(result u32 (error (own $r${z})))`,payload=typed?"$payload":returned?result:factory?"u32":`(own $r${z})`;
+	const stageType=returned?"(result (option u32))":factory||stream?"(result u32)":"";
 	const funcs=[
 		["retain",`(param "value" (borrow $r${a})) (result (own $r${a}))`,"(param i32) (result i32)"]
 		, ["put",`(param "value" (own $r${a}))`,"(param i32)"]
 		, ["take",`(result (own $r${z}))`,"(result i32)"]
+		, ...typed?[["take-error",`(result (own $r${m.err}))`,"(result i32)"]]:[]
 		, ["start-native","(result u32)","(result i32)"]
-		, ["stage",'(param "key" u32) '+stageType,"(param i32) "+(returned?"(param i32)":factory?"(result i32)":"")]
+		, ["stage",'(param "key" u32) '+stageType,"(param i32) "+(returned?"(param i32)":factory||stream?"(result i32)":"")]
 	];
 	return `(component
   ${slots.map(i=>`(import "r${i}" (type $r${i} (sub resource)))`).join("\n  ")}
+  ${m.valueTypes??""}
   ${funcs.map(([n,ty])=>`(import "${n}" (func $${n} ${ty}))`).join("\n  ")}
   (core module $memory (memory (export "m") 1)) (core instance $mem (instantiate $memory))
   ${funcs.map(([n])=>`(core func $${n} (canon lower (func $${n})${n==="stage" && returned?' (memory $mem "m")':""}))`).join("\n  ")}
@@ -40,7 +45,10 @@ const ports=m=>{
       (i32.store (i32.const 36) (if (result i32) (local.get $key) (then (local.get $key)) (else (call $take))))
       (i32.const 32)`:"(call $start-native)"})
     (func (export "peek") (param i32) (result i32)
-      ${returned?`(call $stage (local.get 0) (i32.const 64))
+      ${typed?`(i32.store (i32.const 64) (call $stage (local.get 0)))
+      (if (i32.gt_u (i32.load (i32.const 64)) (i32.const 1)) (then unreachable))
+      (i32.store (i32.const 68) (if (result i32) (i32.load (i32.const 64)) (then (call $take-error)) (else (call $take))))
+      (i32.const 64)`:stream?"(if (call $stage (local.get 0)) (then unreachable)) (call $take)":returned?`(call $stage (local.get 0) (i32.const 64))
       ;; Stage returns some(u32), or none with the actual error owner in the exchange.
       (if (i32.load8_u (i32.const 64)) (then (i32.store8 (i32.const 64) (i32.const 0)))
         (else (i32.store8 (i32.const 64) (i32.const 1)) (i32.store (i32.const 68) (call $take))))
@@ -79,6 +87,45 @@ export const witObjectFutureFiles=options=>{
 		const owner=factory?e.error:returned?e.result.arguments[1]:e.result;
 		const a=rs.findIndex(r=>r.id===e.parameters[0]?.type.id),z=rs.findIndex(r=>r.id===owner?.id);
 		const registration=layout.sites[e.declaration+"#1"];
+		if(e.delivery==="async-iterator" && e.parameters.length===1 && a>=0 && z>=0 && e.effect==="BaseIO" && !e.stepIO && (!e.stepError || rs.some(r=>r.id===e.stepError.id)))
+		{
+			const s=d.parameters[0],typed=Boolean(e.stepError),err=typed?rs.findIndex(r=>r.id===e.stepError.id):null,id="error:AsyncStep."+e.declaration;
+			const terminal=api.errors.find(v=>v.id===id);
+			if(d.kind!=="function" || d.owner!==null || d.resultMode!=="async-iterator" || !same(e.protocol,x["lean-bridge.dev/pull-protocol"]) || e.protocol?.open!==e.declaration || !e.protocol.next || !e.protocol.close
+				|| ["lean-lang.org/delivery","lean-bridge.dev/step-failure","lean-bridge.dev/task-failure","lean-bridge.dev/error-payload-site"].some(k=>Object.hasOwn(x,k))
+				|| d.capabilities.length || d.parameters.length!==1 || !s || !same(s.type,e.parameters[0].type) || s.name!==e.parameters[0].name || s.mutability!==rs[a].mutability
+				|| s.optional!==false || s.default!==null || s.ownership!=="lease" || !same(s.lifetime,leased(s.type).lifetime) || !same(d.result,leased(e.result))
+				|| !same(d.failure,{mode: typed?"declared":"none",errors: typed?[id]:[],unexpected: "poison-runtime"})
+				|| !same(x["lean-bridge.dev/step-error-payload-site"],typed?leased(e.stepError):null) || (typed && (terminal?.category!=="domain" || !same(terminal.payload,e.stepError))))
+				return reject("inconsistent nominal cursor contract: "+e.declaration);
+			const param=witVariantMember(s.name,new Set(),reject,"parameter"),n=cIdentifier(e.name),slots=[...new Set(typed?[a,z,err]:[a,z])];
+			const row={name: label,declaration: e.declaration,input: a,owner: z,param,shape: "stream",err};
+			const valueTypes=typed?`(type $item (own $r${z})) (type $payload (result $item (error (own $r${err}))))`:"";
+			const m={a,z,slots,param,shape: "stream",err,valueTypes};
+			files[label+"-ports.wat"]=ports(m);
+			const abandon=typed?`(if (i32.load8_u offset=32 (local.get $p))
+          (then (call $drop-r${err} (i32.load offset=36 (local.get $p))))
+          (else (call $drop-r${z} (i32.load offset=36 (local.get $p)))))`:`(call $drop-r${z} (i32.load offset=32 (local.get $p)))`;
+			files[label+"-stream.wat"]=canonicalStream({
+				params: `(param "${param}" (borrow $r${a}))`
+				, args: [{t: {flat: ["i32"]}}],valueTypes
+				, payload: typed?{wat: "$payload",flat: ["i32","i32"],size: 8}:{wat: `(own $r${z})`,flat: ["i32"],size: 4}
+				, ownership: {slots,borrows: [[0,a]],abandon}},capacity);
+			const kind=i=>rs[i].name.replaceAll("-","_");
+			files[label+"-stream.h"]=objectStreamHost({
+				...m
+				, p
+				, n
+				, label
+				, capacity
+				, from: kind(a)
+				, to: kind(z)
+				, faultKind: typed?kind(err):null
+				, input: byRef(s.type,n+"_arg").type
+				, output: byRef(e.result,n+"_value").type
+				, fault: typed?byRef(e.stepError,n+"_error").type:null});
+			supported.push(row);continue;
+		}
 		if(e.delivery==="task" && e.parameters.length===2 && a>=0 && z>=0 && registration)
 		{
 			const sig=layout.signatures[registration],idx=layout.exchange.slots.findIndex(x=>x.type===sig.label);

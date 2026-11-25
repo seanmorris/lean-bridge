@@ -11,13 +11,16 @@ static unsigned future_rows(lwit_future_echo *f,lb_cf_phase phase){
 #include "lean-failure-consumer.h"
 #include "lean-callback-consumer.h"
 #include "lean-relay-consumer.h"
+#include "lean-stream-consumer.h"
 static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,unsigned scenario){
     bool shutdown_native=scenario==1;
     lwit_operations ops={0};lwit_future_echo worker={0};result_workers results={0};relay_workers relays={0};session s={0};uint32_t observed=0;active_guest calls={0};
     wasmtime_store_t *store=wasmtime_store_new(engine,NULL,NULL);s.store.ctx=wasmtime_store_context(store);
+    stream_workers streams={0};
     wasmtime_component_linker_t *l=wasmtime_component_linker_new(engine);
     ok(lwit_operations_link(l,&ops));ok(lwit_future_echo_link(l,&worker));link_results(&results,l);
     ok(lwit_future_relay_link(l,&relays.plain));ok(lwit_future_relay_late_link(l,&relays.late));
+    ok(lwit_stream_finite_link(l,&streams.finite));ok(lwit_stream_series_link(l,&streams.series));
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(l);
     ok(wasmtime_component_linker_instance_add_func(root,"observe-drop",12,observe_drop,&observed,NULL));
     ok(wasmtime_component_linker_instance_add_func(root,"inside-callback",15,inside_guest,&calls,NULL));
@@ -40,6 +43,7 @@ static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,unsi
         puts("trapped Wasm callback poisoned its session; shutdown did not call guest destructors");return;
     }
     open_results(&results,&ops);if(!shutdown_native)result_cases(&results,&s,&ops,&observed);
+    assert(lwit_stream_finite_open(&streams.finite,&ops) && lwit_stream_series_open(&streams.series,&ops));
     for(unsigned mode=shutdown_native?4:0;mode<5;mode++){
         seed_input(&ops,71+mode);uint32_t before=observed;
         future_action(&s,"start");assert(future_rows(&worker,LB_CF_NATIVE)==1);
@@ -63,6 +67,8 @@ static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,unsi
     }
     uint32_t final_drops=guest_callbacks(&s,&ops,&calls,shutdown_native);
     if(!shutdown_native)final_drops+=public_relays(&relays,&s,&ops,&calls);
+    if(!shutdown_native)final_drops+=public_streams(&streams,&s,&ops);
+    ok(lwit_stream_series_shutdown(&streams.series));ok(lwit_stream_finite_shutdown(&streams.finite));
     ok(lwit_future_relay_shutdown(&relays.plain));ok(lwit_future_relay_late_shutdown(&relays.late));
     close_results(&results);ok(lwit_future_echo_shutdown(&worker));assert(lwit_operations_close(&ops)==workshop_OK);
     assert(observed==final_drops && !s.store.owners);ok(lwit_shutdown(&s.store));

@@ -16,8 +16,11 @@ export const canonicalStream=(m,slots)=>{
 	const core=payload.flat?.length===1?payload.flat[0]:null,store=core && core+".store"+(payload.size<4?payload.size*8:"");
 	const opts='(memory $mem "m") (realloc (func $mem "realloc"))';
 	const functions=["begin","peek","act","new","write","drop","set","join","poll","del"];
+	const ow=m.ownership,types=ow?.slots.map(i=>`(import "r${i}" (type $r${i} (sub resource)))`).join("\n  ")??"";
+	const end=ow?.borrows.map(([j,i])=>`(call $drop-r${i} (local.get ${j}))`).join(" ")??"";
+	const hooks=ow?["cancel",...ow.slots.map(i=>"drop-r"+i)]:[];
 	return `(component
-  (type $t (stream ${payload.wat}))
+  ${types?types+"\n  ":""}${m.valueTypes?m.valueTypes+"\n  ":""}(type $t (stream ${payload.wat}))
   (import "begin" (func $begin ${params} (result ${begin})))
   (import "peek" (func $peek (param "key" u32) (result ${payload.wat})))
   (import "act" (func $act (param "key" u32) (param "op" u32) (result u32)))
@@ -26,11 +29,11 @@ export const canonicalStream=(m,slots)=>{
   (core func $begin (canon lower (func $begin) ${opts})) (core func $peek (canon lower (func $peek) ${opts}))
   (core func $act (canon lower (func $act))) (core func $new (canon stream.new $t))
   (core func $write (canon stream.write $t async (memory $mem "m"))) (core func $drop (canon stream.drop-writable $t))
-  (core func $set (canon waitable-set.new)) (core func $join (canon waitable.join))
+  ${ow?`(core func $cancel (canon stream.cancel-write $t)) ${ow.slots.map(i=>`(core func $drop-r${i} (canon resource.drop $r${i}))`).join(" ")}\n  `:""}(core func $set (canon waitable-set.new)) (core func $join (canon waitable.join))
   (core func $poll (canon waitable-set.poll (memory $mem "m"))) (core func $del (canon waitable-set.drop))
   (core module $m
     (import "" "m" (memory 1))
-    (import "" "begin" (func $begin ${args} ${failure?"(param i32)":"(result i32)"}))
+    ${ow?hooks.map(n=>`(import "" "${n}" (func $${n} (param i32)${n==="cancel"?" (result i32)":""}))`).join(" ")+"\n    ":""}(import "" "begin" (func $begin ${args} ${failure?"(param i32)":"(result i32)"}))
     (import "" "act" (func $act (param i32 i32) (result i32)))
     (import "" "peek" (func $peek (param i32) ${core?"(result "+core+")":"(param i32)"}))
     (import "" "new" (func $new (result i64))) (import "" "write" (func $write (param i32 i32 i32) (result i32)))
@@ -43,8 +46,8 @@ export const canonicalStream=(m,slots)=>{
       (if (i32.ge_u (i32.sub (local.get $k) (i32.const 1)) (i32.const ${slots})) (then unreachable))
       (i32.add (i32.const 1024) (i32.shl (local.get $k) (i32.const ${shift}))))
     (func (export "start") ${args} (result i32) (local $p i32) (local $pair i64)
-      ${failure?`(call $begin ${locals} (i32.const 64)) (if (i32.load8_u (i32.const 64)) (then (return (i32.const 64))))
-      (local.set $p (call $row (i32.load (i32.const ${at}))))`:`(local.set $p (call $row (call $begin ${locals})))`}
+      ${failure?`(call $begin ${locals} (i32.const 64)) ${end?end+" ":""}(if (i32.load8_u (i32.const 64)) (then (return (i32.const 64))))
+      (local.set $p (call $row (i32.load (i32.const ${at}))))`:`(local.set $p (call $row (call $begin ${locals})))${end?" "+end:""}`}
       (if (i32.load offset=12 (local.get $p)) (then unreachable))
       (local.set $pair (call $new)) (i32.store (local.get $p) (i32.wrap_i64 (i64.shr_u (local.get $pair) (i64.const 32))))
       (i32.store offset=4 (local.get $p) (call $set))
@@ -59,7 +62,7 @@ export const canonicalStream=(m,slots)=>{
       (memory.fill (local.get $p) (i32.const 0) (i32.const 32)) (i32.const 2))
     (func $ack (param $p i32) (param $k i32) (param $rc i32) (result i32)
       (if (i32.eq (local.get $rc) (i32.const -1)) (then (i32.store offset=12 (local.get $p) (i32.const 3)) (return (i32.const 0))))
-      (if (i32.or (i32.eq (local.get $rc) (i32.const 1)) (i32.eq (local.get $rc) (i32.const 17))) (then (return (call $close (local.get $p) (local.get $k)))))
+      ${ow?`(if (i32.eq (local.get $rc) (i32.const 1)) (then ${ow.abandon}))\n      `:""}(if (i32.or (i32.eq (local.get $rc) (i32.const 1)) (i32.eq (local.get $rc) (i32.const 17))) (then (return (call $close (local.get $p) (local.get $k)))))
       (if (i32.ne (local.get $rc) (i32.const 16)) (then unreachable))
       (if (i32.load offset=20 (local.get $p)) (then (return (call $close (local.get $p) (local.get $k)))))
       (call $release (i32.add (local.get $p) (i32.const 8)))
@@ -88,12 +91,22 @@ export const canonicalStream=(m,slots)=>{
       (call $select (i32.add (local.get $p) (i32.const 8)))
       ${core?`(${store} offset=32 (local.get $p) (call $peek (local.get $k)))`:"(call $peek (local.get $k) (i32.add (local.get $p) (i32.const 32)))"}
       (call $select (i32.const 12))
-      (call $ack (local.get $p) (local.get $k) (call $write (i32.load (local.get $p)) (i32.add (local.get $p) (i32.const 32)) (i32.const 1)))))
+      (call $ack (local.get $p) (local.get $k) (call $write (i32.load (local.get $p)) (i32.add (local.get $p) (i32.const 32)) (i32.const 1))))${ow?`
+    ;; On shutdown reclaim only a staged owner that the reader did not accept.
+    (func (export "retire") (param $k i32) (local $p i32) (local $phase i32) (local $rc i32)
+      (local.set $p (call $row (local.get $k))) (local.set $phase (i32.load offset=12 (local.get $p)))
+      (if (i32.eqz (local.get $phase)) (then unreachable))
+      (if (i32.ge_u (local.get $phase) (i32.const 2)) (then
+        (if (call $poll (i32.load offset=4 (local.get $p)) (i32.const 0))
+          (then (local.set $rc (i32.load (i32.const 4))))
+          (else (call $join (i32.load (local.get $p)) (i32.const 0)) (local.set $rc (call $cancel (i32.load (local.get $p))))))
+        (if (i32.and (i32.eq (local.get $phase) (i32.const 3)) (i32.lt_u (local.get $rc) (i32.const 16))) (then ${ow.abandon}))))
+      (drop (call $close (local.get $p) (local.get $k))))`:""})
   (core instance $i (instantiate $m (with "" (instance (export "m" (memory $mem "m"))
     (export "select" (func $mem "select")) (export "release" (func $mem "release"))
-    ${functions.map(n=>'(export "'+n+'" (func $'+n+'))').join(" ")}))))
+    ${[...functions,...hooks].map(n=>'(export "'+n+'" (func $'+n+'))').join(" ")}))))
   (func (export "start") ${params} (result ${result}) (canon lift (core func $i "start") ${opts} (post-return (func $i "post"))))
-  (func (export "pump") (param "key" u32) (result u32) (canon lift (core func $i "pump"))))`;
+  (func (export "pump") (param "key" u32) (result u32) (canon lift (core func $i "pump")))${ow?'\n  (func (export "retire") (param "key" u32) (canon lift (core func $i "retire")))':""})`;
 };
 
 /**
