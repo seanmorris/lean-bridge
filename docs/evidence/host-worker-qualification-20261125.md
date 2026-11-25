@@ -27,10 +27,14 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | Maven | [Four Java/Kotlin clients](jvm-worker-packages-20261124.md#file-effects-on-demand-and-early-stream-cancellation) exercise startup, synchronous and async reads, separate stream demands, and a finalizer write on Java cancellation or Kotlin `take(2)`. Missing filesystem permission prevented publication. |
 | CPAN | In addition to [synchronous Journal](perl-sync-io-20261123.json), [eight relocated worker installs](perl-worker-packages-20261124.md#granted-effects-through-a-worker-and-cursor) read the environment and files, observe separate pull demand, and write the file on early close. Omitting the grant refused the worker, pull and finalizer before packaging. |
 | Native PHP | [Offline Composer installs](php-host-task-packages-20261124.md#filesystem-access-during-a-task-and-cursor) cover startup, sync IO, Amp tasks, successive cursor reads and early-break finalization on PHP 8.2 and 8.5. Missing filesystem permission and owner-blocking cleanup both prevent publication. |
-| npm, PHP-Wasm | [Node and Chromium](javascript-wasm-sync-io-20261123.md) and [the installed Zend extension](php-wasm-installed-sync-io-20261123.md) exercise in-memory IO. The [JS package check](../../tests/helpers/javascript-wasm-io-package-flow.mjs) and [PHP-Wasm compiler check](php-wasm-sync-io-core-20261123.md) separately test undeclared filesystem access. |
+| npm, PHP-Wasm | [Node and Chromium](javascript-wasm-sync-io-20261123.md) and [the installed Zend extension](php-wasm-installed-sync-io-20261123.md) exercise in-memory IO. The [threaded publisher check](../../tests/helpers/wasm-host-worker-effect-refusals.mjs) builds real npm and Zend worker projects. Each refused an explicit OS grant; without a grant it identified the environment-reading initializer and filesystem operations in the synchronous call, task, pull and close. A separate build rejected `IO.wait` in the finalizer even on an already-resolved promise. All six refusals left no release directory. |
 | WIT/WASI | The [standalone synchronous profile](wit-sync-io-packages-20261123.md) reads and writes a real file through the native host. The [guest-owned worker profile](wit-host-objects-20261125.md#copied-and-guest-owned-workers-in-one-release) refuses an environment read in a finalizer and refuses an explicit grant. |
 
 Synchronous Journal results do not establish what happens during a pending callback or an iterator's finalizer on the same target.
+
+To reproduce the two threaded publisher checks, set `LEAN_BRIDGE_TEST_TASK_INPUTS`
+and `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` to the [verified pthread author SDK](../publish/npm.md#build-a-threaded-npm-handoff)
+directory and its manifest digest, then run `npm run test:wasm-worker-effect-refusals`.
 
 ## Checks before closing the nodes
 

@@ -140,6 +140,11 @@ The [installed PHP-Wasm IO packages](../evidence/php-wasm-installed-sync-io-2026
 
 ### Export tasks and pull streams
 
+The PHP-Wasm worker only admits in-memory Lean IO. Do not request filesystem
+or environment grants for this target. The publisher checks initializers,
+sync exports, tasks, pulls and finalizers. Even when a promise is already
+resolved, a finalizer cannot synchronously wait on the PHP-Wasm owner.
+
 Select functions with a real Lean `Task` result in `taskExports`; do not mark
 an ordinary `IO α` function async. A pull stream names its open, next, and
 close functions. For example, using the `Pulse` module:

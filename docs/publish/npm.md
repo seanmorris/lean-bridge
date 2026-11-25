@@ -124,6 +124,11 @@ a host method from a worker, returns a host object in a task or cursor,
 and uses that object as a typed error payload. The npm consumer supplies
 the class once with `withHosts`.
 
+Threaded npm packages support in-memory Lean IO. A `nativeEffects` grant
+cannot enable filesystem or environment access on this target. The publisher
+checks selected tasks, cursor pulls and finalizers, synchronous exports and
+module initialization before emitting a handoff.
+
 Return or compose the Lean task instead of synchronously waiting for it.
 The worker may need the JavaScript owner to run an application method.
 For this combination, the build rejects known blocking primitives such as

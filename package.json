@@ -1425,6 +1425,7 @@
     "test:perl-worker-replay": "node --test --test-concurrency=1 tests/helpers/perl-worker-replay.mjs",
     "test:perl-worker-source": "node --test --test-concurrency=1 tests/helpers/perl-worker-elaboration.mjs",
     "test:php-host-imports": "node --test --test-concurrency=1 tests/helpers/php-host-imports.mjs",
+    "test:wasm-worker-effect-refusals": "node --test --test-concurrency=1 tests/helpers/wasm-host-worker-effect-refusals.mjs",
     "test:python-host-closures": "node --test --test-concurrency=1 tests/helpers/python-host-closures-installed.mjs",
     "test:python-host-task-imports": "node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",
     "test:python-host-workers": "LEAN_BRIDGE_HOST_OBJECT_TEST=1 node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",
