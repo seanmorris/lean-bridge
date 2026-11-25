@@ -2,7 +2,8 @@
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { createServer } from "node:http";
-import { mkdtemp, readFile, realpath } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join, resolve, sep } from "node:path";
 
 const serve = async (consumer, names, isolated) => {
@@ -53,6 +54,12 @@ export const runInstalledChromium = async options => {
 	const address = site.url ?? site.origin, origin = new URL(address).origin;
 	// Keep Chromium in the test's CPU-limited process group, not a detached job.
 	const userData = await mkdtemp(join(root, "chromium-"));
+	// Chrome puts its singleton socket in TMPDIR, even with a separate profile.
+	// Linux sockaddr_un has 108 bytes including the terminator. Keep builds and
+	// the profile on their selected volume; shorten only the browser's temp path.
+	const shortTemp = process.platform === "linux" &&
+		Buffer.byteLength(join(tmpdir(), "org.chromium.Chromium.XXXXXX/SingletonSocket")) >= 108
+		? await mkdtemp("/tmp/lb-chr-") : null;
 	const proc = spawn(process.env.LEAN_BRIDGE_CHROMIUM ?? chromium.executablePath()
 		, ["--headless"
 			, "--remote-debugging-port=0"
@@ -64,16 +71,19 @@ export const runInstalledChromium = async options => {
 			, "--renderer-process-limit=1"
 			, "--user-data-dir=" + userData
 			, "about:blank"],
-		{stdio: ["ignore", "ignore", "pipe"]});
+		{stdio: ["ignore", "ignore", "pipe"], env: shortTemp ? {...process.env, TMPDIR: shortTemp} : process.env});
 	const exited = once(proc, "exit");
 	let browser;
 	try
 	{
 		const endpoint = await new Promise((res, rej) => {
-			const timer = setTimeout(() => rej(new Error("Chromium launch timed out")), 60000);
-			proc.once("error", error => { clearTimeout(timer); rej(error); });
-			proc.once("exit", code => { clearTimeout(timer); rej(new Error("Chromium exited: " + code)); });
 			let tail = "";
+			const timer = setTimeout(() => rej(new Error("Chromium launch timed out\n" + tail)), 60000);
+			proc.once("error", error => { clearTimeout(timer); rej(error); });
+			proc.once("exit", (code, signal) => {
+				clearTimeout(timer);
+				rej(new Error("Chromium exited before DevTools was ready: " + (signal ?? code) + "\n" + tail));
+			});
 			proc.stderr.on("data", chunk => {
 				tail = (tail + chunk).slice(-2048);
 				const match = /DevTools listening on (ws:\/\/[^\s]+)\s/u.exec(tail);
@@ -114,5 +124,6 @@ export const runInstalledChromium = async options => {
 		await browser?.close().catch(() => {});
 		if(proc.exitCode === null && proc.signalCode === null) proc.kill("SIGTERM");
 		await exited.catch(() => {}); await site.close();
+		if(shortTemp) await rm(shortTemp, {recursive: true, force: true});
 	}
 };
