@@ -585,7 +585,14 @@ end LeanBridge.HostExports
 
 unsafe def main (args : List String) : IO Unit := do
   let [path] := args | throw (IO.userError "expected a host-import selection file")
-  let r ← IO.ofExcept <| fromJson? (α := LeanBridge.HostExports.Request) (← IO.ofExcept <| Json.parse (← IO.FS.readFile path))
+  let selection ← IO.ofExcept <| Json.parse (← IO.FS.readFile path)
+  let fields ← IO.ofExcept selection.getObj?
+  -- Ordinary selections omit the cursor protocol. Derived FromJson decodes a
+  -- missing array as null, ignoring its Lean structure default. Default only an
+  -- absent field; an explicit null or a malformed protocol must still fail.
+  let request := if fields.contains "iterators" then selection
+    else Json.obj (fields.insert "iterators" (Json.arr #[]))
+  let r ← IO.ofExcept <| fromJson? (α := LeanBridge.HostExports.Request) request
   initSearchPath (← findSysroot)
   let env ← importModules (r.modules.map fun m => { module := m.toName }) {} 0
   let (result, _, _) ← (LeanBridge.HostExports.extract r).toIO

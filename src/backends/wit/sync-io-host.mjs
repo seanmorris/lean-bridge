@@ -25,6 +25,7 @@ export const decodeWitWireValue = (type,at) => Array.isArray(type) ? `
  * @param componentBytes - Binary validated against that exact WIT world.
  */
 export const generateWitSyncHost = async (model,componentBytes) => {
+	if(model.wire.methods.some(m=>m.delivery)) throw new TypeError("An immediate WIT cursor requires a resource-owning host session");
 	const {wire,methods,layout: surface} = model, p = surface.prefix;
 	const values = await readFile(new URL("./sync-io-values.h",import.meta.url),"utf8");
 	const functions = wire.methods.map((m,i)=>({ witName: methods[i].witName, parameters: m.args.map(k=>({copy: {index: k}})) }));

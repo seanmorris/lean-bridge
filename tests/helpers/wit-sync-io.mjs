@@ -19,7 +19,7 @@ const { LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_WASM_TOOLS: tools } = p
 const requireHost = process.env.LEAN_BRIDGE_WIT_IO_HOST_TEST==="1";
 if(requireHost && (!leanPrefix || !tools || !process.env.LEAN_BRIDGE_WIT_IO_RUNTIME || !process.env.LEAN_BRIDGE_WASMTIME_C_API))
 	throw new Error("WIT IO host acceptance requires LEAN_BRIDGE_LEAN_PREFIX, LEAN_BRIDGE_WASM_TOOLS, LEAN_BRIDGE_WIT_IO_RUNTIME and LEAN_BRIDGE_WASMTIME_C_API");
-for(const [fixture,module,wide] of [["native-sync-io","Journal"],["php-wasm-sync-io","Ledger"],["native-sync-io","Journal",true]])
+for(const [fixture,module,wide] of [["native-sync-io","Journal"],["php-wasm-sync-io","Ledger"],["native-sync-io","Journal",true],["native-immediate-cursor","Dials"]])
 test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar exports" : "")+" results and effects", {skip: !leanPrefix || !tools}, async t=>{
 	const work = await mkdtemp(join(tmpdir(),"wit-sync-io-")); t.after(()=>rm(work,{recursive: true,force: true}));
 	const project = join(work,"project"), app = join(work,"compile");
@@ -56,7 +56,39 @@ test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar e
 		, projectContract: contract, leanPrefix,run,environment: process.env
 		, target: "wit-wasi"});
 	const {api,evidence} = built;
+	if(module==="Journal" && !wide)
+	{
+		assert.ok(!Object.hasOwn(evidence.selection,"iterators"));
+		const invalid=join(app,"invalid-cursor-protocol.json");
+		await writeFile(invalid,canonicalJson({...evidence.selection,iterators: null}));
+		const malformed=processBuildRunner.capture({command: join(leanPrefix,"bin/lean")
+			, args: ["-j1","--run",resolve("src/analyze/HostExports.lean"),invalid]
+			, cwd: app,env: built.env});
+		await assert.rejects(malformed,e=>/Request\.iterators: expected JSON array/u.test([e.details?.stdout,e.details?.stderr].join(" ")));
+	}
 	const input = {api,evidence,bindingIrSha256: hashBindingIr(api)}, model = compileWitSyncIO(input);
+	if(module==="Dials")
+	{
+		const direct=model.methods.filter(m=>m.next);
+		assert.equal(direct.length,3); assert.equal(new Set(direct.map(m=>m.resource)).size,3);
+		for(const m of direct)
+		{
+			assert.ok(model.wit.includes("resource "+m.resource+";"));
+			assert.ok(model.wit.includes(m.next+": func(cursor: borrow<"+m.resource+">)"));
+			assert.ok(model.wit.includes("own<"+m.resource+">"));
+		}
+		assert.doesNotMatch(model.wit,/pollable|future<|stream<|poll-|cancel-/u);
+		await writeFile(join(work,"direct.wit"),model.wit);
+		await writeFile(join(work,"direct.wat"),model.wat);
+		await run(tools,["parse","direct.wat","-o","direct.wasm"]);
+		await run(tools,["validate","--features","component-model","direct.wasm"]);
+		await run(tools,["component","targets","direct.wit","direct.wasm"]);
+		const wrong=model.wit.replaceAll("cursor: borrow<"+direct[0].resource+">","cursor: own<"+direct[0].resource+">");
+		assert.notEqual(wrong,model.wit); await writeFile(join(work,"consuming.wit"),wrong);
+		await assert.rejects(processBuildRunner.capture({command: tools,args: ["component","targets","consuming.wit","direct.wasm"],cwd: work}));
+		t.diagnostic("Three nominal direct resources, including constructor vs step failure; component "+sha256(await readFile(join(work,"direct.wasm"))));
+		return;
+	}
 	assert.equal(model.bindingIrSha256,hashBindingIr(api));
 	assert.deepEqual(model.methods.map(m=>m.declaration),api.declarations.map(d=>d.source.declaration));
 	const index = model.methods.findIndex(m=>m.witName==="choose");
