@@ -1,0 +1,38 @@
+/**
+ * Exercise a stored Lean function through relocated, ownership-aware C11 libraries.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { canonicalJson } from "../src/capsule/node.mjs";
+import { nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { checkCFieldHandoff } from "./helpers/leased-closure-field-c-consumer.mjs";
+import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+
+for(const route of ["ordinary", "reviewed"]) test(`installed ${route} C11 archive owns its function fields`, {
+	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1_200_000
+}, async t => {
+	const dir = await mkdtemp(join(tmpdir(), "lean-bridge-c-closure-field-"));
+	t.after(() => rm(dir, { recursive: true, force: true }));
+	const project = join(dir, "source"), output = join(dir, "producer"), handoff = join(dir, "handoff");
+	await cp(resolve("tests/fixtures/onboarding/leased-closure-fields"), project, { recursive: true });
+	const config = route === "ordinary" ? JSON.parse(await readFile(join(project, "lean-bridge.exports.json"))) : { schemaVersion: 1, modules: ["Owned"] };
+	config.targets = { c: { name: "tariff-quotes", version: "1.0.0" } };
+	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(config));
+	if(route === "reviewed") await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr()));
+	const environment = nativeFixtureEnvironment(["c"]);
+	const built = await buildCanonicalProject({ projectRoot: project
+		, outputRoot: output, targets: ["c"], environment
+		, onProgress: event => t.diagnostic(`${route}: ${event.message}`) });
+	assert.equal(built.backend, "native-c-owned-v2");
+	await copyPackageSetHandoff(output, handoff);
+	await rm(project, { recursive: true }); await rm(output, { recursive: true });
+	await checkCFieldHandoff({ dir, route, t });
+});

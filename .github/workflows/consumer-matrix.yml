@@ -3622,6 +3622,11 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs
           test -s build/owned-c-packaging/ordinary.json
           test -s build/owned-c-packaging/reviewed.json
+          npm run test:c-leased-closure-fields
+          test -s build/leased-closure-fields-c/ordinary.package-set.json
+          test -s build/leased-closure-fields-c/reviewed.package-set.json
+          test -s build/leased-closure-fields-c/ordinary.execution.json
+          test -s build/leased-closure-fields-c/reviewed.execution.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-callbacks.test.mjs
           test -s build/owned-host-callbacks/ordinary.json
           test -s build/owned-host-callbacks/reviewed.json
@@ -3702,6 +3707,7 @@ jobs:
             build/owned-receivers.log
             build/owned-aggregate-native/reviewed-public-c.json
             build/owned-c-packaging/
+            build/leased-closure-fields-c/
             build/owned-host-callbacks/ordinary.json
             build/owned-host-callbacks/reviewed.json
             build/owned-host-packaging/ordinary.json

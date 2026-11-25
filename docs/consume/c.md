@@ -570,6 +570,34 @@ retained children, captured closures and cleanup. The
 [author recipe](../publish/c.md#resource-containing-c-values) explains the explicit
 resource and aggregate policy.
 
+### Keep a function stored in a record
+
+In the [Tariff package](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean),
+`quote` is a Lean function that captures a base price. Copying the C struct
+copies its handle, not its ownership. Use the generated copy function if a
+record needs to outlive its owner:
+
+```c
+tariff_quotes_status price_for_two(tariff_quotes_session *session, uint32_t *price) {
+    tariff_quotes_tariff_t tariff = {0}, copy = {0};
+    tariff_quotes_result *original = NULL, *kept = NULL, *answer = NULL;
+    tariff_quotes_status status = tariff_quotes_make_tariff(session, 40, &tariff, &original);
+    if (status == TARIFF_QUOTES_OK)
+        status = tariff_quotes_tariff_t_copy(session, &tariff, &copy, &kept);
+    tariff_quotes_result_release(&original);
+    if (status == TARIFF_QUOTES_OK)
+        status = tariff_quotes_apply_tariff(session, &copy, 2, price, &answer); /* 42 */
+    tariff_quotes_result_release(&answer);
+    tariff_quotes_result_release(&kept);
+    return status;
+}
+```
+
+The handle belongs to its session. After its last lease is released, using
+it returns `TARIFF_QUOTES_INVALID_ARGUMENT`. A C callback passed by function
+pointer is different: its context is borrowed for the call. Putting it into a
+returned record does not extend that borrow. See the [complete C client](../../tests/fixtures/structured-types/leased-closure-fields.c).
+
 ### Transferred inputs
 
 An export can consume a result owner instead of borrowing its input. Its generated

@@ -787,7 +787,8 @@ Lean checks the field and its argument and result types. The consumer receives
 a lease, so a function capturing a base price still works after the original
 wrapper closes. This selection does not authorize a host callback to escape
 its call, or apply to another field, a variant case, or an array of functions.
-See the [installed Python example](../consume/python.md#calling-a-function-stored-in-a-record).
+For a consumer example, see [Python's callable wrapper](../consume/python.md#calling-a-function-stored-in-a-record)
+or [C's record and result owner](../consume/c.md#keep-a-function-stored-in-a-record).
 
 ## Declarations the analyzer skips
 
