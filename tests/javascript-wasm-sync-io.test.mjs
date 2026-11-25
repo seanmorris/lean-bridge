@@ -2,16 +2,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { bindJavaScriptIO } from "../src/release/component-sync-io-runtime.mjs";
+import { abandonImmediateCursors } from "../src/release/component-immediate-cursors.mjs";
+import { immediateCloseBase, immediateNextBase } from "../src/abi/component-sync-io.mjs";
 import { assertJavaScriptIOConfiguration } from "../src/release/javascript-wasm-io-package.mjs";
 
-const build = ({result = "bool", args = [], errorId = null, error = null, respond, clear}) => {
+const build = ({result = "bool", args = [], errorId = null, error = null, cursor = {}, respond, clear}) => {
 	const memory = new Uint8Array(4096), view = new DataView(memory.buffer);
 	let next = 64, poisoned = false, calls = 0, clears = 0;
 	const frees = [];
 	const malloc = size => { const p = next; next += Math.ceil(size / 8) * 8; return p; };
 	const module = {HEAP8: memory, _free: p => frees.push(p), _malloc: malloc};
-	const lifecycle = {poison: () => { poisoned = true; }, assertOpen: () => { if(poisoned) throw new Error("retired"); }};
-	const abi = {methods: [{id: "f", args, result, error, errorId, tagBytes: 1}]};
+	const lifecycle = {poison: () => { poisoned = true; abandonImmediateCursors(module); }, assertOpen: () => { if(poisoned) throw new Error("retired"); }};
+	const abi = {methods: [{id: "f", args, result, error, errorId, tagBytes: 1, ...cursor}]};
 	const invoke = f => {
 		let status;
 		if(view.getUint32(f + 12, true) === 0xffffffff)
@@ -96,4 +98,63 @@ test("synchronous npm source scope requires an explicit empty effect grant", () 
 	assert.throws(() => assertJavaScriptIOConfiguration(undeclared), /nativeEffects/u);
 	assert.throws(() => assertJavaScriptIOConfiguration({...config, nativeEffects: ["filesystem"]}), /only in-memory/u);
 	assert.throws(() => assertJavaScriptIOConfiguration({...config, taskExports: ["Ledger.add"]}), /taskExports/u);
+});
+
+const direct = {cursor: true, stepId: "error:Step.f", terminal: "uint32", stepIO: false};
+const opened = (f, v, id = 1n) => {
+	v.setBigUint64(f + 16, id, true);
+	v.setBigUint64(f + 24, 41n, true);
+	return 0;
+};
+
+test("direct cursor operations distinguish typed constructor errors, typed step errors and returned values", () => {
+	const ops = [];
+	const host = build({cursor: direct, errorId: "error:EIO.f", error: "uint32"
+	, respond: (f, v) => {
+		const op = v.getUint32(f + 12, true); ops.push(op);
+		if(ops.length === 1 || op === immediateNextBase)
+{ v.setUint32(f + 16, 42, true); return 3; }
+		if(op === immediateCloseBase) return 6; // Failed pull already released the native owner.
+		return opened(f, v);
+	}});
+	const is = id => e => e.details?.errorId === id && e.details.payload === 42;
+	assert.throws(() => host.client.iterate("f", []), is("error:EIO.f"));
+	const it = host.client.iterate("f", []);
+	assert.throws(() => it.next.call({}), TypeError);
+	assert.throws(() => it.next(), is("error:Step.f"));
+	assert.equal(it.return().done, true);
+	assert.deepEqual(ops, [0, 0, immediateNextBase, immediateCloseBase]);
+	assert.equal(host.counts().poisoned, false);
+});
+
+test("direct wire faults retire every cursor on the heap without any further native cleanup", () => {
+	for(const [label, fault] of [
+		["unexpected IO error channel", () => 4]
+		, ["end with owned data", (f, v) => { v.setUint32(f + 40, 1, true); return 2; }]
+		, ["end with a tag", (f, v) => { v.setUint8(f + 96, 1); return 2; }]
+		, ["unexpected trap", () => { throw new WebAssembly.RuntimeError("step trapped"); }]
+	]){
+		const host = build({cursor: direct
+		, respond: (f, v, _, n) => {
+			return v.getUint32(f + 12, true) === 0 ? opened(f, v, BigInt(n)) : fault(f,v);
+		}});
+		const a = host.client.iterate("f", []), b = host.peer.iterate("f", []);
+		assert.throws(() => a.next(), undefined, label);
+		assert.throws(() => b.return(), /retired/u, label);
+		assert.throws(() => host.peer.iterate("f", []), /retired/u, label);
+		assert.deepEqual(host.counts(), {calls: 3, clears: 0, frees: 2, poisoned: true}, label);
+	}
+});
+
+test("two bindings cannot own the same cursor token and an explicit close cannot lose a live owner", () => {
+	const alias = build({cursor: direct, respond: (f, v) => opened(f, v)});
+	const first = alias.client.iterate("f", []);
+	assert.throws(() => alias.peer.iterate("f", []), /Duplicate live Lean cursor/u);
+	assert.throws(() => first.return(), /retired/u);
+	assert.equal(alias.counts().calls, 2);
+	const stale = build({cursor: direct, respond: (f, v, _, n) => n === 1 ? opened(f,v) : 6});
+	const it = stale.client.iterate("f", []);
+	assert.throws(() => it.return(), /Malformed/u);
+	assert.throws(() => it.next(), /retired/u);
+	assert.deepEqual(stale.counts(), {calls: 2, clears: 0, frees: 1, poisoned: true});
 });

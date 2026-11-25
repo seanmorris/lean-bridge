@@ -101,7 +101,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 	const symbols = [stem + "_clear"], methods = [];
 	const functions = entries.map((e, i) => {
 		const direct = e.delivery === "iterator";
-		if((!tasks && ((e.delivery && !direct) || e.taskIO)) || (direct && (tasks || checkedWasm || hostValues))
+		if((!tasks && ((e.delivery && !direct) || e.taskIO)) || (direct && (tasks || hostValues))
 			|| (e.delivery && !["iterator", "task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
 			|| !/^[a-z][a-z0-9_]*$/u.test(e.name)) throw new TypeError("Expected an authenticated synchronous function");
 		const n = p + "_" + e.name, symbol = stem + "_" + i;

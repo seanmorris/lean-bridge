@@ -4,6 +4,10 @@ import { componentScalarTypes } from "./component-scalars.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
 
 export const componentSyncIOAbi = 15;
+export const componentImmediateIOAbi = 18;
+// Ordinary calls and cursor constructors use their declaration index. These
+// two disjoint spaces contain only the selected cursor operations.
+export const immediateNextBase = 0x40000000, immediateCloseBase = 0x80000000;
 /**
  * A concrete error payload the wasm32 IO transport can copy without a handle.
  *
@@ -33,18 +37,31 @@ export const javaScriptIOAbi = (ir,componentIdentity) => {
 	if(!/^[0-9a-f]{64}$(?![\s\S])/u.test(componentIdentity) || ir.capabilities.length || ir.types.length)
 		throw new Error("JavaScript IO requires an in-memory function API and compiled identity");
 	const methods = ir.declarations.map(d=>{
-		const effect = d.source?.extensions?.["lean-lang.org/effect"];
+		const ext = d.source?.extensions, effect = ext?.["lean-lang.org/effect"];
 		const errorId = effect==="IO"?"error:IO.Error":effect==="EIO"?"error:EIO."+d.source.declaration:null;
-		if(!["pure","IO","EIO","BaseIO"].includes(effect) || d.kind!=="function" || d.owner!==null || d.resultMode!=="value"
-			|| d.failure.unexpected!=="poison-runtime" || d.capabilities.length || canonicalizeJsonValue(d.failure.errors)!==canonicalizeJsonValue(errorId?[errorId]:[]))
+		const direct = d.resultMode==="iterator", protocol = ext?.["lean-bridge.dev/pull-protocol"], step = ext?.["lean-bridge.dev/pull-effect"];
+		const stepId = direct && step!=="BaseIO" ? "error:Step."+d.source.declaration : null;
+		const stepError = stepId ? ir.errors.find(e=>e.id===stepId) : null;
+		if(direct && (protocol?.open!==d.source.declaration || !protocol.next || !protocol.close
+			|| !["BaseIO","IO","EIO"].includes(step) || Boolean(ext["lean-bridge.dev/step-failure"])!==(step==="IO")
+			|| step==="IO" && (ext["lean-bridge.dev/step-failure"]!=="IO.Error" || stepError?.payload!==null)
+			|| stepId && stepError?.category!=="domain" || d.effects.includes("async")))
+			throw new Error("Inconsistent immediate JavaScript pull: "+d.id);
+		if(!["pure","IO","EIO","BaseIO"].includes(effect) || d.kind!=="function" || d.owner!==null || (!direct && d.resultMode!=="value")
+			|| d.failure.unexpected!=="poison-runtime" || d.capabilities.length || canonicalizeJsonValue(d.failure.errors)!==canonicalizeJsonValue([errorId,stepId].filter(Boolean)))
 			throw new Error("Inconsistent synchronous JavaScript effect: "+d.id);
 		const args = d.parameters.map(p=>shape(p.type)), result = shape(d.result.type);
 		if(args.some(Array.isArray)) throw new Error("JavaScript IO arguments must be primitives");
 		const error = effect==="IO"?"string":errorId?shape(ir.errors.find(e=>e.id===errorId)?.payload):null;
-		return {id: d.id,args,result,errorId,error,tagBytes: Math.max(1,depth(result),depth(error))};
+		const terminal = stepId ? step==="IO" ? "string" : shape(stepError.payload) : null;
+		const cursor = direct ? {cursor: true,stepId,terminal,stepIO: step==="IO",next: protocol.next} : {};
+		const tagBytes = Math.max(1,depth(result),depth(error),depth(terminal));
+		return {id: d.id,args,result,errorId,error,...cursor,tagBytes};
 	});
-	const key = sha256Text("javascript-wasm-sync-io-v1:"+componentIdentity+":"+bindingIrSha256);
-	return {version: componentSyncIOAbi,componentIdentity,bindingIrSha256,controlSymbol: "lbjs_component_"+key.slice(0,20)+"_control",methods};
+	const direct = methods.some(m=>m.cursor);
+	if(methods.length>=immediateNextBase) throw new Error("Too many synchronous declarations");
+	const key = sha256Text((direct?"javascript-wasm-immediate-io-v1:":"javascript-wasm-sync-io-v1:")+componentIdentity+":"+bindingIrSha256);
+	return {version: direct?componentImmediateIOAbi:componentSyncIOAbi,componentIdentity,bindingIrSha256,controlSymbol: "lbjs_component_"+key.slice(0,20)+"_control",methods};
 };
 
 /**

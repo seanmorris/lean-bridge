@@ -1,5 +1,7 @@
 /** @file Marshal synchronous wasm32 calls without exposing Lean pointers or flattening Except. */
 import { scalarCopyLimit, validateComponentScalar } from "../abi/component-scalars.mjs";
+import { immediateCloseBase, immediateNextBase } from "../abi/component-sync-io.mjs";
+import { bindImmediateCursors } from "./component-immediate-cursors.mjs";
 import { encodeWasmWord as encode, decodeWasmWord as decode } from "./wasm-word-codecs.mjs";
 
 const magic = 0x4a53494f, clear = 0xffffffff;
@@ -19,10 +21,13 @@ const data = m=>new DataView(m.HEAP8.buffer);
  */
 export const bindJavaScriptIO = (module,abi,invoke,lifecycle)=>{
 	const methods=new Map(abi.methods.map((m,i)=>[m.id,{...m,i}]));
-	const call=(id,args)=>{
-		lifecycle.assertOpen(); const method=methods.get(id);
-		if(!method || !Array.isArray(args) || args.length!==method.args.length) throw new TypeError("Unknown synchronous IO declaration or wrong arity");
-		for(const [i,t] of method.args.entries()) validateComponentScalar(t,args[i]);
+	const end=Symbol("exhausted");
+	const request=(method,args,phase,afterFailure=false)=>{
+		lifecycle.assertOpen();
+		const ownerOp=phase==="next" || phase==="close", input=ownerOp?["uint64","uint64"]:method.args;
+		const op=method.i+(phase==="next"?immediateNextBase:phase==="close"?immediateCloseBase:0);
+		if(!Array.isArray(args) || args.length!==input.length) throw new TypeError("Wrong synchronous IO arity");
+		for(const [i,t] of input.entries()) validateComponentScalar(t,args[i]);
 		const live=[]; let used=0, unsafe=false, owned=false, f=0, error, failed=false, result;
 		const retire=e=>{ unsafe=true; lifecycle.poison(); throw e; };
 		const native=op=>{ try
@@ -39,17 +44,31 @@ export const bindJavaScriptIO = (module,abi,invoke,lifecycle)=>{
 		try
 		{
 			f=alloc(size); module.HEAP8.fill(0,f,f+size);
-			const h=data(module); h.setUint32(f,magic,true); h.setUint32(f+4,size,true); h.setUint32(f+12,method.i,true);
-			for(const [i,t] of method.args.entries()) encode(module,f+48+24*i,t,args[i],alloc);
+			const h=data(module); h.setUint32(f,magic,true); h.setUint32(f+4,size,true); h.setUint32(f+12,op,true);
+			for(const [i,t] of input.entries()) encode(module,f+48+24*i,t,args[i],alloc);
 			const status=native(()=>invoke(f)), d=data(module);
-			if(d.getUint32(f,true)!==magic || d.getUint32(f+4,true)!==size || d.getUint32(f+12,true)!==method.i || status!==d.getUint32(f+8,true)) retire(malformed());
-			const declared=method.errorId && status===(method.errorId==="error:IO.Error"?4:3);
+			if(d.getUint32(f,true)!==magic || d.getUint32(f+4,true)!==size || d.getUint32(f+12,true)!==op || status!==d.getUint32(f+8,true)) retire(malformed());
+			const empty=(from,to)=>!module.HEAP8.subarray(f+from,f+to).some(Boolean);
+			if(phase==="open" && status===0)
+			{
+				const key=d.getBigUint64(f+16,true), domain=d.getBigUint64(f+24,true);
+				if(!key || !domain || !empty(32,48) || !empty(tags,size)) retire(malformed());
+				return [key,domain];
+			}
+			if((phase==="next" && status===2) || (phase==="close" && (status===0 || (afterFailure && status===6))))
+			{
+				if(!empty(16,48) || !empty(tags,size)) retire(malformed());
+				return end;
+			}
+			const errorId=phase==="next"?method.stepId:phase==="close"?null:method.errorId;
+			const ioError=phase==="next"?method.stepIO:errorId==="error:IO.Error";
+			const declared=errorId && status===(ioError?4:3);
 			if(status!==0 && !declared)
 			{
 				if(![5,9,10,11,12].includes(status) || module.HEAP8.subarray(f+16,f+48).some(Boolean) || module.HEAP8.subarray(f+tags,f+size).some(Boolean)) retire(malformed());
-				throw new Error("Lean bridge failure in "+id+" (status "+status+")");
+				throw new Error("Lean bridge failure in "+method.id+" (status "+status+")");
 			}
-			let type=declared?method.error:method.result;
+			let type=declared?(phase==="next"?method.terminal:method.error):method.result;
 			const branches=[]; let ix=0;
 			while(Array.isArray(type))
 			{
@@ -65,7 +84,7 @@ export const bindJavaScriptIO = (module,abi,invoke,lifecycle)=>{
 			{ if(!over) retire(e); owned=true; throw e; }
 			owned=true;
 			for(const key of branches.reverse()) result={[key]: result};
-			if(declared) throw Object.assign(new Error(method.errorId==="error:IO.Error"?result:"Lean raised "+method.errorId),{code: "declared-error",details: {errorId: method.errorId,payload: result}});
+			if(declared) throw Object.assign(new Error(ioError?result:"Lean raised "+errorId),{code: "declared-error",details: {errorId,payload: result}});
 		}
 		catch(e)
 		{ failed=true; error=e; }
@@ -82,5 +101,10 @@ export const bindJavaScriptIO = (module,abi,invoke,lifecycle)=>{
 		if(failed) throw error;
 		return result;
 	};
-	return Object.freeze({call});
+	const call=(id,args)=>{
+		const m=methods.get(id); if(!m || m.cursor) throw new TypeError("Unknown synchronous IO declaration");
+		return request(m,args,"call");
+	};
+	if(!abi.methods.some(m=>m.cursor)) return Object.freeze({call});
+	return Object.freeze({call,iterate: bindImmediateCursors(module,methods,request,lifecycle,end)});
 };

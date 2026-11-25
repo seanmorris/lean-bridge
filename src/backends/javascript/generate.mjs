@@ -15,6 +15,7 @@ import { declarationRefinements as assertDeclarationRefinements, nominalRefineme
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
+import { javaScriptIOAbi } from "../../abi/component-sync-io.mjs";
 import { sha256 } from "../../capsule/node.mjs";
 import { emitCopiedValidators } from "./copied-validators.mjs";
 import { compileOwnedJavaScriptPackageModel, renderOwnedJavaScriptPackageLayout } from "./owned-package.mjs";
@@ -106,12 +107,12 @@ const typeScriptType = (typeRef, typeMap) => {
 	return `readonly [${typeRef.arguments.map(argument => typeScriptType(argument, typeMap)).join(", ")}]`;
 };
 
-const deliveredType = (declaration, typeMap, threaded = false) => {
+const deliveredType = (declaration, typeMap, threaded = false, immediate = false) => {
 	const resultType = declaration.result.type.kind === "named" ? typeMap.get(declaration.result.type.id) : undefined;
 	const projected = typeScriptType(declaration.result.type, typeMap);
 	const result = resultType?.kind === "callback" && declaration.result.ownership === "lease" ? `${projected} & LeanOwnedCallable` : projected;
 	if(declaration.resultMode === "promise") return `Promise<${result}>` + (threaded ? " & { cancel(): boolean }" : "");
-	if(declaration.resultMode === "iterator") return `Iterable<${result}>`;
+	if(declaration.resultMode === "iterator") return immediate ? `IterableIterator<${result}> & { return(): IteratorResult<${result}> }` : `Iterable<${result}>`;
 	if(declaration.resultMode === "async-iterator") return threaded ? `AsyncIterableIterator<${result}> & { return(): Promise<IteratorResult<${result}>> }` : `AsyncIterable<${result}>`;
 	return result;
 };
@@ -313,7 +314,7 @@ const ensureUniqueSurface = ir => {
 	if(hostSubtypeCallbacks(ir).size) addExport("withRecovery", "generated checked-callback recovery helper");
 };
 
-const emitDeclarations = (ir, typeMap, threaded = false) => {
+const emitDeclarations = (ir, typeMap, threaded = false, immediate) => {
 	const output = [
 		`// Generated from Binding IR SHA-256 ${hashBindingIr(ir)}.`
 		, `import { runtime } from "./internal/runtime.mjs";`
@@ -346,7 +347,7 @@ const emitDeclarations = (ir, typeMap, threaded = false) => {
 		output.push(`export class ${error.name} extends Error {`);
 		if(error.payload === null)
 		{
-			const message = error.id === "error:IO.Error" || (threaded && error.id === "error:TaskIO.Error") ? `options?.cause?.message ?? ${quote(error.documentation.summary)}` : quote(error.documentation.summary);
+			const message = error.id === "error:IO.Error" || (threaded && error.id === "error:TaskIO.Error") || immediate?.some(m=>m.stepIO && m.stepId===error.id) ? `options?.cause?.message ?? ${quote(error.documentation.summary)}` : quote(error.documentation.summary);
 			output.push(`  constructor(options) {`, `    super(${message}, options);`);
 		} else
 		{
@@ -635,7 +636,7 @@ const emitDeclarations = (ir, typeMap, threaded = false) => {
 		const indent = mappedErrors.length > 0 ? "    " : "  ";
 		if(mappedErrors.length > 0) output.push("  try {");
 		output.push(
-			`${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => callbackWrapper(parameter.type, parameter.name, `${declaration.name}.${parameter.name}`)).join(", ")}]);`,
+			`${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => callbackWrapper(parameter.type, parameter.name, `${declaration.name}.${parameter.name}`)).join(", ")}]${mappedErrors.length && immediate?.some(m=>m.cursor && m.id===declaration.id)?", translateDeclaredError":""});`,
 		);
 		if(new Set(["value", "promise"]).has(declaration.resultMode))
 		{
@@ -761,7 +762,7 @@ const emitValidators = (ir, typeMap) => {
 	return `${lines.join("\n")}\n${emitCopiedValidators(ir, typeMap, validatorName)}`;
 };
 
-const emitTypeScript = (ir, typeMap, threaded = false) => {
+const emitTypeScript = (ir, typeMap, threaded = false, immediate) => {
 	const lines = [
 		`// Generated from Binding IR SHA-256 ${hashBindingIr(ir)}.`
 		, ...emitTypeDeclarations(ir, typeMap)
@@ -864,7 +865,7 @@ const emitTypeScript = (ir, typeMap, threaded = false) => {
 		} else
 		{
 			lines.push(
-				`export declare function ${declaration.name}(${declaration.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(declaration, typeMap, threaded)};`,
+				`export declare function ${declaration.name}(${declaration.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(declaration, typeMap, threaded, immediate?.some(m=>m.cursor && m.id===declaration.id))};`,
 				"",
 			);
 		}
@@ -917,12 +918,16 @@ const emitDocumentation = ir => {
  *
  * @param ir - Binding IR document that defines the source types and operations.
  * @param threadedTaskIdentity - Compiled copied-task identity, only for the pthread profile.
+ * @param immediateIdentity - Compiled synchronous cursor identity, only for the direct-pull profile.
  */
-export const compileJavaScriptPackageModel = (ir, threadedTaskIdentity) => {
-	if(ir.schemaVersion === 4 && threadedTaskIdentity === undefined) return compileOwnedJavaScriptPackageModel(ir);
+export const compileJavaScriptPackageModel = (ir, threadedTaskIdentity, immediateIdentity) => {
+	if(immediateIdentity!==undefined && threadedTaskIdentity!==undefined) throw new TypeError("Conflicting JavaScript delivery modes");
+	if(ir.schemaVersion === 4 && threadedTaskIdentity === undefined && immediateIdentity === undefined) return compileOwnedJavaScriptPackageModel(ir);
 	validateBindingIr(ir);
 	const taskAbi = threadedTaskIdentity === undefined ? null : javaScriptTaskAbi(ir,threadedTaskIdentity);
-	const coverage = analyzeJavaScriptCoverage(ir,taskAbi?.methods);
+	const immediate = immediateIdentity===undefined ? undefined : javaScriptIOAbi(ir,immediateIdentity).methods;
+	if(immediate && !immediate.some(m=>m.cursor)) throw new TypeError("Immediate JavaScript delivery requires a checked pull protocol");
+	const coverage = analyzeJavaScriptCoverage(ir,taskAbi?.methods,immediate);
 	if(!coverage.supported)
 	{
 		const first = coverage.gaps[0];
@@ -930,7 +935,7 @@ export const compileJavaScriptPackageModel = (ir, threadedTaskIdentity) => {
 	}
 	ensureUniqueSurface(ir);
 	const typeMap = new Map(ir.types.map(type => [type.id, type]));
-	return Object.freeze({ ir, typeMap, ...(taskAbi ? {threaded: true} : {}) });
+	return Object.freeze({ ir, typeMap, ...(taskAbi ? {threaded: true} : {}), ...immediate?{immediate}:{} });
 };
 
 /**
@@ -941,7 +946,7 @@ export const compileJavaScriptPackageModel = (ir, threadedTaskIdentity) => {
 export const renderJavaScriptPackageLayout = model => {
 	if(model.kind === "owned-javascript-package") return renderOwnedJavaScriptPackageLayout(model);
 	const { ir, typeMap } = model;
-	const generated = emitDeclarations(ir, typeMap, model.threaded);
+	const generated = emitDeclarations(ir, typeMap, model.threaded, model.immediate);
 	const packageManifest = {
 		version: ir.component.version
 		, type: "module"
@@ -984,7 +989,7 @@ export const renderJavaScriptPackageLayout = model => {
 	};
 	const files = {
 		"index.mjs": generated.source
-		, "index.d.ts": emitTypeScript(ir, typeMap, model.threaded)
+		, "index.d.ts": emitTypeScript(ir, typeMap, model.threaded, model.immediate)
 		, "internal/validators.mjs": emitValidators(ir, typeMap)
 		, "README.md": emitDocumentation(ir)
 		, "binding-manifest.json": `${JSON.stringify(manifest, null, 2)}\n`
@@ -998,9 +1003,10 @@ export const renderJavaScriptPackageLayout = model => {
  *
  * @param ir - Binding IR document that defines the source types and operations.
  * @param threadedTaskIdentity - Optional compiled pthread profile identity.
+ * @param immediateIdentity - Optional compiled identity of a direct-pull component.
  */
-export const generateJavaScriptPackage = (ir, threadedTaskIdentity) => {
-	const model = compileJavaScriptPackageModel(ir, threadedTaskIdentity);
+export const generateJavaScriptPackage = (ir, threadedTaskIdentity, immediateIdentity) => {
+	const model = compileJavaScriptPackageModel(ir, threadedTaskIdentity, immediateIdentity);
 	const files = renderJavaScriptPackageLayout(model);
 	auditJavaScriptPackage(ir, files);
 	return files;

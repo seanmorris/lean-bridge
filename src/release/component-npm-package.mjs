@@ -142,6 +142,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, ["internal/component-sync-io.mjs", relocate(await readFile(new URL("../abi/component-sync-io.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-wasm-control.mjs", await readFile(new URL("../abi/component-wasm-control.mjs", import.meta.url))]
 		, ["internal/component-sync-io-runtime.mjs", relocate(await readFile(new URL("./component-sync-io-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-immediate-cursors.mjs", await readFile(new URL("./component-immediate-cursors.mjs", import.meta.url), "utf8")]
 		, ["internal/wasm-word-codecs.mjs", relocate(await readFile(new URL("./wasm-word-codecs.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-scalar-codec.mjs", codecSource]
 		, ["internal/component-callables.mjs", relocate(await readFile(new URL("../abi/component-callables.mjs", import.meta.url), "utf8"))]

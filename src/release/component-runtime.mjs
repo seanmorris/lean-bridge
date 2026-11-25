@@ -17,7 +17,8 @@ import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/
 import { componentStructuredCallableAbi, assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
 import { componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi, assertComponentOwnedWasmBindings } from "../abi/component-owned-wasm.mjs";
 import { createOwnedWasmComponentRuntime } from "./owned-wasm-component-runtime.mjs";
-import { assertJavaScriptIOAbi, componentSyncIOAbi } from "../abi/component-sync-io.mjs";
+import { assertJavaScriptIOAbi, componentImmediateIOAbi, componentSyncIOAbi } from "../abi/component-sync-io.mjs";
+import { abandonImmediateCursors } from "./component-immediate-cursors.mjs";
 import { validateJavaScriptWasmControl } from "../abi/component-wasm-control.mjs";
 import { bindJavaScriptIO } from "./component-sync-io-runtime.mjs";
 import { componentHostIOAbi, javaScriptHostIOAbi, validateJavaScriptHostModules } from "../abi/component-host-io.mjs";
@@ -132,7 +133,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 	const loaded = new Map();
 	const callables = module._bridge_callable_abi ? createComponentCallableRuntime(module) : null;
 	let poisoned = false,hostDomain;
-	const poison = () => { poisoned = true; hostDomain?.abandon();callables?.poison(); };
+	const poison = () => { poisoned = true; abandonImmediateCursors(module); hostDomain?.abandon();callables?.poison(); };
 	const assertOpen = () => {
 		if(poisoned) throw new Error("Component runtime is poisoned");
 		if(module._bridge_lean_runtime_status && module._bridge_lean_runtime_status() !== 2)
@@ -206,7 +207,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			const owned = [componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi].includes(descriptor.privateAbi.version);
 			const structured = descriptor.privateAbi.version === componentStructuredCallableAbi;
 			const callable = structured || descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
-			const io = descriptor.privateAbi.version === componentSyncIOAbi;
+			const io = [componentSyncIOAbi,componentImmediateIOAbi].includes(descriptor.privateAbi.version);
 			let model, broker;
 			if(host)
 			{

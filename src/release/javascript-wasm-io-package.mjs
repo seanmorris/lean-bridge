@@ -5,7 +5,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { reconcileHostExports } from "../analyze/host-export-model.mjs";
 import { npmPackageMetadata } from "../analyze/package-metadata.mjs";
-import { assertJavaScriptIOAbi } from "../abi/component-sync-io.mjs";
+import { assertJavaScriptIOAbi, componentImmediateIOAbi } from "../abi/component-sync-io.mjs";
 import { javaScriptHostIOAbi, validateJavaScriptHostModules } from "../abi/component-host-io.mjs";
 import { parseBindingIr } from "../binding-ir/canonical.mjs";
 import { javaScriptHostBuildIdentity } from "../build/javascript-wasm-host-component.mjs";
@@ -28,8 +28,9 @@ export const javaScriptHostProfile = "javascript-wasm-host-io-v1";
  */
 export const assertJavaScriptIOConfiguration = configuration => {
 	assertExportConfigurationCapabilities(configuration, {target: "npm"
-		, fields: ["package", "modules", "exports", "nativeEffects", "hostImports"]
+		, fields: ["package", "modules", "exports", "nativeEffects", "hostImports", "iterators"]
 		, targetFields: ["name", "version"]});
+	if(configuration.hostImports && configuration.iterators) throw new Error("Immediate JavaScript cursors require a standalone synchronous package");
 	if(!(configuration.hostImports && configuration.nativeEffects === undefined) && (!Array.isArray(configuration.nativeEffects) || configuration.nativeEffects.length))
 		throw new Error("JavaScript synchronous IO supports only in-memory computation (nativeEffects: [])");
 };
@@ -80,7 +81,7 @@ export const writeJavaScriptIOPackages = async options => {
 	const runtime = await assembleComponentNpmRuntime({mainModule, mainWasm, runtimeRequirement: javascriptSharedRuntimeRequirement});
 	const coordinate = zend?phpTaskCoordinates(api,configuration).npm:componentNpmIdentity(api.component, configuration.targets?.npm);
 	const phpHostBase={"package.json": canonicalJson({type: "module",exports: {".": {types: "./index.d.ts",default: "./index.mjs"}},files: ["index.mjs","index.d.ts","internal","README.md"]})};
-	const files = new Map(Object.entries(zend?phpHostBase:hosts ? generateJavaScriptHostPackage(api,ir,abi.componentIdentity) : generateJavaScriptPackage(api)));
+	const files = new Map(Object.entries(zend?phpHostBase:hosts ? generateJavaScriptHostPackage(api,ir,abi.componentIdentity) : generateJavaScriptPackage(api, undefined, abi.version===componentImmediateIOAbi?abi.componentIdentity:undefined)));
 	const pkg = JSON.parse(files.get("package.json")), metadata = configuration.package ?? {};
 	files.set("package.json", canonicalJson({
 		...pkg

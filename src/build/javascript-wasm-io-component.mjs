@@ -2,7 +2,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson,sha256 } from "../capsule/node.mjs";
-import { javaScriptIOAbi } from "../abi/component-sync-io.mjs";
+import { immediateCloseBase, immediateNextBase, javaScriptIOAbi } from "../abi/component-sync-io.mjs";
 import { validateJavaScriptWasmControl } from "../abi/component-wasm-control.mjs";
 import { compileHostSources } from "./host-elaboration.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
@@ -20,14 +20,25 @@ static int lb_context(void) { return lean_bridge_native_process_valid(); }
 const control = (abi,wire)=>`#include <stdint.h>
 #include <stddef.h>
 extern void ${wire.clear}(uint64_t *);
-${wire.methods.map(m=>`extern int ${m.symbol}(const uint64_t *,uint64_t *,uint8_t *);`).join("\n")}
+${wire.methods.map(m=>m.delivery==="iterator"?`extern int ${m.names.open}(const uint64_t *,uint64_t *,uint64_t *,uint8_t *);
+extern int ${m.names.next}(uint64_t *,uint64_t *,uint8_t *);
+extern int ${m.names.close}(uint64_t *);`:`extern int ${m.symbol}(const uint64_t *,uint64_t *,uint8_t *);`).join("\n")}
 __attribute__((visibility("default"))) uint32_t ${abi.controlSymbol}(uint32_t *f) {
     uintptr_t base=(uintptr_t)f; uint64_t limit=(uint64_t)__builtin_wasm_memory_size(0)*65536u;
     if (!base || base%8 || base+UINT64_C(48)>limit || f[0]!=${magic}u || base+(uint64_t)f[1]>limit) return 5;
     uint64_t *out=(uint64_t *)(f+4), *args=out+4;
     if (f[3]==UINT32_MAX) { ${wire.clear}(out); return 0; }
     switch(f[3]) {
-${wire.methods.map((m,i)=>`    case ${i}: if (f[1]!=${48+24*m.args.length+m.tagBytes}) return 5; return ${m.symbol}(args,out,(uint8_t *)(args+${3*m.args.length}));`).join("\n")}
+${wire.methods.map((m,i)=>m.delivery==="iterator"?`    case ${i}: {
+        if (f[1]!=${48+24*m.args.length+m.tagBytes}) return 5;
+        uint64_t h[2]={0}; int s=${m.names.open}(args,h,out,(uint8_t *)(args+${3*m.args.length}));
+        if (!s) { out[0]=h[0]; out[1]=h[1]; } return s;
+    }
+    case ${immediateNextBase+i}u: case ${immediateCloseBase+i}u: {
+        if (f[1]!=${96+m.tagBytes} || !args[0] || !args[3] || args[1] || args[2] || args[4] || args[5]) return 5;
+        uint64_t h[2]={args[0],args[3]};
+        return f[3]==${immediateNextBase+i}u ? ${m.names.next}(h,out,(uint8_t *)(args+6)) : ${m.names.close}(h);
+    }`:`    case ${i}: if (f[1]!=${48+24*m.args.length+m.tagBytes}) return 5; return ${m.symbol}(args,out,(uint8_t *)(args+${3*m.args.length}));`).join("\n")}
     default: return 5;
     }
 }
@@ -82,6 +93,8 @@ export const compileJavaScriptIOComponent = async options=>{
 	{
 		const d = abi.methods[i];
 		if(m.declaration!==api.declarations[i].source.declaration || [m.args,m.result,m.error,m.tagBytes].some((v,j)=>canonicalJson(v)!==canonicalJson([d.args,d.result,d.error,d.tagBytes][j]))) throw new Error("JavaScript IO wire differs from public contract");
+		if(Boolean(d.cursor)!==(m.delivery==="iterator") || d.cursor && (m.stepDeclaration!==d.next || canonicalJson(m.terminal)!==canonicalJson(d.terminal) || Boolean(m.stepIO)!==d.stepIO))
+			throw new Error("JavaScript immediate pull differs from the compiled protocol");
 	}
 	await save("BridgeCAsync.lean",gen.entryLean); await run(join(leanPrefix,"bin/lean"),["-j1","-c","entry.c","BridgeCAsync.lean"],app,built.env);
 	await save("checked.c",'#include "entry.c"\n'+gen.declarations+"\n"); await save(gen.prefix+".h",gen.header);

@@ -28,9 +28,11 @@ const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefine
  *
  * @param ir - Binding IR document that defines the source types and operations.
  * @param taskMethods - Validated contracts for the opt-in compiled pthread profile.
+ * @param immediateMethods - Reconstructed standalone synchronous Wasm cursor contracts.
  */
-export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
+export const analyzeJavaScriptCoverage = (ir, taskMethods = [], immediateMethods = []) => {
 	const taskContracts = new Map(taskMethods.map(m => [m.id,m]));
+	const immediate = new Map(immediateMethods.filter(m=>m.cursor).map(m=>[m.id,m]));
 	const retainedTypes=new Set();
 	for(const d of ir.declarations) for(const [slot] of taskContracts.get(d.id)?.callbacks ?? [])
 	{
@@ -135,7 +137,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 		}
 	};
 
-	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null, taskMethod, retained=false } = {}) => {
+	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null, taskMethod, cursor, retained=false } = {}) => {
 		if(failure.mode !== "declared") return;
 		for(const errorId of failure.errors)
 		{
@@ -146,7 +148,8 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 					|| (error.id === syncIOError && error.category === "domain" && supportsJavaScriptIOPayload(error.payload)));
 			const taskError = taskMethod && error?.category === "domain" && [taskMethod.startId,taskMethod.terminalId].includes(errorId);
 			const callbackError=(retained || taskMethod?.callbacks?.length) && errorId==="error:JavaScriptCallbackError" && error?.category==="domain" && error.payload===null;
-			if(!boundaryOnly && !envelopeSupported && !taskError && !callbackError)
+			const directError = cursor && error?.category === "domain" && [cursor.errorId,cursor.stepId].includes(errorId);
+			if(!boundaryOnly && !envelopeSupported && !taskError && !directError && !callbackError)
 			{
 				report(
 					"unsupported-error-envelope",
@@ -312,7 +315,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 			}
 			if(
 				new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
-        && !taskContracts.has(declaration.id) && !supportsIteratorValue(parameter.type)
+        && !taskContracts.has(declaration.id) && !immediate.has(declaration.id) && !supportsIteratorValue(parameter.type)
 			) {
 				report(
 					"unsupported-iterator-value",
@@ -349,7 +352,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 		}
 		if(
 			new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
-      && !taskContracts.has(declaration.id) && !supportsIteratorValue(declaration.result.type)
+      && !taskContracts.has(declaration.id) && !immediate.has(declaration.id) && !supportsIteratorValue(declaration.result.type)
 		) {
 			report(
 				"unsupported-iterator-value",
@@ -360,6 +363,7 @@ export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
 		inspectFailure(declaration.failure, `${declaration.id}.failure`, {
 			errorEnvelope: declaration.kind === "function" && declaration.resultMode === "value"
 			, taskMethod: taskContracts.get(declaration.id)
+			, cursor: immediate.get(declaration.id)
 			, syncIOError: declaration.source?.extensions?.["lean-lang.org/effect"] === "EIO"
 				? "error:EIO." + declaration.source.declaration : null
 		});

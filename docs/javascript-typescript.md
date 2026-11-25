@@ -128,6 +128,31 @@ retry on the same heap. A Node worker or a dedicated browser module worker
 has its own runtime. Retiring the worker's instance leaves the parent’s
 runtime and its existing objects usable. See the [worker isolation checks](evidence/javascript-wasm-callback-io-retirement-20261123.md).
 
+### Iterate without a Promise
+
+When a package exports an immediate Lean iterator, use ordinary `for…of`.
+Each demand calls Lean once. A `break`, an exception in the loop body, or
+exhaustion closes the cursor. Nothing runs in the background.
+
+```js
+import { sequence } from "@example/pulls";
+
+for (const value of sequence(10)) {
+  console.log(value);
+  if (value === 1) break; // prints 0 and 1; Lean finalizes the cursor here
+}
+```
+
+If you use `.next()` manually, call `.return()` in a `finally` block, even
+if you never pulled a value. Check `done`, not `value === undefined`: Lean
+can yield `Unit` as an item. When a factory declares an error, the factory
+call throws it; a declared step error is thrown by `next()`
+or the loop. A yielded `Except.error` is still a value. Close worker-owned
+cursors **inside the worker** before asking the parent to terminate it.
+
+The [package author’s guide](publish/npm.md#export-an-immediate-iterator)
+shows the Lean declarations behind this example.
+
 ### Pass application objects to Lean
 
 Some packages export `withHosts` because their Lean functions call methods on

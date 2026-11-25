@@ -79,6 +79,32 @@ local handoff. This profile currently builds npm separately with the local
 SDK; an explicit Nix or Docker request does not fall back to a host build.
 See [calling synchronous IO from JavaScript](../javascript-typescript.md#synchronous-lean-io).
 
+### Export an immediate iterator
+
+Use `iterators` for a pull that returns an `Option` in `BaseIO`, `IO`, or
+`EIO` without waiting on a task. Export the factory, not the private cursor
+or its methods. For example, the [Pulls fixture](../../tests/fixtures/javascript-immediate/Pulls.lean)
+has `sequence : UInt32 → BaseIO Cursor`, `next : Cursor → BaseIO (Option UInt32)`,
+and `finish : Cursor → BaseIO Unit`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulls"],
+  "exports": ["Pulls.sequence"],
+  "iterators": [
+    { "open": "Pulls.sequence", "next": "Pulls.next", "close": "Pulls.finish" }
+  ],
+  "nativeEffects": [],
+  "targets": { "npm": { "name": "@example/pulls", "version": "1.0.0" } }
+}
+```
+
+Use the same synchronous SDK and build command as above. The [consumer](../javascript-typescript.md#iterate-without-a-promise)
+gets an `IterableIterator` with a deterministic `return()`. This npm route
+supports copied items and declared failures, not host imports or OS effects.
+For pulls that actually wait for Lean work, use the [threaded profile](#build-a-threaded-npm-handoff).
+
 ## Export functions that call JavaScript objects
 
 Use `hostImports` when your Lean code accepts an application-owned object,
