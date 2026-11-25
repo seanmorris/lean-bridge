@@ -576,8 +576,28 @@ const checkOwnedResultLifetime = (signature, path, typeMap, typeParameters) => {
 	}
 };
 
-const validateAggregatePolicy = (policy, path) => {
-	exactKeys(policy, ["ownership", "disposal", "fallback", "cycles"], [], path);
+/**
+ * Retention decisions name actual Lean projections, never wildcard paths.
+ *
+ * @param fields - Explicit projection allow-list from an author or review.
+ */
+export const validClosureFields = fields => {
+	if(!Array.isArray(fields) || !fields.length || fields.length > 1024
+		|| Reflect.ownKeys(fields).length !== fields.length + 1) return false;
+	const names = new Set();
+	for(let i = 0; i < fields.length; ++i)
+	{
+		const name = Object.getOwnPropertyDescriptor(fields, i)?.value;
+		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$(?![\s\S])/.test(name) || names.has(name)) return false;
+		names.add(name);
+	}
+	return true;
+};
+
+const validateAggregatePolicy = (policy, path, root = false) => {
+	exactKeys(policy, ["ownership", "disposal", "fallback", "cycles"], root ? ["closureFields"] : [], path);
+	if(Object.hasOwn(policy, "closureFields") && !validClosureFields(policy.closureFields))
+		fail("aggregate-closure-fields", `${path}.closureFields requires distinct qualified projection names`, { path });
 	enumeration(policy.ownership, new Set(["lease"]), `${path}.ownership`);
 	enumeration(policy.disposal, new Set(["required"]), `${path}.disposal`);
 	enumeration(policy.fallback, new Set(["none", "queued-finalizer"]), `${path}.fallback`);
@@ -617,7 +637,7 @@ const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) =
 			, actual: ir.schemaVersion
 		});
 	}
-	if(ir.schemaVersion >= 4) validateAggregatePolicy(ir.aggregatePolicy, `${path}.aggregatePolicy`);
+	if(ir.schemaVersion >= 4) validateAggregatePolicy(ir.aggregatePolicy, `${path}.aggregatePolicy`, true);
 
 	exactKeys(ir.component, ["id", "name", "version"], [], `${path}.component`);
 	string(ir.component.id, `${path}.component.id`, PACKAGE_ID);
@@ -854,6 +874,14 @@ const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) =
     array(type.assurance, `${typePath}.assurance`);
 	});
 
+	if(ir.aggregatePolicy?.closureFields)
+	{
+		const projections = new Set(ir.types.filter(type => type.representation === "owned" && type.kind === "record")
+			.flatMap(type => type.fields.filter(field => field.type.kind === "named" && typeMap.get(field.type.id)?.kind === "callback")
+				.map(field => `${type.source.declaration}.${field.name}`)));
+		for(const name of ir.aggregatePolicy.closureFields)
+			if(!projections.has(name)) fail("aggregate-closure-fields", `${name} is not an exported owned record function field`, { path });
+	}
 	for(const type of ir.types)
 	{
 		const typeParameters = new Map(

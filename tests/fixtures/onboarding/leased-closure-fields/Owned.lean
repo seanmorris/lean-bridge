@@ -1,0 +1,17 @@
+namespace Owned
+
+structure Ticket where
+  serial : UInt32
+  label : String
+
+structure Tariff where
+  quote : UInt32 → UInt32
+
+def newTicket (serial : UInt32) : Ticket := ⟨serial, "ticket"⟩
+def makeTariff (base : UInt32) : Tariff := ⟨fun units => base + units⟩
+def echoTariff (value : Tariff) : Tariff := value
+def applyTariff (value : Tariff) (units : UInt32) : UInt32 := value.quote units
+def unpackQuote (value : Tariff) : UInt32 → UInt32 := value.quote
+def packQuote (quote : UInt32 → UInt32) : Tariff := ⟨quote⟩
+
+end Owned

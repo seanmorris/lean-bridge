@@ -353,8 +353,9 @@ export const exportContractFor = (contracts, name) => contracts && Object.hasOwn
  *
  * @param type - Compiler-owned structural runtime type.
  * @param result - Whether this is a returned value instead of a call argument.
+ * @param retained - Whether an inline signature edge reaches an owned graph through its nominal table.
  */
-export const exportContractOwnership = (type, result = false) => ["resource", "callback", "owned-graph"].includes(type.kind)
+export const exportContractOwnership = (type, result = false, retained = false) => retained || ["resource", "callback", "owned-graph"].includes(type.kind)
 	? { ownership: result ? "lease" : "borrow", lifetime: { scope: result ? "explicit" : "call", anchor: null } }
 	: { ownership: "copy", lifetime: null };
 
@@ -365,7 +366,9 @@ export const exportContractOwnership = (type, result = false) => ["resource", "c
  * @param ownedAggregates - Include ownership-aware boundary acquisition and handle reads.
  */
 export const exportContractEffects = (projection, ownedAggregates = false) => {
-	const effects = projection.parameters.some(parameter => parameter.type.kind === "callback") ? ["fails", "host-call"] : [];
+	const effects = projection.parameters.some(({ type }) => type.kind === "callback" ||
+		(type.kind === "owned-graph" && type.types.some(def => def.kind === "record" && def.fields.some(field => field.type.kind === "callback"))))
+		? ["fails", "host-call"] : [];
 	if(ownedAggregates)
 	{
 		if(projection.parameters.some(parameter => exportContractOwnership(parameter.type).ownership !== "copy")) effects.push("reads-resource");

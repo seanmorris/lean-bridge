@@ -64,6 +64,17 @@ const checkReview = document => {
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const isCallback = type => type.kind === "named"
 		&& definitions.get(type.id)?.kind === "callback";
+	const carriesCallable = (ref, seen) => {
+		if(isCallback(ref)) return true;
+		if(!document.aggregatePolicy.closureFields) return false;
+		if(ref.kind === "apply") return ref.arguments.some(child => carriesCallable(child, seen));
+		if(ref.kind !== "named" || seen.has(ref.id)) return false;
+		seen.add(ref.id);
+		const type = definitions.get(ref.id);
+		if(type.kind === "alias") return carriesCallable(type.target, seen);
+		const fields = type.kind === "variant" ? type.cases.flatMap(branch => branch.fields) : type.fields;
+		return fields.some(field => carriesCallable(field.type, seen));
+	};
 	const copied = type => type.kind === "primitive" || (type.kind === "named"
 		? definitions.get(type.id).representation === "copied" : type.arguments.every(copied));
 	const callbacks = new Map(document.types.filter(type => type.kind === "callback")
@@ -268,7 +279,7 @@ const checkReview = document => {
 	{
 		source(declaration, undefined, true);
 		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
-		const hasCallback = declaration.parameters.some(value => isCallback(value.type));
+		const hasCallback = inputs.some(value => carriesCallable(value.type, new Set()));
 		const effects = [...(hasCallback ? ["fails", "host-call"] : [])
 			, ...(inputs.some(value => !copied(value.type)) ? ["reads-resource"] : [])
 			, ...(!copied(declaration.result.type) ? ["allocates"] : [])].sort();

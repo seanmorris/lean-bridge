@@ -118,7 +118,24 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		remember(projection.result);
 	}
 	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
-	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable, result), ...exportContractOwnership(type, result)
+	// A field signature shares its enclosing nominal table. Its argument/result
+	// can thus be a reference to Bundle rather than a fresh owned-graph wrapper.
+	const retainedEdge = (type, seen) => {
+		if(["resource", "callback", "owned-graph"].includes(type.kind)) return true;
+		if(type.kind === "reference")
+		{
+			if(seen.has(type.name)) return false;
+			seen.add(type.name); return retainedEdge(namedTypes.get(type.name), seen);
+		}
+		if(type.kind === "record") return type.fields.some(field => retainedEdge(field.type, seen));
+		if(type.kind === "variant") return type.cases.some(branch => branch.fields.some(field => retainedEdge(field.type, seen)));
+		if(type.kind === "alias") return retainedEdge(type.target, seen);
+		if(type.kind === "refinement") return retainedEdge(type.base, seen);
+		if(type.element) return retainedEdge(type.element, seen);
+		return type.arguments?.some(child => retainedEdge(child, seen)) ?? false;
+	};
+	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable, result),
+		...exportContractOwnership(type, result, !!request.ownedAggregates?.closureFields && retainedEdge(type, new Set()))
 		, ...decision ? { ownership: decision.ownership, lifetime: structuredClone(decision.lifetime) } : {} });
 	const parameter = (type, index, decision, optional = false, defaultValue = null) => ({
 		name: `arg${index}`, ...site(type, false, decision), mutability: "immutable"
@@ -165,7 +182,8 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, source: source(type.name ?? callbackName), assurance: [] };
 			definitions.set(id, definition);
 			if(type.kind === "alias") definition.target = reference(type.target);
-			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }));
+			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name,
+				type: reference(field.type, undefined, field.type.kind === "callback"), mutability: "immutable", documentation: doc(field.name) }));
 			if(type.kind === "variant") definition.cases = type.cases.map(item => ({ name: item.name
 				, fields: item.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }))
 				, documentation: doc(item.name) }));
@@ -292,7 +310,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		const refinements = { parameters: projection.parameters.map(parameter => refinement(parameter.type, hasSubtype(parameter.type)))
 			, result: refinement(projection.result, hasSubtype(projection.result), false, new Map(), new Set(), 0, true) };
 		const hasRefinements = refinements.result !== null || refinements.parameters.some(value => value !== null);
-		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
+		const effects = exportContractEffects(projection, ownedAggregates);
 		const parameters = projection.parameters.map((p, i) => parameter(
 			p.type, i, contract?.parameters?.[i], p.optional === true, p.default ?? null
 		));
@@ -304,8 +322,8 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			, typeParameters: [], receiver, parameters
 			, result: site(projection.result, true, contract?.result)
 			, mutability: "immutable"
-			, effects: exportContractEffects(projection, ownedAggregates)
-			, failure: hasCallback ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }
+			, effects
+			, failure: effects.includes("host-call") ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }
 			, resultMode: "value", capabilities: [], assurance: []
 			, documentation: doc(item.documentation ?? `Call ${item.identity}.`)
 			, source: { producer: "lean"
@@ -355,7 +373,10 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			}
 		for(const definition of definitions.values())
 			if(definition.representation === "owned" && ["record", "variant"].includes(definition.kind))
+			{
 				definition.aggregate = structuredClone(request.ownedAggregates);
+				delete definition.aggregate.closureFields;
+			}
 	}
 	const document = { schemaVersion: ownedAggregates ? 4 : 3, component
 		, ...(ownedAggregates ? { aggregatePolicy: structuredClone(request.ownedAggregates) } : {})

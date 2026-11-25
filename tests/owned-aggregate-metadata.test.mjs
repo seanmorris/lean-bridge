@@ -91,6 +91,36 @@ test("owned graphs retain resources and recursive references without copied admi
 	assert.throws(() => validateOwnedNativeType(copied, policy), /copied references/);
 });
 
+test("a leased closure is authorized only at its named record projection, not below a container or a variant", async () => {
+	const projection = "Owned.Box.transform";
+	const allowed = { ...policy, closureFields: [projection] };
+	for(const fields of [[], [projection, projection], ["transform"], ["Owned.*"], [projection + "\n"], Array(1), null])
+		assert.throws(() => validateOwnedAggregatePolicy({ ...policy, closureFields: fields }));
+	const scalar = { kind: "primitive", name: "uint32", lean: "UInt32", abi: {
+		cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
+	const fn = { kind: "callback", parameters: [scalar], result: scalar, abi: heap };
+	const field = { name: "transform", projection, type: fn };
+	const value = { ...nominalGraph(), policy: allowed };
+	value.types[0].fields = [field];
+	assert.equal(validateOwnedNativeType(value, allowed), value);
+	await assertJsonSchema("native-metadata-type", value);
+	for(const mutate of [
+		bad => { bad.types[0].fields[0].projection = "Owned.Box.other"; }
+		, bad => { bad.types[0].fields[0].name = "other"; }
+		, bad => { bad.types[0].fields[0].type = array(fn); }
+		, bad => { bad.types[0].fields[0].type.parameters = [fn]; }
+		, bad => { bad.types[0].fields[0].type.abi = scalar.abi; }
+		, bad => { bad.root = array(fn); }
+		, bad => { bad.types[0] = { kind: "variant", name: "Owned.Box", lean: "Owned.Box", abi: heap,
+			cases: [{ name: "make", constructor: "Owned.Box.make", fields: [{ name: "transform", type: fn }] }] }; }
+	])
+	{
+		const bad = structuredClone(value); mutate(bad);
+		assert.throws(() => validateOwnedNativeType(bad, allowed));
+	}
+	assert.throws(() => validateOwnedNativeType({ ...value, policy }, policy), /retained callbacks/);
+});
+
 test("owned graph validation rejects malformed topology, hidden callbacks and policy drift", () => {
 	for(const mutate of [
 		value => { value.policy.ownership = "copy"; }
@@ -177,7 +207,7 @@ test("fresh Lean owned graphs match the independent resource contract, including
 }, async t => {
 	const root = process.cwd(), directory = await mkdtemp(join(tmpdir(), "lean-bridge-owned-metadata-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
-	const prefix = (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
+	const prefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
 	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
 	const capture = args => processBuildRunner.capture({ command: lean, args
 		, cwd: directory
@@ -187,6 +217,11 @@ test("fresh Lean owned graphs match the independent resource contract, including
 	validateExportConfiguration(config);
 	await saveLakeFile(directory, "Owned.lean", source);
 	await capture(["-o", "Owned.olean", "Owned.lean"]);
+	// Each selection still runs in a new Lean process and loads the original
+	// compiled project. Elaborate the identical checker only once per test.
+	await saveLakeFile(directory, "NativeExports.lean", await readFile(extractor));
+	await capture(["-o", "NativeExports.olean", "NativeExports.lean"]);
+	await saveLakeFile(directory, "RunExtractor.lean", "import NativeExports\n");
 	const interfaceIdentity = await identifyLeanInterface(join(directory, "Owned.olean"));
 	const context = { toolchain: "leanprover/lean4:v4.32.2"
 		, extractorSha256: sha256(await readFile(extractor))
@@ -199,7 +234,7 @@ test("fresh Lean owned graphs match the independent resource contract, including
 	const run = async selected => {
 		const request = createMetadataRequest(selected, context);
 		await saveLakeFile(directory, "request.json", canonicalJson(request));
-		const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "request.json"])).stdout);
+		const metadata = JSON.parse((await capture(["--run", "RunExtractor.lean", "--metadata", "request.json"])).stdout);
 		validateElaboratedMetadata(metadata, request);
 		await assertJsonSchema("elaborated-export-metadata", metadata);
 		return { request, metadata };
@@ -248,6 +283,29 @@ test("fresh Lean owned graphs match the independent resource contract, including
 		.every(item => item.projection.status === (["Owned.newTicket", "Owned.serial", "Owned.label", "Owned.retainTicket"].includes(item.identity) ? "supported" : "unsupported")));
 	const hidden = await run({ ...selection, exports: ["Owned.hiddenCallback"], arities: [] });
 	assert.match(hidden.metadata.modules[0].declarations.find(item => item.selected).projection.expression, /retention policy/);
+	const allowed = { ...policy, closureFields: ["Owned.HiddenCallback.callback"] };
+	const withField = await run({ ...selection, ownedAggregates: allowed, exports: ["Owned.hiddenCallback"], arities: [] });
+	assert.deepEqual(withField.metadata.diagnostics, []);
+	const projection = withField.metadata.modules[0].declarations.find(item => item.selected).projection;
+	assert.equal(projection.status, "supported", projection.expression);
+	for(const graph of [projection.parameters[0].type, projection.result])
+	{
+		assert.equal(graph.kind, "owned-graph");
+		assert.deepEqual(graph.policy, allowed);
+		assert.throws(() => validateOwnedNativeType(graph, policy), /differs from the authorized/);
+	}
+	const fieldModel = createOwnedElaboratedSemanticModel({ ...options, ...withField
+		, elaborationSha256: sha256(canonicalJson(withField.metadata)) });
+	await assertJsonSchema("binding-ir-owned", fieldModel.document);
+	const lowered = compileOwnedAggregateModel(fieldModel.document);
+	const field = lowered.types.find(type => type.id === "lean:Owned.HiddenCallback").fields[0];
+	assert.equal(field.retention, "lease");
+	const fn = lowered.types.find(type => type.id === field.type);
+	assert.equal(fn.kind, "callback");
+	assert.equal(fn.callable.parameters[0].ownership, "borrow");
+	assert.equal(fn.callable.result.ownership, "lease");
+	const stale = structuredClone(fieldModel.document); stale.aggregatePolicy.closureFields = ["Owned.Bundle.primary"];
+	assert.throws(() => compileOwnedAggregateModel(stale), /not an exported owned record function field/);
 	const borrowed = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };
 	const leased = { ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
 	const contract = { parameters: [borrowed], result: leased, effects: ["reads-resource", "allocates"] };

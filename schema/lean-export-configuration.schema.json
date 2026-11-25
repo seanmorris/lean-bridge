@@ -117,7 +117,11 @@
         "ownership": {"const": "lease"},
         "disposal": {"const": "required"},
         "fallback": {"enum": ["none", "queued-finalizer"]},
-        "cycles": {"const": "reject"}
+        "cycles": {"const": "reject"},
+        "closureFields": {
+          "type": "array", "minItems": 1, "maxItems": 1024, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)+$(?![\\s\\S])"}
+        }
       }
     },
     "metadata": {

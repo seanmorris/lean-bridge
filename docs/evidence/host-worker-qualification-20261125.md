@@ -98,9 +98,13 @@ These are actual calls to [`retainCallback : (Bundle → Bundle) → Bundle → 
 They do not cover a function capturing an application's host object and
 performing IO, or a callable stored in a record. For the latter, the
 [`HiddenCallback.callback` fixture](../../tests/fixtures/onboarding/owned-aggregates/Owned.lean)
-and its [compiler test](../../tests/owned-aggregate-metadata.test.mjs)
-explicitly report the missing retention policy. A positive test for
-passing the function back must not replace that negative field test.
+and its [compiler test](../../tests/owned-aggregate-metadata.test.mjs) distinguish
+two cases. Without a retention decision, the compiler still rejects the field.
+Naming `Owned.HiddenCallback.callback` in `ownedAggregates.closureFields`
+produces an owned record with a leased function field. Its `Bundle → Bundle`
+signature borrows the resource-containing argument and leases the result.
+This is compiler evidence; it is separate from an installed consumer calling
+the field after the original wrapper closes.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)

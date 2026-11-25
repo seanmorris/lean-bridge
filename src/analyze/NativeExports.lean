@@ -35,7 +35,13 @@ structure OwnedAggregatePolicy where
   disposal : String
   fallback : String
   cycles : String
-  deriving FromJson, ToJson
+  closureFields : Option (Array String) := none
+  deriving FromJson
+
+instance : ToJson OwnedAggregatePolicy where
+  toJson p := Json.mkObj <| [("ownership", toJson p.ownership), ("disposal", toJson p.disposal),
+    ("fallback", toJson p.fallback), ("cycles", toJson p.cycles)] ++
+    (p.closureFields.toList.map fun names => ("closureFields", toJson names))
 
 structure Request where
   profile : Option String := none
@@ -867,8 +873,12 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               ("abi", ← abi (mkConst ``Nat))]
           | none =>
             let fieldSelection := selectedField checked "record" name field.toString
-            shapeTree request fieldType (name :: seen) 0 true fieldSelection containerFin true
-              (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite)
+            let leased := ((request.ownedAggregates.bind (·.closureFields)).getD #[]).contains projection.toString
+            if leased && !fieldType.isForall then reject fieldType "closureFields requires a direct function field"
+            -- The field owns a Lean function in either direction. On input this is
+            -- an existing closure lease, not permission to retain a borrowed host call.
+            shapeTree request fieldType (name :: seen) 0 (!leased) fieldSelection containerFin true
+              (callbackSite := if leased then some true else callbackSite) (hostReply := hostReply) (recordSite := recordSite)
               (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
               (subtypeResult := subtypeResult)
         fields := fields.push (obj [("name", str field.toString),
@@ -1079,6 +1089,11 @@ mutual
       let arguments ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
       return value.setObjVal! "arguments"
         (toJson (← arguments.mapM fun child => closeCopiedGraphValue child (depth + 1)))
+    if kind == "callback" then
+      let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"
+      let result ← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "result") (depth + 1)
+      return value.setObjVal! "result" result |>.setObjVal! "parameters"
+        (toJson (← parameters.mapM fun child => closeCopiedGraphValue child (depth + 1)))
     return value
 
   partial def closeCopiedGraphDefinition (name : String) (inline : Option Json)
@@ -1136,12 +1151,12 @@ def closeCopiedGraph (types : Array Json) (value : Json) : MetaM (Array Json × 
   let (root, state) ← (closeCopiedGraphValue value).run { sources := types }
   return (state.types, root)
 
-partial def hasResource (value : Json) : Bool :=
+partial def hasRetainedIdentity (value : Json) : Bool :=
   match value with
   | .obj fields =>
-    (value.getObjValAs? String "kind").toOption == some "resource" ||
-      fields.toArray.any (fun (_, child) => hasResource child)
-  | .arr values => values.any hasResource
+    ["resource", "callback"].contains ((value.getObjValAs? String "kind").toOption.getD "") ||
+      fields.toArray.any (fun (_, child) => hasRetainedIdentity child)
+  | .arr values => values.any hasRetainedIdentity
   | _ => false
 
 partial def finiteCopiedGraph (types : Array Json) (value : Json)
@@ -1171,7 +1186,7 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
       selected := selected.push type
       pending := copiedReferenceNames type ++ pending
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
-  let owned := kind != "resource" && (hasResource value || selected.any hasResource)
+  let owned := kind != "resource" && (hasRetainedIdentity value || selected.any hasRetainedIdentity)
   if owned then
     let some ownership := policy | throwError "resource aggregates require an explicit ownership policy"
     return obj [("kind", str "owned-graph"), ("root", value),
@@ -1620,7 +1635,10 @@ partial def contractProblem (contract projection : Json) (owned : Bool := false)
       return some "a property must have only its receiver argument"
   if let .ok effects := contract.getObjValAs? (Array String) "effects" then
     let hasCallback := parameters.any fun parameter =>
-      ((parameter.getObjVal? "type" >>= fun type => type.getObjValAs? String "kind").toOption == some "callback")
+      let type := (parameter.getObjVal? "type").toOption.getD Json.null
+      (type.getObjValAs? String "kind").toOption == some "callback" ||
+        ((type.getObjValAs? String "kind").toOption == some "owned-graph" &&
+          containsKind #[] type "callback")
     let retained := fun (type : Json) =>
       ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
     let mut expected := if hasCallback then #["fails", "host-call"] else #[]

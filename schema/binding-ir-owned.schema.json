@@ -20,7 +20,16 @@
     "schemaVersion": {
       "const": 4
     },
-    "aggregatePolicy": { "$ref": "#/$defs/aggregate" },
+    "aggregatePolicy": {
+      "$ref": "#/$defs/aggregate",
+      "properties": {
+        "closureFields": {
+          "type": "array", "minItems": 1, "maxItems": 1024, "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)+$(?![\\s\\S])" }
+        }
+      },
+      "unevaluatedProperties": false
+    },
     "component": {
       "type": "object",
       "additionalProperties": false,
@@ -556,7 +565,8 @@
         "aggregate": {
           "oneOf": [
             {
-              "$ref": "#/$defs/aggregate"
+              "$ref": "#/$defs/aggregate",
+              "unevaluatedProperties": false
             },
             {
               "type": "null"
@@ -1049,7 +1059,6 @@
     },
     "aggregate": {
       "type": "object",
-      "additionalProperties": false,
       "required": [
         "ownership",
         "disposal",
