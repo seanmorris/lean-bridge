@@ -39,9 +39,9 @@ const prepareClient=async(root,a,b)=>{
 		{
 			assert.deepEqual(await invoke(order,[owner,provider,"peers.wasm"]),{stdout: "73\n",stderr: ""});
 			assert.deepEqual(await invoke(order,["count-errors.wasm",provider,"peer-failure.wasm"]),{stdout: "65537\n",stderr: ""});
-			for(const i of [0,1])
+			for(const createOrder of [0,1])for(const readOrder of [0,1])
 			{
-				const result=await invoke(order,[owner,"registration-provider.wasm","cancel-registration-"+i+".wasm"]);
+				const result=await invoke(order,[owner,"registration-provider.wasm","cancel-registration-"+createOrder+readOrder+".wasm"]);
 				assert.equal(result.stderr,"");checkRegistrationCounts(result.stdout);
 			}
 		}
@@ -109,5 +109,5 @@ test("installed async WIT peers share an original box and cancel only the select
 	await assert.rejects(invoke([a.installed,a.installed],[owner,provider,"peers.wasm"]),e=>e.code===1 && /duplicate WIT package interface/u.test(e.stderr));
 	t.diagnostic("8 release/order combinations: one parked Gauge pull, one close, original Workshop callback result 73");
 	t.diagnostic("8 nested error paths: Gauge member error returned through Workshop's callback future; one error issued, one destroyed");
-	t.diagnostic("16 overlapping registration cases: canceled read untouched, sibling invoked once, defining guest owns no remaining registrations");
+	t.diagnostic("32 overlapping registration cases: independent factory/read orders, canceled read untouched, sibling invoked once, no remaining registrations");
 });

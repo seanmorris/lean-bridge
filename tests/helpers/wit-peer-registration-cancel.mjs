@@ -53,10 +53,10 @@ export const buildRegistrationCancellation=async(dir,run)=>{
 	await run("component","targets",world,"--world","registrations","registration-provider.wasm");
 	const contract=await readFile(join(world,"deps/objects.wit"),"utf8"),[,name]=/^package ([^;]+)@1\.0\.0;/u.exec(contract);
 	const src=await readFile("tests/fixtures/static-host-workers/peer-registration-cancel.wat.in","utf8");
-	for(const i of [0,1])
+	for(const createOrder of [0,1])for(const readOrder of [0,1])
 	{
-		const file="cancel-registration-"+i;
-		await writeFile(join(dir,file+".wat"),src.replaceAll("@OBJECTS@",name+"/objects@1.0.0").replaceAll("@VICTIM_FIRST@",String(i)));
+		const file="cancel-registration-"+createOrder+readOrder;
+		await writeFile(join(dir,file+".wat"),src.replaceAll("@OBJECTS@",name+"/objects@1.0.0").replaceAll("@VICTIM_FIRST@",String(createOrder)).replaceAll("@READ_VICTIM_FIRST@",String(readOrder)));
 		await run("parse",file+".wat","-o",file+".wasm");
 		await run("component","targets",world,"--world","instruments",file+".wasm");
 	}
