@@ -58,6 +58,10 @@ directory and its manifest digest, then run `npm run test:wasm-worker-effect-ref
 
 ## Checks before closing the nodes
 
+The [async delivery crosswalk](async-delivery-crosswalk-20261125.md) traces
+each of the 17 consumer profiles to its installed task, stream, callback and
+shutdown records, separately from synchronous iteration.
+
 The [baseline contract](../type-surface.v1.json) distinguishes **17 consumer
 profiles** and two author routes. Its unit is a shape at a position on one
 profile and route, not a package ecosystem. The acceptance questions below

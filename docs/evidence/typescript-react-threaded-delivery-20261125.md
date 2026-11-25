@@ -12,7 +12,7 @@ a hosted result.
 | Ordinary Lean project | [Node and Chromium results](typescript-react-threaded-delivery-20261125/ordinary.json) |
 | Reviewed interface | [Node and Chromium results](typescript-react-threaded-delivery-20261125/reviewed.json) |
 
-The [TypeScript program](../../tests/fixtures/javascript-threaded-host/installed-delivery.mts)
+The [TypeScript program at the recorded revision](https://github.com/seanmorris/lean-bridge/blob/c0e7f54fba9c814db0c49a64c7ac4bd93b43f416/tests/fixtures/javascript-threaded-host/installed-delivery.mts)
 compiles with strict checks, then runs in Node. Its async iterator makes no
 host read while an independent task runs. Early break finalizes the cursor;
 natural exhaustion finalizes a second cursor without an extra read on the next
@@ -20,7 +20,7 @@ demand. A failed pull delivers the generated step error. Canceling a task
 whose host callback is pending succeeds exactly once. Delivering its old reply
 does not change the result of the next task.
 
-The [React component](../../tests/fixtures/javascript-threaded-host/react-delivery.mjs)
+The [React component at the recorded revision](https://github.com/seanmorris/lean-bridge/blob/c0e7f54fba9c814db0c49a64c7ac4bd93b43f416/tests/fixtures/javascript-threaded-host/react-delivery.mjs)
 mounts in a cross-origin-isolated Chromium page. Its first click renders
 `8:1:0`: the task returned 8, one item was yielded and the Lean finalizer reset
 the meter to 0. A second click starts a task with a pending host reply. An

@@ -1,6 +1,7 @@
 /** @file Compile and execute the cancelable task and iterator contract in Node. */
 import {AsyncStep_Workshop_openCursor, withHosts} from "@lean-bridge/workshop-host-example";
 import {closeTaskRuntime, taskRuntimeStats, waitTaskRuntimeIdle} from "@lean-bridge/runtime";
+import {nestedDelivery, terminalDelivery} from "./terminal-delivery.mjs";
 
 /** Consumer-owned object whose reads and finalizer writes are observable. */
 class Meter
@@ -34,7 +35,8 @@ const api = withHosts({Box: Meter});
 try
 {
 	const item: Meter = await api.start(6);
-	const value: number = await api.work(item, async n => n + 1);
+	const nested = await nestedDelivery(cb => api.work(item, cb));
+	const value: number = nested.value;
 	check(value === 7, "awaited Lean task");
 	item.reads = 0;
 	const cursor: AsyncIterableIterator<Meter> = api.open_cursor(item);
@@ -78,6 +80,8 @@ try
 	await api.dispose(); await waitTaskRuntimeIdle();
 	const s = taskRuntimeStats();
 	check([s.pending, s.nativeOwners, s.hostPins, s.frames, s.notifications, s.hostErrors, s.allocations].every(n => n === 0), "not drained");
-	console.log(JSON.stringify({value, yielded, readsAtExhaustion: drain.reads, canceled: true, drained: true}));
+	const retiring = withHosts({Box: Meter});
+	const terminal = await terminalDelivery(cb => retiring.work(item, cb));
+	console.log(JSON.stringify({value, yielded, readsAtExhaustion: drain.reads, canceled: true, drained: true, nested: nested.trace, terminal}));
 } finally
 { await api.dispose(); await closeTaskRuntime(); }

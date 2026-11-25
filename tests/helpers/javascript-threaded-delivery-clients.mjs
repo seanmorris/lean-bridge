@@ -58,12 +58,15 @@ export const checkThreadedDeliveryClients = async (handoff, route) => {
 		await rm(feed, {recursive: true}); await rm(cache, {recursive: true});
 		const env = {PATH: "/no-author-tools", LANG: "C.UTF-8", TMPDIR: root};
 		const typed = "installed-delivery.mts", dom = "react-delivery.mjs";
-		for(const file of [typed, dom]) await copyFile(join(fixture, file), join(app, file));
+		const terminalSource = "terminal-delivery.mts";
+		for(const file of [typed, dom, terminalSource]) await copyFile(join(fixture, file), join(app, file));
 		const compilerOptions = {strict: true, types: [], module: "NodeNext", target: "ES2022", lib: ["ES2024", "DOM"]};
 		await saveLakeFile(app, "tsconfig.json", JSON.stringify({files: [typed], compilerOptions}));
 		await run(process.execPath, [require.resolve("typescript/bin/tsc"), "-p", "tsconfig.json"], app, env);
 		const typescript = JSON.parse(await run(process.execPath, ["installed-delivery.mjs"], app, env, 90000));
-		assert.deepEqual(typescript, {value: 7, yielded: 1, readsAtExhaustion: 1, canceled: true, drained: true});
+		const nested = ["outer", "inner-error", "caught-original", "inner-success", "resumed"];
+		const terminal = {reason: "operation-cancelled", visits: 1, successes: 0, failures: 1, state: "closed", drained: true};
+		assert.deepEqual(typescript, {value: 7, yielded: 1, readsAtExhaustion: 1, canceled: true, drained: true, nested, terminal});
 
 		await saveLakeFile(app, "index.html", `<div id="component"></div>
 <script>globalThis.deliveryReady = Promise.withResolvers();</script>
@@ -103,12 +106,14 @@ import("./react-delivery.mjs").then(m => deliveryReady.resolve(m.exerciseDeliver
 			, assembledDirectory: site, isolated: true, timeoutMs: 90000, evaluate});
 		assert.deepEqual(react, {text: "8:1:0", won: true
 			, canceled: "operation-cancelled"
-			, lateCommits: 0, next: 3, empty: true, drained: true});
+			, lateCommits: 0, next: 3, empty: true, drained: true, nested, terminal
+			, stream: {idleReads: 0, count: 1, exhausted: true, reads: 1, final: 0, phase: "step", failedFinal: 0}});
 		return {packageSetSha256: copy.receiptSha256
 			, typescript, react, deployed, browser
 			, node: process.version, reviewedSourceSha256: metadata.reviewedSourceSha256
 			, typescriptVersion: require("typescript/package.json").version
 			, frameworkVersions
+			, terminalClientSha256: sha256(await readFile(join(fixture, terminalSource)))
 			, typedClientSha256: sha256(await readFile(join(fixture, typed)))
 			, reactClientSha256: sha256(await readFile(join(fixture, dom)))};
 	} finally

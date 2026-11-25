@@ -233,7 +233,7 @@ export default [
 		}
 	}
 	, {
-		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}', 'tests/fixtures/documentation/consumers/**/*.{ts,tsx}']
+		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}', 'tests/fixtures/documentation/consumers/**/*.{ts,tsx}', 'tests/fixtures/javascript-threaded-host/*.mts']
 		, languageOptions: {
 			parser: tseslint.parser
 			, globals: { ...globals.browser }
