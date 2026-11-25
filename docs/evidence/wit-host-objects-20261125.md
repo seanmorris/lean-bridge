@@ -213,3 +213,5 @@ The [native fault probe](../../tests/fixtures/static-host-workers/guest-turn.c) 
 | Reviewed | 61,045,848 | `9cfdf9fe174bc2fface6516dfa4e8e61efe0b7d66b1aa869b1e62ab49d1ecc9e` |
 
 For the other runtimes, see the [installed host-worker evidence by target](host-worker-qualification-20261125.md).
+
+The synchronous-only regression was rebuilt at `0ec2035` because its launcher also includes the shared marshalling header. Both relocated installs returned `1` after checking object identity, mutation, original IO/EIO errors and destructor counts; neither admitted the private exchange import. These are new archive bytes: ordinary 60,970,873 (`e87f60c1fa289ad65799bc137c0e7fde8794a07a767fe8b4ef5aadc851288bea`), reviewed 60,974,555 (`30886cbfb92011eda43736bbd04aab146151ea420144bc8c9996a57ca81a234d`).
