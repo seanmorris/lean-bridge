@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { readFile, realpath } from "node:fs/promises";
 import { extname, join, resolve, sep } from "node:path";
-import { chromium } from "playwright";
+import { launchInstalledChromium } from "./javascript-wasm-installed-browser.mjs";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 
 /**
@@ -13,7 +13,7 @@ import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
  * @param options - Relocated consumer, pinned PHP distribution and Node test diagnostics.
  */
 export const exerciseInstalledIOBrowser = async options => {
-	const { app, host, t, callbacks } = options;
+	const { app, host, t, callbacks, immediate = false } = options;
 	const roots = { "/component/": await realpath(join(app,"node_modules/php-wasm-ledger"))
 		, "/runtime/": await realpath(join(app,"node_modules/@lean-bridge/php-wasm-copied-runtime"))
 		, "/host/": await realpath(host) };
@@ -52,10 +52,11 @@ export const exerciseInstalledIOBrowser = async options => {
 	});
 	await new Promise((yes,no)=>{ server.once("error",no); server.listen(0,"127.0.0.1",yes); });
 	const origin = "http://127.0.0.1:"+server.address().port;
-	let browser;
+	let session;
 	try
 	{
-		browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, headless: true, args: ["--no-sandbox","--disable-dev-shm-usage"] });
+		session = await launchInstalledChromium(app,process.env.CHROMIUM_PATH);
+		const {browser} = session;
 		if(callbacks) for(const fault of ["pending","sum","padding"])
 		{
 			const page = await browser.newPage();
@@ -81,19 +82,21 @@ export const exerciseInstalledIOBrowser = async options => {
 			{
 				await page.route("**/*", r => new URL(r.request().url()).origin === origin ? r.continue() : r.abort());
 				await page.goto(origin);
-				const result = await page.evaluate(async ({ loading, program, files })=>{
+				const result = await page.evaluate(async ({ loading, program, files, immediate })=>{
 					const { PhpWeb: Host } = await import("/host/PhpWeb.mjs");
 					const { runInstalled } = await import("/installed.mjs");
 					const vendor = files?.map(([p,b])=>[p,Uint8Array.from(atob(b),c=>c.charCodeAt(0))]);
-					return runInstalled({Host,loading,program,vendor});
-				},{loading,program,files: mode === "composer" ? vendor : null});
-				assert.equal(result,"php-api:30"); t.diagnostic("Chromium/"+mode+"/"+loading+": "+result);
+					return runInstalled({Host,loading,program,vendor,immediate});
+				},{loading,program,files: mode === "composer" ? vendor : null,immediate});
+				assert.equal(result,immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30"); t.diagnostic("Chromium/"+mode+"/"+loading+": "+result);
 			} finally
 			{ await page.close(); }
 		}
 	} finally
 	{
-		await browser?.close();
-		await new Promise(yes=>{server.close(yes); server.closeAllConnections();});
+		try
+		{ await session?.close(); }
+		finally
+		{ await new Promise(yes=>{server.close(yes); server.closeAllConnections();}); }
 	}
 };

@@ -14,6 +14,6 @@ const walk = async (dir, rel = "") => {
 		else throw new Error("Unexpected vendor entry: "+name);
 	}
 };
-const [, , mode, loading] = process.argv;
+const [, , mode, loading, sample] = process.argv;
 if(mode === "composer") await walk("vendor");
-console.log(await runInstalled({ Host: PhpNode, loading, program: await readFile("consumer.php","utf8"), vendor: mode === "composer" ? vendor : null }));
+console.log(await runInstalled({ Host: PhpNode, loading, immediate: sample === "immediate", program: await readFile("consumer.php","utf8"), vendor: mode === "composer" ? vendor : null }));

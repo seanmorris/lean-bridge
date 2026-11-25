@@ -114,7 +114,7 @@ static int lbphp_pack(int kind, ${has ? "" : "const "}uint64_t *words, ${type} *
 		if(m.symbol!=="lbwire_"+prefix+"_v1_"+i||m.tagBytes<1||!Number.isSafeInteger(m.tagBytes)) throw new TypeError("Invalid PHP fixed entry");
 		const fn=stem+"_"+i, slots=Math.max(1,m.args.length);
 		const direct=m.delivery==="iterator", async=Boolean(m.delivery) && !direct, handle=async || direct;
-		if(direct && (wire.wait || phpWasm || m.callbacks || Object.keys(m.names).sort().join()!=="close,next,open"))
+		if(direct && (wire.wait || m.callbacks || Object.keys(m.names).sort().join()!=="close,next,open"))
 			throw new TypeError("Invalid checked PHP immediate iterator protocol");
 		if(async && (!wire.wait || !["task","async-iterator"].includes(m.delivery) || (m.callbacks && m.delivery!=="task")))
 			throw new TypeError("Invalid PHP delivery protocol");
@@ -161,7 +161,7 @@ ${prototype} {
     else if (status==13) kind=1;${m.effect==="EIO" ? `
     else if (status==${prefix}_TYPED_ERROR) kind=${output(m.error,kinds)};` : ""}` : ""}
     else goto finish;
-    { int packed=lbphp_pack(kind,w,out); if (packed) status=packed; }
+    { int packed=lbphp_pack(kind,w,out); if (packed) status=${phpWasm ? `packed==${prefix}_INVALID ? -1 : packed` : "packed"}; }
 finish:
     ${wire.clear}(w); return status;
 }`);

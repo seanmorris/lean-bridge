@@ -39,19 +39,13 @@ const serve = async (consumer, names, isolated) => {
 };
 
 /**
- * Execute an installed consumer in a fresh JS realm, allowing only loopback package assets.
+ * Launch Chromium inside the test's resource-controlled process group.
  *
- * @param options - Scratch directory, consumer root, package coordinates and page entry point.
+ * @param root - Parent for a private, disposable Chromium profile.
+ * @param executable - Optional pinned host browser binary.
  */
-export const runInstalledChromium = async options => {
-	const {root, consumer, names, evaluate, argument, isolated = false} = options;
+export const launchInstalledChromium = async (root, executable) => {
 	const {chromium} = await import("playwright");
-	const site = options.assembledDirectory
-		? await (await import("../../site/serve.mjs")).startSiteServer({
-			root: options.assembledDirectory, base: options.base ?? "/", isolated
-		})
-		: await serve(consumer, names, isolated);
-	const address = site.url ?? site.origin, origin = new URL(address).origin;
 	// Keep Chromium in the test's CPU-limited process group, not a detached job.
 	const userData = await mkdtemp(join(root, "chromium-"));
 	// Chrome puts its singleton socket in TMPDIR, even with a separate profile.
@@ -60,7 +54,7 @@ export const runInstalledChromium = async options => {
 	const shortTemp = process.platform === "linux"
 		&& Buffer.byteLength(join(tmpdir(), "org.chromium.Chromium.XXXXXX/SingletonSocket")) >= 108
 		? await mkdtemp("/tmp/lb-chr-") : null;
-	const proc = spawn(process.env.LEAN_BRIDGE_CHROMIUM ?? chromium.executablePath()
+	const proc = spawn(executable ?? process.env.LEAN_BRIDGE_CHROMIUM ?? chromium.executablePath()
 		, ["--headless"
 			, "--remote-debugging-port=0"
 			, "--no-sandbox"
@@ -72,8 +66,15 @@ export const runInstalledChromium = async options => {
 			, "--user-data-dir=" + userData
 			, "about:blank"],
 		{stdio: ["ignore", "ignore", "pipe"], env: shortTemp ? {...process.env, TMPDIR: shortTemp} : process.env});
-	const exited = once(proc, "exit");
+	const exited = once(proc, "exit").catch(() => {});
 	let browser;
+	const close = async () => {
+		await browser?.close().catch(() => {});
+		if(proc.exitCode === null && proc.signalCode === null) proc.kill("SIGTERM");
+		await exited;
+		if(shortTemp) await rm(shortTemp, {recursive: true, force: true});
+		await rm(userData,{recursive: true,force: true});
+	};
 	try
 	{
 		const endpoint = await new Promise((res, rej) => {
@@ -92,6 +93,31 @@ export const runInstalledChromium = async options => {
 			});
 		});
 		browser = await chromium.connectOverCDP(endpoint);
+		return {browser,close};
+	} catch(error)
+	{
+		await close(); throw error;
+	}
+};
+
+/**
+ * Execute an installed consumer in a fresh JS realm on the local package server.
+ *
+ * @param options - Scratch root, package coordinates and consumer entry point.
+ */
+export const runInstalledChromium = async options => {
+	const {root, consumer, names, evaluate, argument, isolated = false} = options;
+	const site = options.assembledDirectory
+		? await (await import("../../site/serve.mjs")).startSiteServer({
+			root: options.assembledDirectory, base: options.base ?? "/", isolated
+		})
+		: await serve(consumer, names, isolated);
+	const address = site.url ?? site.origin, origin = new URL(address).origin;
+	let session;
+	try
+	{
+		session = await launchInstalledChromium(root);
+		const {browser} = session;
 		const page = await browser.contexts()[0].newPage();
 		const diagnostics=[];
 		page.on("console",message => {
@@ -121,9 +147,8 @@ export const runInstalledChromium = async options => {
 	}
 	finally
 	{
-		await browser?.close().catch(() => {});
-		if(proc.exitCode === null && proc.signalCode === null) proc.kill("SIGTERM");
-		await exited.catch(() => {}); await site.close();
-		if(shortTemp) await rm(shortTemp, {recursive: true, force: true});
+		try
+		{ await session?.close(); } finally
+		{ await site.close(); }
 	}
 };

@@ -31,7 +31,7 @@ const coordinates = (component, config) => ({
  */
 export const assertPhpWasmIOConfiguration = config => {
 	assertExportConfigurationCapabilities(config, { target: "php-wasm"
-		, fields: ["package", "modules", "exports", "nativeEffects"]
+		, fields: ["package", "modules", "exports", "iterators", "nativeEffects"]
 		, targetFields: ["npm", "composer"] });
 	if(!Array.isArray(config.nativeEffects) || config.nativeEffects.length)
 		fail("this profile supports only in-memory synchronous IO (nativeEffects: [])");
@@ -76,6 +76,8 @@ export const readPhpWasmIOProjectComponent = async (root, runtimeIdentity) => {
 	assertPhpWasmIOConfiguration(config);
 	verifyLakeEntryModules(selectLakeEntryModules(config, inputs), resolution);
 	if(!same(config.modules,selection.exportModules)) fail("configured modules differ from the checked selection");
+	const cursors = [...config.iterators ?? []].sort((a,b) => a.open < b.open ? -1 : 1);
+	if(!same(cursors,selection.iterators ?? [])) fail("configured iterator protocol differs from the checked selection");
 	const reviewed = inputs.filter(f => f.path.endsWith(".binding-ir.json"));
 	if(reviewed.length)
 	{

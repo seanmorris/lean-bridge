@@ -7,7 +7,7 @@ import api from "php-wasm-ledger";
  * @param options - Pinned PHP host constructor, loading mode, PHP application and optional vendor payloads.
  */
 export const runInstalled = async options => {
-	const { Host, loading, program, vendor } = options;
+	const { Host, loading, program, vendor, immediate = false } = options;
 	const lazy = loading === "lazy", locations = [];
 	const binding = lazy ? api.lazy : api, selected = vendor ? binding.extensions : binding;
 	const php = new Host({ version: "8.4", autoTransaction: false
@@ -43,6 +43,15 @@ export const runInstalled = async options => {
 	if(!program.includes(bootstrap)) throw new Error("Expected the embedded consumer fixture");
 	await php.writeFile("/application.php",program.replace(bootstrap,autoload));
 	await run("<?php require '/application.php';");
-	if(stdout !== "php-api:30" || locations.length !== 1) throw new Error(JSON.stringify({stdout,locations}));
+	if(locations.length !== 1) throw new Error("Expected one extension load before teardown");
+	if(immediate)
+	{
+		// run() evaluates another statement in the same PHP request. Only
+		// refresh() shuts down the embedded interpreter and starts a new request.
+		await run("<?php if (!isset($GLOBALS['atShutdown']) || (string)\\LeanLedger\\counts()!=='1207') throw new Exception('cursor closed between host evaluations');");
+		await php.refresh();
+		await run(`<?php require_once '${autoload}'; if (isset($GLOBALS['atShutdown'])) throw new Exception('old PHP request is still live'); echo ';shutdown:', (string)\\LeanLedger\\counts();`);
+	}
+	if(stdout !== (immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30")) throw new Error(JSON.stringify({stdout,locations}));
 	return stdout;
 };

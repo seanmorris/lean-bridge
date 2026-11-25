@@ -1590,6 +1590,24 @@ exception with its typed `payload`; an `IO.Error` raises the package's
 `IOError`. Invalid arguments do not change state or trigger lazy loading.
 This profile admits in-memory effects only.
 
+For an immediate iterator, use PHP's own `foreach`. The open call runs
+before the loop; each advance pulls one item from Lean. In the Ledger
+example, `UInt32` is a `BigInteger` on this 32-bit PHP host:
+
+```php
+foreach (\LeanLedger\sequence(\Brick\Math\BigInteger::of(4)) as $n) {
+    echo $n, PHP_EOL;
+    if ($n->isEqualTo(1)) break;
+}
+```
+
+An ordinary `break` closes the cursor. If you keep the generator yourself,
+call `$cursor->close()` in `finally`. A yielded `null` is a Lean unit item,
+not exhaustion. Multiple `php.run()` calls can share the same cursor: they
+evaluate code in the same interpreter. Refreshing that interpreter ends
+the request and releases remaining cursors. No JavaScript iterator or
+worker scheduler is involved.
+
 A callback may call an IO function in another package on the same PHP
 instance. If that package loads on first use, call it once **before**
 entering the callback: PHP cannot load an extension inside a synchronous

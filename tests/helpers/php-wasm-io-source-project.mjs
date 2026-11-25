@@ -26,6 +26,19 @@ test("PHP-Wasm refuses unimplemented effect grants before looking for tools or w
 	await assert.rejects(lstat(output),{code: "ENOENT"});
 });
 const ordinary = process.env.LEAN_BRIDGE_PHP_WASM_IO_REVIEW_FROM;
+test("Zend immediate cursors cannot select an OS grant or a task scheduler", async t => {
+	const {project,output,config,save} = await setup(t);
+	config.iterators = [{open: "Ledger.choose",next: "Ledger.next",close: "Ledger.finish"}];
+	for(const [addition, expected] of [
+		[{nativeEffects: ["filesystem"]}, /only in-memory synchronous IO/u]
+		, [{asyncIterators: [{open: "Ledger.readTotal",next: "Ledger.nextTask",close: "Ledger.finishTask"}]}, /cannot mix immediate Zend iterators with scheduled calls/u]
+	]) {
+		Object.assign(config,addition); await save();
+		await assert.rejects(buildCanonicalProject({projectRoot: project,outputRoot: output,targets: ["php-wasm"],environment: {PATH: "/no-tools"}}),expected);
+		await assert.rejects(lstat(output),{code: "ENOENT"});
+		config.nativeEffects=[];
+	}
+});
 test("native IO still rejects a mismatched source toolchain before trying to compile", async t => {
 	const {project,output} = await setup(t);
 	await writeFile(join(project,"lean-toolchain"),"leanprover/lean4:v4.31.0\n");

@@ -161,6 +161,14 @@ Its `BaseIO (Option UInt32)` pull executes immediately. The standalone
 Composer package exposes PHP's `IteratorAggregate`
 API; it needs neither Amp nor Revolt. See the [PHP consumer](../php.md#iterate-an-immediate-lean-cursor).
 
+For PHP-Wasm, use the same `iterators` declaration with `nativeEffects: []`
+and a `php-wasm` target. The [Pulls example](../../tests/fixtures/javascript-immediate/Pulls.lean)
+uses `Pulls.sequence`, `Pulls.next`, and `Pulls.finish`; all three operate
+in memory. The compiler checks the selected declarations again when building
+from a reviewed interface. The resulting Zend extension supports
+[ordinary PHP iteration](../php.md#call-synchronous-io-in-php-wasm), without
+the pthread SDK used by the task profile.
+
 ### Export tasks and pull streams
 
 The PHP-Wasm worker only admits in-memory Lean IO. Do not request filesystem

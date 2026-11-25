@@ -1,10 +1,11 @@
 /** @file Install and relocate an actual PHP-Wasm IO CLI release before exercising it. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cp, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
+import { appendFile, cp, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { readVerifiedPhpWasmCopiedRuntime } from "../../src/build/php-wasm-copied-artifacts.mjs";
@@ -14,7 +15,7 @@ import { exerciseInstalledIOBrowser } from "./php-wasm-io-installed-browser.mjs"
 import { assertJsonSchema } from "./json-schema.mjs";
 
 const release = process.env.LEAN_BRIDGE_PHP_WASM_IO_RELEASE;
-test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems", { skip: !release, timeout: 300_000 }, async t => {
+const installed = async (t, release, immediate = false) => {
 	const receiptPath = join(release,"package-set-receipt.json");
 	const {receipt} = await readVerifiedPackageSetReceipt({receiptPath});
 	await assertJsonSchema("package-set-receipt",receipt);
@@ -68,6 +69,20 @@ test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems",
 	await symlink(host,join(app,"node_modules/php-wasm"),"dir");
 	const fixture = "tests/fixtures/php-wasm-sync-io-probe";
 	for(const path of ["consumer.php","installed.mjs","installed-node.mjs"]) await cp(join(fixture,path),join(app,path));
+	if(immediate)
+	{
+		const compiled = join(app,"node_modules/php-wasm-ledger/compiled");
+		const api = JSON.parse(await readFile(join(compiled,"io/binding-ir.json")));
+		const {io} = JSON.parse(await readFile(join(compiled,"artifacts.json")));
+		assert.match(io.zendIdentity,/^[a-f0-9]{64}$/u);
+		const entry = (operation,declaration) => {
+			const i=api.declarations.findIndex(d=>d.source.declaration===declaration && d.resultMode==="iterator");
+			assert.ok(i>=0); return "\\LeanBridge\\WasmIO\\C"+io.zendIdentity+"\\"+operation+i;
+		};
+		const probe=(await readFile(join(fixture,"immediate.php"),"utf8"))
+			.replace("__LB_SEQUENCE_OPEN__",entry("call","Pulls.sequence")).replace("__LB_UNIT_NEXT__",entry("next","Pulls.units"));
+		await writeFile(join(app,"consumer.php"),probe);
+	}
 	if(peer) await cp(join(fixture,"installed-peer.mjs"),join(app,"installed-peer.mjs"));
 	if(callbacks)
 	{
@@ -87,6 +102,14 @@ test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems",
 		await writeFile(join(app,"slots.json"),canonicalJson(Object.fromEntries(api.declarations.map((d,i)=>[d.source.declaration,i]))));
 	}
 	await rename(app,moved); await rename(feed,join(work,"disabled-feed"));
+	if(immediate)
+	{
+		// This route owns the release it just built. Only installed packages and
+		// the PHP distribution remain available to the downstream processes.
+		await rm(release,{recursive: true});
+		await rm(join(work,"disabled-feed"),{recursive: true});
+		await rm(join(work,"npm-cache"),{recursive: true,force: true});
+	}
 	if(callbacks) for(const fault of ["pending","sum","padding"])
 	{
 		const r = await run(process.execPath,["callback-node.mjs",fault],moved,{PATH: "/no-build-tools"});
@@ -95,15 +118,50 @@ test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems",
 	for(const mode of ["embedded","composer"])
 	for(const loading of ["startup","lazy"])
 	{
-		const result = await run(process.execPath,["installed-node.mjs",mode,loading],moved,{PATH: "/no-build-tools"});
-		assert.equal(result.stdout.trim(),"php-api:30"); assert.equal(result.stderr,"");
+		const result = await run(process.execPath,["installed-node.mjs",mode,loading,...immediate ? ["immediate"] : []],moved,{PATH: "/no-build-tools"});
+		assert.equal(result.stdout.trim(),immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30"); assert.equal(result.stderr,"");
 		t.diagnostic(mode+"/"+loading+": "+result.stdout.trim());
 	}
-	if(process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1") await exerciseInstalledIOBrowser({app: moved,host,t,callbacks});
+	if(process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1") await exerciseInstalledIOBrowser({app: moved,host,t,callbacks,immediate});
 	if(peer) for(const order of ["io-first","pure-first"])
 	{
 		const result = await run(process.execPath,["installed-peer.mjs",order],moved,{PATH: "/no-build-tools"});
 		assert.equal(result.stderr,""); assert.equal(result.stdout.trim(),"17:7; one runtime, two components");
 		t.diagnostic(order+": "+result.stdout.trim());
 	}
-});
+};
+test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems", {skip: !release,timeout: 300_000}, t => installed(t,release));
+
+test("PHP-Wasm installs real synchronous Lean iterators in Zend on both source routes",
+	{skip: !process.env.LEAN_BRIDGE_PHP_WASM_IMMEDIATE,timeout: 1_800_000}, async t => {
+	let review;
+	for(const route of ["ordinary","reviewed"]) await t.test(route, async t => {
+		const root = await mkdtemp(join(tmpdir(),"php-wasm-direct-"));
+		t.after(()=>rm(root,{recursive: true,force: true}));
+		const project = join(root,"project"), output = join(root,"release");
+		await cp("tests/fixtures/php-wasm-sync-io",project,{recursive: true});
+		await cp("tests/fixtures/javascript-immediate/Pulls.lean",join(project,"Pulls.lean"));
+		await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "Pulls"\n');
+		const file = join(project,"lean-bridge.exports.json"), config = JSON.parse(await readFile(file));
+		config.modules.push("Pulls");
+		config.iterators = [["sequence","next"],["checked","nextChecked"],["units","nextUnit"],["replies","nextReply"]]
+			.map(([open,next])=>({open: "Pulls."+open,next: "Pulls."+next,close: "Pulls.finish"}));
+		config.exports.push("Pulls.counts",...config.iterators.map(p=>p.open));
+		if(route === "reviewed")
+{
+			assert.ok(review);
+			delete config.exports;
+			await writeFile(join(project,"public.binding-ir.json"),canonicalJson(review));
+}
+		await writeFile(file,canonicalJson(config));
+		await buildCanonicalProject({projectRoot: project,outputRoot: output,targets: ["php-wasm"]})
+			.catch(e => { throw new Error(e.message+" "+JSON.stringify(e.details),{cause: e}); });
+		await rm(project,{recursive: true});
+		const api = JSON.parse(await readFile(join(output,"php-wasm/component/io/binding-ir.json")));
+		assert.equal(api.declarations.filter(d=>d.resultMode==="iterator").length,4);
+		if(review) assert.deepEqual(api,review); else review=api;
+		const {result}=await readVerifiedPackageSetReceipt({receiptPath: join(output,"package-set-receipt.json")});
+		t.diagnostic(route+" package set: "+result.receiptSha256);
+		await installed(t,output,true);
+	});}
+);
