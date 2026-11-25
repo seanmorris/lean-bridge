@@ -78,7 +78,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const wasmHost=wasmHostKinds.length>0,phpHost=phpHostKinds.length>0,rubyHost=rubyHostKinds.length>0,dotnetHost=dotnetHostKinds.length>0;
 	const perlHost=perlHostKinds.length>0, jvmHost=jvmHostKinds.length>0, hostValues=Boolean(staticHost) || perlHost || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost;
-	if(staticHost && (!["c","cpp","rust"].includes(staticHost.owner) || !Array.isArray(staticHost.kinds) || !staticHost.kinds.length || !tasks || checkedWasm || wasmCallbacks || witCallbacks || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost))
+	if(staticHost && (!["c","cpp","rust","wit-wasi"].includes(staticHost.owner) || !Array.isArray(staticHost.kinds) || !staticHost.kinds.length || !tasks || checkedWasm || wasmCallbacks || witCallbacks || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost))
 		throw new TypeError("Static host objects require an exclusive native task wire");
 	if(perlHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || dotnetHost || jvmHost || wasmCallbacks || witCallbacks)) throw new TypeError("Perl host objects require a native Perl task wire");
 	if(jvmHost && (!tasks || checkedWasm || phpHost || wasmHost || rubyHost || dotnetHost || wasmCallbacks || witCallbacks)) throw new TypeError("JVM host objects require a native JVM task wire");

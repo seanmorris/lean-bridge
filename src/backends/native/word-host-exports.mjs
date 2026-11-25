@@ -14,18 +14,18 @@ for(const bits of [8, 16, 32, 64]) for(const [k, l] of [["int", "Int"], ["uint",
  * @param target - Select an isolated package symbol prefix and Lean namespace.
  */
 export const emitWordHostExports = (o, model, target) => {
-	const name = target === "c" ? "C" : target === "cpp" ? "Cpp" : target === "rust" ? "Rust" : target === "php" ? "Php" : target === "dotnet" ? "Dotnet" : null;
+	const name = target === "c" ? "C" : target === "cpp" ? "Cpp" : target === "rust" ? "Rust" : target === "wit-wasi" ? "WitWasi" : target === "php" ? "Php" : target === "dotnet" ? "Dotnet" : null;
 	if(!name) throw new TypeError("Unknown native host owner");
 	const module = "Bridge" + name + "Exports", host = "LeanBridge.Host." + name;
 	const { ir, entries, modules, identity } = o;
 	const taskObjects = target==="php" && o.phpTaskLeases===true;
 	const clrWorkers = target==="dotnet" && o.dotnetTaskLeases===true;
 	const staticWorkers = o.staticTaskLeases!==undefined;
-	if(staticWorkers && (!["c","cpp","rust"].includes(target) || o.staticTaskLeases!==target || model.workerKeys?.length!==ir.types.length || !model.workerKeys.length || model.workerKeys.some(k=>!/^[a-f0-9]{64}$/u.test(k)))) throw new TypeError("Invalid static worker transport keys");
+	if(staticWorkers && (!["c","cpp","rust","wit-wasi"].includes(target) || o.staticTaskLeases!==target || model.workerKeys?.length!==ir.types.length || !model.workerKeys.length || model.workerKeys.some(k=>!/^[a-f0-9]{64}$/u.test(k)))) throw new TypeError("Invalid static worker transport keys");
 	if(clrWorkers && (model.workerKeys?.length!==ir.types.length || model.workerKeys.some(k=>!/^[a-f0-9]{64}$/u.test(k)))) throw new TypeError("Invalid CLR worker transport keys");
 	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(m => !qual.test(m)) || (!entries.length && !taskObjects && !clrWorkers && !staticWorkers))
 		throw new TypeError("Invalid native host component");
-	const prefix = "lb_" + target + "_host_" + identity;
+	const prefix = "lb_" + target.replaceAll("-","_") + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
 	const lean = (t, depth = 0) => {
 		if(depth > 64) throw new TypeError("native host result exceeds 64 nested branches");

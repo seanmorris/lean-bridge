@@ -37,13 +37,13 @@ const fail = (code, message, details = {}) => {
 /** Generated modules accepted by the native host-object compiler (not a package support list). */
 export const compiledHostModules = Object.freeze({ c: "LeanBridge.Host.C"
 	, cpp: "LeanBridge.Host.Cpp"
-	, rust: "LeanBridge.Host.Rust"
+	, rust: "LeanBridge.Host.Rust", "wit-wasi": "LeanBridge.Host.WitWasi"
 	, python: "LeanBridge.Host.Python"
 	, ruby: "LeanBridge.Host.Ruby", jvm: "LeanBridge.Host.Jvm"
 	, dotnet: "LeanBridge.Host.Dotnet", perl: "LeanBridge.Host.Perl"
 	, javascript: "LeanBridge.Host.Javascript", php: "LeanBridge.Host.Php" });
 /** Package coordinates select their own checked host namespace. */
-export const compiledHostTargets = Object.freeze({ c: "c", cpp: "cpp", cargo: "rust", pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript", "php-native": "php", "php-wasm": "php" });
+export const compiledHostTargets = Object.freeze({ c: "c", cpp: "cpp", cargo: "rust", pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript", "php-native": "php", "php-wasm": "php", "wit-wasi": "wit-wasi" });
 
 const primitive = Object.freeze({
 	unit: "Unit", bool: "Bool", char: "Char", bytes: "ByteArray", string: "String"

@@ -18,7 +18,7 @@ export const cHostWorkers=(o,api)=>{
 	const {workerWire:w,domainId,model,ir,identity,prefix,workerEntries}=o;
 	const {p,byRef,add,reserve,defs}=api, priv=[],cbTypes=new Map();
 	if(!/^lbwire_lbc_[a-z][a-z0-9_]*_v1_clear$/u.test(w.clear) || !workerEntries.length || workerEntries.length!==w.methods.length)fail("wire");
-	const stem=w.clear.slice(0,-6),owner=o.cpp?"cpp":"c";
+	const stem=w.clear.slice(0,-6),owner=o.wit?"wit-wasi":o.cpp?"cpp":"c";
 	const key=(...v)=>JSON.stringify(sha256(canonicalJson(["c-public-host-worker/v1",identity,...v])));
 	const kinds=new Map(ir.types.map((t,i)=>{
 		const lease=w.leases[i],hash=sha256(canonicalJson(["static-worker-object/v1",owner,domainId,model.kinds[i].key]));

@@ -119,10 +119,11 @@ def Request.staticObjects (r : Request) : Bool :=
     | some "c" => matchesOwner "LeanBridge.Host.C" r.cTaskCallbacks
     | some "cpp" => matchesOwner "LeanBridge.Host.Cpp" r.cppTaskCallbacks
     | some "rust" => matchesOwner "LeanBridge.Host.Rust" r.rustTaskCallbacks
+    | some "wit-wasi" => matchesOwner "LeanBridge.Host.WitWasi" r.witTaskCallbacks
     | _ => false
 
 def Request.staticLabel (r : Request) : String :=
-  if r.staticTaskOwner == some "c" then "C" else if r.staticTaskOwner == some "cpp" then "C++" else "Rust"
+  if r.staticTaskOwner == some "c" then "C" else if r.staticTaskOwner == some "cpp" then "C++" else if r.staticTaskOwner == some "wit-wasi" then "WIT/WASI" else "Rust"
 
 def Request.localObjects (r : Request) : Bool :=
   r.pythonObjects || r.rubyObjects || r.dotnetObjects || r.jvmObjects || r.perlObjects || r.staticObjects
@@ -166,7 +167,7 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
     -- Only ports with an explicit host lease can expose a nominal result.
     if hostLeases && (r.hostModule.any (fun m =>
         #["LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Ruby", "LeanBridge.Host.Python",
-          "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m)) &&
+          "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.WitWasi", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m)) &&
         e.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)) then return t
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
@@ -410,7 +411,7 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid PHP-Wasm task object selection"
   if let some m := r.hostModule then
     unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet",
-             "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&
+             "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.WitWasi", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&
         r.modules.contains m && !r.exportModules.contains m && !r.resources.isEmpty &&
         r.resources.all (fun t => t.lean.startsWith (m ++ ".")) &&
         r.members.all (fun n => n.startsWith (m ++ ".")) do

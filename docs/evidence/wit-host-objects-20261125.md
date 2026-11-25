@@ -1,0 +1,21 @@
+# Guest-owned WIT objects in compiled Lean workers
+
+This is a local integration result, not an installed WIT package receipt. The [application](../../tests/fixtures/static-host-workers/guest-box.wat.in) defines a mutable resource; only the defining guest knows where it keeps the value. A [second, independently compiled guest](../../tests/fixtures/static-host-workers/guest-peer.wat.in) imports the resource via WIT and returns an independently droppable alias.
+
+The [integration probe](../../tests/fixtures/static-host-workers/guest-box.c) runs the composed component under Wasmtime 42 and calls the actual compiled Lean library. A Lean task returns the original object. A retained callback re-enters Lean, changes its value, and leaves a second, equal-valued object untouched. Rebinding the same resource type preserves identity; a distinct defining instance in the same store and an instance in a different store are rejected. A guest constructor failure returns its original error resource and message, not a box. This last check observes the guest failure directly; it does not yet demonstrate delivery through an installed Lean entry point.
+
+The probe counts guest destructor calls, closes stores with outstanding references, and checks that dropping invalidated slots does not access a deleted store. A guest destructor that traps poisons the adapter: no further guest call is admitted, and closing the store still releases the remaining wrappers. No Lean compiler, Wasm tool or network access is required by the resulting probe executable.
+
+To reproduce from the worktree, set `LEAN_BRIDGE_LEAN_PREFIX`, `LEAN_BRIDGE_WASM_TOOLS` and `LEAN_BRIDGE_WASMTIME_C_API` to the pinned toolchains, then run:
+
+```sh
+npm run test:wit-host-object-source
+node --test --test-concurrency=1 --test-name-pattern='wit-wasi workers' tests/helpers/static-worker-elaboration.mjs
+npm run test:wit-host-object-workers
+```
+
+The synchronous source check compiled ordinary and independently reviewed Lean source to binding IR `4554b3af605c60788485c71cd38438c762e292d9e43cd27b42ebaf34ad90bf40`. The worker source check produced `05d5d67c6a46aa2358c6ffedf69cb9274a7bf373dbd594a89a4919bf9ed27e32` on both routes. It rejected indirect member calls off the owner, both in the task body and in the cursor pull.
+
+The worker integration passed with 43 exported native symbols. The SHA-256 digests were `ad76ddd8dd1a943ed544bc3a7e5565311eec1b3739530135d0daff15a5af9fac` (worker), `87cf27a7501b8595987b5e067d408cfbb582909af302ccde098a7a6508e258f2` (WIT owner domain), and `39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381` (task lease library).
+
+The generated member interface and private store adapter are not yet a public integration for application-owned WIT resources. The probe still connects the native worker to guest member implementations. An installed client must get that connection, its error channels, and its task and cursor protocols from the package.

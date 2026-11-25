@@ -1,4 +1,4 @@
-# C, C++ and Rust worker object contracts
+# Static host worker object contracts
 
 The [source acceptance test](../../tests/helpers/static-worker-elaboration.mjs) compiled a Lake application against each owner's generated Lean module. The [worker code](../../tests/fixtures/static-host-workers/Jobs.lean) returns an object through a task, passes it to and from a retained owner callback, returns it as data, throws it as a declared error, and yields or rejects it from a cursor. The callback runs synchronously on its owner; the Lean export still returns a task.
 
@@ -9,8 +9,11 @@ For each language, ordinary source and the independently reviewed binding IR pro
 | C | `d03889a5d4c13bcf9fce1840b4980a5ecf653c0763da289eb89199943008d599` |
 | C++ | `a7ac190fad523b5d789db1d5f4867f9a3a87f2e97f5cc77d6fb2904e23dc58ba` |
 | Rust | `8c453f0226147ed6635d24c03361886ea0cfffe400aa679a2cce6e7995f3e057` |
+| WIT/WASI | `05d5d67c6a46aa2358c6ffedf69cb9274a7bf373dbd594a89a4919bf9ed27e32` |
 
 Run `node --test --test-concurrency=1 tests/helpers/static-worker-elaboration.mjs` with the pinned Lean toolchain. These are source and effect checks, not evidence of an installed consumer running a host-object worker.
+
+The [WIT/WASI guest integration](wit-host-objects-20261125.md) also runs a real defining guest, a second component importing its resource, and a native Lean worker in Wasmtime.
 
 ## Native compilation and Rust object round trip
 

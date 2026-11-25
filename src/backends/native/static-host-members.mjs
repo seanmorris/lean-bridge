@@ -14,7 +14,7 @@ const identifier=/^[A-Za-z][A-Za-z0-9_]*$(?![\s\S])/u;
  * @param target - Native host owning these resources.
  */
 export const staticHostMembers=(ir,target)=>{
-	const labels={c: "C", cpp: "C++", rust: "Rust", php: "PHP"};
+	const labels={c: "C", cpp: "C++", rust: "Rust", php: "PHP", "wit-wasi": "WIT/WASI"};
 	if(!Object.hasOwn(labels,target)) throw new TypeError("Unsupported native member owner");
 	const privateSymbols=target!=="php",label=labels[target];
 	const fail=why=>{throw new TypeError(label+" host members: "+why);};

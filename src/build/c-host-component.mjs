@@ -4,6 +4,7 @@ import {join} from "node:path";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {cHostFacade} from "../backends/c/host-facade.mjs";
 import {cppHostFacade} from "../backends/cpp/host-facade.mjs";
+import {witApplicationHostImports} from "../backends/wit/application-host-imports.mjs";
 import {staticHostMembers} from "../backends/native/static-host-members.mjs";
 import {emitWordHostMembers} from "../backends/native/word-host-members.mjs";
 import {emitWordHostExports} from "../backends/native/word-host-exports.mjs";
@@ -21,11 +22,11 @@ import {stageWordHostTasks,wordHostTaskKernel} from "./word-host-task-kernel.mjs
  */
 export const compileCHostComponent=async o=>{
 	const {app,ir,projectContract: contract,runtimeRoot,leanPrefix,environment,signal}=o;
-	const target=o.target==="cargo"?"rust":o.target??"c",cpp=target==="cpp",rust=target==="rust",lang=cpp?"Cpp":rust?"Rust":"C";
+	const target=o.target==="cargo"?"rust":o.target??"c",cpp=target==="cpp",rust=target==="rust",wit=target==="wit-wasi",lang=cpp?"Cpp":rust?"Rust":wit?"WitWasi":"C";
 	const requested=Boolean(contract?.taskExports?.length || contract?.asyncIterators?.length);
 	const workers=o.workerTransport===true && requested;
 	const publicWorkers=workers && o.publicWorkers===true && !rust;
-	if(!["cpp","c","rust"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
+	if(!["cpp","c","rust","wit-wasi"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
 		|| (requested!==workers) || contract.leanResources.length)
 		throw new TypeError("Expected synchronous application-owned C host imports");
 	const run=(cmd,args,cwd=app,env=environment)=>processBuildRunner.capture({command: cmd,args,cwd,env,signal});
@@ -34,7 +35,7 @@ export const compileCHostComponent=async o=>{
 	if((await run(join(leanPrefix,"bin/lean"),["--githash"])).stdout.trim()!==manifest.leanCommit)
 		throw new Error("C host requires matching Lean runtime and compiler");
 	const checked=await compileHostSources({...o,target: rust?"cargo":target,run});
-	const model=staticHostMembers(ir,target);
+	const model=staticHostMembers(ir,target),witImports=wit?witApplicationHostImports(ir):null;
 	const direct=workers?checked.entries.filter(e=>!e.delivery):checked.entries;
 	if(workers && checked.evidence.selection.staticTaskOwner!==target) throw new TypeError("Missing compiled static worker owner");
 	const members=emitWordHostMembers(ir,{...model,kinds: model.kinds.map(k=>({...k,strong: k.identity==="strong-canonical"}))},target);
@@ -43,6 +44,12 @@ export const compileCHostComponent=async o=>{
 	const domainInputs=["dotnet/host-domain.c","dotnet/host-domain.h","dotnet/host-frame.h",...rust?["rust/host-owner-cookie.c"]:["c/host-registry.h","c/host-registry.c"]];
 	if(cpp) domainInputs.push("cpp/host-shared.cpp","cpp/host-shared.hpp");
 	const support={};
+	if(wit)
+	{
+		const file="application-object-store.h";
+		const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
+		hashes[file]=sha256(bytes);await save(file,bytes);
+	}
 	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h",...cpp?["cpp/host-worker-readiness.h","cpp/host-async.hpp","cpp/task-callback.hpp","cpp/task-loop.hpp","cpp/task-routine.hpp","cpp/task-values.hpp"]:[]]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
 	{
 		const bytes=await readFile(new URL("../backends/"+f,import.meta.url));
@@ -64,8 +71,8 @@ export const compileCHostComponent=async o=>{
 			return [k,value];
 		}));
 	}
-	const domainId=sha256(canonicalJson({runtimeIdentity,...cpp?{abi}:{},hashes: Object.fromEntries(domainInputs.map(k=>[k,hashes[k]]))}));
-	const domain="liblb_"+target+"_host_domain_"+domainId+".so";
+	const domainId=sha256(canonicalJson({runtimeIdentity,...wit?{owner:"wit-wasi"}:{},...cpp?{abi}:{},hashes: Object.fromEntries(domainInputs.map(k=>[k,hashes[k]]))}));
+	const domain="liblb_"+target.replaceAll("-","_")+"_host_domain_"+domainId+".so";
 	const domainPrefix="lb_cd_"+domainId+"_",refPrefix="lb_cr_"+domainId+"_";
 	let kernel;
 	if(workers)
@@ -76,7 +83,7 @@ export const compileCHostComponent=async o=>{
 	}
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
-	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp,...publicWorkers?{domainId,workerWire:kernel.wire,workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
+	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp,wit,...publicWorkers?{domainId,workerWire:kernel.wire,workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
 	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi,...publicWorkers?{workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
@@ -86,6 +93,7 @@ export const compileCHostComponent=async o=>{
 		, hashes
 		, publicBase
 		, ...kernel?{worker: kernel.fingerprint}:{}
+		, ...witImports?{witImports:sha256(witImports.wit)}:{}
 		, ...cpp?{cppHeader: wrapper("0".repeat(64),publicBase)}:{}
 		, header: base.header
 		, source: base.source
@@ -123,5 +131,5 @@ export const compileCHostComponent=async o=>{
 	{
 		const bytes=await readFile(join(app,lib)); validateNativeElf(bytes); binaries[lib]=sha256(bytes);
 	}
-	return {...checked,identity,component,domain,domainId,domainPrefix,refPrefix,runtimeIdentity,binaries,prefix: actual.prefix,publicHeader: cpp?wrapper(identity,facade):facade.header,symbols,model,...kernel?{workerWire: kernel.wire,workerLedger: kernel.ledger.name}: {},...cpp?{support,abi}:{}};
+	return {...checked,identity,component,domain,domainId,domainPrefix,refPrefix,runtimeIdentity,binaries,prefix: actual.prefix,publicHeader: cpp?wrapper(identity,facade):facade.header,symbols,model,...witImports?{witImports}:{},...kernel?{workerWire: kernel.wire,workerLedger: kernel.ledger.name}: {},...cpp?{support,abi}:{}};
 };

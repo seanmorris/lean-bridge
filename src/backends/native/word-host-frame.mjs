@@ -7,7 +7,7 @@ import { readFile } from "node:fs/promises";
  * @param target - Native owner profile.
  */
 export const wordHostFrame = async target => {
-	const label = target === "dotnet" ? "CLR" : target === "php" ? "PHP" : target === "c" ? "C" : target === "cpp" ? "C++" : target === "rust" ? "Rust" : null;
+	const label = target === "dotnet" ? "CLR" : target === "php" ? "PHP" : target === "c" ? "C" : target === "cpp" ? "C++" : target === "rust" ? "Rust" : target === "wit-wasi" ? "WIT/WASI" : null;
 	if(!label) throw new TypeError("Unknown native host frame");
 	const source = await readFile(new URL("./word-host-frame.c.in", import.meta.url), "utf8");
 	return Buffer.from(source.replaceAll("@LB_HOST@", label));

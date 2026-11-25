@@ -37,7 +37,7 @@ export const generateCTaskExports = options => {
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
 	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery, Boolean(selected)];
-	if(selected && (!["c","cpp","rust"].includes(selected.owner) || !Array.isArray(selected.kinds) || !selected.kinds.length || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost || options.wasmCallbacks || options.witCallbacks))
+	if(selected && (!["c","cpp","rust","wit-wasi"].includes(selected.owner) || !Array.isArray(selected.kinds) || !selected.kinds.length || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || perlHost || options.wasmCallbacks || options.witCallbacks))
 		throw new TypeError("Static host workers require one native owner and private word carriers");
 	if(perlHost && (options.perlDelivery!==true || hosts.filter(Boolean).length!==1 || synchronous || gmp || wasm || wasmHost || phpHost || rubyHost || dotnetHost || jvmHost || options.wasmCallbacks || options.witCallbacks))
 		throw new TypeError("Perl host objects require the exclusive native Perl task owner and word carriers");

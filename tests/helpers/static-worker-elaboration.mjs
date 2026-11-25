@@ -1,4 +1,4 @@
-/** @file Check C, C++ and Rust worker object contracts against fresh Lean compilation. */
+/** @file Check static worker object contracts against fresh Lean compilation. */
 import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -11,11 +11,11 @@ import { compileHostSources } from "../../src/build/host-elaboration.mjs";
 import { openHostProjectSource } from "../../src/build/host-project-source.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { prepareStaticWorkerProject, staticOwners } from "./static-worker-project.mjs";
+import { prepareStaticWorkerProject, staticSourceOwners } from "./static-worker-project.mjs";
 
 const run = (command,args,cwd,env) => processBuildRunner.capture({command,args,cwd,env});
 const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
-for(const [owner,[module,target,callbackError]] of Object.entries(staticOwners)) test(owner + " workers carry nominal objects without direct worker member access", {timeout: 600000}, async t => {
+for(const [owner,[module,target,callbackError]] of Object.entries(staticSourceOwners)) test(owner + " workers carry nominal objects without direct worker member access", {timeout: 600000}, async t => {
 	const root = await mkdtemp(join(tmpdir(),"static-worker-")); t.after(() => rm(root,{recursive: true,force: true}));
 	const project = join(root,"source"), review = join(project,"review.binding-ir.json");
 	const {cfg,declared,save}=await prepareStaticWorkerProject(project,owner);
@@ -50,7 +50,7 @@ for(const [owner,[module,target,callbackError]] of Object.entries(staticOwners))
 	await writeFile(review,canonicalJson(api)); delete cfg.exports; await save();
 	const second=await build(); assert.deepEqual(second.api,api); assert.equal(second.evidence.reviewedSourceSha256,sha256(canonicalJson(api)));
 	await rm(review);delete cfg.taskIOErrors;delete cfg.asyncIterators;cfg.exports=cfg.taskExports=["Jobs.forbidden"]; await save();
-	await assert.rejects(build(),{code: "invalid-task-export",message: (owner==="cpp"?"C++":module)+" task calls a "+(owner==="cpp"?"C++":module)+" member outside its owner: Jobs.forbidden"});
+	await assert.rejects(build(),{code: "invalid-task-export",message: (owner==="wit-wasi"?"WIT/WASI":owner==="cpp"?"C++":module)+" task calls a "+(owner==="wit-wasi"?"WIT/WASI":owner==="cpp"?"C++":module)+" member outside its owner: Jobs.forbidden"});
 	delete cfg.taskExports;cfg.exports=[declared.open];cfg.asyncIterators=[{...declared,next: "Jobs.forbiddenPull"}];await save();
 	await assert.rejects(build(),e=>e.code==="invalid-task-export" && e.message.endsWith("outside its owner: Jobs.forbiddenPull"));
 	t.diagnostic(owner+" ordinary and reviewed worker IR: "+sha256(canonicalJson(api)));

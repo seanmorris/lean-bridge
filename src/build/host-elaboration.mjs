@@ -74,7 +74,7 @@ export const compileHostSources = async options => {
 	const jvmTaskObjects = Boolean(ir && options.target === "maven" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const dotnetTaskObjects=Boolean(ir && options.target==="nuget" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
 	const perlTaskObjects=Boolean(ir && options.target==="cpan" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	const staticTarget = { c: "C", cpp: "C++", rust: "Rust" };
+	const staticTarget = { c: "C", cpp: "C++", rust: "Rust", "wit-wasi": "WIT/WASI" };
 	const staticTaskOwner = ir && Object.hasOwn(staticTarget,target) && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length) ? target : null;
 	const localWorkerOwner = staticTaskOwner ? staticTarget[staticTaskOwner] : perlTaskObjects ? "Perl" : jvmTaskObjects ? "JVM" : dotnetTaskObjects ? "CLR" : rubyTaskObjects ? "Ruby" : null;
 	if(localWorkerOwner)
@@ -98,9 +98,9 @@ export const compileHostSources = async options => {
 			fail("Python worker declarations differ from the captured host source");
 	}
 	const phpWasmTaskObjects=Boolean(ir && options.target==="php-wasm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	if(ir && ["c","cpp","rust","php"].includes(target))
+	if(ir && ["c","cpp","rust","php","wit-wasi"].includes(target))
 	{
-		const label={c: "C",cpp: "C++",rust: "Rust",php: "PHP"}[target];
+		const label={c: "C",cpp: "C++",rust: "Rust",php: "PHP","wit-wasi": "WIT/WASI"}[target];
 		if(target!=="php" && !projectContract) fail(label+" host members require a captured import source");
 		if(projectContract)
 		{

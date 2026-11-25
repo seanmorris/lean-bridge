@@ -96,15 +96,15 @@ export const reconcileHostExports = options => {
 	if(selection.witCursorIO!==undefined && (!witCursorIO || ir || synchronous || !selection.asyncIterators?.length
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && k!=="witTaskCallbacks")))
 		fail("Unauthenticated WIT cursor IO selection");
-	const syncOwners={c: "C",cpp: "C++",rust: "Rust"},syncOwner=Object.hasOwn(syncOwners,hostTarget),ownerLabel=syncOwners[hostTarget]??"PHP";
+	const syncOwners={c: "C",cpp: "C++",rust: "Rust","wit-wasi": "WIT/WASI"},syncOwner=Object.hasOwn(syncOwners,hostTarget),ownerLabel=syncOwners[hostTarget]??"PHP";
 	if(ir && (hostTarget==="php" || syncOwner) && selection.nativeEffectPolicy!==nativeEffectPolicy)
 		fail(ownerLabel+" host imports require compiled member evidence");
-	const staticObjects=selection.staticTaskOwner!==undefined;
+	const staticObjects=selection.staticTaskOwner!==undefined, ownerScheduler=(hostTarget==="wit-wasi"?"wit":hostTarget)+"TaskCallbacks";
 	if(staticObjects && (!ir || !syncOwner || selection.staticTaskOwner!==hostTarget || selection.hostModule!==compiledHostModules[hostTarget]
 		|| synchronous || selection.nativeEffectPolicy!==nativeEffectPolicy || !(selection.taskExports?.length || selection.asyncIterators?.length)
-		|| Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && (k!==hostTarget+"TaskCallbacks" || selection[k]!==true))
-		|| Boolean(selection.taskExports?.length)!==(selection[hostTarget+"TaskCallbacks"]===true))) fail("Unauthenticated static worker object owner");
-	if(ir && syncOwner && !staticObjects && (selection[hostTarget+"TaskCallbacks"]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
+		|| Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && (k!==ownerScheduler || selection[k]!==true))
+		|| Boolean(selection.taskExports?.length)!==(selection[ownerScheduler]===true))) fail("Unauthenticated static worker object owner");
+	if(ir && syncOwner && !staticObjects && (selection[ownerScheduler]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail(ownerLabel+" host imports require synchronous owner calls until a worker binding is selected");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
 	if(selection.phpWasmTaskObjects!==undefined && (!phpWasm || selection.phpNativeTaskObjects!==undefined || selection.nativeEffects?.length))
@@ -220,12 +220,13 @@ export const reconcileHostExports = options => {
 	if(schedulerCount > 1) fail("Ambiguous retained-callback host");
 	if(ir && !owner && hostTarget === "javascript" && (js || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail("Synchronous JavaScript host objects must run on their owning agent");
-	const matchingScheduler = { c: staticObjects && c, cpp: staticObjects && cpp, rust: staticObjects && rust, ruby, jvm, dotnet, perl, php: phpObjects && php, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
+	const matchingScheduler = { c: staticObjects && c, cpp: staticObjects && cpp, rust: staticObjects && rust, "wit-wasi": staticObjects && wit, ruby, jvm, dotnet, perl, php: phpObjects && php, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
 	const importedError = { c: ["CHostError","C"]
 		, cpp: ["CppHostException","C++"]
 		, rust: ["RustHostError","Rust"]
+		, "wit-wasi": ["WitHostError","WIT/WASI"]
 		, jvm: ["JvmHostException", "JVM"]
 		, ruby: ["RubyHostException", "Ruby"]
 		, dotnet: ["DotNetHostException", ".NET"]
@@ -234,7 +235,7 @@ export const reconcileHostExports = options => {
 		, javascript: ["JavaScriptHostException", "JavaScript"] }[hostTarget];
 	const publicErrorName = importedError?.[0] ?? (wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException");
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
-	const staticCallback={c: "error:CCallbackError",cpp: "error:CppCallbackException",rust: "error:RustCallbackError"};
+	const staticCallback={c: "error:CCallbackError",cpp: "error:CppCallbackException",rust: "error:RustCallbackError","wit-wasi": "error:WitCallbackError"};
 	const callbackError=staticObjects?staticCallback[hostTarget]:owner?"error:JavaScriptCallbackError":phpObjects?"error:PhpCallbackException":pythonObjects?"error:PythonCallbackException":rubyObjects?"error:RubyCallbackException":dotnetObjects?"error:DotNetCallbackException":jvmObjects?"error:JvmCallbackException":perlObjects?"error:PerlCallbackException":hostError;
 	const callbackCarrier=t=>{
 		if(t?.kind==="primitive") return {label: t.name,mutability: "immutable"};

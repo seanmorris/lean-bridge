@@ -12,7 +12,7 @@
  * @param owner - Host namespace that supplies those kinds.
  */
 export const taskResourceTypes = (definitions = [],hostKinds=[],owner="javascript") => {
-	const names={javascript: ["js","Javascript"],php: ["php","Php"],ruby: ["ruby","Ruby"],dotnet: ["clr","Dotnet"],jvm: ["jvm","Jvm"],perl: ["perl","Perl"],c: ["c","C"],cpp: ["cpp","Cpp"],rust: ["rust","Rust"]};
+	const names={javascript: ["js","Javascript"],php: ["php","Php"],ruby: ["ruby","Ruby"],dotnet: ["clr","Dotnet"],jvm: ["jvm","Jvm"],perl: ["perl","Perl"],c: ["c","C"],cpp: ["cpp","Cpp"],rust: ["rust","Rust"],"wit-wasi": ["wit","WitWasi"]};
 	if(!Object.hasOwn(names,owner)) throw new TypeError("Unknown task object owner");
 	const [prefix,module]=names[owner];
 	const seen = new Set();
@@ -30,7 +30,7 @@ export const taskResourceTypes = (definitions = [],hostKinds=[],owner="javascrip
 	{
 		const {name,id,hash}=k,slug=prefix+"_host_"+i;
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || !/^[a-f0-9]{64}$(?![\s\S])/u.test(hash) || typeof id!=="string" || !id || seen.has(slug)
-			|| resources.some(r=>r.hash===hash || r.id===id)) throw new TypeError("Invalid "+({php: "PHP",javascript: "JavaScript",ruby: "Ruby",dotnet: "CLR",jvm: "JVM",perl: "Perl",c: "C",cpp: "C++",rust: "Rust"}[owner])+" host lease layout");
+			|| resources.some(r=>r.hash===hash || r.id===id)) throw new TypeError("Invalid "+({php: "PHP",javascript: "JavaScript",ruby: "Ruby",dotnet: "CLR",jvm: "JVM",perl: "Perl",c: "C",cpp: "C++",rust: "Rust","wit-wasi": "WIT/WASI"}[owner])+" host lease layout");
 		resources.push({id,name,hash,slug,lean: "LeanBridge.Host."+module+"."+name,raw: "lb_lease_"+hash,host: true});
 		seen.add(slug);
 	}

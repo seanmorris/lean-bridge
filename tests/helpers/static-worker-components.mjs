@@ -13,7 +13,7 @@ import { buildNativeSharedRuntime } from "../../src/build/native-component.mjs";
 import { openHostProjectSource } from "../../src/build/host-project-source.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { prepareStaticWorkerProject, staticOwners } from "./static-worker-project.mjs";
+import { prepareStaticWorkerProject, staticSourceOwners } from "./static-worker-project.mjs";
 
 const leanPrefix=resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX??".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 const rustScope = async (app,runtimeRoot,b) => {
@@ -38,10 +38,10 @@ const rustScope = async (app,runtimeRoot,b) => {
 	const r=await run(join(app,"probe"),[],{PATH: "/no-tools",LD_LIBRARY_PATH: app+":"+lib,LEAN_NUM_THREADS: "1",LANG: "C"});
 	assert.match(r.stdout,/compiled Lean task returned the original Rust Rc/u);
 };
-for(const owner of Object.keys(staticOwners)) test(owner+" private worker entries link with the real host domain and scoped task leases",{timeout: 600000},async t=>{
+for(const owner of Object.keys(staticSourceOwners)) test(owner+" private worker entries link with the real host domain and scoped task leases",{timeout: 600000},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"word-worker-kernel-")); t.after(()=>rm(root,{recursive: true,force: true}));
 	const project=join(root,"src"), runtimeRoot=join(root,"runtime"), app=join(root,"component");
-	await mkdir(app); await prepareStaticWorkerProject(project,owner); const target=staticOwners[owner][1];
+	await mkdir(app); await prepareStaticWorkerProject(project,owner); const target=staticSourceOwners[owner][1];
 	const inventory=await inspectLeanProject(project), component=elaboratedComponent(inventory.project);
 	const captured=await openHostProjectSource({project,inventory,component,targets: [target],leanPrefix});
 	try
@@ -49,11 +49,13 @@ for(const owner of Object.keys(staticOwners)) test(owner+" private worker entrie
 		const o={...captured,app,target,runtimeRoot,environment: process.env,name: "workshop",version: "1.0.0",ir: captured.projectContract.ir};
 		await assert.rejects(compileCHostComponent(o),/synchronous application-owned/u);
 		await buildNativeSharedRuntime({outputRoot: runtimeRoot,leanPrefix});
-		const b=await compileCHostComponent({...o,workerTransport: true}).catch(e=>{throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause: e});});
+		const wit=owner==="wit-wasi";
+		const b=await compileCHostComponent({...o,workerTransport: true,publicWorkers: wit}).catch(e=>{throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause: e});});
 		await captured.verify();
 		const inspect=async(command,args)=>(await processBuildRunner.capture({command,args,cwd: app,env: process.env})).stdout;
 		const symbols=(await inspect("nm",["-D","--defined-only","--format=posix",b.component])).trim().split("\n").map(s=>s.split(" ")[0]).sort();
-		assert.deepEqual(symbols,[...b.symbols].sort()); assert.ok(symbols.includes(b.prefix+"_visit")); assert.ok(symbols.includes(b.prefix+"_object"));
+		assert.deepEqual(symbols,[...b.symbols].sort());
+		assert.equal(symbols.includes(b.prefix+"_visit"),!wit); assert.equal(symbols.includes(b.prefix+"_object"),!wit);
 		assert.ok(!symbols.some(s=>s.includes("_private_visit")||s.includes("_private_object")));
 		assert.deepEqual(b.workerWire.methods.map(m=>m.name).sort(),["echo","outcome","reject","relay","series"]);
 		assert.ok(b.workerWire.leases.length); assert.ok(b.workerWire.leases.every(k=>k.host));
@@ -62,18 +64,27 @@ for(const owner of Object.keys(staticOwners)) test(owner+" private worker entrie
 		for(const [name,digest] of Object.entries(b.binaries)) assert.equal(sha256(await readFile(join(app,name))),digest);
 		if(owner==="rust" || owner==="c")
 		{
-			const emit=wire=>owner==="rust"?rustHostFacade({...b,ir:o.ir,wire}):cHostFacade({...b,
-				ir:o.ir,name:"workshop",entries:b.entries.filter(e=>!e.delivery),workerEntries:b.entries.filter(e=>e.delivery),workerWire:wire}).header;
+			const emit=wire=>owner==="rust"?rustHostFacade({...b,ir: o.ir,wire}):cHostFacade({...b,
+				ir: o.ir
+				, name: "workshop"
+				, entries: b.entries.filter(e=>!e.delivery)
+				, workerEntries: b.entries.filter(e=>e.delivery)
+				, workerWire: wire}).header;
 			assert.match(emit(b.workerWire),owner==="rust"?/pub fn relay/u:/workshop_relay_start/u);
 			for(const mutate of [w=>{w.leases[0].tag++;},w=>{w.wait.open=w.wait.close;}
 				, w=>{const m=w.methods.find(x=>x.callbacks);m.callbacks[0][1]="uint32";}
 				, w=>{w.methods[0].names.take=w.methods[1].names.take;}
-				, w=>{w.methods[0].tagBytes=0;}, w=>{w.methods.find(m=>m.delivery==="async-iterator").terminal="uint32";}])
-			{
+				, w=>{w.methods[0].tagBytes=0;}
+				, w=>{w.methods.find(m=>m.delivery==="async-iterator").terminal="uint32";}]){
 				const invalid=structuredClone(b.workerWire);mutate(invalid);
 				assert.throws(()=>emit(invalid),owner==="rust"?/Invalid Rust host worker/u:/Invalid C host worker/u);
-			}
+				}
 			if(owner==="rust") await rustScope(app,runtimeRoot,b);
+		}
+		if(wit)
+		{
+			const { exerciseWitApplicationObjects }=await import("./wit-application-objects.mjs");
+			await exerciseWitApplicationObjects({app,runtimeRoot,b});
 		}
 		t.diagnostic(JSON.stringify({owner,component: b.binaries[b.component],domain: b.binaries[b.domain],ledger: b.binaries[b.workerLedger],exports: symbols.length}));
 	} finally

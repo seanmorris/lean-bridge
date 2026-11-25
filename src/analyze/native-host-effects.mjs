@@ -104,9 +104,9 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const names = audit.roots.map(r => r?.declaration);
 	if(!strings(names) || names.length !== roots.length || roots.some(k => !names.includes(k))) fail("compiled roots do not match the export, startup and pull selection");
 	const workerOwner=hasJavaScriptHostOwner(selection);
-	const staticOwners = { c: "C", cpp: "C++", rust: "Rust" };
+	const staticOwners = { c: "C", cpp: "C++", rust: "Rust", "wit-wasi": "WIT/WASI" };
 	const localOwner=Object.hasOwn(staticOwners,selection.staticTaskOwner)?staticOwners[selection.staticTaskOwner]:selection.perlTaskObjects===true?"Perl":selection.jvmTaskObjects===true?"JVM":selection.dotnetTaskObjects===true?"CLR":selection.pythonTaskObjects===true?"Python":selection.rubyTaskObjects===true?"Ruby":null;
-	const byRoot = new Map(), compiledMembers=workerOwner || ["LeanBridge.Host.C","LeanBridge.Host.Cpp","LeanBridge.Host.Rust","LeanBridge.Host.Php"].includes(selection.hostModule) || localOwner?new Map():null;
+	const byRoot = new Map(), compiledMembers=workerOwner || ["LeanBridge.Host.C","LeanBridge.Host.Cpp","LeanBridge.Host.Rust","LeanBridge.Host.WitWasi","LeanBridge.Host.Php"].includes(selection.hostModule) || localOwner?new Map():null;
 	const violations = new Set();
 	for(const { declaration, leaves } of audit.roots)
 	{
