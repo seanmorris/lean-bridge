@@ -1,7 +1,7 @@
 /* Integration fixture for the private Wasmtime adapter and compiled Lean
  * worker. Consumers of a released package must not implement this plumbing. */
 #include "public.h"
-#include "application-object-store.h"
+#include "application-members.h"
 #include <assert.h>
 #include <poll.h>
 #include <stdio.h>
@@ -10,6 +10,7 @@
 typedef wasmtime_component_val_t V;
 typedef struct {
     lwit_store store;
+    lwit_members checked;
     lwit_class box,second_binding;
     wasmtime_component_export_index_t *scope;
 } session;
@@ -26,8 +27,11 @@ static V invoke(session *s,const char *name,V *args,size_t n,bool top){
     assert(lwit_lookup(&s->store,top?NULL:s->scope,name,&fn));
     V result={0};ok(wasmtime_component_func_call(&fn,s->store.ctx,args,n,&result,1));return result;
 }
-static V result(session *s,const char *name,V *args,size_t n){
-    V v=invoke(s,name,args,n,false);
+static V checked(session *s,const wasmtime_component_func_t *f,V *args,size_t n){
+    assert(lwit_open(&s->store));V v={0};ok(wasmtime_component_func_call(f,s->store.ctx,args,n,&v,1));return v;
+}
+static V result(session *s,const wasmtime_component_func_t *f,V *args,size_t n){
+    V v=checked(s,f,args,n);
     assert(v.kind==WASMTIME_COMPONENT_RESULT && v.of.result.is_ok);return v;
 }
 static void open_instance(session *s,wasmtime_context_t *ctx,wasmtime_component_linker_t *l,
@@ -36,18 +40,21 @@ static void open_instance(session *s,wasmtime_context_t *ctx,wasmtime_component_
     ok(wasmtime_component_linker_instantiate(l,ctx,c,&s->store.instance));
     s->scope=wasmtime_component_instance_get_export_index(&s->store.instance,ctx,NULL,iface,strlen(iface));
     assert(s->scope);
+    assert(lwit_members_bind(&s->store,&s->checked));
+    assert(!lwit_members_bind(&s->store,&s->checked));
     assert(!lwit_class_bind(&s->store,s->scope,"same-box","retain-box",&s->box));
     assert(lwit_class_bind(&s->store,s->scope,"retain-box","same-box",&s->box));
     assert(lwit_class_bind(&s->store,s->scope,"retain-box","same-box",&s->second_binding));
 }
 static void close_instance(session *s){
     ok(lwit_shutdown(&s->store));
+    lwit_members_clear(&s->checked);
     lwit_class_clear(&s->box);lwit_class_clear(&s->second_binding);
     wasmtime_component_export_index_delete(s->scope);
 }
 static uint32_t drops(session *s){V v=invoke(s,"drops",NULL,0,true);assert(v.kind==WASMTIME_COMPONENT_U32);return v.of.u32;}
 static void new_box(session *s,uint32_t n,lwit_owner *out){
-    V arg=u32(n),v=result(s,"[static]box.create",&arg,1);
+    V arg=u32(n),v=result(s,&s->checked.on_box.m_create,&arg,1);
     assert(lwit_take(&s->store,&s->box,v.of.result.val,out));wasmtime_component_val_delete(&v);
 }
 static lwit_owner *unbox(workshop_box box){
@@ -60,17 +67,17 @@ static uint32_t make(void *ctx,uint32_t n,workshop_box *out){
 }
 static uint32_t read_box(void *ctx,workshop_box box,uint32_t *out){
     session *s=ctx;lwit_owner *o=unbox(box);assert(lwit_is(&s->box,o));
-    V a=resource(o),v=result(s,"[method]box.read",&a,1);
+    V a=resource(o),v=result(s,&s->checked.on_box.m_read,&a,1);
     assert(v.of.result.val->kind==WASMTIME_COMPONENT_U32);*out=v.of.result.val->of.u32;
     wasmtime_component_val_delete(&v);return 0;
 }
 static uint32_t set_box(void *ctx,workshop_box box,uint32_t n){
-    session *s=ctx;V a[]={resource(unbox(box)),u32(n)},v=result(s,"[method]box.set-level",a,2);
+    session *s=ctx;V a[]={resource(unbox(box)),u32(n)},v=result(s,&s->checked.on_box.m_set_level,a,2);
     assert(!v.of.result.val);wasmtime_component_val_delete(&v);return 0;
 }
 static uint32_t identity(void *ctx,workshop_box box,workshop_box *out){
     session *s=ctx;lwit_owner *original=unbox(box),alias={0};bool equal=false;
-    V a=resource(original),v=result(s,"[method]box.identity",&a,1);
+    V a=resource(original),v=result(s,&s->checked.on_box.m_identity,&a,1);
     assert(lwit_take(&s->store,&s->box,v.of.result.val,&alias));wasmtime_component_val_delete(&v);
     ok(lwit_same(&s->second_binding,original,&alias,&equal));assert(equal);ok(lwit_drop(&alias));
     assert(workshop_box_clone(box,out)==workshop_OK);return 0;
@@ -112,16 +119,27 @@ static void workers(session *s){
     assert(drops(s)==before+3 && !s->store.owners);
     assert(workshop_close(&b)==workshop_OK);
 }
-int main(int argc,char **argv){
-    assert(argc==3);
-    FILE *f=fopen(argv[1],"rb");assert(f && !fseek(f,0,SEEK_END));long n=ftell(f);
+static wasmtime_component_t *load_component(wasm_engine_t *engine,const char *path){
+    FILE *f=fopen(path,"rb");assert(f && !fseek(f,0,SEEK_END));long n=ftell(f);
     assert(n>0 && n<1024*1024 && !fseek(f,0,SEEK_SET));uint8_t *bytes=malloc((size_t)n);
     assert(bytes && fread(bytes,1,(size_t)n,f)==(size_t)n);fclose(f);
+    wasmtime_component_t *component=NULL;ok(wasmtime_component_new(engine,bytes,(size_t)n,&component));free(bytes);
+    return component;
+}
+int main(int argc,char **argv){
+    assert(argc==6);
     wasm_config_t *config=wasm_config_new();wasmtime_config_wasm_component_model_set(config,true);
     wasm_engine_t *engine=wasm_engine_new_with_config(config);
-    wasmtime_component_t *component=NULL;ok(wasmtime_component_new(engine,bytes,(size_t)n,&component));free(bytes);
+    wasmtime_component_t *component=load_component(engine,argv[1]);
     wasmtime_component_linker_t *linker=wasmtime_component_linker_new(engine);
     wasmtime_store_t *one=wasmtime_store_new(engine,NULL,NULL),*two=wasmtime_store_new(engine,NULL,NULL);
+    for(int i=3;i<argc;i++){
+        wasmtime_component_t *mismatch=load_component(engine,argv[i]);
+        lwit_store rejected={.ctx=wasmtime_store_context(two)};lwit_members table={0};
+        ok(wasmtime_component_linker_instantiate(linker,rejected.ctx,mismatch,&rejected.instance));
+        assert(!lwit_members_bind(&rejected,&table) && !table.store && !table.error);
+        assert(!rejected.failed && !rejected.owners);ok(lwit_shutdown(&rejected));wasmtime_component_delete(mismatch);
+    }
     session s={0},sibling={0},other={0};open_instance(&s,wasmtime_store_context(one),linker,component,argv[2]);
     open_instance(&sibling,wasmtime_store_context(one),linker,component,argv[2]);
     open_instance(&other,wasmtime_store_context(two),linker,component,argv[2]);
@@ -134,16 +152,22 @@ int main(int argc,char **argv){
     V borrowed=resource(&first),peer_reply=invoke(&s,"relay-box",&borrowed,1,true);
     lwit_owner peer_alias={0};assert(lwit_take(&s.store,&s.box,&peer_reply,&peer_alias));
     ok(lwit_same(&s.box,&first,&peer_alias,&equal));assert(equal);ok(lwit_drop(&peer_alias));
-    V invalid=u32(UINT32_MAX),v=invoke(&s,"[static]box.create",&invalid,1,false);
+    V invalid=u32(UINT32_MAX),v=checked(&s,&s.checked.on_box.m_create,&invalid,1);
     assert(v.kind==WASMTIME_COMPONENT_RESULT && !v.of.result.is_ok);
     lwit_owner untouched={0};assert(!lwit_take(&s.store,&s.box,v.of.result.val,&untouched));
-    V msg=invoke(&s,"[method]member-error.message",v.of.result.val,1,false);
+    V msg=checked(&s,&s.checked.message,v.of.result.val,1);
     assert(msg.kind==WASMTIME_COMPONENT_STRING && msg.of.string.size==11 && !memcmp(msg.of.string.data,"invalid box",11));
     wasmtime_component_val_delete(&msg);ok(wasmtime_component_resource_any_drop(s.store.ctx,v.of.result.val->of.resource));
     wasmtime_component_val_delete(&v);
     uint32_t before=drops(&s);ok(lwit_drop(&first));ok(lwit_drop(&first));assert(drops(&s)==before+1);
     ok(lwit_drop(&alias));assert(drops(&s)==before+2);
-    new_box(&s,11,&first);new_box(&s,12,&alias);close_instance(&s);assert(!first.any && !alias.any);
+    new_box(&s,11,&first);new_box(&s,12,&alias);
+    wasmtime_component_func_t audit;assert(lwit_lookup(&s.store,NULL,"drops",&audit));
+    before=drops(&s);close_instance(&s);assert(!first.any && !alias.any);
+    /* Inspect the guest independently before deleting its underlying store.
+     * Clearing the native slot alone does not prove its destructor ran. */
+    V after={0};ok(wasmtime_component_func_call(&audit,wasmtime_store_context(one),NULL,0,&after,1));
+    assert(after.kind==WASMTIME_COMPONENT_U32 && after.of.u32==before+2);
     close_instance(&sibling);
     new_box(&other,99,&alias);
     wasmtime_component_func_t arm;assert(lwit_lookup(&other.store,NULL,"arm-drop",&arm));

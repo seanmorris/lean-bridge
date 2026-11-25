@@ -58,10 +58,23 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
 	await writeFile(join(app,"composed.wat"),composed);
 	await run(wasm,["parse","composed.wat","-o","composed.wasm"]);
 	await run(wasm,["validate","composed.wasm"]);
+	const mismatches=[
+		["signed","%get-level: func() -> result<u32","%get-level: func() -> result<s32"]
+		, ["nominal","%identity: func() -> result<own<%box>","%identity: func() -> result<own<%member-error>"]
+		, ["failure","%read: func() -> result<u32, own<%member-error>>","%read: func() -> result<u32, own<%box>>"]
+	];
+	for(const [name,expected,replacement] of mismatches)
+	{
+		assert.ok(wit.includes(expected));
+		await writeFile(join(app,name+".wit"),wit.replace(expected,replacement));
+		await run(wasm,["component","embed",name+".wit","--world","owner","--dummy","-o",name+".core"]);
+		await run(wasm,["component","new",name+".core","-o",name+".wasm"]);
+		await run(wasm,["validate",name+".wasm"]);
+	}
 	const flags=["-std=gnu11","-g0","-Wall","-Wextra","-Werror","-I.","-I"+join(sdk,"include")];
 	const libs=["-L.","-l:"+b.component,"-L"+join(sdk,"lib"),"-lwasmtime","-Wl,-rpath-link,"+join(runtimeRoot,"lib"),"-Wl,-rpath-link,."];
 	await run(process.env.CC??"cc",[...flags,join(fixture,"guest-box.c"),...libs,"-o","guest-probe"]);
-	const executed=await run(join(app,"guest-probe"),["composed.wasm",interfaceName],{
+	const executed=await run(join(app,"guest-probe"),["composed.wasm",interfaceName,...mismatches.map(([name])=>name+".wasm")],{
 		PATH: "/no-tools"
 		, LD_LIBRARY_PATH: [app,join(sdk,"lib"),join(runtimeRoot,"lib")].join(":")
 		, LEAN_NUM_THREADS: "1"
