@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { buildWitApplicationConsumer } from "./wit-application-consumer.mjs";
 import { witApplicationOperations } from "../../src/backends/wit/application-operations.mjs";
+import { witObjectFutureFiles } from "../../src/backends/wit/application-future.mjs";
 
 /**
  * Compile and run the fixture against the actual generated interface and native provider.
@@ -13,8 +14,9 @@ import { witApplicationOperations } from "../../src/backends/wit/application-ope
  * @param root0.app - Private directory containing the generated headers and shared object.
  * @param root0.runtimeRoot - Verified native Lean runtime for this build.
  * @param root0.b - Compiled WIT provider and its source-derived import contract.
+ * @param root0.ir - Original application object contract.
  */
-export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
+export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	const {wit,interfaceName}=b.witImports;
 	const entries=b.entries.filter(e=>!e.delivery);
 	const altered=structuredClone(b.api);
@@ -24,6 +26,13 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
 	const invented=structuredClone(b.api);
 	invented.declarations.find(d=>d.source.declaration==="Workshop.choose").failure.errors.push("error:IO.Error");
 	assert.throws(()=>witApplicationOperations({...options,api: invented}),/unrecognized failure channels/u);
+	for(const [edit,reason] of [
+		[d=>{d.result.ownership="copy";},/inconsistent nominal Task/u]
+		, [d=>{d.source.extensions["lean-bridge.dev/host-imports-sha256"]="0".repeat(64);},/source mismatch/u]
+	]){
+		const api=structuredClone(b.api);edit(api.declarations.find(d=>d.source.declaration==="Jobs.echo"));
+		assert.throws(()=>witObjectFutureFiles({...options,ir,model: b.model,api,entries: b.entries.filter(e=>e.delivery)}),reason);
+	}
 	const run=async(command,args,env=process.env)=>{
 		try
 		{ return await processBuildRunner.capture({command,args,cwd: app,env}); }
@@ -82,15 +91,23 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
 		await run(wasm,["component","new",name+".core","-o",name+".wasm"]);
 		await run(wasm,["validate",name+".wasm"]);
 	}
-	const flags=["-std=gnu11","-g0","-Wall","-Wextra","-Werror","-I.","-I"+join(sdk,"include")];
-	const libs=["-L.","-l:"+b.component,"-L"+join(sdk,"lib"),"-lwasmtime","-Wl,-rpath-link,"+join(runtimeRoot,"lib"),"-Wl,-rpath-link,."];
-	await run(process.env.CC??"cc",[...flags,join(fixture,"guest-box.c"),...libs,"-o","guest-probe"]);
-	const executed=await run(join(app,"guest-probe"),["composed.wasm",interfaceName,...mismatches.map(([name])=>name+".wasm")],{
-		PATH: "/no-tools"
-		, LD_LIBRARY_PATH: [app,join(sdk,"lib"),join(runtimeRoot,"lib")].join(":")
-		, LEAN_NUM_THREADS: "1"
-		, RAYON_NUM_THREADS: "1"
-	});
+	const probe=async(kit,exe,extra=[])=>{
+		const flags=["-std=gnu11","-g0","-Wall","-Wextra","-Werror","-I.","-I"+join(kit,"include"),...extra];
+		const libs=["-L.","-l:"+b.component,"-L"+join(kit,"lib"),"-lwasmtime","-Wl,-rpath-link,"+join(runtimeRoot,"lib"),"-Wl,-rpath-link,."];
+		await run(process.env.CC??"cc",[...flags,join(fixture,"guest-box.c"),...libs,"-o",exe]);
+		return run(join(app,exe),["composed.wasm",interfaceName,...mismatches.map(([name])=>name+".wasm")],{
+			PATH: "/no-tools"
+			, LD_LIBRARY_PATH: [app,join(kit,"lib"),join(runtimeRoot,"lib")].join(":")
+			, LEAN_NUM_THREADS: "1"
+			, RAYON_NUM_THREADS: "1"
+		});
+	};
+	const executed=await probe(sdk,"guest-probe");
 	assert.match(executed.stdout,/guest-owned object survived a compiled Lean worker/u);
 	assert.match(executed.stdout,/independent Wasm consumer called Lean and ran original guest destructors/u);
+	const asyncSdk=process.env.LEAN_BRIDGE_ASYNC_WASMTIME_C_API;
+	assert.ok(asyncSdk,"Object futures require LEAN_BRIDGE_ASYNC_WASMTIME_C_API (Wasmtime 51 C SDK)");
+	const asynchronous=await probe(resolve(asyncSdk),"guest-future-probe",["-DLB_TEST_OBJECT_FUTURE"]);
+	assert.match(asynchronous.stdout,/compiled Lean canonical object future: both delivery orders, both reader drops, blocked writer shutdown/u);
+	assert.match(asynchronous.stdout,/native object future shutdown before take/u);
 };

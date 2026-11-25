@@ -7,6 +7,7 @@ import {cppHostFacade} from "../backends/cpp/host-facade.mjs";
 import {witApplicationHostImports} from "../backends/wit/application-host-imports.mjs";
 import {witApplicationExchange} from "../backends/wit/application-exchange.mjs";
 import {witOperationFiles} from "../backends/wit/application-operation-files.mjs";
+import {witObjectFutureFiles} from "../backends/wit/application-future.mjs";
 import {witApplicationMemberBindings} from "../backends/wit/application-member-bindings.mjs";
 import {witApplicationDispatch} from "../backends/wit/application-member-dispatch.mjs";
 import {staticHostMembers} from "../backends/native/static-host-members.mjs";
@@ -62,10 +63,19 @@ export const compileCHostComponent=async o=>{
 		{
 			hashes[file]=sha256(data);await save(file,data);
 		}
-		const dispatch=witApplicationDispatch({ir,model,entries:direct,descriptor:witImports,name:o.name});
+		const dispatch=witApplicationDispatch({ir,model,entries: direct,descriptor: witImports,name: o.name});
 		hashes.memberDispatch=sha256(dispatch);await save("application-dispatch.h",dispatch);
-		const ops=await witOperationFiles({ir,model,api:checked.api,entries:direct,descriptor:witImports,name:o.name,version:o.version});
-		for(const [file,data] of Object.entries(ops)){hashes[file]=sha256(data);await save(file,data);}
+		const ops=await witOperationFiles({ir,model,api: checked.api,entries: direct,descriptor: witImports,name: o.name,version: o.version});
+		for(const [file,data] of Object.entries(ops))
+		{hashes[file]=sha256(data);await save(file,data);}
+		if(publicWorkers)
+		{
+			const reactor=await readFile(new URL("../backends/wit/canonical-future-reactor.h",import.meta.url));
+			hashes.futureReactor=sha256(reactor);await save("canonical-future-reactor.h",reactor);
+			const futures=witObjectFutureFiles({ir,model,api: checked.api,entries: checked.entries.filter(e=>e.delivery),descriptor: witImports,name: o.name,version: o.version});
+			for(const [file,data] of Object.entries(futures))
+			{hashes[file]=sha256(data);await save(file,data);}
+		}
 	}
 	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h",...cpp?["cpp/host-worker-readiness.h","cpp/host-async.hpp","cpp/task-callback.hpp","cpp/task-loop.hpp","cpp/task-routine.hpp","cpp/task-values.hpp"]:[]]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
 	{
@@ -88,7 +98,7 @@ export const compileCHostComponent=async o=>{
 			return [k,value];
 		}));
 	}
-	const domainId=sha256(canonicalJson({runtimeIdentity,...wit?{owner:"wit-wasi"}:{},...cpp?{abi}:{},hashes: Object.fromEntries(domainInputs.map(k=>[k,hashes[k]]))}));
+	const domainId=sha256(canonicalJson({runtimeIdentity,...wit?{owner: "wit-wasi"}:{},...cpp?{abi}:{},hashes: Object.fromEntries(domainInputs.map(k=>[k,hashes[k]]))}));
 	const domain="liblb_"+target.replaceAll("-","_")+"_host_domain_"+domainId+".so";
 	const domainPrefix="lb_cd_"+domainId+"_",refPrefix="lb_cr_"+domainId+"_";
 	let kernel;
@@ -100,8 +110,8 @@ export const compileCHostComponent=async o=>{
 	}
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
-	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp,wit,...publicWorkers?{domainId,workerWire:kernel.wire,workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
-	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi,...publicWorkers?{workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
+	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp,wit,...publicWorkers?{domainId,workerWire: kernel.wire,workerEntries: checked.entries.filter(e=>e.delivery)}:{}});
+	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi,...publicWorkers?{workerEntries: checked.entries.filter(e=>e.delivery)}:{}});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
 		domainId
@@ -110,7 +120,7 @@ export const compileCHostComponent=async o=>{
 		, hashes
 		, publicBase
 		, ...kernel?{worker: kernel.fingerprint}:{}
-		, ...witImports?{witImports:sha256(witImports.wit)}:{}
+		, ...witImports?{witImports: sha256(witImports.wit)}:{}
 		, ...cpp?{cppHeader: wrapper("0".repeat(64),publicBase)}:{}
 		, header: base.header
 		, source: base.source

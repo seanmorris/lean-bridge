@@ -53,6 +53,9 @@ static void close_instance(session *s){
 }
 static uint32_t drops(session *s){V v=invoke(s,"drops",NULL,0,true);assert(v.kind==WASMTIME_COMPONENT_U32);return v.of.u32;}
 #include "lean-consumer.h"
+#ifdef LB_TEST_OBJECT_FUTURE
+#include "lean-future-consumer.h"
+#endif
 static void new_box(session *s,uint32_t n,lwit_owner *out){
     V arg=u32(n),v=result(s,&s->checked.on_box.m_create,&arg,1);
     assert(lwit_take(&s->store,&s->box,v.of.result.val,out));wasmtime_component_val_delete(&v);
@@ -153,9 +156,16 @@ static wasmtime_component_t *load_component(wasm_engine_t *engine,const char *pa
 int main(int argc,char **argv){
     assert(argc==6);
     wasm_config_t *config=wasm_config_new();wasmtime_config_wasm_component_model_set(config,true);
+#ifdef LB_TEST_OBJECT_FUTURE
+    wasmtime_config_wasm_component_model_async_set(config,true);
+    wasmtime_config_wasm_component_model_more_async_builtins_set(config,true);
+#endif
     wasm_engine_t *engine=wasm_engine_new_with_config(config);
     wasmtime_component_t *graph=load_component(engine,"client-graph.wasm");
     guest_calls_lean(engine,graph,false);guest_calls_lean(engine,graph,true);wasmtime_component_delete(graph);
+#ifdef LB_TEST_OBJECT_FUTURE
+    graph=load_component(engine,"future-graph.wasm");guest_futures(engine,graph,false);guest_futures(engine,graph,true);wasmtime_component_delete(graph);
+#endif
     wasmtime_component_t *component=load_component(engine,argv[1]);
     wasmtime_component_linker_t *linker=wasmtime_component_linker_new(engine);
     wasmtime_store_t *one=wasmtime_store_new(engine,NULL,NULL),*two=wasmtime_store_new(engine,NULL,NULL);

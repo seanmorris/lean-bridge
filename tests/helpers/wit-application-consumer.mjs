@@ -70,4 +70,42 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 	await writeFile(join(app,"client-graph.wat"),graph);
 	await run(wasm,["parse","client-graph.wat","-o","client-graph.wasm"]);
 	await run(wasm,["validate","client-graph.wasm"]);
+	const delivery=JSON.parse(await readFile(join(app,"object-delivery.json"),"utf8"));
+	assert.deepEqual(delivery.supported,[{name: "echo",declaration: "Jobs.echo",input: 0,output: 0,param: "box"}]);
+	assert.deepEqual(delivery.remaining.sort(),["Jobs.outcome","Jobs.reject","Jobs.relay","Jobs.series"]);
+	const component=async(file,id)=>{const data=await readFile(join(app,file),"utf8");return data.replace("(component","(component $"+id);};
+	await writeFile(join(app,"reader.wat"),(await asset("lean-future-consumer")).replace("@TASKS@",delivery.publicName));
+	await run(wasm,["parse","reader.wat","-o","reader.wasm"]);
+	await mkdir(join(app,"wit-future/deps"),{recursive: true});
+	await writeFile(join(app,"wit-future/deps/objects.wit"),descriptor.wit);
+	await copyFile(join(app,"object-tasks.wit"),join(app,"wit-future/tasks.wit"));
+	await writeFile(join(app,"wit-future/fixture.wit"),`package lean-bridge:workshop@1.0.0;
+world future-probe {
+  import object-tasks; use object-tasks.{box};
+  import source: func() -> own<box>; import same: func(left: borrow<box>, right: borrow<box>) -> bool;
+  export start: func(); export discard: func(); export receive: func() -> bool;
+  export request: func(); export collect: func() -> bool; export release-original: func();
+}`);
+	await run(wasm,["component","targets","wit-future","--world","future-probe","reader.wasm"]);
+	const user=(await run(wasm,["print","reader.wasm"])).stdout.replace("(component","(component $reader");
+	const futureGraph=[
+		"(component"
+		, `(type $native-type ${nativeType}) (import "${nativeName}" (instance $native (type $native-type)))`
+		, '(import "observe-drop" (func $observe)) (import "echo-native-start" (func $start (result u32)))'
+		, '(import "echo-native-stage" (func $stage (param "key" u32)))'
+		, graph.replace("(component","(component $base")
+		, await component("object-tasks.wat","tasks")
+		, user
+		, `(instance $g (instantiate $base (with "${nativeName}" (instance $native)) (with "observe-drop" (func $observe))))`
+		, `(alias export $g "${name}" (instance $objects)) (export "${name}" (instance $objects))`
+		, '(alias export $g "private-exchange" (instance $cells)) (alias export $objects "box" (type $box))'
+		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) (with "echo-native-start" (func $start)) (with "echo-native-stage" (func $stage))))`
+		, `(instance $u (instantiate $reader (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`
+		, ...["deliver","reap","retire"].map(n=>`(export "echo-${n}" (func $f "echo-${n}"))`)
+		, ...["start","receive","request","collect","discard","release-original"].map(n=>`(export "${n}" (func $u "${n}"))`)
+		, '(export "private-exchange" (instance $cells)) (export "drops" (func $g "drops")))'
+	].join("\n");
+	await writeFile(join(app,"future-graph.wat"),futureGraph);
+	await run(wasm,["parse","future-graph.wat","-o","future-graph.wasm"]);
+	await run(wasm,["validate","--features","cm-async,cm-async-builtins","future-graph.wasm"]);
 };

@@ -89,7 +89,7 @@ for(const owner of Object.keys(staticSourceOwners)) test(owner+" private worker 
 		if(wit)
 		{
 			const { exerciseWitApplicationObjects }=await import("./wit-application-objects.mjs");
-			await exerciseWitApplicationObjects({app,runtimeRoot,b});
+			await exerciseWitApplicationObjects({app,runtimeRoot,b,ir: o.ir});
 		}
 		t.diagnostic(JSON.stringify({owner,component: b.binaries[b.component],domain: b.binaries[b.domain],ledger: b.binaries[b.workerLedger],exports: symbols.length}));
 	} finally

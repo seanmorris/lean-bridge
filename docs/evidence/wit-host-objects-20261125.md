@@ -6,7 +6,7 @@ The [integration probe](../../tests/fixtures/static-host-workers/guest-box.c) ru
 
 The probe counts guest destructor calls, closes stores with outstanding references, and checks that dropping invalidated slots does not access a deleted store. A guest destructor that traps poisons the adapter: no further guest call is admitted, and closing the store still releases the remaining wrappers. No Lean compiler, Wasm tool or network access is required by the resulting probe executable.
 
-To reproduce from the worktree, set `LEAN_BRIDGE_LEAN_PREFIX`, `LEAN_BRIDGE_WASM_TOOLS` and `LEAN_BRIDGE_WASMTIME_C_API` to the pinned toolchains, then run:
+To reproduce from the worktree, set `LEAN_BRIDGE_LEAN_PREFIX` and `LEAN_BRIDGE_WASM_TOOLS` to the project toolchains. Set `LEAN_BRIDGE_WASMTIME_C_API` to the Wasmtime 42 C SDK and `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the Wasmtime 51.0.0 C SDK, then run:
 
 ```sh
 npm run test:wit-host-object-source
@@ -43,3 +43,22 @@ The app passes binary data with embedded zero bytes, UTF-8 text, a 385-bit natur
 Passing a borrowed box alongside an integer with a zero high limb produces a boundary-validation error, not a Lean `IO` or `EIO` failure. The defining guest notifies a test-only observer from its destructor: the staged box owner is released exactly once before the trap retires the binding. The test does not reenter the poisoned graph to read the counter. It also rejects a changed `EIO` payload and an invented failure on a pure function before generating a facade.
 
 The clean run produced 53 native exports; the worker SHA-256 is `8c3ac7651f0f42c794096e4551248a7e311da31fb01193e260391c175fffc64e`. This is still a locally composed integration. The public object-bearing asynchronous interface, ordinary and reviewed package installations, and their release receipts remain outstanding.
+
+## A canonical future returns the original guest object
+
+For `Jobs.echo : Box → Task Box`, the [generator](../../src/backends/wit/application-future.mjs) emits `echo: func(box: borrow<box>) -> future<own<box>>`. Both occurrences of `box` refer to the defining guest's resource type. A [separate Wasm consumer](../../tests/fixtures/static-host-workers/lean-future-consumer.wat.in) imports the generated interface; `wasm-tools component targets` checks it against the WIT world. The consumer calls the compiled Lean task under Wasmtime 51. Its own instructions read or drop the canonical future.
+
+The [probe](../../tests/fixtures/static-host-workers/lean-future-consumer.h) checks:
+
+| Ordering | What the probe observes |
+| --- | --- |
+| Reader first; writer first | In each order the guest receives an independently droppable owner. The defining guest's equality operation reports that it is the original box. |
+| Reader drops before native take | The embedding closes the job without taking the value. |
+| Reader drops after a write blocks | The guest destructor releases the unread result exactly once. |
+| Store shutdown before native take; shutdown with a blocked write | For each ordering the probe leaves the reader live. The defining guest reports the object drops **before** the Wasmtime store is deleted. |
+
+The [Canonical ABI](https://github.com/WebAssembly/component-model/blob/main/design/mvp/CanonicalABI.md) distinguishes dropping a reader from dropping an unwritten future writer. During teardown, the producer detaches a blocked writer from its wait set before cancelling it. If the reader never accepted the object, the producer releases the object while its defining component is still callable.
+
+The clean build produced 53 native exports; its worker SHA-256 is `f37ad26ce0868d6889a1a77d43d0c0c9aa2ec9154e93ea79fd29203aded102aa`. The owner-domain and task-lease library hashes are unchanged.
+
+This is a private build and runtime result, not an installation receipt. `Task.pure` makes the test deterministic; dropping before native take is **not** evidence that a long-running computation stopped. The build inventory still lists `Jobs.outcome` (returned `Except`), `Jobs.reject` (factory error), `Jobs.relay` (retained callback), and `Jobs.series` (iterator) as outstanding on this Wasm interface.
