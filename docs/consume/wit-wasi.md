@@ -235,6 +235,12 @@ For example, `feed` returns `result<stream<result<result<s64, string>, u16>>, u3
 | Step error (`u16`) | The cursor failed while advancing. This is the last element. |
 | End without an element | The cursor was exhausted normally. |
 
+When both the item and the terminal error can carry text, check the tags,
+not the message. In `stream<result<result<u32, string>, string>>`,
+`ok(err("boom"))` is an ordinary item: read again. `err("boom")` is the
+last element. The [installed guest](../../tests/fixtures/wit-cursor-io/application.wat)
+receives both from the same cursor.
+
 Cancel a pending **read** to stop waiting; you can read again later. Drop the **reader** to close the cursor on early exit and discard outstanding delivery. A read that already reached Lean may have started work; cancelling the read does not roll it back. The [installed stream checks](../evidence/wit-canonical-async-20261124.md#consume-a-compiled-pull-cursor-as-a-stream) exercise both cases.
 
 Dropping the reader also requests cancellation of a pending Lean pull.
@@ -318,7 +324,14 @@ int print_feed(meter_wit_session *s, uint8_t mode, uint32_t limit) {
 
 `next` blocks the calling thread. In an event loop, call `request_feed`, then `poll_feed`. A `PENDING` observation supplies a borrowed readiness descriptor. When it becomes readable, poll again. Neither opening the cursor nor polling an idle cursor starts work. If a pull already owns the next delivery, another `request` or `next` returns `BUSY` without consuming it.
 
-`ITEM` can carry either arm of a returned Lean `Except`. `FAILED` reports a terminal pull error, and `END` reports exhaustion. After either, another request returns `FINISHED`. Drop the cursor if you break early. Closing the session also releases pending and never-requested cursors. A borrowed descriptor expires on delivery, cancellation, drop or session close.
+If the Lean pull can throw an `IO.Error`, the generated native header adds
+`STEP_IO_FAILED`. This state delivers an owned error message, not an item
+or an end-of-stream signal. Read it once and dispose it with the package's
+`string_dispose`; the next request returns `FINISHED`. A domain-specific
+step failure uses `FAILED`, even if its payload is also a string. See the
+[native caller](../../tests/fixtures/wit-cursor-io/consumer.c) for both cases.
+
+`ITEM` can carry either arm of a returned Lean `Except`; you can request another item after either. `END` means the cursor was exhausted normally. After exhaustion or a terminal failure, another request returns `FINISHED`. Drop the cursor if you break early. Closing the session also releases pending and never-requested cursors. A borrowed descriptor expires on delivery, cancellation, drop or session close.
 
 An unexpected runtime failure wakes a parked `await` with `UNAVAILABLE`. Close the session to release its owners. A Lean worker that ignores cancellation can keep the runtime alive until that worker finishes; it cannot publish another item to the closed session.
 

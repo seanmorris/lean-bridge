@@ -119,6 +119,14 @@ Select the cursor implementation with `asyncIterators`. You can publish a cursor
 
 Only the factory is public. The [Lean source](../../tests/fixtures/wit-task-package/cursors.lean) supplies the pull and cleanup functions. A factory failure is outside the stream. A declared step failure is one final error element; normal exhaustion emits no element. An `Except` inside an item remains an ordinary value. Reviewed builds check the identities of all three functions, including cleanup.
 
+A pull can also return `BaseIO (Task (Except IO.Error (Option α)))`.
+For example, [Watch.pull](../../tests/fixtures/wit-cursor-io/Watch.lean)
+delivers an item and later throws `IO.userError "boom"`. The compiler
+records the pull's IO failure separately from a declared `Except String`.
+No `taskIOErrors` selection is needed for a cursor. In a canonical stream,
+the final element carries the UTF-8 error message; in a pollable package
+the corresponding observation is `io-failed(string)`.
+
 If a pull starts a worker, use `IO.checkCanceled` at a point where it is
 safe to stop. Closing a cursor releases the reader's claim on the result;
 it does not interrupt arbitrary Lean code. The [Watch cursor](../../tests/fixtures/wit-canonical-cancel/Watch.lean)

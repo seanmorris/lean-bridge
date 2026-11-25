@@ -14,6 +14,8 @@ export const renderWitTaskImports = async model => {
 	const heap=model.heap??[], leases=wire.leases??[];
 	if(heap.length!==leases.length || heap.some((r,i)=>r.hash!==leases[i].hash || leases[i].tag!==i+3))
 		throw new TypeError("WIT heap identities and native leases disagree");
+	if(!Array.isArray(methods) || !Array.isArray(wire.methods) || methods.length!==wire.methods.length)
+		throw new TypeError("WIT method and native task wire disagree");
 	const callbacks=witCallbackTable(methods,wire,p);
 	const leaseIndex=shape=>leases.findIndex(r=>r.type===shape);
 	const heapRows=leases.map((r,i)=>{
@@ -27,7 +29,9 @@ export const renderWitTaskImports = async model => {
 	{
 		const api=methods[i];
 		const stream=m.delivery==="async-iterator";
-		if((!stream && m.delivery!=="task") || Boolean(api.request)!==stream || m.declaration!==api.declaration)
+		if((!stream && m.delivery!=="task") || Boolean(api.request)!==stream || m.declaration!==api.declaration
+			|| (api.stepIO!==undefined && typeof api.stepIO!=="boolean") || (m.stepIO!==undefined && typeof m.stepIO!=="boolean")
+			|| Boolean(api.stepIO)!==Boolean(m.stepIO) || (api.stepIO && (!stream || m.terminal!=="string")))
 			throw new TypeError("WIT method and native task wire disagree");
 		const n=m.names;
 		if(stream) defs.push("extern int "+n.pull+"(uint64_t *);");
@@ -55,7 +59,8 @@ export const renderWitTaskImports = async model => {
 				, m.callbacks?.length?"NULL":start
 				, decoder(m.terminal,"failed")
 				, m.error?p+(m.effect==="EIO"?"_TYPED_ERROR":"_IO_ERROR"):"0"
-				, m.terminal?p+(stream?"_TYPED_ERROR":"_IO_ERROR"):"0"
+				, m.terminal?p+(stream && !api.stepIO?"_TYPED_ERROR":"_IO_ERROR"):"0"
+				, m.terminal?JSON.stringify(api.stepIO?"io-failed":"failed"):"NULL"
 				, n.start
 				, n.poll
 				, n.take

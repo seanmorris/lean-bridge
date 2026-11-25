@@ -104,7 +104,7 @@ export const generateCTaskExports = options => {
 		const item = values.codec(e.result), error = e.effect === "EIO" ? values.codec(e.error) : null;
 		const step = e.stepError ? values.codec(e.stepError) : null;
 		if(stream && (e.protocol?.open !== e.declaration || !qualified.test(e.protocol.next) || !qualified.test(e.protocol.close))) throw new TypeError("Invalid C pull protocol");
-		if(e.stepIO && (!hostKinds.length || !stream || step)) throw new TypeError("Invalid Wasm host cursor failure contract");
+		if(e.stepIO && ((!hostKinds.length && !options.witDelivery) || !stream || step)) throw new TypeError("Invalid cursor IO failure contract");
 		const ioTerminal=e.taskIO || e.stepIO;
 		const pull = stream ? nativePullEntry(i, entryPrefix, e, item.lean, error?.lean, e.stepIO?"_root_.IO.Error":step?.lean) : null;
 		if(pull)

@@ -234,7 +234,13 @@ static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait
         else if (cursor && lb_name(label,"idle")) { next=LBP(IDLE); }
         else if (cursor && lb_name(label,"end")) { next=LBP(END); }
         else if (cursor && lb_name(label,"item")) { next=LBP(ITEM); }
-        else if (lb_methods[i].terminal && lb_name(label,"failed")) { next=LBP(FAILED); }
+        else if (lb_methods[i].terminal && lb_name(label,lb_methods[i].terminal_case)) {
+#if LB_STEP_IO
+            next=lb_name(label,"io-failed") ? LBP(STEP_IO_FAILED) : LBP(FAILED);
+#else
+            next=LBP(FAILED);
+#endif
+        }
 #if LB_CALLBACKS
         else if (lb_cb_ports[i].factory && lb_name(label,"factory-failed")) { next=LBP(FACTORY_FAILED); }
         else if (lb_cb_ports[i].factory_host && lb_name(label,"factory-callback-failed")) { next=LBP(FACTORY_CALLBACK_FAILED); }
@@ -245,6 +251,9 @@ static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait
         else if (lb_name(label,"closed")) { next=LBP(CLOSED); }
         else goto malformed;
         bool has_value=next==LBP(READY) || next==LBP(ITEM) || next==LBP(FAILED);
+#if LB_STEP_IO
+        has_value=has_value || next==LBP(STEP_IO_FAILED);
+#endif
 #if LB_CALLBACKS
         has_value=has_value || next==LBP(FACTORY_FAILED) || next==LBP(FACTORY_CALLBACK_FAILED) || next==LBP(WORKER_CALLBACK_FAILED);
         if (next!=LBP(PENDING) && lb_cb_ports[i].fd) lb_fn_detach(s,(size_t)(owner-s->owners));

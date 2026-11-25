@@ -62,7 +62,7 @@ const bindings = model=>{
 	};
 	defs.push("typedef struct "+p+"session "+p+"session;",
 		"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","TRAPPED","START_ERROR","BUSY","FINISHED"].map(n=>p+n).join(", ")+" } "+p+"status;",
-		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END",...model.methods.some(m=>m.callbacks?.length)?["FACTORY_FAILED","FACTORY_CALLBACK_FAILED","WORKER_CALLBACK_FAILED"]:[]].map(n=>p+n).join(", ")+" } "+p+"state;",
+		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END",...model.methods.some(m=>m.callbacks?.length)?["FACTORY_FAILED","FACTORY_CALLBACK_FAILED","WORKER_CALLBACK_FAILED"]:[],...model.methods.some(m=>m.stepIO)?["STEP_IO_FAILED"]:[]].map(n=>p+n).join(", ")+" } "+p+"state;",
 		"typedef struct { const char *data; size_t size; } "+p+"text;",
 		"typedef struct { char *data; size_t size; } "+p+"string;");
 	if(binary) defs.push("typedef struct { const uint8_t *data; size_t size; } "+p+"byte_view;",
@@ -119,7 +119,7 @@ const bindings = model=>{
     if (rc!=${p}OK) return rc;
     if (next==${p}${stream?"ITEM":"READY"}) {
         ${receive(value,"value")}
-    }${terminal?` else if (next==${p}FAILED) { ${receive(terminal,"failure")} }`:""}
+    }${terminal?` else if (next==${p}${model.methods[i].stepIO?"STEP_IO_FAILED":"FAILED"}) { ${receive(terminal,"failure")} }`:""}
     wasmtime_component_val_delete(&v); *state=next; ${wait?"":"*fd=gate; "}return ${p}OK;`);
 		}
 		if(stream)
@@ -146,7 +146,7 @@ extern "C" {
 /* Open, use and close sessions on the process main thread. Start needs a fresh
  * zero-initialized owner output. START_ERROR returns the typed factory error and
  * leaves that owner empty. FAILED delivers a terminal error once, leaving the
- * value untouched. A returned Except is a value (READY for tasks, ITEM for cursors).
+ * value untouched. A returned Except is a value (READY for tasks, ITEM for cursors).${model.methods.some(m=>m.stepIO)?"\n * STEP_IO_FAILED carries an owned UTF-8 message from the Lean pull's IO.Error.":""}
  * Opening or observing an idle cursor does not pull. Request one item, then poll
  * or await; next combines request and await. BUSY leaves the pending delivery
  * untouched. END marks exhaustion; the next request returns FINISHED. Drop on
@@ -201,6 +201,7 @@ export const generateWitTaskSession = async (model,component)=>{
 		, source: [
 			'#include "'+prefix+'_wasmtime.h"',await renderWitTaskImports(model)
 			, "#define LBP(x) "+p+"##x"
+			, "#define LB_STEP_IO "+Number(model.methods.some(m=>m.stepIO))
 			, "#define LB_SESSION_KIND "+JSON.stringify(model.prefix+".wit-session")
 			, "#define LB_RUNTIME_COLD "+nativeRuntimeState.cold+"\n#define LB_RUNTIME_READY "+nativeRuntimeState.ready
 			, "static const uint8_t lb_task_component[]={"+Array.from(component).join(",")+"};"

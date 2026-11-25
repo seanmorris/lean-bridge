@@ -46,6 +46,7 @@ structure Request where
   javascriptTaskCallbacks : Option Bool := none
   javascriptThreadedHostMembers : Option Bool := none
   witTaskCallbacks : Option Bool := none
+  witCursorIO : Option Bool := none
   taskIOErrors : Option (Array String) := none
   nativeEffectPolicy : Option String := none
   synchronousIO : Option Bool := none
@@ -313,7 +314,7 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   let v := task.getAppArgs[0]!
   let (item, failure) ← if v.getAppFn.constName? == some ``Except && v.getAppArgs.size == 2 then
     let err := v.getAppArgs[0]!
-    if r.hostValues && err.isConstOf ``IO.Error then
+    if (r.hostValues || r.witCursorIO == some true) && err.isConstOf ``IO.Error then
       pure (v.getAppArgs[1]!, [("stepIO", toJson true)])
     else pure (v.getAppArgs[1]!, [("stepError", ← delivered r err r.hostValues)])
   else pure (v, [])
@@ -361,6 +362,8 @@ private partial def nativeLeaves (env : Environment) (root : Name) (pending : Li
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  if r.witCursorIO.isSome && (r.witCursorIO != some true || r.hostModule.isSome || r.asyncIterators.isEmpty) then
+    throwError "invalid standalone WIT cursor IO selection"
   if r.javascriptThreadedHostMembers.isSome && !r.ownerHostMembers then
     throwError "invalid JavaScript owner-dispatch selection"
   if r.phpNativeTaskObjects.isSome && !r.phpTaskObjects then

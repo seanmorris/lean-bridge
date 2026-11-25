@@ -25,7 +25,9 @@ const method=(d,e,i,names,errors,used)=>{
 		:e.effect==="IO"?error("error:IO.Error",null):null;
 	if((e.effect==="EIO")!==Boolean(e.error)) fail("missing or unexpected typed error");
 	const terminal=e.taskIO?error("error:TaskIO.Error",null):null;
-	const step=e.stepError?error("error:AsyncStep."+e.declaration,e.stepError):null;
+	if(ext["lean-bridge.dev/step-failure"]!==(e.stepIO?"IO.Error":undefined)
+		|| (e.stepIO && (!stream || e.stepError || e.stepIO!==true))) fail("invalid cursor IO failure contract: "+d.name);
+	const step=e.stepIO || e.stepError?error("error:AsyncStep."+e.declaration,e.stepError??null):null;
 	if(!equal([...ids].sort(),[...d.failure.errors].sort()) || d.failure.mode!==(ids.length?"declared":"none")) fail("invalid failure contract: "+d.name);
 	const shape=(s,t)=>{
 		if(s.ownership!=="copy" || !equal(s.type,t)) fail("canonical ABI disagrees with Lean: "+d.name);
@@ -37,7 +39,7 @@ const method=(d,e,i,names,errors,used)=>{
 	const out=shape(d.result,e.result),payload=(terminal||step)?canonicalResult(out,terminal||step):out;
 	const params=args.map(a=>'(param "'+a.name+'" '+a.t.wat+')').join(" ");
 	const rich=!!(stream || failure || terminal || !out.member || out.wat==="char" || args.some(a=>!a.t.member || a.t.wat==="char"));
-	const m={id: String(i),port: "m"+i,name,native: e.name,args,out,params,asynchronous,stream,step,failure,terminal,payload,rich,effect: e.effect};
+	const m={id: String(i),port: "m"+i,name,native: e.name,args,out,params,asynchronous,stream,step,stepIO: e.stepIO===true,failure,terminal,payload,rich,effect: e.effect};
 	const w=asynchronous?(stream?"stream":"future")+"<"+payload.wit+">":out.wit,t=asynchronous?"$future"+i:out.wat,begin=asynchronous?"u32":out.wat;
 	m.wit=failure?"result<"+w+", "+failure.wit+">":w;
 	m.wat=failure?"(result "+t+" (error "+failure.wat+"))":t;

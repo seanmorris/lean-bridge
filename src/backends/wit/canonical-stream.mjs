@@ -126,12 +126,12 @@ export const streamAction=(m,p,n,encoded)=>`static wasmtime_error_t *stream_${m.
     int fd=-1; ${p}_status rc=${n}_poll(*owner,&fd); row->fd=fd;
     if (rc==${p}_PENDING && fd>=0) return NULL;
     if (rc!=${p}_OK || fd!=-1) return wasmtime_error_new("invalid cursor readiness notification");
-    ${n}_value item={0}; ${m.step?n+"_step_error error={0};":""}
+    ${n}_value item={0}; ${m.step?(m.stepIO?p+"_buffer":n+"_step_error")+" error={0};":""}
     rc=${n}_take(owner,&item${m.step?",&error":""}); row->requested=false; row->fd=-1;
     if (rc==${p}_END) {row->owner=NULL; out->of.u32=2; return NULL;}
     wasmtime_component_val_t *v=&r->stream_value;
-    ${m.step?`if (rc==${p}_TYPED_ERROR) { row->owner=NULL;
-        wasmtime_component_val_t *e=lb_child(v,false); ${encoded(m.step,"error","e",n+"_step_error_dispose")}
+    ${m.step?`if (rc==${p}_${m.stepIO?"IO_ERROR":"TYPED_ERROR"}) { row->owner=NULL;
+        wasmtime_component_val_t *e=lb_child(v,false); ${encoded(m.step,"error","e",m.stepIO?p+"_buffer_dispose":n+"_step_error_dispose")}
         out->of.u32=3;
     } else `:""}if (rc==${p}_OK) {
         ${m.step?"v=lb_child(v,true);":""} ${encoded(m.out,"item","v",n+"_value_dispose")} out->of.u32=1;

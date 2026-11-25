@@ -32,6 +32,7 @@ typedef struct {
     const char *resource, *names[4];
     size_t argc; const int *args;
     lb_task_decoder ready,start_failure,terminal; int failure_status,terminal_status;
+    const char *terminal_case;
     int (*start)(const uint64_t *,uint64_t *,uint64_t *,uint8_t *);
     int (*poll)(uint64_t *,int *);
     int (*take)(uint64_t *,uint64_t *,uint8_t *);
@@ -215,7 +216,7 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
                         words[2]=0; decode=lb_cb_text;
                     } else
 #endif
-                    if (m->terminal && taken==m->terminal_status) { decode=m->terminal; state="failed"; }
+                    if (m->terminal && taken==m->terminal_status) { decode=m->terminal; state=m->terminal_case; }
                     else if (m->request && taken==LB_CURSOR_END) { decode=NULL; state="end"; }
                     else if (taken!=0) { err=wasmtime_error_new("Lean task delivery failed"); goto done; }
                     lb_task_unwatch(t);

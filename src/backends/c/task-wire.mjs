@@ -15,6 +15,7 @@ export const taskWireEntry = a => {
 	const start = e.effect === "EIO" ? values.codec(e.error) : null, io = e.effect === "IO";
 	const error = start ? shape(e.error) : io ? "string" : null;
 	const step = e.stepError ? values.codec(e.stepError) : null;
+	if(e.stepIO!==undefined && (e.stepIO!==true || !stream || step)) throw new TypeError("Invalid cursor IO failure contract");
 	const ioTerminal=e.taskIO || e.stepIO;
 	const terminal = step ? shape(e.stepError) : ioTerminal ? "string" : null;
 	const names = Object.fromEntries(["start", "take", ...a.wasmTasks ? ["listen", "cancel"] : ["poll"], "close", ...stream ? ["pull"] : []].map(k => [k, symbol + "_" + k]));
@@ -49,7 +50,7 @@ ${stream ? `int ${names.pull}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owne
 	const method = { name: e.name, declaration: e.declaration
 		, symbol, args, result, error, terminal
 		, effect: e.effect, delivery: e.delivery
-		, stepDeclaration: e.protocol?.next, names
+		, stepDeclaration: e.protocol?.next, ...e.stepIO?{stepIO: true}:{}, names
 		, tagBytes: Math.max(1, depth(result), depth(error), depth(terminal)) };
 	return { names, source, method };
 };

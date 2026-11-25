@@ -91,6 +91,10 @@ export const reconcileHostExports = options => {
 			|| canonicalJson(selection.members) !== canonicalJson(expected.members)) fail("Unverified host import selection");
 	}
 	const synchronous = selection.synchronousIO === true;
+	const witCursorIO=selection.witCursorIO===true;
+	if(selection.witCursorIO!==undefined && (!witCursorIO || ir || synchronous || !selection.asyncIterators?.length
+		|| selection.nativeEffectPolicy!==nativeEffectPolicy || Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && k!=="witTaskCallbacks")))
+		fail("Unauthenticated WIT cursor IO selection");
 	if(ir && hostTarget==="php" && selection.nativeEffectPolicy!==nativeEffectPolicy)
 		fail("PHP host imports require compiled member evidence");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
@@ -286,7 +290,7 @@ export const reconcileHostExports = options => {
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (!owner && async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
-			|| (!stream && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!stream || !hostValues || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async)
+			|| (!stream && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!stream || !(hostValues || witCursorIO) || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async)
 			|| (!async && e.effect === "pure" && ((!immediate && e.result?.constructor !== "result") || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({

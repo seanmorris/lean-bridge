@@ -148,7 +148,9 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 			if(e.taskIO) states.push({witName: "worker-callback-failed",fields: [{type: text}],payload: text});
 			states.push(...calls.map(c=>c.state));
 		}
-		if(e.stepError)
+		if(e.stepIO)
+			states.push({witName: "io-failed",fields: [{type: text}],payload: text});
+		else if(e.stepError)
 		{
 			const payload=delivered(e.stepError); states.push({witName: "failed",fields: [{type: payload}],payload});
 		}
@@ -164,6 +166,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		for(const call of calls)
 		{ resources.push(call.resource); functions.push(...call.functions); }
 		methods.push({ declaration: e.declaration, resource: resource.witName
+			, ...e.stepIO?{stepIO: true}:{}
 			, start: start.witName, poll: poll.witName, cancel: cancel.witName
 			, ...request?{request: request.witName}:{}
 			, ...calls.length?{callbacks: calls.map(c=>c.descriptor)}:{} });

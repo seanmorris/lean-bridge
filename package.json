@@ -1287,6 +1287,7 @@
     "test:wit-task-callback-host": "LEAN_BRIDGE_WIT_CALLBACK_HOST=1 LEAN_BRIDGE_WIT_CALLBACK_WIRE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-callback-wire.mjs",
     "test:wit-task-callback-package": "LEAN_BRIDGE_WIT_CALLBACK_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",
     "test:wit-pollable-bytes": "node --test --test-concurrency=1 tests/helpers/wit-pollable-bytes.mjs",
+    "test:wit-cursor-io": "node --test --test-concurrency=1 tests/helpers/wit-cursor-io-packages.mjs",
     "test:wit-task-host": "LEAN_BRIDGE_WIT_TASK_HOST=1 node --test --test-concurrency=1 tests/helpers/wit-task-resource-world.mjs",
     "test:wit-canonical-transport": "node --test --test-concurrency=1 tests/helpers/wit-canonical-async.mjs",
     "test:wit-canonical-scheduled": "node --test --test-concurrency=1 tests/helpers/wit-canonical-scheduled.mjs",

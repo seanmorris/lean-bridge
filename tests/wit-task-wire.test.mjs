@@ -32,6 +32,34 @@ test("WIT task errors use native readiness and stay distinct on the start and ta
 	assert.equal(method.names.listen,undefined);assert.notEqual(method.names.start,method.names.take);
 });
 
+test("a cursor IO failure carries text but is not a declared String step error",async ()=>{
+	const stream={name: "feed"
+		, declaration: "Jobs.feed"
+		, effect: "BaseIO"
+		, delivery: "async-iterator"
+		, parameters: []
+		, result: value
+		, protocol: {open: "Jobs.feed",next: "Jobs.advance",close: "Jobs.finish"}};
+	const method={declaration: "Jobs.feed",resource: "feed-cursor",start: "open-feed",request: "request-feed",poll: "poll-feed",cancel: "cancel-feed"};
+	for(const stepIO of [true,false])
+	{
+		const entries=[{...stream,...stepIO?{stepIO}:{stepError: {kind: "primitive",name: "string"}}}];
+		const gen=generateCTaskExports({...options,entries,witDelivery: true});
+		const wire=generateSyncWire(gen.prefix,entries,{tasks: true}), [m]=wire.methods;
+		assert.equal(m.terminal,"string");assert.equal(m.stepIO,stepIO || undefined);
+		const model={prefix: gen.prefix,wire,methods: [{...method,stepIO}]};
+		const src=await renderWitTaskImports(model);
+		assert.ok(src.includes(stepIO?'_IO_ERROR,"io-failed"':'_TYPED_ERROR,"failed"'));
+		await assert.rejects(renderWitTaskImports({...model,methods: [{...method,stepIO: !stepIO}]}),/method and native task wire disagree/u);
+		await assert.rejects(renderWitTaskImports({...model,methods: []}),/method and native task wire disagree/u);
+		await assert.rejects(renderWitTaskImports({...model,methods: [{...method,stepIO: "true"}]
+			, wire: {...wire,methods: [{...m,stepIO: "true"}]}}),/method and native task wire disagree/u);
+	}
+	const both=[{...stream,stepIO: true,stepError: value}];
+	assert.throws(()=>generateCTaskExports({...options,entries: both,witDelivery: true}),/cursor IO failure/u);
+	assert.throws(()=>generateSyncWire("lbc_jobs",both,{tasks: true}),/cursor IO failure/u);
+});
+
 test("the WIT task and cursor wire cannot exchange demand, value, or failure channels",async ()=>{
 	const primitive=name=>({kind: "primitive",name});
 	const feed={name: "feed",declaration: "Jobs.feed",effect: "EIO"

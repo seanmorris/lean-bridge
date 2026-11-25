@@ -171,6 +171,7 @@ export const compileHostSources = async options => {
 		, ...(dotnetTaskObjects ? {dotnetTaskObjects: true} : {})
 		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
+		, ...(options.target === "wit-wasi" && !ir && projectContract.asyncIterators?.length ? { witCursorIO: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
