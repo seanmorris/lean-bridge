@@ -302,7 +302,7 @@ static bool application(lb_wit_turns *s,void *ptr){
         check(wasmtime_component_linker_instance_add_func(root,"observe-drop",12,observe_drop,h,NULL));
     }
     if(in->mode==CURSORS || in->mode==CANCEL || in->mode>=MIXED){
-        check(lb_tg_link_all(&h->tasks,root,s));
+        check(lb_tg_link_all(&h->tasks,&h->s.tasks,root,s));
     }
     if(in->mode!=CURSORS && in->mode!=CANCEL && in->mode<MIXED)check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
     wasmtime_component_linker_instance_delete(root);

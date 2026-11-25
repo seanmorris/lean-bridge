@@ -153,6 +153,8 @@ Without a callback provider, pass just `objects.wasm application.wasm`. For a pa
 
 In this launcher, malformed values in a synchronous call are boundary errors, not Lean `IO` or `EIO` results. For example, passing an `Int` with a trailing zero limb to `shift` stops the command with `invalid WIT argument or conversion limit: shift`. If the defining guest itself traps while releasing the staged argument, the command reports that trap instead.
 
+The same application can hold a byte-array future while awaiting an object future. The installed `wit/object-tasks.wit` gives each result type. An `own<box>` result retains the guest object's identity. A `list<u8>` value is a copy: you can reuse the input buffer as soon as the factory returns, even if the worker is still pending.
+
 ### Call synchronous IO
 
 If the receipt lists `native-wit-object-io-v1`, the application supplies the objects. Build one Wasm component for the `owner` world in `wit/deps/objects.wit`, and a separate component for the `application` world in `wit/`. The first component defines the resources and their methods. The second imports those same resource types and the compiled Lean API, and exports `run: func() -> s64`.

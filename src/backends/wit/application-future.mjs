@@ -16,6 +16,8 @@ import { witTurnRelayHost } from "./application-turn-callback.mjs";
 import { witTurnRelayGraph } from "./application-turn-future.mjs";
 import { witTurnPlainGraph,witTurnPlainHost } from "./application-turn-plain.mjs";
 import { witTurnTaskHost } from "./application-turn-task-host.mjs";
+import {copiedWorkerProjection} from "./application-turn-copied.mjs";
+import {copiedWorkerHost} from "./application-turn-copied-host.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -87,6 +89,14 @@ export const witObjectFutureFiles=options=>{
 			|| canonicalJson(d.result.type)!==canonicalJson(e.result))
 			return reject("source mismatch: "+e.declaration);
 		const label=witVariantMember(e.name,names,reject,"operation");
+		const copied=t=>t.kind==="primitive" || (t.kind==="apply" && t.constructor==="result" && t.arguments.every(copied));
+		if([e.result,...e.parameters.map(q=>q.type),...[e.error,e.stepError].filter(Boolean)].every(copied))
+		{
+			const {row,writer}=copiedWorkerProjection({d,e,errors: api.errors,label});
+			files[label+"-copied.wat"]=writer;
+			files[label+"-turn-copied.h"]=copiedWorkerHost({e,byRef,p});
+			supported.push(row);continue;
+		}
 		const returned=e.result.kind==="apply" && e.result.constructor==="result" && e.result.arguments.length===2 && u32(e.result.arguments[0]);
 		const factory=e.effect==="EIO",shape=factory?"factory":returned?"returned":"owned";
 		const owner=factory?e.error:returned?e.result.arguments[1]:e.result;

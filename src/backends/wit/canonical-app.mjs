@@ -8,7 +8,7 @@ import {witVariantMember} from "./copied-variants.mjs";
 
 const fail=reason=>{throw new TypeError("Canonical WIT: "+reason);};
 const marker="lean-bridge-guest-slot-v1";
-const method=(d,e,i,names,errors,used)=>{
+const method=(d,e,i,names,errors,used,emitProducer=true)=>{
 	const ext=d.source?.extensions,stream=d.resultMode==="async-iterator",future=d.resultMode==="promise",asynchronous=stream||future;
 	if(d.kind!=="function" || d.owner!==null || d.source?.producer!=="lean" || !e || d.source.declaration!==e.declaration
         || !["pure","BaseIO","IO","EIO"].includes(e.effect) || ext?.["lean-lang.org/effect"]!==e.effect
@@ -44,8 +44,25 @@ const method=(d,e,i,names,errors,used)=>{
 	m.wit=failure?"result<"+w+", "+failure.wit+">":w;
 	m.wat=failure?"(result "+t+" (error "+failure.wat+"))":t;
 	m.begin=failure?"(result "+begin+" (error "+failure.wat+"))":begin;
-	m.producer=asynchronous && (stream?canonicalStream(m,64):rich?richCanonicalFuture(m,64):renderCanonicalFutureProducer(d,64,args.map(p=>p.name))).replace("(component","(component $producer"+i);
+	m.producer=emitProducer && asynchronous && (stream?canonicalStream(m,64):rich?richCanonicalFuture(m,64):renderCanonicalFutureProducer(d,64,args.map(p=>p.name))).replace("(component","(component $producer"+i);
 	return m;
+};
+/**
+ * Reconcile one copied worker in an application that also declares resources.
+ * Other methods' resource types and error definitions belong to those methods.
+ *
+ * @param d - Reviewed or source-derived public declaration.
+ * @param e - Independently compiled method.
+ * @param errors - Error definitions in the same public interface.
+ */
+export const canonicalCopiedWorker=(d,e,errors)=>{
+	const x=d.source.extensions,phases=e.delivery==="async-iterator"?{call: [],pull: [],close: []}:{call: []};
+	if(!e.delivery || !equal(x["lean-bridge.dev/host-member-phases"],phases) || !equal(x["lean-bridge.dev/host-members"],[])
+		|| ["lean-bridge.dev/error-payload-site","lean-bridge.dev/step-error-payload-site"].some(k=>Object.hasOwn(x,k))
+		|| !d.parameters.every((s,i)=>s.name===e.parameters[i]?.name && s.lifetime===null && s.mutability==="immutable" && s.optional===false && s.default===null)
+		|| d.result.lifetime!==null)
+		fail("invalid copied worker sites: "+d.name);
+	return method(d,e,0,new Set(),new Map(errors.map(v=>[v.id,v])),new Set(),false);
 };
 /**
  * Assemble the shaped producer and a replaceable, type-checked guest section.

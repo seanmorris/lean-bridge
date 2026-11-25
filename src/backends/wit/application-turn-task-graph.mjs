@@ -1,4 +1,5 @@
 /** @file Assemble the source-selected task and cursor interface on one native owner. */
+import {copiedChannelImport,copiedDrain} from "./application-turn-copied.mjs";
 
 /**
  * List the private hooks used by the embedding, never by a downstream application.
@@ -32,6 +33,7 @@ export const witTurnTaskAssembly=o=>{
 	}
 	for(const m of methods)
 	{
+		if(m.copied)continue;
 		for(const i of [m.input,...m.cb!=null?[m.cb]:[]])field("lease",i,`(param "value" (borrow $r${i})) (result u64)`);
 		field("copy",m.owner,take(m.owner));
 		if(m.shape==="stream" && m.err!=null)field("copy",m.err,take(m.err));
@@ -49,6 +51,7 @@ export const witTurnTaskAssembly=o=>{
 	{
 		const args=m.shape==="stream"?'(param "value" u64)':'(param "left" u64) (param "right" u64)';
 		parts.push(`(import "turn-${m.name}" (func $turn${j} (param "op" u32) (param "key" u32) ${args} (result (tuple u32 u32 u64 u64))))`);
+		if(m.copied)parts.push(copiedChannelImport(m,"$copied"+j));
 	}
 	for(const [i,m] of responses)
 	{
@@ -60,6 +63,15 @@ export const witTurnTaskAssembly=o=>{
 	for(const [i,m] of methods.entries())
 	{
 		const stream=m.shape==="stream",extra=m.shape==="callback"?`(with "invoke" (func $res${m.idx} "invoke")) (with "failure" (type $failure))`:"";
+		if(m.copied)
+		{
+			parts.push(files[m.name+"-copied.wat"].replace("(component","(component $writer"+i));
+			parts.push(`(instance $m${i} (instantiate $writer${i} ${(stream?["begin","peek","act"]:["begin","peek"]).map(f=>`(with "${f}" (func $copied${i} "${f}"))`).join(" ")}))`);
+			const controls=stream?"":["poll","close"].map(n=>`(with "${n}" (func $copied${i} "${n}"))`).join(" ");
+			parts.push(copiedDrain(stream).replace("(component","(component $drain"+i),`(instance $d${i} (instantiate $drain${i} (with "turn" (func $turn${i})) (with "release" (func $v "release-lease")) ${controls}))`);
+			for(const n of witTurnChannelPorts(m.shape))parts.push(`(export "${m.name}-${n}" (func $${["drain","poll","close"].includes(n)?"d":"m"}${i} "${n}"))`);
+			continue;
+		}
 		parts.push(files[m.name+(stream?"-turn-cursor.wat":"-turn-future.wat")].replace("(component","(component $code"+i));
 		parts.push(`(instance $m${i} (instantiate $code${i} ${types(methodSlots(m))} ${extra} (with "leases" (instance $v)) (with "turn" (func $turn${i}))))`);
 		parts.push(...witTurnChannelPorts(m.shape).map(n=>`(export "${m.name}-${n}" (func $m${i} "${n}"))`));

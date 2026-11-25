@@ -1,6 +1,7 @@
 /** @file Compose the resource-owning task interface without redefining its resource types. */
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
 import { witTurnTaskAssembly } from "./application-turn-task-graph.mjs";
+import {copiedChannelImport} from "./application-turn-copied.mjs";
 
 /**
  * Private native hooks only transport readiness. The consumer sees the
@@ -13,10 +14,10 @@ export const objectFutureGraph=o=>{
 	validateOrdinaryWasiSettings({name,version});
 	const orig=descriptor.contract.resources,iface=descriptor.interfaceName,exchange=iface.replace("/objects@","/exchange@");
 	const rs=[...orig,{name: descriptor.contract.error},...callbacks.exchange.slots.map(s=>({name: s.type,retain: "retain-"+s.type}))];
-	const methodSlots=m=>[...new Set([m.input,m.owner,...m.err!=null?[m.err]:[],...m.cb!=null?[m.cb]:[]])];
+	const methodSlots=m=>m.copied?[]:[...new Set([m.input,m.owner,...m.err!=null?[m.err]:[],...m.cb!=null?[m.cb]:[]])];
 	const relays=methods.filter(m=>m.shape==="callback"),slots=[...new Set(methods.flatMap(methodSlots))];
 	const objects=slots.filter(i=>i<=orig.length),registrations=slots.filter(i=>i>orig.length);
-	const inputs=new Set(methods.map(m=>m.input)),outputs=new Set(methods.flatMap(m=>m.err!=null?[m.owner,m.err]:[m.owner]));
+	const nominals=methods.filter(m=>!m.copied),inputs=new Set(nominals.map(m=>m.input)),outputs=new Set(nominals.flatMap(m=>m.err!=null?[m.owner,m.err]:[m.owner]));
 	const labels=new Set(methods.map(m=>m.name)),aliases=new Map();
 	for(const i of slots)
 	{
@@ -45,6 +46,13 @@ export const objectFutureGraph=o=>{
 		, `(type $failure (variant (case "callback" (own $r${orig.length})) (case "io" string)))`);
 	methods.forEach(({name: n,input: a,owner: z,shape,cb,err,idx},j)=>{
 		const relay=shape==="callback",stream=shape==="stream";
+		if(methods[j].copied)
+{
+			parts.push(copiedChannelImport(methods[j],"$copied"+j),files[n+"-copied.wat"].replace("(component","(component $writer"+j));
+			parts.push(`(instance $f${j} (instantiate $writer${j} ${(stream?["begin","peek","act"]:["begin","peek"]).map(f=>`(with "${f}" (func $copied${j} "${f}"))`).join(" ")}))`);
+			parts.push(...(stream?["pump","retire"]:["deliver","reap","retire"]).map(f=>`(export "${n}-${f}" (func $f${j} "${f}"))`));
+			return;
+}
 		const types=methodSlots(methods[j]).map(i=>`(with "r${i}" (type $r${i}))`).join(" ")+(relay?' (with "failure" (type $failure))':"");
 		const stage=relay?" (result (result u32 (error string)))":shape==="factory"||stream?" (result u32)":shape==="returned"?" (result (option u32))":"";
 		parts.push(`(import "${n}-native-start" (func $start${j} (result u32)))`,`(import "${n}-native-stage" (func $stage${j} (param "key" u32)${stage}))`);
@@ -69,7 +77,7 @@ export const objectFutureGraph=o=>{
 	const wit=[`package lean-bridge:${name}@${version};`,"interface object-tasks {"
 		, ...objects.length?[`  use ${iface}.{${uses(objects)}};`]:[]
 		, ...relays.length?[`  use callbacks.{${uses(registrations)}};`,`  variant %${failure} { callback(own<%${aliases.get(orig.length)}>), io(string) }`]:[]
-		, ...methods.map(m=>`  %${m.name}: func(%${m.param}: borrow<%${aliases.get(m.input)}>${m.shape==="callback"?`, %${m.callbackParam}: borrow<%${aliases.get(m.cb)}>`:""}) -> ${type(m)};`)
+		, ...methods.map(m=>m.copied?`  %${m.name}: func(${m.witParams}) -> ${m.witResult};`:`  %${m.name}: func(%${m.param}: borrow<%${aliases.get(m.input)}>${m.shape==="callback"?`, %${m.callbackParam}: borrow<%${aliases.get(m.cb)}>`:""}) -> ${type(m)};`)
 		, "}","world task-consumer { import object-tasks; }"].join("\n");
 	const turn=o.complete && methods.length?witTurnTaskAssembly({methods,files,rs,iface,callbacks,objects,registrations,slots,api,aliases,failure,methodSlots}):null;
 	return {api,wit,wat: parts.join("\n"),turn};

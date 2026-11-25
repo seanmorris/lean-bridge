@@ -215,3 +215,20 @@ The [native fault probe](../../tests/fixtures/static-host-workers/guest-turn.c) 
 For the other runtimes, see the [installed host-worker evidence by target](host-worker-qualification-20261125.md).
 
 The synchronous-only regression was rebuilt at `0ec2035` because its launcher also includes the shared marshalling header. Both relocated installs returned `1` after checking object identity, mutation, original IO/EIO errors and destructor counts; neither admitted the private exchange import. These are new archive bytes: ordinary 60,970,873 (`e87f60c1fa289ad65799bc137c0e7fde8794a07a767fe8b4ef5aadc851288bea`), reviewed 60,974,555 (`30886cbfb92011eda43736bbd04aab146151ea420144bc8c9996a57ca81a234d`).
+
+## Copied and guest-owned workers in one release
+
+The [install test](../../tests/helpers/wit-installed-object-task-only.mjs) builds five declarations from one Lean project. `Jobs.echo` returns a guest-owned box. `PacketCompose.packet` copies its inputs and returns a future. `Packet.chunks` yields copied byte arrays, `Packet.release` opens the worker's gate, and `Packet.closed` counts closed cursors. The reviewed build selects the public declarations from the supplied Binding IR without an `exports` list.
+
+| Relocated archive | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 60,976,349 | `2a9d6b223a4014b15ac7e44faf68654d398664e5775f013c3a06043d42abcd49` |
+| Reviewed | 60,977,904 | `e98ad3109c8c07fe102a01ce904780a0766bced3abeb39fe11c2041507f09766` |
+
+Three applications ran from each verified archive with the producer source and release directory removed and no tools on the search path:
+
+- The object consumer compared the two guest identities, dropped the original and read **83** from the remaining box.
+- The [packet consumer](../../tests/fixtures/wit-canonical-bytes/application.wat) distinguished an immediate factory rejection, a returned `Except.error`, and a terminal stream error. It checked empty and non-UTF-8 byte arrays after overwriting the input, dropped a pending future and an unread stream, and observed **2** cursor closes.
+- The [interleaved consumer](../../tests/fixtures/static-host-workers/installed-overlap.wat.in) kept a packet future pending while it awaited the box. It checked the original identity, dropped both box owners, released the packet and recovered the original error byte **253**.
+
+The negative build moved an `IO.getEnv` call into `Packet.finish`, the cursor finalizer. The compiler identified the exact finalizer and missing environment capability. Adding an explicit `nativeEffects` grant also failed: the guest-object WIT profile admits no external OS capabilities. Neither build created a release directory.

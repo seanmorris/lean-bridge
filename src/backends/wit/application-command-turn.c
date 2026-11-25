@@ -85,7 +85,7 @@ static bool application(lb_wit_turns *turns,void *data){
     if(!component)goto end;
     store=wasmtime_store_new(engine,NULL,NULL);link=wasmtime_component_linker_new(engine);if(!store || !link)goto end;
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
-    bool linked=report(lb_ts_link(&s->sync,&s->owner->sync,turns,root)) && report(lb_tg_link_all(&s->tasks,root,turns));
+    bool linked=report(lb_ts_link(&s->sync,&s->owner->sync,turns,root)) && report(lb_tg_link_all(&s->tasks,&s->owner->tasks,root,turns));
     wasmtime_component_linker_instance_delete(root);if(!linked)goto end;
     wasmtime_context_t *ctx=wasmtime_store_context(store);wasmtime_component_instance_t i;
     if(report(wasmtime_component_linker_instantiate(link,ctx,component,&i)))ok=execute(s,&i,ctx);

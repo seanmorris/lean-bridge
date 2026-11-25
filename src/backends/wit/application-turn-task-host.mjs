@@ -14,20 +14,20 @@ export const witTurnTaskHost=(p,methods,entries)=>{
 	const rows=methods.map(m=>{
 		const n=names.get(m.declaration),stream=m.shape==="stream";
 		if(!n)throw new TypeError("Missing native task declaration: "+m.declaration);
-		return {n,stream,name: m.name,f: (stream?"lb_tc_":"lb_tf_")+n,kind: stream?"LB_TG_STREAM":m.shape==="factory"?"LB_TF_FACTORY":m.shape==="callback"?"LB_TF_RETAINED":"LB_TF_SINGLE"};
+		return {n,stream,copied: m.copied,name: m.name,f: (m.copied?"lb_cp_":stream?"lb_tc_":"lb_tf_")+n,kind: stream?"LB_TG_STREAM":m.shape==="factory"?"LB_TF_FACTORY":m.shape==="callback"?"LB_TF_RETAINED":"LB_TF_SINGLE"};
 	});
 	if(!rows.length || new Set(rows.map(r=>r.n)).size!==rows.length || rows.length!==entries.length)throw new TypeError("Incomplete native task inventory");
 	return `/* Generated: scheduler bindings for every source-selected task and cursor. */
 #ifndef LB_WIT_APPLICATION_TURN_TASKS_H
 #define LB_WIT_APPLICATION_TURN_TASKS_H
 #include "application-turn-channels.h"
-${rows.map(r=>'#include "'+r.name+(r.stream?'-turn-stream.h"':'-turn-future.h"')).join("\n")}
+${rows.map(r=>'#include "'+r.name+(r.copied?'-turn-copied.h"':r.stream?'-turn-stream.h"':'-turn-future.h"')).join("\n")}
 enum {${rows.map(r=>"LB_TG_I_"+r.n).join(",")},LB_TG_COUNT};
 static const lb_tg_spec lb_tg_specs[LB_TG_COUNT]={
     ${rows.map(r=>'{"turn-'+r.name+'",'+r.kind+'}').join(",\n    ")}
 };
 typedef struct {${rows.map(r=>r.f+" c_"+r.n+";").join("")}} lb_tg_native;
-typedef struct {lb_tg_port rows[LB_TG_COUNT];struct pollfd fds[64*LB_TG_COUNT];} lb_tg_store;
+typedef struct {lb_tg_port rows[LB_TG_COUNT];struct pollfd fds[64*LB_TG_COUNT];${rows.filter(r=>r.copied).map(r=>"lb_cp_linker copy_"+r.n+";").join("")}} lb_tg_store;
 static inline bool lb_tg_contains(uint32_t op){return op>=LB_TG_BASE && (op-LB_TG_BASE)/16<LB_TG_COUNT;}
 static inline bool lb_tg_dispatch(lb_tg_native *s,lb_tc_refs *refs,${p}binding binding,lb_wit_message in,lb_wit_message *out){
     if(!lb_tg_contains(in.op))return false;
@@ -40,10 +40,11 @@ static inline bool lb_tg_shutdown(lb_tg_native *s){
     bool ok=true;${rows.map(r=>`if(!${r.f}_shutdown(&s->c_${r.n}))ok=false;`).join("\n    ")}
     return ok;
 }
-static inline wasmtime_error_t *lb_tg_link_all(lb_tg_store *g,wasmtime_component_linker_instance_t *root,lb_wit_turns *turns){
+static inline wasmtime_error_t *lb_tg_link_all(lb_tg_store *g,lb_tg_native *native,wasmtime_component_linker_instance_t *root,lb_wit_turns *turns){
+    (void)native;
     for(unsigned i=0;i<LB_TG_COUNT;i++){
         wasmtime_error_t *e=lb_tg_link_one(&g->rows[i],lb_tg_specs+i,i,root,turns);if(e)return e;
-    }return NULL;
+    }${rows.filter(r=>r.copied).map(r=>`{wasmtime_error_t *e=lb_cp_link(&g->copy_${r.n},&native->c_${r.n}.wire,&g->rows[LB_TG_I_${r.n}],${r.stream},"copied-${r.name}",root);if(e)return e;}`).join("\n    ")}return NULL;
 }
 static inline bool lb_tg_open_all(lb_tg_store *g,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx){
     for(unsigned i=0;i<LB_TG_COUNT;i++)if(!lb_tg_open_one(&g->rows[i],lb_tg_specs+i,inst,ctx))return false;

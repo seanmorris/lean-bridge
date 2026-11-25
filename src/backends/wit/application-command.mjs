@@ -3,6 +3,7 @@ import {canonicalSupervisor} from "./canonical-supervisor.mjs";
 import {witApplicationExchange} from "./application-exchange.mjs";
 import {witTurnOwners} from "./application-turn-owners.mjs";
 import {cIdentifier} from "../c/generate.mjs";
+import {copiedChannelImport} from "./application-turn-copied.mjs";
 
 const fail=message=>{throw new TypeError("WIT application command: "+message);};
 const nested=(wat,id,role)=>{
@@ -37,8 +38,15 @@ export const witApplicationCommand=o=>{
 	if(mixed)
 	{
 		parts.push(`(type $sync-ports ${modules.syncPorts}) (import "sync-ports" (instance $transport (type $sync-ports)))`);
-		for(const {name,shape} of methods)
+		for(const method of methods)
 		{
+			const {name,shape}=method;
+			if(method.copied)
+			{
+				const port="copied-"+name;
+				parts.push(copiedChannelImport(method,"$"+port));
+				channels.push(`(with "${port}" (instance $${port}))`);
+			}
 			const n="turn-"+name,input=shape==="stream"?'(param "value" u64)':'(param "left" u64) (param "right" u64)';
 			parts.push(`(import "${n}" (func $${n} (param "op" u32) (param "key" u32) ${input} (result (tuple u32 u32 u64 u64))))`);
 			channels.push(`(with "${n}" (func $${n}))`);
