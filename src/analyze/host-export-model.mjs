@@ -293,15 +293,15 @@ export const reconcileHostExports = options => {
 	};
 	const closures=new Map();
 	const closureRef=e=>{
-		if(!ir || ![compiledHostModules.python,compiledHostModules.ruby].includes(selection.hostModule) || selection.nativeEffectPolicy!==nativeEffectPolicy
-			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous Python or Ruby host factory");
+		if(!ir || ![compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c].includes(selection.hostModule) || selection.nativeEffectPolicy!==nativeEffectPolicy
+			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous C, Python or Ruby host factory");
 		const {argument,reply}=e.result;
 		for(const t of [argument,reply]) if(!(t?.kind==="primitive" || t?.kind==="named" && types.some(r=>r.id===t.id)))
 			fail("Unauthenticated returned closure carrier");
 		const key=sha256(canonicalJson({
 			component,declaration: e.declaration,argument,reply,imports
 			, capabilities: capabilities(e),errors: errorIds(e)
-			, ...hostTarget==="ruby"?{owner: "ruby-host-binding"}:{}
+			, ...hostTarget!=="python"?{owner: hostTarget+"-host-binding"}:{}
 		}));
 		const name="LeanClosure"+key.slice(0,20),id="bridge:"+name;
 		const parameter={...site(argument,true),name: "value",mutability: types.find(r=>r.id===argument.id)?.mutability??"immutable",optional: false,default: null};

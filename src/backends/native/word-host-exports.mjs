@@ -1,5 +1,6 @@
 /** @file Emit the checked synchronous Lean exports and private native owner entry. */
 import { wordHostCarrier } from "./word-host-members.mjs";
+import { readFileSync } from "node:fs";
 
 const qual = /^(?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*$/u;
 const sum = t => t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2;
@@ -27,6 +28,9 @@ export const emitWordHostExports = (o, model, target) => {
 		throw new TypeError("Invalid native host component");
 	const prefix = "lb_" + target.replaceAll("-","_") + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
+	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure");
+	if(factories.some(({e})=>target!=="c" || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
+	const cleanup=factories.length?"dn_closure_cleanup(op)":null;
 	const lean = (t, depth = 0) => {
 		if(depth > 64) throw new TypeError("native host result exceeds 64 nested branches");
 		if(sum(t)) return "(_root_.Except " + lean(t.arguments[1], depth + 1) + " " + lean(t.arguments[0], depth + 1) + ")";
@@ -45,22 +49,31 @@ export const emitWordHostExports = (o, model, target) => {
 }`);
 		return name + "(f,s,v,out,tags)";
 	};
-	for(const [i, e] of entries.entries())
+	const arrow=t=>"("+lean(t.argument)+" → _root_.IO "+lean(t.reply)+")";
+	const calls=entries.map((e,i)=>({e,i})).concat(factories.map(({e,i})=>({e,i: entries.length+i,apply: i})));
+	for(const {i,e,apply} of calls)
 	{
+		if(e.parameters.some(p=>p.type?.kind==="io-closure")) throw new TypeError("Returned host closures are not callback inputs");
 		if(!qual.test(e.declaration) || e.delivery || !["pure", "BaseIO", "IO", "EIO"].includes(e.effect) || e.parameters.length > 64 || (e.effect === "pure" && !clrWorkers && !sum(e.result)))
 			throw new TypeError("Invalid synchronous native export: " + e.declaration);
-		const args = e.parameters.map(p => wordHostCarrier(ir.types, p.type)), eio = e.effect === "EIO";
-		const ret = lean(e.result), n = args.length, fn = "lb_dn_export_" + i;
-		const params = e.parameters.map((p, j) => "(v" + j + " : " + lean(p.type) + ")").join(" ");
+		const inside=apply!==undefined, factory=!inside && e.result.kind==="io-closure";
+		const argTypes=inside?[e.result,e.result.argument]:e.parameters.map(p=>p.type);
+		const args=argTypes.map(t=>t.kind==="io-closure"?{c: "lean_object *",ticket: true,unbox: v=>v}:wordHostCarrier(ir.types,t)),eio=e.effect==="EIO";
+		const result=inside?e.result.reply:e.result;
+		const ret=factory?arrow(result):lean(result), n = args.length, fn = "lb_dn_export_" + i;
+		const params = argTypes.map((t,j)=>"(v"+j+" : "+(t.kind==="io-closure"?arrow(t):lean(t))+")").join(" ");
 		const r = eio ? "(_root_.Except " + lean(e.error) + " " + ret + ")" : ret;
-		const call = "(_root_." + e.declaration + args.map((_, j) => " v" + j).join("") + ")";
+		const call = inside?"(v0 v1)":"(_root_." + e.declaration + args.map((_, j) => " v" + j).join("") + ")";
 		defs.push(`@[export ${fn}] def execute${i} ${params} : IO ${r} := ${eio ? "EIO.toIO' " : e.effect === "pure" ? "pure " : ""}${call}`);
 		header.push("extern lean_object *" + fn + "(" + (args.map(c => c.c).join(",") || "void") + ");");
-		const ok = output(e.result), err = eio && output(e.error);
+		const ok = factory?`dn_closure_save(s,${i},v,out)`:output(result), err = eio && output(e.error);
 		methods.push(`static int dn_call_${i}(lb_dn_frame *f,lb_dnd_session *s,const uint64_t *arg,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {
     if(n!=${n} || (n && !arg)) return 5;
     lean_object *a[${Math.max(1,n)}]={0}, *io=NULL; int status=5;
-    ${args.map((c, j) => c.index === undefined ? `if(!(a[${j}]=dn_get(${c.tag},arg+${3*j}))) goto done;` : `if(arg[${3*j+1}] || arg[${3*j+2}] || !(a[${j}]=LB_DND(wrap)(f,s,${c.index},arg[${3*j}],0))) goto done;`).join("\n    ")}
+    ${args.map((c, j) => c.ticket?`if(arg[1] || arg[2]) goto done;
+    dn_closure_slot *ticket=dn_closure_find(s,${apply},arg[0]);
+    if(!ticket) { status=DN_CLOSURE_STALE; goto done; }
+    a[0]=ticket->fn; lean_inc(a[0]);`:c.index === undefined ? `if(!(a[${j}]=dn_get(${c.tag},arg+${3*j}))) goto done;` : `if(arg[${3*j+1}] || arg[${3*j+2}] || !(a[${j}]=LB_DND(wrap)(f,s,${c.index},arg[${3*j}],0))) goto done;`).join("\n    ")}
     ${args.flatMap((c,j) => c.index === undefined ? [] : ["LB_DND(admit)(a[" + j + "]);"]).join(" ")}
     ${args.flatMap((c,j) => c.c === "lean_object *" ? ["lean_inc(a[" + j + "]);"] : []).join(" ")}
     io=${fn}(${args.map((c,j) => c.unbox("a[" + j + "]")).join(",")}); lean_object *v=lean_ctor_get(io,0);
@@ -115,7 +128,8 @@ static int dn_output(int kind,lean_object *v,uint64_t *out) {
 __attribute__((visibility("default"))) void ${prefix}_clear(uint64_t *out) {
     if(out) { if(out[3]==1 || out[3]==2) free((void *)(uintptr_t)out[0]); memset(out,0,4*sizeof(*out)); }
 }
-${outputs.join("\n")}
+${factories.length?readFileSync(new URL("./word-host-closures.h",import.meta.url),"utf8")
+	+`\nstatic int dn_closure_cleanup(int op) { switch(op) { case -3: ${factories.map(({i})=>"case "+(2*entries.length+i)+":").join(" ")} return 1; default:return 0; } }\n`:""}${outputs.join("\n")}
 ${methods.join("\n")}
 ${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__((visibility("default"))) int ${prefix}_call(${target==="rust"?"uintptr_t owner,":""}uint64_t id,lb_dn_dispatch dispatch,int op,const uint64_t *args,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {
     if(!lean_bridge_native_process_valid() || !out || !tags || !fault) return 10;
@@ -125,15 +139,18 @@ ${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__
     if(op==-2 || op==-1) {
         int code=op==-1 ? LB_DND(close)(&f,component) : lean_bridge_native_component_initialize(component,init) ? LB_DND(open)(&f,component,specs,${ir.types.length}) : DN_DOMAIN_FATAL;
         status=code==DN_BOUND ? 0 : code==DN_INCOMPATIBLE ? 5 : code==DN_ACTIVE ? 14 : 10;
-    } else if(!lean_bridge_native_component_ready(component)${taskObjects?" && op!=PHP_HOST_SWEEP":""}) status=10;
+    } else if(!lean_bridge_native_component_ready(component)${taskObjects?" && op!=PHP_HOST_SWEEP":""}${cleanup?" && !"+cleanup:""}) status=10;
     else {
         lb_dnd_session *s=LB_DND(enter)(&f,component); if(!s) status=14;
         else { f.domain_session=s; f.available=available;
-            switch(op) { ${taskObjects?"case PHP_HOST_SWEEP: status=n ? 5 : 0; break; case PHP_HOST_PIN: case PHP_HOST_RESOLVE: case PHP_HOST_ADMIT: status=php_host_lease(&f,s,op,args,n,out); break; ":""}${entries.map((_,i) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")} default: status=5; }
+            switch(op) { ${factories.length?`case -3: {
+                for(lb_dn_frame *p=f.parent;p;p=p->parent) if(p->domain_session==s) status=14;
+                if(!status) dn_closure_retire((uintptr_t)s,dn_serial);
+                break; } `:""}${taskObjects?"case PHP_HOST_SWEEP: status=n ? 5 : 0; break; case PHP_HOST_PIN: case PHP_HOST_RESOLVE: case PHP_HOST_ADMIT: status=php_host_lease(&f,s,op,args,n,out); break; ":""}${calls.map(({i}) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")}${factories.map(({i})=>` case ${2*entries.length+i}: status=dn_closure_drop(s,${i},args,n); break;`).join("")} default: status=5; }
             LB_DND(leave)(&f,s);
         }
     }
-    if(f.fatal || (${taskObjects?"(op>=0 || (op<=PHP_HOST_PIN && op!=PHP_HOST_SWEEP))":"op>=0"} && !lean_bridge_native_component_ready(component))) status=10;
+    if(f.fatal || (${taskObjects?"(op>=0 || (op<=PHP_HOST_PIN && op!=PHP_HOST_SWEEP))":"op>=0"}${cleanup?" && !"+cleanup:""} && !lean_bridge_native_component_ready(component))) status=10;
     ${staticWorkers && target==="rust"?"if(op==-2 && !status) atomic_store_explicit(&worker_owner,owner,memory_order_relaxed);\n    ":""}lb_dn_leave(&f); return status;
 }
 `;

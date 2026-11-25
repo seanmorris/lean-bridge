@@ -91,6 +91,20 @@ native component, shared reference registry, and Lean runtime. Downstream
 users [register their C implementations](../consume/c.md#supply-c-objects-to-lean);
 they don't need your Lake project or a Lean compiler.
 
+A synchronous factory can capture an imported C object and return a Lean
+function of type `IO (α → IO β)`. Both `α` and `β` can be copied scalars or
+declared host classes. For example:
+
+```lean
+def reader (captured : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun n => do return (← captured.read) + n
+```
+
+List the factory in `exports`, not `taskExports`. The header provides a
+typed callable for that factory, a call function and a drop function. Any
+filesystem or environment effects in the returned body need the same grants
+they would need in a direct export.
+
 To carry those same objects through a task or cursor, select its declaration in
 `taskExports` or `asyncIterators` on this host package. The archive includes
 the extra shared lease library and the compiled worker adapters. A worker can

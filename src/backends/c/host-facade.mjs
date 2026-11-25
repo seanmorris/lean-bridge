@@ -12,6 +12,8 @@ import {cHostWorkers} from "./host-worker-api.mjs";
  */
 export const cHostFacade=o=>{
 	const {ir,entries,model,identity,prefix}=o;
+	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure"),closures=factories.length>0;
+	if(closures && (o.cpp || o.wit))throw new TypeError("Unadmitted host closure facade");
 	const p=cIdentifier(o.name)+"_",guard="LB_C_PUBLIC_"+identity.toUpperCase(),defs=[],code=[],symbols=[];
 	const used=new Set(),reserve=n=>{if(used.has(n)) throw new TypeError("C host public name collision: "+n);used.add(n);return n;};
 	const names=["binding","hosts","status","diagnostic","view","buffer","integer","integer_view"];
@@ -86,22 +88,38 @@ done_${i}:
 		`if(!binding) return ${p}INVALID; lb_cr_ref r=${br("*binding")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,r,&app);
     if(c) return lb_status(c); if(((lb_app *)app)->depth) return ${p}BUSY;
     lb_scope scope={.binding=r,.app=app}; uint64_t w[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
-    ${o.workerWire?"scope.app->closing=true;while(scope.app->jobs)lw_finish(scope.app->jobs);\n    ":""}++scope.app->depth; int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,-1,NULL,0,w,tags,&fault); --scope.app->depth;
+    ${o.workerWire?"scope.app->closing=true;while(scope.app->jobs)lw_finish(scope.app->jobs);\n    ":closures?"scope.app->closing=true;\n    ":""}++scope.app->depth; ${closures?`int clean=${prefix}_call((uintptr_t)&scope,lb_dispatch,-3,NULL,0,w,tags,&fault);
+    if(clean) { --scope.app->depth; scope.app->closing=false; return lb_native(clean); }
+    `:""}int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,-1,NULL,0,w,tags,&fault); --scope.app->depth;
     if(rc) return lb_native(rc); c=LB_CR(binding_drop)(lb_component_key,&r); if(!c) *binding=(${binding}){0}; return lb_status(c);`);
-	for(const [i,e] of entries.entries())
+	const ticketType=e=>p+cIdentifier(e.name)+"_closure";
+	const ticketResult=e=>({
+		type: ticketType(e)
+		, empty: v=>"("+[0,1,2].map(k=>"!("+v+")._private["+k+"]").join(" && ")+")"
+		, unpack: (v,w)=>v+"=("+ticketType(e)+"){{binding_ref.domain,binding_ref.ticket,"+w+"[0]}};"
+	});
+	for(const {e} of factories)
 	{
-		const name=cIdentifier(e.name),a=e.parameters.map(t=>byRef(t.type,name+"_arg")),r=byRef(e.result,name+"_value"),err=e.effect==="EIO" && byRef(e.error,name+"_failure");
+		reserve(cIdentifier(e.name)+"_closure");
+		defs.push("typedef struct { uint64_t _private[3]; } "+ticketType(e)+";");
+	}
+	const calls=entries.map((e,i)=>({e,i})).concat(factories.map(({e,i})=>({e,i: entries.length+i,apply: true})));
+	for(const {i,e,apply} of calls)
+	{
+		const name=cIdentifier(e.name)+(apply?"_call":""),factory=!apply && e.result.kind==="io-closure";
+		const a=apply?[byRef(e.result.argument,name+"_arg")]:e.parameters.map(t=>byRef(t.type,name+"_arg"));
+		const r=factory?ticketResult(e):byRef(apply?e.result.reply:e.result,name+"_value"),err=e.effect==="EIO" && byRef(e.error,name+"_failure");
 		if(e.result.kind==="apply") add(name+"_value_clear","void",r.type+" *v","if(v) { "+r.clear("*v")+" *v=("+r.type+"){0}; }");
 		if(err && e.error.kind==="apply") add(name+"_failure_clear","void",err.type+" *v","if(v) { "+err.clear("*v")+" *v=("+err.type+"){0}; }");
-		const params=[binding+" binding",...a.map((v,j)=>v.arg+" a"+j),r.type+" *value",...err?[err.type+" *failure"]:[],p+"diagnostic *diag"];
+		const params=[apply?"const "+ticketType(e)+" *fn":binding+" binding",...a.map((v,j)=>v.arg+" a"+j),r.type+" *value",...err?[err.type+" *failure"]:[],p+"diagnostic *diag"];
 		const bad=c=>"return lb_status("+c+");",retired=()=>"lean_bridge_native_runtime_retire(); status="+p+"UNAVAILABLE; goto exit;";
 		add(name,p+"status",params.join(", "),`if(!value || !${r.empty("*value")} || ${o.workerWire?"!lw_empty(diag)":"!diag || diag->message.data || diag->message.len"}${err?" || !failure || !"+err.empty("*failure"):""}) return ${p}INVALID;
-    lb_cr_ref binding_ref=${br("binding")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,binding_ref,&app); if(c) return lb_status(c);
-    ${o.workerWire?"if(((lb_app*)app)->closing) return "+p+"BUSY;\n    ":""}if(((lb_app*)app)->depth>=64) return ${p}LIMIT;
-    size_t budget=0; uint64_t w[${Math.max(1,a.length*3)}]={0},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
-    ${a.map((v,j)=>v.pack("a"+j,"w+"+3*j,bad)).join("\n    ")}
+    ${apply?"if(!fn || !fn->_private[2]) return "+p+"STALE;\n    ":""}lb_cr_ref binding_ref=${br(apply?"*fn":"binding")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,binding_ref,&app); if(c) return lb_status(c);
+    ${o.workerWire || closures?"if(((lb_app*)app)->closing) return "+p+"BUSY;\n    ":""}if(((lb_app*)app)->depth>=64) return ${p}LIMIT;
+    size_t budget=0; uint64_t w[${Math.max(1,(a.length+Number(!!apply))*3)}]={${apply?"fn->_private[2]":"0"}},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
+    ${a.map((v,j)=>v.pack("a"+j,"w+"+3*(j+Number(!!apply)),bad)).join("\n    ")}
     lb_scope scope={.binding=binding_ref,.app=app}; ++scope.app->depth;
-    int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,${i},w,${a.length},out,tags,&fault);
+    int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,${i},w,${a.length+Number(!!apply)},out,tags,&fault);
     ${p}status status=lb_native(rc); (void)budget;
     if(!rc) { ${r.unpack("*value","out",retired)} out[3]=0; }
     ${err?"else if(rc==3) { "+err.unpack("*failure","out",retired)+" out[3]=0; }":""}
@@ -110,18 +128,29 @@ done_${i}:
     goto exit;
 exit: ${prefix}_clear(out); lb_reset(&scope); --scope.app->depth; return status;`);
 	}
+	for(const {e,i} of factories)
+	{
+		const type=ticketType(e);
+		add(cIdentifier(e.name)+"_drop",p+"status",type+" *fn",`if(!fn) return ${p}INVALID;
+    if(!fn->_private[0] && !fn->_private[1] && !fn->_private[2]) return ${p}OK;
+    lb_cr_ref binding=${br("*fn")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,binding,&app); if(c) return lb_status(c);
+    lb_scope scope={.binding=binding,.app=app}; if(scope.app->closing) return ${p}BUSY;
+    uint64_t w[3]={fn->_private[2],0,0},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
+    ++scope.app->depth; int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,${2*entries.length+i},w,1,out,tags,&fault);
+    lb_reset(&scope); --scope.app->depth; if(!rc) *fn=(${type}){0}; return lb_native(rc);`);
+	}
 	const worker=o.workerWire?cHostWorkers(o,{p,byRef,add,reserve,defs}):"";
 	const header="#ifndef "+guard+"\n#define "+guard+"\n#include <stdbool.h>\n#include <stddef.h>\n#include <stdint.h>\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n"+defs.join("\n")+"\n#ifdef __cplusplus\n}\n#endif\n#endif\n";
 	const source=`#include "public.h"
 #include "host-registry.h"
 static const char lb_component_key[]="${identity}";
 static const char *const lb_keys[]={${model.kinds.map(k=>JSON.stringify(k.key)).join(",")}};
-typedef struct { ${p}hosts methods; void *context; unsigned depth; ${o.workerWire?"struct lw_job *jobs; bool closing;":""}} lb_app;
+typedef struct { ${p}hosts methods; void *context; unsigned depth; ${o.workerWire?"struct lw_job *jobs; bool closing;":closures?"bool closing;":""}} lb_app;
 typedef struct { lb_cr_ref binding,temp; lb_app *app; const char *key; void *buffer; } lb_scope;
 static void lb_reset(lb_scope *s) { free(s->buffer); s->buffer=NULL; if(s->temp.ticket) LB_CR(drop)(s->key,&s->temp); }
 static void lb_dispose(lb_cr_fn fn,void *ptr) { ((void (*)(void *))fn)(ptr); }
 static ${p}status lb_status(int c) { switch(c) {case CR_OK:return ${p}OK;case CR_STALE:return ${p}STALE;case CR_LIMIT:return ${p}LIMIT;case CR_INVALID:return ${p}INVALID;default:return ${p}UNAVAILABLE;} }
-static ${p}status lb_native(int c) { switch(c) {case 0:return ${p}OK;case 3:return ${p}DECLARED_ERROR;case 4:return ${p}IO_ERROR;case 5:return ${p}INVALID;case 11:case 12:return ${p}LIMIT;case 13:return ${p}HOST_ERROR;case 14:return ${p}BUSY;default:return ${p}UNAVAILABLE;} }
+static ${p}status lb_native(int c) { switch(c) {case 0:return ${p}OK;case 3:return ${p}DECLARED_ERROR;case 4:return ${p}IO_ERROR;case 5:return ${p}INVALID;case 11:case 12:return ${p}LIMIT;case 13:return ${p}HOST_ERROR;case 14:return ${p}BUSY;${closures?"case 16:return "+p+"STALE;":""}default:return ${p}UNAVAILABLE;} }
 #include "host-copied.h"
 static int lb_dispatch(uint64_t id,int32_t op,const uint64_t *w,size_t n,uint64_t *out,uint32_t *fault) {
     lb_scope *scope=(lb_scope *)(uintptr_t)id; lb_app *s=scope->app;

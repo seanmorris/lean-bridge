@@ -160,6 +160,26 @@ same owner; use `workshop_box_clone` for an independent owner. Drop each owner
 when finished. Close the binding before freeing its context. Calls, including
 cleanup, belong on the process main thread. No Lean installation is needed.
 
+If a factory returns a Lean function, its handle belongs to the binding that
+created it. For a package exporting the [reader factory](../../tests/fixtures/c-host-closures/Closures.lean):
+
+```c
+workshop_status read_plus_two(workshop_binding binding, workshop_box box,
+                              uint32_t *out, workshop_diagnostic *diag) {
+    workshop_reader_closure read_plus = {0};
+    workshop_status s = workshop_reader(binding, box, &read_plus, diag);
+    if (s != workshop_OK) return s;
+    s = workshop_reader_call(&read_plus, 2, out, diag);
+    workshop_status cleanup = workshop_reader_drop(&read_plus);
+    return s == workshop_OK ? cleanup : s;
+}
+```
+
+Assigning the handle to a second variable creates an alias, not a second
+owner. Dropping either alias revokes future calls. Closing the binding
+revokes its remaining functions without closing a sibling binding. Calling
+a stale handle doesn't run Lean.
+
 A member's nonzero return code reaches `diagnostic.host_code` if it escapes
 Lean unchanged. A Lean `IO.Error` carries a message; a thrown `EIO` writes its
 declared payload to a separate output; a returned `Except` is an ordinary
