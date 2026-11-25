@@ -42,7 +42,8 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 		.replace(";; @test-drop-notify@","(call $notify)"),"observed.wit");
 	const storage=await compile("exchange-storage",await readFile(join(app,"exchange.wat"),"utf8"),"exchange.wit");
 	const bridge=await compile("bridge",await readFile(join(app,"operations.wat"),"utf8"),"wit-api");
-	const application=await compile("application",await asset("lean-consumer"),"wit-user");
+	const application=await compile("application",(await asset("lean-consumer")).replace(";; @worker-observers@",
+		`(import "cm32p2|${witCoreInterface(ops)}" "cursor-counts" (func (result i64))) (import "cm32p2|${witCoreInterface(ops)}" "cursor-gate" (func (param i32) (result i32)))`),"wit-user");
 	const userCore=(await run(wasm,["print","application.core"])).stdout;
 	const prefix='(import "cm32p2|'+witCoreInterface(ops)+'" "';
 	const imported=userCore.split("\n").map(line=>line.trimStart()).filter(line=>line.startsWith(prefix)).map(line=>line.slice(prefix.length).split('"')[0]);
@@ -80,7 +81,9 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 	await copyFile(join(app,"api.wit"),join(cbDir,"api.wit"));
 	const extra=cbWit.replace("resource %call-box-to-box {","resource %call-box-to-box { make: static func(mode: u32) -> own<%call-box-to-box>;");
 	await writeFile(join(cbDir,"cb.wit"),extra+`\nworld callback-fixture { import ${name}; import api; import inside-callback: func(); export callbacks; export callback-drops: func() -> u32; export callback-visits: func() -> u32; }`);
-	const callback=await compile("callback-fixture",(await asset("guest-callback")).replaceAll("@CALLS@",witCoreInterface(cbName)),"wit-callback");
+	const callback=await compile("callback-fixture",(await asset("guest-callback")).replaceAll("@CALLS@",witCoreInterface(cbName))
+		.replace(";; @test-callback-import@",'(import "cm32p2" "inside-callback" (func $inside))')
+		.replace(";; @test-callback-visit@","(call $inside)"),"wit-callback");
 	// Check the exported callbacks against the production contract, without
 	// the test factory that lets this probe construct the guest's registrations.
 	await writeFile(join(cbDir,"cb.wit"),cbWit+`\nworld examined { import ${name}; import api; import inside-callback: func(); export callbacks; }`);

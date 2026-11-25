@@ -34,6 +34,7 @@
     (i32.store (local.get $p) (local.get $v))
     (call $result (i32.const 0) (call $new (local.get $p))))
   (func $read (export "cm32p2|@IFACE@|[method]box.read") (param $p i32) (result i32)
+    ;; @installed-drop-observer@
     (if (i32.eq (i32.load (local.get $p)) (i32.const 64206)) (then
       (return (call $result (i32.const 1) (call $error (i32.const 8))))))
     (call $result (i32.const 0) (i32.load (local.get $p))))

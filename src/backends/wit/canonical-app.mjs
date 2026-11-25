@@ -83,11 +83,22 @@ export const canonicalAppModel=({name,version,api,entries,prefix})=>{
  *
  * @param bytes - Trusted wasm-tools output for our generated template.
  */
-export const splitCanonicalTemplate=bytes=>{
-	const ident=Buffer.from([0,97,115,109,13,0,1,0]),offsets=[];
-	// The trusted builder writes this small custom section. Match its entire
-	// payload, not an identifier or similarly named section elsewhere in Wasm.
-	const expected=Buffer.concat([Buffer.from([marker.length]),Buffer.from(marker),Buffer.from("1")]);
+export const splitCanonicalTemplate=bytes=>splitWitApplicationSlots(bytes,["1"]);
+
+/**
+ * Keep only the compiler-owned bytes between the replaceable component
+ * sections. The object owner, optional callback provider and application
+ * must occur exactly once, in that order. Ignore deeper nested components:
+ * a marker in a dependency is not a slot in the package template.
+ *
+ * @param bytes - A binary component emitted by the publisher.
+ * @param roles - Ordered identifiers in the generated private custom sections.
+ */
+export const splitWitApplicationSlots=(bytes,roles)=>{
+	const ident=Buffer.from([0,97,115,109,13,0,1,0]),pieces=[];
+	if(!roles.length || new Set(roles).size!==roles.length)fail("invalid guest slot inventory");
+	const prefix=Buffer.concat([Buffer.from([marker.length]),Buffer.from(marker)]);
+	const expected=roles.map(role=>Buffer.concat([prefix,Buffer.from(role)]));
 	const visit=(buf,fn)=>{
 		if(!buf.subarray(0,8).equals(ident)) fail("expected a component");
 		let pos=8;
@@ -104,13 +115,17 @@ export const splitCanonicalTemplate=bytes=>{
 			fn(kind,buf.subarray(pos,end),at,end);pos=end;
 		}
 	};
+	let previous=0;
 	visit(bytes,(kind,data,at,end)=>{
-		if(kind===4) visit(data,(id,payload)=>{
-			if(id===0 && payload.equals(expected)) offsets.push([at,end]);
+		if(kind!==4)return;
+		visit(data,(id,payload)=>{
+			if(id!==0 || !payload.subarray(0,prefix.length).equals(prefix))return;
+			if(at<previous || !expected[pieces.length]?.equals(payload))fail("unexpected or ambiguous guest slot");
+			pieces.push(bytes.subarray(previous,at));previous=end;
 		});
 	});
-	if(offsets.length!==1) fail("missing or ambiguous guest slot");
-	return [bytes.subarray(0,offsets[0][0]),bytes.subarray(offsets[0][1])];
+	if(pieces.length!==roles.length)fail("missing guest slot");
+	return [...pieces,bytes.subarray(previous)];
 };
 
 /**

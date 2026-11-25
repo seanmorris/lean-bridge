@@ -11,7 +11,7 @@ import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {assertJsonSchema} from "./json-schema.mjs";
 import {validateExportConfiguration} from "../../src/analyze/export-configuration.mjs";
-import {canonicalAppModel,splitCanonicalTemplate} from "../../src/backends/wit/canonical-app.mjs";
+import {canonicalAppModel,splitCanonicalTemplate,splitWitApplicationSlots} from "../../src/backends/wit/canonical-app.mjs";
 
 const exec=promisify(execFile),json=async p=>JSON.parse(await readFile(p)),cli=resolve("scripts/lean-bridge.mjs");
 const fixture=resolve("tests/fixtures/wit-canonical-command"),latches=resolve("tests/fixtures/wit-canonical-latches");
@@ -29,6 +29,19 @@ test("the private guest section cannot collide with an ordinary component name",
 		const data=await bin(bad);assert.throws(()=>splitCanonicalTemplate(data),/guest slot/u);
 	}
 	assert.throws(()=>splitCanonicalTemplate(original.subarray(0,original.length-1)),/truncated/u);
+	const roles=["objects","callbacks","application"],slot=r=>'(component (@custom "'+marker+'" "'+r+'"))';
+	const template=rs=>bin("(component "+rs.map(slot).join(" ")+")");
+	const sections=splitWitApplicationSlots(await template(roles),roles);
+	assert.equal(sections.length,4);
+	const all=await bin("(component (component) (component) (component))");
+	const empty=Buffer.concat([Buffer.from([4,8]),all.subarray(0,8)]);
+	assert.deepEqual(Buffer.concat(sections.flatMap((b,i)=>i<3?[b,empty]:[b])),all);
+	for(const invalid of [roles.slice(1),[...roles,"application"],[...roles].reverse(),["objects","other","application"]])
+{
+		const b=await template(invalid);assert.throws(()=>splitWitApplicationSlots(b,roles),/guest slot/u);
+}
+	const nested=await bin("(component (component "+slot("objects")+") "+slot("application")+")");
+	assert.throws(()=>splitWitApplicationSlots(nested,["objects","application"]),/guest slot/u);
 });
 test("canonical scheduling is an explicit WIT-only author choice",async()=>{
 	const config=await json(join(fixture,"lean-bridge.exports.json"));

@@ -1,6 +1,6 @@
 # Guest-owned WIT objects in compiled Lean workers
 
-This is a local integration result, not an installed WIT package receipt. The [application](../../tests/fixtures/static-host-workers/guest-box.wat.in) defines a mutable resource; only the defining guest knows where it keeps the value. A [second, independently compiled guest](../../tests/fixtures/static-host-workers/guest-peer.wat.in) imports the resource via WIT and returns an independently droppable alias.
+The [application](../../tests/fixtures/static-host-workers/guest-box.wat.in) defines a mutable resource; only the defining guest knows where it keeps the value. A [second, independently compiled guest](../../tests/fixtures/static-host-workers/guest-peer.wat.in) imports the resource via WIT and returns an independently droppable alias. The worker checks below use private integrations; the [synchronous release check](#run-the-installed-synchronous-object-package) uses ordinary and reviewed archives.
 
 The [integration probe](../../tests/fixtures/static-host-workers/guest-box.c) runs the composed component under Wasmtime 42 and calls the actual compiled Lean library. A Lean task returns the original object. A retained callback re-enters Lean, changes its value, and leaves a second, equal-valued object untouched. Rebinding the same resource type preserves identity; a distinct defining instance in the same store and an instance in a different store are rejected.
 
@@ -118,4 +118,17 @@ The callback build contained 68 native exports; worker SHA-256: `95d5dd589ee2750
 
 The fixture counts real calls to Lean’s `nextFinite` and `closeFinite`: pumping without demand does not prefetch. Separate guest instances can advance different cursors without exchanging boxes. Generation rejects changes to the close declaration, error channel, payload type or ownership, and input mutability.
 
-This private integration selects seven task factories and two cursor factories with no missing asynchronous exports in the fixture. The clean build checked 75 native exports; worker SHA-256: `5faf5fdf54f58e220b12d1a5c78d1f221176c92ae7b350768241314a55ab737d`. Installing the **application-owned object** profile from ordinary and reviewed release archives is a separate gate.
+This private integration selects seven task factories and two cursor factories with no missing asynchronous exports in the fixture. The clean build checked 75 native exports; worker SHA-256: `5faf5fdf54f58e220b12d1a5c78d1f221176c92ae7b350768241314a55ab737d`. Async object-package installation is a separate gate.
+
+## Run the installed synchronous object package
+
+The [install test](../../tests/helpers/wit-installed-object-packages.mjs) builds the same Lean project twice. The ordinary build derives the public API from Lean; the reviewed build checks it against the supplied Binding IR. Both releases embed Wasmtime and the same native Lean runtime as their compiled library. Each release exposes two WIT worlds: the object provider defines its own resources; the application imports those original resource types and calls Lean.
+
+| Workshop 1.0.0 release | Archive bytes | SHA-256 |
+| --- | ---: | --- |
+| Ordinary | 60,970,294 | `ea160d0404ec128899364ff6c04776c49316a3de7468d11208b34c5e1822b813` |
+| Reviewed | 60,972,808 | `a61daae3f1e91d1f2df15658906242d76a971e885718ccd47bd9fdc8aa071159` |
+
+For each archive the test validates the receipt schema and file hashes, extracts it under a path with spaces, and builds the two consumer components against its public WIT. It deletes the source and original release directory before running the installed command with no tools on `PATH`. The application checks the original boxes, mutation, object and error ownership, UTF-8, binary buffers, and wide integers. The defining guest counts three destructor calls on the successful path and two more on the error path. Swapping the components or importing the bridge's private exchange prevents the application from starting. Run `npm run test:wit-host-object-packages` with the publisher toolchains.
+
+The synchronous profile does not advertise canonical task or cursor factories. A separate composition experiment reached `Jobs.series` from a real guest’s **async** `run`; Wasmtime 51 rejected the native adapter’s blocking re-entry into the same store. The [Wasmtime call documentation](https://github.com/bytecodealliance/wasmtime/blob/v51.0.0/crates/wasmtime/src/runtime/component/func.rs) distinguishes this case from entering the same guest from a synchronous host call. Passing the private worker checks does not resolve that scheduling boundary.

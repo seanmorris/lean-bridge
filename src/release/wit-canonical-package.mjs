@@ -11,7 +11,13 @@ const profile="native-wit-canonical-task-v1",target="wit-wasi";
 const sdkIdentity={version: "51.0.0",archiveSha256: "515694e57d8b376f536280a7343a69b976e83d1ce6fb57bdb87c658b18b356d3",filesSha256: "e2cc848e0b52c352d56296e2606934abf65fe3111ec3aba46ccc371b1af56c49"};
 const asset=path=>readFile(new URL(path,import.meta.url));
 const digest=b=>({bytes: b.length,sha256: sha256(b)});
-const snapshotSdk=async(from,to)=>{
+/**
+ * Copy the exact publisher SDK attested by the canonical release profile.
+ *
+ * @param from - Downloaded Wasmtime 51 Linux x86-64 SDK directory.
+ * @param to - Private, new staging directory for verified headers and library.
+ */
+export const snapshotSdk=async(from,to)=>{
 	if(!from) throw new Error("Set LEAN_BRIDGE_ASYNC_WASMTIME_C_API to the Wasmtime 51.0.0 Linux x86-64 C SDK");
 	const root=resolve(from),files=new Map(),inventory={};
 	const visit=async sub=>{
@@ -31,6 +37,7 @@ const snapshotSdk=async(from,to)=>{
 	}
 	return files;
 };
+export {sdkIdentity as canonicalWasmtimeIdentity};
 
 /**
  * Create the opt-in canonical task archive. The original host elaboration is

@@ -31,6 +31,7 @@ import { buildNativeSharedRuntime } from "./native-component.mjs";
 import { openHostProjectSource } from "./host-project-source.mjs";
 import { validateOrdinaryWasiSettings } from "../backends/wit/copied-model.mjs";
 import { buildWitHostPackage } from "../release/wit-sync-io-package.mjs";
+import { buildWitObjectPackage } from "../release/wit-application-package.mjs";
 
 const fail = message => { throw new CanonicalBuildError("invalid-host-project", message); };
 const absent = async path => {
@@ -49,14 +50,17 @@ const absent = async path => {
 export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
-	if(config.hostImports && (targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "maven", "nuget", "cpan", "php-native"].includes(target))) fail("Host imports require a single c, cpp, cargo, pypi, rubygems, maven, nuget, cpan, or php-native target");
+	if(config.hostImports && (targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "maven", "nuget", "cpan", "php-native","wit-wasi"].includes(target))) fail("Host imports require one supported native target or wit-wasi");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
 	const canonical=wit && config.targets?.[target]?.asyncAbi==="canonical";
+	const witObjects=wit && Boolean(config.hostImports);
+	if(witObjects && (witTasks || canonical || config.resources?.length || config.nativeEffects?.length || config.taskIOErrors?.length))
+		fail("Application-owned WIT packages support synchronous exports without Lean-owned resources or native OS capabilities; task and cursor packaging is not yet available");
 	if(canonical && (!witTasks || config.resources?.length))
 		fail("Canonical WIT requires selected Task or cursor exports without resources");
-	if(wit && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
+	if(wit && !witObjects && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
 		|| (!witTasks && (config.resources?.length || config.taskIOErrors?.length))))
 		fail("WIT IO requires standalone synchronous exports without leases and explicit nativeEffects, or tasks and cursors without external capabilities");
 	const project = await realpath(options.projectRoot);
@@ -99,7 +103,7 @@ export const buildHostProject = async options => {
 		if(target !== "pypi")
 		{
 			const hosts = { c: buildCHostPackage, cpp: buildCHostPackage, cargo: buildRustHostPackage, maven: buildJvmHostPackage, nuget: buildDotnetHostPackage, rubygems: buildRubyHostPackage, cpan: buildPerlHostPackage, "php-native": buildPhpHostPackage };
-			const builder = (contract.ir && hosts[target]) || (wit && !canonical ? buildWitHostPackage : buildCTaskPackage);
+			const builder = witObjects?buildWitObjectPackage:(contract.ir && hosts[target]) || (wit && !canonical ? buildWitHostPackage : buildCTaskPackage);
 			artifact = await builder({ ...common, target, canonical }); receipt = artifact.receipt;
 		}
 		else

@@ -48,6 +48,26 @@ Run `lean-bridge verify --receipt /absolute/path/to/cobalt-release/package-set-r
 
 ## Export synchronous IO
 
+### When the application owns the objects
+
+Declare the application’s constructors, methods, properties and ownership in the `hostImports` file. Set the resource’s host target to `wit-wasi` and import the generated `LeanBridge.Host.WitWasi` module in Lean. For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "exports": ["Workshop.make", "Workshop.update"],
+  "hostImports": "lean-bridge.hosts.json",
+  "targets": {"wit-wasi": {"name": "workshop", "version": "1.0.0"}}
+}
+```
+
+Set `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the pinned Wasmtime **51.0.0** Linux x86-64 SDK and `LEAN_BRIDGE_WASM_TOOLS` to wasm-tools **1.245.1**. The SDK variable names the shared publisher toolchain; it does not change synchronous Lean IO into an asynchronous API. Run the usual `lean-bridge build --project . --target wit-wasi --output release` command. To publish a reviewed API, include the matching public `.binding-ir.json` file beside the export configuration.
+
+Distribute the archive and package-set receipt together. The archive contains both public WIT worlds, the compiled command and its libraries. [Consumer instructions](../consume/wit-wasi.md#call-synchronous-io) show how the two guest components fit together. This application-owned package profile does not admit task or iterator exports; a mixed selection is rejected, not shortened.
+
+### Without application-owned objects
+
 Use ordinary `exports` for `BaseIO`, `IO` or `EIO`. Declare the native host
 capabilities the code actually needs. For example, the
 [Journal fixture](../../tests/fixtures/native-sync-io/Journal.lean)

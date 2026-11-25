@@ -27,9 +27,12 @@ static wasmtime_error_t *${f}_start(void *p,wasmtime_context_t *ctx,const wasmti
     (void)ft;(void)args;${f} *s=p;lwit_operations *ops=s->ops;
     if(!ops || !lwit_open(ops->bridge.members.store) || ctx!=s->r.ctx || argc || retc!=1)return wasmtime_error_new("invalid cursor factory");
     lwit_owner owner={0};${input} input={0};${p}diagnostic d={0};bool imported=false,ok=false;unsigned key=0;
-    if(!lwit_no_error(lwit_exchange_take(&ops->slots[${a}],&owner)))goto done;
-    key=lb_cf_reserve(&s->r);if(!key || !lwit_import_${from}(&ops->bridge,&owner,&input))goto done;
+    const char *why="no object cursor slot";wasmtime_error_t *error=lwit_exchange_take(&ops->slots[${a}],&owner);
+    if(error)goto done;
+    key=lb_cf_reserve(&s->r);if(!key)goto done;
+    why="could not import cursor argument";if(!lwit_import_${from}(&ops->bridge,&owner,&input))goto done;
     imported=true;s->slots[key-1].ops=ops;
+    why="could not start compiled Lean cursor";
     ok=${j}_start(ops->bridge.binding,input,&s->slots[key-1].handle,&d)==${p}OK;
 done:
     if(imported && ${input}_drop(&input)!=${p}OK)ok=false;
@@ -37,7 +40,8 @@ done:
     ${p}diagnostic_clear(&d);
     if(!ok){
         if(key){if(imported)${f}_release(&s->slots[key-1]);s->rows[key-1]=(lb_cf_row){0};}
-        return ${f}_fail(s,"could not start object stream");
+        if(error){ops->bridge.members.store->failed=true;s->r.poisoned=true;return error;}
+        return ${f}_fail(s,why);
     }
     s->rows[key-1]=(lb_cf_row){.phase=LB_CF_STREAM,.fd=-1,.owner=&s->slots[key-1],.close=${f}_release};
     *out=(lb_val){.kind=WASMTIME_COMPONENT_U32,.of.u32=key};return NULL;

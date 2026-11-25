@@ -9,7 +9,7 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
  *
  * @param project - Staged WIT worker project.
  */
-export const extendWitApplication = async project => {
+export const extendWitMembers = async project => {
 	const corpus=resolve("tests/fixtures/cpp-host-workshop");
 	const imports=JSON.parse(await readFile(join(corpus,"lean-bridge.hosts.json"),"utf8"));
 	imports.types[0].host.targets=["wit-wasi"];
@@ -29,6 +29,17 @@ export const extendWitApplication = async project => {
 	await writeFile(join(project,"Workshop.lean"),source+"\n"+extra);
 	const path=join(project,"lean-bridge.exports.json"),config=JSON.parse(await readFile(path,"utf8"));
 	config.exports.push(...["readOnline","text","bytes","shift","natural","keepOther","takeOther","anchored","firstError","pickWide"].map(n=>"Workshop."+n));
+	await writeFile(path,canonicalJson(config));
+};
+
+/**
+ * Add canonical futures and streams to the same synchronous member corpus.
+ *
+ * @param project - WIT worker project with its own Jobs module.
+ */
+export const extendWitApplication=async project=>{
+	await extendWitMembers(project);
+	const path=join(project,"lean-bridge.exports.json"),config=JSON.parse(await readFile(path,"utf8"));
 	const jobs=join(project,"Jobs.lean");
 	await writeFile(jobs,(await readFile(jobs,"utf8"))+"\n"+await readFile("tests/fixtures/static-host-workers/wit-success.lean.in","utf8"));
 	const success=["Jobs.accept","Jobs.completed","Jobs.relayLate"];

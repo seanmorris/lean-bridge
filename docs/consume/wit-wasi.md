@@ -141,6 +141,18 @@ See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for 
 
 ### Call synchronous IO
 
+If the receipt lists `native-wit-object-io-v1`, the application supplies the objects. Build one Wasm component for the `owner` world in `wit/deps/objects.wit`, and a separate component for the `application` world in `wit/`. The first component defines the resources and their methods. The second imports those same resource types and the compiled Lean API, and exports `run: func() -> s64`.
+
+For a package named `workshop`, extract the whole archive and run:
+
+```sh
+./bin/workshop-run objects.wasm application.wasm
+```
+
+The command prints the signed result of `run`. It loads its own adjacent libraries; the deployment machine needs neither the Wasmtime SDK nor Lean. An owned error resource can be inspected through its defining interface just like an owned success value. The `api.wit` result types specify which operations return an ordinary value and which can fail.
+
+The following instructions describe the separate package profile for synchronous IO **without** application-defined host objects.
+
 A `native-wit-io-v1` package uses the same extraction and `pkg-config` workflow
 as the ordinary package above. Calls run synchronously. A `BaseIO` export
 returns its WIT value directly. A fallible `IO` or `EIO` export returns a WIT

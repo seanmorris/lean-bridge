@@ -6,7 +6,7 @@
   (import "cm32p2|@IFACE@" "box_drop" (func $end (param i32)))
   (import "cm32p2|@IFACE@" "[static]box.create" (func $create (param i32 i32)))
   (import "cm32p2|@OPS@" "update" (func $update (param i32 i32 i32)))
-  (import "cm32p2" "inside-callback" (func $inside))
+  ;; @test-callback-import@
   (memory (export "cm32p2_memory") 1)
   ;; Lean update's error type admits a string, though this fixture returns
   ;; an object on error. Reserve bounded canonical storage for that import.
@@ -29,7 +29,8 @@
   (func (export "cm32p2||callback-drops") (result i32) (global.get $drops))
   (func (export "cm32p2||callback-visits") (result i32) (global.get $visits))
   (func (export "cm32p2|@CALLS@|[method]call-box-to-box.invoke") (param $self i32) (param $box i32) (result i32)
-    (global.set $visits (i32.add (global.get $visits) (i32.const 1))) (call $inside)
+    (global.set $visits (i32.add (global.get $visits) (i32.const 1)))
+    ;; @test-callback-visit@
     (if (i32.and (local.get $self) (i32.const 2)) (then unreachable))
     (if (i32.and (local.get $self) (i32.const 1))
       (then (call $create (i32.const -2) (i32.const 16))
