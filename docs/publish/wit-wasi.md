@@ -74,6 +74,8 @@ You can select copied-value tasks and cursors alongside guest-object workers. Fo
 
 You can publish a single object task without a synchronous companion or callback provider. For example, for an echo factory over an application-owned box, select `["Jobs.echo"]` in both `exports` and `taskExports`. In the reviewed route the public selection may come from the Binding IR; keep the task selection and host contract in the configuration.
 
+To [compose two worker releases](../consume/wit-wasi.md#use-two-worker-packages-in-one-application), give each Lean package distinct WIT coordinates and publish each archive independently. Both must use the same defining object contract and compatible native toolchain and runtime. Distribute the complete archive: the package-specific shared library, Wasm adapters, runner and public WIT are already included. The downstream application supplies its object provider and any required callback providers; publishers do not need each other’s Lean source trees.
+
 ### Without application-owned objects
 
 Use ordinary `exports` for `BaseIO`, `IO` or `EIO`. Declare the native host

@@ -268,7 +268,7 @@ Two checks cover different parts of this change:
 - The [dispatcher test](../../tests/helpers/wit-turn-peer-dispatch.mjs) loads two independent native libraries with the same operation number. Both call orders reenter the first library through the second. Neither library can answer the other's ticket. At 32 alternating calls, both routes refuse a 33rd and all 32 pending calls resume. Shutting down with nested requests parked unwinds both libraries before their code is unloaded.
 - The [compiled-worker test](../../tests/helpers/wit-application-command-client.mjs) exercises one actual Lean package under Wasmtime. Its original box travels through a cursor, a retained guest callback, a synchronous update and a future: **73**. The synchronous suite returns **1** and early reader exit returns **17**. Invalid arguments and a trapping callback remain distinguishable.
 
-Running two native dispatchers tests call routing. It does not yet demonstrate two independently installed **async Lean packages** exchanging an original object while both have futures pending, or cancelling one package's reader without affecting the other.
+Running two native dispatchers tests call routing. For installed async packages, see the [two-package cancellation test](#two-installed-worker-packages-cancel-one-reader).
 
 ### Closing one callback provider
 
@@ -279,3 +279,20 @@ The [ownership test](../../tests/helpers/wit-turn-peer-owners.mjs) instantiates 
 The ordinary and reviewed [synchronous release tests](../../tests/helpers/wit-installed-object-packages.mjs) also distinguish a malformed application from a runtime trap. Both test guests have a trapping initializer. The one exporting `run() -> u64` fails type validation **before** its initializer executes; the one exporting the required `run() -> s64` reaches the initializer and reports its trap. Both relocated releases executed the valid owning application with no compiler or SDK on its search path.
 
 The [readiness test](../../tests/fixtures/static-host-workers/peer-wait.c) supplies two native pipes in both package orders. A quiet peer does not hide its sibling’s readable descriptor. The shared wait never consumes or closes that descriptor, honors an immediately ready future, ignores a delivered one, and rejects an invalid descriptor or a full wait buffer.
+
+### Two installed worker packages cancel one reader
+
+The [installed worker test](../../tests/helpers/wit-installed-async-peers.mjs) uses an offline-installed author CLI to publish two different Lean projects, Workshop and [Gauge](../../tests/fixtures/static-host-workers/GaugeWorker.lean), from ordinary source and from reviewed declarations. It checks the receipts and extracts each release into a different directory. It removes the projects and build outputs before running the combined application. The deployment command's executable search path contains no tools.
+
+The application opens Gauge's stream on a guest-owned box. The first pull waits on a real Lean promise. With Workshop's callback future also pending, the application checks that Gauge has seen exactly one pull and no closes. It cancels and drops **only Gauge's reader** and resolves the promise that would have supplied the cancelled result. Workshop still returns the original box with its value changed from 42 to 73. Gauge finishes with exactly one pull and one close. All four source/reviewed pairings passed in both package orders. The runner also rejected a duplicate package, a private scheduler import and a missing callback provider; a callback's `unreachable` trap remained visible to the caller.
+
+A separate replay verified the same four receipts and rebuilt only the downstream guests against the [combined public WIT worlds](../../tests/fixtures/static-host-workers/async-peer-world.wit). Inside Workshop's retained callback, the Wasm provider re-entered **Gauge's compiled Lean `read` method**, checked 42 on the original box, called Workshop's update and read 73 back through Gauge. All eight combinations and the negative controls passed again.
+
+| Worker package | Archive bytes | SHA-256 |
+| --- | ---: | --- |
+| Workshop, ordinary | 61,125,430 | `57643a8339f935b24bb40eb1e7f62567797b9c7e0acdf637469640e5e0107465` |
+| Gauge, ordinary | 61,021,256 | `734aacab8690ac70f99746c9f7d3720dbb256753b8270dbef5b177acdbb87264` |
+| Workshop, reviewed | 61,129,107 | `58178d4d494e428ba0153ff9c3dbbc156db9f5af1dddbe7ee2ed883b81e5cb06` |
+| Gauge, reviewed | 61,022,928 | `94caf8c76571c8ea8c74603af96d598bfb25b19b8e018d7e6dc9bea6944cd34a` |
+
+Run `npm run test:wit-async-peer-packages` with the WIT publisher's toolchain. Set `LEAN_BRIDGE_WIT_ASYNC_PEER_HANDOFFS` to an existing directory to retain the four receipts and archives. To replay without publishing, set `LEAN_BRIDGE_WIT_ASYNC_PEER_REPLAY` to the reported handoff directory. Replay needs wasm-tools to build the independent application; running the installed application does not.

@@ -155,6 +155,20 @@ In this launcher, malformed values in a synchronous call are boundary errors, no
 
 The same application can hold a byte-array future while awaiting an object future. The installed `wit/object-tasks.wit` gives each result type. An `own<box>` result retains the guest object's identity. A `list<u8>` value is a copy: you can reuse the input buffer as soon as the factory returns, even if the worker is still pending.
 
+### Use two worker packages in one application
+
+Set `WORKSHOP` and `GAUGE` to the extracted directories of two compatible `native-wit-object-task-v1` releases. Each contains `lib/lean-bridge-wit-async-peer.so` and a `bin/lean-bridge-wit-run` executable. Use the executable from either package:
+
+```sh
+"$WORKSHOP/bin/lean-bridge-wit-run" "$WORKSHOP" "$GAUGE" -- objects.wasm workshop-callbacks.wasm application.wasm
+```
+
+Here Workshop needs a callback provider and Gauge does not. After `--`, pass the shared object provider first, one callback provider for each package that needs one (in package argument order), and your application last. Your application imports each package’s public WIT interfaces and exports one `run: async func() -> s64`. The runner services their futures and streams together. You don’t supply a scheduler.
+
+When building the application, put the defining `objects.wit` in your WIT dependencies **once**. Keep each release’s public interfaces in its own dependency directory. The [example application world](../../tests/fixtures/static-host-workers/async-peer-world.wit) includes Workshop’s application world and imports Gauge’s API and task interface. The original `box` type comes from the same defining instance on both sides.
+
+Use matching host contracts, runtime identities and worker-adapter versions. Install only trusted native packages. A synchronous-only object archive uses a [different runner protocol](#share-a-guest-owned-object-between-synchronous-packages); it cannot substitute for a worker package in this command.
+
 ### Call synchronous IO
 
 If the receipt lists `native-wit-object-io-v1`, the application supplies the objects. Build one Wasm component for the `owner` world in `wit/deps/objects.wit`, and a separate component for the `application` world in `wit/`. The first component defines the resources and their methods. The second imports those same resource types and the compiled Lean API, and exports `run: func() -> s64`.

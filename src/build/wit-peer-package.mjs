@@ -6,9 +6,13 @@ import {witApplicationExchange} from "../backends/wit/application-exchange.mjs";
 import {cIdentifier} from "../backends/c/generate.mjs";
 
 const asset=n=>new URL("../backends/wit/"+n,import.meta.url);
-// Preserve the compiler's complete, self-contained instance type. In the
-// outer graph each peer contributes exactly one top-level type index.
-const typeSection=bytes=>{
+/**
+ * Preserve the compiler's complete instance type as one top-level type index
+ * in the assembled graph.
+ *
+ * @param bytes - Wasm component containing the isolated instance type.
+ */
+export const witPeerTypeSection=bytes=>{
 	let result=null,at=8;
 	while(at<bytes.length)
 	{
@@ -62,7 +66,7 @@ export const compileWitPeerPackage=async o=>{
 		await writeFile(local(id+".wat"),wat,{flag: "wx"});await cli("parse",id+".wat","-o",id+".wasm");
 		await cli("validate",id+".wasm");return readFile(local(id+".wasm"));
 	};
-	const types=typeSection(await parse("peer-type","(component (type "+ops.nativeType+"))"));
+	const types=witPeerTypeSection(await parse("peer-type","(component (type "+ops.nativeType+"))"));
 	const vault=await parse("peer-vault",witPeerVault(obj,(await cli("print","cells.wasm")).stdout));
 	const digest=async n=>sha256(await readFile(asset(n)));
 	const abi=sha256(canonicalJson([o.sdkIdentity,...await Promise.all(["application-peer.h","application-object-store.h","application-member-runtime.h"].map(digest))]));
@@ -75,7 +79,7 @@ export const compileWitPeerPackage=async o=>{
 		, data("native_type",types),data("vault",vault)
 		, data("facade",await readFile(local("api.wasm")))];
 	await writeFile(local("peer-data.h"),header.join("\n"),{flag: "wx"});
-	for(const n of ["application-peer.h","application-peer-plugin.c"])await copyFile(asset(n),local(n));
+	for(const n of ["application-peer-bytes.h","application-peer.h","application-peer-plugin.c"])await copyFile(asset(n),local(n));
 	const plugin="lean-bridge-wit-peer.so";
 	const flags=["-std=gnu11","-O1","-g0","-Wall","-Wextra","-Werror","-I"+app,"-I"+join(sdk,"include"),"-ffile-prefix-map="+out+"=/build/peer"];
 	await run(cc,[...flags,"-fPIC","-fvisibility=hidden","-shared"
@@ -84,7 +88,7 @@ export const compileWitPeerPackage=async o=>{
 		, "-Wl,-z,defs,-z,now,--build-id=none,-rpath,$ORIGIN"
 		, "-Wl,-rpath-link,"+app,"-Wl,-rpath-link,"+join(runtimeRoot,"lib")
 		, "-o",plugin],out);
-	for(const n of ["application-peer-graph.h","application-peer-command.c"])await copyFile(asset(n),local(n));
+	for(const n of ["application-peer-graph.h","application-peer-io.h","application-peer-command.c"])await copyFile(asset(n),local(n));
 	const runner="lean-bridge-wit-run";
 	await run(cc,[...flags,"application-peer-command.c","-L"+join(sdk,"lib")
 		, "-lwasmtime","-ldl","-Wl,-z,now,--build-id=none,-rpath,$ORIGIN/../lib"

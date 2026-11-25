@@ -3,7 +3,7 @@
 #ifndef LB_WIT_APPLICATION_PEER_H
 #define LB_WIT_APPLICATION_PEER_H
 #include "application-object-store.h"
-typedef struct {const uint8_t *data;size_t size;} lb_peer_bytes;
+#include "application-peer-bytes.h"
 typedef struct {
     uint32_t version,size;
     const char *abi,*compat,*objects,*exchange,*native,*api;

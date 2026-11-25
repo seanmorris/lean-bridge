@@ -4,6 +4,8 @@ import {cp,mkdir,mkdtemp,readFile,writeFile} from "node:fs/promises";
 import {join,resolve} from "node:path";
 import {witCoreInterface} from "../../src/backends/wit/application-operations.mjs";
 import {buildWitApplicationTemplate,compileWitApplicationCommand} from "../../src/build/wit-application-template.mjs";
+import {compileWitAsyncPeer} from "../../src/build/wit-async-peer-package.mjs";
+import {canonicalWasmtimeIdentity} from "../../src/release/wit-canonical-package.mjs";
 
 /**
  * The app provider extends its own registration interface with a constructor.
@@ -105,4 +107,11 @@ export const exerciseMixedWitComposition=async o=>{
 	await assert.rejects(run(command,guest("private-scheduler"),client,env),e=>[e.message,e.details?.stderr,e.stderr].join(" ").includes(template.transport));
 	await assert.rejects(graph("private.wasm",[...paths.slice(0,2),join(client,"private.wasm")]),e=>
 		/turn-series/u.test([e.message,e.details?.stderr,e.stderr].join(" ")));
+	const peer=await compileWitAsyncPeer({...common,template,sdk,runtimeRoot,cc: process.env.CC??"cc",sdkIdentity: canonicalWasmtimeIdentity});
+	await mkdir(join(out,"lib"));await cp(join(out,peer.plugin),join(out,"lib",peer.plugin));
+	const invoke=(args,dirs=[out])=>run(join(out,peer.runner),[...dirs,"--",...args],client,env);
+	assert.equal((await invoke(paths)).stdout.trim(),"73");
+	assert.equal((await invoke(guest("early"))).stdout.trim(),"17");
+	await assert.rejects(invoke(guest("trap")),e=>/unreachable/u.test(e.details?.stderr??e.stderr));
+	await assert.rejects(invoke(paths,[out,out]),e=>/duplicate WIT package interface/u.test(e.details?.stderr??e.stderr));
 };

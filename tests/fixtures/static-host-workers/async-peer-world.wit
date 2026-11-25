@@ -1,0 +1,12 @@
+package example:instruments;
+
+world instruments {
+  include lean-bridge:workshop/application@1.0.0;
+  import lean-bridge:gauge/api@1.0.0;
+  import lean-bridge:gauge/object-tasks@1.0.0;
+}
+
+world registrations {
+  include lean-bridge:workshop/registrations@1.0.0;
+  import lean-bridge:gauge/api@1.0.0;
+}
