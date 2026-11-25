@@ -32,6 +32,8 @@ export const buildDotnetHostPackage = async o => {
 		const domain = await compileDotnetHostDomain({ app, runtimeRoot, runtimeIdentity, leanPrefix, cc, run });
 		const options = { ir, entries, modules: projectContract.modules, dotnetTaskLeases: Boolean(kernel) }, baseline = await generateDotnetHostExports({ ...options, identity: "0".repeat(64) });
 		const hashes = {};
+		if(entries.some(e=>e.result.kind==="io-closure"))
+			hashes["dotnet/host-functions.cs"]=sha256(await readFile(new URL("../backends/dotnet/host-functions.cs",import.meta.url)));
 		if(kernel) for(const f of ["host-worker-api.mjs","task-delivery.cs","task-loop.cs","task-callbacks.cs","host-task-scope.cs","host-worker-frame.cs"])
 			hashes["dotnet/"+f]=sha256(await readFile(new URL("../backends/dotnet/"+f,import.meta.url)));
 		for(const file of ["dotnet/host-wire.h", "c/task-integers.h", "dotnet/host-wire.cs", "dotnet/host-api.mjs", "dotnet/sync-io.mjs", "dotnet/sync-wire.cs", "dotnet/verified-assets.mjs", "dotnet/copied-conversions.mjs"])

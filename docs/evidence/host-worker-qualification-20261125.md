@@ -9,7 +9,7 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | Cargo | [Rust futures and streams](static-host-workers-20261125.md#installed-rust-futures-and-streams): an installed executable receives the original `Rc` and distinguishes a factory failure from a later task or stream failure. [Returned Lean functions](rust-host-closures-20261125.md) preserve the application object and error, allow an active call to finish after owner disposal, and release captures after a panic. |
 | C | The [C11 worker client](static-host-workers-20261125.md#installed-c11-workers-on-application-objects) tests both build systems and peer link orders. [Returned C callables](c-host-closures-20261125.md) check original object identity, stale aliases, independent bindings, self-drop and destructor counts after failure. |
 | C++ | [C++20 consumer](static-host-workers-20261125.md#installed-c20-futures-and-streams-on-application-objects): generated futures and streams, both build systems and link orders. [Move-only returned functions](cpp-host-closures-20261125.md) preserve shared pointers and exceptions, finish an in-flight call on self-close, and release captures on the owner thread. |
-| NuGet | [.NET 8 packages](dotnet-worker-packages-20261124.md): two assemblies share the host-class registry; cancellation is scoped to the binding. |
+| NuGet | [.NET 8 packages](dotnet-worker-packages-20261124.md): two assemblies share the host-class registry. [Returned C# callables](dotnet-host-closures-20261125.md) retain the original application object, release captures on the owner thread, and remain usable in a sibling task callback when another binding closes. |
 | Maven | [Java and Kotlin](jvm-worker-packages-20261124.md): separate client programs run against relocated Maven packages, including both component load orders. |
 | RubyGems | [MRI platform gems](ruby-worker-gems-20261124.md) exercise an independently packaged peer. [Three installed closure configurations](ruby-host-closures-20261125.md) cover captured Ruby objects, original exceptions, self-disposal, fiber ownership and stale Proc conversion. |
 | CPAN | [Perl distributions](perl-worker-packages-20261124.md): threaded and unthreaded Perl 5.36.3 and 5.38.2, with prebuilt and locally compiled generated XS. |
@@ -19,14 +19,14 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 
 ### Returned functions that capture application objects
 
-For a signature such as `Box → IO (Box → IO Box)`, five of the twelve
+For a signature such as `Box → IO (Box → IO Box)`, six of the twelve
 package targets above have installed ordinary, reviewed and worker-package
-evidence: C, C++, Cargo, PyPI and RubyGems. They are also the five host
+evidence: C, C++, Cargo, NuGet, PyPI and RubyGems. They are also the six host
 namespaces currently admitted by
 [the Lean source elaborator](../../src/analyze/HostExports.lean) for this
 factory result.
 
-The remaining targets for this case are **NuGet, Maven (Java and Kotlin),
+The remaining targets for this case are **Maven (Java and Kotlin),
 CPAN, native PHP, PHP-Wasm, npm and WIT/WASI**. Receiving a callback from
 one of those hosts is the opposite direction; returning a function over
 copied values does not test a captured application object. Neither counts

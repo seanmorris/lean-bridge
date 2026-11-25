@@ -118,6 +118,25 @@ binding, not the C# object. If another package still binds the same nominal
 kind, it can keep using the object. After the last binding closes, Lean
 references retained under the old binding are stale.
 
+If a package exports a function that returns another Lean function, keep the
+creating binding open while you use the result. For example, `Remember`
+captures one C# object and returns it when invoked with another:
+
+```csharp
+using var workshop = LeanBridge.Workshop.Api.BindHosts<Meter>();
+var first = workshop.Make(7);
+var second = workshop.Make(11);
+using var remember = workshop.Remember(first);
+Console.WriteLine(ReferenceEquals(first, remember.Invoke(second))); // True
+```
+
+`Invoke` runs synchronously on the process main thread. Dispose the function
+to release its capture, or dispose the binding to revoke all its functions.
+If a member disposes the function during its own call, that call can finish;
+later calls throw `ObjectDisposedException`. Prefer `using`. For an abandoned
+function, the finalizer queues cleanup; the next binding call or an explicit
+`LeanBridge.Workshop.Api.DrainHostCloses()` on the owner thread processes it.
+
 See [publishing a host contract](../publish/nuget.md#import-an-application-owned-c-class)
 for the Lean side of the example.
 

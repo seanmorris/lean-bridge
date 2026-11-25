@@ -46,17 +46,45 @@ export const generateDotnetHostApi = async o => {
 	const decode = (t, n = 0) => sum(t) ? "(Tag(tags[" + n + "]) ? " + type(t) + ".Ok(" + decode(t.arguments[0], n+1) + ") : " + type(t) + ".Err(" + decode(t.arguments[1], n+1) + "))"
 		: site(t).index === undefined ? dotnetScalarResult(t.name) : "(" + type(t) + ")HostRefs.Read(output[0])!";
 	const impl = [], pub = [], methods = new Set([...gens, "Bound", "Binding", "Dispose", "GetType", "GetHashCode", "Equals", "ToString", "MemberwiseClone", "Finalize", "ReferenceEquals"]);
-	for(const [i, e] of entries.entries())
+	const hasFunctions=entries.some(e=>e.result.kind==="io-closure");
+	// Match the native table: each factory at i has apply at N+i and drop
+	// at 2N+i. Only the private apply method takes a ticket; its carriers
+	// and exception decoding otherwise follow the ordinary synchronous ABI.
+	const functions=entries.flatMap((e,j)=>{
+		if(e.result.kind!=="io-closure")return [];
+		const parameters=[{name: "ticket",type: {kind: "primitive",name: "uint64"}}
+			, {name: "arg",type: e.result.argument}];
+		return [{e: {...e,result: e.result.reply,parameters},i: entries.length+j,apply: true}];
+	});
+	for(const {i,e,apply} of [...entries.map((e,i)=>({e,i,apply: false})),...functions])
 	{
 		const method = e.name.split("_").map(n => n.charAt(0).toUpperCase() + n.slice(1)).join("");
 		const names = e.parameters.map(p => p.name);
-		if(!/^[A-Z][A-Za-z0-9]*$/u.test(method) || methods.has(method) || names.some(n => !/^[a-z][a-z0-9_]*$/u.test(n)) || new Set(names).size !== names.length)
+		if(!/^[A-Z][A-Za-z0-9]*$/u.test(method) || (!apply && methods.has(method)) || names.some(n => !/^[a-z][a-z0-9_]*$/u.test(n)) || new Set(names).size !== names.length)
 			throw new TypeError("Invalid or colliding CLR host export: " + e.name);
 		methods.add(method);
-		const result = type(e.result), unit = result === "Unit", ret = unit ? "void" : result;
+		const factory=e.result.kind==="io-closure";
+		const result = factory?"ulong":type(e.result), unit = result === "Unit", ret = unit ? "void" : result;
 		const parameters = e.parameters.map((p, j) => type(p.type) + " @" + names[j]);
-		const invoke=`global::${assembly}.Wire.Call${i}${g}(this.Binding${names.map(n => ",@" + n).join("")})`;
-		pub.push(`    public ${ret} ${method}(${parameters.join(",")}) => ${o.workerWire?`this.scope.Invoke(() => ${invoke})`:invoke};`);
+		const invoke=`global::${assembly}.Wire.Call${i}${g}(${hasFunctions?"Host_":"this.Binding"}${names.map(n => ",@" + n).join("")})`;
+		if(factory)
+		{
+			const cls="Returned"+method,a=type(e.result.argument),r=type(e.result.reply);
+			if(methods.has(cls) || e.effect!=="IO")throw new TypeError("Invalid CLR returned-function factory: "+method);
+			methods.add(cls);
+			pub.push(`    public sealed class ${cls} : System.IDisposable {
+        internal readonly HostFunctionLease Lease;
+        internal ${cls}(HostFunctionOwner owner) { Lease=new(owner,${2*entries.length+i}); }
+        public ${r==="Unit"?"void":r} Invoke(${a} arg) => Lease.Invoke((b,id)=>global::${assembly}.Wire.Call${entries.length+i}${g}(b,id,arg));
+        public void Dispose() => Lease.Dispose();
+    }
+    public ${cls} ${method}(${parameters.join(",")}) {
+        var Result_=new ${cls}(this.owner);
+        Result_.Lease.Attach(this.owner.Invoke(Host_=>${invoke}));
+        return Result_;
+    }`);
+		}
+		else if(!apply)pub.push(`    public ${ret} ${method}(${parameters.join(",")}) => ${hasFunctions?`this.owner.Invoke(Host_=>${invoke})`:o.workerWire?`this.scope.Invoke(() => ${invoke})`:invoke};`);
 		const local = e.parameters.map((p, j) => type(p.type) + " v" + j);
 		impl.push(`    internal static ${ret} Call${i}${g}(HostMembers binding${local.length ? "," + local.join(",") : ""}) ${constraints} {
         using var call=new HostCall(binding); using var frame=new Frame();
@@ -67,7 +95,7 @@ export const generateDotnetHostApi = async o => {
         var clear=Clear;
         try {
             int status=Entry(call.Id,HostCall.Entry,${i},input,${local.length},output,tags,&fault); call.Check(fault);
-            if(status==0) ${unit ? "return;" : "return " + decode(e.result) + ";"}
+            if(status==0) ${unit ? "return;" : "return " + (factory?"output[0]":decode(e.result)) + ";"}
             ${e.effect === "EIO" ? "if(status==3) throw new DeclaredError<" + type(e.error) + ">(" + JSON.stringify(e.declaration) + "," + decode(e.error) + ");" : ""}
             if(status==4) throw new LeanIOException(${JSON.stringify(e.declaration)},${dotnetScalarResult("string")});
             throw Status(status);
@@ -89,13 +117,16 @@ public sealed class LeanIOException(string declaration,string message):System.IO
 public sealed class WrongContextException():System.InvalidOperationException("Lean IO requires the original process main thread") {}
 public sealed class RuntimeUnavailableException():System.InvalidOperationException("The Lean runtime is unavailable") {}
 public static class Api {
-    public static Bound${g} BindHosts${g}() ${constraints} => new(HostContract.Bind(${gens.map(n => "typeof(" + n + ")").join(",")}));${worker?"\n"+worker.staticPub.join("\n"):""}
+    public static Bound${g} BindHosts${g}() ${constraints} => new(HostContract.Bind(${gens.map(n => "typeof(" + n + ")").join(",")}));${hasFunctions?"\n    public static void DrainHostCloses() => HostFunctionReleases.Drain();":""}${worker?"\n"+worker.staticPub.join("\n"):""}
 }
 public sealed class Bound${g} : System.IDisposable ${constraints} {
-    private HostMembers? binder;${worker?"\n    private readonly HostTaskScope scope=new();":""}
+    ${hasFunctions?`private readonly HostFunctionOwner owner;${worker?"\n    private readonly HostTaskScope scope=new();":""}
+    private HostMembers Binding => owner.Binding;
+    internal Bound(HostMembers value) { owner=new(value${worker?",scope.CheckDisposal,scope.Dispose":""}); }
+    public void Dispose() => owner.Dispose();`:`private HostMembers? binder;${worker?"\n    private readonly HostTaskScope scope=new();":""}
     private HostMembers Binding => binder ?? throw new System.ObjectDisposedException("CLR host binding");
     internal Bound(HostMembers value) { global::${assembly}.Wire.Control(value,-2); binder=value; }
-    public void Dispose() { ${finish} }
+    public void Dispose() { ${finish} }`}
 ${[...pub,...worker?.boundPub??[]].join("\n")}
 }
 `
@@ -118,11 +149,17 @@ ${verifiedDotnetAssets(evidence)}
         int status=Entry(call.Id,HostCall.Entry,op,null,0,output,&tag,&fault); call.Check(fault);
         if(status!=0) throw Status(status);
     }
-${impl.join("\n")}${worker?"\n"+worker.impl:""}
+${hasFunctions?`    internal static void DropReturned(HostMembers binding,int op,ulong ticket) {
+        using var call=new HostCall(binding); ulong* input=stackalloc ulong[3]{ticket,0,0};
+        ulong* output=stackalloc ulong[4]; byte tag=0; uint fault=0;
+        int status=Entry(call.Id,HostCall.Entry,op,input,1,output,&tag,&fault); call.Check(fault);
+        if(status!=0) throw Status(status);
+    }
+`:""}${impl.join("\n")}${worker?"\n"+worker.impl:""}
 }
 ` };
 	const taskFiles=worker?["task-delivery.cs","task-loop.cs","host-task-scope.cs","host-worker-frame.cs",...o.workerWire.methods.some(m=>m.callbacks?.length)?["task-callbacks.cs"]:[]]:[];
-	for(const name of ["host-frame.cs", "host-refs.cs", "host-wire.cs", "sync-wire.cs",...taskFiles])
+	for(const name of ["host-frame.cs", "host-refs.cs", "host-wire.cs", "sync-wire.cs",...hasFunctions?["host-functions.cs"]:[],...taskFiles])
 		files[name] = (await readFile(new URL("./" + name, import.meta.url), "utf8")).replace("namespace LeanBridge.GeneratedIO;", "namespace " + assembly + ";");
 	return { files, assembly };
 };

@@ -70,6 +70,23 @@ Host members run on the CLR owner thread. A Lean worker can carry the
 class reference and request a C# callback on the owner; it cannot call a
 member directly from the worker. The build checks indirect calls too.
 
+A synchronous `IO` export can return a unary Lean function and capture
+an application object. For example, add this definition in `Workshop`
+and list `Workshop.remember` in `exports`:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    pure captured
+```
+
+The installed package generates a typed, disposable C# function with an
+`Invoke` method, scoped to the binding that created it. Keep this factory
+out of `taskExports`: both the factory and each invocation are synchronous.
+OS effects in the function body, not just the factory, need the corresponding
+`nativeEffects` grant. See [the C# caller](../consume/dotnet.md#let-lean-call-your-c-class).
+
 To export a worker alongside synchronous members, list its full Lean name
 in both `exports` and `taskExports`. For a reviewed package, supply the
 public Binding IR in place of `exports` and keep `taskExports`. For example,
