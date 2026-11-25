@@ -33,7 +33,7 @@ export const wordHostCarrier = (types, ref) => {
  * @param target - Native owner profile; private frame symbols are hidden per component.
  */
 export const emitWordHostMembers = (ir, model, target) => {
-	const label = target === "dotnet" ? "CLR" : target === "php" ? "PHP" : target === "c" ? "C" : target === "cpp" ? "C++" : null;
+	const label = target === "dotnet" ? "CLR" : target === "php" ? "PHP" : target === "c" ? "C" : target === "cpp" ? "C++" : target === "rust" ? "Rust" : null;
 	if(!label) throw new TypeError("Unknown native host owner");
 	const headers = [], bodies = []; let hasNominal = false;
 	for(const [slot, m] of model.members.entries())

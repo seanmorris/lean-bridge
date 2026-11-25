@@ -20,8 +20,8 @@ import {processBuildRunner} from "./process-runner.mjs";
  */
 export const compileCHostComponent=async o=>{
 	const {app,ir,projectContract: contract,runtimeRoot,leanPrefix,environment,signal}=o;
-	const target=o.target??"c",cpp=target==="cpp",lang=cpp?"Cpp":"C";
-	if(!["cpp","c"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
+	const target=o.target==="cargo"?"rust":o.target??"c",cpp=target==="cpp",rust=target==="rust",lang=cpp?"Cpp":rust?"Rust":"C";
+	if(!["cpp","c","rust"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
 		|| contract.taskExports.length || contract.asyncIterators.length || contract.leanResources.length)
 		throw new TypeError("Expected synchronous application-owned C host imports");
 	const run=(cmd,args,cwd=app,env=environment)=>processBuildRunner.capture({command: cmd,args,cwd,env,signal});
@@ -29,12 +29,12 @@ export const compileCHostComponent=async o=>{
 	const {identity: runtimeIdentity,manifest}=await readVerifiedNativeRuntime(runtimeRoot);
 	if((await run(join(leanPrefix,"bin/lean"),["--githash"])).stdout.trim()!==manifest.leanCommit)
 		throw new Error("C host requires matching Lean runtime and compiler");
-	const checked=await compileHostSources({...o,target,run});
+	const checked=await compileHostSources({...o,target: rust?"cargo":target,run});
 	const model=staticHostMembers(ir,target);
 	const members=emitWordHostMembers(ir,{...model,kinds: model.kinds.map(k=>({...k,strong: k.identity==="strong-canonical"}))},target);
 	const gen=id=>emitWordHostExports({ir,entries: checked.entries,modules: contract.modules,identity: id},members,target);
 	const hashes={};
-	const domainInputs=["dotnet/host-domain.c","dotnet/host-domain.h","dotnet/host-frame.h","c/host-registry.h","c/host-registry.c"];
+	const domainInputs=["dotnet/host-domain.c","dotnet/host-domain.h","dotnet/host-frame.h",...rust?["rust/host-owner-cookie.c"]:["c/host-registry.h","c/host-registry.c"]];
 	if(cpp) domainInputs.push("cpp/host-shared.cpp","cpp/host-shared.hpp");
 	const support={};
 	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
@@ -61,7 +61,7 @@ export const compileCHostComponent=async o=>{
 	const domainPrefix="lb_cd_"+domainId+"_",refPrefix="lb_cr_"+domainId+"_";
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
-	const facadeFor=(identity,prefix)=>cHostFacade({ir,entries: checked.entries,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp});
+	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: checked.entries,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp});
 	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: checked.entries,model,name: o.name,identity,facade,ownerPrefix,abi});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
@@ -87,7 +87,7 @@ export const compileCHostComponent=async o=>{
 		for(const file of ["host-domain","host-registry"]) await run(cc,[...flags.filter(x=>x!=="-shared"),"-c",file+".c","-o",file+".o"]);
 		await run(cxx,["-std=c++20","-O1","-g0","-shared","-fPIC","-fvisibility=hidden","-DLB_C_REF_PREFIX="+refPrefix,"-DLB_CPP_OWNER_PREFIX="+ownerPrefix,"host-shared.cpp","host-domain.o","host-registry.o",...libs,"-Wl,-soname,"+domain,"-o",domain]);
 	}
-	else await run(cc,[...flags,"host-domain.c","host-registry.c",...libs,"-Wl,-soname,"+domain,"-o",domain]);
+	else await run(cc,[...flags,"host-domain.c",rust?"host-owner-cookie.c":"host-registry.c",...libs,"-Wl,-soname,"+domain,"-o",domain]);
 	const entryFile="Bridge"+lang+"Exports.lean";
 	await save(entryFile,actual.entryLean); await save("entry-abi.h",actual.header);
 	await run(join(leanPrefix,"bin/lean"),["-j1","-c","entry.c",entryFile],app,checked.env);

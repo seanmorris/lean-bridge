@@ -14,7 +14,7 @@ for(const bits of [8, 16, 32, 64]) for(const [k, l] of [["int", "Int"], ["uint",
  * @param target - Select an isolated package symbol prefix and Lean namespace.
  */
 export const emitWordHostExports = (o, model, target) => {
-	const name = target === "c" ? "C" : target === "cpp" ? "Cpp" : target === "php" ? "Php" : target === "dotnet" ? "Dotnet" : null;
+	const name = target === "c" ? "C" : target === "cpp" ? "Cpp" : target === "rust" ? "Rust" : target === "php" ? "Php" : target === "dotnet" ? "Dotnet" : null;
 	if(!name) throw new TypeError("Unknown native host owner");
 	const module = "Bridge" + name + "Exports", host = "LeanBridge.Host." + name;
 	const { ir, entries, modules, identity } = o;
@@ -102,9 +102,9 @@ __attribute__((visibility("default"))) void ${prefix}_clear(uint64_t *out) {
 }
 ${outputs.join("\n")}
 ${methods.join("\n")}
-__attribute__((visibility("default"))) int ${prefix}_call(uint64_t id,lb_dn_dispatch dispatch,int op,const uint64_t *args,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {
+${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__((visibility("default"))) int ${prefix}_call(${target==="rust"?"uintptr_t owner,":""}uint64_t id,lb_dn_dispatch dispatch,int op,const uint64_t *args,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {
     if(!lean_bridge_native_process_valid() || !out || !tags || !fault) return 10;
-    lb_dn_frame f; int status=lb_dn_enter(&f,id,dispatch,lean_bridge_native_runtime_retire);
+    ${target==="rust"?"if(!LB_DND(rust_owner)(owner)) return 15;\n    ":""}lb_dn_frame f; int status=lb_dn_enter(&f,id,dispatch,lean_bridge_native_runtime_retire);
     if(status) return status==LB_DN_WRONG_THREAD ? 9 : 10;
     *fault=0;
     if(op==-2 || op==-1) {
