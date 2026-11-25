@@ -1,5 +1,6 @@
 """Immediate pulls on the component's owning thread, without an event loop."""
 import atexit as _cursor_atexit
+from os import getpid as _cursor_getpid
 from weakref import WeakSet as _CursorSet
 
 
@@ -10,6 +11,7 @@ class LeanStreamError(Exception):
 
 
 _open_iterators = _CursorSet()
+_cursor_process = None
 
 
 class _LBIterator:
@@ -31,7 +33,7 @@ class _LBIterator:
             if self._cursor is None:
                 self._cursor = self._start()
                 self._start = None
-                _open_iterators.add(self)
+                _track_lean_iterator(self)
             step = _native._cursor_next(self._cursor)
             if step is None:
                 raise StopIteration
@@ -65,8 +67,19 @@ class _LBIterator:
         self.close()
 
 
-@_cursor_atexit.register
+def _track_lean_iterator(cursor):
+    global _cursor_process
+    if _cursor_process is None:
+        _cursor_atexit.register(_close_lean_iterators)
+        _cursor_process = _cursor_getpid()
+    _open_iterators.add(cursor)
+
+
 def _close_lean_iterators():
+    # Importing in another interpreter does not establish ownership. A forked
+    # child inherits this hook, but not the right to enter the parent's Lean heap.
+    if _cursor_process != _cursor_getpid():
+        return
     for cursor in list(_open_iterators):
         cursor.close()
     _native._cursor_owner()

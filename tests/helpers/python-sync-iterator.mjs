@@ -29,7 +29,7 @@ const checkProtocols=async(src,evidence,api)=>{
 	const changed=field=>({...evidence.selection,iterators: evidence.selection.iterators.map(s=>
 		s.open==="Counting.numbers"?{...s,...field}:s)});
 	await assert.rejects(actual(changed({next: "Counting.threaded"})),e=>/immediate Option, not a Task/u.test(e.stderr+" "+e.stdout));
-	const ungranted=changed({close: "Counting.writes"}),metadata=await actual(ungranted);
+	const ungranted={...changed({close: "Counting.writes"}),nativeEffects: []},metadata=await actual(ungranted);
 	assert.throws(()=>resolveNativeHostEffects(ungranted,metadata.nativeEffectAudit),/Counting\.writes requires nativeEffects "filesystem"/u);
 	const granted={...ungranted,nativeEffects: ["filesystem"]};
 	const {phases}=resolveNativeHostEffects(granted,metadata.nativeEffectAudit);
@@ -51,8 +51,8 @@ test("synchronous iterators publish and run without a task or event loop",async 
 	await copyFile("LICENSE",join(src,"LICENSE"));
 	await writeFile(join(src,"lean-toolchain"),"leanprover/lean4:v4.32.2\n");
 	await writeFile(join(src,"lakefile.toml"),'name = "counting"\nversion = "1.0.0"\n[[lean_lib]]\nname = "Counting"\n');
-	const iterators=[p("numbers","next"),p("checked","checkedNext"),p("units","nextUnit")];
-	const cfg={schemaVersion: 1,modules: ["Counting"],nativeEffects: [],iterators
+	const iterators=[p("numbers","next"),p("checked","checkedNext"),{...p("units","nextUnit"),close: "Counting.writes"}];
+	const cfg={schemaVersion: 1,modules: ["Counting"],nativeEffects: ["filesystem"],iterators
 		, exports: ["Counting.counts",...iterators.map(p=>p.open)]
 		, targets: {pypi: {name: "lean-counting",version: "1.0.0"}}};
 	const config=join(src,"lean-bridge.exports.json");
@@ -99,5 +99,8 @@ test("synchronous iterators publish and run without a task or event loop",async 
 		assert.equal(result.stderr,"");assert.match(result.stdout,/immediate native pulls.*seven finalizers passed/u);
 		assert.match(result.stdout,/shutdown closed the final live cursor exactly once/u);
 		t.diagnostic(route+": "+result.stdout.trim());
+		await cp(join(fixture,"fork.py"),join(moved,"fork.py"));
+		const fork=await run(python,["-sB","fork.py"],{cwd: moved,timeout: 30_000,env: {PATH: "/no-author-tools",PYTHONNOUSERSITE: "1"}});
+		assert.equal(fork.stderr,"");assert.match(fork.stdout,/child exit left the owner cursor usable/u);
 	}
 });

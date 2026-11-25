@@ -196,6 +196,10 @@ Exhaustion and pull errors close the cursor. Use `with` for deterministic
 cleanup on an early `break`: Python does not notify a retained iterator
 that its caller left a loop. Explicit `close()` is idempotent.
 
+The underlying Lean runtime can still have native threads. Start a fresh
+process if you need another owner; a forked child cannot use an inherited
+cursor or run its finalizer on the parent's behalf.
+
 ### Await a Lean task
 
 Install the [Timers release](../publish/pypi.md#export-a-lean-task-to-asyncio)

@@ -43,7 +43,8 @@ def nextUnit (c : Cursor) : IO (Option Unit) := do
 
 def finish (_ : Cursor) : BaseIO Unit := closed.modify (· + 1)
 def threaded (c : Cursor) : BaseIO (Task (Option Nat)) := do return Task.pure (← next c)
-def writes (_ : Cursor) : BaseIO Unit := do
-  discard <| (IO.FS.writeFile "ungranted" "closed").toBaseIO
+def writes (c : Cursor) : BaseIO Unit := do
+  finish c
+  discard <| (IO.FS.writeFile "iterator-finalizer" "closed").toBaseIO
 
 end Counting

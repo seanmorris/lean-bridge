@@ -36,3 +36,17 @@ Run `npm run test:python-sync-iterator` with the pinned Lean compiler and
 native runtime, pip and Python development headers. Set `LEAN_BRIDGE_PYTHON`
 to the interpreter to test. These are local installed-package results for
 `native-python-io-v1`, not evidence for a worker, another host or hosted CI.
+
+## Forking a process with a live cursor
+
+The [installed fork client](../../tests/fixtures/python-sync-iterator/fork.py) opens
+a cursor before forking. The child cannot pull and exits normally, which runs
+Python's shutdown handlers. The parent verifies the child did **not** change
+the finalizer's file, pulls the next item, and explicitly closes the cursor.
+Only then does the file change. An in-memory counter alone cannot distinguish
+the child's copy from the parent's. Both package routes passed on each ABI.
+
+| Package route | CPython 3.11.16 receipt | CPython 3.12.14 receipt |
+| --- | --- | --- |
+| Ordinary | `229be9a2fb4d51f67d87ee6f8460e43d6e798e29a06a12aa33a549c320f80a79` | `ba3ffe88753449ba02f8e310e0f6bbdeda2bb0635ce8fd7f281290277265f2cb` |
+| Reviewed | `5a2522adccc828f943ebe1028dbffe03f5c5f6010e8cd9730f4e3ca5e7947ae4` | `86c1afd2be970ef909dfc413cad54ef366c685d8c795cb87429e66262bd1bc96` |
