@@ -112,8 +112,13 @@ export const ownedAggregateReviewedIr = () => {
 	return ir;
 };
 
-/** Independently state the stored-closure interface, without reading the ordinary build. */
-export const leasedClosureFieldReviewedIr = () => {
+/**
+ * Independently state the stored-closure interface, without reading the ordinary build.
+ *
+ * @param options - Optional declarations for a selected consumer fixture.
+ * @param options.exchange - Include the callback that exchanges function-bearing records.
+ */
+export const leasedClosureFieldReviewedIr = ({ exchange = false } = {}) => {
 	const ir = ownedAggregateReviewedIr();
 	ir.component = { id: "tariff-quotes@1.0.0", name: "tariff-quotes", version: "1.0.0" };
 	ir.aggregatePolicy = { ...policy(), closureFields: ["Owned.Tariff.quote"] };
@@ -133,12 +138,18 @@ export const leasedClosureFieldReviewedIr = () => {
 			, callable: { ...callable, parameters: [parameter(scalar, 0)], result: site(scalar, true) } }
 	];
 	const template = ir.declarations.find(decl => decl.name === "newTicket");
+	const transformName = `Callback${sha256(canonicalJson({ parameters: [tariff], result: tariff })).slice(0, 20)}`;
+	const transform = { kind: "named", id: `bridge:${transformName}` };
+	if(exchange) ir.types.push({ ...definition(transformName, "callback", "identity")
+		, id: transform.id, source: source(transformName)
+		, callable: { ...callable, parameters: [parameter(tariff, 0)], result: site(tariff, true) } });
 	ir.declarations = [
 		["newTicket", [scalar], ticket], ["makeTariff", [scalar], tariff]
 		, ["applyTariff", [tariff, scalar], scalar], ["echoTariff", [tariff], tariff]
 		, ["unpackQuote", [tariff], callback], ["packQuote", [callback], tariff]
+		, ...exchange ? [["exchangeTariff", [transform, scalar, scalar], scalar]] : []
 	].map(([name, inputs, output]) => {
-		const canInvoke = inputs.includes(tariff) || inputs.includes(callback);
+		const canInvoke = inputs.includes(tariff) || inputs.includes(callback) || inputs.includes(transform);
 		return { ...template, name, id: `lean:Owned.${name}`
 			, overloadKey: `Owned.${name}`, source: source(`Owned.${name}`)
 			, parameters: inputs.map(parameter), result: site(output, true)

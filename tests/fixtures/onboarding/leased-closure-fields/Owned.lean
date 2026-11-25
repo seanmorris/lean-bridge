@@ -14,4 +14,8 @@ def applyTariff (value : Tariff) (units : UInt32) : UInt32 := value.quote units
 def unpackQuote (value : Tariff) : UInt32 → UInt32 := value.quote
 def packQuote (quote : UInt32 → UInt32) : Tariff := ⟨quote⟩
 
+-- Construct the input here so no outside result owner keeps its function alive.
+def exchangeTariff (revise : Tariff → Tariff) (base units : UInt32) : UInt32 :=
+  (revise (makeTariff base)).quote units
+
 end Owned

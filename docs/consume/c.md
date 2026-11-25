@@ -598,6 +598,33 @@ it returns `TARIFF_QUOTES_INVALID_ARGUMENT`. A C callback passed by function
 pointer is different: its context is borrowed for the call. Putting it into a
 returned record does not extend that borrow. See the [complete C client](../../tests/fixtures/structured-types/leased-closure-fields.c).
 
+### Return a function-bearing record from a callback
+
+The same package can export `exchangeTariff`. Lean constructs a tariff, asks
+your callback for a replacement, then calls the returned tariff's `quote`
+field. To return the incoming tariff unchanged, assign `*out = *incoming`
+and leave `*owner` null. The bridge reads the reply before the borrow ends.
+To return a newly constructed tariff, supply its result owner with the reply:
+
+```c
+static tariff_quotes_status replace_price(
+    void *context, tariff_quotes_session *session,
+    const tariff_quotes_tariff_t *incoming,
+    tariff_quotes_tariff_t *out, tariff_quotes_result **owner
+) {
+    (void)incoming;
+    uint32_t new_base = *(const uint32_t *)context;
+    return tariff_quotes_make_tariff(session, new_base, out, owner);
+}
+```
+
+The bridge releases a supplied reply owner on success **and on failure**.
+Do not release it a second time. If your application needs the incoming
+function after returning from the callback, use its generated `_retain`
+operation while the borrow is live. Keep that separate owner until you have
+finished using the function. The [complete callback client](../../tests/fixtures/structured-types/tariff-exchange.c)
+also shows reentry, invalid replies, and recovery from a nested callback failure.
+
 ### Transferred inputs
 
 An export can consume a result owner instead of borrowing its input. Its generated

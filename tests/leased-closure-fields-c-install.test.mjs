@@ -14,7 +14,7 @@ import { nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { checkCFieldHandoff } from "./helpers/leased-closure-field-c-consumer.mjs";
 import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { copyPackageSetHandoff, retainPackageSetEvidence } from "./helpers/package-set.mjs";
 
 for(const route of ["ordinary", "reviewed"]) test(`installed ${route} C11 archive owns its function fields`, {
 	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1_200_000
@@ -25,8 +25,9 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} C11 archiv
 	await cp(resolve("tests/fixtures/onboarding/leased-closure-fields"), project, { recursive: true });
 	const config = route === "ordinary" ? JSON.parse(await readFile(join(project, "lean-bridge.exports.json"))) : { schemaVersion: 1, modules: ["Owned"] };
 	config.targets = { c: { name: "tariff-quotes", version: "1.0.0" } };
+	if(route === "ordinary") config.exports.push("Owned.exchangeTariff");
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(config));
-	if(route === "reviewed") await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr()));
+	if(route === "reviewed") await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({ exchange: true })));
 	const environment = nativeFixtureEnvironment(["c"]);
 	const built = await buildCanonicalProject({ projectRoot: project
 		, outputRoot: output, targets: ["c"], environment
@@ -34,5 +35,7 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} C11 archiv
 	assert.equal(built.backend, "native-c-owned-v2");
 	await copyPackageSetHandoff(output, handoff);
 	await rm(project, { recursive: true }); await rm(output, { recursive: true });
+	if(process.env.LEAN_BRIDGE_TARIFF_REPLAY_ROOT)
+		await retainPackageSetEvidence(handoff, join(resolve(process.env.LEAN_BRIDGE_TARIFF_REPLAY_ROOT), route));
 	await checkCFieldHandoff({ dir, route, t });
 });

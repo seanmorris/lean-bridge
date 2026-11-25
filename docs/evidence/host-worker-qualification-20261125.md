@@ -110,6 +110,31 @@ owner, invokes the remaining leases, and verifies that a raw alias is invalid
 after its last lease is released. Neither tests a function field containing a
 captured application object or a durable host callback.
 
+The [C callback exchange](c-callback-function-fields-20261125.md) separately
+exercises the function-bearing record as a callback argument and reply,
+including a borrowed reply, transferred reply owner and explicitly retained
+incoming function. Passing a record is different from passing a bare callable.
+
+### A callback receives a Lean function directly
+
+`withFunction value callback := callback id value` passes the function itself,
+not a record containing it. Existing ordinary and reviewed installs cover
+this case for the following clients. The host invokes the borrowed function
+inside its callback, retains an independent handle, and checks expiry or
+rejection of the borrow and continued use of the retained handle.
+
+| Client | Where to verify the installed check |
+| --- | --- |
+| C# | [HigherOrder](../../tests/fixtures/structured-types/owned-dotnet-callback-signatures.cs) is included in the installed executable. Both [NuGet reports](owned-dotnet-execution-20260927.json) pin the original probe in `packages.<route>.originalProbeSha256` and separately identify the compiled consumer. |
+| Java and Kotlin | The [Maven reports](owned-jvm-execution-20260927.json) identify a separate compiled consumer for each language in both `callbacks-*` packages. The [packaged Java probe](https://github.com/seanmorris/lean-bridge/blob/578f04d09320e6998959390a3a0218ac6fd66d02/tests/fixtures/structured-types/owned-jvm-callback-signatures.java) and [Kotlin probe](../../tests/fixtures/structured-types/owned-kotlin-callback-signatures.kt) match the receipt's source inventory. The current Java source includes a [later thread-cleanup change](jvm-thread-exit-repair-20260928.md); it is not the byte-for-byte source for this receipt. |
+| Perl | The [CPAN reports](owned-perl-integration-20260928.json) bind the [signature client](../../tests/fixtures/structured-types/owned-perl-signatures.pl) at `packages.callbacks-ordinary.consumerSha256` and `packages.callbacks-reviewed.consumerSha256`. The expired borrow and later successful retained call are separate assertions. |
+| Native PHP | The [Composer reports](owned-php-integration-20260928.json) bind the [installed PHP client](../../tests/fixtures/structured-types/owned-installed-php.php) at `packages.<route>.sourceSha256`. |
+| PHP-Wasm | The [interpreter package reports](owned-php-wasm-integration-20260928.json) bind a [different PHP client](../../tests/fixtures/structured-types/owned-php-wasm-installed.php) at `reports.packages.observations[].consumerSha256`. |
+
+This evidence is for a pure Lean identity function over a resource-bearing
+record, as a **callback parameter**. It does not establish a direct function
+**returned by** a host callback, nor a host function registered for later use.
+
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
 for an immediate option or a task-backed result, respectively.

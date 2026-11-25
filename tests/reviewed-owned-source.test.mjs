@@ -72,6 +72,21 @@ test("reviewed closure fields select the real projection and preserve possible c
 	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "reviewed-ir-build-unsupported" });
 });
 
+test("a callback exchanging function-bearing records borrows its input and leases its reply", () => {
+	const document = leasedClosureFieldReviewedIr({ exchange: true });
+	validateReviewedOwnedSource(capture(document));
+	const change = document.declarations.find(decl => decl.name === "exchangeTariff");
+	const transform = document.types.find(type => type.id === change.parameters[0].type.id).callable;
+	assert.deepEqual(transform.parameters[0].type, transform.result.type);
+	assert.equal(transform.result.type.id, "lean:Owned.Tariff");
+	assert.equal(transform.parameters[0].ownership, "borrow");
+	assert.deepEqual(transform.parameters[0].lifetime, { scope: "call", anchor: null });
+	assert.equal(transform.result.ownership, "lease");
+	assert.deepEqual(transform.result.lifetime, { scope: "explicit", anchor: null });
+	transform.result.ownership = "copy"; transform.result.lifetime = null;
+	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "aggregate-ownership" });
+});
+
 test("owned review owns resource selection and policy without admitting v4 to v3", () => {
 	const document = annotated(), review = capture(document);
 	assert.deepEqual(validateReviewedOwnedSource(review), document);
