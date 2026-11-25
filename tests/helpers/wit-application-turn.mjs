@@ -78,5 +78,7 @@ export const exerciseWitApplicationTurn=async o=>{
 	assert.match(r.stdout,/unchanged downstream application: series to retained relay to nested Lean update to canonical future: 73/u);
 	assert.match(r.stdout,/canonical object tasks: 65 immediate factory rejections, returned errors, both u32 bounds, independent readers and early drops/u);
 	assert.match(r.stdout,/eleven generated defining-member adapters: identity, transfers, mutation, copied buffers, wide limbs and original exceptions/u);
+	assert.match(r.stdout,/complete public synchronous facade: 19 compiled operations, 11 defining members, rethrown first failure and 17-argument identity/u);
+	assert.match(r.stdout,/trapped synchronous member cleanup: native frame retired and copied slots released without guest reentry/u);
 	assert.match(r.stdout,/canonical callback futures: sixteen scheduling\/error combinations and native teardown on a guest trap/u);
 };

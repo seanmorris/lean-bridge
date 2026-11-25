@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import {readFile,writeFile} from "node:fs/promises";
 import {join} from "node:path";
+import {witApplicationExchange} from "../../src/backends/wit/application-exchange.mjs";
 import {witTurnOwners} from "../../src/backends/wit/application-turn-owners.mjs";
 import {canonicalSupervisor} from "../../src/backends/wit/canonical-supervisor.mjs";
 
@@ -45,7 +46,27 @@ export const buildTurnCallbackGuests=async o=>{
 		channel.push(`(import "turn-${name}" (func $turn-${name} (param "op" u32) (param "key" u32) ${input} (result (tuple u32 u32 u64 u64))))`);
 		bindings.push(`(with "turn-${name}" (func $turn-${name}))`);
 	}
-	const mixed=[callbackGraph.trimEnd().slice(0,-1).replace(send,()=>[send,...channel].join("\n")),assembly];
+	const read=name=>readFile(join(app,name),"utf8"),component=async n=>(await run(wasm,["print",n+".wasm"])).stdout.replace("(component","(component $"+n);
+	const x=witApplicationExchange(b.witImports),obj=b.witImports.interfaceName;
+	const generated=[(await read("turn-members.wat")).replace("(component","(component $members-code")
+		, `(instance $mi (instantiate $members-code (with "${obj}" (instance $obj)) (with "leases" (instance $vault))))`
+		, await component("exchange-storage")
+		, await component("bridge")
+		, await component("application")
+		, (await read("turn-native.wat")).replace("(component","(component $turn-code")
+		, ...x.slots.map(s=>`(alias export $obj "${s.type}" (type $${s.alias}))`)
+		, `(instance $cells (instantiate $exchange-storage (with "${obj}" (instance $obj)) ${x.slots.map(s=>`(with "${s.alias}" (type $${s.alias}))`).join(" ")}))`
+		, "(instance $exchange "+x.slots.flatMap(s=>[`(export "${s.alias}" (type $${s.alias}))`,...[s.put,s.take].map(f=>`(export "${f}" (func $cells "${f}"))`)]).join(" ")+")"
+		, `(instance $native (instantiate $turn-code (with "${obj}" (instance $obj)) (with "${x.name}" (instance $exchange)) (with "leases" (instance $vault)) (with "members" (instance $mi)) (with "sync-ports" (instance $transport))))`
+		, `(instance $pub (instantiate $bridge (with "${obj}" (instance $obj)) (with "${x.name}" (instance $exchange)) (with "${ops.nativeName}" (instance $native "${ops.nativeName}")))) (alias export $pub "${ops.publicName}" (instance $api))`
+		, `(instance $sync-client (instantiate $application (with "${obj}" (instance $obj)) (with "box" (type $box)) (with "${ops.publicName}" (instance $api))))`
+		, '(export "sync-suite" (func $sync-client "suite")) (export "sync-exercise" (func $sync-client "exercise"))'
+		, '(export "arm-sync-trap" (func $o "arm-drop"))'
+		, '(export "sync-counts" (func $api "cursor-counts")) (export "sync-gate" (func $api "cursor-gate"))'];
+	const bound=reg.replace(/;; @update-start@[\s\S]*?;; @update-end@/u,()=>generated.join("\n"));
+	assert.notEqual(bound,reg);
+	const mixed=[...graphParts.slice(0,-2).map(part=>part===send?`(import "sync-ports" (instance $transport (type $sync-type)))\n${channel.join("\n")}`:part)];
+	mixed.splice(1,0,`(type $sync-type ${await read("turn-sync-ports.wat")})`);mixed.push(bound.trimEnd().slice(0,-1),assembly);
 	mixed.push(`(instance $all (instantiate $all-code (with "${b.witImports.interfaceName}" (instance $obj)) (with "${callbacks.interfaceName}" (instance $cb))`);
 	mixed.push(`(with "leases" (instance $ext)) ${bindings.join(" ")})) (alias export $all "${taskName}" (instance $jobs))`);
 	for(const {name,shape} of supported)

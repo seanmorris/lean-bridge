@@ -28,6 +28,8 @@ const coreSig=(ts,out,imp)=>{
 	const many=out.flat.length>1;
 	return params(imp&&many?[...args,"i32"]:args)+(imp&&many || !out.flat.length?"":` (result ${many?"i32":out.flat[0]})`);
 };
+/** Canonical layouts shared by the two halves of the synchronous turn. */
+export const witTurnAbi={align,fields,sizeOf,u64,type,none,result,params,alloc,ptr,load,save,coreSig};
 const signature=(m,ts,out)=>m.inputs.map((a,i)=>`(param "${a.name}" ${ts[i].wat})`).join(" ")+(out.wat?` (result ${out.wat})`:"");
 
 /**

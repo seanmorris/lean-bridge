@@ -1,6 +1,7 @@
 ;; Probe only: the provider imports the public IO-shaped update. Delegate to
 ;; the shared compiled Workshop.update probe, wrapping its member-error arm.
   (alias export $obj "box" (type $box)) (alias export $obj "member-error" (type $err))
+  ;; @update-start@
   (type $f (variant (case "member" (own $err)) (case "io" string)))
   (component $api-adapter
     (import "box" (type $b (sub resource))) (import "err" (type $e (sub resource)))
@@ -19,6 +20,7 @@
     (with "failure" (type $f)) (with "update" (func $d "update"))))
   (instance $api (export "box" (type $box)) (export "member-error" (type $err))
     (export "io-failure" (type $f)) (export "update" (func $adapt "update")))
+  ;; @update-end@
   (core module $no (func (export "inside"))) (core instance $no (instantiate $no))
   (func $inside (canon lift (core func $no "inside")))
   @PROVIDER@

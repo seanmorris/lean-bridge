@@ -1,9 +1,10 @@
 /* A genuine async Wasm caller, a single native Lean owner, and the original
  * Workshop.update (setLevel then getLevel). No Wasmtime call runs on the Lean
- * owner. This probe covers one signature, not the installed async API. */
+ * owner. The mixed probe runs the full facade and the async task suite. */
 #include "application-turn.h"
 #include "public.h"
 #include "application-turn-tasks.h"
+#include "application-turn-sync-host.h"
 #include <poll.h>
 #include <wasmtime.h>
 #include <assert.h>
@@ -14,7 +15,7 @@
 
 enum { UPDATE=1,SET=2,GET=3,RESULT=4,MEMBER_ERROR=5 };
 typedef struct { lb_wit_turns turns; workshop_binding binding; bool bound,audit_aliases; unsigned drops,sets,gets,starts,pulls,closes;
-    lb_tc_refs refs;lb_tg_native tasks; } session;
+    lb_tc_refs refs;lb_tg_native tasks;lb_ts_bus sync;bool sync_host; } session;
 typedef struct { session *s; uint64_t ticket,fault; } box_arg;
 static void dispose(void *p){++((box_arg *)p)->s->drops;}
 static uint32_t member(void *ctx,workshop_box box,unsigned op,uint32_t arg,uint32_t *out){
@@ -43,6 +44,10 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
     }
     bool task=lb_tg_contains(arg.op);unsigned ch=task?(arg.op-LB_TG_BASE)/16:0,op=task?(arg.op-LB_TG_BASE)%16:0;
     bool cursor=task && lb_tg_specs[ch].kind==LB_TG_STREAM,drain=task && op==(cursor?LB_TC_DRAIN:LB_TF_DRAIN);
+    if(s->sync_host && !drain && !s->bound){
+        s->refs.turns=turns;s->sync.refs=&s->refs;assert(workshop_with_hosts(&lb_ts_hosts,&s->sync,&s->binding)==workshop_OK);s->bound=true;s->sync_host=true;
+    }
+    if(arg.op==LB_TS_ENTER){assert(s->sync_host);return lb_ts_dispatch(&s->sync,s->binding,arg,out);}
     if(!s->bound && !drain){
         workshop_hosts h={.box_read=get,.box_get_level=get,.box_set_level=set,.box_create=make,.box_identity=own,
             .box_anchored=own,.box_keep_other=pair,.box_take_other=pair,.box_echo_text=bytes,.box_echo_bytes=bytes,.box_shift=integer};
@@ -86,7 +91,7 @@ static void check(wasmtime_error_t *e){
     wasm_name_t m;wasmtime_error_message(e,&m);fprintf(stderr,"%.*s\n",(int)m.size,m.data);
     wasm_name_delete(&m);wasmtime_error_delete(e);abort();
 }
-typedef struct { session s; lb_wit_ticket current; lb_tg_store tasks;bool waited; } host;
+typedef struct { session s; lb_wit_ticket current; lb_tg_store tasks;lb_ts_linker sync;bool waited; } host;
 static wasmtime_error_t *bridge(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
     (void)ctx;(void)ft;host *h=ptr;assert(argc==2 && retc==1 && in->kind==WASMTIME_COMPONENT_U64 && in[1].kind==WASMTIME_COMPONENT_U64);
@@ -148,7 +153,7 @@ static bool nested_open(lb_wit_turns *s,void *ctx){
     assert(!finish_cursor_event(s,a,&released) && released==7);
     return lb_wit_turn_retire(s);
 }
-enum scenario {PROPERTY,TRAP,CURSORS,CANCEL,REGISTRATIONS,MIXED,FUTURE_ERROR,FUTURE_TRAP};
+enum scenario {PROPERTY,TRAP,CURSORS,CANCEL,REGISTRATIONS,MIXED,FUTURE_ERROR,FUTURE_TRAP,SYNC_TRAP};
 typedef struct {host *h;const char *wasm;enum scenario mode;} input;
 static wasmtime_component_func_t lookup(wasmtime_component_instance_t *instance,wasmtime_context_t *ctx,const char *name){
     wasmtime_component_export_index_t *idx=wasmtime_component_instance_get_export_index(instance,ctx,NULL,name,strlen(name));
@@ -264,6 +269,17 @@ static void run_mixed(host *h,wasmtime_component_instance_t *inst,wasmtime_conte
     }
     check(wasmtime_component_func_call(&take,ctx,NULL,0,&got,1));assert(got.kind==WASMTIME_COMPONENT_S64 && got.of.s64==73 && changed);
     check(lb_tg_retire_all(&h->tasks));plain_cases(h,inst,ctx);
+    relay_probe sync={h,inst,ctx};
+    RV result=rcall(&sync,NULL,"sync-suite",NULL,0);assert(result.kind==WASMTIME_COMPONENT_U32 && result.of.u32==1);
+    RV seeds[]={ru32(42),ru32(73)};
+    result=rcall(&sync,NULL,"sync-exercise",seeds,2);assert(result.kind==WASMTIME_COMPONENT_U32 && result.of.u32==73);
+    seeds[0]=ru32(UINT32_MAX);seeds[1]=ru32(UINT32_MAX-1);
+    result=rcall(&sync,NULL,"sync-exercise",seeds,2);assert(result.kind==WASMTIME_COMPONENT_U32 && result.of.u32=='i');
+    seeds[0]=ru32(UINT32_MAX-1);seeds[1]=ru32(UINT32_MAX);
+    result=rcall(&sync,NULL,"sync-exercise",seeds,2);assert(result.of.u32=='o');
+    result=rcall(&sync,NULL,"sync-counts",NULL,0);assert(result.kind==WASMTIME_COMPONENT_U64 && result.of.u64==counts(h));
+    RV hold={.kind=WASMTIME_COMPONENT_BOOL,.of.boolean=false};result=rcall(&sync,NULL,"sync-gate",&hold,1);assert(result.kind==WASMTIME_COMPONENT_U32);
+    puts("complete public synchronous facade: 19 compiled operations, 11 defining members, rethrown first failure and 17-argument identity");
     lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
     check(lb_tg_drain(&h->tasks));
     relay_probe p={h,inst,ctx};assert(rcount(&p,"visits")==1 && rcount(&p,"cb-drops")==3 && !rcount(&p,"live-owners"));
@@ -276,10 +292,11 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasm_engine_t *engine=wasm_engine_new_with_config(cfg);wasmtime_store_t *store=wasmtime_store_new(engine,NULL,NULL);
     wasmtime_component_linker_t *link=wasmtime_component_linker_new(engine);
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
+    if(in->mode>=MIXED){h->s.sync_host=true;check(lb_ts_link(&h->sync,&h->s.sync,s,root));}
     if(in->mode==CURSORS || in->mode==CANCEL || in->mode>=MIXED){
         check(lb_tg_link_all(&h->tasks,root,s));
     }
-    if(in->mode!=CURSORS && in->mode!=CANCEL)check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
+    if(in->mode!=CURSORS && in->mode!=CANCEL && in->mode<MIXED)check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
     wasmtime_component_linker_instance_delete(root);
     FILE *f=fopen(in->wasm,"rb");assert(f && !fseek(f,0,SEEK_END));long n=ftell(f);assert(n>0 && !fseek(f,0,SEEK_SET));
     uint8_t *b=malloc((size_t)n);assert(b && fread(b,1,(size_t)n,f)==(size_t)n);fclose(f);
@@ -293,6 +310,16 @@ static bool application(lb_wit_turns *s,void *ptr){
     if(in->mode==CURSORS || in->mode==CANCEL){streams(h,&instance,ctx,in->mode==CANCEL);goto finished;}
     if(in->mode==REGISTRATIONS){check_members(h,&instance,ctx);run_relays(h,&instance,ctx);goto finished;}
     if(in->mode==MIXED){run_mixed(h,&instance,ctx);goto finished;}
+    if(in->mode==SYNC_TRAP){
+        wasmtime_component_func_t arm=lookup(&instance,ctx,"arm-sync-trap"),exercise=lookup(&instance,ctx,"sync-exercise");
+        step(&arm,ctx);
+        RV seeds[]={ru32(UINT32_MAX),ru32(UINT32_MAX-1)},r={0};
+        wasmtime_error_t *e=wasmtime_component_func_call(&exercise,ctx,seeds,2,&r,1);
+        assert(e && h->sync.ctl.depth==1 && !h->sync.ctl.frames[0].ev.done && h->s.sync.slots[0].occupied);
+        wasm_name_t m;wasmtime_error_message(e,&m);bool found=false;const char reason[]="unreachable";
+        for(size_t i=0;i+sizeof reason-1<=m.size;i++)if(!memcmp(m.data+i,reason,sizeof reason-1))found=true;
+        assert(found);wasm_name_delete(&m);wasmtime_error_delete(e);goto finished;
+    }
     if(in->mode>=FUTURE_ERROR){future_cases(h,&instance,ctx,in->mode==FUTURE_TRAP);goto finished;}
     wasmtime_component_func_t run=lookup(&instance,ctx,"run");
     wasmtime_call_future_t *fut=wasmtime_component_func_call_async(&run,ctx,NULL,0,&value,1,&err);
@@ -317,7 +344,8 @@ static bool application(lb_wit_turns *s,void *ptr){
         check(wasmtime_component_func_call(&bind,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && !value.of.boolean);
     }
 finished:
-    assert(lb_wit_turn_retire(s));
+    if(in->mode>=MIXED)assert(lb_ts_retire(&h->sync.ctl));
+    else assert(lb_wit_turn_retire(s));
     wasmtime_component_delete(c);wasmtime_component_linker_delete(link);wasmtime_store_delete(store);wasm_engine_delete(engine);
     return true;
 }
@@ -352,7 +380,7 @@ int main(int argc,char **argv){
     puts("retained native tasks: reentrant original object, owned callback exception, caught exception then independent IO error, cancelled pending callback");
     host mixed={0};input app={&mixed,argv[6],MIXED};
     assert(lb_wit_turn_run(&mixed.s.turns,enter,finish,&mixed.s,application,&app));
-    assert(!mixed.s.bound && mixed.s.starts==1 && mixed.s.pulls==2 && mixed.s.closes==1 && mixed.s.sets==1 && mixed.s.gets==1);
+    assert(!mixed.s.bound && mixed.s.starts==1 && mixed.s.pulls==2 && mixed.s.closes==1 && !mixed.sync.ctl.depth && !mixed.s.sync.poisoned);
     for(unsigned i=0;i<256;i++)assert(mixed.s.refs.rows[i].state==LB_TC_FREE);
     puts("unchanged downstream application: series to retained relay to nested Lean update to canonical future: 73");
     host errors={0};input cases={&errors,argv[6],FUTURE_ERROR};
@@ -362,4 +390,9 @@ int main(int argc,char **argv){
     assert(lb_wit_turn_run(&trapped.s.turns,enter,finish,&trapped.s,application,&traps) && !trapped.s.bound);
     for(unsigned i=0;i<256;i++)assert(trapped.s.refs.rows[i].state!=LB_TC_LIVE && !trapped.s.refs.rows[i].pins);
     puts("canonical callback futures: sixteen scheduling/error combinations and native teardown on a guest trap");
+    host sync_trap={0};input sync_case={&sync_trap,argv[6],SYNC_TRAP};
+    assert(lb_wit_turn_run(&sync_trap.s.turns,enter,finish,&sync_trap.s,application,&sync_case));
+    assert(!sync_trap.s.bound && !sync_trap.sync.ctl.depth && !sync_trap.s.sync.frame);
+    for(unsigned i=0;i<LB_WIT_TURN_DEPTH;i++)assert(!sync_trap.s.sync.slots[i].occupied);
+    puts("trapped synchronous member cleanup: native frame retired and copied slots released without guest reentry");
 }

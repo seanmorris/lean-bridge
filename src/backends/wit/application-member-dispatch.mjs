@@ -5,13 +5,25 @@ import { cHostCodecs } from "../c/host-codecs.mjs";
 import { witConversionPrelude } from "./copied-conversions.mjs";
 
 const witName = name => name.replaceAll("-", "_");
-const encode = (k,a) => {
+/**
+ * Pack a member argument for the native checked-value codec.
+ *
+ * @param k - Checked member value kind.
+ * @param a - Native argument expression.
+ */
+export const witMemberEncode = (k,a) => {
 	if(k==="string" || k==="bytes") return `w[0]=(uintptr_t)${a}.data;w[1]=${a}.len;w[3]=1;`;
 	if(k==="nat" || k==="int") return `w[0]=(uintptr_t)${a}.data;w[1]=${a}.len;w[2]=${a}.negative;w[3]=2;`;
 	if(k==="float32" || k==="float64") return `memcpy(w,&${a},sizeof(${a}));`;
 	return `w[0]=(uint64_t)${a};`;
 };
-const decode = (k,type) => {
+/**
+ * Copy a member result into the native facade-owned representation.
+ *
+ * @param k - Checked member value kind.
+ * @param type - Native result type.
+ */
+export const witMemberDecode = (k,type) => {
 	if(["int","nat","string","bytes"].includes(k))
 	{
 		const integer=k==="int" || k==="nat",size=integer?8:1;
@@ -68,14 +80,14 @@ static inline wasmtime_error_t *lwit_export_${witName(r.name)}(lwit_bridge *b,${
 		const result=scalar(m.result),has=m.result!=="unit",params=["void *ctx",...args,...has?[result.type+" *out"]:[]];
 		const owned=m.inputs.flatMap((a,j)=>typeof a.kind==="number" && a.ownership!=="borrow"?[j]:[]);
 		const ins=m.inputs.map((a,j)=>{
-			if(typeof a.kind!=="number")return `{uint64_t w[4]={0};${encode(a.kind,"a"+j)}if(lb_output(LB_${a.kind.toUpperCase()},w,&scope,&args[${j}])!=LB_GOOD)goto done;}`;
+			if(typeof a.kind!=="number")return `{uint64_t w[4]={0};${witMemberEncode(a.kind,"a"+j)}if(lb_output(LB_${a.kind.toUpperCase()},w,&scope,&args[${j}])!=LB_GOOD)goto done;}`;
 			const r=contract.resources[a.kind],v="args["+j+"]";
 			return `{lwit_owner *o=lwit_from_${witName(r.name)}(&b->members,a${j});if(!o)goto done;
         ${a.ownership==="borrow"?`${v}.kind=WASMTIME_COMPONENT_RESOURCE;${v}.of.resource=wasmtime_component_resource_any_clone(o->any);`:`if(!lwit_no_error(lwit_retain(&b->members.kinds[${a.kind}],o,&stage${j})))goto done;`}}`;
 		});
 		const convert=!has?"if(value)goto done;":typeof m.result==="number"
 			?`if(!lwit_accept_${m.result}(b,value,out))goto done;`
-			:`{uint64_t w[3]={0};if(!value || !lb_input(LB_${m.result.toUpperCase()},value,&scope,w))goto done;${decode(m.result,result.type)}}`;
+			:`{uint64_t w[3]={0};if(!value || !lb_input(LB_${m.result.toUpperCase()},value,&scope,w))goto done;${witMemberDecode(m.result,result.type)}}`;
 		const f=m.error?`if(reply.kind!=WASMTIME_COMPONENT_RESULT)goto done;
     value=reply.of.result.val;
     if(!reply.of.result.is_ok){code=lwit_capture(b->frame,s,b->members.error,value);goto done;}`:`value=${has?"&reply":"NULL"};`;

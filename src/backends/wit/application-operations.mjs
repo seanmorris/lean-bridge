@@ -119,5 +119,5 @@ export const witApplicationOperations = options => {
 		, `world bridge { import ${objects}; import ${exchange}; import native; export api; }`
 	].join("\n");
 	const publicWit=[pkg,api,"world consumer { import api; }"].join("\n");
-	return {methods,publicName,nativeName,exchange,objects,nativeType,wit,publicWit,contract};
+	return {methods,publicName,nativeName,exchange,objects,nativeType,wit,publicWit,contract,signedName: signed?signedName:null};
 };

@@ -4,6 +4,8 @@ import { canonicalJson } from "../../capsule/node.mjs";
 import { witApplicationOperations } from "./application-operations.mjs";
 import { witOperationFacade } from "./application-operation-facade.mjs";
 import { witTurnMembers } from "./application-turn-members.mjs";
+import { witTurnSyncGraph } from "./application-turn-sync-graph.mjs";
+import { witTurnSyncHost } from "./application-turn-sync-host.mjs";
 import { witOperationHost } from "./application-operation-host.mjs";
 
 /**
@@ -15,10 +17,11 @@ import { witOperationHost } from "./application-operation-host.mjs";
 export const witOperationFiles=async options=>{
 	const operations=witApplicationOperations(options);
 	const scratch=await readFile(new URL("./application-operation-scratch.wat",import.meta.url),"utf8");
+	const sync=options.turn?witTurnSyncGraph(operations,scratch):null;
 	const {publicName,nativeName,nativeType,methods}=operations;
 	return {
 		"operations.wit": operations.wit
-		, ...options.turn?{"turn-members.wat": witTurnMembers(options.descriptor,scratch)}:{}
+		, ...options.turn?{"turn-members.wat": witTurnMembers(options.descriptor,scratch),"application-turn-sync-host.h": witTurnSyncHost({...options,operations}),"turn-native.wat": sync.wat,"turn-sync-ports.wat": sync.ports}:{}
 		, "api.wit": operations.publicWit
 		, "operations.wat": witOperationFacade(operations,scratch)
 		, "application-operations.h": witOperationHost({...options,operations})

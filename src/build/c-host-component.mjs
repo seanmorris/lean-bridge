@@ -75,11 +75,13 @@ export const compileCHostComponent=async o=>{
 			const reactor=await readFile(new URL("../backends/wit/canonical-future-reactor.h",import.meta.url));
 			hashes.futureReactor=sha256(reactor);await save("canonical-future-reactor.h",reactor);
 			const futures=witObjectFutureFiles({ir,model,api: checked.api,entries: checked.entries.filter(e=>e.delivery),descriptor: witImports,name: o.name,version: o.version});
-			const turnFiles=Object.keys(futures),hasFuture=turnFiles.some(n=>n.endsWith("-turn-future.h"));
-			if(hasFuture || turnFiles.some(n=>n.endsWith("-turn-stream.h")))for(const file of [
+			const hasFuture=Object.keys(futures).some(n=>n.endsWith("-turn-future.h"));
+			for(const file of [
 				"application-turn.h"
 				, "application-turn-cursor.h"
 				, "application-turn-cursor-link.h"
+				, "application-turn-sync.h"
+				, "application-turn-sync-link.h"
 				, ...hasFuture || futures["application-turn-tasks.h"]?["application-turn-future-link.h"]:[]
 				, ...futures["application-turn-tasks.h"]?["application-turn-channels.h"]:[]]){
 				const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));

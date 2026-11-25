@@ -2,7 +2,15 @@
 import { cIdentifier } from "../c/generate.mjs";
 import { cHostCodecs } from "../c/host-codecs.mjs";
 
-const inbound=(t,a,arg,v)=>{
+/**
+ * Render a validated copied Wasmtime input for a native call.
+ *
+ * @param t - Checked copied ABI type.
+ * @param a - Native argument variable to initialize.
+ * @param arg - Native C type of that argument.
+ * @param v - Wasmtime value expression to read.
+ */
+export const witOpInbound=(t,a,arg,v)=>{
 	if(t.k==="unit")return `if(${v}.kind!=WASMTIME_COMPONENT_U8 || ${v}.of.u8){invalid=true;goto done;}`;
 	const kind=t.k.toUpperCase(),words="uint64_t w[3]={0};";
 	const body=t.k==="bytes"||t.k==="string"||t.k==="int"||t.k==="nat"
@@ -10,9 +18,20 @@ const inbound=(t,a,arg,v)=>{
 		:t.k.startsWith("float")?`memcpy(&${a},w,sizeof(${a}));`:`${a}=(${arg})w[0];`;
 	return `{${words}if(!lb_input(LB_${kind},&${v},&scope,w)){invalid=true;goto done;}${body}}`;
 };
-const emit=(t,v,d,resources,depth=0)=>{
+/**
+ * Render a value result, delegating nominal ownership to the chosen transport.
+ *
+ * @param t - Checked result or variant arm.
+ * @param v - Native source expression.
+ * @param d - Wasmtime destination pointer expression.
+ * @param resources - Ordered guest resource inventory.
+ * @param depth - Nesting level for generated local names.
+ * @param nominal - Optional emitter for a resource in the selected transport.
+ */
+export const witOpEmit=(t,v,d,resources,depth=0,nominal=null)=>{
 	if(t.slot!==undefined)
 	{
+		if(nominal)return nominal(t.slot,v,d);
 		const n=resources[t.slot].name.replaceAll("-","_");
 		return `if(!lwit_no_error(lwit_export_${n}(b,${v},&moved))){goto done;}slot=${t.slot};transfer=&moved;
         *(${d})=(lb_val){.kind=WASMTIME_COMPONENT_U32,.of.u32=0};`;
@@ -21,7 +40,7 @@ const emit=(t,v,d,resources,depth=0)=>{
 	{
 		const child="child"+depth,src="("+v+")";
 		return `{lb_val *${child}=NULL;if(lb_result(${d},${src}.ok,&${child},&scope)!=LB_GOOD)goto done;
-        if(${src}.ok){${emit(t.left,src+".value",child,resources,depth+1)}}else{${emit(t.right,src+".error",child,resources,depth+1)}}}`;
+        if(${src}.ok){${witOpEmit(t.left,src+".value",child,resources,depth+1,nominal)}}else{${witOpEmit(t.right,src+".error",child,resources,depth+1,nominal)}}}`;
 	}
 	if(t.k==="unit")return `if(${v}!=0){goto done;}*(${d})=(lb_val){.kind=WASMTIME_COMPONENT_U8,.of.u8=0};`;
 	const pack=["bytes","string","nat","int"].includes(t.k)
@@ -42,8 +61,8 @@ export const witOperationHost=o=>{
 	const bodies=methods.map(m=>{
 		const e=m.entry,n=cIdentifier(e.name),r=byRef(e.result,n+"_value"),f=e.error&&byRef(e.error,n+"_failure");
 		const args=e.parameters.map(v=>byRef(v.type,n+"_arg")),nominal=m.params.flatMap(({type},j)=>type.slot!==undefined?[j]:[]);
-		const names=args.map((_,i)=>"a"+i),success=emit(m.result,"value","dest",contract.resources);
-		const fallback=m.declared?emit(m.declared,"failure","detail",contract.resources):emit({k: "string"},"diag.message","detail",contract.resources);
+		const names=args.map((_,i)=>"a"+i),success=witOpEmit(m.result,"value","dest",contract.resources);
+		const fallback=m.declared?witOpEmit(m.declared,"failure","detail",contract.resources):witOpEmit({k: "string"},"diag.message","detail",contract.resources);
 		return `static wasmtime_error_t *lwit_op_${m.index}(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     lb_val *args,size_t argc,lb_val *results,size_t resultc){
     (void)ft;(void)args;lwit_operations *g=data;lwit_bridge *b=&g->bridge;lwit_store *s=b->members.store;
@@ -54,7 +73,7 @@ export const witOperationHost=o=>{
     ${args.map((a,i)=>a.arg+" a"+i+"={0};").join("")}
     ${nominal.map(j=>"lwit_owner staged"+j+"={0};").join("")}
     ${[...nominal].reverse().map(j=>`if(!lwit_no_error(lwit_exchange_take(&g->slots[${m.params[j].type.slot}],&staged${j})))goto done;`).join("\n    ")}
-    ${m.params.map(({type: t},j)=>t.slot===undefined?inbound(t,names[j],args[j].arg,"args["+j+"]")
+    ${m.params.map(({type: t},j)=>t.slot===undefined?witOpInbound(t,names[j],args[j].arg,"args["+j+"]")
 		:`if(args[${j}].kind!=WASMTIME_COMPONENT_U32 || args[${j}].of.u32){invalid=true;goto done;}`).join("\n    ")}
     ${nominal.map(j=>`if(!lwit_import_${contract.resources[m.params[j].type.slot].name.replaceAll("-","_")}(b,&staged${j},&a${j}))goto done;`).join("\n    ")}
     ${p}status status=lwit_sync_${n}(${["b",...names,"&value",...f?["&failure"]:[],"&original","&diag"].join(",")});
