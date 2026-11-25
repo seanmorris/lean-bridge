@@ -7,7 +7,7 @@ to Lean. The [downstream client](../../tests/fixtures/python-host-closures/consu
 uses the installed wheel's normal methods, context managers and exceptions.
 It never exchanges a native handle.
 
-On CPython 3.11, four offline wheel installs passed after relocation. With two
+On CPython 3.11 and 3.12.14, four offline wheel installs per interpreter passed after relocation. With two
 distinct boxes, the returned closure delivered its original captured object.
 A nested call preserved identity and a failing method raised its original
 Python exception. Closing a closure inside its own invocation revoked new
@@ -25,12 +25,14 @@ asyncio owner. In both worker builds another returned function read two
 different file contents on successive invocations. With no filesystem grant
 the publisher refused that function, even though its factory performs no IO.
 
-| CPython 3.11 build | Verified package-set receipt (SHA-256) |
-| --- | --- |
-| Synchronous host, ordinary source | `08df1254e2e6b82d96303b231dbdcaa255b370cdb6a313f39fb5150dab683dbc` |
-| Synchronous host, reviewed interface instead of export list | `6579797032215adc026efd973259edeac24096792413ba7d6e1547f3698cb417` |
-| Host with binding-independent scalar task | `895673e9d155f4dda27ee6c63096dc646974041119ebbe9e1afd76ca12715197` |
-| Host with application-object task | `95c6dd0d65bb9883b35bc69a6b2c006573433851f27e5e6bfce5ea8c27148018` |
+Verified package-set receipts (SHA-256):
+
+| Build | CPython 3.11 | CPython 3.12.14 |
+| --- | --- | --- |
+| Synchronous host, ordinary source | `08df1254e2e6b82d96303b231dbdcaa255b370cdb6a313f39fb5150dab683dbc` | `07b22f80b559471806e937d1d15ff22f8ea2d5f12e4507882f6384a27bf2f63f` |
+| Synchronous host, reviewed interface instead of export list | `6579797032215adc026efd973259edeac24096792413ba7d6e1547f3698cb417` | `7ce0e3b98fd71cb5a31cf48051b721072478852cf56c71ec7875e3cc84543b32` |
+| Host with binding-independent scalar task | `895673e9d155f4dda27ee6c63096dc646974041119ebbe9e1afd76ca12715197` | `dd28d3f1d50812071148edd11571d347ea12c22905920f663ec645c478d8a573` |
+| Host with application-object task | `95c6dd0d65bb9883b35bc69a6b2c006573433851f27e5e6bfce5ea8c27148018` | `85f067be81a147af0cfe209f17205890b77a75aa4dd2544dc65531656abb71ca` |
 
 Run `npm run test:python-host-closures` with the pinned Lean toolchain, a C
 compiler and CPython with pip and development headers. Set `LEAN_BRIDGE_PYTHON`
