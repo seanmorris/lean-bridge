@@ -24,4 +24,12 @@ The [component test](../../tests/helpers/static-worker-components.mjs) built the
 
 The [Rust executable](../../tests/fixtures/static-host-workers/scope.rs) used the real Rust owner registry and an application `Rc<Meter>`. It passed that object to the compiled Lean `Jobs.echo` task, waited for readiness, and recovered the *same allocation*. An out-of-scope call before open could not claim the runtime. A foreign owner, another thread, a nested scope trying to resolve its parent's token, and reuse of a released token were all rejected. Closing a second, untaken task and the binding returned the object's strong-reference count to one.
 
-Run `npm run test:static-host-worker-components` for these checks. The Rust executable uses the private native ABI. A public, installed Rust future/stream API for host objects, retained-callback execution and cancellation races still need downstream tests. The C and C++ entries above are compilation results, not application execution.
+Run `npm run test:static-host-worker-components` for these private-ABI checks. The C and C++ entries in the table are compilation results, not application execution.
+
+## Installed Rust futures and streams
+
+The [installed Cargo test](../../tests/helpers/rust-host-packages.mjs) passed for ordinary source and independently reviewed IR. Each consumer linked a second component through the same version of the runtime crate. The test built each executable offline from checksummed crates, removed its client, Cargo registry and build directories, then ran the relocated binary without Lean or Cargo on its path. The [receipt and archive hashes](rust-host-workers-20261125.json) identify both releases and the peer.
+
+The [Rust application](../../tests/fixtures/static-host-workers/consumer.rs) recovered the original `Rc` across a future, a stream and a retained callback. The [effect checks](../../tests/fixtures/static-host-workers/effects.rs) distinguish a factory failure, a task failure, a terminal stream failure, an ordinary returned `Result` and the original callback error. Dropping the last binding from inside its callback released its pending work without closing the peer. In a separate process, a callback panic woke a future parked on a Lean promise in the peer; the test did not rely on a timer or natural task completion.
+
+Run `npm run test:rust-host-worker-packages` to build and test fresh packages. To keep the releases, set `LEAN_BRIDGE_RUST_HOST_HANDOFFS` to an existing directory. To repeat just the consumer checks, set `LEAN_BRIDGE_RUST_WORKER_REPLAY` to the resulting `cargo-host-releases-*` directory and run the same command.

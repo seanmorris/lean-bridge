@@ -113,7 +113,7 @@ items.close()?; // No further pulls.
 
 Run this code on the process main thread using a current-thread executor. Lean workers carry the object; they do not call its Rust methods on worker threads. A retained callback runs on the binding thread and can call another bound method. A factory failure, a task failure and an ordinary returned `Result` stay distinct. A terminal stream error arrives once.
 
-Drop a task or call `cancel()` to stop receiving its result. Closing or dropping the binding cancels its outstanding tasks and streams; a peer binding stays usable. An explicit close during an active call or callback returns `Fault::Busy`. A Rust callback panic retires the shared native runtime.
+Drop a task or call `cancel()` to stop receiving its result. Closing or dropping the binding cancels its outstanding tasks and streams; a peer binding stays usable. An explicit close during an active call or callback returns `Fault::Busy`. A Rust callback panic retires the shared native runtime and wakes pending work on peer bindings. See the [installed worker checks](../evidence/static-host-workers-20261125.md#installed-rust-futures-and-streams).
 
 If the release receipt says `native-rust-task-v1`, add only the component crate to your Cargo dependencies. Cargo resolves its exact `lean-bridge-task-runtime` dependency. Run these functions on a current-thread executor **on the process main thread**. Tasks and resource owners are not `Send`; there is no Lean scheduler for your application to drive.
 
