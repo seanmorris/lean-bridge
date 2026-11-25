@@ -10,6 +10,7 @@ import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
 import { perlStringLiteral as q, projectPerlNames } from "./naming.mjs";
 import { perlTaskAssets, taskDeclarations, taskModules, taskXs } from "./task-xs.mjs";
+import { immediateDeclarations, immediateModules, immediateShutdown, immediateXs } from "./direct-xs.mjs";
 import { retainedArguments } from "./retained-xs.mjs";
 import { heapResourceIdentities } from "../../analyze/heap-resource-identity.mjs";
 import { perlLeaseModules, perlLeaseXs, perlResourceKinds } from "./io-resources.mjs";
@@ -112,8 +113,10 @@ const verify = (api, wire, ns, kinds) => {
 		const d = api.declarations.find(d => d.name === m.name), e = m.effect;
 		const ids = e === "IO" ? ["error:IO.Error"] : e === "EIO" ? ["error:EIO." + m.declaration] : [];
 		const a = api.errors.find(x => x.id === ids[0]);
-		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? "async-iterator" : "value";
-		const step = m.stepDeclaration ? api.errors.find(x => x.id === "error:AsyncStep."+m.declaration) : null;
+		const direct = m.delivery === "iterator";
+		const mode = m.delivery === "task" ? "promise" : direct || m.delivery === "async-iterator" ? m.delivery : "value";
+		const step = m.stepDeclaration ? api.errors.find(x => x.id === "error:"+(direct?"Step.":"AsyncStep.")+m.declaration) : null;
+		const ioStep = d?.source.extensions["lean-bridge.dev/step-failure"] === "IO.Error";
 		const taskIO = d?.source.extensions["lean-bridge.dev/task-failure"] === "IO.Error";
 		const retained = Boolean(m.callbacks?.length), hostError = "error:PerlHostException";
 		if(retained && e === "IO") ids.push(hostError);
@@ -128,9 +131,12 @@ const verify = (api, wire, ns, kinds) => {
 			|| !m.args.every((raw,j)=>site(d.parameters[j],raw,true)) || !site(d.result,m.result,false)
 			|| !same(type(d.result.type), m.result) || !same(e === "EIO" ? type(a?.payload) : e === "IO" && !retained ? "string" : null, m.error)
 			|| m.tagBytes !== Math.max(1,depth(m.result),depth(m.error),depth(m.terminal))
-			|| (m.delivery && !wire.wait)
+			|| (m.delivery && Boolean(wire.wait) === direct)
+			|| (direct && (retained || !m.names || Object.keys(m.names).sort().join()!=="close,next,open"
+				|| ["open","next","close"].some(k=>m.names[k]!==m.symbol+"_"+k)))
+			|| Boolean(m.stepIO)!==ioStep || (ioStep && step?.payload!==null)
 			|| (retained ? m.delivery !== "task" || m.stepDeclaration !== undefined || m.terminal !== undefined
-				: m.delivery && (!same(m.terminal,step ? type(step.payload) : taskIO ? "string" : null)
+				: m.delivery && (!same(m.terminal,ioStep ? "string" : step ? type(step.payload) : taskIO ? "string" : null)
 					|| m.stepDeclaration !== d.source.extensions["lean-bridge.dev/pull-protocol"]?.next)))
 			throw new TypeError("CPAN IO wire differs from elaborated declaration: " + m.name);
 	}
@@ -186,7 +192,7 @@ const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evide
 		return q(i.module) + " => " + q(i.sourceSha256);
 	}).join(", ");
 	const args = `${q(runtime)}, { ${sources} }, ${q(api.component.id)}, ${q(libHash)}`;
-	return `${hosts}${perlEffectClasses(name,methods)}${perlLeaseModules(kinds,name)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
+	return `${hosts}${perlEffectClasses(name,methods)}${perlLeaseModules(kinds,name)}${immediateModules(name,methods)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
 package ${name};
 use strict;
 use warnings;
@@ -226,11 +232,11 @@ sub CLONE_SKIP { 1 }
 __END__
 =head1 NAME
 
-${name} - ${assets || methods.some(m=>m.delivery) ? "Compiled Lean futures and demand-driven cursors" : "Compiled synchronous Lean functions"}
+${name} - ${methods.some(m=>m.delivery==="iterator") ? "Compiled immediate Lean cursors" : assets || methods.some(m=>m.delivery) ? "Compiled Lean futures and demand-driven cursors" : "Compiled synchronous Lean functions"}
 
 =head1 CALLS${hosts?"\n\nRegister the declared host classes with C<with_hosts(\\%classes, sub { ... })>. Call the exported functions inside that block. The binding closes on return or exception.":""}
 
-${methods.map(m => `=head2 ${m.name}\n\nCalls C<${m.declaration}> (${m.effect}).${m.delivery==="task"?" Returns a Future.":m.delivery==="async-iterator"?" Returns a cursor; next yields a Future with one item or an empty list at end.":""}`).join("\n\n")}
+${methods.map(m => `=head2 ${m.name}\n\nCalls C<${m.declaration}> (${m.effect}).${m.delivery==="task"?" Returns a Future.":m.delivery==="async-iterator"?" Returns a cursor; next yields a Future with one item or an empty list at end.":m.delivery==="iterator"?" Returns an immediate cursor. Call next in list context for one item (including undef), or an empty list at exhaustion. Call close when stopping early.":""}`).join("\n\n")}
 
 An EIO failure dies with the declaration-specific exception; use C<payload>
 to read the typed value. IO failures provide C<message>. A returned Except
@@ -255,12 +261,12 @@ const xsSource = (wire, methods, name, kinds) => {
 	return `#include "sync-wire.h"
 extern void ${wire.clear}(uint64_t *);
 static void lbs_clear(pTHX_ void *frame) { ${wire.clear}((uint64_t *)frame); Safefree(frame); }${kinds.size?"\n"+perlLeaseXs(kinds,name):""}
-${methods.filter(m=>!m.delivery).map(m => `extern int ${m.symbol}(const uint64_t *, uint64_t *, uint8_t *);`).join("\n")}${wire.wait?"\n"+taskDeclarations(wire):""}
+${methods.filter(m=>!m.delivery).map(m => `extern int ${m.symbol}(const uint64_t *, uint64_t *, uint8_t *);`).join("\n")}${immediateDeclarations(methods)}${wire.wait?"\n"+taskDeclarations(wire):""}
 
 MODULE = ${name}    PACKAGE = ${name}
 PROTOTYPES: DISABLE
 
-${methods.map((m,i) => m.delivery ? taskXs(m,name,i,encode,decode) : xs(m,name,encode,decode)).join("\n")}`;
+${methods.map((m,i) => m.delivery==="iterator" ? immediateXs(m,name,i,encode,decode) : m.delivery ? taskXs(m,name,i,encode,decode) : xs(m,name,encode,decode)).join("\n")}${immediateShutdown(methods)}`;
 };
 
 /**

@@ -14,7 +14,7 @@ import { installCpanArchive } from "../release/cpan-install.mjs";
 // Configure an isolated prebuilt-only copy (which performs the real load
 // check). Only the two immutable SDK libraries share storage with the stage.
 // No full runtime installation is left behind by the publisher.
-const compileHostVariant = async ({working,runtimePackage,componentPackage,perl,environment,signal}) => {
+const compileFromRuntimeView = async ({working,runtimePackage,componentPackage,perl,environment,signal}) => {
 	const {manifest}=await readVerifiedCpanPackage(runtimePackage);
 	const view=await mkdtemp(join(working,".cpan-compiler-runtime-"));
 	try
@@ -80,19 +80,20 @@ export const projectCpanPackages = async ({
 		, ownedModuleName
 		, syncIO
 		, hostImports });
+	const useView = Boolean(hostImports || syncIO?.wire?.methods.some(m => m.delivery === "iterator"));
 	for(const perl of perls)
 	{
 		signal?.throwIfAborted();
-		if(hostImports)
+		if(useView)
 		{
-			await compileHostVariant({working,runtimePackage,componentPackage,perl,environment,signal});
+			await compileFromRuntimeView({working,runtimePackage,componentPackage,perl,environment,signal});
 			continue;
 		}
 		const installed = await installCpanArchive({ archive: runtimeArchive.path, workingRoot: working, prefix: installRoot, perl, mode: "prebuilt-only", environment });
 		await compileCpanXsVariant({ packageRoot: componentPackage, perl, environment: { ...environment, PERL5LIB: installed.perl5lib } });
 	}
 	const componentArchive = await archiveCpanPackage({ packageRoot: componentPackage, outputRoot: archives });
-	await rm(installRoot, { recursive: true, force: true });
+	if(!useView) await rm(installRoot, { recursive: true, force: true });
 	return {
 		ecosystem: "cpan", backend: "perl"
 		, runtimeIdentity: runtimeArchive.receipt.runtimeIdentity

@@ -167,6 +167,28 @@ pending futures and closes its cursors, even if the block throws. A different
 component’s binding stays usable. An object already delivered to Perl is an
 ordinary blessed reference and remains usable after the block.
 
+### Read an immediate iterator
+
+Call `$cursor->next` in list context. The list has one element for an item
+(even when that item is `undef` or zero), and no elements at exhaustion.
+Unlike a task-backed stream, this loop needs neither `Future` nor `IO::Async`:
+
+```perl
+use v5.36;
+use LeanBridge::Dials;
+
+my $cursor = LeanBridge::Dials::sequence(4);
+while (my ($value) = $cursor->next) {
+    say $value;
+    last if $value == 1;
+}
+$cursor->close;
+```
+
+Exhaustion closes the cursor. Close it explicitly when you exit early
+and intend to keep its Perl object alive. If a pull yields or throws a
+Lean resource, that value has its own independently closeable lease.
+
 ### Wait for a task or read a stream
 
 A task export returns a `Future` attached to the default loop returned by `IO::Async::Loop->new`. If your application already uses that loop, its timers and I/O continue to run while `get` waits for a result. In event-driven code, register `on_done` and `on_fail` callbacks instead. The component declares its CPAN dependencies; synchronous-only packages do not require an event loop.

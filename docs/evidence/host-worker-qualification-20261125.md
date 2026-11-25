@@ -121,8 +121,10 @@ Both author routes for [native PHP](native-sync-iterators-20261125.md#native-php
 ran `foreach` on PHP 8.2 and 8.5 without a scheduler. The [Java and Kotlin
 clients](native-sync-iterators-20261125.md#java-and-kotlin) separately pulled
 items from an installed Maven package on both routes, including independent
-leases for a resource item and a declared step error. That gives eight
-direct iterator profiles. The remaining nine are Perl, .NET,
+leases for a resource item and a declared step error. The [threaded and
+unthreaded Perl clients](native-sync-iterators-20261125.md#perl) exercised
+both source routes with no event loop. That gives nine direct iterator
+profiles. The remaining eight are .NET,
 PHP-Wasm, WIT/WASI, Node JavaScript, Node TypeScript, browser JavaScript,
 React and browser workers.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)

@@ -163,3 +163,34 @@ and cursor closed. In Java, closing a cursor after `hasNext()` but before
 Run `LEAN_BRIDGE_IMMEDIATE_TARGET=maven npm run test:native-immediate-cursor`
 with JDK 22, Kotlin 2.2, Maven and the offline Maven tool cache selected
 by `LEAN_BRIDGE_JVM_IO_M2_SEED`.
+
+## Perl
+
+The [CPAN installation test](../../tests/helpers/native-immediate-perl.mjs)
+installed prebuilt runtime and component archives offline on threaded Perl
+5.38.2 and unthreaded Perl 5.36.3, then relocated them. Both interpreters
+ran the [same consumer](../../tests/fixtures/native-immediate-cursor/consumer.pl)
+against both source routes without a compiler on their runtime path.
+
+| Ordinary package-set receipt | Reviewed package-set receipt |
+| --- | --- |
+| `084ed72deb3529e29fbe8a8d2631088346cdaac69d6a9f084a774dd90d46c1ed` | `05e6923605f19a1ba95337eb46a2f7e7f64cae7e72542103d6f69cd062063820` |
+
+`while (my ($item) = $cursor->next)` delivered zero and `undef` as items;
+only an empty list ended iteration. Scalar context was rejected before
+pulling. Six opens, ten pulls and six closes covered exhaustion, factory
+and step errors, lexical scope exit, and an application exception that kept
+its original identity. Independent processes tested normal shutdown and a
+forked child: the parent's finalizer file stayed untouched at child exit
+and the parent pulled again. The threaded interpreter also refused to use
+a cloned cursor. Neither `Future` nor `IO::Async::Loop` was loaded.
+
+Both ABIs also borrowed a [Lean ticket](../../tests/fixtures/native-immediate-cursor/TicketPulls.lean)
+as a constructor argument, received it as an item and as a typed step
+error, and read the error's independent lease after closing the other
+wrappers. At the end the runtime reported zero live identities, wrappers,
+callbacks and scopes.
+
+Run `LEAN_BRIDGE_IMMEDIATE_TARGET=cpan npm run test:native-immediate-cursor`.
+Set `LEAN_BRIDGE_PERLS` to a JSON array of absolute Perl paths. These local
+Linux x86-64 builds used the test-only glibc 2.36 floor.

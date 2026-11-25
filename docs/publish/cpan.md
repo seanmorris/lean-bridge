@@ -96,6 +96,30 @@ lean-bridge build --project tests/fixtures/perl-host-project --target cpan --out
 
 This produces a `native-perl-host-v1` component and its exact shared runtime distribution. Publish the two archives as described [below](#publish-to-cpan). The application [binds its own Perl class](../consume/perl.md#supply-a-perl-class-to-lean). Calls to the object's members run on the initiating interpreter thread.
 
+### Export an immediate iterator
+
+For a synchronous pull, select the constructor under `exports` and its
+open, next and close declarations under `iterators`. For example, the
+[Dials source](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+returns an immediate `Option UInt32` and writes a file when closed:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Dials"],
+  "exports": ["Dials.sequence"],
+  "iterators": [{"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"cpan": {"module": "LeanBridge::Dials", "version": "0.001"}}
+}
+```
+
+The pull may also return `IO (Option α)` or `EIO ε (Option α)`. A
+constructor failure identifies the constructor; a pull failure names the
+pull. Publish this as a standalone synchronous package. Select
+`asyncIterators` for a pull backed by a Lean `Task` instead.
+See the [list-context Perl loop](../consume/perl.md#read-an-immediate-iterator).
+
 ### Export tasks and streams
 
 Use `taskExports` for functions returning an actual Lean `Task` (directly or inside `BaseIO`, `IO` or `EIO`). Use `asyncIterators` for a demand-driven stream: select its open, next and close declarations together. For the [Pulse source](../../tests/fixtures/c-lean-tasks/Pulse.lean):
