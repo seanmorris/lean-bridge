@@ -135,6 +135,32 @@ owned results with the functions named in the installed header. There is no
 task handle to wait on. The [installed C example](../../tests/fixtures/native-sync-io-clients/consumer.c)
 exercises each outcome and makes another call after both kinds of Lean failure.
 
+### Read a synchronous iterator
+
+The [Dials client](../../tests/fixtures/native-immediate-cursor/consumer.c)
+uses the installed header. Open the cursor on the main thread; each call
+to `next` performs one Lean pull on that thread.
+
+```c
+#include <lbc_dials.h>
+
+int first_dial(uint32_t *value) {
+    lbc_dials_sequence_handle cursor = {0};
+    lbc_dials_status status = lbc_dials_sequence_open(3, &cursor);
+    if (status != lbc_dials_OK) return 0;
+    status = lbc_dials_sequence_next(&cursor, value);
+    lbc_dials_sequence_close(&cursor);  /* Early exit. */
+    return status == lbc_dials_OK;
+}
+```
+
+`OK` means the output is an item, even if it is zero. `END` means there is
+no item. End-of-sequence and a Lean step failure close the cursor; closing
+the same zeroed handle again is harmless. A copy of a closed handle cannot
+be reused. Use the separate error output on a checked factory or step and
+dispose of its payload using the generated header. There is no poll/take
+pair or file descriptor for an immediate pull.
+
 ## Supply C objects to Lean
 
 In a `native-c-host-v1` package the payload belongs to your application.

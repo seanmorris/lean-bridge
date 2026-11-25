@@ -74,6 +74,8 @@ The [source configuration](../../src/analyze/export-configuration.mjs) distingui
 for an immediate option or a task-backed result, respectively.
 [Installed Python wheels](python-sync-iterators-20261125.md) exercise immediate
 iteration from ordinary source and a reviewed interface on CPython 3.11 and 3.12.
+[Installed C11 libraries](native-sync-iterators-20261125.md) exercise both
+routes with a typed handle and a real file-writing finalizer.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
 starts with constructed IR; it cannot stand in for an installed source package
 on another profile. Check each profile for one pull per demand, value versus

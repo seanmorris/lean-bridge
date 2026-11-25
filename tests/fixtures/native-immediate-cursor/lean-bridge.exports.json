@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Dials"],
+  "exports": ["Dials.sequence", "Dials.checked", "Dials.units", "Dials.counts"],
+  "iterators": [
+    {"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"},
+    {"open": "Dials.checked", "next": "Dials.checkedNext", "close": "Dials.finish"},
+    {"open": "Dials.units", "next": "Dials.nextUnit", "close": "Dials.finish"}
+  ],
+  "nativeEffects": ["filesystem"],
+  "targets": {"c": {"name": "dials", "version": "1.0.0"}}
+}

@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
+import { iteratorEntryLean, nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
 import { cTaskValues } from "./task-values.mjs";
 import { emitRetainedTask, retainedLean, retainedPrototypes, retainedTask, wasmRetainedLean } from "./task-callback-exports.mjs";
 import { cResourceApi, cResourceSupport, taskResourceTypes } from "./task-resources.mjs";
@@ -20,9 +20,11 @@ const qualified = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
 export const generateCTaskExports = options => {
 	const { name, modules, entries, componentIdentity } = options;
 	const synchronous = options.synchronousIO === true;
+	const directCursors = entries.some(e => e.delivery === "iterator");
+	if(directCursors && !synchronous) throw new TypeError("Immediate cursors require a synchronous C delivery contract");
 	if(!/^[a-z][a-z0-9]*(?:[-_.][a-z0-9]+)*$/u.test(name) || !/^[0-9a-f]{64}$/u.test(componentIdentity)
 		|| !modules?.length || !modules.every(m => qualified.test(m))
-		|| (synchronous ? entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
+		|| (synchronous ? entries.some(e => (e.delivery && e.delivery !== "iterator") || e.taskIO) || !(directCursors || entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect)))
 			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
 	const wasmHost=!!options.wasmHostKinds?.length,phpHost=!!options.phpHostKinds?.length;
 	const rubyHost=!!options.rubyHostKinds?.length, dotnetHost=!!options.dotnetHostKinds?.length;
@@ -90,6 +92,7 @@ export const generateCTaskExports = options => {
 		, "namespace " + namespace
 		, `@[export ${entryPrefix}_error_text] def errorText (e : IO.Error) : String := toString e`
 		, ...synchronous ? [] : [streamEntryLean]
+		, ...directCursors ? [iteratorEntryLean] : []
 		, ...retained ? [wasm ? wasmRetainedLean(entryPrefix+"_cb") : retainedLean] : []
 		, ...wasm && retained ? [`@[extern "${entryPrefix}_cb_factory"] opaque cbTrackFactory {α : Type} (port : @& CallbackPort) (task : @& Task α) : BaseIO Unit`] : []];
 	const fn = (name, args, body) => {
@@ -105,9 +108,9 @@ export const generateCTaskExports = options => {
 		if(!qualified.test(e.declaration) || !/^[a-z][a-z0-9_]*$/u.test(e.name) || names.has(e.name)
 			|| e.hostMembers?.length) throw new TypeError("Invalid or duplicate C task export");
 		names.add(e.name);
-		const stream = e.delivery === "async-iterator", async = stream || e.delivery === "task";
+		const direct = e.delivery === "iterator", stream = e.delivery === "async-iterator", async = stream || e.delivery === "task", handle = async || direct;
 		if(e.taskIO && e.delivery !== "task") throw new TypeError("Terminal IO errors require a real Task");
-		if(e.delivery && !async || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)) throw new TypeError("Unsupported C task effect or delivery");
+		if(e.delivery && !handle || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)) throw new TypeError("Unsupported C task effect or delivery");
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
@@ -117,10 +120,11 @@ export const generateCTaskExports = options => {
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
 		const item = values.codec(e.result), error = e.effect === "EIO" ? values.codec(e.error) : null;
 		const step = e.stepError ? values.codec(e.stepError) : null;
-		if(stream && (e.protocol?.open !== e.declaration || !qualified.test(e.protocol.next) || !qualified.test(e.protocol.close))) throw new TypeError("Invalid C pull protocol");
-		if(e.stepIO && ((!hostKinds.length && !options.witDelivery) || !stream || step)) throw new TypeError("Invalid cursor IO failure contract");
+		if((stream || direct) && (e.protocol?.open !== e.declaration || !qualified.test(e.protocol.next) || !qualified.test(e.protocol.close))) throw new TypeError("Invalid C pull protocol");
+		if(direct && (!["BaseIO", "IO", "EIO"].includes(e.stepEffect) || (e.stepEffect === "IO") !== Boolean(e.stepIO) || (e.stepEffect === "EIO") !== Boolean(step))) throw new TypeError("Invalid immediate C pull effect");
+		if(e.stepIO && ((!direct && ((!hostKinds.length && !options.witDelivery) || !stream)) || step)) throw new TypeError("Invalid cursor IO failure contract");
 		const ioTerminal=e.taskIO || e.stepIO;
-		const pull = stream ? nativePullEntry(i, entryPrefix, e, item.lean, error?.lean, e.stepIO?"_root_.IO.Error":step?.lean) : null;
+		const pull = stream || direct ? nativePullEntry(i, entryPrefix, e, item.lean, error?.lean, e.stepIO?"_root_.IO.Error":step?.lean) : null;
 		if(pull)
 		{
 			lean.push(pull.helpers); declarations.push(pull.declarations);
@@ -133,7 +137,7 @@ export const generateCTaskExports = options => {
 		const invoke = e.effect === "EIO" ? `_root_.EIO.toIO' ${app}` : e.effect === "BaseIO" ? `liftM ${app}` : e.effect === "pure" ? `pure ${app}` : app;
 		lean.push(`@[export ${entry}] def invoke${i} ${args.map((a, k) => `(v${k} : ${a.lean})`).join(" ")} : IO ${result} := ${invoke}`);
 		declarations.push(`extern lean_object *${entry}(${args.map(a => a.abi).join(", ") || "void"});`);
-		if(async) types.push(`typedef struct { uint64_t id, domain; } ${h};`);
+		if(handle) types.push(`typedef struct { uint64_t id, domain; } ${h};`);
 		// Stable aliases: adding a different export must not change the consumer's
 		// spelling for an anonymous returned Except or the way it is disposed.
 		for(const [kind, c] of [["value", item], [synchronous ? "error" : "start_error", error], ["step_error", step]])
@@ -144,14 +148,14 @@ export const generateCTaskExports = options => {
 				if(c.dispose) prototypes.push(`static inline void ${alias}_dispose(${c.directMpz ? "mpz_ptr v" : alias + " *v"}) { ${c.dispose}(v); }`);
 			}
 		const ioError = e.effect === "IO", checkedArgs = args.map((a, k) => a.validate(`v${k}`)).filter(Boolean).join("\n    ");
-		fn(`${n}_${async ? "start" : "call"}`, [...args.map((a, k) => `${a.arg} v${k}`)
-			, async ? `${h} *out` : values.out(item, "out")
+		fn(`${n}_${direct ? "open" : async ? "start" : "call"}`, [...args.map((a, k) => `${a.arg} v${k}`)
+			, handle ? `${h} *out` : values.out(item, "out")
 			, ...error ? [values.out(error, "error")] : ioError ? [`${p}_buffer *io_error`] : []],
-		`if (!out${async ? " || out->id" : occupied(item, "out")}${error ? " || !error" + occupied(error, "error") : ""}) return LB(INVALID);
+		`if (!out${handle ? " || out->id" : occupied(item, "out")}${error ? " || !error" + occupied(error, "error") : ""}) return LB(INVALID);
     ${args.some(a => a.buffer) ? "size_t budget = 0;" : ""}
     ${checkedArgs}
     LB(status) s = lb_prepare(); if (s != LB(OK)) return s;${args.flatMap((a, k) => a.bind ? ["\n    " + a.bind(`v${k}`)] : []).join("")}
-    ${async ? `lb_entry *owner; s = lb_reserve(${i}, &owner); if (s != LB(OK)) return s;` : ""}
+    ${handle ? `lb_entry *owner; s = lb_reserve(${i}, &owner); if (s != LB(OK)) return s;` : ""}
     lean_object *io = ${entry}(${args.map((a, k) => a.argument(`v${k}`)).join(", ")});
     if (!lean_io_result_is_ok(io)) s = lb_io_failure(io, ${ioError ? "io_error" : "NULL"});
     else {
@@ -159,11 +163,35 @@ export const generateCTaskExports = options => {
         ${error ? `int ok = lean_obj_tag(v) == 1; v = lean_ctor_get(v, 0);
         if (!ok) { s = ${error.read}(v, error); if (s == LB(OK)) s = LB(TYPED_ERROR); }
         else ` : ""}{
-            ${stream ? `lean_inc(v); owner->cursor = v; owner->pull = ${pull.next}; owner->close = ${pull.close};`
+            ${pull ? `lean_inc(v); owner->cursor = v; owner->pull = ${pull.next}; owner->close = ${pull.close};`
 				: async ? "s = lb_subscribe(owner, v);" : `s = ${item.read}(v, out);`}
         }
     }
-    lean_dec(io); ${async ? "if (s == LB(OK)) { out->id = owner->id; out->domain = lb_domain; } else lb_drop(owner);" : ""} return s;`);
+    lean_dec(io); ${handle ? "if (s == LB(OK)) { out->id = owner->id; out->domain = lb_domain; } else lb_drop(owner);" : ""} return s;`);
+		if(direct)
+		{
+			fn(`${n}_next`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : [], ...e.stepIO ? [`${p}_buffer *message`] : []],
+				`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}${e.stepIO ? " || !message" : ""}) return LB(INVALID);
+    lb_entry *owner; LB(status) s = lb_lookup(h->id, h->domain, ${i}, &owner, 0);
+    if (s != LB(OK)) return s;
+    owner->pulling = 1; lean_inc(owner->cursor);
+    lean_object *io = owner->pull(owner->cursor);
+    if (!lean_io_result_is_ok(io)) s = LB(UNAVAILABLE);
+    else {
+        lean_object *v = lean_io_result_get_value(io);
+        ${e.stepIO || step ? `if (!lean_obj_tag(v)) {
+            lean_object *err = lean_ctor_get(v, 0);
+            ${step ? `s = ${step.read}(err, error); if (s == LB(OK)) s = LB(TYPED_ERROR);` : `lean_inc(err); lean_object *text = lb_c_error_text(err);
+            s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(IO_ERROR);`}
+        } else { v = lean_ctor_get(v, 0);` : ""}
+        if (!lean_obj_tag(v)) s = LB(END); else s = ${item.read}(lean_ctor_get(v, 0), out);
+        ${e.stepIO || step ? "}" : ""}
+    }
+    lean_dec(io); owner->pulling = 0;
+    if (s != LB(OK)) { h->id = 0; lb_drop(owner); }
+    return s;`);
+			fn(`${n}_close`, [`${h} *h`], `return !h ? LB(INVALID) : !h->id ? LB(OK) : lb_close(&h->id, h->domain, ${i});`);
+		}
 		if(!async) continue;
 		if(stream) fn(`${n}_pull`, [`${h} h`], `return lb_request(h.id, h.domain, ${i});`);
 		if(wasm)
@@ -210,7 +238,7 @@ export const generateCTaskExports = options => {
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef enum { ${statuses.flatMap((s, i) => synchronous ? ["PENDING", "END", "IDLE"].includes(s) ? [] : [`${p}_${s} = ${i}`] : [`${p}_${s}`]).join(", ")} } ${p}_status;
+typedef enum { ${statuses.flatMap((s, i) => synchronous ? (["PENDING", "IDLE"].includes(s) || (!directCursors && s === "END")) ? [] : [`${p}_${s} = ${i}`] : [`${p}_${s}`]).join(", ")} } ${p}_status;
 typedef struct { const uint8_t *data; size_t len; } ${p}_view;
 typedef struct { uint8_t *data; size_t len;${wasmHost?" uint32_t host_ticket;":""} } ${p}_buffer;
 void ${p}_buffer_dispose(${p}_buffer *v);${exact && !gmp ? `
@@ -227,7 +255,7 @@ ${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...host ? host.he
 #include <lean/lean.h>${wasm ? `\n#define initialize_BridgeCAsync initialize_${module}\n#define lb_c_error_text ${entryPrefix}_error_text` : ""}
 ${wasm && retained ? "#include <pthread.h>\n#define LB_WASM_CALLBACK_PORT 1\n#define LB_CB_FACTORY "+entryPrefix+"_cb_factory\n#define lb_c_cb_request "+entryPrefix+"_cb_request\n#define lb_c_cb_track "+entryPrefix+"_cb_track\n" : ""}${declarations.join("\n")}
 #define LB(x) ${p}_##x
-#define LB_SYNC_ONLY ${Number(synchronous)}
+#define LB_SYNC_ONLY ${Number(synchronous)}${directCursors ? "\n#define LB_DIRECT_CURSORS 1" : ""}
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
 ${wasmHost?"#define LB_WASM_HOST_ERRORS 1\n":""}#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}

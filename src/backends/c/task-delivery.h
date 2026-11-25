@@ -11,7 +11,9 @@
 #ifdef LB_RETAINED_TASKS
 #include "task-callback-port.h"
 #endif
+#endif
 
+#if !LB_SYNC_ONLY || defined(LB_DIRECT_CURSORS)
 typedef lean_object *(*lb_cursor_op)(lean_object *);
 #ifdef LB_PUBLIC_C_CALLBACKS
 typedef struct lb_c_owner lb_c_owner;
@@ -23,7 +25,11 @@ typedef struct lb_entry {
     unsigned kind;
     lean_object *cursor;
     lb_cursor_op pull, close;
+#if !LB_SYNC_ONLY
     lb_task_watch watch;
+#else
+    int pulling;
+#endif
 #ifdef LB_PUBLIC_C_CALLBACKS
     lb_c_owner *host;
 #endif
@@ -50,7 +56,7 @@ static LB(status) lb_prepare(void) {
     }
     return LB(OK);
 }
-#if !LB_SYNC_ONLY
+#if !LB_SYNC_ONLY || defined(LB_DIRECT_CURSORS)
 static LB(status) lb_reserve(unsigned kind, lb_entry **out) {
     lb_entry *e = calloc(1, sizeof *e);
     if (!e) return LB(NO_MEMORY);
@@ -62,6 +68,9 @@ static LB(status) lb_lookup(uint64_t id, uint64_t domain, unsigned kind, lb_entr
     if (!lb_context()) return LB(WRONG_CONTEXT);
     if (domain != lb_domain) return LB(CLOSED);
     for (lb_entry *e = lb_entries; e; e = e->next) if (id == e->id && kind == e->kind) {
+#ifdef LB_DIRECT_CURSORS
+        if (e->pulling) return LB(BUSY);
+#endif
         if (!cleanup && !lean_bridge_native_component_ready(LB_COMPONENT)) return LB(UNAVAILABLE);
         *out = e; return LB(OK);
     }
@@ -74,7 +83,9 @@ static void lb_drop(lb_entry *e) {
 #ifdef LB_RETAINED_TASKS
     lb_retained_clear(&e->retained);
 #endif
+#if !LB_SYNC_ONLY
     lb_watch_close(&e->watch, 1);
+#endif
     if (e->cursor) {
         /* Retirement allows release, not a fresh application effect. */
         if (lean_bridge_native_component_ready(LB_COMPONENT)) {
@@ -87,6 +98,7 @@ static void lb_drop(lb_entry *e) {
 #endif
     free(e);
 }
+#if !LB_SYNC_ONLY
 static LB(status) lb_subscribe(lb_entry *e, lean_object *task) {
     if (!lb_watch_start(&e->watch, task)) return LB(OK);
     lean_io_cancel_core(task);
@@ -111,6 +123,7 @@ static LB(status) lb_poll(uint64_t id, uint64_t domain, unsigned kind, int *fd) 
     if (lb_watch_ready(&e->watch)) { *fd = -1; return LB(OK); }
     *fd = lb_watch_fd(&e->watch); return LB(PENDING);
 }
+#endif
 static LB(status) lb_close(uint64_t *id, uint64_t domain, unsigned kind) {
     if (!id) return LB(INVALID);
     lb_entry *e; LB(status) s = lb_lookup(*id, domain, kind, &e, 1);

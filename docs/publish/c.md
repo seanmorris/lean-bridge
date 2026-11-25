@@ -49,6 +49,20 @@ Use `nativeEffects: []` for an in-memory API. Build with `--target c`; the
 returning `IO α` or `EIO ε α` generates one `_call` entry, not a polling
 handle. See [how an installed caller handles the result](../consume/c.md#call-synchronous-io).
 
+### Export an immediate cursor
+
+See the [Dials source and export configuration](../../tests/fixtures/native-immediate-cursor/lean-bridge.exports.json).
+Select the factory as a public export. In `iterators`, name its `open`,
+`next` and `close` Lean declarations. The factory returns a private cursor.
+The pull returns an immediate `Option α` in `BaseIO`, `IO` or `EIO ε`; the
+finalizer takes that cursor and returns `BaseIO Unit`. These names and
+effects must agree with the compiled module on the reviewed route too.
+
+Dials declares `nativeEffects: ["filesystem"]` because its finalizer writes
+a file. The generated public header exposes open, next and close without
+generating a task. Use `asyncIterators` instead if the Lean pull returns
+a task. See [the installed C API](../consume/c.md#read-a-synchronous-iterator).
+
 ## Call application-owned C objects from Lean
 
 Select the C host contract with `hostImports` and list the Lean entry points
