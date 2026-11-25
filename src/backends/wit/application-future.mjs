@@ -11,6 +11,7 @@ import { witObjectCallbackProjection } from "./application-callback.mjs";
 import { relayComponents } from "./application-relay.mjs";
 import { canonicalStream } from "./canonical-stream.mjs";
 import { objectStreamHost } from "./application-stream-host.mjs";
+import { witTurnCursorGraph,witTurnCursorHost,witTurnCursorPorts } from "./application-turn-cursor.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -112,6 +113,11 @@ export const witObjectFutureFiles=options=>{
 				, payload: typed?{wat: "$payload",flat: ["i32","i32"],size: 8}:{wat: `(own $r${z})`,flat: ["i32"],size: 4}
 				, ownership: {slots,borrows: [[0,a]],abandon}},capacity);
 			const kind=i=>rs[i].name.replaceAll("-","_");
+			files[label+"-turn-ports.wat"]=witTurnCursorPorts(row);
+			files[label+"-turn-cursor.wat"]=witTurnCursorGraph(row,files[label+"-turn-ports.wat"],files[label+"-stream.wat"]);
+			files[label+"-turn-stream.h"]=witTurnCursorHost({...m,p,n,capacity
+				, input: byRef(s.type,n+"_arg").type,output: byRef(e.result,n+"_value").type
+				, fault: typed?byRef(e.stepError,n+"_error").type:null});
 			files[label+"-stream.h"]=objectStreamHost({
 				...m
 				, p

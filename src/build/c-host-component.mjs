@@ -74,6 +74,11 @@ export const compileCHostComponent=async o=>{
 			hashes.callbackReadiness=sha256(wake);await save("callback-readiness.h",wake);
 			const reactor=await readFile(new URL("../backends/wit/canonical-future-reactor.h",import.meta.url));
 			hashes.futureReactor=sha256(reactor);await save("canonical-future-reactor.h",reactor);
+			if(checked.entries.some(e=>e.delivery==="async-iterator"))for(const file of ["application-turn.h","application-turn-cursor.h","application-turn-cursor-link.h"])
+			{
+				const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
+				hashes[file]=sha256(bytes);await save(file,bytes);
+			}
 			const futures=witObjectFutureFiles({ir,model,api: checked.api,entries: checked.entries.filter(e=>e.delivery),descriptor: witImports,name: o.name,version: o.version});
 			for(const [file,data] of Object.entries(futures))
 			{hashes[file]=sha256(data);await save(file,data);}

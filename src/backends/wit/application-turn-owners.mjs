@@ -14,7 +14,7 @@ const body=(k,i)=>{
       (local.set $token (call $save (i32.const ${base}) (local.get $v)))
       (if (i64.eqz (local.get $token)) (then (call $drop${i} (local.get $v)))) (local.get $token))`
 	, optional("take","(call $remove (local.get $p))")
-	, `(func (export "release-${i}") (param $ticket i64) (result i32) (local $p i32)
+	, `(func $release${i} (export "release-${i}") (param $ticket i64) (result i32) (local $p i32)
       (local.set $p ${find})
       (if (local.get $p) (then (call $drop${i} (call $remove (local.get $p)))))
       (i32.ne (local.get $p) (i32.const 0)))`
@@ -23,10 +23,11 @@ const body=(k,i)=>{
         (local.set $p (i32.add (local.get $p) (i32.const 8)))
         (br_if $scan (i32.lt_u (local.get $p) (i32.const ${base+capacity*8})))))`];
 	if(k.retain)out.push(`(func (export "lease-${i}") (param $borrow i32) (result i64) (local $owned i32)
+      (if (i32.eqz (global.get $domain)) (then (call $drop${i} (local.get $borrow)) (return (i64.const 0))))
       (local.set $owned (call $retain${i} (local.get $borrow))) (call $drop${i} (local.get $borrow))
       (call $hold${i} (local.get $owned)))`,
 	optional("copy",`(call $retain${i} (i32.load offset=4 (local.get $p)))`),
-	`(func (export "same-${i}") (param $ticket i64) (param $other i64) (result i32) (local $p i32) (local $q i32)
+	`(func $sameTickets${i} (export "same-${i}") (param $ticket i64) (param $other i64) (result i32) (local $p i32) (local $q i32)
       (local.set $p ${find}) (local.set $q (call $find (i32.const ${base}) (local.get $other)))
       (if (result i32) (i32.and (i32.ne (local.get $p) (i32.const 0)) (i32.ne (local.get $q) (i32.const 0)))
         (then (call $same${i} (i32.load offset=4 (local.get $p)) (i32.load offset=4 (local.get $q)))) (else (i32.const 0))))`);
@@ -107,10 +108,16 @@ export const witTurnOwners=(descriptor,callbacks)=>{
         (local.set $v (i32.load offset=4 (local.get $p))) (i64.store (local.get $p) (i64.const 0))
         (global.set $live (i32.sub (global.get $live) (i32.const 1))) (local.get $v))
       ${kinds.map(body).join("\n")}
+      (func (export "release-lease") (param $kind i32) (param $ticket i64) (result i32)
+        ${kinds.map((_,i)=>`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $release${i} (local.get $ticket)))))`).join(" ")} (i32.const 0))
+      (func (export "same-lease") (param $kind i32) (param $left i64) (param $right i64) (result i32)
+        ${kinds.flatMap((k,i)=>k.retain?[`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $sameTickets${i} (local.get $left) (local.get $right)))))`]:[]).join(" ")} (i32.const 0))
       (func (export "count") (result i32) (global.get $live))
       (func (export "close") (global.set $closed (i32.const 1)) (global.set $domain (i32.const 0)) ${kinds.map((_,i)=>`(call $drain${i})`).join(" ")}))
     (core instance $i (instantiate $m (with "" (instance ${links.join(" ")}))))
     (func (export "bind") (param "domain" u32) (result bool) (canon lift (core func $i "bind")))
+    (func (export "release-lease") (param "kind" u32) (param "ticket" u64) (result bool) (canon lift (core func $i "release-lease")))
+    (func (export "same-lease") (param "kind" u32) (param "left" u64) (param "right" u64) (result bool) (canon lift (core func $i "same-lease")))
     (func (export "count") (result u32) (canon lift (core func $i "count")))
     (func (export "close") (canon lift (core func $i "close"))) ${lift.join("\n")})`;
 };

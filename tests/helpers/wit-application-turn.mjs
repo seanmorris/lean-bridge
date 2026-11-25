@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {readFile,writeFile} from "node:fs/promises";
 import {join,resolve} from "node:path";
 import {witTurnOwners} from "../../src/backends/wit/application-turn-owners.mjs";
+import {canonicalSupervisor} from "../../src/backends/wit/canonical-supervisor.mjs";
 
 /**
  * Use the real source-compiled Workshop.update and the separately compiled
@@ -25,13 +26,45 @@ export const exerciseWitApplicationTurn=async o=>{
 		await writeFile(join(app,id+".wat"),code);await run(wasm,["parse",id+".wat","-o",id+".wasm"]);
 		await run(wasm,["validate","--features","cm-async,cm-async-builtins",id+".wasm"]);
 	}
+	const names=["series","finite"],client=await readFile(join(fixture,"turn-cursor-client.wat.in"),"utf8");
+	const programs=await Promise.all(names.map(n=>readFile(join(app,n+"-turn-cursor.wat"),"utf8")));
+	const cursor=["(component"];
+	for(const n of names)cursor.push(`(import "turn-${n}" (func $${n} (param "op" u32) (param "key" u32) (param "value" u64) (result (tuple u32 u32 u64 u64))))`);
+	cursor.push(owner.replace("(component","(component $owner"),"(instance $o (instantiate $owner))");
+	cursor.push(`(alias export $o "${b.witImports.interfaceName}" (instance $obj)) (alias export $obj "box" (type $r0))`);
+	cursor.push(witTurnOwners(b.witImports,null).replace("(component","(component $table"));
+	cursor.push(`(instance $v (instantiate $table (with "${b.witImports.interfaceName}" (instance $obj))))`);
+	cursor.push('(export "bind-owners" (func $v "bind")) (export "close-owners" (func $v "close")) (export "live-owners" (func $v "count"))');
+	for(const [i,n] of names.entries())
+	{
+		cursor.push(programs[i].replace("(component","(component $code"+i));
+		cursor.push(`(instance $s${i} (instantiate $code${i} (with "r0" (type $r0)) (with "leases" (instance $v)) (with "turn" (func $${n}))))`);
+		cursor.push(`(export "${n}-pump" (func $s${i} "pump")) (export "${n}-retire" (func $s${i} "retire"))`);
+		cursor.push(`(export "${n}-drain" (func $s${i} "drain"))`);
+	}
+	const start='(instance $app (instantiate $client (with "objects" (instance $obj)) (with "series" (func $s0 "start")) (with "finite" (func $s1 "start"))))';
+	const cancelled=client.replace(";; @cancel-parked@",`(if (i32.eqz (local.get $phase)) (then
+        (call $eq (call $cancel-f (global.get $f)) (i32.const 2)) (call $end-f (global.get $f))))`)
+		.replace(";; @finish-cancel@",`(if (i32.eq (local.get $phase) (i32.const 3)) (then
+        (call $drop (global.get $a)) (call $drop (global.get $b)) (call $del (global.get $set))
+        (call $ret (i64.const 73)) (return (i32.const 0))))`);
+	for(const [id,guest] of [["guest-turn-cursors",client],["guest-turn-cancel",cancelled]])
+	{
+		await writeFile(join(app,id+".wat"),[...cursor,guest,start,canonicalSupervisor,")"].join("\n"));
+		await run(wasm,["parse",id+".wat","-o",id+".wasm"]);
+		await run(wasm,["validate","--features","cm-async,cm-async-builtins",id+".wasm"]);
+	}
 	const flags=["-std=gnu11","-O1","-g0","-Wall","-Wextra","-Werror","-pthread","-I."];
 	const includes=["-I"+resolve("src/backends/wit"),"-I"+join(kit,"include")];
 	const libs=["-L.","-l:"+b.component,"-L"+join(kit,"lib"),"-lwasmtime"];
 	const paths=["-Wl,-rpath-link,"+join(runtimeRoot,"lib"),"-Wl,-rpath-link,."];
 	await run(process.env.CC??"cc",[...flags,...includes,join(fixture,"guest-turn.c"),...libs,...paths,"-o","guest-turn"]);
 	const env={PATH: "/no-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1",LD_LIBRARY_PATH: [app,join(kit,"lib"),join(runtimeRoot,"lib")].join(":")};
-	const r=await run(join(app,"guest-turn"),["guest-turn.wasm","guest-turn-trap.wasm"],env);
+	const guests=["guest-turn.wasm","guest-turn-trap.wasm","guest-turn-cursors.wasm","guest-turn-cancel.wasm"];
+	const r=await run(join(app,"guest-turn"),guests,env);
 	assert.match(r.stdout,/async guest: original box 42 -> 73; original getter error; two Lean frames disposed/u);
 	assert.match(r.stdout,/trapped async guest: parked Lean call unwound once on its owner before store destruction/u);
+	assert.match(r.stdout,/canonical guest-owned cursors: four open, six pulls, one abandoned before demand, four closed/u);
+	assert.match(r.stdout,/parked read cancelled before Lean resolved; no late item or second close/u);
+	assert.match(r.stdout,/reentrant cursor open during owner comparison: three independent cursors, three releases/u);
 };
