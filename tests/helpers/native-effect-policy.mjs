@@ -23,16 +23,26 @@ const policy = { modules: ["Demo"], exports: ["Demo.f"], members: [], asyncItera
 const resolveLeaf = (leaf, change = {}, hostSymbols) => resolveNativeHostEffects({ ...policy, ...change },
 	{ policy: nativeEffectPolicy, initializers: [], roots: [{ declaration: "Demo.f", leaves: [leaf] }] }, hostSymbols);
 const cfg = "lean-bridge.exports.json";
-test("explicit waits are refused only on the host-member pthread owner profile",()=>{
-	const host={nativeEffects: [],hostModule: "LeanBridge.Host.Javascript",javascriptThreadedHostMembers: true,taskExports: ["Demo.f"]};
+test("owner-dispatched workers refuse explicit waits, but permit nonblocking composition and standalone IO",()=>{
+	const hosts=[
+		["JavaScript",{hostModule: "LeanBridge.Host.Javascript",javascriptThreadedHostMembers: true}]
+		, ["PHP-Wasm",{hostModule: "LeanBridge.Host.Php",phpWasmTaskObjects: true}]
+		, ["native PHP",{hostModule: "LeanBridge.Host.Php",phpNativeTaskObjects: true}]
+		, ["Perl",{perlTaskObjects: true}],["Python",{pythonTaskObjects: true}]
+		, ["Ruby",{rubyTaskObjects: true}],["JVM",{jvmTaskObjects: true}]
+		, ["CLR",{dotnetTaskObjects: true}],["C",{staticTaskOwner: "c"}]
+		, ["C++",{staticTaskOwner: "cpp"}],["Rust",{staticTaskOwner: "rust"}]
+		, ["WIT/WASI",{staticTaskOwner: "wit-wasi"}]
+	].map(([owner,s])=>[owner,{...s,nativeEffects: [],taskExports: ["Demo.f"]}]);
 	for(const symbol of ["lean_task_get_own","lean_io_wait","lean_io_wait_any","lean_dbg_sleep","lean_io_basemutex_lock","lean_io_baserecmutex_lock","lean_io_basesharedmutex_read","lean_io_basesharedmutex_write","lean_io_condvar_wait"])
 {
 		const leaf={name: "primitive",module: "Init.System.IO",symbol};
-		assert.throws(()=>resolveLeaf(leaf,host),/can block the JavaScript host owner/u);
+		for(const [owner,host] of hosts)assert.throws(()=>resolveLeaf(leaf,host),e=>e.code==="native-effect-policy" && e.message.includes("can block the "+owner+" host owner"));
 		assert.deepEqual(resolveLeaf(leaf,{nativeEffects: []}).capabilities,[]);
+		assert.deepEqual(resolveLeaf(leaf,{nativeEffects: [],hostModule: "LeanBridge.Host.Php"}).capabilities,[]);
 }
 	for(const symbol of ["lean_io_basemutex_try_lock","lean_io_basesharedmutex_try_read","lean_task_map","lean_task_bind","lean_io_as_task"])
-		assert.deepEqual(resolveLeaf({name: "primitive",module: "Init.System.IO",symbol},host).capabilities,[]);
+		for(const [,host] of hosts)assert.deepEqual(resolveLeaf({name: "primitive",module: "Init.System.IO",symbol},host).capabilities,[]);
 });
 test("the exact list-to-array and target word-width leaves require no OS grant",()=>{
 	const mk={name: "Array.mk",module: "Init.Prelude",symbol: "lean_array_mk"};

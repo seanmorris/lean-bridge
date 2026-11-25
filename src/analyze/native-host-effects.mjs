@@ -17,9 +17,10 @@ const ambient = {
 export const nativeEffects = Object.freeze(Object.keys(ambient).sort());
 const fail = message => { throw Object.assign(new TypeError(`Native effect policy: ${message}`), { code: "native-effect-policy" }); };
 const catalog = new Map();
-// A synchronous pthread-to-JavaScript proxy needs the heap owner to service it.
-// The audit records transitive leaves, not which agent eventually runs them;
-// refuse explicit waits even when the author expects them to run on a worker.
+// Owner-dispatched workers need the host thread to deliver callbacks and
+// drive cancellation. The audit records transitive leaves, not which thread
+// eventually executes each leaf. Only these owner profiles prohibit waits;
+// plain synchronous IO does not acquire a scheduler constraint.
 const ownerBlocking = new Set(["lean_task_get_own", "lean_io_wait"
 	, "lean_io_wait_any", "lean_dbg_sleep", "lean_io_condvar_wait"
 	, "lean_io_basemutex_lock", "lean_io_baserecmutex_lock"
@@ -106,6 +107,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const workerOwner=hasJavaScriptHostOwner(selection);
 	const staticOwners = { c: "C", cpp: "C++", rust: "Rust", "wit-wasi": "WIT/WASI" };
 	const localOwner=Object.hasOwn(staticOwners,selection.staticTaskOwner)?staticOwners[selection.staticTaskOwner]:selection.perlTaskObjects===true?"Perl":selection.jvmTaskObjects===true?"JVM":selection.dotnetTaskObjects===true?"CLR":selection.pythonTaskObjects===true?"Python":selection.rubyTaskObjects===true?"Ruby":null;
+	const blockingOwner=workerOwner?"JavaScript":selection.phpWasmTaskObjects===true?"PHP-Wasm":selection.phpNativeTaskObjects===true?"native PHP":localOwner;
 	const byRoot = new Map(), compiledMembers=workerOwner || ["LeanBridge.Host.C","LeanBridge.Host.Cpp","LeanBridge.Host.Rust","LeanBridge.Host.WitWasi","LeanBridge.Host.Php"].includes(selection.hostModule) || localOwner?new Map():null;
 	const violations = new Set();
 	for(const { declaration, leaves } of audit.roots)
@@ -129,8 +131,8 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 				continue;
 				}
 			const cap = exact ? null : catalog.get(symbol);
-			if((workerOwner || selection.phpWasmTaskObjects===true || localOwner) && ownerBlocking.has(symbol))
-				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the ${workerOwner?"JavaScript":localOwner??"PHP-Wasm"} host owner; return or compose the task without waiting synchronously`);
+			if(blockingOwner && ownerBlocking.has(symbol))
+				violations.add(`${declaration} reaches ${name} (${symbol}), which can block the ${blockingOwner} host owner; return or compose the task without waiting synchronously`);
 			if(cap === null) continue;
 			if(!allowed.includes(cap)) violations.add(`${declaration} requires nativeEffects "${cap}" via ${name} (${symbol})`);
 			found.add(cap);

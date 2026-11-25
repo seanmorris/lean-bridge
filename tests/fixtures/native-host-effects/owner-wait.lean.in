@@ -1,0 +1,12 @@
+
+namespace Effects
+
+-- The promise is already resolved. This checks the compiler's explicit-wait
+-- policy without ever relying on a real deadlock or a test timeout.
+def blockingClose (cursor : Cursor) : BaseIO Unit := do
+  let gate : IO.Promise Bool ← IO.Promise.new
+  gate.resolve true
+  let _ ← IO.wait gate.result?
+  close cursor
+
+end Effects

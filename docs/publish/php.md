@@ -30,6 +30,14 @@ Amp and Revolt. A worker can carry objects and call a retained PHP callback
 on the owner thread; it cannot invoke a PHP member directly. Synchronous
 methods on the same binding can still invoke imported members.
 
+Keep the PHP event loop available to deliver callbacks and cancellation. Return
+or compose a Lean `Task` rather than synchronously waiting for it. In this
+host-worker profile the compiler checks the native operations reachable from
+startup, exports, pulls and finalizers. It rejects an explicit blocking wait
+such as `IO.wait`, even if that task happens to be ready at runtime. A filesystem
+or environment grant does not grant permission to block the owner. This rule
+does not turn a standalone synchronous IO package into an async package.
+
 For a borrowed member result, name the object that must outlive it. Use
 `{"scope":"receiver","anchor":"receiver"}` for the receiving object, or
 `{"scope":"parameter","anchor":"parent"}` for a nominal argument named

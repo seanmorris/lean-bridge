@@ -39,9 +39,9 @@ export const checkHostWorkerEffects=async(t,spec)=>{
 	const releases=kept?await mkdtemp(join(kept,target+"-effects-releases-")):null;
 	if(releases)t.diagnostic("handoffs: "+releases);
 	let review;
-	for(const route of ["denied","ordinary","reviewed"])
+	for(const route of ["denied",...spec.blockingOwner?["blocked-owner"]:[],"ordinary","reviewed"])
 	{
-		if(replay && route==="denied")continue;
+		if(replay && (route==="denied" || route==="blocked-owner"))continue;
 		const stage=join(root,route),src=join(stage,"source"),fresh=join(stage,"release");
 		await mkdir(stage);
 		let dir=replay?resolve(replay,route):prior && route==="ordinary"?resolve(prior):null;
@@ -52,14 +52,23 @@ export const checkHostWorkerEffects=async(t,spec)=>{
 			await appendFile(join(src,"lakefile.toml"),'\n[[lean_lib]]\nname = "Effects"\n');
 			for(const field of ["modules","exports","taskExports","asyncIterators"])(cfg[field]??=[]).push(...extra[field]);
 			cfg.nativeEffects=route==="denied"?["environment"]:extra.nativeEffects;
+			if(route==="blocked-owner")
+			{
+				const cursor=cfg.asyncIterators.find(x=>x.open==="Effects.walk");
+				assert.equal(cursor.close,"Effects.close");cursor.close="Effects.blockingClose";
+				await appendFile(join(src,"Effects.lean"),await readFile(join(family,"owner-wait.lean.in")));
+			}
 			if(route==="reviewed")
 			{delete cfg.exports;await writeFile(join(src,"worker.binding-ir.json"),canonicalJson(review));}
 			await writeFile(join(src,cfgFile),canonicalJson(cfg));
 			const args=[resolve("scripts/lean-bridge.mjs"),"build","--project",src,"--target",target,"--output",fresh,"--json","--progress","none"];
 			const build=()=>run(process.execPath,args,stage,env,1200000);
-			if(route==="denied")
+			if(route==="denied" || route==="blocked-owner")
 			{
-				await assert.rejects(build(),e=>["Effects.worker","Effects.pull","Effects.close"].every(n=>e.message.includes(n+" requires nativeEffects")) && e.message.includes("filesystem"));
+				const refused=route==="denied"
+					? e=>["Effects.worker","Effects.pull","Effects.close"].every(n=>e.message.includes(n+" requires nativeEffects")) && e.message.includes("filesystem")
+					: e=>["Effects.blockingClose","lean_io_wait","can block the "+spec.blockingOwner+" host owner"].every(s=>e.message.includes(s));
+				await assert.rejects(build(),refused);
 				await assert.rejects(access(fresh),{code: "ENOENT"});continue;
 			}
 			await build();await rm(src,{recursive: true});dir=fresh;
