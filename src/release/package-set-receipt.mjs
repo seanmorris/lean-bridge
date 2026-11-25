@@ -28,7 +28,7 @@ const pathIsSafe = value => typeof value === "string" && value.length <= 1024 &&
 const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1", "javascript-wasm-sync-io-v1", "javascript-wasm-host-io-v1", "javascript-wasm-threaded-task-v1"]
 	, "php-wasm": ["php-wasm-copied-v1", "php-wasm-sync-io-v1", "php-wasm-threaded-task-v1"]
 	, pypi: ["native-library-v1", "native-python-host-v1", "native-python-task-v1", "native-python-io-v1"]
-	, c: ["native-library-v1", "native-c-task-v1", "native-c-io-v1"]
+	, c: ["native-library-v1", "native-c-task-v1", "native-c-io-v1", "native-c-host-v1"]
 	, cpp: ["native-library-v1", "native-cpp-task-v1", "native-cpp-io-v1"]
 	, cargo: ["native-library-v1", "native-rust-task-v1", "native-rust-io-v1"]
 	, rubygems: ["native-library-v1", "native-ruby-io-v1", "native-ruby-task-v1", "native-ruby-host-v1"]

@@ -42,7 +42,7 @@ export const prepareNativeHostFixture = async (project, backend) => {
 	await cp(fixture, project, { recursive: true });
 	if(backend === "ruby") return;
 	assert.ok(Object.hasOwn(hosts, backend)); const { label, target } = hosts[backend];
-	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(file, "utf8"));
+	const file = join(project, "lean-bridge.hosts.json"), contract = JSON.parse(await readFile(backend==="c"?resolve("tests/fixtures/c-host-members/lean-bridge.hosts.json"):file, "utf8"));
 	contract.types[0].host.targets = [backend];
 	contract.types[0].documentation.summary = {c: "An application-owned C object with a read method.", jvm: "A JVM object with a read method.", dotnet: "A .NET object with a read method.", php: "A PHP object with a read method."}[backend];
 	await writeFile(file, canonicalJson(contract));

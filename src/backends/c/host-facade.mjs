@@ -15,8 +15,7 @@ export const cHostFacade=o=>{
 	const used=new Set(),reserve=n=>{if(used.has(n)) throw new TypeError("C host public name collision: "+n);used.add(n);return n;};
 	const names=["binding","hosts","status","diagnostic","view","buffer","integer","integer_view"];
 	names.forEach(reserve);
-	typedefs();
-	function typedefs(){
+	{
 		defs.push("typedef struct { uint64_t _private[2]; } "+p+"binding;",
 			"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","IO_ERROR","DECLARED_ERROR","HOST_ERROR","BUSY"].map(x=>p+x).join(", ")+" } "+p+"status;",
 			"typedef struct { const uint8_t *data; size_t len; } "+p+"view;",
@@ -58,12 +57,12 @@ export const cHostFacade=o=>{
     int rc=2; bool called=false; size_t budget=0; uint32_t err=0;
     ${args.map((v,j)=>v.arg+" a"+j+"={0};").join(" ")}
     ${hasResult?result.type+" result={0};":""}
-    ${args.map((a,j)=>a.nominal?`{ lb_cr_ref borrowed={0},own={0}; if(LB_CR(lift)(${a.key},w[${3*j}],&borrowed) || LB_CR(clone)(${a.key},borrowed,&own)) goto done_${i}; a${j}=(${a.type}){{own.domain,own.ticket}}; }`:a.unpack("a"+j,"w+"+3*j,bad,{borrowed:true})).join("\n    ")}
+    ${args.map((a,j)=>a.nominal?`{ lb_cr_ref borrowed={0},own={0}; if(LB_CR(lift)(${a.key},w[${3*j}],&borrowed) || LB_CR(clone)(${a.key},borrowed,&own)) goto done_${i}; a${j}=(${a.type}){{own.domain,own.ticket}}; }`:a.unpack("a"+j,"w+"+3*j,bad,{borrowed: true})).join("\n    ")}
     called=true; err=s->methods.${label}(${["s->context",...args.map((_,j)=>"a"+j),...hasResult?["&result"]:[]].join(",")});
     ${result.dyn?"scope->buffer=result.data;":""}
     if(err) { *fault=err; rc=1; goto done_${i}; }
-    ${result.nominal?`{ lb_cr_ref own={0}; if(LB_CR(clone)(${result.key},${result.raw("result")},&own)) goto done_${i}; scope->key=${result.key}; scope->temp=own; out[0]=own.ticket; }`:
-		hasResult?result.pack("result","out",()=>("goto done_"+i+";")):"out[0]=0;"}
+    ${result.nominal?`{ lb_cr_ref own={0}; if(LB_CR(clone)(${result.key},${result.raw("result")},&own)) goto done_${i}; scope->key=${result.key}; scope->temp=own; out[0]=own.ticket; }`
+		:hasResult?result.pack("result","out",()=>("goto done_"+i+";")):"out[0]=0;"}
     rc=0;
 done_${i}:
     ${result.nominal && m.resultOwnership!=="borrow"?result.clear("result"):""}
@@ -130,5 +129,5 @@ static int lb_dispatch(uint64_t id,int32_t op,const uint64_t *w,size_t n,uint64_
 }
 ${code.join("\n")}
 `;
-	return {header,source,symbols,prefix:p};
+	return {header,source,symbols,prefix: p};
 };

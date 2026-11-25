@@ -19,8 +19,8 @@ import {processBuildRunner} from "./process-runner.mjs";
  */
 export const compileCHostComponent=async o=>{
 	const {app,ir,projectContract: contract,runtimeRoot,leanPrefix,environment,signal}=o;
-	if(!ir || contract?.generatedHostModule!=="LeanBridge.Host.C" || !contract.hostImportsSource ||
-		contract.taskExports.length || contract.asyncIterators.length || contract.leanResources.length)
+	if(!ir || contract?.generatedHostModule!=="LeanBridge.Host.C" || !contract.hostImportsSource
+		|| contract.taskExports.length || contract.asyncIterators.length || contract.leanResources.length)
 		throw new TypeError("Expected synchronous application-owned C host imports");
 	const run=(cmd,args,cwd=app,env=environment)=>processBuildRunner.capture({command: cmd,args,cwd,env,signal});
 	const save=(name,data)=>writeFile(join(app,name),data,{flag: "wx"});
@@ -45,8 +45,18 @@ export const compileCHostComponent=async o=>{
 	const base=gen("0".repeat(64));
 	const facadeFor=(identity,prefix)=>cHostFacade({ir,entries: checked.entries,model,name: o.name,identity,prefix});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
-	const identity=sha256(canonicalJson({domainId,api: checked.api,evidence: checked.evidence,
-		hashes,publicBase,header: base.header,source: base.source,entry: base.entryLean,name: o.name,version: o.version}));
+	const identity=sha256(canonicalJson({
+		domainId
+		, api: checked.api
+		, evidence: checked.evidence
+		, hashes
+		, publicBase
+		, header: base.header
+		, source: base.source
+		, entry: base.entryLean
+		, name: o.name
+		, version: o.version
+	}));
 	const actual=gen(identity), component="lib"+actual.prefix+".so";
 	const facade=facadeFor(identity,actual.prefix);
 	const cc=environment.CC??"cc";

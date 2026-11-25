@@ -135,6 +135,38 @@ owned results with the functions named in the installed header. There is no
 task handle to wait on. The [installed C example](../../tests/fixtures/native-sync-io-clients/consumer.c)
 exercises each outcome and makes another call after both kinds of Lean failure.
 
+## Supply C objects to Lean
+
+In a `native-c-host-v1` package the payload belongs to your application.
+For example, Lean can read and update your existing meter without copying it.
+The installed header declares one function pointer for each member the Lean
+package uses. Fill in that table and pass it, plus your application context,
+to `workshop_with_hosts`. Those names come from the example package; use the
+names in your installed header.
+
+```c
+static uint32_t read_meter(void *context, workshop_box meter, uint32_t *out) {
+    (void)context;
+    void *payload = NULL;
+    if (workshop_box_data(meter, &payload) != workshop_OK) return 37;
+    *out = ((struct meter *)payload)->level;
+    return 0;
+}
+```
+
+Adopt a payload with `workshop_box_adopt(payload, destructor, &box)`.
+Zero-initialize owners and diagnostic outputs. A struct assignment aliases the
+same owner; use `workshop_box_clone` for an independent owner. Drop each owner
+when finished. Close the binding before freeing its context. Calls, including
+cleanup, belong on the process main thread. No Lean installation is needed.
+
+A member's nonzero return code reaches `diagnostic.host_code` if it escapes
+Lean unchanged. A Lean `IO.Error` carries a message; a thrown `EIO` writes its
+declared payload to a separate output; a returned `Except` is an ordinary
+value. The [complete C application](../../tests/fixtures/c-host-members/consumer.c)
+registers both member tables, uses the same object from two packages, and
+releases the final owner after closing the bindings.
+
 ## Wait for a task or pull a stream
 
 A C archive marked `native-c-task-v1` bundles the Lean runtime. Include the

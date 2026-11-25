@@ -30,24 +30,26 @@ test("public C consumers exchange real application objects across independent Le
 			const config=JSON.parse(await readFile(cfg,"utf8")); config.targets.c.name=name; await writeFile(cfg,canonicalJson(config));
 		}
 		const inventory=await inspectLeanProject(project),component=elaboratedComponent(inventory.project);
-		const source=await openHostProjectSource({project,inventory,component,leanPrefix,targets:["c"]});
+		const source=await openHostProjectSource({project,inventory,component,leanPrefix,targets: ["c"]});
 		try
 		{
-			const b=await compileCHostComponent({...source,ir:source.projectContract.ir,app,runtimeRoot,leanPrefix,environment:process.env,name,version:"1.0.0"});
+			const b=await compileCHostComponent({...source,ir: source.projectContract.ir,app,runtimeRoot,leanPrefix,environment: process.env,name,version: "1.0.0"});
 			await source.verify();
 			if(builds.length) assert.equal(b.binaries[b.domain],builds[0].binaries[builds[0].domain]);
 			else await copyFile(join(app,b.domain),join(prefix,b.domain));
 			await copyFile(join(app,b.component),join(prefix,b.component));
 			await writeFile(join(prefix,name+".h"),b.publicHeader);
 			builds.push(b);
-		} catch(e) {throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause:e});}
-		finally {await source.dispose();}
+		} catch(e)
+{throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause: e});}
+		finally
+{await source.dispose();}
 	}
 	assert.notEqual(builds[0].component,builds[1].component);
-	await rm(producer,{recursive:true});
+	await rm(producer,{recursive: true});
 	for(const lib of ["liblean_bridge_native.so","libleanshared.so"])
 		await link(join(runtimeRoot,"lib",lib),join(prefix,lib)).catch(e=>{if(e.code!=="EXDEV") throw e;return copyFile(join(runtimeRoot,"lib",lib),join(prefix,lib));});
-	const run=(command,args)=>processBuildRunner.capture({command,args,cwd:prefix,env:{...process.env,LD_LIBRARY_PATH:""}});
+	const run=(command,args)=>processBuildRunner.capture({command,args,cwd: prefix,env: {...process.env,LD_LIBRARY_PATH: ""}});
 	const fixture=resolve("tests/fixtures/c-host-members/consumer.c");
 	for(const b of builds)
 	{

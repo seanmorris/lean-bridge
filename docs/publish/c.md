@@ -49,6 +49,49 @@ Use `nativeEffects: []` for an in-memory API. Build with `--target c`; the
 returning `IO α` or `EIO ε α` generates one `_call` entry, not a polling
 handle. See [how an installed caller handles the result](../consume/c.md#call-synchronous-io).
 
+## Call application-owned C objects from Lean
+
+Select the C host contract with `hostImports` and list the Lean entry points
+that use it. For example, a package that reads and updates a meter declares:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "exports": ["Workshop.read", "Workshop.update"],
+  "hostImports": "lean-bridge.hosts.json",
+  "targets": { "c": { "name": "workshop", "version": "1.0.0" } }
+}
+```
+
+The [complete meter contract](../../tests/fixtures/c-host-members/lean-bridge.hosts.json)
+describes the nominal `Box` type, its methods and lifetime rules, and selects
+`c` in `host.targets`. Save it beside the export configuration. Lean Bridge generates the import;
+don't add an implementation of that module to the project.
+
+```lean
+import LeanBridge.Host.C
+
+namespace Workshop
+open LeanBridge.Host.C
+
+def read (box : Box) : IO UInt32 := box.read
+
+def update (box : Box) (value : UInt32) : IO UInt32 := do
+  box.setLevel value
+  box.getLevel
+
+end Workshop
+```
+
+Build with `lean-bridge build --project . --target c --output release-c`.
+The `native-c-host-v1` receipt identifies the synchronous host profile.
+Distribute the verified archive: it contains the generated public header,
+native component, shared reference registry, and Lean runtime. Downstream
+users [register their C implementations](../consume/c.md#supply-c-objects-to-lean);
+they don't need your Lake project or a Lean compiler. Task and cursor exports
+use a different profile.
+
 ## Export tasks and pull streams
 
 If the Lean code uses files, environment variables, or other OS facilities,

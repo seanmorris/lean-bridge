@@ -23,3 +23,11 @@ usable after binding closure; the original C payload was destroyed exactly once.
 
 This test exercises the compiled libraries directly. It does not establish
 release-archive installation, worker delivery, or C++/Rust/WIT support.
+
+The separate `npm run test:c-host-packages` gate installs the candidate CLI
+offline, builds both source routes and a peer, and links consumers using the
+metadata in the resulting archives. It requires pkg-config, CMake and a C11
+compiler. Set `LEAN_BRIDGE_CMAKE` for a nonstandard CMake executable.
+`LEAN_BRIDGE_C_HOST_HANDOFFS` retains the receipts and archives under an
+existing directory. Set `LEAN_BRIDGE_C_HOST_REPLAY` to that run's release
+directory to repeat receipt verification and installation without building Lean.

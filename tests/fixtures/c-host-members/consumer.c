@@ -7,7 +7,7 @@
 #include <string.h>
 
 typedef struct { uint32_t level; } meter;
-typedef struct { unsigned calls; uint32_t fault; workshop_binding *busy; } state;
+typedef struct { unsigned calls; uint32_t fault; workshop_binding *busy; peer_binding *nested; bool corrupt; } state;
 static unsigned destroyed;
 static void dispose(void *p) { ++destroyed; free(p); }
 static meter *payload(workshop_box b) {
@@ -16,6 +16,12 @@ static meter *payload(workshop_box b) {
 static uint32_t read_meter(void *ctx,workshop_box b,uint32_t *out) {
     state *s=ctx; ++s->calls;
     if(s->busy) assert(workshop_close(s->busy)==workshop_BUSY);
+    if(s->nested) {
+        peer_diagnostic d={0}; uint32_t inner=101;
+        assert(peer_read(*s->nested,b,&inner,&d)==peer_HOST_ERROR);
+        assert(d.host_code==91 && inner==101);
+        peer_diagnostic_clear(&d);
+    }
     if(s->fault) return s->fault;
     *out=payload(b)->level; return 0;
 }
@@ -27,7 +33,9 @@ static uint32_t set_meter(void *ctx,workshop_box b,uint32_t n) {
     ++((state *)ctx)->calls; payload(b)->level=n; return 0;
 }
 static uint32_t identity(void *ctx,workshop_box b,workshop_box *out) {
-    ++((state *)ctx)->calls; assert(workshop_box_clone(b,out)==workshop_OK); return 0;
+    state *s=ctx; ++s->calls;
+    if(s->corrupt) return 0; /* Invalid successful reply: required owner was never supplied. */
+    assert(workshop_box_clone(b,out)==workshop_OK); return 0;
 }
 int main(void) {
     workshop_hosts am={.box_read=read_meter,.box_create=create_meter,.box_get_level=read_meter,.box_set_level=set_meter,.box_identity=identity};
@@ -41,9 +49,10 @@ int main(void) {
     assert(workshop_make(a,23,&x,&d)==workshop_OK);
     uint32_t n=0;
     assert(peer_update(b,x,47,&n,&e)==peer_OK && n==47);
-    first.busy=&a;
+    first.busy=&a; first.nested=&b; second.fault=91;
     assert(workshop_read(a,x,&n,&d)==workshop_OK && n==47);
-    first.busy=NULL;
+    assert(d.host_code==0 && !d.message.data);
+    first.busy=NULL; first.nested=NULL; second.fault=0;
     assert(peer_identity(b,x,&aliased,&e)==peer_OK);
     bool equal=false;
     assert(workshop_box_same(x,aliased,&equal)==workshop_OK && equal);
@@ -77,5 +86,18 @@ int main(void) {
     assert(peer_box_drop(&aliased)==peer_OK && !destroyed);
     assert(workshop_box_drop(&returned)==workshop_OK && destroyed==1);
     assert(!memcmp(msg.data,"host read failed",16)); peer_buffer_clear(&msg);
-    puts("public C owners: exactly one destruction");
+    /* A malformed reply must retire the shared Lean runtime. Teardown and
+     * native owner disposal must still work on both sides of that boundary. */
+    workshop_hosts bad={.box_read=read_meter,.box_create=create_meter,.box_get_level=read_meter,.box_set_level=set_meter,.box_identity=identity};
+    peer_hosts observer={.box_read=read_meter,.box_create=create_meter,.box_get_level=read_meter,.box_set_level=set_meter,.box_identity=identity};
+    assert(workshop_with_hosts(&bad,&first,&a)==workshop_OK);
+    assert(peer_with_hosts(&observer,&second,&b)==peer_OK);
+    assert(workshop_make(a,72,&x,&d)==workshop_OK);
+    first.corrupt=true;
+    assert(workshop_identity(a,x,&returned,&d)==workshop_UNAVAILABLE);
+    unsigned previous=second.calls;
+    assert(peer_read(b,x,&n,&e)==peer_UNAVAILABLE && second.calls==previous);
+    assert(peer_close(&b)==peer_OK && workshop_close(&a)==workshop_OK);
+    assert(workshop_box_drop(&x)==workshop_OK && destroyed==2);
+    puts("public C owners: exactly one destruction per payload, including after runtime retirement");
 }

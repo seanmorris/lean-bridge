@@ -1,7 +1,8 @@
 /** @file Generate typed C conversions for synchronous application host bindings. */
 import {cIdentifier} from "./generate.mjs";
 
-/** Derive copied, nominal and returned-Except codecs from compiler-checked type references.
+/**
+ * Derive copied, nominal and returned-Except codecs from compiler-checked type references.
  *
  * @param ir - Authenticated host imports.
  * @param kinds - Native nominal keys in compiler order.
@@ -52,9 +53,12 @@ export const cHostCodecs=(ir,kinds,p,defs)=>{
 		const a=byRef(t.arguments[0],name+"_value",depth+1),b=byRef(t.arguments[1],name+"_error",depth+1);
 		const type=p+name;
 		defs.push("typedef struct { bool ok; "+a.type+" value; "+b.type+" error; } "+type+";");
-		return {type,empty: v=>"("+a.empty("("+v+").value")+" && "+b.empty("("+v+").error")+")",
-			clear: v=>"if(("+v+").ok) { "+a.clear("("+v+").value")+" } else { "+b.clear("("+v+").error")+" }",
-			unpack: (v,w,bad)=>"if(tags["+depth+"]>1) { "+bad("CR_INVALID")+" } ("+v+").ok=tags["+depth+"]!=0; if(("+v+").ok) { "+a.unpack("("+v+").value",w,bad)+" } else { "+b.unpack("("+v+").error",w,bad)+" }"};
+		return {
+			type
+			, empty: v=>"("+a.empty("("+v+").value")+" && "+b.empty("("+v+").error")+")"
+			, clear: v=>"if(("+v+").ok) { "+a.clear("("+v+").value")+" } else { "+b.clear("("+v+").error")+" }"
+			, unpack: (v,w,bad)=>"if(tags["+depth+"]>1) { "+bad("CR_INVALID")+" } ("+v+").ok=tags["+depth+"]!=0; if(("+v+").ok) { "+a.unpack("("+v+").value",w,bad)+" } else { "+b.unpack("("+v+").error",w,bad)+" }"
+		};
 	};
 	return {scalar,byRef};
 };
