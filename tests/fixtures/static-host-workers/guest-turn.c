@@ -12,14 +12,15 @@
 
 enum { UPDATE=1,SET=2,GET=3,RESULT=4,MEMBER_ERROR=5 };
 typedef struct { lb_wit_turns turns; workshop_binding binding; bool bound; unsigned drops,sets,gets; } session;
-typedef struct { session *s; } box_arg;
+typedef struct { session *s; uint64_t ticket,fault; } box_arg;
 static void dispose(void *p){++((box_arg *)p)->s->drops;}
 static uint32_t member(void *ctx,workshop_box box,unsigned op,uint32_t arg,uint32_t *out){
     session *s=ctx;void *p=NULL;assert(workshop_box_data(box,&p)==workshop_OK && ((box_arg *)p)->s==s);
     lb_wit_message msg={0};
     if(op==GET)++s->gets;else ++s->sets;
-    if(!lb_wit_turn_request(&s->turns,(lb_wit_message){op,{arg}},&msg))return 97;
-    if(msg.op==MEMBER_ERROR)return 77;
+    box_arg *owner=p;
+    if(!lb_wit_turn_request(&s->turns,(lb_wit_message){op,{arg,owner->ticket}},&msg))return 97;
+    if(msg.op==MEMBER_ERROR){assert(msg.words[1]);owner->fault=msg.words[1];return 77;}
     assert(msg.op==RESULT);
     if(out)*out=(uint32_t)msg.words[0];
     return 0;
@@ -39,12 +40,12 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
             .box_anchored=own,.box_keep_other=pair,.box_take_other=pair,.box_echo_text=bytes,.box_echo_bytes=bytes,.box_shift=integer};
         assert(workshop_with_hosts(&h,s,&s->binding)==workshop_OK);s->bound=true;
     }
-    box_arg borrowed={s};workshop_box box={0};workshop_diagnostic d={0};uint32_t n=0;
+    box_arg borrowed={.s=s,.ticket=arg.words[1]};workshop_box box={0};workshop_diagnostic d={0};uint32_t n=0;
     assert(workshop_box_adopt(&borrowed,dispose,&box)==workshop_OK);
     workshop_status status=workshop_update(s->binding,box,(uint32_t)arg.words[0],&n,&d);
     assert(workshop_box_drop(&box)==workshop_OK);
     bool ok=status==workshop_OK || (status==workshop_HOST_ERROR && d.host_code==77);
-    *out=(lb_wit_message){status==workshop_OK?RESULT:MEMBER_ERROR,{n}};
+    *out=(lb_wit_message){status==workshop_OK?RESULT:MEMBER_ERROR,{n,borrowed.fault}};
     workshop_diagnostic_clear(&d);return ok;
 }
 static void finish(void *ctx){
@@ -58,12 +59,15 @@ static void check(wasmtime_error_t *e){
 typedef struct { session s; lb_wit_ticket current; } host;
 static wasmtime_error_t *bridge(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
-    (void)ctx;(void)ft;host *h=ptr;assert(argc==1 && retc==1 && in->kind==WASMTIME_COMPONENT_U64);
-    uint64_t word=in->of.u64;lb_wit_message m={(uint32_t)(word>>32),{(uint32_t)word}};lb_wit_event e={0};
+    (void)ctx;(void)ft;host *h=ptr;assert(argc==2 && retc==1 && in->kind==WASMTIME_COMPONENT_U64 && in[1].kind==WASMTIME_COMPONENT_U64);
+    uint64_t word=in->of.u64;lb_wit_message m={(uint32_t)(word>>32),{(uint32_t)word,in[1].of.u64}};lb_wit_event e={0};
     bool ok=m.op==UPDATE?lb_wit_turn_begin(&h->s.turns,m,&e):lb_wit_turn_reply(&h->s.turns,h->current,m,&e);
     if(!ok)return wasmtime_error_new("invalid native owner turn");
     assert(e.done==(e.message.op==RESULT || e.message.op==MEMBER_ERROR));h->current=e.ticket;
-    *out=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U64,.of.u64=((uint64_t)e.message.op<<32)|e.message.words[0]};
+    *out=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_TUPLE};
+    wasmtime_component_valtuple_new_uninit(&out->of.tuple,2);
+    out->of.tuple.data[0]=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U64,.of.u64=((uint64_t)e.message.op<<32)|e.message.words[0]};
+    out->of.tuple.data[1]=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U64,.of.u64=e.message.words[1]};
     return NULL;
 }
 static bool protocol(lb_wit_turns *s,void *arg){
@@ -82,6 +86,11 @@ static bool protocol(lb_wit_turns *s,void *arg){
     return lb_wit_turn_retire(s);
 }
 typedef struct {host *h;const char *wasm;bool trap;} input;
+static wasmtime_component_func_t lookup(wasmtime_component_instance_t *instance,wasmtime_context_t *ctx,const char *name){
+    wasmtime_component_export_index_t *idx=wasmtime_component_instance_get_export_index(instance,ctx,NULL,name,strlen(name));
+    wasmtime_component_func_t func;assert(idx && wasmtime_component_instance_get_func(instance,ctx,idx,&func));
+    wasmtime_component_export_index_delete(idx);return func;
+}
 static bool application(lb_wit_turns *s,void *ptr){
     input *in=ptr;host *h=in->h;assert(s==&h->s.turns);
     wasm_config_t *cfg=wasm_config_new();wasmtime_config_wasm_component_model_set(cfg,true);
@@ -95,9 +104,9 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasmtime_component_t *c=NULL;check(wasmtime_component_new(engine,b,n,&c));free(b);
     wasmtime_context_t *ctx=wasmtime_store_context(store);wasmtime_component_instance_t instance;
     check(wasmtime_component_linker_instantiate(link,ctx,c,&instance));
-    wasmtime_component_export_index_t *idx=wasmtime_component_instance_get_export_index(&instance,ctx,NULL,"run",3);
-    wasmtime_component_func_t run;assert(idx && wasmtime_component_instance_get_func(&instance,ctx,idx,&run));
-    wasmtime_component_export_index_delete(idx);wasmtime_error_t *err=NULL;wasmtime_component_val_t value={0};
+    wasmtime_component_func_t run=lookup(&instance,ctx,"run"),bind=lookup(&instance,ctx,"bind-owners");
+    wasmtime_error_t *err=NULL;wasmtime_component_val_t value={0},domain={.kind=WASMTIME_COMPONENT_U32,.of.u32=19};
+    check(wasmtime_component_func_call(&bind,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && value.of.boolean);
     wasmtime_call_future_t *fut=wasmtime_component_func_call_async(&run,ctx,NULL,0,&value,1,&err);
     assert(fut);struct timespec begin,now,pause={0,1000000};assert(!clock_gettime(CLOCK_MONOTONIC,&begin));
     while(!wasmtime_call_future_poll(fut)){
@@ -111,6 +120,13 @@ static bool application(lb_wit_turns *s,void *ptr){
         assert(found);wasm_name_delete(&m);wasmtime_error_delete(err);
     }else{
         check(err);assert(value.kind==WASMTIME_COMPONENT_S64 && value.of.s64==73);
+        wasmtime_component_func_t live=lookup(&instance,ctx,"live-owners"),close=lookup(&instance,ctx,"close-owners");
+        check(wasmtime_component_func_call(&live,ctx,NULL,0,&value,1));assert(value.kind==WASMTIME_COMPONENT_U32 && !value.of.u32);
+        wasmtime_component_func_t foreign=lookup(&instance,ctx,"bind-foreign"),audit=lookup(&instance,ctx,"audit");
+        domain.of.u32=20;check(wasmtime_component_func_call(&foreign,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && value.of.boolean);
+        check(wasmtime_component_func_call(&audit,ctx,NULL,0,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && value.of.boolean);
+        check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
+        check(wasmtime_component_func_call(&bind,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && !value.of.boolean);
     }
     assert(lb_wit_turn_retire(s));
     wasmtime_component_delete(c);wasmtime_component_linker_delete(link);wasmtime_store_delete(store);wasm_engine_delete(engine);

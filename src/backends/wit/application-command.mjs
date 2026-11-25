@@ -1,6 +1,7 @@
 /** @file Compose independently built object, callback and application components with the compiled Lean facade. */
 import {canonicalSupervisor} from "./canonical-supervisor.mjs";
 import {witApplicationExchange} from "./application-exchange.mjs";
+import {witTurnOwners} from "./application-turn-owners.mjs";
 import {cIdentifier} from "../c/generate.mjs";
 
 const fail=message=>{throw new TypeError("WIT application command: "+message);};
@@ -66,6 +67,9 @@ export const witApplicationCommand=o=>{
 	}
 	if(methods.length)
 	{
+		parts.push(nested(witTurnOwners(descriptor,registered?callbacks:null),"turn-owners"),
+			`(instance $owners (instantiate $turn-owners ${appImports[0]} ${registered?`(with "${cb}" (instance $cb))`:""}))`,
+			'(export "bind-owners" (func $owners "bind"))','(export "close-owners" (func $owners "close"))');
 		parts.push(nested(modules.tasks,"tasks"),`(instance $jobs (instantiate $tasks ${taskImports.join(" ")} ${channels.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`);
 		for(const m of methods)for(const p of (m.shape==="stream"?["pump","retire"]:["deliver","reap","retire"]))
 		{

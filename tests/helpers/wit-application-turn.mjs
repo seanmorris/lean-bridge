@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import {readFile,writeFile} from "node:fs/promises";
 import {join,resolve} from "node:path";
+import {witTurnOwners} from "../../src/backends/wit/application-turn-owners.mjs";
 
 /**
  * Use the real source-compiled Workshop.update and the separately compiled
@@ -13,7 +14,10 @@ export const exerciseWitApplicationTurn=async o=>{
 	const {app,b,fixture,kit,wasm,runtimeRoot,run}=o;
 	const owner=(await run(wasm,["print","guest.wasm"])).stdout;
 	const template=await readFile(join(fixture,"guest-turn.wat.in"),"utf8");
+	const audit=await readFile(join(fixture,"guest-lease-audit.wat.in"),"utf8");
 	const graph=template.replace("@OWNER@",()=>owner.replace("(component","(component $owner"))
+		.replace("@TABLE@",()=>witTurnOwners(b.witImports,null).replace("(component","(component $table"))
+		.replace("@AUDIT@",()=>audit)
 		.replaceAll("@OBJECTS@",b.witImports.interfaceName);
 	assert.ok(graph.includes(";; @inject-guest-trap@"));
 	for(const [id,code] of [["guest-turn",graph],["guest-turn-trap",graph.replace(";; @inject-guest-trap@","unreachable")]])

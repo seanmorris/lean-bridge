@@ -99,6 +99,14 @@ int main(int argc,char **argv){
     if(!report(lwit_operations_link(link,&ops)))goto end;
     for(const channel *c=channels;c->r;c++)if(!report(c->link(link)))goto end;
     if(!report(wasmtime_component_linker_instantiate(link,graph.ctx,component,&graph.instance)))goto end;
+#if LB_ASYNC
+    /* This executable hosts one store/graph for its entire process. */
+    wasmtime_component_func_t bind_owners,close_owners;
+    wasmtime_component_val_t domain={.kind=WASMTIME_COMPONENT_U32,.of.u32=1},bound={0};
+    if(!lwit_lookup(&graph,NULL,"bind-owners",&bind_owners) || !lwit_lookup(&graph,NULL,"close-owners",&close_owners) ||
+       !report(wasmtime_component_func_call(&bind_owners,graph.ctx,&domain,1,&bound,1)) ||
+       bound.kind!=WASMTIME_COMPONENT_BOOL || !bound.of.boolean)goto end;
+#endif
     opened=lwit_operations_open(&graph,&ops);if(!opened)goto end;
     for(const channel *c=channels;c->r;c++)if(!c->open())goto end;
     success=execute(&answer);
@@ -108,6 +116,9 @@ end:
     if(!success)graph.failed=true;
     for(const channel *c=channels;c->r;c++)if(!report(c->close())){graph.failed=true;success=false;}
     if(opened && lwit_operations_close(&ops)!=LB_GRAPH_OK)success=false;
+#if LB_ASYNC
+    if(success && !graph.failed && !report(wasmtime_component_func_call(&close_owners,graph.ctx,NULL,0,NULL,0)))success=false;
+#endif
     if(!report(lwit_shutdown(&graph)) || graph.failed)success=false;
     if(link)wasmtime_component_linker_delete(link);
     if(store)wasmtime_store_delete(store);
