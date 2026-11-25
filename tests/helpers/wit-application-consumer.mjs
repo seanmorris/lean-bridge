@@ -121,12 +121,19 @@ world failure-probe {
 		, ...hooks.map(([n,type])=>`(import "${n}" (func $${n} ${type}))`)
 		, graph.replace("(component","(component $base")
 		, await component("object-tasks.wat","tasks")
+		, await component("callback-exchange.wat","callback-storage")
+		, (await asset("guest-registration")).replace("(component","(component $registrations")
 		, user,fault,callback
 		, `(instance $g (instantiate $base (with "${nativeName}" (instance $native)) (with "observe-drop" (func $observe))))`
 		, `(alias export $g "${name}" (instance $objects)) (export "${name}" (instance $objects))`
 		, '(alias export $g "private-exchange" (instance $cells)) (alias export $objects "box" (type $box))'
 		, `(instance $cb (instantiate $callback-fixture (with "${name}" (instance $objects)) (with "${ops}" (instance $g "${ops}")) (with "inside-callback" (func $inside))))`
 		, `(export "${cbName}" (instance $cb "${cbName}")) (export "callback-drops" (func $cb "callback-drops")) (export "callback-visits" (func $cb "callback-visits"))`
+		, `(alias export $cb "${cbName}" (instance $provider)) (alias export $provider "call-box-to-box" (type $registration))`
+		, `(instance $cs (instantiate $callback-storage (with "${cbName}" (instance $provider))))`
+		, `(alias export $cs "${cbLayout.exchange.name}" (instance $cx)) (export "${cbLayout.exchange.name}" (instance $cx))`
+		, '(instance $registrar (instantiate $registrations (with "registration" (type $registration)) (with "make" (func $provider "[static]call-box-to-box.make")) (with "put" (func $cx "put-item0"))))'
+		, '(export "create-registration" (func $registrar "create"))'
 		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) ${hooks.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`
 		, `(instance $u (instantiate $reader (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`
 		, client("v"),client("v2")

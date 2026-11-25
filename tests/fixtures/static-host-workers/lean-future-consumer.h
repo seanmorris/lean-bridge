@@ -22,7 +22,6 @@ static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,bool
     ok(wasmtime_component_linker_instantiate(l,s.store.ctx,graph,&s.store.instance));
     assert(lwit_operations_open(&s.store,&ops) && lwit_future_echo_open(&worker,&ops));
     open_results(&results,&ops);if(!shutdown_native)result_cases(&results,&s,&ops,&observed);
-    const char *callbacks="lean-bridge:workshop/callbacks@1.0.0";
     for(unsigned mode=shutdown_native?4:0;mode<5;mode++){
         seed_input(&ops,71+mode);uint32_t before=observed;
         future_action(&s,"start");assert(future_rows(&worker,LB_CF_NATIVE)==1);
@@ -44,7 +43,7 @@ static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,bool
         assert(future_rows(&worker,LB_CF_FREE)==worker.r.capacity && !s.store.owners);
         assert(observed==before+(mode==1?2:3) && drops(&s)==observed);
     }
-    uint32_t final_drops=guest_callbacks(&s,&ops,&calls,callbacks,shutdown_native);
+    uint32_t final_drops=guest_callbacks(&s,&ops,&calls,shutdown_native);
     close_results(&results);ok(lwit_future_echo_shutdown(&worker));assert(lwit_operations_close(&ops)==workshop_OK);
     assert(observed==final_drops && !s.store.owners);ok(lwit_shutdown(&s.store));
     wasmtime_component_linker_delete(l);wasmtime_store_delete(store);

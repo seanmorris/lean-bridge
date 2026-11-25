@@ -8,8 +8,8 @@
  * @param o - Nominal signatures, checked resource slots and provider coordinate.
  */
 export const objectCallbackBinding=o=>{
-	const {sigs,jobs,prefix: p,iface,rs}=o;
-	const entries=sigs.map(({label,a,z,input,output,callback})=>{
+	const {sigs,jobs,prefix: p,iface,rs,exchange}=o;
+	const entries=sigs.map(({label,a,z,input,output,callback},i)=>{
 		const k="lwit_"+callback,n=p+callback,from=rs[a].name.replaceAll("-","_"),to=rs[z].name.replaceAll("-","_");
 		return `typedef struct {lwit_operations *ops; lwit_class type; wasmtime_component_func_t invoke; unsigned live;} ${k};
 typedef struct {${k} *binding; lwit_owner registration;} ${k}_closure;
@@ -30,6 +30,14 @@ static inline bool ${k}_open(${k} *out,lwit_operations *ops){
 static inline bool ${k}_clear(${k} *b){
     if(!b || b->live)return false;
     lwit_class_clear(&b->type);*b=(${k}){0};return true;
+}
+static inline bool ${k}_exchange(${k} *b,lwit_exchange *out){
+    if(!b || !lwit_open(b->type.store))return false;
+    lwit_store *s=b->type.store;
+    wasmtime_component_export_index_t *scope=wasmtime_component_instance_get_export_index(&s->instance,s->ctx,NULL,"${exchange.name}",${exchange.name.length});
+    if(!scope)return false;
+    bool ok=lwit_exchange_bind(s,scope,b->type.type,"${exchange.slots[i].put}","${exchange.slots[i].take}",out);
+    wasmtime_component_export_index_delete(scope);return ok;
 }
 static void ${k}_dispose(void *data){
     ${k}_closure *c=data;(void)lwit_no_error(lwit_drop(&c->registration));--c->binding->live;free(c);

@@ -32,19 +32,24 @@ static workshop_status finish_relay(workshop_relay_handle *job,workshop_box *val
     }
     V marker={0};assert(row.take(row.owner,&marker));return v.status;
 }
-static uint32_t guest_callbacks(session *s,lwit_operations *ops,active_guest *calls,const char *iface,bool cancel_only){
+static uint32_t guest_callbacks(session *s,lwit_operations *ops,active_guest *calls,bool cancel_only){
     lwit_callback_box_to_box binding={0};assert(lwit_callback_box_to_box_open(&binding,ops));
     calls->binding=&binding;
-    wasmtime_component_export_index_t *scope=wasmtime_component_instance_get_export_index(&s->store.instance,s->store.ctx,NULL,iface,strlen(iface));
-    assert(scope);wasmtime_component_func_t make;
-    assert(lwit_lookup(&s->store,scope,"[static]call-box-to-box.make",&make));wasmtime_component_export_index_delete(scope);
+    lwit_exchange queued={0};assert(lwit_callback_box_to_box_exchange(&binding,&queued));
+    assert(!lwit_callback_box_to_box_exchange(&binding,&queued)); /* cannot overwrite a live binding */
+    wasmtime_component_func_t create;assert(lwit_lookup(&s->store,NULL,"create-registration",&create));
     uint32_t final_box_drops=drops(s); /* owner releases expected by binding teardown */
     for(unsigned mode=cancel_only?4:0;mode<(cancel_only?5u:4u);mode++){
         unsigned start=calls->visits,cb_drops=invoke(s,"callback-drops",NULL,0,true).of.u32;
-        V behavior=u32(mode==1),v={0};ok(wasmtime_component_func_call(&make,s->store.ctx,&behavior,1,&v,1));
-        lwit_owner reg={0},outfault={0};assert(lwit_take(&s->store,&binding.type,&v,&reg));wasmtime_component_val_delete(&v);
+        /* Put the failing registration first, then the successful one. The
+         * first two jobs prove the typed stack is LIFO by invoking both. */
+        if(mode==0){V fail=u32(1);ok(wasmtime_component_func_call(&create,s->store.ctx,&fail,1,NULL,0));}
+        if(mode!=1){V pass=u32(0);ok(wasmtime_component_func_call(&create,s->store.ctx,&pass,1,NULL,0));}
+        lwit_owner reg={0},outfault={0};ok(lwit_exchange_take(&queued,&reg));
         workshop_box original={0},received={0};workshop_diagnostic d={0};
         assert(lwit_sync_make(&ops->bridge,42,&original,&outfault,&d)==workshop_OK);
+        refused(lwit_exchange_put(&queued,lwit_from_box(&ops->bridge.members,original)));
+        assert(lwit_open(&s->store));
         workshop_callback_box_to_box cb={0};workshop_relay_handle job={0},second={0};
         assert(!lwit_callback_box_to_box_adopt(&binding,lwit_from_box(&ops->bridge.members,original),&cb));
         lwit_owner copied=reg; /* copying the wrapper is not an ownership transfer */

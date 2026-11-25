@@ -4,6 +4,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { callbackHostName } from "../../abi/host-member-names.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 import { objectCallbackBinding } from "./application-callback-host.mjs";
+import { witCallbackExchange } from "./application-exchange.mjs";
 
 /**
  * Generate the guest callback contract and owner-thread registrations from
@@ -59,12 +60,14 @@ export const witObjectCallbackFiles=options=>{
 		, `  same-${label}: func(left: borrow<%${label}>, right: borrow<%${label}>) -> bool;`
 	]);
 	const iface="lean-bridge:"+name+"/callbacks@"+version;
+	const exchange=witCallbackExchange(iface,sigs);
 	const wit=[`package lean-bridge:${name}@${version};`,"interface callbacks {"
 		, `  use ${descriptor.interfaceName}.{${[...inputs.map(i=>rs[i].name),error].map(n=>"%"+n).join(", ")}};`
 		, ...fields
 		, "}"
 		, `world callback-provider { import ${descriptor.interfaceName}; export callbacks; }`].join("\n");
 	return {"object-callbacks.wit": wit
-		, "application-callbacks.h": objectCallbackBinding({sigs,jobs,prefix,iface,rs})
-		, "object-callbacks.json": canonicalJson({schemaVersion: 1,interfaceName: iface,signatures: Object.fromEntries(shapes),sites: Object.fromEntries(uses)})};
+		, "callback-exchange.wat": exchange.wat
+		, "application-callbacks.h": objectCallbackBinding({sigs,jobs,prefix,iface,rs,exchange})
+		, "object-callbacks.json": canonicalJson({schemaVersion: 2,interfaceName: iface,exchange: {name: exchange.name,slots: exchange.slots},signatures: Object.fromEntries(shapes),sites: Object.fromEntries(uses)})};
 };

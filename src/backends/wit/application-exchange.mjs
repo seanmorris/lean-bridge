@@ -20,6 +20,12 @@ export const witApplicationExchange = ({contract,interfaceName}) => {
 	const fields=slots.flatMap(s=>["  "+s.put+": func(value: own<"+s.alias+">);","  "+s.take+": func() -> own<"+s.alias+">;"]);
 	const uses="  use objects.{"+slots.map(s=>"%"+s.type+" as "+s.alias).join(", ")+"};";
 	const wit=["interface exchange {",uses,...fields,"}","world exchange-storage {", "  import objects;",uses,...fields.map(f=>f.replace("  ","  export ")),"}"].join("\n");
+	return {name,slots,wit,wat: exchangeCore(slots)};
+};
+
+// Same bounded storage for both exchanges. The wrappers below import the
+// original resource types; a registration is never transferred as a u32.
+const exchangeCore=slots=>{
 	const capacity=64;
 	const funcs=slots.map((s,i)=>{
 		const n="$depth"+i,offset=i*capacity*4;
@@ -34,7 +40,31 @@ export const witApplicationExchange = ({contract,interfaceName}) => {
     (global.set ${n} (i32.sub (global.get ${n}) (i32.const 1)))
     (i32.load offset=${offset} ${address}))`;
 	});
-	const pages=Math.ceil(types.length*capacity*4/65536);
-	const wat="(module (memory "+pages+" "+pages+")\n"+funcs.join("\n")+"\n)";
-	return {name,slots,wit,wat};
+	const pages=Math.ceil(slots.length*capacity*4/65536);
+	return "(module (memory "+pages+" "+pages+")\n"+funcs.join("\n")+"\n)";
+};
+
+/**
+ * Private stack per original callback resource. A guest facade can retain a
+ * registration into this instance, and the native factory can take it in the
+ * same call. No synthetic resource definition or shared pointer is involved.
+ *
+ * @param iface - Fully qualified public callback provider interface.
+ * @param sigs - Authenticated nominal callback signatures, in layout order.
+ */
+export const witCallbackExchange=(iface,sigs)=>{
+	const slots=sigs.map(({label},i)=>({type: label,alias: "item"+i,put: "put-item"+i,take: "take-item"+i}));
+	const name=iface.replace("/callbacks@","/callback-exchange@");
+	const text=["(component",`(import "${iface}" (instance $cb`
+		, ...slots.map(s=>`(export "${s.type}" (type (sub resource)))`),"))"
+		, ...slots.map(s=>`(alias export $cb "${s.type}" (type $${s.alias}))`)
+		, exchangeCore(slots).replace("(module","(core module $m")
+		, "(core instance $mem (instantiate $m))"
+		, ...slots.flatMap(s=>[
+			`(func $${s.put} (param "value" (own $${s.alias})) (canon lift (core func $mem "cm32p2||${s.put}")))`
+			, `(func $${s.take} (result (own $${s.alias})) (canon lift (core func $mem "cm32p2||${s.take}")))`])
+		, "(instance $x"
+		, ...slots.flatMap(s=>[`(export "${s.alias}" (type $${s.alias}))`,...[s.put,s.take].map(f=>`(export "${f}" (func $${f}))`)])
+		, ")",`(export "${name}" (instance $x)))`];
+	return {name,slots,wat: text.join("\n")};
 };
