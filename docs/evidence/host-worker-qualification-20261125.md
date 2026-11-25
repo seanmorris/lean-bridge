@@ -13,21 +13,21 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | Maven | [Java and Kotlin](jvm-worker-packages-20261124.md): separate client programs run against relocated Maven packages, including both component load orders. |
 | RubyGems | [MRI platform gems](ruby-worker-gems-20261124.md) exercise an independently packaged peer. [Three installed closure configurations](ruby-host-closures-20261125.md) cover captured Ruby objects, original exceptions, self-disposal, fiber ownership and stale Proc conversion. |
 | CPAN | [Perl distributions](perl-worker-packages-20261124.md): threaded and unthreaded Perl 5.36.3 and 5.38.2, with prebuilt and locally compiled generated XS. |
-| Native PHP | [Composer client](php-host-task-packages-20261124.md): application objects and closures through Amp futures and `foreach`. |
+| Native PHP | [Composer client](php-host-task-packages-20261124.md): application objects and callbacks through Amp futures and `foreach`. [Returned Lean functions](php-host-closures-20261125.md) capture the original PHP object and release it after self-close, owner disposal, retirement or a destructor throwing during the factory. |
 | PHP-Wasm | [Zend interpreter packages](php-wasm-zend-packages-20261124.md): PHP class identity, pending work and isolation between two interpreters. A JavaScript object test alone does not establish this. |
 | WIT/WASI | [Guest-owned objects](wit-host-objects-20261125.md), [copied canonical values](wit-canonical-async-20261124.md) and [pollable task resources](wit-task-resource-world-20261123.md) have different runtime contracts. Evidence for one does not qualify the others. |
 
 ### Returned functions that capture application objects
 
-For a signature such as `Box → IO (Box → IO Box)`, six of the twelve
+For a signature such as `Box → IO (Box → IO Box)`, seven of the twelve
 package targets above have installed ordinary, reviewed and worker-package
-evidence: C, C++, Cargo, NuGet, PyPI and RubyGems. They are also the six host
-namespaces currently admitted by
-[the Lean source elaborator](../../src/analyze/HostExports.lean) for this
-factory result.
+evidence: C, C++, Cargo, NuGet, native PHP, PyPI and RubyGems.
+[The source elaborator](../../src/analyze/HostExports.lean) admits the PHP
+factory only with the native PHP owner; the shared PHP namespace alone
+does not qualify the Zend Wasm runtime.
 
 The remaining targets for this case are **Maven (Java and Kotlin),
-CPAN, native PHP, PHP-Wasm, npm and WIT/WASI**. Receiving a callback from
+CPAN, PHP-Wasm, npm and WIT/WASI**. Receiving a callback from
 one of those hosts is the opposite direction; returning a function over
 copied values does not test a captured application object. Neither counts
 as installed evidence for this case.

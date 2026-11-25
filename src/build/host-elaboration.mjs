@@ -47,7 +47,7 @@ export const threadedHostSource=(contract,evidence,target="javascript")=>{
 	{
 		const interfaces=evidence.interfaces.filter(f=>f.module===module);
 		const lean=generateLeanHostObjectAdapters(parsed,{threadedJavaScript: !php,phpWasmTaskObjects: php})[module.replaceAll(".","/")+".lean"];
-		if((php?evidence.selection.phpWasmTaskObjects:evidence.selection.javascriptThreadedHostMembers)!==true || evidence.selection.phpNativeTaskObjects!==undefined
+		if((php?evidence.selection.phpWasmTaskObjects:evidence.selection.javascriptThreadedHostMembers)!==true || evidence.selection.phpNativeTaskObjects!==undefined || evidence.selection.phpNativeFunctions!==undefined
 			|| (php?evidence.selection.javascriptThreadedHostMembers:evidence.selection.phpWasmTaskObjects)!==undefined || evidence.selection.hostModule!==module
 			|| evidence.hostImportsSourceSha256!==hash || interfaces.length!==1 || interfaces[0].sourceSha256!==sha256(lean))
 			fail("Threaded "+label+" provider differs from the elaborated module");
@@ -168,6 +168,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
 		, ...(threadedJavaScript ? {javascriptThreadedHostMembers: true} : {})
 		, ...(phpNativeTaskObjects ? {phpNativeTaskObjects: true} : {})
+		, ...(ir && options.target==="php-native" ? {phpNativeFunctions: true} : {})
 		, ...(pythonTaskObjects ? {pythonTaskObjects: true} : {})
 		, ...(rubyTaskObjects ? {rubyTaskObjects: true} : {})
 		, ...(jvmTaskObjects ? {jvmTaskObjects: true} : {})

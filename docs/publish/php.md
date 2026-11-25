@@ -22,6 +22,21 @@ distribute the Composer ZIP as usual. The receipt identifies this synchronous
 profile as `native-php-host-v1`. The [PHP consumer example](../php.md#let-lean-call-an-application-object)
 shows how an application binds its classes; no consumer writes FFI code.
 
+To capture a PHP object in a returned Lean function, use a synchronous
+factory in the same host module. For example:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    pure captured
+```
+
+Select the factory in `exports`, not in `taskExports`. The native package
+generates an [invokable PHP object](../php.md#call-a-returned-function-that-captures-a-php-object)
+owned by this binding. Declare any OS effects used by the returned function
+in `nativeEffects`, just as for code run by the factory itself.
+
 To carry an imported class through a task or cursor, keep the same
 `hostImports` and declare `taskExports`, `taskIOErrors` or `asyncIterators`
 as appropriate. See the [async Workshop configuration](../../tests/fixtures/php-host-tasks/lean-bridge.exports.json).

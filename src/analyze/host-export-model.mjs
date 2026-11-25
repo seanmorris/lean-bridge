@@ -57,6 +57,7 @@ export const taskWorkerInterface=(api,evidence)=>{
 	if(evidence.selection.dotnetTaskObjects) throw new TypeError("CLR task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.pythonTaskObjects) throw new TypeError("Python task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.phpNativeTaskObjects) throw new TypeError("Native PHP task object carriers cannot use the JavaScript worker interface");
+	if(evidence.selection.phpNativeFunctions) throw new TypeError("Native PHP returned functions cannot use the JavaScript worker interface");
 	// Nominal Zend workers have their own checked ABI; never turn their
 	// synchronous PHP callbacks into JavaScript promises.
 	if(evidence.selection.phpWasmTaskObjects) return api;
@@ -107,6 +108,9 @@ export const reconcileHostExports = options => {
 	if(ir && syncOwner && !staticObjects && (selection[ownerScheduler]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail(ownerLabel+" host imports require synchronous owner calls until a worker binding is selected");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
+	const phpFunctions=selection.phpNativeFunctions===true;
+	if(selection.phpNativeFunctions!==undefined && (!phpFunctions || !ir || hostTarget!=="php" || selection.phpWasmTaskObjects!==undefined || selection.nativeEffectPolicy!==nativeEffectPolicy))
+		fail("Unauthenticated native PHP returned-function owner");
 	if(selection.phpWasmTaskObjects!==undefined && (!phpWasm || selection.phpNativeTaskObjects!==undefined || selection.nativeEffects?.length))
 		fail("Unauthenticated PHP-Wasm task objects");
 	if((selection.phpNativeTaskObjects!==undefined || phpWasm) && (!phpObjects || !ir || hostTarget!=="php" || selection.nativeEffectPolicy!==nativeEffectPolicy
@@ -293,8 +297,8 @@ export const reconcileHostExports = options => {
 	};
 	const closures=new Map();
 	const closureRef=e=>{
-		if(!ir || ![compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules.dotnet].includes(selection.hostModule) || selection.nativeEffectPolicy!==nativeEffectPolicy
-			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous C, C++, .NET, Python, Ruby or Rust host factory");
+		if(!ir || !(phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules.dotnet].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
+			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous C, C++, .NET, native PHP, Python, Ruby or Rust host factory");
 		const {argument,reply}=e.result;
 		for(const t of [argument,reply]) if(!(t?.kind==="primitive" || t?.kind==="named" && types.some(r=>r.id===t.id)))
 			fail("Unauthenticated returned closure carrier");

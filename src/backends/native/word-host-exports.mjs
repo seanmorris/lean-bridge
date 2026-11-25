@@ -29,7 +29,8 @@ export const emitWordHostExports = (o, model, target) => {
 	const prefix = "lb_" + target.replaceAll("-","_") + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
 	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure");
-	if(factories.some(({e})=>!["c","cpp","rust","dotnet"].includes(target) || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
+	if(factories.some(({e})=>!["c","cpp","rust","dotnet","php"].includes(target) || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
+	const retireFunctions=target==="php"?-7:-3; // PHP worker pins, resolves, admits and sweeps occupy -3 through -6.
 	const cleanup=factories.length?"dn_closure_cleanup(op)":null;
 	const lean = (t, depth = 0) => {
 		if(depth > 64) throw new TypeError("native host result exceeds 64 nested branches");
@@ -129,7 +130,7 @@ __attribute__((visibility("default"))) void ${prefix}_clear(uint64_t *out) {
     if(out) { if(out[3]==1 || out[3]==2) free((void *)(uintptr_t)out[0]); memset(out,0,4*sizeof(*out)); }
 }
 ${factories.length?readFileSync(new URL("./word-host-closures.h",import.meta.url),"utf8")
-	+`\nstatic int dn_closure_cleanup(int op) { switch(op) { case -3: ${factories.map(({i})=>"case "+(2*entries.length+i)+":").join(" ")} return 1; default:return 0; } }\n`:""}${outputs.join("\n")}
+	+`\nstatic int dn_closure_cleanup(int op) { switch(op) { case ${retireFunctions}: ${factories.map(({i})=>"case "+(2*entries.length+i)+":").join(" ")} return 1; default:return 0; } }\n`:""}${outputs.join("\n")}
 ${methods.join("\n")}
 ${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__((visibility("default"))) int ${prefix}_call(${target==="rust"?"uintptr_t owner,":""}uint64_t id,lb_dn_dispatch dispatch,int op,const uint64_t *args,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {
     if(!lean_bridge_native_process_valid() || !out || !tags || !fault) return 10;
@@ -143,7 +144,7 @@ ${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__
     else {
         lb_dnd_session *s=LB_DND(enter)(&f,component); if(!s) status=14;
         else { f.domain_session=s; f.available=available;
-            switch(op) { ${factories.length?`case -3: {
+            switch(op) { ${factories.length?`case ${retireFunctions}: {
                 for(lb_dn_frame *p=f.parent;p;p=p->parent) if(p->domain_session==s) status=14;
                 if(!status) dn_closure_retire((uintptr_t)s,dn_serial);
                 break; } `:""}${taskObjects?"case PHP_HOST_SWEEP: status=n ? 5 : 0; break; case PHP_HOST_PIN: case PHP_HOST_RESOLVE: case PHP_HOST_ADMIT: status=php_host_lease(&f,s,op,args,n,out); break; ":""}${calls.map(({i}) => "case " + i + ": status=dn_call_" + i + "(&f,s,args,n,out,tags,fault); break;").join(" ")}${factories.map(({i})=>` case ${2*entries.length+i}: status=dn_closure_drop(s,${i},args,n); break;`).join("")} default: status=5; }

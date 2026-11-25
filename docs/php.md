@@ -114,6 +114,34 @@ first exception thrown by cleanup; the bridge still drains the remaining
 references. If the call itself failed, its original error takes precedence.
 See the [two-package lifetime and error checks](evidence/php-host-finalizers-20261124.md).
 
+#### Call a returned function that captures a PHP object
+
+For a native package exporting `remember : Box → IO (Box → IO Box)`, call
+the result like a PHP function. The captured object stays the same object:
+
+```php
+$workshop = LeanWorkshop\withHosts(['Box' => Meter::class]);
+try {
+    $first = $workshop->make(7);
+    $remember = $workshop->remember($first);
+    try {
+        $second = $workshop->make(11);
+        assert($remember($second) === $first);
+    } finally {
+        $remember->close();
+    }
+} finally {
+    $workshop->close();
+}
+```
+
+Closing the function releases its capture. Closing the binding revokes
+all of its functions, even if PHP still holds them. If a member closes
+the currently executing function, that call can finish; a later call
+throws `LogicException`. The same Fiber and fork rules apply as for a
+bound member. Calling a returned function is synchronous even if the
+same package also exports an Amp future.
+
 #### Await a task that uses your objects
 
 A Composer package with the `native-php-host-task-v1` profile also exposes

@@ -43,6 +43,7 @@ structure Request where
   perlTaskObjects : Option Bool := none
   phpTaskCallbacks : Option Bool := none
   phpNativeTaskObjects : Option Bool := none
+  phpNativeFunctions : Option Bool := none
   phpWasmTaskObjects : Option Bool := none
   javascriptTaskCallbacks : Option Bool := none
   javascriptThreadedHostMembers : Option Bool := none
@@ -175,7 +176,7 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
 /-- A function delivered by a factory is not a retained host callback.
     Only admit a host with a binding-owned invocation and revocation path. -/
 def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
-  if effect == ``IO && r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Dotnet"].contains m) &&
+  if effect == ``IO && (r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Dotnet"].contains m)) &&
       r.nativeEffectPolicy == some "native-host-io-v1" then
     if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
       let b := b.consumeMData
@@ -414,6 +415,9 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid JavaScript owner-dispatch selection"
   if r.phpNativeTaskObjects.isSome && !r.phpTaskObjects then
     throwError "invalid native PHP task object selection"
+  if r.phpNativeFunctions.isSome && (r.phpNativeFunctions != some true || r.hostModule != some "LeanBridge.Host.Php" ||
+      r.phpWasmTaskObjects.isSome || r.nativeEffectPolicy != some "native-host-io-v1") then
+    throwError "invalid native PHP returned-function owner"
   if r.pythonTaskObjects.isSome && !r.pythonObjects then
     throwError "invalid Python task object selection"
   if r.rubyTaskObjects.isSome && !r.rubyObjects then
