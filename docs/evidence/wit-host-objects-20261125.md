@@ -232,3 +232,27 @@ Three applications ran from each verified archive with the producer source and r
 - The [interleaved consumer](../../tests/fixtures/static-host-workers/installed-overlap.wat.in) kept a packet future pending while it awaited the box. It checked the original identity, dropped both box owners, released the packet and recovered the original error byte **253**.
 
 The negative build moved an `IO.getEnv` call into `Packet.finish`, the cursor finalizer. The compiler identified the exact finalizer and missing environment capability. Adding an explicit `nativeEffects` grant also failed: the guest-object WIT profile admits no external OS capabilities. Neither build created a release directory.
+
+## Two independently installed Lean packages share one guest object
+
+[Workshop and Gauge](../../tests/helpers/wit-installed-peers.mjs) are separate Lean projects with different public interfaces and native libraries. Both depend on the same guest-defined resource type. The test builds each from ordinary source and again from reviewed Binding IR, verifies the package receipts, relocates the installs and deletes the producer directories. The deployment command runs offline with no tools on its search path. The [public application world](../../tests/fixtures/static-host-workers/peer-world.wit) includes both packages.
+
+The [Wasm application](../../tests/fixtures/static-host-workers/installed-peers.wat.in) creates a box containing 36. Workshop returns an independent owner of that box. Gauge adds 37, then throws the box as a declared Lean `EIO` error. The guest checks the identity of both the success and error values against the original. After dropping its first two owners, it passes the error owner back to Workshop and reads **73**. The guest's own live-owner counter then reports exactly one owner: the counter itself. Both installation orders and all four ordinary/reviewed pairings return the same result.
+
+The runner refuses a private exchange import, an unrelated resource kind, a duplicate package API and an independently built package with a different object contract. A separately validated provider exposing one instance's `box` and another's `retain-box` fails at the method's resource parameter. A guest exporting `run: func() -> u32` instead of `s64` fails type checking before its `unreachable` body runs.
+
+| Synchronous package | Archive bytes | SHA-256 |
+| --- | ---: | --- |
+| Workshop, ordinary | 60,957,938 | `3bb21eecebd3269c68da290d65393bdb6671a2f16860d1b85bda7a463d4b7454` |
+| Gauge, ordinary | 60,957,773 | `551f8369ae7f69619ada36091f892c310f0884aaf7ca8d04b886a705df411415` |
+| Workshop, reviewed | 60,959,161 | `c6b545a3b51f2e668e474509f00b1832d7f8819a286f81c80cfafe76453dae01` |
+| Gauge, reviewed | 60,959,039 | `e981a0cce57af504773aa83d0709200f0f9bddd67f034bc63fb11d0d68210ca6` |
+| Gauge, incompatible contract (negative control) | 60,957,058 | `f3a008eb71538bfa5ec5dea7b38eae7ac5b8abcd370772698b857bf62e803ff8` |
+
+Reproduce this check with the publisher toolchains above:
+
+```sh
+node --test --test-concurrency=1 tests/helpers/wit-installed-peers.mjs
+```
+
+This command composes synchronous packages. The earlier future and cursor checks run on a single installed Lean package; they do not establish cross-package cancellation.

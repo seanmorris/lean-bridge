@@ -7,6 +7,7 @@ import {compileCHostComponent} from "../build/c-host-component.mjs";
 import {readVerifiedNativeRuntime,validateNativeElf} from "../build/native-artifacts.mjs";
 import {processBuildRunner} from "../build/process-runner.mjs";
 import {buildWitApplicationTemplate,compileWitApplicationCommand} from "../build/wit-application-template.mjs";
+import {compileWitPeerPackage} from "../build/wit-peer-package.mjs";
 import {canonicalWasmtimeIdentity,snapshotSdk} from "./wit-canonical-package.mjs";
 import {createDeterministicTarGzFromFiles} from "./deterministic-archive.mjs";
 import {writePackageSetReceipt} from "./package-set-receipt.mjs";
@@ -48,6 +49,9 @@ export const buildWitObjectPackage=async o=>{
 			files.set(path,bytes);
 		};
 		await addElf("bin/"+binary,join(out,binary));
+		const peer=mixed?null:await compileWitPeerPackage({...common,cc: environment.CC??"cc",sdk,runtimeRoot,sdkIdentity: canonicalWasmtimeIdentity});
+		if(peer)
+		{await addElf("bin/"+peer.runner,join(out,peer.runner));await addElf("lib/"+peer.plugin,join(out,peer.plugin));}
 		await addElf("lib/libwasmtime.so",join(sdk,"lib/libwasmtime.so"),sha256(sdkFiles.get("lib/libwasmtime.so")));
 		for(const [lib,hash] of Object.entries(b.binaries))await addElf("lib/"+lib,join(app,lib),hash);
 		for(const [path,meta] of Object.entries(manifest.files))if(path.startsWith("lib/"))await addElf(path,join(runtimeRoot,path),meta.sha256);
@@ -66,8 +70,10 @@ export const buildWitObjectPackage=async o=>{
 		for(const [n,bytes] of Object.entries(contract.notices))files.set(share+"/licenses/"+n,bytes);
 		files.set("package-metadata.json",canonicalJson(contract.metadata??{}));
 		files.set("README.md",`# ${name} ${version}\n\nBuild an object provider for the owner world in wit/deps/objects.wit and an application for the application world in wit/.${template.roles.includes("callbacks")?" Build a callback provider for the registrations world in wit/.":""} Extract the entire archive, then run:\n\n    bin/${binary} ${template.roles.map(role=>role+".wasm").join(" ")}\n\nThe program prints the signed 64-bit result of the application's ${mixed?"asynchronous":"synchronous"} run function. Its WIT imports use the provider's own resources and the compiled Lean operations. All native libraries are included for Linux x86-64 with glibc ${floor} or later. Running the package requires neither a Lean compiler, a Wasm SDK nor a network connection.\n`);
-		const commandIdentity=sha256(canonicalJson({component: b.identity,template: template.parts.map(sha256),roles: template.roles,runner: sha256(files.get("bin/"+binary)),wasmtime: canonicalWasmtimeIdentity}));
-		const records=[...files].map(([path,value])=>({path,bytes: Buffer.from(value),mode: path==="bin/"+binary?0o755:0o644}));
+		const peerIdentity=peer?{peerRunner: sha256(files.get("bin/"+peer.runner)),peerAdapter: sha256(files.get("lib/"+peer.plugin))}:{};
+		const commandIdentity=sha256(canonicalJson({component: b.identity,template: template.parts.map(sha256),roles: template.roles,runner: sha256(files.get("bin/"+binary)),wasmtime: canonicalWasmtimeIdentity,...peerIdentity}));
+		if(peer)files.set("README.md",files.get("README.md")+"\nTo use compatible synchronous packages together, pass their installed directories in any order:\n\n    bin/lean-bridge-wit-run /path/to/first /path/to/second -- objects.wasm application.wasm\n\nBoth APIs operate on the same defining object instance. Only load trusted native packages.\n");
+		const records=[...files].map(([path,value])=>({path,bytes: Buffer.from(value),mode: path.startsWith("bin/")?0o755:0o644}));
 		const inner={
 			schemaVersion: 1
 			, kind: "lean-bridge-wit-object-package"

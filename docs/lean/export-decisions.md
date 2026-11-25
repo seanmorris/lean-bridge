@@ -536,13 +536,15 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 A Lean `IO` result tells the caller how an operation can fail. It doesn't say
 whether that operation reads a file, checks an environment variable, or only
-updates an in-memory reference. Declare OS access separately for Linux x86-64
-C, C++, Rust, Python, Ruby, .NET and JVM packages that export native synchronous
-IO, tasks or iterators (see [Maven task exports](../publish/maven.md#export-tasks-and-streams));
-and for Python host-import packages. The [synchronous WIT profile](../publish/wit-wasi.md#export-synchronous-io)
-also requires these grants; it executes them in the native Wasmtime host. List the grants
-in `lean-bridge.exports.json`. Here the module reads an environment variable at
-startup, and its worker reads a file:
+updates an in-memory reference. Declare OS access separately for native synchronous
+IO, tasks and iterators in C, C++, Rust, Python, Ruby, .NET, JVM, Perl and native PHP
+packages on Linux x86-64. Python host-import packages use the same grants.
+The [standalone synchronous WIT profile](../publish/wit-wasi.md#without-application-owned-objects)
+executes declared OS effects in the native Wasmtime host. [Guest-owned WIT packages](../publish/wit-wasi.md#when-the-application-owns-the-objects)
+do not accept external OS grants.
+
+List grants in `lean-bridge.exports.json`. Here the module reads an environment
+variable at startup, and its worker reads a file:
 
 ```json
 {
@@ -595,7 +597,8 @@ API. For example, `Journal.read : String → IO String` reads a file:
 }
 ```
 
-Build one target (`c`, `cpp`, `cargo`, `rubygems`, `nuget`, `maven` or `pypi`) at a time. No task, iterator or host import
+Build one native target at a time: `c`, `cpp`, `cargo`, `pypi`, `rubygems`, `nuget`, `maven`,
+[`cpan`](../publish/cpan.md#export-synchronous-io) or [`php-native`](../publish/php.md#export-synchronous-io). No task, iterator or host import
 is required. Source discovery alone cannot check OS access; use the build's
 `binding-ir.json` to review the compiled interface. The functions finish
 before returning. A thrown `EIO` error

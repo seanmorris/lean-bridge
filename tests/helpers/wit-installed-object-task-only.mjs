@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import {execFile} from "node:child_process";
 import {lstat,mkdir,mkdtemp,readFile,rename,rm,writeFile} from "node:fs/promises";
-import {basename,join,resolve} from "node:path";
+import {basename,join} from "node:path";
 import {tmpdir} from "node:os";
 import {promisify} from "node:util";
 import test from "node:test";
@@ -13,10 +13,12 @@ import {extendWitApplication} from "./wit-application-project.mjs";
 import {prepareWitObjectCopiedProject,buildWitCopiedConsumers} from "./wit-object-copied-project.mjs";
 import {canonicalCopiedWorker} from "../../src/backends/wit/canonical-app.mjs";
 import {buildCanonicalProject} from "../../src/build/canonical-build.mjs";
+import {installWitAuthor} from "./wit-installed-author.mjs";
 
-const exec=promisify(execFile),cli=resolve("scripts/lean-bridge.mjs"),json=async path=>JSON.parse(await readFile(path,"utf8"));
+const exec=promisify(execFile),json=async path=>JSON.parse(await readFile(path,"utf8"));
 for(const copied of [false,true])test(copied?"installed WIT copied and guest-owned workers operate on the same owner":"a task-only WIT package needs neither synchronous Lean functions nor callback registrations",{timeout: 900000},async t=>{
     const root=await mkdtemp(join(tmpdir(),"wit-task-only-"));t.after(()=>rm(root,{recursive: true,force: true}));
+    const cli=await installWitAuthor(root);
     const wasm=process.env.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools";let review;
     for(const route of ["ordinary","reviewed"])
 {
@@ -31,7 +33,7 @@ for(const copied of [false,true])test(copied?"installed WIT copied and guest-own
         if(review)delete config.exports;
         config.targets["wit-wasi"].asyncAbi="canonical";await writeFile(path,canonicalJson(config));
         if(review)await writeFile(join(src,"workshop.binding-ir.json"),canonicalJson(review));
-        await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",release,"--json","--progress","none"]).catch(e=>{
+        await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",release,"--json","--progress","none"],{cwd: work}).catch(e=>{
             throw new Error([e.message,e.stdout,e.stderr].filter(Boolean).join("\n"),{cause: e});
         });
         const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(release,"package-set-receipt.json")});

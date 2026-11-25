@@ -191,6 +191,29 @@ of the store if the call reports that it trapped. A raw Wasmtime call that
 bypasses this guard cannot run the native effect. The component uses its
 native host's OS permissions, not a standalone WASI filesystem.
 
+### Share a guest-owned object between synchronous packages
+
+Extract both verified `native-wit-object-io-v1` archives. Each must contain `lib/lean-bridge-wit-peer.so`. Use the `bin/lean-bridge-wit-run` supplied by either release. For example, Workshop can return a box, Gauge can change it, and Workshop can read the new value through the same box:
+
+```sh
+"$WORKSHOP/bin/lean-bridge-wit-run" "$WORKSHOP" "$GAUGE" -- objects.wasm application.wasm
+```
+
+Pass **installed directories**, not archives. Package order does not change resource identity. The runner accepts up to 16 distinct synchronous APIs with the same defining object contract and compatible runtimes. Load only trusted packages: their adapters contain native code. The two Wasm guests receive the public interfaces, not access to the native adapters.
+
+For the application build, place the shared `objects.wit` once in `wit/deps/`. Copy Workshop's `api.wit` and `application.wit` into `wit/deps/workshop/` and Gauge's `api.wit` into `wit/deps/gauge/`. Include their published worlds in `wit/world.wit`:
+
+```wit
+package example:meters;
+
+world meters {
+  include lean-bridge:workshop/application@1.0.0;
+  include lean-bridge:gauge/consumer@1.0.0;
+}
+```
+
+Workshop's application world already imports the defining guest and exports `run: func() -> s64`. Gauge contributes its public operations. Build with your usual component bindings, then check the resulting binary with `wasm-tools component targets wit --world meters application.wasm`. Deployment needs neither wasm-tools nor Lean. For futures and streams, use the [async package launcher](#run-an-async-application-with-guest-owned-objects).
+
 ### Await a Lean task
 
 A release marked `native-wit-task-v1` bundles a Wasmtime component, its native Lean runtime, and a typed C header. Extract the archive and put its `lib/pkgconfig` directory on `PKG_CONFIG_PATH`. The following program calls `Meter.immediate` from the example package; it does not need Lean, an engine installation, or a Wasmtime value converter.
