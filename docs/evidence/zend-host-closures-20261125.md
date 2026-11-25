@@ -30,6 +30,10 @@ own callable still completed. Dropping the last capture released the PHP
 object. An escaped function did not keep its binding alive.
 
 The embedded test used two live interpreters with different PHP classes.
+Replaying the same archives with the standalone client's rendezvous also
+left a real callback task pending in the first interpreter. The second
+interpreter completed independently; resuming the first delivered its own
+value and capture, with no surviving native owners.
 The [trap control](../../tests/fixtures/php-wasm-task-owner/zend-trap.php)
 checked retirement and released the captured object. The successful clients
 finished with zero frames, native owners, pending work, notifications, and
@@ -62,6 +66,26 @@ closing the active function allowed that call to finish, refused another
 invocation and left the sibling callable usable. A PHP weak reference cleared
 after the last capture closed.
 
+A replay of the three receipts above exercised two independent bindings of
+the **same** component. Abandoning one binding released its captured object
+(observed through PHP's `WeakReference`) and invalidated its escaped function.
+The other binding's function still returned its exact captured object. A PHP
+member returning a value of the wrong class raised `TypeError`; the next valid
+call succeeded. In contrast, Lean could catch the member's thrown application
+exception and return its declared recovery value.
+
+The embedded Node client also ran [two live PHP interpreters](../../tests/fixtures/php-wasm-task-owner/installed-realms.mjs)
+from the same installed Workshop descriptor. It held the first capture open
+while the second interpreter used a different class and offset; both returned
+their own captured object and the expected independent value. The two-interpreter
+rendezvous ran in Node; the same-binding disposal checks also ran in Chromium.
+
 Run `npm run test:php-wasm-zend-sync-packages` with the single-threaded
 author runtime, PHP-Wasm interpreter and Chromium. These are local installed
 results, not hosted or registry releases.
+
+To repeat the installed checks without compiling, set
+`LEAN_BRIDGE_PHP_ZEND_PACKAGE_REPLAY` to the directory containing the original
+`ordinary/`, `reviewed/` and `peer/` handoffs. Use the command for the matching
+standalone or threaded profile. The harness verifies the receipts, installs
+fresh clients and runs them outside the producer tree.

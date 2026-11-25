@@ -60,6 +60,7 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 		assert.ok(extra.startsWith("<?php\n"));await appendFile(join(app,"installed.php"),"\n"+extra.slice(6));
 	}
 	await cp(resolve("tests/fixtures/php-wasm-task-owner",immediate?"sync-installed.mjs":"installed.mjs"),join(app,"installed.mjs"));
+	await cp(resolve("tests/fixtures/php-wasm-task-owner/installed-realms.mjs"),join(app,"installed-realms.mjs"));
 	if(peer && !leases && !zend) for(const file of ["trap.php","trap.mjs","malformed.mjs"]) await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,file));
 	if(zend && !immediate) for(const [file,dest] of [["zend-trap.php","trap.php"],["trap.mjs","trap.mjs"]])
 		await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,dest));
