@@ -1,6 +1,6 @@
 /** @file Exercise immediate Lean pulls through relocated native consumer packages. */
 import assert from "node:assert/strict";
-import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, appendFile, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -8,10 +8,11 @@ import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runEffectConsumers, runNativeTool } from "./native-effect-consumers.mjs";
+import { exerciseJvmCursors } from "./native-immediate-jvm.mjs";
 
 const fixture = resolve("tests/fixtures/native-immediate-cursor");
 const target = process.env.LEAN_BRIDGE_IMMEDIATE_TARGET ?? "c";
-const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1", rubygems: "native-ruby-io-v1", "php-native": "native-php-io-v1"};
+const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1", rubygems: "native-ruby-io-v1", "php-native": "native-php-io-v1", maven: "native-jvm-io-v1"};
 if(!Object.hasOwn(profiles, target)) throw new Error("Unsupported immediate cursor consumer: " + target);
 const json = async file => JSON.parse(await readFile(file, "utf8"));
 const check = async (handoff, ordinary) => {
@@ -25,11 +26,20 @@ const check = async (handoff, ordinary) => {
 	assert.deepEqual(evidence.selection.asyncIterators, []);
 	if(ordinary) assert.deepEqual(api, ordinary);
 	const cursors = api.declarations.filter(d => d.resultMode === "iterator");
-	assert.equal(cursors.length, 3);
+	assert.equal(cursors.length, target === "maven" ? 4 : 3);
 	for(const decl of cursors)
 	{
 		assert.ok(!decl.effects.includes("async"));
-		assert.deepEqual(decl.source.extensions["lean-bridge.dev/native-effects-v1"], {close: ["capability:native.filesystem"]});
+		const effects = decl.source.extensions["lean-bridge.dev/native-effects-v1"];
+		if(decl.source.declaration === "TicketPulls.tickets")
+		{
+			assert.equal(effects, undefined);
+			assert.equal(decl.result.ownership, "lease");
+			const step = api.errors.find(e => e.id === "error:Step.TicketPulls.tickets");
+			assert.ok(decl.failure.errors.includes(step.id));
+			assert.deepEqual(step.payload, decl.result.type);
+		}
+		else assert.deepEqual(effects, {close: ["capability:native.filesystem"]});
 	}
 	return {receipt, api, report: {receiptSha256: result.receiptSha256}};
 };
@@ -47,7 +57,16 @@ test(target + " installs pull immediate Lean iterators without a poller", async 
 			await copyFile(join(fixture, name), join(source, name));
 		const config = join(source, "lean-bridge.exports.json");
 		const cfg = await json(config);
-		if(target !== "c") cfg.targets = {[target]: {name: target === "php-native" ? "example/dials" : "dials", version: "1.0.0"}};
+		if(target === "maven")
+		{
+			await copyFile(join(fixture, "TicketPulls.lean"), join(source, "TicketPulls.lean"));
+			await appendFile(join(source, "lakefile.toml"), '\n[[lean_lib]]\nname = "TicketPulls"\n');
+			cfg.modules.push("TicketPulls");
+			cfg.resources = ["TicketPulls.Ticket"];
+			cfg.exports.push("TicketPulls.issue", "TicketPulls.readTicket", "TicketPulls.tickets", "TicketPulls.closedTickets");
+			cfg.iterators.push({open: "TicketPulls.tickets", next: "TicketPulls.nextTicket", close: "TicketPulls.closeTicket"});
+		}
+		if(target !== "c") cfg.targets = {[target]: {name: target === "php-native" ? "example/dials" : target === "maven" ? "org.example:dials" : "dials", version: "1.0.0"}};
 		if(ordinary)
 		{
 			delete cfg.exports;
@@ -57,6 +76,14 @@ test(target + " installs pull immediate Lean iterators without a poller", async 
 		await buildCanonicalProject({projectRoot: source, targets: [target], outputRoot: output})
 			.catch(e => { throw new Error(e.message + " " + JSON.stringify(e.details), {cause: e}); });
 		await rm(source, {recursive: true});
+		if(target === "maven")
+		{
+			const {api, receipt, report} = await check(output, ordinary); ordinary ??= api;
+			await exerciseJvmCursors(dir, fixture, output, receipt);
+			t.diagnostic(route + ": " + report.receiptSha256);
+			await rm(output, {recursive: true});
+			continue;
+		}
 		const previous = ordinary;
 		const reports = await runEffectConsumers(root, root, target, process.env, {
 			...installed, routes: [route], clients: fixture, check: async handoff => {

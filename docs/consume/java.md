@@ -217,6 +217,25 @@ Packages built against different definitions of `Ticket` expose different
 Java types. The [Maven configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results)
 shows how authors select the shared type.
 
+### Iterate without a scheduler
+
+An immediate Lean iterator returns a single-pass, closeable Java iterator.
+Use try-with-resources when you might stop early:
+
+```java
+try (var values = org.leanbridge.dials.Api.sequence(4)) {
+    for (long value : values) {
+        System.out.println(value);
+        if (value == 1) break;
+    }
+}
+```
+
+Opening the cursor calls the Lean factory. The first `hasNext()` pulls one
+item; repeated calls do not advance it until `next()` takes the item.
+Exhaustion or a step failure closes the cursor. If an item is a resource,
+the caller owns it after `next()`; close it separately.
+
 ### Await tasks and consume streams
 
 A selected Lean `Task α` returns a `CompletableFuture<T>`. A cursor returns a cold `Flow.Publisher<T>`: subscribing alone does not open the cursor, and Lean produces an item only when the subscriber requests one. This example prints `42` and then `2`.

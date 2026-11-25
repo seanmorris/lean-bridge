@@ -13,7 +13,7 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
-import { nativeDeliveryHeader } from "../../src/build/jvm-io-owner.mjs";
+import { jvmIOEntry, nativeDeliveryHeader } from "../../src/build/jvm-io-owner.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
@@ -39,8 +39,22 @@ test("the Maven IO profile includes its implementation and the examples select o
 	for(const path of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const manifest = await parse(path), files = manifest.files ?? manifest.includedFiles;
-		for(const f of ["src/backends/c/task-owner-policy.h", "src/backends/jvm/io-owner.c", "src/backends/jvm/io-owner.h", "src/backends/jvm/io-wire.java", "src/backends/jvm/sync-io.mjs", "src/build/jvm-io-owner.mjs", "src/release/jvm-io-package.mjs"]) assert.ok(files.includes(f), path + ": " + f);
+		for(const f of ["src/backends/c/task-owner-policy.h", "src/backends/jvm/io-owner.c", "src/backends/jvm/io-owner.h", "src/backends/jvm/io-wire.java", "src/backends/jvm/sync-io.mjs", "src/backends/jvm/sync-cursor.java", "src/build/jvm-io-owner.mjs", "src/release/jvm-io-package.mjs"]) assert.ok(files.includes(f), path + ": " + f);
 	}
+});
+test("the JVM immediate owner calls only the selected cursor operations, without a reactor", () => {
+	const prefix = "lbc_dials", symbol = "lbwire_lbc_dials_v1_0";
+	const names = {open: symbol + "_open", next: symbol + "_next", close: symbol + "_close"};
+	const method = {delivery: "iterator", symbol, names};
+	const entry = jvmIOEntry({methods: [method]}, prefix);
+	assert.equal(entry.cursor, prefix + "_jvm_cursor");
+	assert.equal(entry.watch, undefined);
+	assert.equal(entry.task, undefined);
+	assert.match(entry.source, /LB_JVM_OWNER\(call\)\(cursor_on_owner/u);
+	for(const m of [{...method, symbol: symbol + "_foreign"}, {...method, names: {...names, next: names.close}},
+		{...method, names: {...names, poll: symbol + "_poll"}}])
+		assert.throws(() => jvmIOEntry({methods: [m]}, prefix), /Unverified JVM immediate/u);
+	assert.throws(() => jvmIOEntry({methods: [method], wait: "wait"}, prefix, "reactor"), /immediate cursor operations/u);
 });
 const policy = env.LEAN_BRIDGE_JVM_IO_POLICY;
 test("Maven IO rejects missing OS grants, unsupported delivery and dishonest source reviews without a handoff", { skip: !policy, timeout: 600_000 }, async t => {

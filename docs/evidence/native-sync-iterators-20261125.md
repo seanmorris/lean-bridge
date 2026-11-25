@@ -128,3 +128,38 @@ continued from its previous position. The 8.5 build had no `pcntl`.
 Set `LEAN_BRIDGE_IMMEDIATE_TARGET=php-native` and run
 `npm run test:native-immediate-cursor`. Use `LEAN_BRIDGE_TEST_PHPS` to
 provide a JSON array of absolute PHP CLI paths. Each needs FFI.
+
+## Java and Kotlin
+
+The same Maven JAR supplied two installed APIs: a Java 22 closeable
+`Iterator<T>` and a Kotlin 2.2 closeable `Sequence<T>`. The [installation
+test](../../tests/helpers/native-immediate-jvm.mjs) installed the original
+JAR and POM in a clean offline Maven repository on both source routes,
+resolved the classpath, compiled the clients, and relocated the install.
+The runtime classpath contained the Kotlin standard library but no
+coroutines; the JAR had no task port or reactor.
+
+| Ordinary package-set receipt | Reviewed package-set receipt |
+| --- | --- |
+| `2a71f36c79cfdc77b1eb5a57438b5b30b8be701e0267b7d0e12796eb56c73988` | `3b145d6d9107677eb1b3cca67ca3f9efaf8bb37b5f21b8c862de334e648e78a4` |
+
+The [Java client](../../tests/fixtures/native-immediate-cursor/InstalledCursor.java)
+observed seven opens, thirteen pulls and seven finalizers, including
+abandonment, a caller exception, and a pull from a virtual thread.
+Repeated `hasNext()` calls did not advance the cursor. The separate
+[Kotlin client](../../tests/fixtures/native-immediate-cursor/InstalledCursor.kt)
+observed six opens, twelve pulls and six finalizers using `use`, `first` and
+`toList`. Both distinguished a unit item from exhaustion and a constructor
+exception from a typed or IO step exception. Each language also exited a
+separate process with a live cursor; the parent verified the finalizer's file.
+
+[TicketPulls](../../tests/fixtures/native-immediate-cursor/TicketPulls.lean)
+yields the borrow's underlying ticket, then throws that ticket on the next
+pull. Each client checked that the item and error payload referred to the
+same resource and that the payload remained usable after the input, item
+and cursor closed. In Java, closing a cursor after `hasNext()` but before
+`next()` also returned the native live-identity count to zero without GC.
+
+Run `LEAN_BRIDGE_IMMEDIATE_TARGET=maven npm run test:native-immediate-cursor`
+with JDK 22, Kotlin 2.2, Maven and the offline Maven tool cache selected
+by `LEAN_BRIDGE_JVM_IO_M2_SEED`.

@@ -172,6 +172,22 @@ received as an exception's `payload()`. A ticket of the same name from different
 Lean source is a different Kotlin type. See the
 [Maven author configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results).
 
+### Iterate without a scheduler
+
+A package with an immediate Lean iterator returns a closeable Kotlin
+`Sequence`. It needs neither a coroutine scope nor a dispatcher:
+
+```kotlin
+val firstTwo = org.leanbridge.dials.kotlin.Api.sequence(4).use { values ->
+    values.take(2).toList()
+}
+```
+
+The sequence is single-pass. Calling `iterator()` a second time does not
+start another Lean cursor. Use `use` around short-circuiting operations such
+as `first()` or `take(n)` so an early stop runs the Lean finalizer. A yielded
+resource has its own lease; use or close that value separately.
+
 ### Await tasks and consume streams
 
 A selected Lean task is a `suspend fun`; a cursor is a cold `kotlinx.coroutines.flow.Flow<T>`. Use them in a coroutine as you would any other suspend function or flow. This example prints `42` and then `2`.

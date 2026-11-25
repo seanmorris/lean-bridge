@@ -173,6 +173,9 @@ export const installJvmTaskRuntime = async o => {
  */
 export const generateJvmIO = async options => {
 	const { api, wire, invoke, retire, evidence } = options, tasks = Boolean(wire.wait);
+	const direct = wire.methods.some(m => m.delivery === "iterator");
+	if(direct !== Boolean(options.cursor) || direct && (tasks || !invoke.endsWith("_jvm_invoke")
+		|| options.cursor !== invoke.slice(0, -6) + "cursor")) throw new TypeError("Inconsistent JVM immediate cursor entry");
 	const retained = wire.methods.some(m => m.callbacks?.length);
 	if(tasks !== Boolean(options.task && options.watch) || retained && !tasks) throw new TypeError("Inconsistent JVM task delivery");
 	const slug = api.component.name.toLowerCase().replaceAll(/[^a-z0-9]+/gu, "_");
@@ -200,9 +203,10 @@ export const generateJvmIO = async options => {
 	{
 		const m = leases.size ? { ...raw, args: raw.args.map(shape), result: shape(raw.result), error: shape(raw.error), terminal: shape(raw.terminal) } : raw;
 		const decl = api.declarations.find(d => d.name === m.name);
-		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? m.delivery : "value";
+		const cursor = m.delivery === "iterator";
+		const mode = m.delivery === "task" ? "promise" : cursor || m.delivery === "async-iterator" ? m.delivery : "value";
 		if(!decl || decl.source.declaration !== m.declaration || decl.parameters.length !== m.args.length || decl.resultMode !== mode
-			|| (m.delivery && (!tasks || mode === "value"))) throw new TypeError("JVM delivery must match the compiler-checked Lean declarations");
+			|| (m.delivery && !cursor && (!tasks || mode === "value"))) throw new TypeError("JVM delivery must match the compiler-checked Lean declarations");
 		verifyJvmLeaseSites(leases, raw, decl, api);
 		const name = ident(m.name);
 		if(!/^[a-z][A-Za-z0-9_]*$/u.test(name) || names.has(name)) throw new TypeError("Colliding JVM IO method: " + name);
@@ -243,6 +247,20 @@ export const generateJvmIO = async options => {
             }, new CallbackPort.Slot[]{${m.args.map((_, j) => slots.get(j)?.bind ?? "null").join(", ")}}));
     }`);
 			kotlin.push(`    @JvmStatic suspend fun ${back(name)}(${kp}): ${kt}${unit ? " { " + call + awaiter + " }" : " = " + call + awaiter}`);
+			continue;
+		}
+		if(cursor)
+		{
+			const terminal = m.stepIO ? `if (status == 4) throw new LeanIOException(${JSON.stringify(m.stepDeclaration)}, f.text());`
+				: m.terminal ? typedError(name[0].toUpperCase() + name.slice(1) + "StepError", m.terminal, JSON.stringify(m.stepDeclaration)) : "";
+			const value = spelling(m.result, ns, false, true);
+			methods.push(`    public static LeanCursor<${value}> ${name}(${nativeArgs}) {
+        return new LeanCursor<>(${i}, ${m.args.length}, ${m.tagBytes}, f -> { ${init} },
+            (f,status) -> { ${error} Wire.success(status); },
+            (f,status) -> { ${terminal} Wire.success(status); return ${result(m.result)}; },
+            ${m.result?.leaseClass ? "v -> v.close()" : "v -> {}"});
+    }`);
+			kotlin.push(`    @JvmStatic fun ${back(name)}(${kp}): LeanSequence<${kt}> = LeanSequence(${call}) { ${m.result === "unit" ? "kotlin.Unit" : "it"} }`);
 			continue;
 		}
 		if(m.delivery)
@@ -295,6 +313,29 @@ export const generateJvmIO = async options => {
 	files[`src/main/java/${dir}/NativeAssets.java`] = copiedJvmAssets({ namespace: ns }, evidence);
 	files[`src/main/java/${dir}/Wire.java`] = (await readFile(new URL("./io-wire.java", import.meta.url), "utf8"))
 		.replace("__PACKAGE__", ns).replace("__INVOKE__", invoke).replace("__CLEAR__", wire.clear).replace("__RETIRE__", retire);
+	if(direct)
+	{
+		const wirePath = `src/main/java/${dir}/Wire.java`;
+		files[wirePath] = insertAt(files[wirePath], "    int call(int op)", `    MemorySegment cursorArgs() { return args; }
+    MemorySegment cursorOut() { return out; }
+    MemorySegment cursorTags() { return tags; }
+    int call(int op)`);
+		files[`src/main/java/${dir}/LeanCursor.java`] = (await readFile(new URL("./sync-cursor.java", import.meta.url), "utf8"))
+			.replace("__PACKAGE__", ns).replace("__CURSOR__", options.cursor);
+		files[`src/main/kotlin/${dir}/kotlin/LeanSequence.kt`] = `package ${ns}.kotlin
+class LeanSequence<T> private constructor(private val source: AutoCloseable, private val items: Iterator<T>) : Sequence<T>, AutoCloseable {
+    override fun iterator(): Iterator<T> = items
+    override fun close() = source.close()
+    internal companion object {
+        operator fun <V,T> invoke(cursor: ${ns}.LeanCursor<V>, convert: (V) -> T): LeanSequence<T> =
+            LeanSequence(cursor, object : Iterator<T> {
+                override fun hasNext() = cursor.hasNext()
+                override fun next() = convert(cursor.next())
+            })
+    }
+}
+`;
+	}
 	if(leases.size)
 	{
 		const ports = [];

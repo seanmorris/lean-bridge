@@ -111,7 +111,7 @@ export const buildCTaskPackage = async options => {
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger) await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc: environment.CC ?? "cc", run });
 		if(integers) await save("task-integers.h", integers);
-		const exported = php ? phpPort.symbols : jvm ? [jvmEntry.invoke, jvmEntry.retire, ...ledger ? [] : [wire.clear], ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
+		const exported = php ? phpPort.symbols : jvm ? [jvmEntry.invoke, jvmEntry.retire, ...ledger ? [] : [wire.clear], ...jvmEntry.cursor ? [jvmEntry.cursor] : [], ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
 		await save("exports.map", `{ global: ${exported.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"

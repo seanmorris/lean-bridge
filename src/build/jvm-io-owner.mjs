@@ -127,6 +127,36 @@ int ${invoke}(int op, const uint64_t *args, uint64_t *out, uint8_t *tags) {
 }
 void ${retire}(void) { lean_bridge_native_runtime_retire(); }
 `;
+	const direct = wire.methods.flatMap((m, i) => m.delivery === "iterator" ? [{m, i}] : []);
+	if(direct.length)
+	{
+		if(wire.wait || direct.some(({m, i}) => m.symbol !== "lbwire_" + p + "_v1_" + i
+			|| Object.keys(m.names).sort().join() !== "close,next,open"
+			|| ["open", "next", "close"].some(k => m.names[k] !== m.symbol + "_" + k)))
+			throw new TypeError("Unverified JVM immediate cursor operations");
+		const cursor = p + "_jvm_cursor";
+		const procs = direct.map(({m: {names: n}}) => `extern int ${n.open}(const uint64_t *, uint64_t *, uint64_t *, uint8_t *);
+extern int ${n.next}(uint64_t *, uint64_t *, uint8_t *);
+extern int ${n.close}(uint64_t *);`);
+		return {invoke, retire, cursor, source: source + `
+${procs.join("\n")}
+typedef struct { int method, op, status; const uint64_t *args; uint64_t *h,*out; uint8_t *tags; } lb_cursor_request;
+static void cursor_on_owner(void *ptr) {
+    lb_cursor_request *r=ptr;
+    switch (r->method) {
+${direct.map(({m: {names: n}, i}) => `    case ${i}: switch (r->op) {
+        case 0: r->status=${n.open}(r->args,r->h,r->out,r->tags); break;
+        case 1: r->status=${n.next}(r->h,r->out,r->tags); break;
+        case 2: r->status=${n.close}(r->h); break;
+    } break;`).join("\n")}
+    }
+}
+int ${cursor}(int method, int op, const uint64_t *args, uint64_t *h, uint64_t *out, uint8_t *tags) {
+    lb_cursor_request r={method, op, ${p}_INVALID, args, h, out, tags};
+    return LB_JVM_OWNER(call)(cursor_on_owner, &r) ? r.status : ${p}_UNAVAILABLE;
+}
+`};
+	}
 	if(!wire.wait) return { invoke, retire, source };
 	const task = p + "_jvm_task", watch = p + "_jvm_watch";
 	const ops = [["start", "const uint64_t *, uint64_t *, uint64_t *, uint8_t *", "r->args,r->h,r->out,r->tags"]

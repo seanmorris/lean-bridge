@@ -69,6 +69,12 @@ test("JVM resource operations require the shared owner, source kind and declared
 	for(const d of [{ ...decl, parameters: [site("lease", "explicit")] }, { ...decl, result: site("copy", "explicit") }])
 		assert.throws(() => verifyJvmLeaseSites(kinds, m, d, api), /resource ownership/u);
 	assert.throws(() => verifyJvmLeaseSites(kinds, { ...m, error: "string" }, decl, api), /resource error/u);
+	const direct = {...m, delivery: "iterator", error: null, terminal: m.error};
+	const stepId = "error:Step.Desk.keep", asyncId = "error:AsyncStep.Desk.keep";
+	const stepApi = {...api, errors: [stepId, asyncId].map(id => ({id, payload: type}))};
+	const at = id => ({...decl, failure: {errors: [id]}});
+	verifyJvmLeaseSites(kinds, direct, at(stepId), stepApi);
+	assert.throws(() => verifyJvmLeaseSites(kinds, direct, at(asyncId), stepApi), /resource error stage/u);
 	assert.throws(() => jvmLeaseModels(api, w, { ...evidence, ledgerId: hash }, new Set()), /kind or ledger/u);
 	assert.throws(() => jvmLeaseModels(api, { ...w, leases: [{ ...w.leases[0], hash: runtimeIdentity }] }, evidence, new Set()), /kind or ledger/u);
 	assert.throws(() => jvmIOEntry({ ...w, leases: [{ ...w.leases[0], symbol: w.clear }] }, "lbc_desk"), /Unverified JVM/u);

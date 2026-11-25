@@ -163,6 +163,31 @@ delivery protocols as described below. The [synchronous installed-package eviden
 records both load orders, the incompatible lookalike package, and cleanup
 after a typed error or runtime retirement.
 
+## Export an immediate iterator
+
+Select the constructor as an export and name its pull and finalizer under
+`iterators`. For example, the [Dials module](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+opens a counter, pulls a `BaseIO (Option UInt32)`, and closes with
+`BaseIO Unit`. Its finalizer writes a file, so the package needs the
+filesystem grant.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Dials"],
+  "exports": ["Dials.sequence"],
+  "iterators": [{"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "org.example:dials", "version": "1.0.0"}}
+}
+```
+
+Use `IO` or `EIO` for a pull that can fail. Its exception identifies the
+pull declaration, separately from any constructor error. Use a standalone
+synchronous package for this protocol; a pull that returns a Lean `Task`
+belongs under `asyncIterators`. See the [Java](../consume/java.md#iterate-without-a-scheduler)
+and [Kotlin](../consume/kotlin.md#iterate-without-a-scheduler) loop examples.
+
 ## Export tasks and streams
 
 Select declarations returning a real Lean `Task` in `taskExports`. For a pull
