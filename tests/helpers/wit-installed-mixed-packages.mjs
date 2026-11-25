@@ -50,6 +50,7 @@ test("installed mixed WIT applications run original objects, callbacks, futures 
 		await assert.rejects(invoke(guest("bad-argument")),e=>e.code===1 && /invalid WIT argument or conversion limit: shift/u.test(e.stderr));
 		await assert.rejects(invoke(guest("trap")),e=>e.code===1 && /unreachable/u.test(e.stderr));
 		await assert.rejects(invoke([...paths.slice(0,2),join(consumer,"private.wasm")]),e=>e.code===1 && /turn-series/u.test(e.stderr));
+		await assert.rejects(invoke(guest("private-scheduler")),e=>e.code===1 && e.stderr.includes("lean-bridge:workshop/scheduler@1.0.0"));
 		await assert.rejects(invoke(paths.slice(1)),e=>e.code===2 && /objects.wasm.*callbacks.wasm.*application.wasm/u.test(e.stderr));
 		t.diagnostic(route+" "+artifact.bytes+" bytes "+artifact.sha256+" — installed stream to retained callback to reentrant Lean update to future: 73");
 		await rm(work,{recursive: true});

@@ -76,6 +76,8 @@ static bool execute(store_owner *s,wasmtime_component_instance_t *i,wasmtime_con
 }
 static bool application(lb_wit_turns *turns,void *data){
     store_owner *s=data;
+    lb_wit_turns *route=&s->owner->turns;
+    if(!lb_wit_turn_attach(turns,route,dispatch,s->owner))return false;
     wasm_config_t *cfg=wasm_config_new();if(!cfg)return false;
     wasmtime_config_wasm_component_model_set(cfg,true);wasmtime_config_wasm_component_model_async_set(cfg,true);
     wasmtime_config_wasm_component_model_more_async_builtins_set(cfg,true);
@@ -85,14 +87,17 @@ static bool application(lb_wit_turns *turns,void *data){
     if(!component)goto end;
     store=wasmtime_store_new(engine,NULL,NULL);link=wasmtime_component_linker_new(engine);if(!store || !link)goto end;
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
-    bool linked=report(lb_ts_link(&s->sync,&s->owner->sync,turns,root)) && report(lb_tg_link_all(&s->tasks,&s->owner->tasks,root,turns));
+    wasmtime_component_linker_instance_t *ports=NULL;
+    bool linked=report(wasmtime_component_linker_instance_add_instance(root,LB_TRANSPORT,strlen(LB_TRANSPORT),&ports));
+    if(linked)linked=report(lb_ts_link(&s->sync,&s->owner->sync,route,ports)) && report(lb_tg_link_all(&s->tasks,&s->owner->tasks,ports,route));
+    if(ports)wasmtime_component_linker_instance_delete(ports);
     wasmtime_component_linker_instance_delete(root);if(!linked)goto end;
     wasmtime_context_t *ctx=wasmtime_store_context(store);wasmtime_component_instance_t i;
     if(report(wasmtime_component_linker_instantiate(link,ctx,component,&i)))ok=execute(s,&i,ctx);
 end:
     /* Stop the native owner before deleting the store, including when a
        guest member traps while the owner is waiting for a synchronous reply. */
-    if(s->sync.ctl.bus?!lb_ts_retire(&s->sync.ctl):!lb_wit_turn_retire(turns))ok=false;
+    if(s->sync.ctl.bus?!lb_ts_retire_graph(&s->sync.ctl,turns):!lb_wit_turn_retire(turns))ok=false;
     if(link)wasmtime_component_linker_delete(link);
     if(store)wasmtime_store_delete(store);
     if(component)wasmtime_component_delete(component);
@@ -104,7 +109,8 @@ int main(int argc,char **argv){
     }
     /* Per-channel state scales with the source inventory, not the thread stack. */
     native_owner *n=calloc(1,sizeof *n);store_owner *s=calloc(1,sizeof *s);bool ok=false;
-    if(n && s){s->owner=n;s->inputs=argv+1;ok=lb_wit_turn_run(&n->turns,dispatch,finish,n,application,s) && n->finished;}
+    lb_wit_turns root={0};
+    if(n && s){s->owner=n;s->inputs=argv+1;ok=lb_wit_turn_run(&root,NULL,finish,n,application,s) && n->finished;}
     if(ok)printf("%" PRId64 "\n",s->answer);else fputs("WIT application failed\n",stderr);
     free(s);free(n);return ok?0:1;
 }

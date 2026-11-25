@@ -10,14 +10,19 @@ const copiedChannelFields=m=>[
 	, ...m.shape==="stream"?[["act",key+' (param "op" u32) (result u32)']]:[["poll",key+" (result bool)"],["close",key]]
 ];
 /**
+ * Build the private instance type shared by the host port and the Wasm writer.
+ *
+ * @param m - Checked copied channel.
+ */
+export const copiedChannelType=m=>"(instance "+copiedChannelFields(m).map(([n,t])=>`(export "${n}" (func ${t}))`).join(" ")+")";
+/**
  * Declare a named private instance type so all graphs use identical imports.
  *
  * @param m - Checked copied channel.
  * @param id - Private WAT instance identifier.
  */
 export const copiedChannelImport=(m,id)=>{
-	const fields=copiedChannelFields(m).map(([n,t])=>`(export "${n}" (func ${t}))`).join(" ");
-	return `(type ${id}-type (instance ${fields})) (import "copied-${m.name}" (instance ${id} (type ${id}-type)))`;
+	return `(type ${id}-type ${copiedChannelType(m)}) (import "copied-${m.name}" (instance ${id} (type ${id}-type)))`;
 };
 
 /**

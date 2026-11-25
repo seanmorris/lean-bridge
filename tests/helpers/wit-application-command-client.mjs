@@ -61,6 +61,9 @@ export const buildInstalledWitGuests=async({wit,out,wasm,run})=>{
 	}
 	await save("private.wat",app.replace("(component",'(component (import "turn-series" (func (param "op" u32) (param "key" u32) (param "value" u64) (result (tuple u32 u32 u64 u64))))'));
 	await cli("parse","private.wat","-o","private.wasm");await cli("validate","--features","cm-async,cm-async-builtins","private.wasm");
+	await save("private-scheduler.wat",app.replace("(component",`(component (import "${pkg}scheduler${version}" (instance))`));
+	await cli("parse","private-scheduler.wat","-o","private-scheduler.wasm");
+	await cli("validate","--features","cm-async,cm-async-builtins","private-scheduler.wasm");
 	return ["owner.wasm","provider.wasm","application.wasm"].map(path=>join(out,path));
 };
 
@@ -74,6 +77,7 @@ export const exerciseMixedWitComposition=async o=>{
 	const {app,b,wasm,run,sdk,runtimeRoot}=o,out=await mkdtemp(join(app,"mixed-")),client=join(out,"consumer");
 	const common={app,out,b,name: "workshop",version: "1.0.0",wasm,run};
 	const template=await buildWitApplicationTemplate(common);
+	assert.equal(template.transport,"lean-bridge:workshop/scheduler@1.0.0");
 	assert.deepEqual(template.roles,["objects","callbacks","application"]);
 	assert.deepEqual(template.methods.map(m=>m.declaration).sort(),b.entries.filter(e=>e.delivery).map(e=>e.declaration).sort());
 	const paths=await buildInstalledWitGuests({out: client,wit: join(out,"wit"),wasm,run});
@@ -98,6 +102,7 @@ export const exerciseMixedWitComposition=async o=>{
 	await assert.rejects(run(command,guest("bad-argument"),client,env),e=>/invalid WIT argument or conversion limit: shift/u.test(e.details?.stderr??e.stderr));
 	await assert.rejects(run(command,guest("trap"),client,env),e=>/unreachable/u.test([e.message,e.details?.stderr,e.stderr].join(" ")));
 	await assert.rejects(run(command,[...paths.slice(0,2),join(client,"private.wasm")],client,env),e=>/turn-series/u.test([e.message,e.details?.stderr,e.stderr].join(" ")));
+	await assert.rejects(run(command,guest("private-scheduler"),client,env),e=>[e.message,e.details?.stderr,e.stderr].join(" ").includes(template.transport));
 	await assert.rejects(graph("private.wasm",[...paths.slice(0,2),join(client,"private.wasm")]),e=>
 		/turn-series/u.test([e.message,e.details?.stderr,e.stderr].join(" ")));
 };

@@ -56,7 +56,7 @@ export const buildWitApplicationTemplate=async o=>{
 	await save("command.wat",result.wat);await cli("parse","command.wat","-o","command.wasm");
 	await cli("validate","--features","cm-async,cm-async-builtins","command.wasm");
 	const bytes=await readFile(local("command.wasm"));
-	return {publicFiles,roles: result.roles,parts: splitWitApplicationSlots(bytes,result.roles),methods: delivery?.supported??[]};
+	return {publicFiles,roles: result.roles,parts: splitWitApplicationSlots(bytes,result.roles),methods: delivery?.supported??[],transport: result.transport};
 };
 
 /**

@@ -258,3 +258,14 @@ node --test --test-concurrency=1 tests/helpers/wit-installed-peers.mjs
 ```
 
 This command composes synchronous packages. The earlier future and cursor checks run on a single installed Lean package; they do not establish cross-package cancellation.
+
+## How a mixed package routes nested calls
+
+The [mixed launcher](../../src/backends/wit/application-command-turn.c) registers its compiled package on one [native owner](../../src/backends/wit/application-turn.h). Wasmtime runs on a separate store thread. Each suspended call now records its package as well as its ticket; a package can neither resume a sibling's frame nor retire the shared owner. Scheduler imports are private to a package-qualified interface such as `lean-bridge:workshop/scheduler@1.0.0`. Application code still imports the public WIT functions.
+
+Two checks cover different parts of this change:
+
+- The [dispatcher test](../../tests/helpers/wit-turn-peer-dispatch.mjs) loads two independent native libraries with the same operation number. Both call orders reenter the first library through the second. Neither library can answer the other's ticket. At 32 alternating calls, both routes refuse a 33rd and all 32 pending calls resume. Shutting down with nested requests parked unwinds both libraries before their code is unloaded.
+- The [compiled-worker test](../../tests/helpers/wit-application-command-client.mjs) exercises one actual Lean package under Wasmtime. Its original box travels through a cursor, a retained guest callback, a synchronous update and a future: **73**. The synchronous suite returns **1** and early reader exit returns **17**. Invalid arguments and a trapping callback remain distinguishable.
+
+Running two native dispatchers tests call routing. It does not yet demonstrate two independently installed **async Lean packages** exchanging an original object while both have futures pending, or cancelling one package's reader without affecting the other.

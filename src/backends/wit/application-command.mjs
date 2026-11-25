@@ -3,7 +3,7 @@ import {canonicalSupervisor} from "./canonical-supervisor.mjs";
 import {witApplicationExchange} from "./application-exchange.mjs";
 import {witTurnOwners} from "./application-turn-owners.mjs";
 import {cIdentifier} from "../c/generate.mjs";
-import {copiedChannelImport} from "./application-turn-copied.mjs";
+import {copiedChannelType} from "./application-turn-copied.mjs";
 
 const fail=message=>{throw new TypeError("WIT application command: "+message);};
 const nested=(wat,id,role)=>{
@@ -34,23 +34,27 @@ export const witApplicationCommand=o=>{
 		, "  export run: "+(methods.length?"async ":"")+"func() -> s64;"
 		, "}"
 		, ...registered?[`world registrations { import ${obj}; import api; export callbacks; }`]:[]].join("\n");
-	const parts=["(component"],channels=[];
+	const parts=["(component"],channels=[],transport=mixed?`lean-bridge:${name}/scheduler@${version}`:null;
 	if(mixed)
 	{
-		parts.push(`(type $sync-ports ${modules.syncPorts}) (import "sync-ports" (instance $transport (type $sync-ports)))`);
+		const fields=[`(type $sync ${modules.syncPorts}) (export "sync-ports" (instance (type $sync)))`];
+		const aliases=['(alias export $scheduler "sync-ports" (instance $transport))'];
 		for(const method of methods)
 		{
 			const {name,shape}=method;
 			if(method.copied)
 			{
 				const port="copied-"+name;
-				parts.push(copiedChannelImport(method,"$"+port));
+				fields.push(`(type $${port} ${copiedChannelType(method)}) (export "${port}" (instance (type $${port})))`);
+				aliases.push(`(alias export $scheduler "${port}" (instance $${port}))`);
 				channels.push(`(with "${port}" (instance $${port}))`);
 			}
 			const n="turn-"+name,input=shape==="stream"?'(param "value" u64)':'(param "left" u64) (param "right" u64)';
-			parts.push(`(import "${n}" (func $${n} (param "op" u32) (param "key" u32) ${input} (result (tuple u32 u32 u64 u64))))`);
+			fields.push(`(export "${n}" (func (param "op" u32) (param "key" u32) ${input} (result (tuple u32 u32 u64 u64))))`);
+			aliases.push(`(alias export $scheduler "${n}" (func $${n}))`);
 			channels.push(`(with "${n}" (func $${n}))`);
 		}
+		parts.push(`(type $scheduler-type (instance ${fields.join("\n")}))`,`(import "${transport}" (instance $scheduler (type $scheduler-type)))`,...aliases);
 	}
 	else parts.push(`(type $native-type ${ops.nativeType}) (import "${ops.nativeName}" (instance $native (type $native-type)))`);
 	parts.push(nested(modules.owner,"owner","objects"),nested(modules.exchange,"cells-code"),nested(modules.facade,"facade"),
@@ -91,7 +95,7 @@ export const witApplicationCommand=o=>{
 	}
 	parts.push(nested(modules.application,"downstream","application"),`(instance $app (instantiate $downstream ${appImports.join(" ")}))`,
 		methods.length?canonicalSupervisor:'(export "run" (func $app "run"))',")");
-	return {world,wat: parts.join("\n"),roles};
+	return {world,wat: parts.join("\n"),roles,transport};
 };
 
 /**
@@ -102,10 +106,11 @@ export const witApplicationCommand=o=>{
  * @param template.parts - Fixed binary sections before, between and after the input components.
  * @param template.roles - Ordered consumer inputs.
  * @param template.methods - Checked native worker declarations.
+ * @param template.transport - Private linker namespace of a mixed package.
  * @param entries - Source-selected native names.
  * @param name - Native facade prefix.
  */
-export const witCommandHeader=({parts,roles,methods},entries,name)=>{
+export const witCommandHeader=({parts,roles,methods,transport},entries,name)=>{
 	const p=cIdentifier(name)+"_",inputs=[
 		`#define LB_INPUTS ${roles.length}`
 		, "static const char *const input_roles[]={"+roles.map(r=>JSON.stringify(r)).join(",")+"};"
@@ -118,6 +123,7 @@ export const witCommandHeader=({parts,roles,methods},entries,name)=>{
 		return [
 			'#include "application-turn-sync-host.h"'
 			, '#include "application-turn-tasks.h"'
+			, "#define LB_TRANSPORT "+JSON.stringify(transport)
 			, ...inputs
 			, `#define LB_BINDING ${p}binding\n#define LB_OPEN ${p}with_hosts\n#define LB_CLOSE ${p}close\n#define LB_OK ${p}OK\n`].join("\n");
 	}

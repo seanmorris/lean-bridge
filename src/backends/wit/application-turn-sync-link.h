@@ -10,11 +10,12 @@ typedef struct {
 } lb_ts_control;
 /* Retire the owner first: it may still be reading or unwinding these slots.
  * The store is never entered during disposal, even after a guest trap. */
-static inline bool lb_ts_retire(lb_ts_control *c){
-    if(!c || !c->bus || !lb_wit_turn_retire(c->turns))return false;
+static inline bool lb_ts_retire_graph(lb_ts_control *c,lb_wit_turns *root){
+    if(!c || !c->bus || !root || !c->turns || c->turns->loop!=root->loop || !lb_wit_turn_retire(root))return false;
     for(unsigned i=0;i<LB_WIT_TURN_DEPTH;i++)if(c->bus->slots[i].occupied)lb_ts_slot_clear(c->bus->slots+i);
     c->depth=0;return true;
 }
+static inline bool lb_ts_retire(lb_ts_control *c){return c && lb_ts_retire_graph(c,c->turns);}
 typedef struct {lb_ts_control *control;unsigned action,method;} lb_ts_hook;
 static inline wasmtime_error_t *lb_ts_step(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     lb_val *in,size_t n,lb_val *out,size_t results){
