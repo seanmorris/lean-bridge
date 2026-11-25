@@ -12,6 +12,11 @@ back. The client had neither a compiler nor the publisher on its search path.
 | Reviewed public interface | `5ba9be8bc13a849adaf114b019ec3e2afa729c06f6ac8457ee4742e7b3b8a8aa` |
 | Host functions, file-reading closure and application-object task | `1b4d7a8dc4bc8a9e9f0d4335e53bad1e6da6236f327e946958180b9f9b677d0c` |
 
+Repeating all three builds with an offline-installed publisher CLI reproduced
+the three receipt digests exactly. Before the positive reviewed build, changing
+only the callable's owner from Ruby to Python was rejected. Neither that
+stale review nor the missing filesystem grant produced a release directory.
+
 The same function worked through `call` and Ruby block conversion. An
 exception escaped a nested host call with its original Ruby identity.
 Closing a function from inside its own call let that invocation finish,
