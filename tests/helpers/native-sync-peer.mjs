@@ -13,6 +13,7 @@ import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
+import { addMixedRustHosts } from "./mixed-rust-host-crates.mjs";
 
 const fx = resolve("tests/fixtures/native-sync-resource"), shared = resolve("tests/fixtures/resource-tasks");
 const modes = ["sync", "task"], json = async p => JSON.parse(await readFile(p, "utf8"));
@@ -73,7 +74,7 @@ const install = async (work, root, target) => {
 	const direct = await unpack(sync.component, sync.dir, "sync"), async = await unpack(task.component, task.dir, "task");
 	const client = join(fx, "consumer." + (target === "cpp" ? "cpp" : "rs"));
 	const isolated = { PATH: "/unavailable", LANG: "C", TMPDIR: app, LEAN_NUM_THREADS: "1" };
-	let runtimeFeatures;
+	let runtimeFeatures, hostProbe;
 	if(target === "cpp")
 	{
 		const pc = { ...env, PKG_CONFIG_PATH: "", PKG_CONFIG_LIBDIR: [direct, async].map(p => join(p, "lib/pkgconfig")).join(":") };
@@ -91,14 +92,17 @@ const install = async (work, root, target) => {
 		assert.equal(descriptor.schemaVersion, 2); assert.deepEqual(descriptor.profiles, ["native-rust-io-v1", "native-rust-task-v1", ...old?[]:["native-rust-host-v1"]]);
 		const rust = { ...env, RUSTC: env.LEAN_BRIDGE_RUSTC ?? "rustc", CARGO_TARGET_DIR: join(build, "target"), CARGO_NET_OFFLINE: "true" };
 		await mkdir(join(build, "src")); await copyFile(client, join(build, "src/main.rs"));
-		await writeFile(join(build, "Cargo.toml"), `[package]\nname="installed-peers"\nversion="0.1.0"\nedition="2021"\n[dependencies]\nlease-sync={path=${JSON.stringify(direct)}}\nlease-task={path=${JSON.stringify(async)}}\n[patch.crates-io]\nlean-bridge-task-runtime={path=${JSON.stringify(support)}}\n`);
+		if(env.LEAN_BRIDGE_NATIVE_SYNC_MIXED_HOSTS) hostProbe = await addMixedRustHosts(env.LEAN_BRIDGE_NATIVE_SYNC_MIXED_HOSTS, sync.runtime, join(build, "src"), unpack);
+		const profile = hostProbe ? '\n[profile.dev]\ndebug=0\nincremental=false\n[profile.dev.package.sha2]\nopt-level=2\n' : "";
+		await writeFile(join(build, "Cargo.toml"), `[package]\nname="installed-peers"\nversion="0.1.0"\nedition="2021"\n[dependencies]\nlease-sync={path=${JSON.stringify(direct)}}\nlease-task={path=${JSON.stringify(async)}}\n${hostProbe?.dependencies ?? ""}[patch.crates-io]\nlean-bridge-task-runtime={path=${JSON.stringify(support)}}\n${profile}`);
 		await run(cargo, ["generate-lockfile", "--offline"], build, rust);
 		const graph = JSON.parse(await run(cargo, ["metadata", "--locked", "--offline", "--format-version", "1"], build, rust));
 		const providers = graph.packages.filter(p => p.name === sync.runtime.name); assert.equal(providers.length, 1);
 		const provider = providers[0]; assert.equal(provider.version, sync.runtime.version);
 		runtimeFeatures = graph.resolve.nodes.find(n => n.id === provider.id).features.sort();
 		assert.ok(runtimeFeatures.includes("async"));
-		for(const pkg of [sync.component, task.component])
+		if(hostProbe) assert.ok(runtimeFeatures.includes("host-objects"));
+		for(const pkg of [sync.component, task.component, ...hostProbe?.packages ?? []])
 		{
 			const component = graph.packages.find(p => p.name === pkg.name), dependency = component.dependencies.find(d => d.name === provider.name);
 			assert.equal(dependency.req, "=" + provider.version); assert.equal(dependency.uses_default_features, pkg === task.component);
@@ -108,11 +112,12 @@ const install = async (work, root, target) => {
 		await copyFile(join(build, "target/debug/installed-peers"), binary);
 	}
 	await rm(build, { recursive: true });
-	await run(binary, [], app, isolated, 60_000);
+	await run(binary, hostProbe ? ["forward"] : [], app, isolated, hostProbe ? 180_000 : 60_000);
 	return { target, route: target === "cpp" ? "ordinary" : "reviewed"
 		, nominal: sync.nominal, runtimeIdentity: sync.component.runtimeIdentity
 		, consumerSha256: sha256(await readFile(client))
 		, ...runtimeFeatures ? { runtimeFeatures } : {}
+		, ...hostProbe ? { hostProbe: hostProbe.evidence } : {}
 		, sync: sync.proof, task: task.proof };
 };
 const replay = process.env.LEAN_BRIDGE_NATIVE_SYNC_MIXED_REPLAY;
