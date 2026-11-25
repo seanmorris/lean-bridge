@@ -9,4 +9,12 @@ def completed (box : Box) : Task (Except Box UInt32) :=
   let _ := box
   Task.pure (.ok 0)
 
+-- A caught guest exception is *not* the terminal error of this task.
+def relayLate (box : Box) (f : Box → IO Box) : BaseIO (Task (Except IO.Error Box)) :=
+  IO.asTask do
+    try
+      let _ ← f box
+    catch _ => pure ()
+    throw (IO.userError "late λ")
+
 end Jobs

@@ -13,7 +13,7 @@ import { witCallbackExchange } from "./application-exchange.mjs";
  *
  * @param options - Compiler-checked workers, original import IR and matching native facade.
  */
-export const witObjectCallbackFiles=options=>{
+export const witObjectCallbackProjection=options=>{
 	const {ir,entries,api,descriptor,name,version}=options,rs=descriptor.contract.resources;
 	const hash=hashBindingIr(ir),prefix=cIdentifier(name)+"_",shapes=new Map(),uses=new Map(),occupied=new Set(rs.map(r=>r.name));
 	occupied.add(descriptor.contract.error);
@@ -66,8 +66,16 @@ export const witObjectCallbackFiles=options=>{
 		, ...fields
 		, "}"
 		, `world callback-provider { import ${descriptor.interfaceName}; export callbacks; }`].join("\n");
-	return {"object-callbacks.wit": wit
+	const layout={schemaVersion: 2,interfaceName: iface,exchange: {name: exchange.name,slots: exchange.slots},signatures: Object.fromEntries(shapes),sites: Object.fromEntries(uses)};
+	const files={"object-callbacks.wit": wit
 		, "callback-exchange.wat": exchange.wat
 		, "application-callbacks.h": objectCallbackBinding({sigs,jobs,prefix,iface,rs,exchange})
-		, "object-callbacks.json": canonicalJson({schemaVersion: 2,interfaceName: iface,exchange: {name: exchange.name,slots: exchange.slots},signatures: Object.fromEntries(shapes),sites: Object.fromEntries(uses)})};
+		, "object-callbacks.json": canonicalJson(layout)};
+	return {files,layout};
 };
+/**
+ * Emit the standalone registration provider artifacts for checked worker sites.
+ *
+ * @param options - Compiler-checked declarations and their original object interface.
+ */
+export const witObjectCallbackFiles=options=>witObjectCallbackProjection(options).files;

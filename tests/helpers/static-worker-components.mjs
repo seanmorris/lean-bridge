@@ -62,7 +62,7 @@ for(const owner of Object.keys(staticSourceOwners)) test(owner+" private worker 
 		assert.deepEqual(symbols,[...b.symbols].sort());
 		assert.equal(symbols.includes(b.prefix+"_visit"),!wit); assert.equal(symbols.includes(b.prefix+"_object"),!wit);
 		assert.ok(!symbols.some(s=>s.includes("_private_visit")||s.includes("_private_object")));
-		assert.deepEqual(b.workerWire.methods.map(m=>m.name).sort(),[...wit?["accept","completed"]:[],"echo","outcome","reject","relay","series"]);
+		assert.deepEqual(b.workerWire.methods.map(m=>m.name).sort(),[...wit?["accept","completed","relay_late"]:[],"echo","outcome","reject","relay","series"].sort());
 		assert.ok(b.workerWire.leases.length); assert.ok(b.workerWire.leases.every(k=>k.host));
 		const deps=await inspect("readelf",["-d",b.component]);
 		for(const name of [b.domain,b.workerLedger,"libleanshared.so","liblean_bridge_native.so"]) assert.ok(deps.includes("["+name+"]"),name);

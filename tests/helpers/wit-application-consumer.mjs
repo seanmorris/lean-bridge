@@ -85,16 +85,19 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 	// the test factory that lets this probe construct the guest's registrations.
 	await writeFile(join(cbDir,"cb.wit"),cbWit+`\nworld examined { import ${name}; import api; import inside-callback: func(); export callbacks; }`);
 	await run(wasm,["component","targets","wit-callback","--world","examined","callback-fixture.wasm"]);
-	assert.deepEqual(supported.map(m=>[m.name,m.shape]),[["accept","factory"],["completed","returned"],["echo","owned"],["outcome","returned"],["reject","factory"]]);
-	assert.deepEqual(delivery.remaining.sort(),["Jobs.relay","Jobs.series"]);
+	assert.deepEqual(supported.map(m=>[m.name,m.shape]),[["accept","factory"],["completed","returned"],["echo","owned"],["outcome","returned"],["reject","factory"],["relay","callback"],["relay-late","callback"]]);
+	assert.deepEqual(delivery.remaining,["Jobs.series"]);
 	const component=async(file,id)=>{const data=await readFile(join(app,file),"utf8");return data.replace("(component","(component $"+id);};
 	await writeFile(join(app,"reader.wat"),(await asset("lean-future-consumer")).replace("@TASKS@",delivery.publicName));
 	await run(wasm,["parse","reader.wat","-o","reader.wasm"]);
 	await writeFile(join(app,"fault-reader.wat"),(await asset("lean-failure-consumer")).replace("@TASKS@",delivery.publicName));
 	await run(wasm,["parse","fault-reader.wat","-o","fault-reader.wasm"]);
+	await writeFile(join(app,"relay-reader.wat"),(await asset("lean-relay-consumer")).replace("@TASKS@",delivery.publicName));
+	await run(wasm,["parse","relay-reader.wat","-o","relay-reader.wasm"]);
 	await mkdir(join(app,"wit-future/deps"),{recursive: true});
 	await writeFile(join(app,"wit-future/deps/objects.wit"),descriptor.wit);
 	await copyFile(join(app,"object-tasks.wit"),join(app,"wit-future/tasks.wit"));
+	await copyFile(join(app,"object-callbacks.wit"),join(app,"wit-future/callbacks.wit"));
 	await writeFile(join(app,"wit-future/fixture.wit"),`package lean-bridge:workshop@1.0.0;
 world future-probe {
   import object-tasks; use object-tasks.{box};
@@ -106,12 +109,20 @@ world failure-probe {
   import object-tasks; use object-tasks.{box};
   import source: func() -> own<box>; import same: func(left: borrow<box>, right: borrow<box>) -> bool;
   export reject: func(); export start-case: func(mode: u32); export discard-case: func(); export receive-case: func();
+}
+world relay-probe {
+  import object-tasks; use object-tasks.{box, member-error, call-box-to-box};
+  import source: func() -> own<box>; import register: func(mode: u32) -> own<call-box-to-box>;
+  import same: func(left: borrow<box>, right: borrow<box>) -> bool; import message: func(self: borrow<member-error>) -> string;
+  export begin: func(mode: u32); export discard: func(); export receive: func();
+  export request: func(); export collect: func();
 }`);
+	await run(wasm,["component","targets","wit-future","--world","relay-probe","relay-reader.wasm"]);
 	await run(wasm,["component","targets","wit-future","--world","future-probe","reader.wasm"]);
 	await run(wasm,["component","targets","wit-future","--world","failure-probe","fault-reader.wasm"]);
 	const fault=(await run(wasm,["print","fault-reader.wasm"])).stdout.replace("(component","(component $fault");
 	const client=id=>`(instance $${id} (instantiate $fault (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`;
-	const hooks=supported.flatMap(m=>[[m.name+"-native-start","(result u32)"],[m.name+"-native-stage",'(param "key" u32) '+(m.shape==="factory"?"(result u32)":m.shape==="returned"?"(result (option u32))":"")]]);
+	const hooks=supported.flatMap(m=>[[m.name+"-native-start","(result u32)"],[m.name+"-native-stage",'(param "key" u32) '+(m.shape==="callback"?"(result (result u32 (error string)))":m.shape==="factory"?"(result u32)":m.shape==="returned"?"(result (option u32))":"")]]);
 	const user=(await run(wasm,["print","reader.wasm"])).stdout.replace("(component","(component $reader");
 	const futureGraph=[
 		"(component"
@@ -121,6 +132,7 @@ world failure-probe {
 		, ...hooks.map(([n,type])=>`(import "${n}" (func $${n} ${type}))`)
 		, graph.replace("(component","(component $base")
 		, await component("object-tasks.wat","tasks")
+		, await component("relay-reader.wat","relay-client")
 		, await component("callback-exchange.wat","callback-storage")
 		, (await asset("guest-registration")).replace("(component","(component $registrations")
 		, user,fault,callback
@@ -134,7 +146,10 @@ world failure-probe {
 		, `(alias export $cs "${cbLayout.exchange.name}" (instance $cx)) (export "${cbLayout.exchange.name}" (instance $cx))`
 		, '(instance $registrar (instantiate $registrations (with "registration" (type $registration)) (with "make" (func $provider "[static]call-box-to-box.make")) (with "put" (func $cx "put-item0"))))'
 		, '(export "create-registration" (func $registrar "create"))'
-		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) ${hooks.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`
+		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) (with "${cbName}" (instance $provider)) (with "${cbLayout.exchange.name}" (instance $cx)) ${hooks.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`
+		, ...["rc","rc2"].map(id=>`(instance $${id} (instantiate $relay-client (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "register" (func $provider "[static]call-box-to-box.make")) (with "same" (func $objects "same-box")) (with "message" (func $objects "[method]member-error.message"))))`)
+		, ...["begin","discard","receive","request","collect"].map(n=>`(export "guest-relay-${n}" (func $rc "${n}"))`)
+		, ...["begin","receive"].map(n=>`(export "second-relay-${n}" (func $rc2 "${n}"))`)
 		, `(instance $u (instantiate $reader (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`
 		, client("v"),client("v2")
 		, ...supported.flatMap(m=>["deliver","reap","retire"].map(n=>`(export "${m.name}-${n}" (func $f "${m.name}-${n}"))`))

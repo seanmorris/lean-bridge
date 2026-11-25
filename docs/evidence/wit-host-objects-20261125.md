@@ -76,7 +76,7 @@ The [guest](../../tests/fixtures/static-host-workers/lean-failure-consumer.wat.i
 
 Two independent guest instances also have `Jobs.outcome` futures outstanding at the same time. Their boxes hold the same number but have distinct identities. In both read orders, each guest gets its own box, and the probe accounts for every destructor.
 
-Generation rejects a different declared error ID, a changed payload type, copy ownership on the error object, and a factory failure relabeled as a task failure. This clean build produced 62 native exports and worker SHA-256 `e08b632f01ea0dbbf2d799bd5a0ee0cbde7a1f143bf533f0df0c2b33fc080cae`. The private build inventory now lists only `Jobs.relay` (retained callback) and `Jobs.series` (iterator) as unimplemented among these seven worker declarations. Ordinary and reviewed package installs are still outstanding.
+Generation rejects a different declared error ID, a changed payload type, copy ownership on the error object, and a factory failure relabeled as a task failure. This clean build produced 62 native exports and worker SHA-256 `e08b632f01ea0dbbf2d799bd5a0ee0cbde7a1f143bf533f0df0c2b33fc080cae`.
 
 ## A Lean task calls back into its Wasm application
 
@@ -86,6 +86,21 @@ The [native integration probe](../../tests/fixtures/static-host-workers/lean-cal
 
 The probe also checks two jobs sharing one registration, releasing the caller's reference before either job completes, and revoking a registration from inside its active Wasm callback. Revocation defers destruction until that callback returns. A separate test waits for a real callback request on the combined notification descriptor, then cancels without invoking it. The registration is destroyed without a guest visit. A detached Lean task may briefly retain its box; closing the last binding accounts for every box destructor before the store is deleted.
 
-The clean build checked the standalone callback interface and linked 63 native exports (worker SHA-256 `a1d29f0a86957373e892016e54613ab842a8036636d2cdc6a77f30d0bd38e424`). This verifies the callback provider and its native worker driver. It does not yet expose `Jobs.relay` as a guest-callable canonical future: the probe initiates the call through the typed native facade. The remaining relay work is to connect that factory to the public WIT interface and deliver success, callback failure and terminal Lean IO failure through the correct result arms.
+The clean build checked the standalone callback interface and linked 63 native exports (worker SHA-256 `a1d29f0a86957373e892016e54613ab842a8036636d2cdc6a77f30d0bd38e424`). This probe initiates the call through the typed native facade; the next check starts it from Wasm.
 
 The [registration client](../../tests/fixtures/static-host-workers/guest-registration.wat.in) also creates and transfers registrations entirely within Wasm. A private exchange imports the defining guest’s resource type and moves ownership to the native factory; it exposes no numeric registration to application code. The client queues a failing registration and then a successful one. The two actual Lean jobs observe success and failure in reverse order. Handing the exchange a box instead is rejected without poisoning the store. This clean build produced worker SHA-256 `9f8d97bb04c9f8a931b713e7a13dc7ded9f24454cdf65777bf93d0c170f257e7`.
+
+## The Wasm caller starts the Lean task
+
+The [downstream guest](../../tests/fixtures/static-host-workers/lean-relay-consumer.wat.in) starts a compiled Lean task by calling `relay(box, f)` and immediately drops its own callback registration. It reads a canonical `future<result<own<box>, callback-failure>>`. It imports no native handle, scheduler function, or result adapter.
+
+| What the compiled Lean task does | What the Wasm caller observes |
+| --- | --- |
+| Returns the callback’s box | The defining guest confirms this is the original box. |
+| Propagates the callback’s exception | The `callback` arm owns the original guest exception. Its method returns `other error`. |
+| Throws a new IO error after running the callback | The `io` arm contains the exact UTF-8 text `late λ`, even when Lean first caught a callback exception. |
+| Invokes a callback that traps | The session is poisoned. There is no ordinary result; shutdown releases native wrappers without calling into the trapped guest. |
+
+The [integration test](../../tests/fixtures/static-host-workers/lean-relay-consumer.h) reads both before and after the writer is ready, abandons unread results, and cancels with a callback request already queued. Two independent guest instances share one producer and consume different result arms in reverse order. On non-trapping paths the test accounts for every box, exception and registration destructor before deleting the store. On cancellation it checks that the guest callback was never invoked.
+
+The clean build contained 68 native exports; worker SHA-256: `95d5dd589ee27505465e9f359d94830c99037d1b3e183c789cc8b862496b5daa`. Its private inventory selects all seven task factories and leaves one declaration, `Jobs.series`, the object-valued iterator, outstanding. These are compiled integration checks, not ordinary or reviewed installed-package receipts.

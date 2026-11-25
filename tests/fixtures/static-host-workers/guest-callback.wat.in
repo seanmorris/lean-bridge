@@ -30,6 +30,7 @@
   (func (export "cm32p2||callback-visits") (result i32) (global.get $visits))
   (func (export "cm32p2|@CALLS@|[method]call-box-to-box.invoke") (param $self i32) (param $box i32) (result i32)
     (global.set $visits (i32.add (global.get $visits) (i32.const 1))) (call $inside)
+    (if (i32.and (local.get $self) (i32.const 2)) (then unreachable))
     (if (i32.and (local.get $self) (i32.const 1))
       (then (call $create (i32.const -2) (i32.const 16))
         (if (i32.ne (i32.load8_u (i32.const 16)) (i32.const 1)) (then unreachable)))

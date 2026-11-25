@@ -15,6 +15,8 @@ run two independently built PHP class bindings and check disposal and interprete
 
 The [Python worker contract check](python-worker-object-contract-20261124.md) distinguishes opaque Python objects on a Lean worker from Python methods, which execute only on the interpreter owner.
 
+The [Wasm guest callback and future check](wit-host-objects-20261125.md#the-wasm-caller-starts-the-lean-task) follows an application-owned box and exception through compiled Lean and back into an independently compiled Wasm caller.
+
 [Zero-payload checked records in C and C++](zero-payload-checked-record-native-20261021.md)
 record four hosted native package selections for proof-only `Witness`,
 Unit-bearing `Token`, plain empty `Marker`, Option, Array and variant values.

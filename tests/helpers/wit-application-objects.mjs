@@ -36,6 +36,16 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	const invented=structuredClone(b.api);
 	invented.declarations.find(d=>d.source.declaration==="Workshop.choose").failure.errors.push("error:IO.Error");
 	assert.throws(()=>witApplicationOperations({...options,api: invented}),/unrecognized failure channels/u);
+	for(const alter of [
+		d=>{d.parameters[0].ownership="transfer";}
+		, d=>{d.parameters[1].optional=true;}
+		, d=>{d.result.ownership="copy";}
+		, d=>{d.failure.errors=["error:WitCallbackError"];}
+		, d=>{d.source.extensions["lean-bridge.dev/task-failure"]="EIO";}
+	]){
+		const api=structuredClone(b.api);alter(api.declarations.find(d=>d.source.declaration==="Jobs.relay"));
+		assert.throws(()=>witObjectFutureFiles({...options,ir,model: b.model,api,entries: b.entries.filter(e=>e.delivery)}),/inconsistent callback Task/u);
+	}
 	for(const [edit,reason] of [
 		[d=>{d.result.ownership="copy";},/inconsistent nominal Task/u]
 		, [d=>{d.source.extensions["lean-bridge.dev/host-imports-sha256"]="0".repeat(64);},/source mismatch/u]
@@ -131,4 +141,6 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	assert.match(asynchronous.stdout,/native object future shutdown before take/u);
 	assert.match(asynchronous.stdout,/compiled relay retained a guest callback, reentered Lean, propagated its original exception and deferred self-disposal/u);
 	assert.match(asynchronous.stdout,/guest distinguished immediate EIO errors from delivered Except values and released each selected branch/u);
+	assert.match(asynchronous.stdout,/Wasm started compiled Lean relays: box, original callback exception, terminal IO text; delivered, discarded and cancelled/u);
+	assert.match(asynchronous.stdout,/trapped Wasm callback poisoned its session; shutdown did not call guest destructors/u);
 };

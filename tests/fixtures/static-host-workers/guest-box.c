@@ -164,7 +164,7 @@ int main(int argc,char **argv){
     wasmtime_component_t *graph=load_component(engine,"client-graph.wasm");
     guest_calls_lean(engine,graph,false);guest_calls_lean(engine,graph,true);wasmtime_component_delete(graph);
 #ifdef LB_TEST_OBJECT_FUTURE
-    graph=load_component(engine,"future-graph.wasm");guest_futures(engine,graph,false);guest_futures(engine,graph,true);wasmtime_component_delete(graph);
+    graph=load_component(engine,"future-graph.wasm");for(unsigned scenario=0;scenario<3;scenario++)guest_futures(engine,graph,scenario);wasmtime_component_delete(graph);
 #endif
     wasmtime_component_t *component=load_component(engine,argv[1]);
     wasmtime_component_linker_t *linker=wasmtime_component_linker_new(engine);

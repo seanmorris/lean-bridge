@@ -7,7 +7,8 @@ import { witVariantMember } from "./copied-variants.mjs";
 import { richCanonicalFuture } from "./canonical-future.mjs";
 import { objectFutureHost } from "./application-future-host.mjs";
 import { objectFutureGraph } from "./application-future-graph.mjs";
-import { witObjectCallbackFiles } from "./application-callback.mjs";
+import { witObjectCallbackProjection } from "./application-callback.mjs";
+import { relayComponents } from "./application-relay.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -65,6 +66,7 @@ export const witObjectFutureFiles=options=>{
 	const ds=new Map(api.declarations.filter(d=>d.resultMode!=="value").map(d=>[d.source.declaration,d]));
 	if(ds.size!==entries.length || new Set(entries.map(e=>e.declaration)).size!==entries.length)return reject("worker inventory differs");
 	const files={},supported=[],remaining=[],names=new Set();
+	const callbacks=witObjectCallbackProjection(options),layout=callbacks.layout;
 	for(const e of entries)
 	{
 		const d=ds.get(e.declaration),x=d?.source.extensions;
@@ -76,6 +78,33 @@ export const witObjectFutureFiles=options=>{
 		const factory=e.effect==="EIO",shape=factory?"factory":returned?"returned":"owned";
 		const owner=factory?e.error:returned?e.result.arguments[1]:e.result;
 		const a=rs.findIndex(r=>r.id===e.parameters[0]?.type.id),z=rs.findIndex(r=>r.id===owner?.id);
+		const registration=layout.sites[e.declaration+"#1"];
+		if(e.delivery==="task" && e.parameters.length===2 && a>=0 && z>=0 && registration)
+		{
+			const sig=layout.signatures[registration],idx=layout.exchange.slots.findIndex(x=>x.type===sig.label);
+			const err=rs.length,cb=err+1+idx,n=cIdentifier(e.name),params=new Set();
+			const param=witVariantMember(e.parameters[0].name,params,reject,"parameter"),callbackParam=witVariantMember(e.parameters[1].name,params,reject,"parameter");
+			const expected=["error:TaskIO.Error","error:WitCallbackError"];
+			if(idx<0 || e.effect!=="BaseIO" || e.taskIO!==true || d.resultMode!=="promise" || d.capabilities.length || d.parameters.length!==2
+				|| x["lean-lang.org/delivery"]!=="Task" || x["lean-bridge.dev/task-failure"]!=="IO.Error" || x["lean-bridge.dev/error-payload-site"]
+				|| !same(d.failure,{mode: "declared",errors: expected,unexpected: "poison-runtime"}) || !same(d.result,leased(e.result))
+				|| !expected.every(id=>api.errors.some(v=>v.id===id && v.category==="domain" && v.payload===null))
+				|| !d.parameters.every((v,i)=>v.name===e.parameters[i].name && v.ownership==="lease" && same(v.lifetime,leased(v.type).lifetime) && v.optional===false && v.default===null)
+				|| !same(d.parameters[0].type,e.parameters[0].type) || d.parameters[0].mutability!==rs[a].mutability || d.parameters[1].mutability!=="immutable")
+				return reject("inconsistent callback Task contract: "+e.declaration);
+			const row={name: label,declaration: e.declaration,input: a,owner: z,param,shape: "callback",callbackParam,cb,err,idx};
+			const m={
+				...row
+				, p,n,label,capacity,a,z
+				, callback: sig.callback
+				, input: byRef(e.parameters[0].type,n+"_arg").type
+				, output: byRef(e.result,n+"_value").type
+				, from: rs[a].name.replaceAll("-","_")
+				, to: rs[z].name.replaceAll("-","_")};
+			const wasm=relayComponents(m);
+			files[label+"-ports.wat"]=wasm.ports;files[label+"-future.wat"]=wasm.future;files[label+"-future.h"]=objectFutureHost(m);
+			supported.push(row);continue;
+		}
 		if(e.delivery!=="task" || e.parameters.length!==1 || a<0 || z<0 || (factory?!u32(e.result):!["pure","BaseIO"].includes(e.effect)))
 		{
 			remaining.push(e.declaration);continue;
@@ -106,8 +135,8 @@ export const witObjectFutureFiles=options=>{
 		files[label+"-future.h"]=objectFutureHost(m);
 		supported.push({name: label,declaration: e.declaration,input: a,owner: z,param,shape});
 	}
-	const graph=objectFutureGraph({...options,methods: supported,files});
+	const graph=objectFutureGraph({...options,methods: supported,files,callbacks: layout});
 	files["object-tasks.wit"]=graph.wit;files["object-tasks.wat"]=graph.wat;
 	files["object-delivery.json"]=canonicalJson({schemaVersion: 2,publicName: graph.api,supported,remaining});
-	return {...files,...witObjectCallbackFiles(options)};
+	return {...files,...callbacks.files};
 };

@@ -70,7 +70,7 @@ const producerWat=({wat,core,store,params,lower,locals,slots,rich})=>{
 	const options=rich?' (memory $mem "m") (realloc (func $mem "realloc"))':"";
 	const payloadAt=rich?16:8;
 	return `(component
-  ${types?types+"\n  ":""}(import "begin" (func $begin ${params} (result ${begin})))
+  ${types?types+"\n  ":""}${rich?.valueTypes?rich.valueTypes+"\n  ":""}(import "begin" (func $begin ${params} (result ${begin})))
   ${rich?'(import "peek" (func $peek (param "key" u32) (result '+wat+')))':""}
   (type $t (future ${wat}))
   ${rich?canonicalArena(pages*65536,pages):'(core module $mem (memory (export "m") 1))'}

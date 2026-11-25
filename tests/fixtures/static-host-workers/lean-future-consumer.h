@@ -10,17 +10,35 @@ static unsigned future_rows(lwit_future_echo *f,lb_cf_phase phase){
 }
 #include "lean-failure-consumer.h"
 #include "lean-callback-consumer.h"
-static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,bool shutdown_native){
-    lwit_operations ops={0};lwit_future_echo worker={0};result_workers results={0};session s={0};uint32_t observed=0;active_guest calls={0};
+#include "lean-relay-consumer.h"
+static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,unsigned scenario){
+    bool shutdown_native=scenario==1;
+    lwit_operations ops={0};lwit_future_echo worker={0};result_workers results={0};relay_workers relays={0};session s={0};uint32_t observed=0;active_guest calls={0};
     wasmtime_store_t *store=wasmtime_store_new(engine,NULL,NULL);s.store.ctx=wasmtime_store_context(store);
     wasmtime_component_linker_t *l=wasmtime_component_linker_new(engine);
     ok(lwit_operations_link(l,&ops));ok(lwit_future_echo_link(l,&worker));link_results(&results,l);
+    ok(lwit_future_relay_link(l,&relays.plain));ok(lwit_future_relay_late_link(l,&relays.late));
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(l);
     ok(wasmtime_component_linker_instance_add_func(root,"observe-drop",12,observe_drop,&observed,NULL));
     ok(wasmtime_component_linker_instance_add_func(root,"inside-callback",15,inside_guest,&calls,NULL));
     wasmtime_component_linker_instance_delete(root);
     ok(wasmtime_component_linker_instantiate(l,s.store.ctx,graph,&s.store.instance));
     assert(lwit_operations_open(&s.store,&ops) && lwit_future_echo_open(&worker,&ops));
+    assert(lwit_future_relay_open(&relays.plain,&ops) && lwit_future_relay_late_open(&relays.late,&ops));
+    if(scenario==2){
+        calls.binding=&relays.plain.cb;seed_input(&ops,42);wasmtime_component_func_t start;
+        assert(lwit_lookup(&s.store,NULL,"guest-relay-begin",&start));V trap=u32(4);
+        ok(wasmtime_component_func_call(&start,s.store.ctx,&trap,1,NULL,0));
+        wasmtime_error_t *e=NULL;for(unsigned i=0;!e;i++){assert(i<32);e=lb_cf_advance(&relays.plain.r,5000);}
+        refused(e);assert(calls.visits==1 && s.store.failed && relays.plain.r.poisoned);
+        lwit_callback_box_to_box fresh={0};assert(!lwit_callback_box_to_box_open(&fresh,&ops));
+        unsigned before=observed;
+        ok(lwit_future_relay_shutdown(&relays.plain));ok(lwit_future_relay_late_shutdown(&relays.late));
+        ok(lwit_future_echo_shutdown(&worker));assert(!relays.plain.cb.live && lwit_operations_close(&ops)==workshop_OK);
+        ok(lwit_shutdown(&s.store));assert(before==observed && !s.store.owners);
+        wasmtime_component_linker_delete(l);wasmtime_store_delete(store);
+        puts("trapped Wasm callback poisoned its session; shutdown did not call guest destructors");return;
+    }
     open_results(&results,&ops);if(!shutdown_native)result_cases(&results,&s,&ops,&observed);
     for(unsigned mode=shutdown_native?4:0;mode<5;mode++){
         seed_input(&ops,71+mode);uint32_t before=observed;
@@ -44,6 +62,8 @@ static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,bool
         assert(observed==before+(mode==1?2:3) && drops(&s)==observed);
     }
     uint32_t final_drops=guest_callbacks(&s,&ops,&calls,shutdown_native);
+    if(!shutdown_native)final_drops+=public_relays(&relays,&s,&ops,&calls);
+    ok(lwit_future_relay_shutdown(&relays.plain));ok(lwit_future_relay_late_shutdown(&relays.late));
     close_results(&results);ok(lwit_future_echo_shutdown(&worker));assert(lwit_operations_close(&ops)==workshop_OK);
     assert(observed==final_drops && !s.store.owners);ok(lwit_shutdown(&s.store));
     wasmtime_component_linker_delete(l);wasmtime_store_delete(store);
