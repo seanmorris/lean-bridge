@@ -113,45 +113,48 @@ static int lbphp_pack(int kind, ${has ? "" : "const "}uint64_t *words, ${type} *
 	{
 		if(m.symbol!=="lbwire_"+prefix+"_v1_"+i||m.tagBytes<1||!Number.isSafeInteger(m.tagBytes)) throw new TypeError("Invalid PHP fixed entry");
 		const fn=stem+"_"+i, slots=Math.max(1,m.args.length);
-		const async=Boolean(m.delivery);
+		const direct=m.delivery==="iterator", async=Boolean(m.delivery) && !direct, handle=async || direct;
+		if(direct && (wire.wait || phpWasm || m.callbacks || Object.keys(m.names).sort().join()!=="close,next,open"))
+			throw new TypeError("Invalid checked PHP immediate iterator protocol");
 		if(async && (!wire.wait || !["task","async-iterator"].includes(m.delivery) || (m.callbacks && m.delivery!=="task")))
 			throw new TypeError("Invalid PHP delivery protocol");
-		symbols.push(fn); declarations.push(signature(fn,";",async));
+		symbols.push(fn); declarations.push(signature(fn,";",handle));
 		const inputs=m.args.map(input);
 		const error=m.error===null?"":`else if (status==${prefix}_${m.effect==="IO"?"IO_ERROR":"TYPED_ERROR"}) kind=${output(m.error,kinds)};`;
-		const start=async ? m.names.start : m.symbol;
-		source.push(`extern int ${start}(const uint64_t *,${async ? "uint64_t *," : ""}uint64_t *,uint8_t *);
-${signature(fn,"",async)} {
-    if (${occupied} || !tags || tagcap!=${m.tagBytes} || argc!=${m.args.length} || (argc&&!args)${async ? " || !h || h[0] || h[1]" : ""}) return ${prefix}_INVALID;
+		const start=direct ? m.names.open : async ? m.names.start : m.symbol;
+		source.push(`extern int ${start}(const uint64_t *,${handle ? "uint64_t *," : ""}uint64_t *,uint8_t *);
+${signature(fn,"",handle)} {
+    if (${occupied} || !tags || tagcap!=${m.tagBytes} || argc!=${m.args.length} || (argc&&!args)${handle ? " || !h || h[0] || h[1]" : ""}) return ${prefix}_INVALID;
     memset(tags,0,(size_t)tagcap);
     uint64_t a[${3*slots}]={0}, w[4]={0}, total=0; void *owned[${slots}]={0};
     int status=${prefix}_INVALID, kind=-1; (void)total;
 ${inputs.join("\n")}
-    status=${start}(a,${async ? "h," : ""}w,tags);
-    if (status==${prefix}_OK) ${async ? "goto finish" : "kind="+output(m.result,kinds)}; ${error}
+    status=${start}(a,${handle ? "h," : ""}w,tags);
+    if (status==${prefix}_OK) ${handle ? "goto finish" : "kind="+output(m.result,kinds)}; ${error}
     else goto finish;
     { int packed=lbphp_pack(kind,w,out); if (packed) status=${phpWasm ? `packed==${prefix}_INVALID ? -1 : packed` : "packed"}; }
 finish:
     ${wire.clear}(w); for (unsigned int j=0;j<${slots};j++) free(owned[j]); return status;
 }`);
-		if(async)
+		if(handle)
 		{
 			const names=m.names;
-			for(const k of ["start","take","poll","close",...m.delivery==="async-iterator" ? ["pull"] : []])
+			for(const k of (direct ? ["open","next","close"] : ["start","take","poll","close",...m.delivery==="async-iterator" ? ["pull"] : []]))
 				if(names[k]!==m.symbol+"_"+k) throw new TypeError("Invalid checked PHP task entry");
-			const take=fn+"_take", prototype=`int ${take}(uint64_t *h, ${type} *out, uint8_t *tags, uint64_t tagcap)`;
-			taskSymbols.push(take,names.poll,names.close);
-			taskDeclarations.push(prototype+";",`int ${names.poll}(uint64_t *h, int *fd);`,`int ${names.close}(uint64_t *h);`);
+			const take=fn+(direct ? "_next" : "_take"), from=direct ? names.next : names.take;
+			const prototype=`int ${take}(uint64_t *h, ${type} *out, uint8_t *tags, uint64_t tagcap)`;
+			taskSymbols.push(take,...direct ? [] : [names.poll],names.close);
+			taskDeclarations.push(prototype+";",...direct ? [] : [`int ${names.poll}(uint64_t *h, int *fd);`],`int ${names.close}(uint64_t *h);`);
 			if(names.pull)
 			{
 				taskSymbols.push(names.pull); taskDeclarations.push(`int ${names.pull}(uint64_t *h);`);
 			}
 			const terminal=m.delivery==="task" || m.stepIO ? "IO_ERROR" : "TYPED_ERROR";
-			source.push(`extern int ${names.take}(uint64_t *,uint64_t *,uint8_t *);
+			source.push(`extern int ${from}(uint64_t *,uint64_t *,uint8_t *);
 ${prototype} {
     if (!h || ${occupied} || !tags || tagcap!=${m.tagBytes}) return ${prefix}_INVALID;
     uint64_t w[4]={0}; memset(tags,0,(size_t)tagcap);
-    int status=${names.take}(h,w,tags), kind=-1;
+    int status=${from}(h,w,tags), kind=-1;
     if (status==${prefix}_OK) kind=${output(m.result,kinds)};
     ${m.terminal ? `else if (status==${prefix}_${terminal}) kind=${output(m.terminal,kinds)};` : ""}${m.callbacks ? `
     else if (status==14) kind=0;
@@ -212,6 +215,10 @@ ${failProto} {
 			throw new TypeError("Invalid checked PHP readiness port");
 		symbols.push(...taskSymbols,open,close);
 		declarations.push(...taskDeclarations,`int ${open}(int source, int callback, int *gate);`,`void ${close}(int *gate);`);
+	} else if(taskSymbols.length)
+	{
+		symbols.push(...taskSymbols);
+		declarations.push(...taskDeclarations);
 	}
 	for(const {symbol} of leases)
 	{

@@ -14,6 +14,35 @@ const q=s=>"'"+s.replaceAll("\\","\\\\").replaceAll("'","\\'")+"'";
 const expr=t=>Array.isArray(t)?"["+t.map(expr).join(",")+"]":q(t);
 const hex=s=>typeof s==="string"&&/^[0-9a-f]{64}$/u.test(s);
 const exceptions=m=>[m.failure,m.terminalFailure].filter(Boolean);
+const cursorNative=(m,i,model,port,decode)=>{
+	const ns="\\"+model.namespace+"\\", fn=port.symbols[i+1];
+	const fail=(cls,code,decl,type)=>cls ? `if ($status===${code}) throw new ${ns}${cls}(${q(decl)},${decode}(${expr(type)},$tags,$data));` : "";
+	const bad=`throw new ${ns}LeanBridgeError('Unexpected Lean iterator status '.$status);`;
+	return `    public static function call${i}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): ${ns}Cursor {
+        $ffi=self::ffi(); $h=$ffi->new('uint64_t[2]');
+        $take=static function() use ($h) {
+            [$status,$tags,$data]=self::invoke(${q(fn+"_next")},[],[],${m.tagBytes},$h,true);
+            if ($status===2) return [];
+            if ($status===0) return [${decode}(${expr(m.result)},$tags,$data)];
+            ${fail(m.terminalFailure,m.stepIO ? 4 : 3,m.stepDeclaration,m.terminal)}
+            ${bad}
+        };
+        $release=static function() use ($ffi,$h) {
+            if ($h[0]!==0) {
+                $status=$ffi->${m.names.close}($h);
+                if ($status!==0 && $status!==6) ${bad}
+            }
+        };
+        $make=\\Closure::bind(static fn()=>new ${ns}Cursor($take,$release),null,${ns}Cursor::class);
+        $cursor=$make();
+        try {
+            [$status,$tags,$data]=self::invoke(${q(fn)},${expr(m.args)},[${m.parameters.map(p=>"$"+p.name).join(",")}],${m.tagBytes},$h);
+            if ($status===0) return $cursor;
+            ${fail(m.failure,m.effect==="IO" ? 4 : 3,m.declaration,m.error)}
+            ${bad}
+        } catch (\\Throwable $e) { $cursor->close(); throw $e; }
+    }`;
+};
 const taskPublic=(m,i)=>{
 	const stream=m.delivery==="async-iterator", type=stream ? "PullStream" : "\\Amp\\Future";
 	const args=m.parameters.map(p=>"$"+p.name), params=args.map(a=>"mixed "+a);
@@ -42,8 +71,8 @@ abstract class DeclaredFailure extends \\RuntimeException {
     }
 }
 ${[...new Set(methods.flatMap(exceptions))].map(f=>"final class "+f+" extends DeclaredFailure {}").join("\n")}
-${methods.map((m,i)=>m.delivery ? taskPublic(m,i) : `/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${m.returnType} */
-function ${m.publicName}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): ${m.returnType} {
+${methods.map((m,i)=>m.delivery && m.delivery!=="iterator" ? taskPublic(m,i) : `/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${m.delivery==="iterator" ? "Cursor<"+m.returnType+">" : m.returnType} */
+function ${m.publicName}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): ${m.delivery==="iterator" ? "Cursor" : m.returnType} {
     if (func_num_args()!==${m.args.length}) throw new \\ArgumentCountError('Expected ${m.args.length} arguments');
     return Internal\\Native::call${i}(${m.parameters.map(p=>"$"+p.name).join(", ")});
 }`).join("\n")}`;
@@ -102,9 +131,11 @@ export const generatePhpIOFiles=async(model,assets)=>{
 		||assets.library!=="lib"+prefix+".so"||Object.keys(assets.libraries).sort().join("/")!==[assets.library,...deps].sort().join("/")
 		||!Object.values(assets.libraries).every(hex)) throw new TypeError("Unverified native PHP synchronous IO libraries");
 	const tasks=Boolean(model.wire.wait);
+	const direct=methods.some(m=>m.delivery==="iterator");
 	const retained=methods.some(m=>m.callbacks?.length);
 	const branches=methods.some(m=>Array.isArray(m.result)||Array.isArray(m.error)||Array.isArray(m.terminal))?["Ok","Err"]:[];
 	const extra = {};
+	if(direct) extra["src/Internal/Cursor.php"]=(await readFile(new URL("./io-iterator.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
 	if(retained) extra["src/Internal/Callbacks.php"]=(await readFile(new URL("./io-callbacks.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
 	if(tasks) extra["src/Internal/Delivery.php"]=(await readFile(new URL("./io-delivery.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns)
 		.replace("/*__LB_RELEASE_CALLBACKS__*/",retained ? "\n                if (isset($this->ops['releaseCallbacks'])) ($this->ops['releaseCallbacks'])();" : "");
@@ -126,7 +157,7 @@ declare(strict_types=1);
 namespace ${ns};
 require_once __DIR__ . '/Internal/Loader.php';${leased ? "\nrequire_once __DIR__ . '/Internal/Leases.php';\nrequire_once __DIR__ . '/Internal/LeaseCodec.php';" : ""}
 require_once __DIR__ . '/Internal/Native.php';
-require_once __DIR__ . '/Internal/WireValues.php';${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}${retained ? "\nrequire_once __DIR__ . '/Internal/Callbacks.php';" : ""}
+require_once __DIR__ . '/Internal/WireValues.php';${direct ? "\nrequire_once __DIR__ . '/Internal/Cursor.php';" : ""}${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}${retained ? "\nrequire_once __DIR__ . '/Internal/Callbacks.php';" : ""}
 ${phpIOPublicDeclarations(methods,branches)}
 `;
 	const native=`<?php
@@ -144,7 +175,7 @@ TYPES;
         \\LeanBridge\\CopiedNativeV1\\Runtime::ensureProcess();
         return self::$ffi??=self::load();
     }
-    private static function invoke(string $fn,array $types,array $args,int $depth${tasks ? ",?\\FFI\\CData $handle=null,bool $taking=false" : ""}): array {
+    private static function invoke(string $fn,array $types,array $args,int $depth${tasks || direct ? ",?\\FFI\\CData $handle=null,bool $taking=false" : ""}): array {
         $budget=new Budget(); $bytes=[];
         foreach ($types as $i=>$kind) $bytes[]=${retained ? "$kind==='callback' ? '' : " : ""}${leased ? "self::encoded" : "WireValues::input"}($kind,$args[$i],$budget);
         $ffi=self::ffi(); $scope=new Scope($ffi);
@@ -155,7 +186,7 @@ TYPES;
                 $in[$i]->data=$scope->buffer($data);
                 $in[$i]->length=strlen($data);
             }
-            $status=${tasks ? `$taking ? $ffi->$fn($handle,\\FFI::addr($out),\\FFI::addr($tags[0]),$depth)
+            $status=${tasks || direct ? `$taking ? $ffi->$fn($handle,\\FFI::addr($out),\\FFI::addr($tags[0]),$depth)
                 : ($handle!==null ? $ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth,$handle)
                 : $ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth))` : `$ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth)`};
             $length=$out->length;${leased ? `
@@ -171,7 +202,7 @@ TYPES;
             $scope->close();
         }
     }
-${methods.map((m,i)=>m.delivery ? taskNative(m,i,model,port,decode) : `    public static function call${i}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): mixed {
+${methods.map((m,i)=>m.delivery==="iterator" ? cursorNative(m,i,model,port,decode) : m.delivery ? taskNative(m,i,model,port,decode) : `    public static function call${i}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): mixed {
         [$status,$tags,$data]=self::invoke(${q(port.symbols[i+1])},${expr(m.args)},[${m.parameters.map(p=>"$"+p.name).join(",")}],${m.tagBytes});
         if ($status===0) return ${decode}(${expr(m.result)},$tags,$data);
         ${m.failure?`if ($status===${m.effect==="IO"?4:3}) throw new \\${ns}\\${m.failure}(${q(m.declaration)},${decode}(${expr(m.error)},$tags,$data));`:""}

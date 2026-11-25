@@ -1,4 +1,4 @@
-/** @file Exercise synchronous cursors through the installed public headers. */
+/** @file Exercise immediate Lean pulls through relocated native consumer packages. */
 import assert from "node:assert/strict";
 import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -11,7 +11,7 @@ import { runEffectConsumers, runNativeTool } from "./native-effect-consumers.mjs
 
 const fixture = resolve("tests/fixtures/native-immediate-cursor");
 const target = process.env.LEAN_BRIDGE_IMMEDIATE_TARGET ?? "c";
-const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1", rubygems: "native-ruby-io-v1"};
+const profiles = {c: "native-c-io-v1", cpp: "native-cpp-io-v1", cargo: "native-rust-io-v1", rubygems: "native-ruby-io-v1", "php-native": "native-php-io-v1"};
 if(!Object.hasOwn(profiles, target)) throw new Error("Unsupported immediate cursor consumer: " + target);
 const json = async file => JSON.parse(await readFile(file, "utf8"));
 const check = async (handoff, ordinary) => {
@@ -47,7 +47,7 @@ test(target + " installs pull immediate Lean iterators without a poller", async 
 			await copyFile(join(fixture, name), join(source, name));
 		const config = join(source, "lean-bridge.exports.json");
 		const cfg = await json(config);
-		if(target !== "c") cfg.targets = {[target]: {name: "dials", version: "1.0.0"}};
+		if(target !== "c") cfg.targets = {[target]: {name: target === "php-native" ? "example/dials" : "dials", version: "1.0.0"}};
 		if(ordinary)
 		{
 			delete cfg.exports;
@@ -72,6 +72,14 @@ test(target + " installs pull immediate Lean iterators without a poller", async 
 const installed = {
 		cmakeProject: target === "cpp" ? join(fixture, "CMakeLists.txt") : null,
 		inspectPackage: async (_, prefix) => {
+			if(target === "php-native")
+			{
+				await access(join(prefix, "src/Internal/Cursor.php"));
+				await assert.rejects(access(join(prefix, "src/Internal/Delivery.php")), {code: "ENOENT"});
+				const api = await readFile(join(prefix, "src/Api.php"), "utf8");
+				assert.doesNotMatch(api, /\\Amp\\|\\Revolt\\|FFI::/u);
+				return;
+			}
 			if(target === "rubygems")
 			{
 				await access(join(prefix, "lib/lean_bridge/dials/sync_iterator.rb"));

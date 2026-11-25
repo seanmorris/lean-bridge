@@ -117,6 +117,11 @@ destruction on the owning thread and at process exit.
 The [MRI gems](native-sync-iterators-20261125.md#ruby) implement ordinary
 `Enumerable` iteration with no task runtime; both routes closed on block
 exit, application exceptions, collection and shutdown.
+Both author routes for [native PHP](native-sync-iterators-20261125.md#native-php)
+ran `foreach` on PHP 8.2 and 8.5 without a scheduler. That gives six direct
+iterator profiles. The remaining eleven are Perl, .NET, Java, Kotlin,
+PHP-Wasm, WIT/WASI, Node JavaScript, Node TypeScript, browser JavaScript,
+React and browser workers.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
 starts with constructed IR; it cannot stand in for an installed source package
 on another profile. Check each profile for one pull per demand, value versus

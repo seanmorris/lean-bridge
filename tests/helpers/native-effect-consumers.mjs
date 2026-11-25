@@ -1,5 +1,5 @@
 /**
- * Install native handoffs and exercise the same effects from four languages.
+ * Install native handoffs and exercise the effects through each language's public API.
  *
  * @file
  */
@@ -30,7 +30,7 @@ const run = async (cmd, args, cwd, env, timeout = 600_000) => {
 		throw new Error([e.message, termination, e.stdout, e.stderr].filter(Boolean).join("\n"), { cause: e });
 	}
 };
-const ext = { c: "c", cpp: "cpp", pypi: "py", cargo: "rs", rubygems: "rb" };
+const ext = { c: "c", cpp: "cpp", pypi: "py", cargo: "rs", rubygems: "rb", "php-native": "php" };
 export { run as runNativeTool };
 /**
  * Run independent installed consumers with the producer toolchain off their runtime path.
@@ -65,6 +65,29 @@ export const runEffectConsumers = async (work, releases, target, env, sample = {
 				await copyFile(client, bin); isolated.PYTHONPATH = prefix;
 				await writeFile(join(app, "state"), "open");
 				await run(python, ["-S", "-B", bin], app, isolated, 45_000);
+			}
+			else if(target === "php-native")
+			{
+				const {installPhpIOComponents} = await import("./php-io-install.mjs");
+				const source = join(build, "composer"), deployed = join(app, "installed");
+				await mkdir(source);
+				const {vendor} = await installPhpIOComponents(build, source, deployed, [handoff]);
+				installed = await sample.inspectPackage?.(target, join(vendor, component.name), component);
+				await rm(build, {recursive: true});
+				const phps = env.LEAN_BRIDGE_TEST_PHPS ? JSON.parse(env.LEAN_BRIDGE_TEST_PHPS) : [env.LEAN_BRIDGE_PHP ?? await run("php", ["-r", "echo PHP_BINARY;"], app, env)];
+				assert.ok(Array.isArray(phps) && phps.length && new Set(phps).size === phps.length);
+				await copyFile(client, join(app, "consumer.php"));
+				for(const php of phps)
+				{
+					const builtIn = await run(php, ["-n", "-r", "echo (int)extension_loaded('ffi');"], app, isolated);
+					const flags = ["-n", ...builtIn === "1" ? [] : ["-d", "extension=ffi"], "-d", "ffi.enable=1"];
+					for(const mode of ["iterate", "shutdown"])
+					{
+						await writeFile(join(app, "state"), "open");
+						await run(php, [...flags, "consumer.php", mode], app, isolated, 45_000);
+						assert.equal(await readFile(join(app, "state"), "utf8"), "closed", mode);
+					}
+				}
 			}
 			else if(target === "rubygems")
 			{

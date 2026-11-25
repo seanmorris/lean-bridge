@@ -153,6 +153,14 @@ and the [independently reproduced archive](../evidence/php-sync-io-20261123.json
 
 The [installed PHP-Wasm IO packages](../evidence/php-wasm-installed-sync-io-20261123.md) provide synchronous calls with startup or lazy loading. A project that selects tasks instead uses the threaded package described below.
 
+For a synchronous native PHP cursor, declare its three functions in
+`iterators` instead of `asyncIterators`. For example, the
+[Dials fixture](../../tests/fixtures/native-immediate-cursor/Dials.lean) uses
+`{"open":"Dials.sequence","next":"Dials.next","close":"Dials.finish"}`.
+Its `BaseIO (Option UInt32)` pull executes immediately. The standalone
+Composer package exposes PHP's `IteratorAggregate`
+API; it needs neither Amp nor Revolt. See the [PHP consumer](../php.md#iterate-an-immediate-lean-cursor).
+
 ### Export tasks and pull streams
 
 The PHP-Wasm worker only admits in-memory Lean IO. Do not request filesystem

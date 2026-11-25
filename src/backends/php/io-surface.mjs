@@ -74,6 +74,7 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 	const leases = new Map();
 	const typeOf = t => checkType(t, leases, phpWasm ? wasmTypes : scalarTypes);
 	if(tasks) for(const n of ["taskioerror","pullstream"]) errorClasses.add(n);
+	if(wire.methods.some(m=>m.delivery==="iterator")) errorClasses.add("cursor");
 	if(wire.methods.some(m=>m.callbacks)) for(const n of ["retainedcallback","callbackclosed"]) errorClasses.add(n);
 	for(const r of wire.leases ?? [])
 	{
@@ -118,8 +119,8 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 		}
 		const terminal = w.callbacks && entries[i].taskIO ? "string" : w.terminal;
 		const error = w.callbacks && w.effect==="IO" ? "string" : w.error;
-		const terminalFailure = terminal ? w.delivery==="task" ? "TaskIOError" : pascal(w.name)+"StepError" : null;
-		if(terminalFailure && w.delivery==="async-iterator")
+		const terminalFailure = terminal ? w.delivery==="task" ? "TaskIOError" : w.delivery==="iterator" && w.stepIO ? "IOError" : pascal(w.name)+"StepError" : null;
+		if(terminalFailure && (w.delivery==="async-iterator" || (w.delivery==="iterator" && !w.stepIO)))
 		{
 			if(errorClasses.has(terminalFailure.toLowerCase())) fail("typed step error class collision");
 			errorClasses.add(terminalFailure.toLowerCase());

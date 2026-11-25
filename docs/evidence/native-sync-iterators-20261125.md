@@ -103,3 +103,28 @@ the remaining live cursor. The test also checked the finalizer's file.
 
 Use `LEAN_BRIDGE_IMMEDIATE_TARGET=rubygems` with the native test command
 above. Set `LEAN_BRIDGE_RUBY` to the MRI executable for the platform gem.
+
+## Native PHP
+
+PHP 8.2.35 and 8.5.10 NTS CLI each ran the [same PHP client](../../tests/fixtures/native-immediate-cursor/consumer.php)
+against an ordinary and a reviewed Composer release. Composer installed
+offline; the lock contained only the component and `brick/math`. After
+relocation the client had no compiler on its path and used no Amp or Revolt.
+
+| Ordinary source | Reviewed interface (without an export list) |
+| --- | --- |
+| `f8c52acc12747298e73802d34cbeb73ed4606e50222d2acdd80dbdd7dfd14855` | `32902cc2e7844484552ce07a189ee476c42ad9b21a6b11fc666a2a185b4a5fc4` |
+
+All four combinations distinguished `null` items from exhaustion and
+reported the original factory, typed step or IO step failure. A second
+iterator could not consume the first one's item. Early `break`, a thrown
+application exception, and closing a suspended generator all released the
+cursor exactly once (seven opens, fourteen pulls, seven closes). A second
+process exited with a live generator; the parent observed the finalizer's
+file write. On the 8.2 build with `pcntl`, an inherited generator refused
+use and close in a forked child without writing that file. The parent
+continued from its previous position. The 8.5 build had no `pcntl`.
+
+Set `LEAN_BRIDGE_IMMEDIATE_TARGET=php-native` and run
+`npm run test:native-immediate-cursor`. Use `LEAN_BRIDGE_TEST_PHPS` to
+provide a JSON array of absolute PHP CLI paths. Each needs FFI.

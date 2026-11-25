@@ -28,6 +28,21 @@ test("the PHP task producer selects real declarations and the documented consume
 	for(const decl of [...cfg.exports,...cfg.taskExports,...Object.values(cfg.asyncIterators[0])])
 		assert.match(source,new RegExp("\\bdef "+decl.split(".")[1]+"\\b","u"));
 });
+test("native PHP immediate cursors expose a checked byte port without a scheduler",()=>{
+	const prefix="lbc_php_"+sha256("example/dials"), t={kind: "primitive",name: "unit"};
+	const entry={declaration: "Dials.units",name: "units",parameters: [],result: t,delivery: "iterator",effect: "IO",stepIO: true};
+	const wire=generateSyncWire(prefix,[entry]),model={prefix,methods: wire.methods,wire};
+	const port=generatePhpIOPort(model),[m]=wire.methods;
+	assert.ok(port.symbols.includes(m.names.close) && port.symbols.includes(port.symbols[1]+"_next"));
+	assert.ok(!port.symbols.includes(m.names.open) && !port.symbols.includes(m.names.next));
+	assert.doesNotMatch(port.definitions,/_poll\(|_take\(|_wait_open\(/u);
+	for(const op of ["open","next","close"])
+	{
+		const invalid=structuredClone(model);
+		invalid.methods[0].names[op]="wrong_"+op;
+		assert.throws(()=>generatePhpIOPort(invalid),/Invalid checked PHP/u);
+	}
+});
 test("native PHP exports checked task operations but not the raw value, start or take wire",()=>{
 	const prefix="lbc_php_"+sha256("lean-bridge/pulse"), t={kind: "primitive",name: "bytes"};
 	const entry={declaration: "Pulse.bytes",name: "bytes",parameters: [{name: "v",type: t}],result: t,delivery: "task",effect: "pure"};

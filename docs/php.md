@@ -212,6 +212,25 @@ performs the effect. This profile targets native PHP CLI, not PHP-Wasm.
 See [export synchronous IO](publish/php.md#export-synchronous-io) and the
 [installed PHP 8.2 and 8.5 results](evidence/php-sync-io-20261123.json).
 
+### Iterate an immediate Lean cursor
+
+A native Composer package may expose a synchronous iterator. Use `foreach`:
+each demand runs one Lean pull on the calling thread, without Amp or an
+event loop. Stopping a normal `foreach` early runs the Lean finalizer.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+foreach (\LeanDials\sequence(10) as $n) {
+    echo $n, PHP_EOL;
+    if ($n === 2) break;
+}
+```
+
+If you keep the underlying generator after stopping, call `$cursor->close()`
+in `finally`. A yielded `null` represents Lean unit; it is not the end of
+the sequence. See the [installed PHP example](../tests/fixtures/native-immediate-cursor/consumer.php).
+
 ### Await a Lean task or iterate a stream
 
 A native Composer task package installs Amp and Revolt alongside the Lean
