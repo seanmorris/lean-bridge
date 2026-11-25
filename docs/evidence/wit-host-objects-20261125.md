@@ -249,6 +249,8 @@ The runner refuses a private exchange import, an unrelated resource kind, a dupl
 | Gauge, reviewed | 60,959,039 | `e981a0cce57af504773aa83d0709200f0f9bddd67f034bc63fb11d0d68210ca6` |
 | Gauge, incompatible contract (negative control) | 60,957,058 | `f3a008eb71538bfa5ec5dea7b38eae7ac5b8abcd370772698b857bf62e803ff8` |
 
+An independent run packed the author CLI, installed it with npm offline, removed the feed and invoked the installed CLI from each fresh project. All five archive hashes matched the checkout build, all eight successful executions returned 73 again, and the same six refusal checks passed.
+
 Reproduce this check with the publisher toolchains above:
 
 ```sh

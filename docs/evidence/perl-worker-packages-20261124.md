@@ -43,3 +43,9 @@ to retain all three receipts and their named archives. To run downstream
 checks on those exact archives without rebuilding Lean, set
 `LEAN_BRIDGE_PERL_WORKER_REPLAY` to the resulting handoff root and run
 `npm run test:perl-worker-replay`. Nothing in this test uploads to CPAN.
+
+## Filtered publisher source
+
+The Nix Perl engine reads only files in [its source filter](../../nix/perl-engine-source-boundary.json). The uncorrected filter omitted transitive imports and Perl worker templates and still named a deleted C frame source. Unlike an unfiltered checkout, the filtered tree could not load the publisher.
+
+The [filtered-engine checks](../../tests/perl-contract.test.mjs) passed after restoring the required files. They copy just the filter's contents to a temporary directory, import the native publisher there with no tools on its search path, load the Perl scheduler and build the mixed-worker XS headers. Removing a required module fails the import; putting it back restores it. This checks the source filter locally, not a complete Nix derivation or a new CPAN installation.

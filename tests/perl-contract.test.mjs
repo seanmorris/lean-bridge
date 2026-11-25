@@ -713,7 +713,8 @@ test("the Nix Perl source boundary includes the complete import and template clo
     for(const match of source.matchAll(/from\s+["'](\.[^"']+)["']/g)) assert.ok(paths.has(resolve(dirname(path), match[1])), `${path}: ${match[1]}`);
 }
   for(const template of ["Build.pm", "Platform.pm", "Runtime.pm", "Runtime.xs", "runtime.h", "host-domain.h", "host-domain.inc",
-    "host-frame.h", "host-scope.h", "host-wire.h", "sync-wire.h"]) assert.ok(paths.has(resolve("src/backends/perl", template)));
+    "host-frame.h", "host-scope.h", "host-wire.h", "sync-wire.h", "host-worker-xs.h",
+    "host-worker-scope.pm", "worker-ledger.h", "worker-ledger.c"]) assert.ok(paths.has(resolve("src/backends/perl", template)));
   for(const template of ["src/analyze/NativeExports.lean", "src/build/ResolveLakeWorkspace.lean"]) assert.ok(paths.has(resolve(template)));
 });
 
@@ -734,7 +735,18 @@ test("the filtered Perl engine loads without undeclared checkout modules", async
 		await mkdir(dirname(join(directory, path)), { recursive: true });
 		await copyFile(path, join(directory, path));
 	}
-	const script = 'await import("./src/build/native-project.mjs"); console.log("filtered-engine-ready");';
+	const script = [
+		'import assert from "node:assert/strict"'
+		, 'import "./src/build/native-project.mjs"'
+		, 'import {perlHostWorkerAssets} from "./src/backends/perl/host-worker-scheduler.mjs"'
+		, 'import {perlHostHeaders} from "./src/build/perl-host-component.mjs"'
+		, 'const assets = await perlHostWorkerAssets()'
+		, 'const headers = await perlHostHeaders({assets})'
+		, 'assert.ok(assets.scopeModule.includes("package __LBNS__::_HostWorkers"))'
+		, 'assert.ok(headers["host-worker-xs.h"].includes("phw_end"))'
+		, 'assert.ok(headers["host-scope.h"].includes("#include \\"host-worker-xs.h\\""))'
+		, 'console.log("filtered-engine-ready")'
+	].join("; ");
 	const run = () => execFileSync(process.execPath, ["--input-type=module", "-e", script], {
 		cwd: directory, encoding: "utf8", env: { PATH: "/unavailable" }, stdio: "pipe"
 	});
