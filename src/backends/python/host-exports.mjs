@@ -150,8 +150,8 @@ static PyObject *lb_start_${i}(lean_object *v) {
 		].join("\n")
 	};
 };
-const emit = (resources, entry, i, codecs, synchronous, immediate, scoped) => {
-	const args = entry.parameters.map(p => carrier(resources, p.type));
+const emit = (resources, entry, i, codecs, synchronous, immediate, scoped, custom = {}) => {
+	const args = custom.args ?? entry.parameters.map(p => carrier(resources, p.type));
 	const effect = entry.effect ?? "IO", task = entry.delivery === "task", stream = entry.delivery === "async-iterator";
 	const bound = resources.some(r => !r.hash) && !task && !stream;
 	if(!["pure", "IO", "EIO", ...(task || stream || immediate ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
@@ -162,11 +162,11 @@ const emit = (resources, entry, i, codecs, synchronous, immediate, scoped) => {
 	const startError = effect === "EIO" ? returned(resources, entry.error, codecs) : null;
 	const asyncOut = stream ? streamCodec(i, entry, returned(resources, entry.result, codecs), startError, entry.stepError ? returned(resources, entry.stepError, codecs) : null)
 		: task ? taskCodec(i, returned(resources, entry.result, codecs), startError, entry.taskIO) : null;
-	const out = asyncOut ?? returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
+	const out = custom.out ?? asyncOut ?? returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
 	const symbol = `lb_python_host_invoke_${i}`;
 	const conversions = pythonHostArguments(args, "v", 0);
 	const values = args.map((a, j) => a.unbox ? `${a.unbox}(v[${j}])` : `v[${j}]`).join(", ");
-	const call = `(_root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")})`;
+	const call = custom.call ?? `(_root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")})`;
 	const application = stream ? asyncOut.application(call) : call;
 	const invoke = effect === "EIO" ? `_root_.EIO.toIO' ${application}` : effect === "pure" ? `pure ${application}` : effect === "BaseIO" ? `liftM ${application}` : application;
 	const lean = `${stream ? asyncOut.helpers + "\n" : ""}@[export ${symbol}] def invoke${i} ${args.map((a, j) => `(v${j} : ${a.lean})`).join(" ")} : IO ${out.lean} := ${invoke}`;
@@ -183,7 +183,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     }` : ""}
     if (!lb_prepare()) return NULL;
     lb_sync_started = 1;` : ""}
-    ${bound ? "lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; lb_sweep();" : ""}
+    ${bound ? (custom.collect?'if (lb_current->depth >= 64) { PyErr_SetString(PyExc_RecursionError,"Lean host call nesting limit"); return NULL; }\n    ':"")+"lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; "+(custom.collect?"lb_closures_collect(0); ":"")+"lb_sweep();" : ""}
     lean_object *v[${Math.max(1, args.length)}] = {0}, *io = NULL; PyObject *result = NULL;
     ${conversions.setup}
     io = ${symbol}(${values});
@@ -219,10 +219,29 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
 	const params = entry.parameters.map(p => p.name).join(", ");
 	const raw = `_native.${entry.name}(${params})`, decoded = out.decode ? out.decode(raw) : raw;
 	const python = asyncOut ? `${task ? "async " : ""}def ${entry.name}(${params}):\n${asyncOut.body(raw, entry.declaration)}`
-		: `def ${entry.name}(${params}):\n    return ${effect === "EIO" ? `_lb_unwrap("${entry.declaration}", ${decoded})` : decoded}\n`;
+		: `def ${entry.name}(${params}):\n    ${custom.factory?"_lb_closure_owner()\n    ":""}return ${effect === "EIO" ? `_lb_unwrap("${entry.declaration}", ${decoded})` : decoded}\n`;
 	return { lean, c, python, declarations, method: `{"${entry.name}", lb_invoke_${i}, METH_VARARGS, NULL}` };
 };
 
+// Use the same argument staging, host-error restoration and reentry frame as
+// ordinary synchronous exports. Lean typechecks both the factory and invocation.
+const closureEntry=(resources,e,i,codecs,immediate,scoped)=>{
+	if(e.delivery || e.effect!=="IO") throw new TypeError("expected a synchronous IO closure factory");
+	const arg=carrier(resources,e.result.argument),reply=carrier(resources,e.result.reply);
+	if([arg,reply].some(t=>t.validate)) throw new TypeError("host closures do not admit Lean resource leases");
+	const method="_apply_closure_"+i;
+	const codec={
+		lean: `(${arg.lean} → _root_.IO ${reply.lean})`
+		, c: "lean_object *"
+		, fromPython: v=>`lb_closure_borrow(${i},${v})`
+		, toPython: v=>`lb_closure_new(${i},${v})`
+		, decode: v=>`LeanClosure._from_lean(${v}, _native.${method})`
+	};
+	const factory=emit(resources,e,i,codecs,false,immediate,scoped,{out: codec,collect: true,factory: true});
+	const invoke=emit(resources,{name: method,declaration: e.declaration,effect: "IO",parameters: [{name: "fn"},{name: "value"}],result: e.result.reply},
+		"apply"+i,codecs,false,immediate,scoped,{args: [codec,arg],out: reply,call: "(v0 v1)",collect: true});
+	return {...factory,...Object.fromEntries(["lean","c","declarations","method"].map(key=>[key,factory[key]+(key==="method"?",\n":"\n")+invoke[key]]))};
+};
 /**
  * Generate both language halves together. Each selected application declaration
  * is independently checked at its exact signature when Lean compiles entryLean.
@@ -250,6 +269,9 @@ export const generatePythonHostExtension = options => {
 	if(syncIO && [...leaseNames, ...entries.map(e => e.name)].includes("LeanIOError")) throw new TypeError("reserved Python IO error name");
 	const imported = ir?.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python")) ?? [];
 	const resources = [...imported, ...owned];
+	const closures=entries.some(e=>e.result?.kind==="io-closure");
+	if(closures && (!imported.length || [...provider.resources,...leaseNames,...entries.map(e=>e.name)].includes("LeanClosure")))
+		throw new TypeError("returned host closures require Python host classes and the reserved LeanClosure type");
 	for(const e of entries)
 	{
 		// Async object conversion requires the authenticated binding. Workers never dispatch Python.
@@ -279,7 +301,8 @@ export const generatePythonHostExtension = options => {
 	const immediate = synchronous || ((!ir || scoped) && entries.some(row => row.delivery));
 	const functions = entries.map((e, i) => e.parameters.some(p => slots.has(p))
 		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots, owned: scoped?resources:owned, scoped })
-		: emit(resources, e, i, codecs, synchronous, immediate, scoped));
+		: e.result?.kind==="io-closure"?closureEntry(resources,e,i,codecs,immediate,scoped)
+			: emit(resources, e, i, codecs, synchronous, immediate, scoped,{collect: closures}));
 	const callbackCodecs = callbacks ? [...slots].map(([p, id]) => {
 		const a = carrier(resources, p.type.argument);
 		const b=carrier(resources,p.type.reply);
@@ -305,7 +328,7 @@ ${b.hostIndex===undefined?"":`static lean_object *lb_cb_out_${id}(PyObject *v) {
 		, ...functions.map(f => f.declarations)].join("\n");
 	const source = `${provider.source}
 #include "lean_bridge_native_runtime.h"
-#define LB_COMPONENT "pyhost:${componentIdentity}"
+#define LB_COMPONENT "pyhost:${componentIdentity}"${closures?"\n"+asset("host-closures.h"):""}
 ${scoped?asset("worker-binding.h"):""}
 ${entryDeclarations}${leased ? `\n#define LB_PY_LEASE_ABI "lean-bridge/python-resource/${sha256([runtimeIdentity, options.ledgerId, leaseHeader].join("\n"))}"\n${leaseHeader}` : ""}
 ${synchronous ? `#include <sys/syscall.h>
@@ -334,7 +357,11 @@ ${ir ? `static PyObject *lb_pybind(PyObject *mod, PyObject *args) {
     Py_RETURN_NONE;
 }
 static PyObject *lb_pyunbind(PyObject *mod, PyObject *args) {
-    (void)mod; (void)args; if (lb_unbind()) return NULL; ${scoped?"Py_CLEAR(lb_worker_cookie);":""} Py_RETURN_NONE;
+    (void)mod; (void)args; ${closures?`if (!lb_active() || lb_current->depth) {
+        PyErr_SetString(PyExc_RuntimeError,"cannot close an inactive, foreign or executing host binding"); return NULL;
+    }
+    lb_closures_closing=1; lb_current->depth++; lb_closures_collect(1); lb_sweep(); lb_current->depth--; lb_closures_closing=0;
+    `:""}if (lb_unbind()) return NULL; ${scoped?"Py_CLEAR(lb_worker_cookie);":""} Py_RETURN_NONE;
 }` : ""}
 ${scoped?`static PyObject *lb_may_unbind(PyObject *mod, PyObject *unused) {
     (void)mod;(void)unused;if (!lb_worker_active()) return NULL;
@@ -358,7 +385,7 @@ ${streams ? asset("stream-delivery.h") : ""}
 ${outcomes ? ioOutcome + "\n" : ""}${callbacks ? '#define LB_PORT_NAME LB_COMPONENT ".callback-port-v1"\n#define LB_PORT_KIND "lean-bridge/python-callback-port-v1"\n#define LB_CB_REQUEST lb_py_cb_request\n#define LB_CB_TRACK lb_py_cb_track\n' + asset("../native/task-callback-queue.h") + "\n" + asset("task-callback.h") + "\n" + callbackCodecs + "\n" : ""}${[...codecs.values()].map(f => f.c).join("\n")}
 ${functions.map(f => f.c).join("\n")}
 ${worker?"#undef PyCapsule_New\n"+worker:""}
-static PyMethodDef lb_methods[] = {
+static PyMethodDef lb_methods[] = {${closures?'\n    {"_close_closure", lb_closure_close, METH_O, NULL}, {"_closure_closed", lb_closure_closed, METH_O, NULL},':""}
     ${scoped?'{"_may_unbind", lb_may_unbind, METH_NOARGS, NULL}, {"_worker_sweep", lb_worker_sweep, METH_NOARGS, NULL},':""}
     ${ir ? '{"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},' : ""}
     ${tasks ? '{"_task_ready", lb_task_ready, METH_O, NULL}, {"_task_fd", lb_task_descriptor, METH_O, NULL}, {"_task_take", lb_task_take, METH_O, NULL}, {"_task_close", lb_task_close, METH_O, NULL},' : ""}
@@ -372,6 +399,7 @@ PyMODINIT_FUNC PyInit__native(void) { ${leased ? `PyObject *m = PyModule_Create(
     ) { Py_DECREF(m); return NULL; } return m;` : "return PyModule_Create(&lb_module);"} }
 `;
 	const render = t => {
+		if(t.kind === "io-closure") return `LeanClosure[${render(t.argument)}, ${render(t.reply)}]`;
 		if(t.kind === "io-callback") return `_Callable[[${render(t.argument)}], ${render(t.reply)}]`;
 		if(t.kind === "named") return resources.find(r => r.id === t.id).name;
 		if(t.kind === "apply" && t.constructor === "result") return `Ok[${render(t.arguments[0])}] | Err[${render(t.arguments[1])}]`;
@@ -396,6 +424,7 @@ class ${r.name}(_Protocol):
     def __enter__(self) -> _Self: ...
     def __exit__(self, *exc: object) -> None: ...
 `)] : [])
+		, ...(closures ? ["from typing import Generic as _FnGeneric, TypeVar as _FnVar, Self as _FnSelf, Never as _FnNever\n_FnA = _FnVar('_FnA')\n_FnR = _FnVar('_FnR')\nclass LeanClosure(_FnGeneric[_FnA, _FnR]):\n    def __new__(cls, _: _FnNever, /) -> _FnSelf: ...\n    def __call__(self, value: _FnA, /) -> _FnR: ...\n    @property\n    def closed(self) -> bool: ...\n    def close(self) -> None: ...\n    def __enter__(self) -> _FnSelf: ...\n    def __exit__(self, *exc: object) -> None: ...\n"] : [])
 		, ...(syncIO ? ["class LeanIOError(RuntimeError):\n    declaration: str\n    message: str\n    def __init__(self, declaration: str, message: str) -> None: ...\n"] : [])
 		, ...(outcomes ? ["class LeanTaskError(RuntimeError):\n    declaration: str\n"] : [])
 		, ...(callbacks ? ["from typing import Callable as _Callable, Generic as _CBGeneric, TypeVar as _CBVar\n_CBArg = _CBVar('_CBArg')\n_CBReply = _CBVar('_CBReply')\nclass RetainedCallback(_CBGeneric[_CBArg, _CBReply]):\n    def __init__(self, callback: _Callable[[_CBArg], _CBReply]) -> None: ...\n    def close(self) -> None: ...\n    def __call__(self, value: _CBArg) -> _CBReply: ...\n"] : [])
@@ -427,10 +456,92 @@ class ${r.name}(_Protocol):
 		}
 		types.push("");
 	}
-	const support = errorTypes ? [
+	const callableClass = closures ? `
+from typing import Generic as _FnGeneric, TypeVar as _FnVar
+_FnA, _FnR = _FnVar("_FnA"), _FnVar("_FnR")
+${scoped?"_lb_closure_owner = _lb_binding":`
+from contextvars import ContextVar as _ClosureContext
+_lb_scope_var = _ClosureContext(__name__ + ".closure_binding", default=None)
+class _LBClosureScope:
+    __slots__ = ("classes", "open", "token")
+
+    def __init__(self, classes):
+        self.classes, self.open, self.token = classes, False, None
+
+    def __enter__(self):
+        if self.classes is None:
+            raise RuntimeError("binding has already been used")
+        _native._bind(*self.classes)
+        try:
+            self.token = _lb_scope_var.set(self)
+        except BaseException:
+            _native._unbind()
+            raise
+        self.classes, self.open = None, True
+
+    def __exit__(self, *exc):
+        if _lb_closure_owner() is not self:
+            raise RuntimeError("cannot close another host binding")
+        # Reset first: a copied context cannot consume the creator's token.
+        _lb_scope_var.reset(self.token)
+        self.open = False
+        try:
+            _native._unbind()
+        except BaseException:
+            self.token = _lb_scope_var.set(self)
+            self.open = True
+            raise
+        self.token = None
+
+def _lb_closure_owner():
+    scope = _lb_scope_var.get()
+    if scope is None or not scope.open:
+        raise RuntimeError("Lean closure requires its active host binding context")
+    return scope
+
+def bind_hosts(*, ${hostNames}):
+    return _LBClosureScope((${hostNames},))
+`}
+
+class LeanClosure(_FnGeneric[_FnA, _FnR]):
+    """A returned Lean function, valid until closed or the surrounding binding exits."""
+    __slots__ = ("__ticket", "__apply")
+
+    def __new__(cls, *args, **kwargs):
+        raise TypeError("LeanClosure values are returned by Lean functions")
+
+    @classmethod
+    def _from_lean(cls, ticket, apply):
+        self = object.__new__(cls)
+        self.__ticket, self.__apply = ticket, apply
+        return self
+
+    def __call__(self, value, /):
+        _lb_closure_owner()
+        return self.__apply(self.__ticket, value)
+
+    def close(self):
+        if not self.closed:
+            _lb_closure_owner()
+        _native._close_closure(self.__ticket)
+
+    @property
+    def closed(self):
+        return _native._closure_closed(self.__ticket)
+
+    def __reduce_ex__(self, protocol):
+        raise TypeError("cannot copy or pickle a bound Lean closure")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+` : "";
+	const support = callableClass + (errorTypes ? [
 		resultTypes, errorClass, "_lb_error_type = LeanEIOError"
 		, "def _lb_unwrap(declaration, value):\n    if isinstance(value, Err):\n        raise LeanEIOError(declaration, value.error)\n    return value.value\n"
-		, ...[...codecs.values()].map(f => f.python)].join("\n") : "";
+		, ...[...codecs.values()].map(f => f.python)].join("\n") : "");
 	return {
 		hostLean: provider.lean, entryLean, entryDeclarations, source, stub
 		, types: types.join("\n")

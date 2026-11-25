@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { canonicalJson } from "../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { compiledHostModules, hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
@@ -291,6 +291,34 @@ export const reconcileHostExports = options => {
 		if(e.stepIO && e.protocolHostMembers?.pull?.length) ids.add(hostError);
 		return [...ids];
 	};
+	const closures=new Map();
+	const closureRef=e=>{
+		if(!ir || selection.hostModule!==compiledHostModules.python || selection.nativeEffectPolicy!==nativeEffectPolicy
+			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous Python host factory");
+		const {argument,reply}=e.result;
+		for(const t of [argument,reply]) if(!(t?.kind==="primitive" || t?.kind==="named" && types.some(r=>r.id===t.id)))
+			fail("Unauthenticated returned closure carrier");
+		const key=sha256(canonicalJson({component,declaration: e.declaration,argument,reply,imports,capabilities: capabilities(e),errors: errorIds(e)}));
+		const name="LeanClosure"+key.slice(0,20),id="bridge:"+name;
+		const parameter={...site(argument,true),name: "value",mutability: types.find(r=>r.id===argument.id)?.mutability??"immutable",optional: false,default: null};
+		const closureEffects=[...new Set(["fails","nondeterministic",...used(e).flatMap(n=>members.get(n).effects)])].sort();
+		const extensions={"lean-bridge.dev/closure-owner": "python-host-binding","lean-bridge.dev/required-capabilities": capabilities(e)};
+		closures.set(e.declaration,{
+			id, name, kind: "callback", representation: "identity"
+			, mutability: "immutable"
+			, fields: [], cases: [], typeParameters: [], assurance: []
+			, target: null, host: null, resource: null
+			, callable: {
+				invocation: "many", reentry: "same-agent", selfDisposal: "defer"
+				, resultMode: "value", parameters: [parameter], result: site(reply)
+				, effects: closureEffects
+				, failure: {mode: "declared",errors: errorIds(e),unexpected: "poison-runtime"}
+			}
+			, source: {producer: "lean",declaration: e.declaration,extensions}
+			, documentation: doc("A returned Lean function. Closing its creating host binding revokes it.")
+		});
+		return {kind: "named",id};
+	};
 	const entries = metadata.entries.map(e => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
@@ -301,6 +329,7 @@ export const reconcileHostExports = options => {
 		if(hasCallbacks(e) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c || ruby || dotnet || jvm || perl || php || js || wit)))
 			fail("Unverified retained-callback selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
+		if(e.result?.kind==="io-closure") closureRef(e);
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (!owner && async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
@@ -333,7 +362,7 @@ export const reconcileHostExports = options => {
 	const api = {
 		schemaVersion: 3, component
 		, producers: [{ id: "lean", adapter: "lean-bridge-host-exports", adapterVersion: 1, tool: "Lean", toolVersion: metadata.leanVersion, extensions: {} }]
-		, types: [...ownedTypes, ...callbacks.values()
+		, types: [...ownedTypes, ...callbacks.values(), ...closures.values()
 			, ...types.map(t => ({ ...t, assurance: []
 				, host: { ...t.host, targets: [hostTarget] }
 				, source: { producer: "lean", declaration: `${hostModule}.${t.name}`, extensions: {} } }))]
@@ -343,8 +372,9 @@ export const reconcileHostExports = options => {
 			, parameters: e.parameters.map((p, j) => ({ ...site(isCallback(p.type) ? callbackRef(p.type) : p.type, true), name: entries[i].parameters[j].name
 				, mutability: isOwned(p.type) ? mayWrite(e) ? "write" : "read" : p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
-			, result: site(e.result), mutability: "immutable"
-			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...used(e).flatMap(n => members.get(n).effects)])].sort()
+			, result: closures.has(e.declaration)?leased({kind: "named",id: closures.get(e.declaration).id}):site(e.result)
+			, mutability: "immutable"
+			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(e.result?.kind==="io-closure"?["allocates"]:[]), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...used(e).flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
 			, capabilities: capabilities(e), assurance: []

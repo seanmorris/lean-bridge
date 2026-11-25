@@ -104,6 +104,7 @@ The Lean signature controls what the Python caller receives:
 | Exported Lean result | Installed Python call |
 | --- | --- |
 | `IO α` | Returns the value. An unhandled exception from a Python method reaches its caller as the original exception. |
+| `IO (α → IO β)` | Returns a typed, closable `LeanClosure[α, β]` tied to the creating host binding. |
 | `EIO ε α` | Returns the value on success; raises the package's `LeanEIOError` with the original typed payload on failure. |
 | `Except ε α` or `IO (Except ε α)` | Returns `Ok(value)` or `Err(error)`. Returning `.error` does not raise. |
 
@@ -117,6 +118,24 @@ result or error can carry a host object. For example,
 For worker results and stream items, select the [async export](#let-a-lean-task-call-python) too.
 This profile builds one target at a time. Python host-member calls themselves
 are synchronous; compound member arguments and custom native objects are not supported.
+
+To keep an application object for a later call, return a function that
+captures it. For example:
+
+```lean
+def reader (captured : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun extra => do
+    return (← captured.read) + extra
+```
+
+Select the factory as an ordinary export; it does not belong in `taskExports`.
+The returned function takes one explicit, nondependent argument. Its argument
+and reply may each be a copied scalar or an imported Python class. Lean
+Bridge checks host-member dependencies and native effects in the function
+body as well as the factory. For instance, a returned file reader needs
+`nativeEffects: ["filesystem"]` even if the factory itself reads nothing.
+See the [Lean fixture](../../tests/fixtures/python-host-closures/Closures.lean)
+and [Python usage](../consume/python.md#call-a-lean-function-that-remembers-your-python-object).
 
 ## Export synchronous IO to Python
 

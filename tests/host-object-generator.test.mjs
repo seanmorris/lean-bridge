@@ -156,3 +156,22 @@ test("Python worker stubs expose the application class, not native tickets or bi
 	assert.doesNotMatch(stub, /capsule|cookie|_worker_sweep|_task_take/iu);
 	assert.throws(() => generatePythonHostExtension({ ...opts, entries: [{ ...entry, result: { kind: "named", id: "other:Box" } }] }), /checked Lean resources/u);
 });
+
+test("Python distinguishes a returned Lean closure from a retained host callback",()=>{
+	const box={kind: "named",id: "lean:Alpha.Box"},u32=primitiveRef("uint32");
+	const e={
+		name: "remember", declaration: "Workshop.remember", effect: "IO"
+		, parameters: [{name: "box",type: box}]
+		, result: {kind: "io-closure",argument: u32,reply: box}
+	};
+	const opts={ir: executableHostFixture(),module: "Workshop",runtimeIdentity: "a".repeat(64),componentIdentity: "b".repeat(64)};
+	const gen=over=>generatePythonHostExtension({...opts,entries: [{...e,...over}]});
+	const {stub,entryLean}=gen({});
+	assert.match(stub,/def remember\(box: Box\) -> LeanClosure\[int, Box\]/u);
+	assert.doesNotMatch(stub,/cookie|capsule|_apply_closure|RetainedCallback/u);
+	assert.match(entryLean,/UInt32 → _root_\.IO _root_\.LeanBridge\.Host\.Python\.Box/u);
+	assert.throws(()=>gen({effect: "EIO",error: u32}),/synchronous IO closure factory/u);
+	assert.throws(()=>gen({delivery: "task"}),/Lean tasks require copied carriers/u);
+	assert.throws(()=>gen({result: {...e.result,argument: {kind: "named",id: "foreign:Box"}}}),/declared host object/u);
+	assert.throws(()=>generatePythonHostExtension({...opts,ir: null,entries: [e]}),/require Python host classes/u);
+});

@@ -116,6 +116,28 @@ nested `Ok`/`Err` values. You can inspect the value or `exc.payload` after
 `bind_hosts` exits. Holding it is an ordinary Python reference; you do not
 need to keep the binding open or call `close` on the object.
 
+### Call a Lean function that remembers your Python object
+
+A component can return a function instead of an object. In the
+[closure example](../../tests/fixtures/python-host-closures/Closures.lean),
+`remember` captures your meter. The returned function calls both meters'
+`read` methods and gives you back the one you originally supplied:
+
+```python
+first, second = Meter(), Meter()
+with lean_meter.bind_hosts(Box=Meter):
+    with lean_meter.remember(first) as recall:
+        assert recall(second) is first
+    assert recall.closed
+```
+
+The returned `LeanClosure` belongs to the binding that created it. You can
+call it repeatedly on that binding's thread. Closing it or exiting the binding
+prevents new calls; reopening the binding does not revive it. Closing it from
+inside a method lets the current invocation finish. For an asyncio component,
+invoke it in the binding's active context as well. This differs from a returned
+meter: the meter is yours and remains usable after the binding closes.
+
 ### Pass your objects through a Lean task
 
 A worker can carry a Python object while the callback that uses it runs on

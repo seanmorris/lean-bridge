@@ -172,6 +172,23 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
 
+/-- A function delivered by a factory is not a retained host callback. Only
+    the Python owner can currently lease and invoke this kind of IO closure. -/
+def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
+  if effect == ``IO && r.hostModule == some "LeanBridge.Host.Python" &&
+      r.nativeEffectPolicy == some "native-host-io-v1" then
+    if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
+      let b := b.consumeMData
+      unless !b.hasLooseBVars && b.getAppFn.constName? == some ``IO && b.getAppArgs.size == 1 do
+        throwError "returned host closures require a nondependent unary IO function: {e}"
+      let reply := b.getAppArgs[0]!
+      let admitted := fun (t : Expr) => primitives.any (fun p => t.isConstOf p.1) ||
+        t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString))
+      unless admitted a && admitted reply do
+        throwError "returned host closure arguments and replies must be copied scalars or declared Python objects: {e}"
+      return Json.mkObj [("kind", toJson "io-closure"), ("argument", ← carrier r a), ("reply", ← carrier r reply)]
+  returned r e false true
+
 /-- Admit a leased nominal by itself, or a checked host lease in a synchronous declared error. -/
 def delivered (r : Request) (e : Expr) (hostLeases := false) : MetaM Json := do
   if let some name := (← instantiateMVars e).consumeMData.constName? then
@@ -500,7 +517,7 @@ def extract (r : Request) : MetaM Json := do
         else pure (payload, [])
         pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value r.hostValues)] ++ extra ++ terminal
       else if (head == ``IO || (head == ``BaseIO && r.immediateValues)) && resultArgs.size == 1 then
-        pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]! false true)]
+        pure [("effect", toJson head.toString), ("result", ← immediateResult r head resultArgs[0]!)]
       else if head == ``EIO && resultArgs.size == 2 then
         pure [("effect", toJson "EIO"), ("error", ← delivered r resultArgs[0]! true),
           ("result", ← returned r resultArgs[1]! false true)]

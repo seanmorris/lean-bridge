@@ -5,7 +5,7 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | Target | Installed consumer evidence |
 | --- | --- |
 | npm | [Node, Node worker, Chromium, bundled page and module worker](javascript-host-imports-20261124.md#retained-callbacks-with-application-objects): a retained callback carries the actual JavaScript object; a peer sees the same object. |
-| PyPI | [CPython wheels](python-worker-wheels-20261124.md): independently packaged components use one registry; closing a binding with a callback pending releases its readers. |
+| PyPI | [CPython workers](python-worker-wheels-20261124.md) share a registry between packages. [Returned Lean closures](python-host-closures-20261125.md) separately check captured Python object identity, self-close, foreign threads and expired binding contexts. |
 | Cargo | [Rust futures and streams](static-host-workers-20261125.md#installed-rust-futures-and-streams): an installed executable receives the original `Rc` and distinguishes a factory failure from a later task or stream failure. |
 | C | [C11 consumer](static-host-workers-20261125.md#installed-c11-workers-on-application-objects): pkg-config and CMake, ordinary and reviewed packages, both peer link orders. |
 | C++ | [C++20 consumer](static-host-workers-20261125.md#installed-c20-futures-and-streams-on-application-objects): generated futures and streams, both build systems and link orders. |
