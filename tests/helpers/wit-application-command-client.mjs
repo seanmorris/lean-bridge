@@ -6,6 +6,7 @@ import {witCoreInterface} from "../../src/backends/wit/application-operations.mj
 import {buildWitApplicationTemplate,compileWitApplicationCommand} from "../../src/build/wit-application-template.mjs";
 import {compileWitAsyncPeer} from "../../src/build/wit-async-peer-package.mjs";
 import {canonicalWasmtimeIdentity} from "../../src/release/wit-canonical-package.mjs";
+import {addWitFunctionClient} from "./wit-application-project.mjs";
 
 /**
  * The app provider extends its own registration interface with a constructor.
@@ -16,8 +17,9 @@ import {canonicalWasmtimeIdentity} from "../../src/release/wit-canonical-package
  * @param o.out - Isolated downstream compilation directory.
  * @param o.wasm - Pinned wasm-tools executable.
  * @param o.run - Checked process runner.
+ * @param [o.functions] - Require and exercise the package's binding-owned functions.
  */
-export const buildInstalledWitGuests=async({wit,out,wasm,run})=>{
+export const buildInstalledWitGuests=async({wit,out,wasm,run,functions=false})=>{
 	const fixtures=resolve("tests/fixtures/static-host-workers"),pkg="lean-bridge:workshop/",version="@1.0.0";
 	const contract=await readFile(join(wit,"deps/objects.wit"),"utf8");
 	const [,objectPackage]=/^package ([^;]+)@1\.0\.0;/u.exec(contract)??[];
@@ -36,13 +38,25 @@ export const buildInstalledWitGuests=async({wit,out,wasm,run})=>{
 	await save("owner.wat",(await consumer("guest-box")).replaceAll("@IFACE@",witCoreInterface(obj)));
 	await cli("component","embed","app-wit/deps/objects.wit","--world","owner","owner.wat","-o","owner.core");
 	await cli("component","new","owner.core","-o","owner.wasm");
-	await build("provider","registrations",(await consumer("guest-callback")).replaceAll("@CALLS@",witCoreInterface(calls))
+	let cbSource=await consumer("guest-callback");
+	if(functions)cbSource=cbSource.replace(";; @test-callback-import@",`(import "cm32p2|@OPS@" "remember" (func $capture (param i32 i32)))
+    (import "cm32p2|@OPS@" "[method]remember-function.invoke" (func $invoke-fn (param i32 i32 i32)))
+    (import "cm32p2|@OPS@" "remember-function_drop" (func $drop-fn (param i32)))
+    (import "cm32p2|@IFACE@" "same-box" (func $same-box (param i32 i32) (result i32)))`)
+		.replace(";; @test-callback-visit@",`(call $capture (local.get $box) (i32.const 24))
+    (if (i32.load8_u (i32.const 24)) (then unreachable))
+    (call $invoke-fn (i32.load (i32.const 28)) (local.get $box) (i32.const 48))
+    (if (i32.load8_u (i32.const 48)) (then unreachable))
+    (if (i32.eqz (call $same-box (local.get $box) (i32.load (i32.const 52)))) (then unreachable))
+    (call $end (i32.load (i32.const 52))) (call $drop-fn (i32.load (i32.const 28)))`);
+	await build("provider","registrations",cbSource.replaceAll("@CALLS@",witCoreInterface(calls))
 		.replaceAll("@IFACE@",witCoreInterface(obj)).replaceAll("@OPS@",witCoreInterface(ops)));
 	await cli("component","targets",wit,"--world","registrations","provider.wasm");
 	const app=(await consumer("installed-application")).replaceAll("@OBJECTS@",obj).replaceAll("@CALLBACKS@",calls).replaceAll("@TASKS@",pkg+"object-tasks"+version);
 	await save("app.wat",app);await cli("parse","app.wat","-o","application.wasm");
 	await cli("component","targets","app-wit","--world","application","application.wasm");
-	const syncClient=(await consumer("lean-consumer")).replaceAll("@IFACE@",witCoreInterface(obj)).replaceAll("@OPS@",witCoreInterface(ops))
+	const template=await consumer("lean-consumer");
+	const syncClient=(functions?await addWitFunctionClient(template):template).replaceAll("@IFACE@",witCoreInterface(obj)).replaceAll("@OPS@",witCoreInterface(ops))
 		.replace(";; @worker-observers@",`(import "cm32p2|${witCoreInterface(ops)}" "cursor-counts" (func $counts (result i64))) (import "cm32p2|${witCoreInterface(ops)}" "cursor-gate" (func $gate (param i32) (result i32)))`);
 	const suite=syncClient.replace(";; @installed-drop-checks@",`(drop (call $gate (i32.const 0))) (call $expect (i64.eqz (call $counts)))
         (call $expect (i32.eq (call $exercise (i32.const 42) (i32.const 73)) (i32.const 73)))

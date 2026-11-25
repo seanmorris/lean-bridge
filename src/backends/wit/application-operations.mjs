@@ -3,6 +3,7 @@ import { canonicalValue } from "./canonical-values.mjs";
 import { canonicalJson } from "../../capsule/node.mjs";
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
 import { witVariantMember } from "./copied-variants.mjs";
+import {verifyWitFunction,witFunctionEntries} from "./application-functions.mjs";
 
 const reject=message=>{throw new TypeError("WIT application operations: "+message);};
 const align=(n,a)=>Math.ceil(n/a)*a;
@@ -70,35 +71,62 @@ export const witApplicationOperations = options => {
 	const declarations=new Map(binding.declarations.filter(d=>d.resultMode==="value").map(d=>[d.source.declaration,d]));
 	const payloads=new Map(binding.errors.map(err=>[err.id,err.payload]));
 	if(declarations.size!==entries.length)return reject("synchronous export inventory differs from Binding IR");
-	const variants=[],methods=entries.map((e,i)=>{
+	const variants=[],functionDefs=[];let index=0;
+	const methods=entries.flatMap((e,i)=>{
 		if(e.delivery || !["pure","BaseIO","IO","EIO"].includes(e.effect))return reject("expected a synchronous Lean export");
 		const d=declarations.get(e.declaration);
 		if(!d || d.name!==e.name || d.failure.unexpected!=="poison-runtime")return reject("inconsistent source declaration: "+e.declaration);
-		if(canonicalJson(d.result.type)!==canonicalJson(e.result)
+		const factory=e.result.kind==="io-closure";
+		if(factory) verifyWitFunction(e,d,binding,options.ir);
+		if((!factory && canonicalJson(d.result.type)!==canonicalJson(e.result))
 			|| canonicalJson(d.parameters.map(({name,type})=>({name,type})))!==canonicalJson(e.parameters)
 			|| (e.effect==="EIO" && canonicalJson(payloads.get("error:EIO."+e.declaration)??null)!==canonicalJson(e.error)))
 			return reject("value or failure payload differs from Binding IR: "+e.declaration);
 		const errors=d.failure.errors,member=errors.includes("error:WitHostError");
 		const expected=e.effect==="IO"?["error:IO.Error",...member?["error:WitHostError"]:[]]:e.effect==="EIO"?["error:EIO."+e.declaration]:[];
 		if(errors.length!==expected.length || !expected.every(id=>errors.includes(id) && payloads.has(id)))return reject("unrecognized failure channels for "+e.declaration);
-		const argNames=new Set(),params=e.parameters.map(p=>({name: witVariantMember(p.name,argNames,reject,"parameter"),type: value(p.type,true)}));
-		const result=value(e.result),declared=e.effect==="EIO"?value(e.error):null;
-		let output=result;
-		if(errors.length)
-{
-			let payload=declared??value({kind: "primitive",name: "string"});
-			if(member)
-{
-				const external=resource(contract.resources.length),fault=io??=unique("io-failure");
-				if(!variants.length)variants.push({wit: `  variant %${fault} { member(${external.wit}), io(string) }`});
-				payload={...sum(external,payload),wit: "%"+fault};
-}
-			output=sum(result,payload);
-}
-		return {entry: e,index: i,name: labels[i],params,result,declared,member,errors,output};
+		const resourceName=factory?unique(labels[i]+"-function"):null;
+		return witFunctionEntries(e).map((entry,j)=>{
+			const role=factory?["make","invoke","drop"][j]:null;
+			const argNames=new Set(),params=entry.parameters.map(p=>({name: witVariantMember(p.name,argNames,reject,"parameter"),type: value(p.type,true)}));
+			// The private drop hook acknowledges with zero. Public close/dtor
+			// return nothing and must not import the guest's Lean Unit type.
+			let result=value(role==="drop"?{kind: "primitive",name: "uint8"}:entry.result);
+			const declared=entry.effect==="EIO"?value(entry.error):null;
+			if(role==="make")result={...result,make: resourceName,wit: "own<%"+resourceName+">"};
+			let output=result;
+			if(errors.length && role!=="drop")
+			{
+				let payload=declared??value({kind: "primitive",name: "string"});
+				if(member)
+				{
+					const external=resource(contract.resources.length);
+					if(io===null)
+{io=unique("io-failure");variants.push({wit: `  variant %${io} { member(${external.wit}), io(string) }`});}
+					payload={...sum(external,payload),wit: "%"+io};
+				}
+				if(role==="invoke")
+				{
+					const failure=unique(resourceName+"-error");
+					variants.push({wit: `  variant %${failure} { closed, failed(${payload.wit}) }`});
+					payload={...sum(value({kind: "primitive",name: "uint8"}),payload),wit: "%"+failure};
+				}
+				output=sum(result,payload);
+			}
+			if(role==="invoke")functionDefs.push(`  resource %${resourceName} { invoke: func(%value: ${params[1].type.wit}) -> ${output.wit}; close: func(); }`);
+			return {entry
+				, index: index++
+				, name: role && j?unique(labels[i]+"-"+role):labels[i]
+				, params
+				, result
+				, declared
+				, member: role!=="drop" && member
+				, errors: role==="drop"?[]:errors
+				, output,...role?{role,resourceName}:{}};
+		});
 	});
 	const nativeName="lean-bridge:"+name+"/native@"+version,publicName="lean-bridge:"+name+"/api@"+version,exchange=objects.replace("/objects@","/exchange@");
-	const signatures=side=>methods.map(m=>"  %"+m.name+": func("+m.params.map(p=>"%"+p.name+": "+p.type[side]).join(", ")+") -> "+m.output[side]+";");
+	const signatures=side=>methods.filter(m=>side==="native" || !m.role || m.role==="make").map(m=>"  %"+m.name+": func("+m.params.map(p=>"%"+p.name+": "+p.type[side]).join(", ")+") -> "+m.output[side]+";");
 	const nativeType=[
 		"(instance"
 		, ...signed?['(type $record (record (field "negative" bool) (field "limbs" (list u32))))',`(export "${signedName}" (type $signed (eq $record)))`]:[]
@@ -110,7 +138,7 @@ export const witApplicationOperations = options => {
 	const api=[
 		"interface api {"
 		, ...imports.length?["  use "+objects+".{"+imports.join(", ")+"};"]:[]
-		, ...variants.map(v=>v.wit),...signatures("wit"),"}"
+		, ...variants.map(v=>v.wit),...functionDefs,...signatures("wit"),"}"
 	].join("\n");
 	const wit=[
 		pkg,"interface native {"

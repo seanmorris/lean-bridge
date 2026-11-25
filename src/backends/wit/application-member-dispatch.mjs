@@ -3,6 +3,7 @@ import { hostDeclarationName } from "../../abi/host-member-names.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 import { cHostCodecs } from "../c/host-codecs.mjs";
 import { witConversionPrelude } from "./copied-conversions.mjs";
+import {witFunctionEntries} from "./application-functions.mjs";
 
 const witName = name => name.replaceAll("-", "_");
 /**
@@ -112,7 +113,7 @@ done:
     wasmtime_component_val_delete(&reply);lb_scope_close(&scope);return lwit_open(s)?code:UINT32_MAX;
 }`);
 	}
-	const sync=entries.map(e=>{
+	const sync=entries.flatMap(witFunctionEntries).map(e=>{
 		const n=cIdentifier(e.name),a=e.parameters.map(t=>byRef(t.type,n+"_arg")),r=byRef(e.result,n+"_value");
 		const err=e.effect==="EIO" && byRef(e.error,n+"_failure");
 		const params=["lwit_bridge *b",...a.map((v,j)=>v.arg+" a"+j),r.type+" *value",...err?[err.type+" *failure"]:[],"lwit_owner *original",p+"diagnostic *diag"];

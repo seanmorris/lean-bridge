@@ -29,7 +29,7 @@ export const emitWordHostExports = (o, model, target) => {
 	const prefix = "lb_" + target.replaceAll("-","_") + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
 	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure");
-	if(factories.some(({e})=>!["c","cpp","rust","dotnet","php"].includes(target) || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
+	if(factories.some(({e})=>!["c","cpp","rust","dotnet","php","wit-wasi"].includes(target) || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
 	const retireFunctions=target==="php"?-7:-3; // PHP worker pins, resolves, admits and sweeps occupy -3 through -6.
 	const cleanup=factories.length?"dn_closure_cleanup(op)":null;
 	const lean = (t, depth = 0) => {
@@ -129,7 +129,7 @@ static int dn_output(int kind,lean_object *v,uint64_t *out) {
 __attribute__((visibility("default"))) void ${prefix}_clear(uint64_t *out) {
     if(out) { if(out[3]==1 || out[3]==2) free((void *)(uintptr_t)out[0]); memset(out,0,4*sizeof(*out)); }
 }
-${factories.length?readFileSync(new URL("./word-host-closures.h",import.meta.url),"utf8")
+${factories.length?(target==="wit-wasi"?"#define DN_WIT_COMPONENT_REP 1\n":"")+readFileSync(new URL("./word-host-closures.h",import.meta.url),"utf8")
 	+`\nstatic int dn_closure_cleanup(int op) { switch(op) { case ${retireFunctions}: ${factories.map(({i})=>"case "+(2*entries.length+i)+":").join(" ")} return 1; default:return 0; } }\n`:""}${outputs.join("\n")}
 ${methods.join("\n")}
 ${target==="rust"?"extern int LB_DND(rust_owner)(uintptr_t);\n":""}__attribute__((visibility("default"))) int ${prefix}_call(${target==="rust"?"uintptr_t owner,":""}uint64_t id,lb_dn_dispatch dispatch,int op,const uint64_t *args,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {

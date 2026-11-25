@@ -11,8 +11,19 @@ static dn_closure_slot *dn_closures;
 static size_t dn_capacity, dn_live, dn_next;
 static uint64_t dn_serial;
 enum { DN_SLOT_BITS=12, DN_SLOTS=1<<DN_SLOT_BITS, DN_CLOSURE_STALE=16 };
+#ifdef DN_WIT_COMPONENT_REP
+/* The canonical resource representation is u32. It names one issued
+ * generation, never an address or an index that could revive after drop. */
+#define DN_MAX_SERIAL UINT32_MAX
+#define DN_MAKE_TICKET(serial,slot) (serial)
+#define DN_TICKET_SERIAL(ticket) (ticket)
+#else
+#define DN_MAX_SERIAL (UINT64_MAX>>DN_SLOT_BITS)
+#define DN_MAKE_TICKET(serial,slot) (((serial)<<DN_SLOT_BITS)|(slot))
+#define DN_TICKET_SERIAL(ticket) ((ticket)>>DN_SLOT_BITS)
+#endif
 static int dn_closure_save(lb_dnd_session *s,unsigned site,lean_object *fn,uint64_t *out) {
-    if (dn_serial==(UINT64_MAX>>DN_SLOT_BITS)) return 12;
+    if (dn_serial==DN_MAX_SERIAL) return 12;
     if (dn_live==dn_capacity) {
         if (dn_capacity==DN_SLOTS) return 12;
         size_t n=dn_capacity?dn_capacity*2:8;
@@ -30,15 +41,25 @@ static int dn_closure_save(lb_dnd_session *s,unsigned site,lean_object *fn,uint6
         dn_next=dn_capacity; dn_closures=p; dn_capacity=n;
     }
     while(dn_closures[dn_next].fn) dn_next=(dn_next+1)%dn_capacity;
-    const size_t i=dn_next; const uint64_t id=(++dn_serial<<DN_SLOT_BITS)|i;
+    const size_t i=dn_next; const uint64_t id=DN_MAKE_TICKET(++dn_serial,i);
     lean_inc(fn); dn_closures[i]=(dn_closure_slot){fn,(uintptr_t)s,id,site};
     ++dn_live; dn_next=(i+1)%dn_capacity; out[0]=id; return 0;
 }
 static dn_closure_slot *dn_closure_find(lb_dnd_session *s,unsigned site,uint64_t id) {
+#ifdef DN_WIT_COMPONENT_REP
+    if (!id || id>dn_serial || !dn_capacity) return NULL;
+    size_t i=(id-1)%dn_capacity;
+    for (size_t n=0;n<dn_capacity;n++,i=(i+1)%dn_capacity) {
+        dn_closure_slot *v=dn_closures+i;
+        if (v->ticket==id) return v->fn && v->owner==(uintptr_t)s && v->site==site ? v : NULL;
+    }
+    return NULL;
+#else
     const size_t i=(size_t)(id&(DN_SLOTS-1));
     if(!id || i>=dn_capacity) return NULL;
     dn_closure_slot *v=dn_closures+i;
     return v->fn && v->ticket==id && v->owner==(uintptr_t)s && v->site==site ? v : NULL;
+#endif
 }
 static void dn_closure_release(dn_closure_slot *v) {
     lean_object *fn=v->fn; *v=(dn_closure_slot){0};
@@ -49,7 +70,7 @@ static void dn_closure_retire(uintptr_t key,uint64_t watermark) {
     /* Revoke the entire group before a finalizer can re-enter. New tickets
      * from another opening at a recycled address are outside this batch. */
     for(size_t i=0;i<dn_capacity;i++)
-        if(dn_closures[i].owner==key && (dn_closures[i].ticket>>DN_SLOT_BITS)<=watermark)
+        if(dn_closures[i].owner==key && DN_TICKET_SERIAL(dn_closures[i].ticket)<=watermark)
             dn_closures[i].owner=0;
     for(size_t i=0;i<dn_capacity;i++)
         if(dn_closures[i].fn && !dn_closures[i].owner) dn_closure_release(dn_closures+i);

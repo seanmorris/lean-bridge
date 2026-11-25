@@ -80,9 +80,10 @@ export const witOperationHost=o=>{
     ${!m.errors.length?`if(status!=${p}OK){goto done;}${success}`
 		:`if(lb_result(&result,status==${p}OK,&dest,&scope)!=LB_GOOD)goto done;
     if(status==${p}OK){${success}}else{
-        lb_val *detail=dest;${m.member?`if(lb_result(dest,status==${p}HOST_ERROR,&detail,&scope)!=LB_GOOD)goto done;
+        lb_val *detail=dest;${m.role==="invoke"?`if(lb_result(dest,status==${p}STALE,&detail,&scope)!=LB_GOOD)goto done;
+        if(status==${p}STALE)*detail=(lb_val){.kind=WASMTIME_COMPONENT_U8};else {dest=detail;`:""}${m.member?`if(lb_result(dest,status==${p}HOST_ERROR,&detail,&scope)!=LB_GOOD)goto done;
         if(status==${p}HOST_ERROR){if(!original.any)goto done;transfer=&original;slot=${error};*detail=(lb_val){.kind=WASMTIME_COMPONENT_U32,.of.u32=0};}
-        else `:""}if(status==${p}${f?"DECLARED_ERROR":"IO_ERROR"}){${fallback}}else goto done;}`}
+        else `:""}if(status==${p}${f?"DECLARED_ERROR":"IO_ERROR"}){${fallback}}else goto done;${m.role==="invoke"?"}":""}}`}
     ok=true;
 done:
     ${nominal.map(j=>`if(!lwit_no_error(lwit_drop(&staged${j}))){ok=false;}(void)${args[j].type}_drop(&a${j});`).join("\n    ")}

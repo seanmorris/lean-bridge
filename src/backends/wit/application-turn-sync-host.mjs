@@ -79,9 +79,10 @@ done:
     if(b->poisoned)goto done;
     ${m.errors.length?`if(lb_result(&result,rc==${p}OK,&dest,&scope)!=LB_GOOD)goto done;
     if(rc==${p}OK){${success}}else {lb_val *detail=dest;
-        ${m.member?`if(lb_result(dest,rc==${p}HOST_ERROR,&detail,&scope)!=LB_GOOD)goto done;
+        ${m.role==="invoke"?`if(lb_result(dest,rc==${p}STALE,&detail,&scope)!=LB_GOOD)goto done;
+        if(rc==${p}STALE)*detail=(lb_val){.kind=WASMTIME_COMPONENT_U8};else {dest=detail;`:""}${m.member?`if(lb_result(dest,rc==${p}HOST_ERROR,&detail,&scope)!=LB_GOOD)goto done;
         if(rc==${p}HOST_ERROR){fault_id=diag.host_code;if(!fault_id)goto done;fault_out=detail;}
-        else `:""}if(rc==${p}${f?"DECLARED_ERROR":"IO_ERROR"}){${failure}}else goto done;}`:`if(rc!=${p}OK)goto done;
+        else `:""}if(rc==${p}${f?"DECLARED_ERROR":"IO_ERROR"}){${failure}}else goto done;${m.role==="invoke"?"}":""}}`:`if(rc!=${p}OK)goto done;
     ${success}`}
     ok=true;
 done:

@@ -178,7 +178,7 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
 def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
   let jsOwner := r.hostModule == some "LeanBridge.Host.Javascript" && (r.ownerHostMembers ||
     (r.javascriptThreadedHostMembers.isNone && r.taskExports.isEmpty && r.asyncIterators.isEmpty))
-  if effect == ``IO && (jsOwner || r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Perl"].contains m)) &&
+  if effect == ``IO && (jsOwner || r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.WitWasi", "LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Perl"].contains m)) &&
       r.nativeEffectPolicy == some "native-host-io-v1" then
     if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
       let b := b.consumeMData

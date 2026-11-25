@@ -192,6 +192,16 @@ For a package named `workshop`, extract the whole archive and run:
 
 The command prints the signed result of `run`. It loads its own adjacent libraries; the deployment machine needs neither the Wasmtime SDK nor Lean. An owned error resource can be inspected through its defining interface just like an owned success value. The `api.wit` result types specify which operations return an ordinary value and which can fail.
 
+If a Lean function captures one of your objects and returns a callable, the
+factory returns an **owned WIT resource**. For example, `remember(box)` produces
+a `remember-function`. Call its `invoke(other-box)` method to get an owned
+reference to the original box. Your component bindings manage the handle;
+there is no integer to pass around. Drop the function when finished, or call
+`close()` to revoke it while you still hold it. A later `invoke` then returns
+`err(closed)`; a failure inside a live function returns `err(failed(...))`.
+The [independent guest example](../../tests/fixtures/static-host-workers/installed-functions.wat.in)
+exercises both cases through the public WIT interface.
+
 The following instructions describe the separate package profile for synchronous IO **without** application-defined host objects.
 
 A `native-wit-io-v1` package uses the same extraction and `pkg-config` workflow

@@ -11,7 +11,7 @@ import {hashBindingIr} from "../../src/binding-ir/canonical.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {witCoreInterface} from "../../src/backends/wit/application-operations.mjs";
 import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
-import {extendWitMembers} from "./wit-application-project.mjs";
+import {addWitFunctionClient, extendWitFunctions, extendWitMembers} from "./wit-application-project.mjs";
 import {installWitAuthor} from "./wit-installed-author.mjs";
 import {assertJsonSchema} from "./json-schema.mjs";
 
@@ -24,9 +24,10 @@ test("relocated WIT packages execute synchronous Lean IO with application-owned 
 	for(const route of ["ordinary","reviewed"])
 {
 		const work=join(root,route),src=join(work,"source"),out=join(work,"release");
-		await mkdir(work);await prepareNativeHostFixture(src,"wit-wasi");await extendWitMembers(src);await copyFile("LICENSE",join(src,"LICENSE"));
+		await mkdir(work);await prepareNativeHostFixture(src,"wit-wasi");await extendWitMembers(src);await extendWitFunctions(src);await copyFile("LICENSE",join(src,"LICENSE"));
 		if(original)await writeFile(join(src,"workshop.binding-ir.json"),canonicalJson(original));
-		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"],{cwd: work});
+		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"],{cwd: work})
+			.catch(error=>{t.diagnostic([error.stdout,error.stderr].filter(Boolean).join("\n").slice(-5000));throw error;});
 		const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(out,"package-set-receipt.json")});
 		await assertJsonSchema("package-set-receipt",receipt);
 		assert.equal(receipt.packages.length,1);const [pkg]=receipt.packages,[a]=pkg.artifacts;
@@ -49,7 +50,8 @@ test("relocated WIT packages execute synchronous Lean IO with application-owned 
 		const wc=(...args)=>exec(wasm,args,{cwd: work});
 		for(const [id,spec,world] of [["guest-box",objects,"owner"],["lean-consumer",wit,"application"]])
 {
-			const code=(await readFile(join(fixtures,id+".wat.in"),"utf8")).replaceAll("@IFACE@",witCoreInterface(iface)).replaceAll("@OPS@",witCoreInterface("lean-bridge:workshop/api@1.0.0"))
+			const template=await readFile(join(fixtures,id+".wat.in"),"utf8");
+			const code=(id==="lean-consumer"?await addWitFunctionClient(template):template).replaceAll("@IFACE@",witCoreInterface(iface)).replaceAll("@OPS@",witCoreInterface("lean-bridge:workshop/api@1.0.0"))
 				.replace(";; @installed-drop-observer@","(if (i32.eq (i32.load (local.get $p)) (i32.const 77777)) (then (return (call $result (i32.const 0) (global.get $drops)))))")
 				.replace(";; @installed-drop-checks@",`(call $make (i32.const 77777) (i32.const 0)) (local.set $monitor (call $ok))
     (call $read (local.get $monitor) (i32.const 0)) (local.set $before (call $ok))

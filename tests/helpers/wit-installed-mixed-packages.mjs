@@ -12,7 +12,7 @@ import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-recei
 import {buildInstalledWitGuests} from "./wit-application-command-client.mjs";
 import {installWitAuthor} from "./wit-installed-author.mjs";
 import {prepareStaticWorkerProject} from "./static-worker-project.mjs";
-import {extendWitApplication} from "./wit-application-project.mjs";
+import {extendWitApplication, extendWitFunctions} from "./wit-application-project.mjs";
 import {assertJsonSchema} from "./json-schema.mjs";
 
 const exec=promisify(execFile),json=async p=>JSON.parse(await readFile(p,"utf8"));
@@ -23,9 +23,10 @@ test("installed mixed WIT applications run original objects, callbacks, futures 
 	for(const route of ["ordinary","reviewed"])
 {
 		const work=join(root,route),src=join(work,"source"),out=join(work,"release"),consumer=join(work,"independent guest");
-		await mkdir(work);await prepareStaticWorkerProject(src,"wit-wasi");await extendWitApplication(src);
+		await mkdir(work);await prepareStaticWorkerProject(src,"wit-wasi");await extendWitApplication(src);await extendWitFunctions(src);
 		if(original)await writeFile(join(src,"workshop.binding-ir.json"),canonicalJson(original));
-		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"],{cwd: work});
+		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"],{cwd: work})
+			.catch(error=>{t.diagnostic([error.stdout,error.stderr].filter(Boolean).join("\n").slice(-5000));throw error;});
 		const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(out,"package-set-receipt.json")});
 		await assertJsonSchema("package-set-receipt",receipt);assert.equal(receipt.packages.length,1);
 		const [pkg]=receipt.packages,[artifact]=pkg.artifacts;assert.equal(pkg.profile,"native-wit-object-task-v1");assert.equal(pkg.runtimeDelivery,"embedded");
@@ -42,7 +43,7 @@ test("installed mixed WIT applications run original objects, callbacks, futures 
 {assert.deepEqual(ir,original);assert.equal(meta.reviewedSourceSha256,sha256(canonicalJson(original)));}
 		else
 {assert.equal(meta.reviewedSourceSha256,undefined);original=ir;}
-		const paths=await buildInstalledWitGuests({out: consumer,wit: join(prefix,"wit"),wasm: process.env.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools",run: (p,a,cwd)=>exec(p,a,{cwd,maxBuffer: 4194304})});
+		const paths=await buildInstalledWitGuests({out: consumer,wit: join(prefix,"wit"),functions: true,wasm: process.env.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools",run: (p,a,cwd)=>exec(p,a,{cwd,maxBuffer: 4194304})});
 		await rm(src,{recursive: true});await rm(out,{recursive: true});
 		const invoke=args=>exec(join(prefix,meta.command),args,{cwd: consumer,timeout: 30000,env: {PATH: "/no-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1"}});
 		assert.equal((await invoke(paths)).stdout.trim(),"73");

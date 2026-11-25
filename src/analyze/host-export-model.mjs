@@ -298,7 +298,7 @@ export const reconcileHostExports = options => {
 	const closures=new Map();
 	const closureRef=e=>{
 		const jsOwner=hostTarget==="javascript" && (owner || (selection.javascriptThreadedHostMembers===undefined && !selection.taskExports?.length && !selection.asyncIterators?.length));
-		if(!ir || !(jsOwner || phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules.dotnet,compiledHostModules.jvm,compiledHostModules.perl].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
+		if(!ir || !(jsOwner || phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules["wit-wasi"],compiledHostModules.dotnet,compiledHostModules.jvm,compiledHostModules.perl].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
 			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous host factory");
 		const {argument,reply}=e.result;
 		for(const t of [argument,reply]) if(!(t?.kind==="primitive" || t?.kind==="named" && types.some(r=>r.id===t.id)))

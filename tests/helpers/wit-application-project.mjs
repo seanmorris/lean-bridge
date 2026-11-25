@@ -1,7 +1,38 @@
 /** @file Exercise WIT member ownership and copied carriers in an actual Lake application. */
-import { readFile, writeFile } from "node:fs/promises";
+import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+
+/**
+ * Add actual Lean factories, including one with copied arguments, to an installed package.
+ *
+ * @param project - Ordinary or reviewed Lake source tree.
+ */
+export const extendWitFunctions = async project => {
+	const configFile = join(project, "lean-bridge.exports.json");
+	const config = JSON.parse(await readFile(configFile, "utf8"));
+	const source = await readFile("tests/fixtures/c-host-closures/Closures.lean", "utf8");
+	await writeFile(join(project, "Closures.lean"), source.replaceAll("LeanBridge.Host.C", "LeanBridge.Host.WitWasi"));
+	await appendFile(join(project, "lakefile.toml"), '\n[[lean_lib]]\nname = "Closures"\n');
+	config.modules.push("Closures");
+	config.exports.push("Closures.remember", "Closures.reader", "Closures.identityReader");
+	await writeFile(configFile, canonicalJson(config));
+};
+
+/**
+ * Install the independent public-API exercise in the guest; leave other suites unchanged.
+ *
+ * @param guest - Unexpanded core guest module.
+ */
+export const addWitFunctionClient = async guest => {
+	const probe = await readFile("tests/fixtures/static-host-workers/installed-functions.wat.in", "utf8");
+	const [imports, code] = probe.split(";; @functions@");
+	if(!code || !guest.includes(";; @worker-observers@") || !guest.includes(";; @installed-drop-checks@"))
+		throw new Error("Missing WIT guest injection site");
+	return guest.replace(";; @worker-observers@", () => imports + "\n  ;; @worker-observers@")
+		.replace(";; @installed-drop-checks@", "(call $check-functions)\n    ;; @installed-drop-checks@")
+		.replace("  (func $suite ", () => code + "\n  (func $suite ");
+};
 
 /**
  * Reuse the scalar source corpus, then add a consumed parameter, an anchored

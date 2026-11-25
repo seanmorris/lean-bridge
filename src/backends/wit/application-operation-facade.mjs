@@ -3,6 +3,7 @@ import { witCoreInterface } from "./application-operations.mjs";
 
 const align=(n,a)=>Math.ceil(n/a)*a;
 const restore=(t,offset)=>{
+	if(t.make)return `(i32.store offset=${offset} (local.get $ret) (call $new-${t.make} (i32.load offset=${offset} (local.get $ret))))`;
 	if(t.slot!==undefined)return `(if (i32.load offset=${offset} (local.get $ret)) (then unreachable))
     (i32.store offset=${offset} (local.get $ret) (call $take${t.slot}))`;
 	if(!t.left)return "";
@@ -25,7 +26,8 @@ export const witOperationFacade=(model,scratch)=>{
 		imports.push(`(import "cm32p2|${iface}" "${label}" (func $${id} ${params.length?"(param "+params.join(" ")+")":""} ${out?"(result "+out+")":""}))`);
 	};
 	const output=t=>{
-		if(t.slot!==undefined)imp(exchange,"take-item"+t.slot,"take"+t.slot,[],"i32");
+		if(t.make)imp("_ex_"+api,t.make+"_new","new-"+t.make,["i32"],"i32");
+		else if(t.slot!==undefined)imp(exchange,"take-item"+t.slot,"take"+t.slot,[],"i32");
 		else if(t.left)
 		{output(t.left);output(t.right);}
 	};
@@ -34,6 +36,14 @@ export const witOperationFacade=(model,scratch)=>{
 		const flat=m.params.flatMap(p=>p.type.flat),many=flat.length>16,args=many?["i32"]:flat;
 		const indirect=m.output.flat.length>1,ret=indirect?"i32":m.output.flat[0];
 		imp(native,m.name,"fn"+m.index,indirect?[...args,"i32"]:args,indirect?null:ret);
+		if(m.role==="drop")
+		{
+			const base="cm32p2|"+api+"|";
+			funcs.push(`(func $drop-${m.index} (export "${base}[method]${m.resourceName}.close") (param i32)
+  (call $enter) (if (call $fn${m.index} (local.get 0)) (then unreachable)) (call $leave))
+(export "${base}${m.resourceName}_dtor" (func $drop-${m.index}))`);
+			continue;
+		}
 		output(m.output);
 		let ix=0,offset=0;const stage=[],pass=[];
 		for(const {type: t} of m.params)
@@ -54,7 +64,7 @@ export const witOperationFacade=(model,scratch)=>{
 		// The private callback consumes same-type arguments in reverse order.
 		if(many)pass.push("(local.get 0)");
 		if(indirect)pass.push("(local.get $ret)");
-		const symbol="cm32p2|"+api+"|"+m.name;
+		const symbol="cm32p2|"+api+"|"+(m.role==="invoke"?"[method]"+m.resourceName+".invoke":m.name);
 		funcs.push(`(func (export "${symbol}") ${args.length?"(param "+args.join(" ")+")":""} (result ${ret}) ${indirect?"(local $ret i32)":""}
   (call $enter) ${stage.join("\n  ")}
   ${indirect?`(local.set $ret (call $alloc (i32.const 0) (i32.const 0) (i32.const ${m.output.align}) (i32.const ${m.output.size})))`:""}

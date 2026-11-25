@@ -13,7 +13,6 @@ import {cHostWorkers} from "./host-worker-api.mjs";
 export const cHostFacade=o=>{
 	const {ir,entries,model,identity,prefix}=o;
 	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure"),closures=factories.length>0;
-	if(closures && o.wit)throw new TypeError("Unadmitted host closure facade");
 	const p=cIdentifier(o.name)+"_",guard="LB_C_PUBLIC_"+identity.toUpperCase(),defs=[],code=[],symbols=[];
 	const used=new Set(),reserve=n=>{if(used.has(n)) throw new TypeError("C host public name collision: "+n);used.add(n);return n;};
 	const names=["binding","hosts","status","diagnostic","view","buffer","integer","integer_view"];
@@ -138,6 +137,22 @@ exit: ${prefix}_clear(out); lb_reset(&scope); --scope.app->depth; return status;
     uint64_t w[3]={fn->_private[2],0,0},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
     ++scope.app->depth; int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,${2*entries.length+i},w,1,out,tags,&fault);
     lb_reset(&scope); --scope.app->depth; if(!rc) *fn=(${type}){0}; return lb_native(rc);`);
+		if(o.wit)
+		{
+			// Only the private embedder sees these representations. The Wasm
+			// application receives a canonical, instance-specific WIT resource.
+			const n=cIdentifier(e.name),a=e.parameters.map(x=>byRef(x.type,n+"_arg")),arg=byRef(e.result.argument,n+"_input"),reply=byRef(e.result.reply,n+"_reply");
+			const restored=`${type} fn={{binding._private[0],binding._private[1],key}};`;
+			add("lb_wit_make_"+n,p+"status",[binding+" binding",...a.map((v,j)=>v.arg+" a"+j),"uint32_t *value",p+"diagnostic *diag"].join(", "),
+				`if(!value || *value)return ${p}INVALID;
+    ${type} fn={0};${p}status rc=${p}${n}(${["binding",...a.map((_,j)=>"a"+j),"&fn","diag"].join(",")});
+    if(rc==${p}OK){if(!fn._private[2] || fn._private[2]>UINT32_MAX){(void)${p}${n}_drop(&fn);return ${p}INVALID;}*value=(uint32_t)fn._private[2];}return rc;`);
+			add("lb_wit_invoke_"+n,p+"status",binding+" binding,uint32_t key,"+arg.arg+" arg,"+reply.type+" *value,"+p+"diagnostic *diag",
+				restored+`return ${p}${n}_call(&fn,arg,value,diag);`);
+			add("lb_wit_drop_"+n,p+"status",binding+" binding,uint32_t key,uint8_t *value,"+p+"diagnostic *diag",
+				`if(!key || !value || *value || !diag)return ${p}INVALID;${restored}${p}status rc=${p}${n}_drop(&fn);
+    return rc==${p}STALE?${p}OK:rc;`);
+		}
 	}
 	const worker=o.workerWire?cHostWorkers(o,{p,byRef,add,reserve,defs}):"";
 	const header="#ifndef "+guard+"\n#define "+guard+"\n#include <stdbool.h>\n#include <stddef.h>\n#include <stdint.h>\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n"+defs.join("\n")+"\n#ifdef __cplusplus\n}\n#endif\n#endif\n";
