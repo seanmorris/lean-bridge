@@ -176,6 +176,12 @@ opens and borrows store-owned resources in real Wasmtime installations. That
 gives **17 of 17** locally exercised direct iterator profiles on both source
 routes. This count is for synchronous iterators only.
 
+For npm's asynchronous protocols, [two additional installed consumers](typescript-react-threaded-delivery-20261125.md)
+exercise strict TypeScript as an executed Node program and React as a mounted
+Chromium application. The evidence includes early iterator exit, cancellation
+while a host callback is pending, and a late reply followed by a successful
+new task. The React component unmounts without closing the shared runtime.
+
 For the WIT/WASI profile, the other three signature families have separate
 installed records. The [task and cancellation consumer](wit-task-resource-world-20261123.md#installed-package-receipts)
 checks a real parked task, delivery at most once, cancellation before delivery

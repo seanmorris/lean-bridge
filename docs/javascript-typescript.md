@@ -1396,6 +1396,15 @@ export function LeanSum() {
 
 React development StrictMode runs an extra effect setup and cleanup. ESM shares the import across those effects; the retired effect skips its update. The cleanup flag does not cancel initialization or a synchronous Lean call. The runtime remains available to other consumers in the page.
 
+For a threaded package, a task *can* be canceled. Keep its original return
+value in a ref before awaiting it; the promise returned by `.then()` is not
+the cancelable handle. If the component owns the work, call `cancel()` from
+effect cleanup and handle the task's `operation-cancelled` rejection. Other
+components can keep using the shared runtime. Breaking out of `for await`
+closes that async iterator, not the whole binding.
+The [mounted Workshop example](../tests/fixtures/javascript-threaded-host/react-delivery.mjs)
+exercises both operations through button clicks and unmount.
+
 For editable inputs, validate the [numeric range](#validate-numeric-inputs) and include submitted input in the effect's dependency list. Keep browser-only computation in the effect instead of importing it from a server-rendered module.
 
 #### Configure the React build

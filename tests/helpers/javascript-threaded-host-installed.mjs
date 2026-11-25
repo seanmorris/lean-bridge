@@ -9,10 +9,26 @@ import {installedTaskHarness} from "./javascript-wasm-task-cli-harness.mjs";
 import {prepareThreadedHostProject} from "./javascript-threaded-host-source.mjs";
 import {base,bundleTaskWeb,replayTaskWeb} from "./javascript-wasm-task-web-bundle.mjs";
 import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
+import {checkThreadedDeliveryClients} from "./javascript-threaded-delivery-clients.mjs";
+import {saveLakeFile} from "./lake-workspace.mjs";
 import {javaScriptTaskAbi} from "../../src/abi/javascript-wasm-tasks.mjs";
 
 const ports=process.env.LEAN_BRIDGE_JS_NOMINAL_CALLBACK_TEST==="1";
 const functions=process.env.LEAN_BRIDGE_TEST_JS_FUNCTIONS==="1";
+const recordUI = async (label, handoff) => {
+	const run = await checkThreadedDeliveryClients(handoff, label);
+	await saveLakeFile(resolve("build/threaded-delivery"), label + ".json", JSON.stringify({route: label, ...run}, null, 2) + "\n");
+	return run;
+};
+test("compiled TypeScript and mounted React consume both retained threaded Workshop archives", {
+	skip: !process.env.LEAN_BRIDGE_JS_DELIVERY_RELEASES, timeout: 300000
+}, async t => {
+	for(const route of ["ordinary", "reviewed"])
+{
+		const handoff = resolve(process.env.LEAN_BRIDGE_JS_DELIVERY_RELEASES, route, "packages/npm");
+		t.diagnostic(JSON.stringify(await recordUI(route, handoff)));
+}
+});
 test(functions?"offline worker functions retain their original objects across callbacks and cancellation":ports?"offline npm retained callbacks transport application objects in both directions":"offline npm host objects survive tasks and cursor delivery in Node, page and module workers", {
 	skip: !functions && !ports && process.env.LEAN_BRIDGE_JS_THREADED_HOST_TEST!=="1"
 	, timeout: 1200000
@@ -61,6 +77,8 @@ test(functions?"offline worker functions retain their original objects across ca
 			assert.deepEqual(report,{worker: {checks},page: {checks},state: "closed",frames: 0,allocations: 0,pending: 0,nativeOwners: 0,notifications: 0});
 			t.diagnostic(JSON.stringify({mode: pkg.label,hostWorkerDeployment: report}));
 			runs[pkg.label]={node,nodeModuleWorker: worker,chromium,chromiumDeployment: report};
+			if(!functions && !ports)
+				runs[pkg.label].deliveryClients = await recordUI(pkg.label, join(pkg.out,"packages/npm"));
 }
 		const blocked=join(h.root,"blocked"),out=join(h.root,"refused");const bad=await prepareThreadedHostProject(blocked);
 		const lean=join(blocked,"Workshop.lean");
