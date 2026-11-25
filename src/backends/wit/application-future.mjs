@@ -7,6 +7,7 @@ import { witVariantMember } from "./copied-variants.mjs";
 import { richCanonicalFuture } from "./canonical-future.mjs";
 import { objectFutureHost } from "./application-future-host.mjs";
 import { objectFutureGraph } from "./application-future-graph.mjs";
+import { witObjectCallbackFiles } from "./application-callback.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -108,5 +109,5 @@ export const witObjectFutureFiles=options=>{
 	const graph=objectFutureGraph({...options,methods: supported,files});
 	files["object-tasks.wit"]=graph.wit;files["object-tasks.wat"]=graph.wat;
 	files["object-delivery.json"]=canonicalJson({schemaVersion: 2,publicName: graph.api,supported,remaining});
-	return files;
+	return {...files,...witObjectCallbackFiles(options)};
 };

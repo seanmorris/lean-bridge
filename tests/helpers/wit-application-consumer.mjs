@@ -59,6 +59,7 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 		, `(instance $cells (instantiate $exchange-storage (with "${name}" (instance $objects)) ${x.slots.map(s=>`(with "${s.alias}" (type $${s.alias}))`).join(" ")}))`
 		, "(instance $exchange "+x.slots.flatMap(s=>[`(export "${s.alias}" (type $${s.alias}))`,...[s.put,s.take].map(f=>`(export "${f}" (func $cells "${f}"))`)]).join(" ")+")"
 		, `(instance $b (instantiate $bridge (with "${name}" (instance $objects)) (with "${x.name}" (instance $exchange)) (with "${nativeName}" (instance $native))))`
+		, `(export "${ops}" (instance $b "${ops}"))`
 		, `(instance $client (instantiate $application (with "${name}" (instance $objects)) (with "box" (type $item0)) (with "${ops}" (instance $b "${ops}"))))`
 		, '(export "exercise" (func $client "exercise"))'
 		, '(export "suite" (func $client "suite"))'
@@ -72,6 +73,18 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 	await run(wasm,["validate","client-graph.wasm"]);
 	const delivery=JSON.parse(await readFile(join(app,"object-delivery.json"),"utf8"));
 	const supported=delivery.supported;
+	const cbLayout=JSON.parse(await readFile(join(app,"object-callbacks.json"),"utf8")),{interfaceName: cbName}=cbLayout;
+	assert.equal(cbLayout.signatures[cbLayout.sites["Jobs.relay#1"]].label,"call-box-to-box");
+	const cbWit=await readFile(join(app,"object-callbacks.wit"),"utf8"),cbDir=join(app,"wit-callback");
+	await mkdir(join(cbDir,"deps"),{recursive: true});await writeFile(join(cbDir,"deps/objects.wit"),descriptor.wit);
+	await copyFile(join(app,"api.wit"),join(cbDir,"api.wit"));
+	const extra=cbWit.replace("resource %call-box-to-box {","resource %call-box-to-box { make: static func(mode: u32) -> own<%call-box-to-box>;");
+	await writeFile(join(cbDir,"cb.wit"),extra+`\nworld callback-fixture { import ${name}; import api; import inside-callback: func(); export callbacks; export callback-drops: func() -> u32; export callback-visits: func() -> u32; }`);
+	const callback=await compile("callback-fixture",(await asset("guest-callback")).replaceAll("@CALLS@",witCoreInterface(cbName)),"wit-callback");
+	// Check the exported callbacks against the production contract, without
+	// the test factory that lets this probe construct the guest's registrations.
+	await writeFile(join(cbDir,"cb.wit"),cbWit+`\nworld examined { import ${name}; import api; import inside-callback: func(); export callbacks; }`);
+	await run(wasm,["component","targets","wit-callback","--world","examined","callback-fixture.wasm"]);
 	assert.deepEqual(supported.map(m=>[m.name,m.shape]),[["accept","factory"],["completed","returned"],["echo","owned"],["outcome","returned"],["reject","factory"]]);
 	assert.deepEqual(delivery.remaining.sort(),["Jobs.relay","Jobs.series"]);
 	const component=async(file,id)=>{const data=await readFile(join(app,file),"utf8");return data.replace("(component","(component $"+id);};
@@ -104,13 +117,16 @@ world failure-probe {
 		"(component"
 		, `(type $native-type ${nativeType}) (import "${nativeName}" (instance $native (type $native-type)))`
 		, '(import "observe-drop" (func $observe))'
+		, '(import "inside-callback" (func $inside))'
 		, ...hooks.map(([n,type])=>`(import "${n}" (func $${n} ${type}))`)
 		, graph.replace("(component","(component $base")
 		, await component("object-tasks.wat","tasks")
-		, user,fault
+		, user,fault,callback
 		, `(instance $g (instantiate $base (with "${nativeName}" (instance $native)) (with "observe-drop" (func $observe))))`
 		, `(alias export $g "${name}" (instance $objects)) (export "${name}" (instance $objects))`
 		, '(alias export $g "private-exchange" (instance $cells)) (alias export $objects "box" (type $box))'
+		, `(instance $cb (instantiate $callback-fixture (with "${name}" (instance $objects)) (with "${ops}" (instance $g "${ops}")) (with "inside-callback" (func $inside))))`
+		, `(export "${cbName}" (instance $cb "${cbName}")) (export "callback-drops" (func $cb "callback-drops")) (export "callback-visits" (func $cb "callback-visits"))`
 		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) ${hooks.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`
 		, `(instance $u (instantiate $reader (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`
 		, client("v"),client("v2")

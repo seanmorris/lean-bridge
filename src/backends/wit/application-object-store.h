@@ -106,6 +106,14 @@ static inline bool lwit_give(lwit_owner *v,wasmtime_component_val_t *out) {
     *out=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_RESOURCE,.of.resource=v->any};
     *v=(lwit_owner){0};return true;
 }
+/* Transfer a registered owner between address-stable native slots without
+ * cloning its guest handle or leaving a dangling entry in the store list. */
+static inline bool lwit_move_owner(lwit_owner *to,lwit_owner *from){
+    if(!to || to->any || to->source || !from || !from->any || !from->prev || *from->prev!=from ||
+       from->box || !lwit_open(from->source))return false;
+    *to=*from;*to->prev=to;if(to->next)to->next->prev=&to->next;
+    *from=(lwit_owner){0};return true;
+}
 static inline wasmtime_error_t *lwit_drop(lwit_owner *v) {
     if(!v || !v->any)return NULL;
     lwit_owner old=*v;

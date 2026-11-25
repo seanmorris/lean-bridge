@@ -11,6 +11,10 @@
 typedef enum { LB_CF_FREE, LB_CF_RESERVED, LB_CF_NATIVE, LB_CF_WRITER, LB_CF_STREAM } lb_cf_phase;
 typedef bool (*lb_cf_take_fn)(void *, wasmtime_component_val_t *);
 typedef void (*lb_cf_close_fn)(void *);
+/* A combined descriptor can signal either an owner callback or settlement.
+ * Run the native driver on the store owner. Set fd=-1 only when ready to take,
+ * otherwise return the next borrowed descriptor and keep the same job alive. */
+typedef bool (*lb_cf_progress_fn)(void *, int *fd);
 typedef struct {
     lb_cf_phase phase;
     int fd;
@@ -18,6 +22,8 @@ typedef struct {
     void *owner;
     lb_cf_take_fn take;
     lb_cf_close_fn close;
+    lb_cf_progress_fn progress;
+    void *driver;
 } lb_cf_row;
 typedef struct {
     /* The embedding supplies zeroed rows and equally many poll slots, once.
@@ -45,6 +51,17 @@ static inline unsigned lb_cf_reserve(lb_cf_reactor *r) {
 static inline bool lb_cf_arm(lb_cf_reactor *r, unsigned key, int fd, void *owner, lb_cf_take_fn take, lb_cf_close_fn close) {
     if (!key || key>r->capacity || fd< -1 || !take || !close || r->rows[key-1].phase!=LB_CF_RESERVED) return false;
     r->rows[key-1]=(lb_cf_row){.phase=LB_CF_NATIVE, .fd=fd, .owner=owner, .take=take, .close=close}; return true;
+}
+static inline bool lb_cf_arm_driven(lb_cf_reactor *r,unsigned key,int fd,void *owner,void *driver,lb_cf_progress_fn progress,
+    lb_cf_take_fn take,lb_cf_close_fn close){
+    if(!driver || !progress || !lb_cf_arm(r,key,fd,owner,take,close))return false;
+    r->rows[key-1].driver=driver;r->rows[key-1].progress=progress;return true;
+}
+/* Only call on initial owner entry or following a readiness notification. */
+static inline int lb_cf_ready(lb_cf_row *row){
+    if(!row->progress)return 1;
+    int fd=-2;if(!row->progress(row->driver,&fd) || fd< -1)return -1;
+    row->fd=fd;return fd<0;
 }
 /* Native ownership transfers to the embedding's take callback only on success.
  * Writer rows retain canonical memory, not native owners. Destroy the Wasmtime
@@ -102,6 +119,9 @@ static inline wasmtime_error_t *lb_cf_advance(lb_cf_reactor *r, int timeout) {
         lb_cf_row *row=&r->rows[i];
         if (row->phase!=LB_CF_NATIVE || (row->fd>=0 && !r->fds[i].revents)) continue;
         if (row->fd>=0 && !(r->fds[i].revents&POLLIN)) return lb_cf_fail(r,"invalid native future descriptor notification");
+        int ready=lb_cf_ready(row);
+        if(ready<0)return lb_cf_fail(r,"could not advance callback-bearing future");
+        if(!ready)continue;
         wasmtime_component_val_t args[2]={{.kind=WASMTIME_COMPONENT_U32,.of.u32=i+1},{0}}, result={0};
         if (!row->take(row->owner,&args[1])) return lb_cf_fail(r,"could not take notified native future");
         /* take consumed the token. Never call its close if delivery now traps. */

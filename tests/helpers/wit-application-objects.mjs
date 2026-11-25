@@ -6,6 +6,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { buildWitApplicationConsumer } from "./wit-application-consumer.mjs";
 import { witApplicationOperations } from "../../src/backends/wit/application-operations.mjs";
 import { witObjectFutureFiles } from "../../src/backends/wit/application-future.mjs";
+import { witObjectCallbackFiles } from "../../src/backends/wit/application-callback.mjs";
 
 /**
  * Compile and run the fixture against the actual generated interface and native provider.
@@ -22,6 +23,15 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	const altered=structuredClone(b.api);
 	altered.errors.find(e=>e.id==="error:EIO.Workshop.mapped").payload={kind: "primitive",name: "uint32"};
 	const options={descriptor: b.witImports,entries,name: "workshop",version: "1.0.0"};
+	for(const alter of [
+		t=>{t.source.extensions["lean-bridge.dev/callback-scheduler"]="worker";}
+		, t=>{t.callable.selfDisposal="immediate";}
+		, t=>{t.callable.result.ownership="copy";}
+		, t=>{t.callable.failure.errors=["error:TaskIO.Error"];}
+	]){
+		const api=structuredClone(b.api);alter(api.types.find(t=>t.kind==="callback"));
+		assert.throws(()=>witObjectCallbackFiles({...options,ir,api,entries: b.entries.filter(e=>e.delivery)}),/Invalid retained WIT object callback/u);
+	}
 	assert.throws(()=>witApplicationOperations({...options,api: altered}),/failure payload differs/u);
 	const invented=structuredClone(b.api);
 	invented.declarations.find(d=>d.source.declaration==="Workshop.choose").failure.errors.push("error:IO.Error");
@@ -119,5 +129,6 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	const asynchronous=await probe(resolve(asyncSdk),"guest-future-probe",["-DLB_TEST_OBJECT_FUTURE"]);
 	assert.match(asynchronous.stdout,/compiled Lean canonical object future: both delivery orders, both reader drops, blocked writer shutdown/u);
 	assert.match(asynchronous.stdout,/native object future shutdown before take/u);
+	assert.match(asynchronous.stdout,/compiled relay retained a guest callback, reentered Lean, propagated its original exception and deferred self-disposal/u);
 	assert.match(asynchronous.stdout,/guest distinguished immediate EIO errors from delivered Except values and released each selected branch/u);
 };

@@ -70,6 +70,8 @@ export const compileCHostComponent=async o=>{
 		{hashes[file]=sha256(data);await save(file,data);}
 		if(publicWorkers)
 		{
+			const wake=await readFile(new URL("../backends/wit/callback-readiness.h",import.meta.url));
+			hashes.callbackReadiness=sha256(wake);await save("callback-readiness.h",wake);
 			const reactor=await readFile(new URL("../backends/wit/canonical-future-reactor.h",import.meta.url));
 			hashes.futureReactor=sha256(reactor);await save("canonical-future-reactor.h",reactor);
 			const futures=witObjectFutureFiles({ir,model,api: checked.api,entries: checked.entries.filter(e=>e.delivery),descriptor: witImports,name: o.name,version: o.version});

@@ -33,8 +33,7 @@ static inline bool lwit_finish_frame(lwit_call_frame *f,uint32_t id,lwit_owner *
     while(f->faults){
         lwit_fault *p=f->faults;f->faults=p->next;
         if(id && id==p->id && out && !out->any && !out->source && lwit_open(p->owner.source)){
-            *out=p->owner;*out->prev=out;if(out->next)out->next->prev=&out->next;
-            p->owner=(lwit_owner){0};found=true;
+            found=lwit_move_owner(out,&p->owner);
         }
         if(!lwit_no_error(lwit_drop(&p->owner)))ok=false;
         free(p);
