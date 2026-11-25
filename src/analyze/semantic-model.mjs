@@ -182,8 +182,10 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, source: source(type.name ?? callbackName), assurance: [] };
 			definitions.set(id, definition);
 			if(type.kind === "alias") definition.target = reference(type.target);
-			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name,
-				type: reference(field.type, undefined, field.type.kind === "callback"), mutability: "immutable", documentation: doc(field.name) }));
+			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name
+				, type: reference(field.type, undefined, field.type.kind === "callback")
+				, mutability: "immutable"
+				, documentation: doc(field.name) }));
 			if(type.kind === "variant") definition.cases = type.cases.map(item => ({ name: item.name
 				, fields: item.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }))
 				, documentation: doc(item.name) }));

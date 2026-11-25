@@ -8,7 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { validateBindingIr, validateBindingIrForMigration, validateOwnedAggregateBindingIr } from "../src/binding-ir/contract.mjs";
 import { canonicalizeBindingIr } from "../src/binding-ir/canonical.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { leasedClosureFieldReviewedIr, ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 
 const changed = (change, code) => {
 	const ir = ownedAggregateReviewedIr(); change(ir);
@@ -28,6 +28,25 @@ test("owned aggregate contracts preserve all resource-bearing shapes and callabl
 	assert.ok(schema.$defs.typeDefinition.required.includes("aggregate"));
 	assert.ok(schema.$defs.typeDefinition.properties.representation.enum.includes("owned"));
 	assert.deepEqual(schema.$defs.aggregate.properties.ownership, { const: "lease" });
+});
+
+test("standalone reviewed IR cannot bypass the projection lease by hiding a callable", () => {
+	const review = leasedClosureFieldReviewedIr();
+	assert.equal(validateOwnedAggregateBindingIr(review), review);
+	for(const mutation of [
+		ir => { delete ir.aggregatePolicy.closureFields; }
+		, ir => { ir.aggregatePolicy.closureFields = ["Owned.Tariff.other"]; }
+		, (_ir, record) => { record.fields[0].type = { kind: "apply", constructor: "option", arguments: [record.fields[0].type] }; }
+		, (ir, record) => {
+			const callback = record.fields[0].type;
+			ir.types.push({ ...record, id: "lean:Owned.Quoter", name: "Quoter", kind: "alias", target: callback, fields: [], aggregate: null, representation: "identity" });
+			record.fields[0].type = { kind: "named", id: "lean:Owned.Quoter" };
+		}
+	]){
+		const ir = structuredClone(review);
+		mutation(ir, ir.types.find(type => type.name === "Tariff"));
+		assert.throws(() => validateOwnedAggregateBindingIr(ir), { code: "aggregate-closure-fields" });
+	}
 });
 
 test("new ownership semantics cannot enter a v3 backend or masquerade as copied records", () => {

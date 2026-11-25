@@ -704,6 +704,29 @@ limits do not bound Lean's working memory or every Python allocation overhead.
 See [owned-wheel acceptance](../evidence/owned-python-packages-20260927.md) and
 the [author configuration](../publish/pypi.md#export-resource-containing-values).
 
+### Calling a function stored in a record
+
+In the [Tariff example](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean),
+`quote` is a Lean function that captures a base price. Calling `echo_tariff`
+returns a new record with its own lease on that function:
+
+```python
+from lean_tariff_quotes import echo_tariff, make_tariff
+
+tariff = make_tariff(40)
+with tariff.quote:
+    copy = echo_tariff(tariff)
+
+with copy.quote as quote:
+    assert quote(2) == 42
+```
+
+Use the context manager (or `close()`) on each returned function. Passing
+`Tariff(lambda units: ...)` to Lean raises `TypeError`: the field requires an
+existing typed Lean closure. A Python callable passed directly to a callback
+parameter is borrowed for that call, even if Lean puts it in a record.
+Calling it after the borrow ends raises `LeanBridgeError`.
+
 ### Transferred inputs
 
 A publisher can mark a resource-containing argument as transferred. Pass its

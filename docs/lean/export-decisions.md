@@ -762,6 +762,33 @@ Model call.
 
 Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews are checked against freshly compiled Lean types, including resource identity, field order, callbacks and lifetimes. Builds [reconcile reviewed APIs](existing-package.md#compile-a-reviewed-contract) before compiling adapters. Combined builds require every selected profile to admit the same API; analysis alone does not establish target or installed-package support. The [consumer support contract](../consumer-support.v1.json) records those runtime checks.
 
+### Store a Lean function in a record
+
+Name the projection in `ownedAggregates.closureFields` when a direct record
+field must hold a Lean closure. For example, the record
+`Owned.Tariff` has a field `quote : UInt32 → UInt32`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.makeTariff", "Owned.echoTariff"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject",
+    "closureFields": ["Owned.Tariff.quote"]
+  }
+}
+```
+
+Lean checks the field and its argument and result types. The consumer receives
+a lease, so a function capturing a base price still works after the original
+wrapper closes. This selection does not authorize a host callback to escape
+its call, or apply to another field, a variant case, or an array of functions.
+See the [installed Python example](../consume/python.md#calling-a-function-stored-in-a-record).
+
 ## Declarations the analyzer skips
 
 The default public proposal excludes private and protected declarations, theorems, and type declarations. Selected unsafe, partial, admitted, and unreviewed foreign implementations produce diagnostics. Duplicate unqualified host names require a naming decision.

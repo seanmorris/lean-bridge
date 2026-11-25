@@ -134,6 +134,17 @@ const checkReview = document => {
 		reject(type.kind !== "apply" || !arity || type.arguments.length !== arity, path);
 		type.arguments.forEach((item, index) => reference(item, `${path}.arguments[${index}]`, true));
 	};
+	const callbackDirection = (type, path, expected) => {
+		if(!isCallback(type)) return;
+		const definition = callbacks.get(type.id);
+		const refinements = callbackDefinitionRefinement(definition, document.types, { ownedStructural: true });
+		if(refinements === null) return;
+		const direction = callbackSubtypeDirection({
+			parameters: definition.callable.parameters.map(parameter => parameter.type)
+			, result: definition.callable.result.type
+		}, refinements, document.types, { ownedStructural: true });
+		reject(direction !== null && direction !== expected, path);
+	};
 	const site = (value, path, result = false, transfers = false, anchors = false) => {
 		reference(value.type, `${path}.type`);
 		const copy = copied(value.type);
@@ -142,22 +153,7 @@ const checkReview = document => {
 		if(anchors && !copy && result && value.ownership === "borrow" && ["parameter", "receiver"].includes(value.lifetime?.scope)) return;
 		reject(value.ownership !== (copy ? "copy" : result ? "lease" : "borrow")
 			|| !same(value.lifetime, copy ? null : { scope: result ? "explicit" : "call", anchor: null }), path);
-		if(isCallback(value.type))
-		{
-			const definition = callbacks.get(value.type.id);
-			const refinement = callbackDefinitionRefinement(
-				definition, document.types, { ownedStructural: true }
-			);
-			if(refinement !== null)
-			{
-				const direction = callbackSubtypeDirection({
-					parameters: definition.callable.parameters.map(parameter => parameter.type)
-					, result: definition.callable.result.type
-				}, refinement, document.types, { ownedStructural: true });
-				reject(direction !== null && direction !== (result ? "closure" : "host")
-					, `${path}.type`);
-			}
-		}
+		callbackDirection(value.type, `${path}.type`, result ? "closure" : "host");
 	};
 	const parameter = (value, path, transfers = false) => {
 		reject(value.optional || value.default !== null || value.mutability !== "immutable", path);
@@ -190,7 +186,11 @@ const checkReview = document => {
 		for(const field of fields)
 		{
 			reject(field.mutability !== "immutable", `${definition.id}.${field.name}.mutability`);
-			reference(field.type, `${definition.id}.${field.name}.type`, true);
+			const path = `${definition.id}.${field.name}.type`;
+			const leased = definition.kind === "record" && isCallback(field.type)
+				&& document.aggregatePolicy.closureFields?.includes(`${definition.source.declaration}.${field.name}`);
+			reference(field.type, path, !leased);
+			if(leased) callbackDirection(field.type, path, "closure");
 		}
 	}
 	// Every consumed occurrence of a checked record, copied or owned, names its exact

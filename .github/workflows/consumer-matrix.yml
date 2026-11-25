@@ -4183,6 +4183,7 @@ jobs:
           export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs
+          LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' npm run test:leased-closure-fields
           npm run test:owned-python-transfers
           test -s build/owned-python-transfers/ordinary.json
           test -s build/owned-python-transfers/reviewed.json

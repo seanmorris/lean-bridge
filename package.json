@@ -1321,6 +1321,7 @@
     "test:owned-rust-transfers": "LEAN_BRIDGE_OWNED_RUST_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-rust-transfers.test.mjs tests/owned-rust-transfer-packaging.test.mjs",
     "test:owned-rust-borrows": "LEAN_BRIDGE_OWNED_RUST_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-rust-borrows.test.mjs tests/owned-rust-borrow-packaging.test.mjs",
     "test:owned-rust-receivers": "LEAN_BRIDGE_OWNED_RUST_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/owned-rust-receivers.test.mjs tests/owned-rust-receiver-packaging.test.mjs tests/owned-rust-receiver-plain.test.mjs",
+    "test:leased-closure-fields": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-install.test.mjs",
     "test:owned-python-transfers": "LEAN_BRIDGE_OWNED_PYTHON_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-python-transfers.test.mjs tests/owned-python-transfer-packaging.test.mjs",
     "test:owned-python-borrows": "LEAN_BRIDGE_OWNED_PYTHON_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-python-borrows.test.mjs tests/owned-python-borrow-packaging.test.mjs",
     "test:owned-python-receivers": "LEAN_BRIDGE_OWNED_PYTHON_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/owned-python-receivers.test.mjs tests/owned-python-receiver-packaging.test.mjs tests/owned-python-receiver-plain.test.mjs",

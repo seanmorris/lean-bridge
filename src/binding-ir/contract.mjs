@@ -604,6 +604,49 @@ const validateAggregatePolicy = (policy, path, root = false) => {
 	enumeration(policy.cycles, new Set(["reject"]), `${path}.cycles`);
 };
 
+const validateLeasedClosureFields = (ir, types, path) => {
+	const remaining = new Set(ir.aggregatePolicy.closureFields ?? []);
+	const callbacks = new Set(ir.types.filter(type => type.kind === "callback").map(type => type.id));
+	if(!callbacks.size && !remaining.size) return;
+	/**
+	 * Yield named references inside a field or alias, without expanding nominal types.
+	 *
+	 * @param root - Validated finite type-reference expression.
+	 */
+	const namesIn = function* (root) {
+		const pending = [root];
+		while(pending.length)
+		{
+			const ref = pending.pop();
+			if(ref.kind === "apply") pending.push(...ref.arguments);
+			else if(ref.kind === "named") yield ref.id;
+		}
+	};
+	// A shared alias chain is visited once, not expanded afresh for every field.
+	// Stop at nominal records: their own projections govern their contents.
+	const parents = new Map();
+	for(const type of ir.types) if(type.kind === "alias") for(const id of namesIn(type.target))
+	{
+		if(!parents.has(id)) parents.set(id, []);
+		parents.get(id).push(type.id);
+	}
+	for(const id of callbacks) for(const alias of parents.get(id) ?? []) callbacks.add(alias);
+	for(const type of ir.types)
+	{
+		const fields = type.kind === "record" ? type.fields
+			: type.kind === "variant" ? type.cases.flatMap(branch => branch.fields) : [];
+		for(const field of fields) for(const id of namesIn(field.type))
+		{
+			if(!callbacks.has(id)) continue;
+			const projection = `${type.source.declaration}.${field.name}`;
+			if(type.kind !== "record" || type.representation !== "owned" || field.type.kind !== "named"
+				|| types.get(id)?.kind !== "callback" || !remaining.delete(projection))
+				fail("aggregate-closure-fields", `${projection} requires an explicitly selected direct owned record function field`, { path });
+		}
+	}
+	if(remaining.size) fail("aggregate-closure-fields", `${remaining.values().next().value} is not an exported owned record function field`, { path });
+};
+
 /**
  * Validate shared structure and semantics for an explicitly selected version.
  *
@@ -874,14 +917,7 @@ const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) =
     array(type.assurance, `${typePath}.assurance`);
 	});
 
-	if(ir.aggregatePolicy?.closureFields)
-	{
-		const projections = new Set(ir.types.filter(type => type.representation === "owned" && type.kind === "record")
-			.flatMap(type => type.fields.filter(field => field.type.kind === "named" && typeMap.get(field.type.id)?.kind === "callback")
-				.map(field => `${type.source.declaration}.${field.name}`)));
-		for(const name of ir.aggregatePolicy.closureFields)
-			if(!projections.has(name)) fail("aggregate-closure-fields", `${name} is not an exported owned record function field`, { path });
-	}
+	if(ir.schemaVersion === 4) validateLeasedClosureFields(ir, typeMap, path);
 	for(const type of ir.types)
 	{
 		const typeParameters = new Map(

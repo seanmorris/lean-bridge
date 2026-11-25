@@ -112,6 +112,42 @@ export const ownedAggregateReviewedIr = () => {
 	return ir;
 };
 
+/** Independently state the stored-closure interface, without reading the ordinary build. */
+export const leasedClosureFieldReviewedIr = () => {
+	const ir = ownedAggregateReviewedIr();
+	ir.component = { id: "tariff-quotes@1.0.0", name: "tariff-quotes", version: "1.0.0" };
+	ir.aggregatePolicy = { ...policy(), closureFields: ["Owned.Tariff.quote"] };
+	const scalar = primitive("uint32"), tariff = named("Tariff"), ticket = named("Ticket");
+	const callbackName = `Callback${sha256(canonicalJson({ parameters: [scalar], result: scalar })).slice(0, 20)}`;
+	const callback = { kind: "named", id: `bridge:${callbackName}` };
+	const site = (type, result = false) => ({ type
+		, ownership: type === scalar ? "copy" : result ? "lease" : "borrow"
+		, lifetime: type === scalar ? null : { scope: result ? "explicit" : "call", anchor: null } });
+	const parameter = (type, index) => ({ ...site(type), name: `arg${index}`, mutability: "immutable", optional: false, default: null });
+	const callable = ir.types.find(type => type.kind === "callback").callable;
+	ir.types = [
+		ir.types.find(type => type.id === ticket.id)
+		, definition("Tariff", "record", "owned", { fields: [field("quote", callback)] })
+		, { ...definition(callbackName, "callback", "identity")
+			, id: callback.id, source: source(callbackName)
+			, callable: { ...callable, parameters: [parameter(scalar, 0)], result: site(scalar, true) } }
+	];
+	const template = ir.declarations.find(decl => decl.name === "newTicket");
+	ir.declarations = [
+		["newTicket", [scalar], ticket], ["makeTariff", [scalar], tariff]
+		, ["applyTariff", [tariff, scalar], scalar], ["echoTariff", [tariff], tariff]
+		, ["unpackQuote", [tariff], callback], ["packQuote", [callback], tariff]
+	].map(([name, inputs, output]) => {
+		const canInvoke = inputs.includes(tariff) || inputs.includes(callback);
+		return { ...template, name, id: `lean:Owned.${name}`
+			, overloadKey: `Owned.${name}`, source: source(`Owned.${name}`)
+			, parameters: inputs.map(parameter), result: site(output, true)
+			, effects: [...canInvoke ? ["reads-resource", "host-call", "fails"] : [], ...output === scalar ? [] : ["allocates"]]
+			, failure: canInvoke ? callable.failure : template.failure };
+	});
+	return ir;
+};
+
 /** Add one per-use checked Subtype decision inside an owned aggregate. */
 export const ownedSubtypeReviewedIr = () => {
 	const ir = ownedAggregateReviewedIr();

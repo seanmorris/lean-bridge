@@ -366,8 +366,8 @@ export const exportContractOwnership = (type, result = false, retained = false) 
  * @param ownedAggregates - Include ownership-aware boundary acquisition and handle reads.
  */
 export const exportContractEffects = (projection, ownedAggregates = false) => {
-	const effects = projection.parameters.some(({ type }) => type.kind === "callback" ||
-		(type.kind === "owned-graph" && type.types.some(def => def.kind === "record" && def.fields.some(field => field.type.kind === "callback"))))
+	const effects = projection.parameters.some(({ type }) => type.kind === "callback"
+		|| (type.kind === "owned-graph" && type.types.some(def => def.kind === "record" && def.fields.some(field => field.type.kind === "callback"))))
 		? ["fails", "host-call"] : [];
 	if(ownedAggregates)
 	{

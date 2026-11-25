@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "tariff-quotes@1.0.0",
+    "name": "tariff-quotes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53869337,
+          "path": "archives/tariff_quotes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "10af7fa3d9c481c072fe2f40b89116c1ae1c4aeba5c89ea8d5659d5ff2f0fe72"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "tariff-quotes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ab8f4d105739158b17559654073c18820415a65a5090d3c42bdf3d73402a4279",
+      "id": "native-library-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "aa061fd0ac4018d1c83c40d0a288369f7e95a5cede6b024d8cc836c4817b7baf"
+  }
+}

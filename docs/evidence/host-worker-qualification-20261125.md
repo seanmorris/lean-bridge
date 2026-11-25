@@ -103,8 +103,10 @@ two cases. Without a retention decision, the compiler still rejects the field.
 Naming `Owned.HiddenCallback.callback` in `ownedAggregates.closureFields`
 produces an owned record with a leased function field. Its `Bundle → Bundle`
 signature borrows the resource-containing argument and leases the result.
-This is compiler evidence; it is separate from an installed consumer calling
-the field after the original wrapper closes.
+For installed calls, the [Python Tariff receipt](python-leased-closure-fields-20261125.md)
+exercises a scalar function field after its original wrapper closes. Neither
+result by itself tests a function field containing a captured application
+object or a durable host callback.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)

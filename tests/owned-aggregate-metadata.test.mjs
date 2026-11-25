@@ -96,8 +96,12 @@ test("a leased closure is authorized only at its named record projection, not be
 	const allowed = { ...policy, closureFields: [projection] };
 	for(const fields of [[], [projection, projection], ["transform"], ["Owned.*"], [projection + "\n"], Array(1), null])
 		assert.throws(() => validateOwnedAggregatePolicy({ ...policy, closureFields: fields }));
-	const scalar = { kind: "primitive", name: "uint32", lean: "UInt32", abi: {
-		cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
+	const scalar = { kind: "primitive", name: "uint32", lean: "UInt32"
+	, abi: {
+		cType: "uint32_t"
+		, box: "lean_box_uint32"
+		, unbox: "lean_unbox_uint32"
+		, heap: false } };
 	const fn = { kind: "callback", parameters: [scalar], result: scalar, abi: heap };
 	const field = { name: "transform", projection, type: fn };
 	const value = { ...nominalGraph(), policy: allowed };
@@ -111,10 +115,10 @@ test("a leased closure is authorized only at its named record projection, not be
 		, bad => { bad.types[0].fields[0].type.parameters = [fn]; }
 		, bad => { bad.types[0].fields[0].type.abi = scalar.abi; }
 		, bad => { bad.root = array(fn); }
-		, bad => { bad.types[0] = { kind: "variant", name: "Owned.Box", lean: "Owned.Box", abi: heap,
-			cases: [{ name: "make", constructor: "Owned.Box.make", fields: [{ name: "transform", type: fn }] }] }; }
-	])
-	{
+		, bad => { bad.types[0] = { kind: "variant"
+			, name: "Owned.Box", lean: "Owned.Box", abi: heap
+			, cases: [{ name: "make", constructor: "Owned.Box.make", fields: [{ name: "transform", type: fn }] }] }; }
+	]){
 		const bad = structuredClone(value); mutate(bad);
 		assert.throws(() => validateOwnedNativeType(bad, allowed));
 	}
@@ -305,7 +309,7 @@ test("fresh Lean owned graphs match the independent resource contract, including
 	assert.equal(fn.callable.parameters[0].ownership, "borrow");
 	assert.equal(fn.callable.result.ownership, "lease");
 	const stale = structuredClone(fieldModel.document); stale.aggregatePolicy.closureFields = ["Owned.Bundle.primary"];
-	assert.throws(() => compileOwnedAggregateModel(stale), /not an exported owned record function field/);
+	assert.throws(() => compileOwnedAggregateModel(stale), { code: "aggregate-closure-fields" });
 	const borrowed = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };
 	const leased = { ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
 	const contract = { parameters: [borrowed], result: leased, effects: ["reads-resource", "allocates"] };
