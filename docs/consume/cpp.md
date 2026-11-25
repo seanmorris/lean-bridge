@@ -128,6 +128,14 @@ original C++ exception. If Lean maps it to `EIO String`, catch
 `lean_bridge::sync_v1::DeclaredError<std::string>` instead. A returned
 `Except` remains a value.
 
+For a borrowed member result, use an aliasing `shared_ptr` when returning a
+subobject: `std::shared_ptr<Dial>(parent, &parent->dial)`. It points at the
+field but keeps the original parent alive. If the contract says the result
+borrows from a parameter, use that parameter's owner, not the receiver's.
+Creating another control block for the same address is not equivalent; that
+invalid reply makes further Lean calls unavailable. The [two-class
+client](../../tests/fixtures/cpp-host-anchors/client.cpp) exercises both cases.
+
 Call or explicitly close the binding on the process main thread. Destroying
 a binding on another thread queues its cleanup for the next owner-thread
 entry; call `lean_bridge::sync_v1::drain_host_closes()` there if no more

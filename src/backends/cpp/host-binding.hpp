@@ -10,6 +10,7 @@
 #include <memory>
 #include <typeinfo>
 #include <type_traits>
+#include <utility>
 #include <sys/syscall.h>
 #include <unistd.h>
 
@@ -36,6 +37,8 @@ inline void drain() {
     }
 }
 struct Frame {
+    // The enclosing private C adapter reserves UINT32_MAX for invalid replies.
+    static constexpr uint32_t overflow_id=UINT32_MAX-1;
     Frame *&slot,*parent; std::vector<std::exception_ptr> faults;
     std::exception_ptr overflow;
     explicit Frame(Frame *&s) : slot(s),parent(s) {slot=this;}
@@ -43,12 +46,12 @@ struct Frame {
     uint32_t remember() noexcept {
         auto p=std::current_exception();
         try {
-            if(faults.size()>=UINT32_MAX-1) throw std::length_error("too many nested member failures");
+            if(faults.size()>=overflow_id-1) throw std::length_error("too many nested member failures");
             faults.push_back(std::move(p)); return static_cast<uint32_t>(faults.size());
-        } catch(...) {overflow=std::current_exception(); return UINT32_MAX;}
+        } catch(...) {overflow=std::current_exception(); return overflow_id;}
     }
     [[noreturn]] void rethrow(uint32_t id) const {
-        if(id==UINT32_MAX && overflow) std::rethrow_exception(overflow);
+        if(id==overflow_id && overflow) std::rethrow_exception(overflow);
         if(!id || id>faults.size()) throw Unavailable{};
         std::rethrow_exception(faults[id-1]);
     }
@@ -59,6 +62,9 @@ inline void registry(int rc) {
     if(rc==2) throw Closed{};
     if(rc==3) throw std::length_error("C++ host owner budget exceeded");
     throw Unavailable{};
+}
+template<class T,class U> bool anchored(const std::shared_ptr<T>& value,const std::shared_ptr<U>& parent) noexcept {
+    return value && parent && !value.owner_before(parent) && !parent.owner_before(value);
 }
 template<class V> std::string text(const V& v) {
     return v.len?std::string(reinterpret_cast<const char*>(v.data),v.len):std::string{};

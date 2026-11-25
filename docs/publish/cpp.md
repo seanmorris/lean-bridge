@@ -63,6 +63,13 @@ The archive records the producing libstdc++ ABI and its header checks
 compatibility at compile time. This is a synchronous profile; a plain `IO`
 entry does not return a future.
 
+When a member returns a borrowed object, set its result ownership to
+`borrow` and name the owner: `{ "scope": "receiver", "anchor": "receiver" }`
+or `{ "scope": "parameter", "anchor": "dial" }` for an argument named
+`dial`. The generated C++ binding checks that the result shares that
+owner's control block. Use a lease for a result with an independent owner.
+See the [borrowed member example](../../tests/fixtures/cpp-host-anchors/Workshop.lean).
+
 ## Export tasks and streams
 
 If the Lean code uses files, environment variables, or other OS facilities,

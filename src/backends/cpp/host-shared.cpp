@@ -49,8 +49,15 @@ static int pin(const char *key,const std::type_info *type,const std::shared_ptr<
        !p || !p->get() || !p->use_count() || !out || out->domain || out->ticket) return CR_INVALID;
     for(box *b=live;b;b=b->next) {
         if(b->address!=p->get()) continue;
-        if(b->retiring || std::strcmp(b->key,key) || bool(type)!=bool(b->type) || (type && *type!=*b->type) || b->value.owner_before(*p) || p->owner_before(b->value))
+        if(b->retiring || b->value.owner_before(*p) || p->owner_before(b->value)) return CR_INVALID;
+        if(std::strcmp(b->key,key)) {
+            // An aliasing shared_ptr to a standard-layout object's first
+            // member can have the same address as the parent. These are two
+            // nominal objects, safely distinguished by their concrete types.
+            if(type && b->type && *type!=*b->type) continue;
             return CR_INVALID;
+        }
+        if(bool(type)!=bool(b->type) || (type && *type!=*b->type)) return CR_INVALID;
         return LB_CR(adopt)(key,b,reinterpret_cast<lb_cr_fn>(destroy),dispose,out);
     }
     auto *b=new(std::nothrow) box{*p,p->get(),{},live,false,type};

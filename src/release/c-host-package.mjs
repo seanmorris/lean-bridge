@@ -94,7 +94,7 @@ export const buildCHostPackage=async o=>{
 			, hostImportsSourceSha256: b.evidence.hostImportsSourceSha256
 			, hostDomain: b.domain
 			, library: b.component
-			, ...cpp?{cppHostAbi: b.abi,cppStandard:20}:{}
+			, ...cpp?{cppHostAbi: b.abi,cppStandard: 20}:{}
 			, glibcMinimumVersion: floor
 			, cmakePackage, cmakeTarget
 			, pkgConfig: name

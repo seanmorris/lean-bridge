@@ -40,5 +40,27 @@ int main() {
     int foreign=0;assert(LB_CR(adopt)(kind,&foreign,nullptr,nullptr,&none)==CR_OK);
     assert(LB_CPP_OWNER(share)(kind,none,&recovered)==CR_INVALID && !recovered);
     assert(LB_CR(drop)(kind,&none)==CR_OK);
+    struct Pair { int first; };
+    auto parent=std::make_shared<Pair>(Pair{91});
+    std::shared_ptr<int> field(parent,&parent->first);
+    std::shared_ptr<void> a1=parent,a2=field;
+    assert(a1.get()==a2.get() && !a1.owner_before(a2) && !a2.owner_before(a1));
+    uint64_t w[2]{},v[2]{},invalid[2]{};
+    assert(LB_CPP_OWNER(bind_type)(kind,&typeid(Pair))==CR_OK);
+    assert(LB_CPP_OWNER(pin_typed)(kind,&typeid(Pair),&a1,w)==CR_OK);
+    assert(LB_CPP_OWNER(pin_typed)(other,&typeid(int),&a2,v)==CR_OK);
+    assert(LB_CPP_OWNER(share_typed)(other,&typeid(Pair),v,&recovered)==CR_INVALID);
+    assert(LB_CPP_OWNER(share_typed)(kind,&typeid(Pair),v,&recovered)==CR_INVALID);
+    assert(LB_CPP_OWNER(share_typed)(other,&typeid(int),v,&recovered)==CR_OK);
+    assert(recovered.get()==a2.get() && !recovered.owner_before(parent) && !parent.owner_before(recovered));
+    std::shared_ptr<void> impostor(a1.get(),[](void*){});
+    assert(LB_CPP_OWNER(pin_typed)(other,&typeid(int),&impostor,invalid)==CR_INVALID);
+    assert(LB_CPP_OWNER(unbind_type)(kind,&typeid(Pair))==CR_OK);
+    // A live object still protects the type claim after the binding closes.
+    assert(LB_CPP_OWNER(bind_type)(kind,&typeid(int))==CR_INVALID);
+    lb_cr_ref rp{w[0],w[1]},rf{v[0],v[1]};
+    assert(LB_CR(drop)(kind,&rp)==CR_OK && LB_CR(drop)(other,&rf)==CR_OK);
+    assert(LB_CPP_OWNER(bind_type)(kind,&typeid(int))==CR_OK);
+    assert(LB_CPP_OWNER(unbind_type)(kind,&typeid(int))==CR_OK);
     std::puts("C++ shared owner: same control block, exact destruction");
 }

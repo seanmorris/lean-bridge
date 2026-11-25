@@ -89,9 +89,10 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 			await run(cpp?"c++":"cc",[cpp?"-std=c++20":"-std=c11","-Werror","-Wall","-Wextra",...cpp?["-DCHECK_COPIED_MEMBERS=1"]:[],main,...flags,"-o",bin],client,pc);
 			const isolated={PATH: "/without-tools",LANG: "C",LEAN_NUM_THREADS: "1",LD_LIBRARY_PATH: ""};
 			const loaded=async file=>{
-				const deps=(await run("ldd",[file],client,{...env,LD_LIBRARY_PATH:""})).split("\n");
+				const deps=(await run("ldd",[file],client,{...env,LD_LIBRARY_PATH: ""})).split("\n");
 				const names=[];
-				for(const line of deps) {
+				for(const line of deps)
+				{
 					const m=/^\s*(lib(?:lb_(?:c|cpp)_host_\w+|lean_bridge_native|leanshared)\.so) => (.+?) \(/u.exec(line);
 					if(!m) continue;
 					const path=await realpath(m[2]); assert.ok(dirs.some(d=>path.startsWith(d+"/lib/")),path); names.push(m[1]);

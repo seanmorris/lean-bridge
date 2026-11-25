@@ -62,7 +62,7 @@ export const compileCHostComponent=async o=>{
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
 	const facadeFor=(identity,prefix)=>cHostFacade({ir,entries: checked.entries,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp});
-	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: checked.entries,model,name:o.name,identity,facade,ownerPrefix,abi});
+	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: checked.entries,model,name: o.name,identity,facade,ownerPrefix,abi});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
 		domainId
@@ -70,7 +70,7 @@ export const compileCHostComponent=async o=>{
 		, evidence: checked.evidence
 		, hashes
 		, publicBase
-		, ...cpp?{cppHeader:wrapper("0".repeat(64),publicBase)}:{}
+		, ...cpp?{cppHeader: wrapper("0".repeat(64),publicBase)}:{}
 		, header: base.header
 		, source: base.source
 		, entry: base.entryLean

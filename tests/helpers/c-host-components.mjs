@@ -9,6 +9,7 @@ import {elaboratedComponent} from "../../src/analyze/semantic-model.mjs";
 import {compileCHostComponent} from "../../src/build/c-host-component.mjs";
 import {boostSources} from "../../src/backends/cpp/boost.mjs";
 import {openHostProjectSource} from "../../src/build/host-project-source.mjs";
+import {buildNativeSharedRuntime} from "../../src/build/native-component.mjs";
 import {processBuildRunner} from "../../src/build/process-runner.mjs";
 import {canonicalJson} from "../../src/capsule/node.mjs";
 import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
@@ -17,7 +18,9 @@ for(const target of ["c","cpp"]) test("public "+(target==="c"?"C":"C++")+" consu
 	const cpp=target==="cpp";
 	const root=await mkdtemp(join(tmpdir(),"c-host-components-"));
 	t.after(()=>rm(root,{recursive: true,force: true}));
-	const leanPrefix=resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX), runtimeRoot=resolve(process.env.LEAN_BRIDGE_C_HOST_SDK);
+	const leanPrefix=resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX??".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
+	const sdk=process.env.LEAN_BRIDGE_C_HOST_SDK, runtimeRoot=sdk?resolve(sdk):join(root,"runtime");
+	if(!sdk) await buildNativeSharedRuntime({leanPrefix,outputRoot: runtimeRoot});
 	const prefix=join(root,"client"), producer=join(root,"producer");
 	await mkdir(prefix); await mkdir(producer);
 	const builds=[];
@@ -41,17 +44,24 @@ for(const target of ["c","cpp"]) test("public "+(target==="c"?"C":"C++")+" consu
 			else await copyFile(join(app,b.domain),join(prefix,b.domain));
 			await copyFile(join(app,b.component),join(prefix,b.component));
 			await writeFile(join(prefix,name+(cpp?".hpp":".h")),b.publicHeader);
-			for(const [path,bytes] of Object.entries(b.support??{})) { await mkdir(dirname(join(prefix,path)),{recursive:true}); await writeFile(join(prefix,path),bytes); }
+			for(const [path,bytes] of Object.entries(b.support??{}))
+			{
+				await mkdir(dirname(join(prefix,path)),{recursive: true});
+				await writeFile(join(prefix,path),bytes);
+			}
 			if(!builds.length && cpp && b.publicHeader.includes("<boost/multiprecision/cpp_int.hpp>"))
 				for(const [path,bytes] of Object.entries(boostSources())) if(path.startsWith("include/"))
 				{
-					const f=join(prefix,path.slice(8)); await mkdir(dirname(f),{recursive:true}); await writeFile(f,bytes);
+					const f=join(prefix,path.slice(8)); await mkdir(dirname(f),{recursive: true}); await writeFile(f,bytes);
 				}
 			builds.push(b);
 		} catch(e)
-{throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause: e});}
-		finally
-{await source.dispose();}
+		{
+			throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause: e});
+		} finally
+		{
+			await source.dispose();
+		}
 	}
 	assert.notEqual(builds[0].component,builds[1].component);
 	await rm(producer,{recursive: true});
@@ -66,10 +76,14 @@ for(const target of ["c","cpp"]) test("public "+(target==="c"?"C":"C++")+" consu
 	}
 	for(const order of [builds,[...builds].reverse()])
 	{
-		try {
+		try
+		{
 			await run(cpp?process.env.CXX??"c++":process.env.CC??"cc",[cpp?"-std=c++20":"-std=c11","-Wall","-Wextra","-Werror","-I.",fixture,"-L.","-Wl,-rpath,$ORIGIN","-Wl,-rpath-link,.",...order.map(b=>"-l:"+b.component),...cpp?["-l:"+builds[0].domain,"-DBOOST_MP_STANDALONE","-DCHECK_COPIED_MEMBERS=1","-pthread"]:[],"-o","client"]);
 			const output=await run("./client",[]); assert.match(output.stdout,cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u);
-		} catch(e) {throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause:e});}
+		} catch(e)
+		{
+			throw new Error([e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n"),{cause: e});
+		}
 	}
 	t.diagnostic("Both link orders: "+builds.map(b=>b.binaries[b.component]).join(", ")+"; shared domain "+builds[0].binaries[builds[0].domain]);
 });

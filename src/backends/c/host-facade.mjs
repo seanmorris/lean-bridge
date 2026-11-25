@@ -60,7 +60,7 @@ export const cHostFacade=o=>{
     ${args.map((a,j)=>a.nominal?`{ lb_cr_ref borrowed={0},own={0}; if(LB_CR(lift)(${a.key},w[${3*j}],&borrowed) || LB_CR(clone)(${a.key},borrowed,&own)) goto done_${i}; a${j}=(${a.type}){{own.domain,own.ticket}}; }`:a.unpack("a"+j,"w+"+3*j,bad,{borrowed: true})).join("\n    ")}
     called=true; err=s->methods.${label}(${["s->context",...args.map((_,j)=>"a"+j),...hasResult?["&result"]:[]].join(",")});
     ${result.dyn?"scope->buffer=result.data;":""}
-    if(err) { *fault=err; rc=1; goto done_${i}; }
+    ${o.cpp?"if(err==UINT32_MAX) goto done_"+i+";\n    ":""}if(err) { *fault=err; rc=1; goto done_${i}; }
     ${result.nominal?`{ lb_cr_ref own={0}; if(LB_CR(clone)(${result.key},${result.raw("result")},&own)) goto done_${i}; scope->key=${result.key}; scope->temp=own; out[0]=own.ticket; }`
 		:hasResult?result.pack("result","out",()=>("goto done_"+i+";")):"out[0]=0;"}
     rc=0;
