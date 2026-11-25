@@ -32,6 +32,7 @@ structure Request where
   rustTaskCallbacks : Option Bool := none
   cppTaskCallbacks : Option Bool := none
   cTaskCallbacks : Option Bool := none
+  staticTaskOwner : Option String := none
   rubyTaskCallbacks : Option Bool := none
   rubyTaskObjects : Option Bool := none
   dotnetTaskCallbacks : Option Bool := none
@@ -104,8 +105,27 @@ def Request.perlObjects (r : Request) : Bool :=
     (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty) &&
     (r.perlTaskCallbacks == some true) == !r.taskExports.isEmpty
 
+/-- Native owners transport opaque objects. Only the owner's callback may
+    dereference one; selecting a different scheduler does not grant access. -/
+def Request.staticObjects (r : Request) : Bool :=
+  let hasTasks := !r.taskExports.isEmpty
+  let markers := #[r.cTaskCallbacks, r.cppTaskCallbacks, r.rustTaskCallbacks,
+    r.pythonTaskCallbacks, r.rubyTaskCallbacks, r.dotnetTaskCallbacks, r.jvmTaskCallbacks,
+    r.perlTaskCallbacks, r.phpTaskCallbacks, r.javascriptTaskCallbacks, r.witTaskCallbacks]
+  let matchesOwner := fun (mod : String) (flag : Option Bool) =>
+    r.hostModule == some mod && flag == (if hasTasks then some true else none)
+  (hasTasks || !r.asyncIterators.isEmpty) && (markers.filter Option.isSome).size == (if hasTasks then 1 else 0) &&
+    match r.staticTaskOwner with
+    | some "c" => matchesOwner "LeanBridge.Host.C" r.cTaskCallbacks
+    | some "cpp" => matchesOwner "LeanBridge.Host.Cpp" r.cppTaskCallbacks
+    | some "rust" => matchesOwner "LeanBridge.Host.Rust" r.rustTaskCallbacks
+    | _ => false
+
+def Request.staticLabel (r : Request) : String :=
+  if r.staticTaskOwner == some "c" then "C" else if r.staticTaskOwner == some "cpp" then "C++" else "Rust"
+
 def Request.localObjects (r : Request) : Bool :=
-  r.pythonObjects || r.rubyObjects || r.dotnetObjects || r.jvmObjects || r.perlObjects
+  r.pythonObjects || r.rubyObjects || r.dotnetObjects || r.jvmObjects || r.perlObjects || r.staticObjects
 
 def Request.hostValues (r : Request) : Bool := r.ownerHostMembers || r.phpTaskObjects || r.localObjects
 
@@ -170,7 +190,9 @@ def taskInput (r : Request) (e : Expr) : MetaM Json := do
         (((r.ownerHostMembers && r.javascriptTaskCallbacks == some true) || r.phpTaskObjects || r.localObjects) &&
           t.constName?.any (fun n => r.resources.any (fun k => k.lean == n.toString)))
       unless [a, v].all admitted do
-        if r.ownerHostMembers then
+        if r.staticObjects then
+          throwError "retained task callback arguments and replies must be copied scalars or declared {r.staticLabel} owner classes: {e}"
+        else if r.ownerHostMembers then
           throwError "retained task callback arguments and replies must be copied scalars or declared JavaScript owner classes: {e}"
         else if r.rubyObjects then
           throwError "retained task callback arguments and replies must be copied scalars or declared Ruby owner classes: {e}"
@@ -234,6 +256,10 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
 
 def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
   if r.ownerHostMembers then return
+  if r.staticObjects then
+    if r.members.any (fun m => deps.contains m.toName) then
+      throwError "{r.staticLabel} task calls a {r.staticLabel} member outside its owner: {n}"
+    return
   if r.perlObjects then
     if r.members.any (fun m => deps.contains m.toName) then
       throwError "Perl task calls a Perl member outside its owner: {n}"
@@ -362,6 +388,8 @@ private partial def nativeLeaves (env : Environment) (root : Name) (pending : Li
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  if r.staticTaskOwner.isSome && !r.staticObjects then
+    throwError "invalid static worker object owner"
   if r.witCursorIO.isSome && (r.witCursorIO != some true || r.hostModule.isSome || r.asyncIterators.isEmpty) then
     throwError "invalid standalone WIT cursor IO selection"
   if r.javascriptThreadedHostMembers.isSome && !r.ownerHostMembers then
