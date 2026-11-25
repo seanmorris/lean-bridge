@@ -77,23 +77,46 @@ export const rustHostFacade = pkg => {
 		cases.push(j+"=>{if arg.len()!="+args.length+"{return Err(Fault::Protocol.into())}"+vs.join("")+(borrow?"let anchor=v"+m.anchor+".clone();":"")+" let value=H::member"+j+"("+args.map((_,i)=>"v"+i).join(",")+")?;Ok("+out+")}");
 	}
 	const sum=t=>t.kind==="apply" && t.constructor==="result" && t.arguments.length===2;
-	const decode=(t,depth=0)=>{
+	const decode=(t,depth=0,port="self.port")=>{
 		if(depth>64) throw new TypeError("Rust host result depth exceeded");
 		if(sum(t))
 		{
-			const [a,b]=t.arguments.map(k=>decode(k,depth+1)); return {ty: "Result<"+a.ty+","+b.ty+">",expr: "if o.branch("+depth+")? {Ok("+a.expr+")}else{Err("+b.expr+")}"};
+			const [a,b]=t.arguments.map(k=>decode(k,depth+1,port)); return {ty: "Result<"+a.ty+","+b.ty+">",expr: "if o.branch("+depth+")? {Ok("+a.expr+")}else{Err("+b.expr+")}"};
 		}
-		const v=track(ref(t));return {ty: subject(v,"H","HostRef"),expr: nominal(v)?"self.port.output::<H::Object"+v+">("+v+",o.word())?":readScalar(v,"o.word()")};
+		const v=track(ref(t));return {ty: subject(v,"H","HostRef"),expr: nominal(v)?port+".output::<H::Object"+v+">("+v+",o.word())?":readScalar(v,"o.word()")};
 	};
-	const names=new Set(["new","close"]);
-	for(const [j,e] of entries.filter(e=>!e.delivery).entries())
+	const names=new Set(["new","close"]),returned=[],typeNames=new Set(),sync=entries.filter(e=>!e.delivery);
+	const parameter=v=>nominal(v)?"&impl AsHost<H::Object"+v+">":v==="string"?"&str":v==="bytes"?"&[u8]":(isBig(v)?"&":"")+primitive(v);
+	const input=(v,i,port)=>nominal(v)?port+".input("+v+",v"+i+",&mut scratch)?":encode(v,"v"+i,"scratch",false);
+	const scratch=vs=>vs.some(v=>nominal(v)||["string","bytes","int","nat"].includes(v))?"let mut scratch=Scratch::default();":"";
+	for(const [j,e] of sync.entries())
 	{
-		const n=ident(cIdentifier(e.name)),args=e.parameters.map(p=>track(ref(p.type))),ret=decode(e.result),err=e.effect==="EIO"?decode(e.error):null;
+		const n=ident(cIdentifier(e.name)),args=e.parameters.map(p=>track(ref(p.type)));
 		if(names.has(n)) throw new TypeError("Reserved Rust host binding entry: "+n); names.add(n);
-		const ps=args.map((v,i)=>"v"+i+":"+(nominal(v)?"&impl AsHost<H::Object"+v+">":v==="string"?"&str":v==="bytes"?"&[u8]":(isBig(v)?"&":"")+primitive(v)));
-		const ws=args.map((v,i)=>nominal(v)?"self.port.input("+v+",v"+i+",&mut scratch)?":encode(v,"v"+i,"scratch",false));
+		const ps=args.map((v,i)=>"v"+i+":"+parameter(v)),ws=args.map((v,i)=>input(v,i,"self.port"));
+		if(e.result.kind==="io-closure")
+		{
+			if(e.effect!=="IO") throw new TypeError("Rust returned functions require an IO factory");
+			const cls="Returned"+cIdentifier(e.name).split("_").filter(Boolean).map(s=>s[0].toUpperCase()+s.slice(1)).join("");
+			if(typeNames.has(cls) || cls==="ReturnedOwner") throw new TypeError("Reserved Rust returned-function type: "+cls);typeNames.add(cls);
+			const a=track(ref(e.result.argument)),r=decode(e.result.reply,0,"h.port"),decl=JSON.stringify(e.declaration);
+			returned.push("pub struct "+cls+"<H:Host>{owner:std::rc::Weak<ReturnedOwner>,ticket:std::cell::Cell<u64>,_types:PhantomData<H>} impl<H:Host> "+cls+"<H>{"
+				+"pub fn call(&self,v0:"+parameter(a)+")->Result<"+r.ty+",HostCallError>{"
+				+"let h=self.owner.upgrade().ok_or(Fault::Closed)?;let id=self.ticket.get();if id==0{return Err(Fault::Closed.into())}"
+				+scratch([a])+"let ws=[[id,0,0],"+input(a,0,"h.port")+"];let (o,failed)=unsafe{h.port.execute("+(sync.length+j)+",&ws,"+decl+")?};"
+				+"if failed{return Err(Fault::Protocol.into())}Ok("+r.expr+")}"
+				+"pub fn close(&self)->Result<(),Fault>{let Some(h)=self.owner.upgrade()else{return Ok(())};lean_bridge_host_runtime::owner::check_context()?;"
+				+"let id=self.ticket.replace(0);if id==0{return Ok(())}match unsafe{h.port.execute::<Infallible>("+(2*sync.length+j)+",&[[id,0,0]],"+decl+")}{"
+				+"Ok((_,false))|Err(HostCallError::Boundary(Fault::Closed))=>Ok(()),Err(HostCallError::Boundary(e))=>{self.ticket.set(id);Err(e)},_=>Err(Fault::Protocol)}}}"
+				+"impl<H:Host> Drop for "+cls+"<H>{fn drop(&mut self){let _=self.close();}}");
+			exports.push("pub fn "+n+"(&self"+(ps.length?","+ps.join(","):"")+")->Result<"+cls+"<H>,HostCallError>{"+scratch(args)+"let ws=["+ws.join(",")+"];"
+				+"let (o,failed)=unsafe{self.port.execute("+j+",&ws,"+decl+")?};let id=p::single(o.word(),u64::MAX)?;if failed || id==0{return Err(Fault::Protocol.into())}"
+				+"Ok("+cls+"{owner:Rc::downgrade(&self.owner),ticket:std::cell::Cell::new(id),_types:PhantomData})}");
+			continue;
+		}
+		const ret=decode(e.result),err=e.effect==="EIO"?decode(e.error):null;
 		exports.push("pub fn "+n+"(&self"+(ps.length?","+ps.join(","):"")+")->Result<"+ret.ty+",HostCallError<"+(err?err.ty:"Infallible")+">>{"
-			+(args.some(v=>nominal(v)||["string","bytes","int","nat"].includes(v))?"let mut scratch=Scratch::default();":"")+"let ws=["+ws.join(",")+"];"
+			+scratch(args)+"let ws=["+ws.join(",")+"];"
 			+"let (o,failed)=unsafe{self.port.execute("+j+",&ws,"+JSON.stringify(e.declaration)+")?};if failed {"
 			+(err?"return Err(HostCallError::Declared{declaration:"+JSON.stringify(e.declaration)+",payload:"+err.expr+"});":"return Err(Fault::Protocol.into());")+"} Ok("+ret.expr+")}");
 	}
@@ -119,13 +142,14 @@ export const rustHostFacade = pkg => {
 			, "if a.is_null() || b.is_null(){return Err(Fault::Load(\"Missing checked Rust host entry\".into()))}Ok((std::mem::transmute::<*mut c_void,p::Call>(a),std::mem::transmute::<*mut c_void,p::Clear>(b)))}}).clone()}"
 		].join("\n"):"#[link(name="+JSON.stringify(prefix)+")] extern \"C\" {#[link_name="+JSON.stringify(prefix+"_call")+"] fn entry(cookie:usize,id:u64,d:p::Dispatch,op:i32,a:*const u64,n:usize,o:*mut u64,t:*mut u8,e:*mut u32)->i32; #[link_name="+JSON.stringify(prefix+"_clear")+"] fn clear(o:*mut u64);}"
 		, ...workers?[workers.functions]:[]
-		, "pub struct Binding<H:Host>{port:"+(workers?"Rc<Connection>,workers:Rc<w::Workers>,methods:[w::Methods;"+workers.count+"]":"Connection")+",_types:PhantomData<H>} impl<H:Host> Binding<H>{"
-		, "pub fn new()->Result<Self,Fault>{"+(pkg.embedded?"let(entry,clear)=functions()?;":"")+(workers?"let(visit,object,release,wait,methods)=worker_functions()?;":"")+"let port=unsafe{Connection::open("+JSON.stringify(domainId)+",vec!["+kindArgs.join(",")+"],entry,clear,member::<H>)?};"+(workers?"let port=Rc::new(port);let workers=unsafe{w::Workers::new(port.clone(),visit,object,release,wait)};":"")+"Ok(Self{port,"+(workers?"workers,methods,":"")+"_types:PhantomData})}"
+		, ...returned.length?["struct ReturnedOwner{port:Rc<Connection>"+(workers?",workers:Rc<w::Workers>":"")+"} impl Drop for ReturnedOwner{fn drop(&mut self){"+(workers?"self.workers.shutdown();":"let _=self.port.close();")+"}}",...returned]:[]
+		, "pub struct Binding<H:Host>{port:"+(workers || returned.length?"Rc<Connection>":"Connection")+(returned.length?",owner:Rc<ReturnedOwner>":"")+(workers?",workers:Rc<w::Workers>,methods:[w::Methods;"+workers.count+"]":"")+",_types:PhantomData<H>} impl<H:Host> Binding<H>{"
+		, "pub fn new()->Result<Self,Fault>{"+(pkg.embedded?"let(entry,clear)=functions()?;":"")+(workers?"let(visit,object,release,wait,methods)=worker_functions()?;":"")+"let port=unsafe{Connection::"+(returned.length?"open_with_returned_functions":"open")+"("+JSON.stringify(domainId)+",vec!["+kindArgs.join(",")+"],entry,clear,member::<H>)?};"+(workers || returned.length?"let port=Rc::new(port);":"")+(workers?"let workers=unsafe{w::Workers::new(port.clone(),visit,object,release,wait)};":"")+(returned.length?"let owner=Rc::new(ReturnedOwner{port:port.clone()"+(workers?",workers:workers.clone()":"")+"});":"")+"Ok(Self{port,"+(returned.length?"owner,":"")+(workers?"workers,methods,":"")+"_types:PhantomData})}"
 		, "pub fn close(&self)->Result<(),Fault>{self."+(workers?"workers":"port")+".close()}"
 		, ...exports
 		, ...workers?.methods??[]
 		, "}"
-		, ...workers?["impl<H:Host> Drop for Binding<H>{fn drop(&mut self){self.workers.shutdown();}}"]:[]
+		, ...workers && !returned.length?["impl<H:Host> Drop for Binding<H>{fn drop(&mut self){self.workers.shutdown();}}"]:[]
 		, ""
 	].join("\n");
 };

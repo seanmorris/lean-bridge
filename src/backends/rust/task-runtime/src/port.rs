@@ -117,20 +117,31 @@ impl Output {
     pub fn branch(&self,i:usize)->Result<bool,Fault> {match self.tags.get(i){Some(0)=>Ok(false),Some(1)=>Ok(true),_=>Err(Fault::Protocol)}}
 }
 impl Drop for Output {fn drop(&mut self){unsafe{(self.clear)(self.raw.as_mut_ptr())}}}
-pub struct Connection {session:RefCell<Option<Rc<Session>>>,call:Call,clear:Clear,member:Member,depth:Cell<usize>}
+pub struct Connection {session:RefCell<Option<Rc<Session>>>,call:Call,clear:Clear,member:Member,depth:Cell<usize>,returned:bool,closing:Cell<bool>}
 struct Active<'a>(&'a Cell<usize>);
 impl Drop for Active<'_> {fn drop(&mut self){self.0.set(self.0.get()-1)}}
 impl Connection {
     /// Safety: the entry and clear functions must come from the same checked
     /// component and use this exact protocol and member table.
     pub unsafe fn open(d:&'static str,k:Vec<Kind>,call:Call,clear:Clear,member:Member)->Result<Self,Fault> {
+        unsafe {Self::open_inner(d,k,call,clear,member,false)}
+    }
+    /// Safety: same contract as open; the component must also implement
+    /// binding-local retirement (-3) independently of ordinary call readiness.
+    pub unsafe fn open_with_returned_functions(d:&'static str,k:Vec<Kind>,call:Call,clear:Clear,member:Member)->Result<Self,Fault> {
+        unsafe {Self::open_inner(d,k,call,clear,member,true)}
+    }
+    unsafe fn open_inner(d:&'static str,k:Vec<Kind>,call:Call,clear:Clear,member:Member,returned:bool)->Result<Self,Fault> {
         let s=Rc::new(Session::new(d,k)?);
-        let c=Self{session:RefCell::new(Some(s.clone())),call,clear,member,depth:Cell::new(0)};
+        let c=Self{session:RefCell::new(Some(s.clone())),call,clear,member,depth:Cell::new(0),returned,closing:Cell::new(false)};
         let (f,_,rc,_)=c.invoke(s,-2,&[]);drop(f);
         if rc!=0 {c.session.take();return Err(status(rc))}
         Ok(c)
     }
-    fn session(&self)->Result<Rc<Session>,Fault> {self.session.borrow().clone().ok_or(Fault::Closed)}
+    fn session(&self)->Result<Rc<Session>,Fault> {
+        if self.closing.get(){return Err(Fault::Busy)}
+        self.session.borrow().clone().ok_or(Fault::Closed)
+    }
     fn invoke(&self,s:Rc<Session>,op:i32,ws:&[Word])->(Frame,Output,i32,u32) {
         let f=Frame{session:s,member:self.member,replies:Default::default(),errors:Default::default(),panic:Cell::new(false)};
         let mut o=Output{raw:[0;4],tags:[0;65],clear:self.clear};let mut fault=0;
@@ -141,7 +152,16 @@ impl Connection {
     pub fn close(&self)->Result<(),Fault>{
         if self.depth.get()!=0 {return Err(Fault::Busy)}
         let Some(s)=self.session.borrow().clone() else{return Ok(())};
-        s.validate()?;let (_,_,rc,_)=self.invoke(s,-1,&[]);
+        s.validate()?;
+        struct Closing<'a>(&'a Cell<bool>);
+        impl Drop for Closing<'_>{fn drop(&mut self){self.0.set(false)}}
+        if self.closing.replace(self.returned){return Err(Fault::Busy)}
+        let _guard=Closing(&self.closing);
+        if self.returned {
+            let (_,_,rc,_)=self.invoke(s.clone(),-3,&[]);
+            if rc!=0{return Err(status(rc))}
+        }
+        let (_,_,rc,_)=self.invoke(s,-1,&[]);
         if rc!=0{return Err(status(rc))}
         self.session.take();Ok(())
     }
@@ -162,7 +182,7 @@ impl Connection {
     }
 }
 impl Drop for Connection {fn drop(&mut self){let _=self.close();}}
-fn status(rc:i32)->Fault {match rc {5=>Fault::InvalidValue,9=>Fault::WrongContext,10|15=>Fault::Unavailable,11=>Fault::Allocation,12=>Fault::Limit,14=>Fault::Busy,_=>Fault::Protocol}}
+fn status(rc:i32)->Fault {match rc {5=>Fault::InvalidValue,9=>Fault::WrongContext,10|15=>Fault::Unavailable,11=>Fault::Allocation,12=>Fault::Limit,14=>Fault::Busy,16=>Fault::Closed,_=>Fault::Protocol}}
 
 #[cfg(feature="async")]
 #[doc(hidden)]

@@ -60,6 +60,17 @@ Select the Lean wrapper functions to export and build with `--target cargo`. You
 
 Distribute both archives in the receipt: the component and its exact `lean-bridge-task-runtime` dependency. Compatible components share the runtime; the `host-objects` feature does not enable async. A worker may carry an imported object, or pass it to a retained callback on the binding thread. Calling a Rust member directly from worker code is rejected at build time. The downstream application [binds its own Rust types](../consume/rust.md#let-lean-call-your-rust-objects). The [installed-package evidence](../evidence/rust-host-packages-20261125.md) records the releases and consumer checks. To expose a task or pull stream on the same binding, select its Lean declaration in `taskExports` or `asyncIterators`. The generated crate enables async delivery automatically. The [installed worker test](../evidence/static-host-workers-20261125.md#installed-rust-futures-and-streams) covers both source routes. Use `taskIOErrors` when a terminal `Except IO.Error` is a task failure rather than a returned value.
 
+### Export a returned function on an object binding
+
+Export a synchronous factory with a type such as
+`Box → IO (UInt32 → IO UInt32)` through the normal `exports` list.
+The inner function can capture an imported Rust object and call its members
+on later invocations. Its argument and result must each be a supported
+primitive or a declared host object. Do not put the factory in `taskExports`:
+calling the returned function runs its Lean IO body synchronously.
+Declare any required native effects, including those used only inside that
+body. See [how callers use the lease](../consume/rust.md#call-a-function-returned-by-lean).
+
 ## Export a task or pull stream
 
 If the Lean code uses files, environment variables, or other OS facilities,

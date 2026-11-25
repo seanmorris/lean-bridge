@@ -1412,6 +1412,7 @@
     "test:ruby-host-closures": "node --test --test-concurrency=1 tests/helpers/ruby-host-closures-installed.mjs",
     "test:c-host-closures": "node --test --test-concurrency=1 tests/helpers/c-host-closures-installed.mjs",
     "test:cpp-host-closures": "LEAN_BRIDGE_CPP_HOST_CLOSURE_TEST=1 node --test --test-concurrency=1 tests/helpers/c-host-closures-installed.mjs",
+    "test:rust-host-closures": "node --test --test-concurrency=1 tests/helpers/rust-host-closures-installed.mjs",
     "test:jvm-host-imports": "node --test --test-concurrency=1 tests/helpers/jvm-host-imports.mjs",
     "test:dotnet-host-imports": "node --test --test-concurrency=1 tests/helpers/dotnet-host-imports.mjs",
     "test:jvm-worker-transport": "node --test --test-concurrency=1 tests/helpers/jvm-worker-transport.mjs",

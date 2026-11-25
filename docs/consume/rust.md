@@ -94,6 +94,27 @@ Call the binding on the process main thread. Pass an `Rc<T>` you already own or 
 
 A fallible member can return `MemberResult<T>`. A host error propagated through Lean comes back as `HostCallError::Host` with the original error object. A Lean `IO.Error`, a declared `EIO` error and a bridge failure have separate variants; a returned `Except` is a value. The [complete Rust application](../../tests/fixtures/rust-host-members/archives.rs) implements both classes and uses them from two packages.
 
+### Call a function returned by Lean
+
+When a factory returns a Lean function, the installed crate gives you a
+typed value with `call` and `close` methods. For example, given a Workshop
+package exporting `Closures.remember`:
+
+```rust
+let first = api.make(15)?;
+let second = api.make(30)?;
+let remember = api.remember(&first)?;
+let result = remember.call(&second)?;
+assert!(result.ptr_eq(&first));
+remember.close()?;
+```
+
+The function can be called repeatedly on the binding thread. Dropping it
+releases its capture; call `close()` to release it earlier. Closing or dropping
+the binding revokes its functions. A call already inside a member can finish,
+but a later call returns `HostCallError::Boundary(Fault::Closed)`.
+The function is not `Send` and does not keep a discarded binding alive.
+
 ### Await a task or pull a stream
 
 An object binding can expose tasks and streams alongside ordinary methods. Pass the same `Rc<T>` or `HostRef<T>` you use for synchronous calls. For example, given the Workshop binding and meter above:

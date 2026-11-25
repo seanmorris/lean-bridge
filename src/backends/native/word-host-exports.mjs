@@ -29,7 +29,7 @@ export const emitWordHostExports = (o, model, target) => {
 	const prefix = "lb_" + target.replaceAll("-","_") + "_host_" + identity;
 	const header = [model.header], defs = [], methods = [], outputs = [];
 	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure");
-	if(factories.some(({e})=>!["c","cpp"].includes(target) || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
+	if(factories.some(({e})=>!["c","cpp","rust"].includes(target) || e.effect!=="IO" || e.delivery)) throw new TypeError("Unsupported native host closure factory");
 	const cleanup=factories.length?"dn_closure_cleanup(op)":null;
 	const lean = (t, depth = 0) => {
 		if(depth > 64) throw new TypeError("native host result exceeds 64 nested branches");
