@@ -55,7 +55,11 @@ const directWorld=(api,wire,settings,bindingIrSha256,prefix)=>{
 	for(const [i,method] of methods.entries())
 	{
 		method.witName=values.functions.find(f=>f.declaration.id===api.declarations[i].id).witName;
-		if(method.next) method.resource=values.resources[cursor++].witName;
+		if(method.next)
+		{
+			method.next=values.functions.find(f=>f.declaration.id===pairs[cursor].next).witName;
+			method.resource=values.resources[cursor++].witName;
+		}
 	}
 	return {bindingIrSha256,prefix,wire,methods,layout: values.surface
 		, name: values.name,version: values.version

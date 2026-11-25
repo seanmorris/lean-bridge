@@ -61,12 +61,19 @@ export const linkWitHost = async options => {
 		if(!id || !Number.isSafeInteger(id.bytes) || id.bytes<1 || !/^[a-f0-9]{64}$/u.test(id.sha256)) throw new Error("Missing native WIT IO dependency: "+name);
 		return {name,bytes: id.bytes,sha256: id.sha256};
 	});
+	const brands=host.scopedCursors?"liblb_wit_cursor_brands_v1.so":null;
+	if(brands)
+	{
+		await save("cursor-brands.c",await readFile(new URL("../backends/wit/cursor-brands.c",import.meta.url)));
+		await run(cc,["-std=c11","-O1","-g0","-shared","-fPIC","cursor-brands.c","-Wl,--build-id=none,-z,nodelete,-soname,"+brands,"-o",brands],app,env);
+		const bytes=await readFile(join(app,brands)); dependencies.push({name: brands,bytes: bytes.length,sha256: sha256(bytes)});
+	}
 	if(ledger)
 	{
 		const bytes=await readFile(join(app,ledger.name));
 		dependencies.push({name: ledger.name,bytes: bytes.length,sha256: sha256(bytes)});
 	}
-	const guarded = tasks ? witHostDependencyPrelude(dependencies)+host.source : guardWitHostSource(host.source,p,dependencies);
+	const guarded = tasks || host.scopedCursors ? witHostDependencyPrelude(dependencies)+host.source : guardWitHostSource(host.source,p,dependencies);
 	const identityInputs = { runtimeIdentity, bindingIrSha256, evidence, template
 		, delivery: sha256(delivery), integers: integers && sha256(integers)
 		, ...tasks ? {notification: sha256(notification)} : {}
@@ -86,7 +93,7 @@ export const linkWitHost = async options => {
 	for(const [name,bytes] of callbackHeaders) await save(name,bytes);
 	if(integers) await save("task-integers.h",integers);
 	await save(p+"_wasmtime.h",host.header); await save("wit-host.c",guarded);
-	const exported = tasks ? [...host.symbols] : ["open","call","call_instance","link","close"].map(n=>p+"_wasmtime_"+n);
+	const exported = host.symbols ? [...host.symbols] : ["open","call","call_instance","link","close"].map(n=>p+"_wasmtime_"+n);
 	exported.push("__lean_bridge_wit_host_process_origin_v1");
 	await save("exports.map","{ global: "+exported.join("; ")+"; local: *; };\n");
 	const library = "lib"+p+"_wasmtime.so", inc = ["-I",join(sdk,"include"),"-I",join(runtimeRoot,"include")];
@@ -105,6 +112,7 @@ export const linkWitHost = async options => {
 	await run(cc,[...flags,"-shared",...compiled
 		, "-L",join(runtimeRoot,"lib"),"-L",join(sdk,"lib")
 		, ...ledger?["-L.","-l:"+ledger.name]:[]
+		, ...brands?["-L.","-l:"+brands]:[]
 		, "-lwasmtime","-llean_bridge_native","-lleanshared","-ldl","-lm","-pthread"
 		, "-Wl,-Bsymbolic-functions,-z,defs,-z,now,-z,nodelete"
 		, "-Wl,--build-id=none","-Wl,--version-script=exports.map"
@@ -115,5 +123,6 @@ export const linkWitHost = async options => {
 	return { library, header: p+"_wasmtime.h", prefix: p
 		, componentIdentity, runtimeIdentity, bindingIrSha256, dependencies
 		, ...ledger?{leaseLibrary: ledger.name}:{}
+		, ...brands?{cursorBrands: brands}:{}
 		, librarySha256: sha256(bytes),componentSha256: sha256(componentBytes)};
 };

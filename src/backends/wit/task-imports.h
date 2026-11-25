@@ -265,8 +265,8 @@ static wasmtime_error_t *lb_tasks_link(lb_tasks *s,wasmtime_context_t *ctx,wasmt
     wasmtime_error_t *err=wasmtime_component_linker_instance_add_instance(root,LB_TASK_IMPORT,strlen(LB_TASK_IMPORT),&child);
     for (size_t i=0;!err && i<LB_KINDS;i++) {
         uint32_t old=atomic_load(&lb_task_next_tag);
-        while (old!=UINT32_MAX && !atomic_compare_exchange_weak(&lb_task_next_tag,&old,old+1)) {}
-        if (old==UINT32_MAX) { err=wasmtime_error_new("WIT task type identities exhausted"); break; }
+        while (old<INT32_MAX && !atomic_compare_exchange_weak(&lb_task_next_tag,&old,old+1)) {}
+        if (old>=INT32_MAX) { err=wasmtime_error_new("WIT task type identities exhausted"); break; }
         s->tags[i]=old+1;
         wasmtime_component_resource_type_t *ty=wasmtime_component_resource_type_new_host(s->tags[i]);
 #if LB_CALLBACKS

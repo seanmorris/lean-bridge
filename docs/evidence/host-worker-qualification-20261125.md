@@ -128,8 +128,19 @@ add Node JavaScript, Node TypeScript, browser JavaScript, React, and browser
 workers. The [installed .NET client](native-sync-iterators-20261125.md#net)
 pulls directly and disposes unread owned items. [PHP-Wasm in Node and
 Chromium](php-wasm-immediate-iterators-20261125.md) runs the cursor in Zend
-and releases live resources at request shutdown. That gives **16 of 17**
-locally exercised direct iterator profiles on both routes. WIT/WASI remains.
+and releases live resources at request shutdown. [WIT/WASI](wit-immediate-iterators-20261125.md)
+opens and borrows store-owned resources in real Wasmtime installations. That
+gives **17 of 17** locally exercised direct iterator profiles on both source
+routes. This count is for synchronous iterators only.
+
+For the WIT/WASI profile, the other three signature families have separate
+installed records. The [task and cancellation consumer](wit-task-resource-world-20261123.md#installed-package-receipts)
+checks a real parked task, delivery at most once, cancellation before delivery
+and refusal of a late result. The [canonical stream consumer](wit-canonical-async-20261124.md#consume-a-compiled-pull-cursor-as-a-stream)
+counts actual Lean pulls, including withdrawn demand and early reader drop.
+The [two-worker cancellation check](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader)
+adds a live callback and an unaffected sibling. These observations answer
+different questions; a synchronous cursor needs none of those schedulers.
 The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
 starts with constructed IR; it cannot stand in for an installed source package
 on another profile. Check each profile for one pull per demand, value versus

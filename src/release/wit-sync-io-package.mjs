@@ -12,6 +12,7 @@ import { compileWitSyncIO } from "../backends/wit/sync-io-model.mjs";
 import { compileWitTaskResources } from "../backends/wit/task-model.mjs";
 import { renderWitTaskHeader } from "../backends/wit/task-session.mjs";
 import { renderWitHostHeader } from "../backends/wit/copied-host.mjs";
+import { witCursorHeader, witCursorUsage } from "../backends/wit/sync-cursor-host.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
 
@@ -75,14 +76,14 @@ export const buildWitHostPackage = async options => {
 		};
 		for(const dep of host.dependencies)
 		{
-			const file = "lib/"+dep.name, from=dep.name===host.leaseLibrary?join(app,dep.name)
+			const file = "lib/"+dep.name, from=dep.name===host.leaseLibrary || dep.name===host.cursorBrands?join(app,dep.name)
 				:join(dep.name==="libwasmtime.so"?sdk:runtimeRoot,file);
 			await verifyElf(file,from,dep.sha256);
 		}
 		await verifyElf("lib/"+host.library,join(app,host.library),host.librarySha256);
 		const binary = await readFile(join(app,"component.wasm"));
 		if(sha256(binary)!==host.componentSha256) throw new Error("WIT IO component changed after compilation");
-		const header = tasks ? renderWitTaskHeader(model) : renderWitHostHeader({surface: model.layout,trackIOTraps: true});
+		const header = tasks ? renderWitTaskHeader(model) : host.cursorBrands ? witCursorHeader(model) : renderWitHostHeader({surface: model.layout,trackIOTraps: true});
 		if(await readFile(join(app,host.header),"utf8")!==header) throw new Error("WIT IO host header differs from its API");
 		files.set("include/"+host.header,header);
 		files.set("wit/"+name+".wit",model.wit);
@@ -108,7 +109,7 @@ export const buildWitHostPackage = async options => {
 
 Extract the entire archive. Add lib/pkgconfig to PKG_CONFIG_PATH and compile with pkg-config --cflags --libs ${name}-wit. Include ${host.header}. The package supplies Wasmtime ${wasmtimeCapiIdentity.version}, the native Lean runtime, and the compiled component; consumers do not need Lean. Linux x86-64, glibc ${floor} or newer.
 
-${tasks ? `Open a main-thread session with ${p}_wit_open. Use the typed start, poll, await, cancel and drop functions in ${host.header}. Poll returns a borrowed Linux readiness descriptor while pending; do not read or close it. Await blocks the calling thread. Cancellation stops delivery, not necessarily Lean computation. Copies refer to the same store-owned resource. Drop once; close the session to release all remaining resources. Payloads are copied. Dispose strings and nested results with their generated disposal functions.${projectContract.asyncIterators?.length ? " Open a cursor without pulling. Use next for one blocking pull, or request then poll/await. BUSY means the outstanding pull still owns its result; FINISHED means no further requests are possible. ITEM, END and FAILED are distinct. Drop the cursor on early exit." : ""} A failed session can still be closed. No Wasmtime value construction or Lean compiler is needed.` : `Open a session with ${p}_wasmtime_open, call a WIT export with ${p}_wasmtime_call and close with ${p}_wasmtime_close. Do not use a session concurrently or after fork. Delete each returned value or Wasmtime error with its Wasmtime destructor. Results remain yours after closing the session. On error, the output slot is unchanged.
+${tasks ? `Open a main-thread session with ${p}_wit_open. Use the typed start, poll, await, cancel and drop functions in ${host.header}. Poll returns a borrowed Linux readiness descriptor while pending; do not read or close it. Await blocks the calling thread. Cancellation stops delivery, not necessarily Lean computation. Copies refer to the same store-owned resource. Drop once; close the session to release all remaining resources. Payloads are copied. Dispose strings and nested results with their generated disposal functions.${projectContract.asyncIterators?.length ? " Open a cursor without pulling. Use next for one blocking pull, or request then poll/await. BUSY means the outstanding pull still owns its result; FINISHED means no further requests are possible. ITEM, END and FAILED are distinct. Drop the cursor on early exit." : ""} A failed session can still be closed. No Wasmtime value construction or Lean compiler is needed.` : host.cursorBrands ? witCursorUsage(p) : `Open a session with ${p}_wasmtime_open, call a WIT export with ${p}_wasmtime_call and close with ${p}_wasmtime_close. Do not use a session concurrently or after fork. Delete each returned value or Wasmtime error with its Wasmtime destructor. Results remain yours after closing the session. On error, the output slot is unchanged.
 
 These calls are synchronous. The outer result of a fallible export carries its declared Lean failure; returned Except values retain their own inner branches. A boundary error is not a Lean failure. Unexpected traps retire the shared process runtime; do not replay effectful calls. For your own store, register imports with ${p}_wasmtime_link and invoke exports with ${p}_wasmtime_call_instance. Destroy your store when discard_store is set. A raw call that bypasses this guard cannot execute the native effect.`}
 

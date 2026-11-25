@@ -2,6 +2,7 @@
 import { readFile } from "node:fs/promises";
 import { witConversionPrelude } from "./copied-conversions.mjs";
 import { renderWitHostHeader, renderWitValueSession } from "./copied-host.mjs";
+import { witCursorHeader, witCursorSession } from "./sync-cursor-host.mjs";
 
 const leaf = type => "LB_"+type.toUpperCase();
 /**
@@ -25,12 +26,13 @@ export const decodeWitWireValue = (type,at) => Array.isArray(type) ? `
  * @param componentBytes - Binary validated against that exact WIT world.
  */
 export const generateWitSyncHost = async (model,componentBytes) => {
-	if(model.wire.methods.some(m=>m.delivery)) throw new TypeError("An immediate WIT cursor requires a resource-owning host session");
 	const {wire,methods,layout: surface} = model, p = surface.prefix;
+	const cursors=wire.methods.some(m=>m.delivery==="iterator");
 	const values = await readFile(new URL("./sync-io-values.h",import.meta.url),"utf8");
 	const functions = wire.methods.map((m,i)=>({ witName: methods[i].witName, parameters: m.args.map(k=>({copy: {index: k}})) }));
 	const validators = [...new Set(wire.methods.flatMap(m=>m.args))].map(k=>`static inline bool lb_in_${k}(const lb_val *v, lb_scope *s, uint64_t *w) { return lb_input(${leaf(k)},v,s,w); }`);
 	const calls = wire.methods.map((m,i)=>{
+		if(m.delivery==="iterator") return "";
 		const errorStatus = m.effect==="EIO"?3:4, input = m.args.map((k,j)=>`
     if (!lb_in_${k}(&args[${j}],&scope,a+${3*j})) { error=wasmtime_error_new("Invalid native WIT argument or conversion limit"); goto done; }`).join("");
 		return `extern int ${m.symbol}(const uint64_t *,uint64_t *,uint8_t *);
@@ -62,7 +64,7 @@ static wasmtime_error_t *lb_call_${i}(void *data,wasmtime_context_t *context,con
     return error;
 }`;
 	});
-	const header = renderWitHostHeader({surface,trackIOTraps: true});
+	const header = cursors?witCursorHeader(model):renderWitHostHeader({surface,trackIOTraps: true});
 	const source = `#include "${p}_wasmtime.h"
 #include "lean_bridge_native_runtime.h"
 #include <stdint.h>
@@ -78,6 +80,6 @@ static _Thread_local lb_call_frame *lb_active;
 extern void ${wire.clear}(uint64_t *);
 ${validators.join("\n")}
 ${calls.join("\n")}
-${renderWitValueSession({...model,surface,functions,trackIOTraps: true},componentBytes)}`;
-	return {header,source,prefix: p};
+${cursors?await witCursorSession(model,componentBytes,decodeWitWireValue):renderWitValueSession({...model,surface,functions,trackIOTraps: true},componentBytes)}`;
+	return {header,source,prefix: p,...cursors?{scopedCursors: true,symbols: ["open","link_cursors","instantiate","call","drop","close"].map(n=>p+"_wasmtime_"+n)}:{}};
 };

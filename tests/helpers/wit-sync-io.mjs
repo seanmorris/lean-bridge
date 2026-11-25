@@ -87,6 +87,27 @@ test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar e
 		assert.notEqual(wrong,model.wit); await writeFile(join(work,"consuming.wit"),wrong);
 		await assert.rejects(processBuildRunner.capture({command: tools,args: ["component","targets","consuming.wit","direct.wasm"],cwd: work}));
 		t.diagnostic("Three nominal direct resources, including constructor vs step failure; component "+sha256(await readFile(join(work,"direct.wasm"))));
+		const runtimeRoot=process.env.LEAN_BRIDGE_WIT_IO_RUNTIME;
+		if(runtimeRoot)
+		{
+			const wasmtimeRoot=process.env.LEAN_BRIDGE_WASMTIME_C_API,cc=process.env.CC??"cc";
+			const host=await linkWitHost({app,built,runtimeRoot,leanPrefix,run,wasmtimeRoot,wasmTools: tools});
+			assert.equal(host.componentSha256,sha256(await readFile(join(work,"direct.wasm"))));
+			const sdk=join(app,"wasmtime"),bin=join(work,"consumer");
+			await run(cc,["-std=c11","-Wall","-Wextra","-Werror"
+				, "-I",app,"-I",join(sdk,"include")
+				, resolve("tests/fixtures/wit-sync-io/cursor.c")
+				, "-L"
+				, app
+				, "-l:"+host.library
+				, "-L"
+				, join(sdk,"lib")
+				, "-lwasmtime"
+				, "-Wl,-rpath-link,"+join(runtimeRoot,"lib"),"-o",bin]);
+			const env={PATH: "/no-tools",RAYON_NUM_THREADS: "1",LD_LIBRARY_PATH: [app,join(sdk,"lib"),join(runtimeRoot,"lib")].join(":")};
+			assert.equal((await run(bin,[],work,env)).stdout.trim(),"direct-wit:6 opens;8 pulls;6 closes");
+			assert.equal(await readFile(join(work,"state"),"utf8"),"closed");
+		}
 		return;
 	}
 	assert.equal(model.bindingIrSha256,hashBindingIr(api));

@@ -103,8 +103,14 @@ and the tools listed above. The resulting `native-wit-io-v1` archive contains
 the component, native host, verified libraries, WIT, headers and `pkg-config`
 metadata. A reviewed project can supply its public `.binding-ir.json` instead
 of listing `exports`; the builder checks the review against compiled Lean.
-This profile takes one target per build and does not accept task, iterator,
-host-object or resource selections.
+This profile takes one target per build. It also accepts synchronous iterators:
+list each factory in `exports` and name its checked `open`, `next` and `close`
+declarations in `iterators`. For example, [Dials](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+uses `{"open":"Dials.sequence","next":"Dials.next","close":"Dials.finish"}`.
+The pull returns an immediate `Option`, not a `Task`. The finalizer's file
+write requires the filesystem grant even if the consumer exits the loop early.
+Do not mix immediate iterators with scheduled exports or application-owned
+objects. Select the task or object profile for those packages.
 
 The grant is an author-side admission check, not a WASI sandbox. For example,
 a permitted file write uses the host process's filesystem permissions. An

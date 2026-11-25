@@ -226,6 +226,23 @@ of the store if the call reports that it trapped. A raw Wasmtime call that
 bypasses this guard cannot run the native effect. The component uses its
 native host's OS permissions, not a standalone WASI filesystem.
 
+### Pull a synchronous sequence
+
+In the installed WIT, a synchronous factory returns its own cursor resource.
+For example, `sequence(1)` opens a cursor without asking Lean for an item.
+Call `next-sequence` with a borrow of that cursor: the first call yields
+`some(0)`, the second yields `none`. There is no poll handle or event loop.
+A fallible factory or pull returns a WIT `result`; a failure is not exhaustion.
+A yielded `Unit` is `some(unit)`, not `none`.
+
+Use your generated component bindings to drop the owner on early exit. In the
+supplied C embedding, call the package's `_wasmtime_drop` on the returned
+resource **before** deleting its C value. Wasmtime's value destructor alone
+frees the box, not the resource. Closing the session finalizes any remaining
+cursors. Keep each cursor in the store that opened it; wrong-kind and
+foreign-store pulls are rejected without advancing Lean. The [C consumer](../../tests/fixtures/wit-sync-io/cursor.c)
+shows both a private session and one attached to an application-owned store.
+
 ### Share a guest-owned object between synchronous packages
 
 Extract both verified `native-wit-object-io-v1` archives. Each must contain `lib/lean-bridge-wit-peer.so`. Use the `bin/lean-bridge-wit-run` supplied by either release. For example, Workshop can return a box, Gauge can change it, and Workshop can read the new value through the same box:
