@@ -727,6 +727,30 @@ existing typed Lean closure. A Python callable passed directly to a callback
 parameter is borrowed for that call, even if Lean puts it in a record.
 Calling it after the borrow ends raises `LeanBridgeError`.
 
+### Return a Lean function from a Python callback
+
+`staged_quote` calls your pricing callback with a base price. Return a Lean
+function from the installed package; Lean calls it with the number of units.
+
+```python
+from lean_tariff_quotes import make_tariff, staged_quote, with_recovery
+
+def choose(base):
+    return make_tariff(base + 80).quote
+
+with make_tariff(700).quote as recovery:
+    price = staged_quote(with_recovery(choose, recovery), 10, 3)
+    assert price == 93
+```
+
+`with_recovery` supplies a live function of the required type before Lean
+enters the callback. It does not swallow exceptions. If `choose` raises,
+the caller gets that same exception, not a price calculated by `recovery`.
+You can also return a Lean function you already own and keep using it after
+the call. Returning a plain Python lambda instead raises `TypeError`.
+The [complete example](../../tests/fixtures/structured-types/tariff-staged.py)
+checks both ownership cases.
+
 ### Transferred inputs
 
 A publisher can mark a resource-containing argument as transferred. Pass its

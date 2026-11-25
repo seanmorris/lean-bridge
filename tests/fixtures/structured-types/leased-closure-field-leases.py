@@ -1,5 +1,6 @@
 """Inspect the runtime actually loaded by the public consumer, without GC."""
 import ctypes as c
+import json
 import runpy
 import lean_tariff_quotes as api
 from lean_tariff_quotes import _assets
@@ -30,5 +31,19 @@ assert client["copy"].is_closed and client["projected"].is_closed
 # The client globals still hold the wrappers. The session is the only owner.
 assert not state.slots, len(state.slots)
 assert live() == 1, live()
+cases = []
+counts = []
+
+
+def checkpoint(name):
+    assert not state.slots, (name, len(state.slots))
+    count = live()
+    assert count == 1, (name, count)
+    cases.append(name)
+    counts.append(count)
+
+
+runpy.run_path("staged_consumer.py")["check_cases"](checkpoint)
 state.close()
 assert live() == 0, live()
+print(json.dumps({"cases": cases, "identities": counts + [live()]}))

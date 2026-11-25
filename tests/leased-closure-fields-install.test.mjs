@@ -16,7 +16,7 @@ import { generateOwnedPythonValues } from "../src/backends/python/owned-values.m
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { copyPackageSetHandoff, retainPackageSetEvidence } from "./helpers/package-set.mjs";
 import { installPythonWheel } from "./helpers/python-wheel-install.mjs";
 import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 
@@ -40,6 +40,8 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} wheel reta
 	const environment = { ...nativeFixtureEnvironment(["python"]), LEAN_BRIDGE_PYTHON: python };
 	const config = JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json")));
 	const probe = await readFile("tests/fixtures/structured-types/leased-closure-fields.py");
+	const staged = await readFile("tests/fixtures/structured-types/tariff-staged.py");
+	const observer = await readFile("tests/fixtures/structured-types/leased-closure-field-leases.py");
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-closure-field-"));
 	try
 	{
@@ -48,7 +50,13 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} wheel reta
 		if(route === "reviewed")
 		{
 			await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: config.modules, targets: config.targets }));
-			await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr()));
+			await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({ staged: true })));
+		}
+		else
+		{
+			config.exports.push("Owned.stagedQuote", "Owned.flatQuote");
+			config.contracts = { "Owned.stagedQuote": JSON.parse(await readFile("tests/fixtures/structured-types/tariff-staged-contract.json")) };
+			await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(config));
 		}
 		const built = await buildCanonicalProject({ projectRoot: project
 			, outputRoot: output, targets: ["pypi"], environment
@@ -66,16 +74,36 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} wheel reta
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const digest = sha256(await readFile(join(handoff, "package-set-receipt.json")));
 		await rm(project, { recursive: true }); await rm(output, { recursive: true });
+		if(process.env.LEAN_BRIDGE_TARIFF_PYTHON_REPLAY_ROOT)
+			await retainPackageSetEvidence(handoff, join(resolve(process.env.LEAN_BRIDGE_TARIFF_PYTHON_REPLAY_ROOT), route));
 		const pkg = receipt.packages.find(item => item.target === "pypi" && item.role === "component");
 		const root = join(directory, "consumer"), archive = join(handoff, pkg.artifacts[0].path);
 		const installation = await installPythonWheel({ root, archive, python });
 		await rm(handoff, { recursive: true });
 		const relocated = join(directory, "relocated");
 		await saveLakeFile(root, "consumer.py", probe);
-		await cp("tests/fixtures/structured-types/leased-closure-field-leases.py", join(root, "inspect_leases.py"));
+		await saveLakeFile(root, "inspect_leases.py", observer);
+		await saveLakeFile(root, "staged_consumer.py", staged);
 		await rename(root, relocated);
 		const result = await runCopied(join(relocated, "venv/bin/python"), ["-I", "-B", "inspect_leases.py"], relocated);
-		assert.equal(result.stdout.trim(), "leased-closure-fields: ok"); assert.equal(result.stderr, "");
+		assert.equal(result.stderr, "");
+		const [field, outputRecord, ...extra] = result.stdout.trimEnd().split("\n");
+		assert.equal(field, "leased-closure-fields: ok"); assert.equal(extra.length, 0);
+		const observations = JSON.parse(outputRecord);
+		assert.deepEqual(observations.cases, [
+			"flat scalar reply", "returned and independently owned functions"
+			, "recovery checked before invocation", "original callback exception"
+			, "invalid replies and later success"
+		]);
+		assert.deepEqual(observations.identities, [1, 1, 1, 1, 1, 0]);
+		const evidence = resolve("build/leased-closure-fields-python");
+		await saveLakeFile(evidence, `${route}.package-set.json`, canonicalJson(receipt));
+		await saveLakeFile(evidence, `${route}.staged.json`, canonicalJson({
+			schemaVersion: 1, route, packageSetSha256: digest
+			, interpreter: installation.python
+			, fieldConsumerSha256: sha256(probe), consumerSha256: sha256(staged)
+			, probeSha256: sha256(observer), ...observations
+		}));
 		t.diagnostic(`${route} Python ${installation.python}: package-set ${digest}; consumer ${sha256(probe)}`);
 	}
 	finally

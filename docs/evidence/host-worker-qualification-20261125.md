@@ -139,6 +139,11 @@ returns a typed Lean function on both author routes. Lean applies it to a second
 argument. The two build-system clients distinguish a fresh owned reply from
 a caller-owned function, missing recovery, a host failure and a foreign reply.
 This does not register a C function for use after the callback returns.
+The [two installed CPython wheels](python-staged-callback-results-20261125.md)
+exercise the same direct reply through the Python API. A retained Lean
+function remains usable; a Python lambda is not a valid function result.
+An exception raised by the host callback survives as the original Python
+object. Both installs reached zero live identities at session close.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)

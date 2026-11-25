@@ -24,7 +24,7 @@ call-borrowed callback parameter does not become durable when Lean returns
 it inside a record: both direct and record-mediated invocation fail with
 callback status 10, the lambda never runs, and a subsequent valid call works.
 
-The [lifetime probe](../../tests/fixtures/structured-types/leased-closure-field-leases.py)
+The [lifetime probe used for these wheels](https://github.com/seanmorris/lean-bridge/blob/984be4d3133fbb1166dfd7c880f7f8e8f80f7bff/tests/fixtures/structured-types/leased-closure-field-leases.py)
 reads native identity counts from the same library that the normal import
 loaded. With client globals still holding the closed wrappers, the
 sequence is **0 before opening a session → 1 session identity → 1 session
