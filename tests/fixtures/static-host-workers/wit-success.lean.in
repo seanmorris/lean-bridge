@@ -1,0 +1,12 @@
+namespace Jobs
+open LeanBridge.Host.WitWasi
+
+-- Same types as reject and outcome, but the factory / returned Except succeed.
+def accept (box : Box) : EIO Box (Task UInt32) :=
+  let _ := box
+  pure (Task.pure 4294967295)
+def completed (box : Box) : Task (Except Box UInt32) :=
+  let _ := box
+  Task.pure (.ok 0)
+
+end Jobs

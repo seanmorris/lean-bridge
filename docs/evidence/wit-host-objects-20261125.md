@@ -61,4 +61,19 @@ The [Canonical ABI](https://github.com/WebAssembly/component-model/blob/main/des
 
 The clean build produced 53 native exports; its worker SHA-256 is `f37ad26ce0868d6889a1a77d43d0c0c9aa2ec9154e93ea79fd29203aded102aa`. The owner-domain and task-lease library hashes are unchanged.
 
-This is a private build and runtime result, not an installation receipt. `Task.pure` makes the test deterministic; dropping before native take is **not** evidence that a long-running computation stopped. The build inventory still lists `Jobs.outcome` (returned `Except`), `Jobs.reject` (factory error), `Jobs.relay` (retained callback), and `Jobs.series` (iterator) as outstanding on this Wasm interface.
+This is a private build and runtime result, not an installation receipt. `Task.pure` makes the test deterministic; dropping before native take is **not** evidence that a long-running computation stopped.
+
+## Does the caller get an error or a future?
+
+The order of the Lean types determines when the Wasm caller can observe the error:
+
+| Lean return type | WIT return type | What the independent guest receives |
+| --- | --- | --- |
+| `EIO Box (Task UInt32)` | `result<future<u32>, own<box>>` | `Jobs.reject` returns the original box immediately, with no reader. `Jobs.accept` returns a reader that delivers `UInt32.max`. |
+| `Task (Except Box UInt32)` | `future<result<u32, own<box>>>` | Both calls return a reader. Reading `Jobs.outcome` yields the error branch with the original box; reading `Jobs.completed` yields the success branch with zero. |
+
+The [guest](../../tests/fixtures/static-host-workers/lean-failure-consumer.wat.in) checks the tags and compares each returned object using the defining component's equality operation. The [embedding test](../../tests/fixtures/static-host-workers/lean-failure-consumer.h) observes its destructor and runs 65 failed factories against 64 available writer slots. The store remains usable and every slot stays free. It also drops unread results in all three delivery cases: the error owner is released once, and neither copied integer is treated as a resource.
+
+Two independent guest instances also have `Jobs.outcome` futures outstanding at the same time. Their boxes hold the same number but have distinct identities. In both read orders, each guest gets its own box, and the probe accounts for every destructor.
+
+Generation rejects a different declared error ID, a changed payload type, copy ownership on the error object, and a factory failure relabeled as a task failure. This clean build produced 62 native exports and worker SHA-256 `e08b632f01ea0dbbf2d799bd5a0ee0cbde7a1f143bf533f0df0c2b33fc080cae`. The private build inventory now lists only `Jobs.relay` (retained callback) and `Jobs.series` (iterator) as unimplemented among these seven worker declarations. Ordinary and reviewed package installs are still outstanding.

@@ -33,6 +33,15 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 		const api=structuredClone(b.api);edit(api.declarations.find(d=>d.source.declaration==="Jobs.echo"));
 		assert.throws(()=>witObjectFutureFiles({...options,ir,model: b.model,api,entries: b.entries.filter(e=>e.delivery)}),reason);
 	}
+	for(const mutate of [
+		(api,d)=>{d.failure.errors=["error:IO.Error"];}
+		, (api,d)=>{d.source.extensions["lean-bridge.dev/error-payload-site"].ownership="copy";}
+		, (api,d)=>{api.errors.find(e=>e.id===d.failure.errors[0]).payload={kind: "primitive",name: "uint32"};}
+		, (api,d)=>{d.source.extensions["lean-bridge.dev/task-failure"]="IO.Error";}
+	]){
+		const api=structuredClone(b.api);mutate(api,api.declarations.find(d=>d.name==="reject"));
+		assert.throws(()=>witObjectFutureFiles({...options,ir,model: b.model,api,entries: b.entries.filter(e=>e.delivery)}),/inconsistent nominal Task contract/u);
+	}
 	const run=async(command,args,env=process.env)=>{
 		try
 		{ return await processBuildRunner.capture({command,args,cwd: app,env}); }
@@ -110,4 +119,5 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	const asynchronous=await probe(resolve(asyncSdk),"guest-future-probe",["-DLB_TEST_OBJECT_FUTURE"]);
 	assert.match(asynchronous.stdout,/compiled Lean canonical object future: both delivery orders, both reader drops, blocked writer shutdown/u);
 	assert.match(asynchronous.stdout,/native object future shutdown before take/u);
+	assert.match(asynchronous.stdout,/guest distinguished immediate EIO errors from delivered Except values and released each selected branch/u);
 };

@@ -29,5 +29,9 @@ export const extendWitApplication = async project => {
 	await writeFile(join(project,"Workshop.lean"),source+"\n"+extra);
 	const path=join(project,"lean-bridge.exports.json"),config=JSON.parse(await readFile(path,"utf8"));
 	config.exports.push(...["readOnline","text","bytes","shift","natural","keepOther","takeOther","anchored","firstError","pickWide"].map(n=>"Workshop."+n));
+	const jobs=join(project,"Jobs.lean");
+	await writeFile(jobs,(await readFile(jobs,"utf8"))+"\n"+await readFile("tests/fixtures/static-host-workers/wit-success.lean.in","utf8"));
+	const success=["Jobs.accept","Jobs.completed"];
+	config.taskExports.push(...success);config.exports.push(...success);
 	await writeFile(path,canonicalJson(config));
 };

@@ -8,7 +8,8 @@
  * @param m - Reconciled nominal input, output, native declarations and row limit.
  */
 export const objectFutureHost=m=>{
-	const {p,n,label,capacity,a,z,from,to,input,output}=m,f="lwit_future_"+n,j=p+n;
+	const {p,n,label,capacity,a,z,from,to,input,output,fault,shape}=m,f="lwit_future_"+n,j=p+n;
+	const returned=shape==="returned",factory=shape==="factory";
 	return `/* Include after application-operations.h. */
 #include "canonical-future-reactor.h"
 typedef struct {${j}_handle job; lwit_owner result; lwit_operations *ops;} ${f}_slot;
@@ -24,10 +25,13 @@ static void ${f}_release(void *data){
 static bool ${f}_take(void *data,wasmtime_component_val_t *marker){
     ${f}_slot *s=data; ${output} out={0}; ${p}diagnostic d={0};
     bool ok=${j}_take(&s->job,&out,&d)==${p}OK;
-    if(ok)ok=lwit_no_error(lwit_export_${to}(&s->ops->bridge,out,&s->result));
-    if(${output}_drop(&out)!=${p}OK)ok=false;
+    uint32_t copy=0;
+    ${factory?"copy=out;":returned?`if(ok && out.ok)copy=out.value;
+    else if(ok)ok=lwit_no_error(lwit_export_${to}(&s->ops->bridge,out.error,&s->result));
+    ${j}_value_clear(&out);`:`if(ok)ok=lwit_no_error(lwit_export_${to}(&s->ops->bridge,out,&s->result));
+    if(${output}_drop(&out)!=${p}OK)ok=false;`}
     ${p}diagnostic_clear(&d);
-    if(ok)*marker=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U32,.of.u32=0};
+    if(ok)*marker=(wasmtime_component_val_t){.kind=WASMTIME_COMPONENT_U32,.of.u32=copy};
     return ok;
 }
 static wasmtime_error_t *${f}_start(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
@@ -36,22 +40,40 @@ static wasmtime_error_t *${f}_start(void *data,wasmtime_context_t *ctx,const was
     if(!ops || !lwit_open(ops->bridge.members.store) || ctx!=s->r.ctx || argc || resultc!=1)
         return wasmtime_error_new("invalid object future start");
     lwit_owner owner={0}; ${input} arg={0}; ${p}diagnostic d={0};
-    bool ok=false;unsigned key=0; ${f}_slot *slot=NULL;int fd=-1;
+    ${factory?`${fault} failure={0};lwit_owner declared={0};bool has_failure=false;`:""}
+    bool ok=false,imported=false;unsigned key=0; ${f}_slot *slot=NULL;int fd=-1;
+    const char *problem="${label}: taking the staged input";
     if(!lwit_no_error(lwit_exchange_take(&ops->slots[${a}],&owner)))goto done;
+    problem="${label}: reserving and importing the input";
     key=lb_cf_reserve(&s->r);if(!key || !lwit_import_${from}(&ops->bridge,&owner,&arg))goto done;
+    imported=true;
     slot=&s->slots[key-1];slot->ops=ops;
-    if(${j}_start(ops->bridge.binding,arg,&slot->job,&d)!=${p}OK)goto done;
+    problem="${label}: starting compiled Lean task";
+    ${p}status opened=${j}_start(ops->bridge.binding,arg,&slot->job,${factory?"&failure,":""}&d);
+    ${factory?`if(opened==${p}DECLARED_ERROR){
+        has_failure=true;problem="${label}: exporting the declared error";ok=lwit_no_error(lwit_export_${to}(&ops->bridge,failure,&declared));goto done;
+    }`:""}
+    if(opened!=${p}OK)goto done;
+    problem="${label}: registering native readiness";
     ${p}status state=${j}_poll(slot->job,&fd);
     if(state!=${p}OK && (state!=${p}PENDING || fd<0))goto done;
     ok=lb_cf_arm(&s->r,key,state==${p}OK?-1:fd,slot,${f}_take,${f}_release);
 done:
     ${p}diagnostic_clear(&d);
-    if(${input}_drop(&arg)!=${p}OK)ok=false;
+    if(imported && ${input}_drop(&arg)!=${p}OK){ok=false;problem="${label}: dropping the input ticket";}
     if(!lwit_no_error(lwit_drop(&owner)))ok=false;
+    ${factory?`if(has_failure && ${fault}_drop(&failure)!=${p}OK){ok=false;problem="${label}: dropping the declared error ticket";}
+    if(declared.any){
+        if(ok && lwit_open(ops->bridge.members.store)){problem="${label}: transferring the declared error";ok=lwit_no_error(lwit_exchange_put(&ops->slots[${z}],&declared));}
+        if(!lwit_no_error(lwit_drop(&declared)))ok=false;
+        /* No job or writable future was created. Only zero signals a declared
+         * error; malformed frames and unexpected native failures still trap. */
+        s->rows[key-1]=(lb_cf_row){0};key=0;slot=NULL;
+    }`:""}
     if(!ok || !lwit_open(ops->bridge.members.store)){
         if(slot)${f}_release(slot);
         if(key)s->rows[key-1]=(lb_cf_row){0};
-        ops->bridge.members.store->failed=true;return lb_cf_fail(&s->r,"cannot start compiled object future");
+        ops->bridge.members.store->failed=true;return lb_cf_fail(&s->r,problem);
     }
     *result=(lb_val){.kind=WASMTIME_COMPONENT_U32,.of.u32=key};return NULL;
 }
@@ -59,13 +81,19 @@ static wasmtime_error_t *${f}_stage(void *data,wasmtime_context_t *ctx,const was
     lb_val *args,size_t argc,lb_val *result,size_t resultc){
     (void)ft;(void)result;${f} *s=data;unsigned key=s->r.staged_key;
     if(!s->ops || ctx!=s->r.ctx || !lwit_open(s->ops->bridge.members.store) ||
-        !s->r.staged || !key || key>${capacity} || argc!=1 || resultc ||
+        !s->r.staged || !key || key>${capacity} || argc!=1 || resultc!=${factory||returned?1:0} ||
         args->kind!=WASMTIME_COMPONENT_U32 || args->of.u32!=key ||
-        s->r.staged->kind!=WASMTIME_COMPONENT_U32 || s->r.staged->of.u32)
+        s->r.staged->kind!=WASMTIME_COMPONENT_U32${factory||returned?"":" || s->r.staged->of.u32"})
         return lb_cf_fail(&s->r,"invalid object future payload claim");
-    wasmtime_error_t *e=lwit_exchange_put(&s->ops->slots[${z}],&s->slots[key-1].result);
+    ${factory?`*result=*s->r.staged;s->r.staged=NULL;return NULL;`:returned?`*result=(lb_val){.kind=WASMTIME_COMPONENT_OPTION};
+    if(!s->slots[key-1].result.any){
+        result->of.option=wasmtime_component_val_new(s->r.staged);
+        s->r.staged=NULL;return NULL;
+    }
+    if(s->r.staged->of.u32)return lb_cf_fail(&s->r,"invalid nominal result marker");`:""}
+    ${factory?"":`wasmtime_error_t *e=lwit_exchange_put(&s->ops->slots[${z}],&s->slots[key-1].result);
     if(!e)s->r.staged=NULL;
-    return e;
+    return e;`}
 }
 static inline wasmtime_error_t *${f}_link(wasmtime_component_linker_t *l,${f} *s){
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(l);

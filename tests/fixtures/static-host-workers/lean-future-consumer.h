@@ -8,21 +8,20 @@ static void future_action(session *s,const char *name){
 static unsigned future_rows(lwit_future_echo *f,lb_cf_phase phase){
     unsigned n=0;for(unsigned i=0;i<f->r.capacity;i++)n+=f->rows[i].phase==phase;return n;
 }
+#include "lean-failure-consumer.h"
 static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,bool shutdown_native){
-    lwit_operations ops={0};lwit_future_echo worker={0};session s={0};uint32_t observed=0;
+    lwit_operations ops={0};lwit_future_echo worker={0};result_workers results={0};session s={0};uint32_t observed=0;
     wasmtime_store_t *store=wasmtime_store_new(engine,NULL,NULL);s.store.ctx=wasmtime_store_context(store);
     wasmtime_component_linker_t *l=wasmtime_component_linker_new(engine);
-    ok(lwit_operations_link(l,&ops));ok(lwit_future_echo_link(l,&worker));
+    ok(lwit_operations_link(l,&ops));ok(lwit_future_echo_link(l,&worker));link_results(&results,l);
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(l);
     ok(wasmtime_component_linker_instance_add_func(root,"observe-drop",12,observe_drop,&observed,NULL));
     wasmtime_component_linker_instance_delete(root);
     ok(wasmtime_component_linker_instantiate(l,s.store.ctx,graph,&s.store.instance));
     assert(lwit_operations_open(&s.store,&ops) && lwit_future_echo_open(&worker,&ops));
+    open_results(&results,&ops);if(!shutdown_native)result_cases(&results,&s,&ops,&observed);
     for(unsigned mode=shutdown_native?4:0;mode<5;mode++){
-        workshop_box native={0};lwit_owner input={0},fault={0};workshop_diagnostic d={0};
-        assert(lwit_sync_make(&ops.bridge,71+mode,&native,&fault,&d)==workshop_OK);
-        ok(lwit_export_box(&ops.bridge,native,&input));assert(workshop_box_drop(&native)==workshop_OK);
-        ok(lwit_exchange_put(&ops.slots[0],&input));uint32_t before=observed;
+        seed_input(&ops,71+mode);uint32_t before=observed;
         future_action(&s,"start");assert(future_rows(&worker,LB_CF_NATIVE)==1);
         if(mode==3)future_action(&s,"request");
         if(mode!=1 && !shutdown_native){
@@ -42,7 +41,7 @@ static void guest_futures(wasm_engine_t *engine,wasmtime_component_t *graph,bool
         assert(future_rows(&worker,LB_CF_FREE)==worker.r.capacity && !s.store.owners);
         assert(observed==before+(mode==1?2:3) && drops(&s)==observed);
     }
-    ok(lwit_future_echo_shutdown(&worker));assert(lwit_operations_close(&ops)==workshop_OK);ok(lwit_shutdown(&s.store));
+    close_results(&results);ok(lwit_future_echo_shutdown(&worker));assert(lwit_operations_close(&ops)==workshop_OK);ok(lwit_shutdown(&s.store));
     wasmtime_component_linker_delete(l);wasmtime_store_delete(store);
     puts(shutdown_native?"native object future shutdown before take":"compiled Lean canonical object future: both delivery orders, both reader drops, blocked writer shutdown");
 }

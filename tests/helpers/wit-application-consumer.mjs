@@ -71,11 +71,14 @@ export const buildWitApplicationConsumer = async ({app,fixture,descriptor,wasm,r
 	await run(wasm,["parse","client-graph.wat","-o","client-graph.wasm"]);
 	await run(wasm,["validate","client-graph.wasm"]);
 	const delivery=JSON.parse(await readFile(join(app,"object-delivery.json"),"utf8"));
-	assert.deepEqual(delivery.supported,[{name: "echo",declaration: "Jobs.echo",input: 0,output: 0,param: "box"}]);
-	assert.deepEqual(delivery.remaining.sort(),["Jobs.outcome","Jobs.reject","Jobs.relay","Jobs.series"]);
+	const supported=delivery.supported;
+	assert.deepEqual(supported.map(m=>[m.name,m.shape]),[["accept","factory"],["completed","returned"],["echo","owned"],["outcome","returned"],["reject","factory"]]);
+	assert.deepEqual(delivery.remaining.sort(),["Jobs.relay","Jobs.series"]);
 	const component=async(file,id)=>{const data=await readFile(join(app,file),"utf8");return data.replace("(component","(component $"+id);};
 	await writeFile(join(app,"reader.wat"),(await asset("lean-future-consumer")).replace("@TASKS@",delivery.publicName));
 	await run(wasm,["parse","reader.wat","-o","reader.wasm"]);
+	await writeFile(join(app,"fault-reader.wat"),(await asset("lean-failure-consumer")).replace("@TASKS@",delivery.publicName));
+	await run(wasm,["parse","fault-reader.wat","-o","fault-reader.wasm"]);
 	await mkdir(join(app,"wit-future/deps"),{recursive: true});
 	await writeFile(join(app,"wit-future/deps/objects.wit"),descriptor.wit);
 	await copyFile(join(app,"object-tasks.wit"),join(app,"wit-future/tasks.wit"));
@@ -85,23 +88,35 @@ world future-probe {
   import source: func() -> own<box>; import same: func(left: borrow<box>, right: borrow<box>) -> bool;
   export start: func(); export discard: func(); export receive: func() -> bool;
   export request: func(); export collect: func() -> bool; export release-original: func();
+}
+world failure-probe {
+  import object-tasks; use object-tasks.{box};
+  import source: func() -> own<box>; import same: func(left: borrow<box>, right: borrow<box>) -> bool;
+  export reject: func(); export start-case: func(mode: u32); export discard-case: func(); export receive-case: func();
 }`);
 	await run(wasm,["component","targets","wit-future","--world","future-probe","reader.wasm"]);
+	await run(wasm,["component","targets","wit-future","--world","failure-probe","fault-reader.wasm"]);
+	const fault=(await run(wasm,["print","fault-reader.wasm"])).stdout.replace("(component","(component $fault");
+	const client=id=>`(instance $${id} (instantiate $fault (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`;
+	const hooks=supported.flatMap(m=>[[m.name+"-native-start","(result u32)"],[m.name+"-native-stage",'(param "key" u32) '+(m.shape==="factory"?"(result u32)":m.shape==="returned"?"(result (option u32))":"")]]);
 	const user=(await run(wasm,["print","reader.wasm"])).stdout.replace("(component","(component $reader");
 	const futureGraph=[
 		"(component"
 		, `(type $native-type ${nativeType}) (import "${nativeName}" (instance $native (type $native-type)))`
-		, '(import "observe-drop" (func $observe)) (import "echo-native-start" (func $start (result u32)))'
-		, '(import "echo-native-stage" (func $stage (param "key" u32)))'
+		, '(import "observe-drop" (func $observe))'
+		, ...hooks.map(([n,type])=>`(import "${n}" (func $${n} ${type}))`)
 		, graph.replace("(component","(component $base")
 		, await component("object-tasks.wat","tasks")
-		, user
+		, user,fault
 		, `(instance $g (instantiate $base (with "${nativeName}" (instance $native)) (with "observe-drop" (func $observe))))`
 		, `(alias export $g "${name}" (instance $objects)) (export "${name}" (instance $objects))`
 		, '(alias export $g "private-exchange" (instance $cells)) (alias export $objects "box" (type $box))'
-		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) (with "echo-native-start" (func $start)) (with "echo-native-stage" (func $stage))))`
+		, `(instance $f (instantiate $tasks (with "${name}" (instance $objects)) (with "${x.name}" (instance $cells)) ${hooks.map(([n])=>`(with "${n}" (func $${n}))`).join(" ")}))`
 		, `(instance $u (instantiate $reader (with "${delivery.publicName}" (instance $f "${delivery.publicName}")) (with "source" (func $cells "take-item0")) (with "same" (func $objects "same-box"))))`
-		, ...["deliver","reap","retire"].map(n=>`(export "echo-${n}" (func $f "echo-${n}"))`)
+		, client("v"),client("v2")
+		, ...supported.flatMap(m=>["deliver","reap","retire"].map(n=>`(export "${m.name}-${n}" (func $f "${m.name}-${n}"))`))
+		, ...["reject","start-case","receive-case","discard-case"].map(n=>`(export "${n}" (func $v "${n}"))`)
+		, ...["start-case","receive-case"].map(n=>`(export "second-${n}" (func $v2 "${n}"))`)
 		, ...["start","receive","request","collect","discard","release-original"].map(n=>`(export "${n}" (func $u "${n}"))`)
 		, '(export "private-exchange" (instance $cells)) (export "drops" (func $g "drops")))'
 	].join("\n");
