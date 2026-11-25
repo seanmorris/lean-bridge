@@ -7,6 +7,8 @@ import { buildWitApplicationConsumer } from "./wit-application-consumer.mjs";
 import { witApplicationOperations } from "../../src/backends/wit/application-operations.mjs";
 import { witObjectFutureFiles } from "../../src/backends/wit/application-future.mjs";
 import { witObjectCallbackFiles } from "../../src/backends/wit/application-callback.mjs";
+import { exerciseWitApplicationTurn } from "./wit-application-turn.mjs";
+import { exerciseMixedWitComposition } from "./wit-application-command-client.mjs";
 
 /**
  * Compile and run the fixture against the actual generated interface and native provider.
@@ -157,4 +159,6 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b,ir}) => {
 	assert.match(asynchronous.stdout,/Wasm started compiled Lean relays: box, original callback exception, terminal IO text; delivered, discarded and cancelled/u);
 	assert.match(asynchronous.stdout,/trapped Wasm callback poisoned its session; shutdown did not call guest destructors/u);
 	assert.match(asynchronous.stdout,/Wasm pulled its original boxes, distinguished a typed final error from EOF, and closed parked or abandoned Lean cursors once/u);
+	await exerciseWitApplicationTurn({app,b,fixture,kit: resolve(asyncSdk),wasm,runtimeRoot,run});
+	await exerciseMixedWitComposition({app,b,wasm,run: (command,args,cwd)=>processBuildRunner.capture({command,args,cwd,env: process.env})});
 };
