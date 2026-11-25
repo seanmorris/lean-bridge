@@ -53,7 +53,7 @@ export const buildTurnCallbackGuests=async o=>{
 		for(const port of ports)mixed.push(`(export "${name}-${port}" (func $all "${name}-${port}"))`);
 	}
 	mixed.push(readerGraph,application);
-	for(const [fixtureName,id,ports] of [["future","echo",["start","request","collect","receive","discard"]],["failure","case",["reject","start-case","receive-case","discard-case"]]])
+	for(const [fixtureName,id,ports] of [["future","echo",["start","request","collect","receive","discard","release-original"]],["failure","case",["reject","start-case","receive-case","discard-case"]]])
 	{
 		const source=await readFile(join(fixture,`lean-${fixtureName}-consumer.wat.in`),"utf8");
 		mixed.push(source.replace("(component","(component $"+id+"-client").replaceAll("@TASKS@",taskName));

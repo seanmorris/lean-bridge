@@ -40,7 +40,7 @@ static void rdrop(relay_probe *p,RV *v){
 static void run_relays(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx){
     relay_probe p={h,inst,ctx};
     for(unsigned mode=0;mode<4;mode++){
-        unsigned channel=mode==2?528:512,before=rcount(&p,"visits"),drops=rcount(&p,"cb-drops");
+        unsigned channel=lb_tg_code(mode==2?LB_TG_I_relay_late:LB_TG_I_relay,0),before=rcount(&p,"visits"),drops=rcount(&p,"cb-drops");
         RV n=ru32(42),box=rcall(&p,"objects","[static]box.create",&n,1);assert(box.kind==WASMTIME_COMPONENT_RESULT && box.of.result.is_ok);
         RV *original=box.of.result.val;n=ru32(mode==1 || mode==2);RV cb=rcall(&p,"callbacks","[static]call-box-to-box.make",&n,1);
         RV held=rcall(&p,NULL,"hold-box",original,1),retained=rcall(&p,NULL,"hold-cb",&cb,1);
@@ -84,6 +84,6 @@ static void run_relays(host *h,wasmtime_component_instance_t *inst,wasmtime_cont
         assert(rcount(&p,"visits")==before+(mode!=3) && rcount(&p,"cb-drops")==drops+2+(mode!=3));
     }
     lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
-    (void)advance(&p,512+LB_TF_DRAIN,0,0,0);assert(!rcount(&p,"live-owners"));
+    (void)advance(&p,lb_tg_code(LB_TG_I_relay,LB_TF_DRAIN),0,0,0);assert(!rcount(&p,"live-owners"));
     wasmtime_component_func_t close=lookup(inst,ctx,"close-owners");check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
 }

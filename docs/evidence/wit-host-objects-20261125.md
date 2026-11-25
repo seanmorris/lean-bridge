@@ -169,6 +169,8 @@ The [generated task interface](../../src/backends/wit/application-turn-task-grap
 
 The [result reader](../../tests/fixtures/static-host-workers/lean-failure-consumer.wat.in) distinguishes three other cases: `Jobs.accept` successfully creates a future of `4294967295`; `Jobs.completed` delivers `ok 0`; and `Jobs.outcome` delivers an error containing the original box **inside** a successfully created future. The driver repeats each case with a reader that drops before delivery and one that drops while the write is pending. The native and guest ownership tables return to zero after shutdown.
 
-The clean integration build checked 75 native exports; worker SHA-256: `a513b022edcef034558d050dc1d64db58057b1ac4dc74b24498549897d78b890`.
+The clean integration build with the generated native scheduler checked 75 native exports; worker SHA-256: `7ced87285a8a76291da8f9100740236d1d7aa36d5181ccdfc1a3ae76d9b16c8d`.
 
-The [test composition](../../tests/helpers/wit-application-turn-callbacks.mjs) still supplies a fixture-specific synchronous update adapter. The release command needs to run all synchronous operations on this runtime and pass ordinary and reviewed mixed installs. The synchronous package remains separately installable.
+The [native scheduler](../../src/backends/wit/application-turn-task-host.mjs) derives its linker, dispatch and teardown tables from those same declarations. A pending finite cursor leaves no readable descriptor until the test opens its Lean gate. The scheduler then observes the wakeup, without manufacturing an item or firing a timer in Lean. During teardown it also closes two open echo futures together: one write holds an unread box and the other factory has started but has not been polled. The guest has already dropped its original handles. Both ownership tables finish empty.
+
+The [test composition](../../tests/helpers/wit-application-turn-callbacks.mjs) still supplies a fixture-specific synchronous update adapter. The release command needs to run all 19 synchronous operations on this runtime and pass ordinary and reviewed mixed installs. The synchronous package remains separately installable.

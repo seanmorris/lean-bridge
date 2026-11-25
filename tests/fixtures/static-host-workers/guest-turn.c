@@ -3,17 +3,7 @@
  * owner. This probe covers one signature, not the installed async API. */
 #include "application-turn.h"
 #include "public.h"
-#include "series-turn-stream.h"
-#include "finite-turn-stream.h"
-#include "relay-turn-future.h"
-#include "relay-late-turn-future.h"
-#include "accept-turn-future.h"
-#include "completed-turn-future.h"
-#include "echo-turn-future.h"
-#include "outcome-turn-future.h"
-#include "reject-turn-future.h"
-#include "application-turn-cursor-link.h"
-#include "application-turn-future-link.h"
+#include "application-turn-tasks.h"
 #include <poll.h>
 #include <wasmtime.h>
 #include <assert.h>
@@ -24,8 +14,7 @@
 
 enum { UPDATE=1,SET=2,GET=3,RESULT=4,MEMBER_ERROR=5 };
 typedef struct { lb_wit_turns turns; workshop_binding binding; bool bound,audit_aliases; unsigned drops,sets,gets,starts,pulls,closes;
-    lb_tc_refs refs;lb_tc_series series;lb_tc_finite finite;lb_tf_relay relay;lb_tf_relay_late late;
-    lb_tf_accept accept;lb_tf_completed completed;lb_tf_echo echo;lb_tf_outcome outcome;lb_tf_reject reject; } session;
+    lb_tc_refs refs;lb_tg_native tasks; } session;
 typedef struct { session *s; uint64_t ticket,fault; } box_arg;
 static void dispose(void *p){++((box_arg *)p)->s->drops;}
 static uint32_t member(void *ctx,workshop_box box,unsigned op,uint32_t arg,uint32_t *out){
@@ -52,7 +41,8 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
     if(arg.op==242){
         assert(s->bound && workshop_close(&s->binding)==workshop_OK);s->bound=false;*out=(lb_wit_message){0};return true;
     }
-    bool drain=arg.op>=512?(arg.op-512)%16==LB_TF_DRAIN:arg.op>=256 && (arg.op-256)%16==LB_TC_DRAIN;
+    bool task=lb_tg_contains(arg.op);unsigned ch=task?(arg.op-LB_TG_BASE)/16:0,op=task?(arg.op-LB_TG_BASE)%16:0;
+    bool cursor=task && lb_tg_specs[ch].kind==LB_TG_STREAM,drain=task && op==(cursor?LB_TC_DRAIN:LB_TF_DRAIN);
     if(!s->bound && !drain){
         workshop_hosts h={.box_read=get,.box_get_level=get,.box_set_level=set,.box_create=make,.box_identity=own,
             .box_anchored=own,.box_keep_other=pair,.box_take_other=pair,.box_echo_text=bytes,.box_echo_bytes=bytes,.box_shift=integer};
@@ -68,24 +58,11 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
         assert(workshop_cursor_gate(s->binding,arg.words[0]!=0,&outval,&d)==workshop_OK);
         workshop_diagnostic_clear(&d);*out=(lb_wit_message){0};return true;
     }
-    if(arg.op>=512){
-        unsigned ch=(arg.op-512)/16;arg.op=(arg.op-512)%16;s->refs.turns=turns;
-        switch(ch){
-        case 0:return lb_tf_relay_call(&s->relay,&s->refs,s->binding,arg,out);
-        case 1:return lb_tf_relay_late_call(&s->late,&s->refs,s->binding,arg,out);
-        case 2:return lb_tf_accept_call(&s->accept,&s->refs,s->binding,arg,out);
-        case 3:return lb_tf_completed_call(&s->completed,&s->refs,s->binding,arg,out);
-        case 4:return lb_tf_echo_call(&s->echo,&s->refs,s->binding,arg,out);
-        case 5:return lb_tf_outcome_call(&s->outcome,&s->refs,s->binding,arg,out);
-        case 6:return lb_tf_reject_call(&s->reject,&s->refs,s->binding,arg,out);
-        default:return false;
-        }
-    }
-    if(arg.op>=256){
-        unsigned channel=(arg.op-256)/16;arg.op=(arg.op-256)%16;assert(channel<2);s->refs.turns=turns;
-        if(arg.op==LB_TC_OPEN)++s->starts;else if(arg.op==LB_TC_PULL)++s->pulls;else if(arg.op==LB_TC_CLOSE)++s->closes;
-        bool ok=channel?lb_tc_finite_call(&s->finite,&s->refs,s->binding,arg,out):lb_tc_series_call(&s->series,&s->refs,s->binding,arg,out);
-        if(ok && arg.op==LB_TC_OPEN && s->audit_aliases){
+    if(task){
+        s->refs.turns=turns;
+        if(cursor){if(op==LB_TC_OPEN)++s->starts;else if(op==LB_TC_PULL)++s->pulls;else if(op==LB_TC_CLOSE)++s->closes;}
+        bool ok=lb_tg_dispatch(&s->tasks,&s->refs,s->binding,arg,out);
+        if(ok && cursor && op==LB_TC_OPEN && s->audit_aliases){
             unsigned live=0;for(unsigned i=0;i<256;i++)if(s->refs.rows[i].state==LB_TC_LIVE)++live;
             const unsigned counts[]={1,2,2,3};assert(s->starts<=4 && live==counts[s->starts-1]);
         }
@@ -101,9 +78,7 @@ static bool enter(lb_wit_turns *turns,void *ctx,lb_wit_message arg,lb_wit_messag
     workshop_diagnostic_clear(&d);return ok;
 }
 static void finish(void *ctx){
-    session *s=ctx;assert(lb_tc_series_shutdown(&s->series) && lb_tc_finite_shutdown(&s->finite));
-    assert(lb_tf_relay_shutdown(&s->relay) && lb_tf_relay_late_shutdown(&s->late));
-    assert(lb_tf_accept_shutdown(&s->accept) && lb_tf_completed_shutdown(&s->completed) && lb_tf_echo_shutdown(&s->echo) && lb_tf_outcome_shutdown(&s->outcome) && lb_tf_reject_shutdown(&s->reject));
+    session *s=ctx;assert(lb_tg_shutdown(&s->tasks));
     if(s->bound){assert(workshop_close(&s->binding)==workshop_OK);s->bound=false;}
 }
 static void check(wasmtime_error_t *e){
@@ -111,9 +86,7 @@ static void check(wasmtime_error_t *e){
     wasm_name_t m;wasmtime_error_message(e,&m);fprintf(stderr,"%.*s\n",(int)m.size,m.data);
     wasm_name_delete(&m);wasmtime_error_delete(e);abort();
 }
-enum { ACCEPT,COMPLETED,ECHO,OUTCOME,REJECT,PLAIN_COUNT };
-static const char *const plain_names[PLAIN_COUNT]={"accept","completed","echo","outcome","reject"};
-typedef struct { session s; lb_wit_ticket current; lb_tc_port ports[2];lb_tf_driver future,late,plain[PLAIN_COUNT];bool waited; } host;
+typedef struct { session s; lb_wit_ticket current; lb_tg_store tasks;bool waited; } host;
 static wasmtime_error_t *bridge(void *ptr,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *ft,
     wasmtime_component_val_t *in,size_t argc,wasmtime_component_val_t *out,size_t retc){
     (void)ctx;(void)ft;host *h=ptr;assert(argc==2 && retc==1 && in->kind==WASMTIME_COMPONENT_U64 && in[1].kind==WASMTIME_COMPONENT_U64);
@@ -158,20 +131,20 @@ static unsigned finish_cursor_event(lb_wit_turns *s,lb_wit_event ev,unsigned *re
 }
 static bool nested_open(lb_wit_turns *s,void *ctx){
     (void)ctx;unsigned keys[3],released=0;lb_wit_event a={0},b={0},c={0};
-    assert(lb_wit_turn_begin(s,(lb_wit_message){256+LB_TC_OPEN,{0,1}},&a));
+    assert(lb_wit_turn_begin(s,(lb_wit_message){lb_tg_code(LB_TG_I_series,LB_TC_OPEN),{0,1}},&a));
     keys[0]=finish_cursor_event(s,a,&released);
-    assert(lb_wit_turn_begin(s,(lb_wit_message){256+LB_TC_OPEN,{0,2}},&b));
+    assert(lb_wit_turn_begin(s,(lb_wit_message){lb_tg_code(LB_TG_I_series,LB_TC_OPEN),{0,2}},&b));
     assert(!b.done && b.message.op==LB_TC_SAME);
-    assert(lb_wit_turn_begin(s,(lb_wit_message){256+LB_TC_OPEN,{0,3}},&c));
+    assert(lb_wit_turn_begin(s,(lb_wit_message){lb_tg_code(LB_TG_I_series,LB_TC_OPEN),{0,3}},&c));
     keys[2]=finish_cursor_event(s,c,&released);
     keys[1]=finish_cursor_event(s,b,&released);
     assert(keys[0] && keys[1] && keys[2] && keys[0]!=keys[1] && keys[0]!=keys[2] && keys[1]!=keys[2]);
     for(unsigned i=0;i<3;i++){
-        assert(lb_wit_turn_begin(s,(lb_wit_message){256+LB_TC_CLOSE,{keys[i]}},&a));
+        assert(lb_wit_turn_begin(s,(lb_wit_message){lb_tg_code(LB_TG_I_series,LB_TC_CLOSE),{keys[i]}},&a));
         assert(finish_cursor_event(s,a,&released)==0);
     }
     assert(lb_wit_turn_begin(s,(lb_wit_message){.op=242},&a) && a.done);
-    assert(lb_wit_turn_begin(s,(lb_wit_message){.op=256+LB_TC_DRAIN},&a));
+    assert(lb_wit_turn_begin(s,(lb_wit_message){.op=lb_tg_code(LB_TG_I_series,LB_TC_DRAIN)},&a));
     assert(!finish_cursor_event(s,a,&released) && released==7);
     return lb_wit_turn_retire(s);
 }
@@ -193,6 +166,7 @@ static uint64_t counts(host *h){
 }
 static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,bool cancel){
     wasmtime_component_func_t launch=lookup(inst,ctx,"launch"),tick=lookup(inst,ctx,"tick"),done=lookup(inst,ctx,"done"),take=lookup(inst,ctx,"take");
+    lb_tc_port *ports[]={&h->tasks.rows[LB_TG_I_series].stream.port,&h->tasks.rows[LB_TG_I_finite].stream.port};
     wasmtime_component_func_t pumps[]={lookup(inst,ctx,"series-pump"),lookup(inst,ctx,"finite-pump")};
     wasmtime_component_func_t retire[]={lookup(inst,ctx,"series-retire"),lookup(inst,ctx,"finite-retire")};
     lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){240,{1}},&ev) && ev.done);
@@ -201,15 +175,16 @@ static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context
     for(unsigned i=0;;i++){
         assert(i<2000);step(&tick,ctx);check(wasmtime_component_func_call(&done,ctx,NULL,0,&got,1));
         assert(got.kind==WASMTIME_COMPONENT_BOOL);if(got.of.boolean)break;
-        for(unsigned c=0;c<2;c++)for(unsigned k=0;k<64;k++)if(h->ports[c].active[k]){
-            int fd=h->ports[c].fd[k];
+        for(unsigned c=0;c<2;c++)for(unsigned k=0;k<64;k++)if(ports[c]->active[k]){
+            int fd=ports[c]->fd[k];
             if(fd>=0){
                 struct pollfd pfd={.fd=fd,.events=POLLIN};int ready=poll(&pfd,1,0);assert(ready>=0);
                 if(c==1 && !h->waited && !cancel){
-                    assert(!ready);bool other=false;for(unsigned j=0;j<64;j++)other|=h->ports[0].active[j];
+                    assert(!ready);bool other=false;for(unsigned j=0;j<64;j++)other|=ports[0]->active[j];
                     if(!other){
+                        bool readable=true;check(lb_tg_wait(&h->tasks,0,&readable));assert(!readable);
                         assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=240},&ev) && ev.done);
-                        assert(poll(&pfd,1,5000)==1 && (pfd.revents&(POLLIN|POLLHUP)));h->waited=true;
+                        check(lb_tg_wait(&h->tasks,5000,&readable));assert(readable);h->waited=true;
                     }
                 }
                 /* Even an unreadable native descriptor must not conceal a
@@ -217,10 +192,10 @@ static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context
             }
             wasmtime_component_val_t key={.kind=WASMTIME_COMPONENT_U32,.of.u32=k+1};
             check(wasmtime_component_func_call(&pumps[c],ctx,&key,1,&got,1));
-            if(c==1 && h->ports[c].fd[k]>=0)saw_park=true;
+            if(c==1 && ports[c]->fd[k]>=0)saw_park=true;
         }
         if(cancel && saw_park && !closed_early){
-            bool finite=false,series=false;for(unsigned k=0;k<64;k++){finite|=h->ports[1].active[k];series|=h->ports[0].active[k];}
+            bool finite=false,series=false;for(unsigned k=0;k<64;k++){finite|=ports[1]->active[k];series|=ports[0]->active[k];}
             if(!finite && series){
                 assert(counts(h)-before==UINT64_C(0x100000001));closed_early=true;
             }
@@ -228,11 +203,11 @@ static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context
         nanosleep(&delay,NULL);
     }
     check(wasmtime_component_func_call(&take,ctx,NULL,0,&got,1));assert(got.kind==WASMTIME_COMPONENT_S64 && got.of.s64==73);
-    for(unsigned c=0;c<2;c++)for(unsigned k=0;k<64;k++)if(h->ports[c].active[k]){
+    for(unsigned c=0;c<2;c++)for(unsigned k=0;k<64;k++)if(ports[c]->active[k]){
         wasmtime_component_val_t key={.kind=WASMTIME_COMPONENT_U32,.of.u32=k+1};
         check(wasmtime_component_func_call(&retire[c],ctx,&key,1,NULL,0));
     }
-    assert(!h->ports[0].depth && !h->ports[1].depth && saw_park);
+    assert(!ports[0]->depth && !ports[1]->depth && saw_park);
     if(cancel){
         assert(closed_early && !h->waited);
         assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=240},&ev) && ev.done);
@@ -246,17 +221,11 @@ static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context
     check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
 }
 #include "guest-turn-relay.h"
-static void relay_driver(lb_tf_driver *d,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,const char *prefix){
-    const char *names[]={"poll","deliver","reap","retire","close","drain"};
-    wasmtime_component_func_t *fs[]={&d->poll,&d->deliver,&d->reap,&d->retire,&d->close,&d->drain};d->ctx=ctx;
-    for(unsigned i=0;i<6;i++){char name[48];int n=snprintf(name,sizeof name,"%s-%s",prefix,names[i]);assert(n>0 && (size_t)n<sizeof name);*fs[i]=lookup(inst,ctx,name);}
-}
 #include "guest-turn-plain.h"
 static void future_cases(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,bool trap){
-    relay_driver(&h->future,inst,ctx,"relay");relay_driver(&h->late,inst,ctx,"relay-late");
     relay_probe p={h,inst,ctx};wasmtime_component_func_t start=lookup(inst,ctx,"user-begin");
     for(unsigned stepno=0;stepno<(trap?1u:4u);stepno++)for(unsigned mode=trap?4:0;mode<(trap?5u:4u);mode++){
-        lb_tf_driver *d=(mode==2 || mode==3)?&h->late:&h->future;
+        lb_tf_driver *d=(mode==2 || mode==3)?&h->tasks.rows[LB_TG_I_relay_late].future:&h->tasks.rows[LB_TG_I_relay].future;
         unsigned before=rcount(&p,"visits"),drops=rcount(&p,"cb-drops"),changed=0;RV arg=ru32(mode);
         check(wasmtime_component_func_call(&start,ctx,&arg,1,NULL,0));assert(rcount(&p,"visits")==before && rcount(&p,"cb-drops")==drops+1);
         unsigned i=0;while(i<64 && !d->port.port.active[i])i++;assert(i<64);
@@ -277,31 +246,25 @@ static void future_cases(host *h,wasmtime_component_instance_t *inst,wasmtime_co
         check(lb_tf_reap(d,&changed));assert(!d->port.port.active[i]);
         assert(rcount(&p,"visits")==before+(stepno!=2) && rcount(&p,"cb-drops")==drops+2+(stepno!=2));
     }
-    check(lb_tf_retire(&h->future));check(lb_tf_retire(&h->late));lb_wit_event ev={0};
+    check(lb_tf_retire(&h->tasks.rows[LB_TG_I_relay].future));check(lb_tf_retire(&h->tasks.rows[LB_TG_I_relay_late].future));lb_wit_event ev={0};
     assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
-    check(wasmtime_component_func_call(&h->future.drain,ctx,NULL,0,NULL,0));assert(!rcount(&p,"live-owners"));
+    check(lb_tg_drain(&h->tasks));assert(!rcount(&p,"live-owners"));
     wasmtime_component_func_t close=lookup(inst,ctx,"close-owners");check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
 }
 static void run_mixed(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx){
-    lb_tf_driver *d=&h->future;relay_driver(d,inst,ctx,"relay");
     wasmtime_component_func_t launch=lookup(inst,ctx,"launch"),tick=lookup(inst,ctx,"tick"),done=lookup(inst,ctx,"done"),take=lookup(inst,ctx,"take");
-    wasmtime_component_func_t pump=lookup(inst,ctx,"series-pump"),retire=lookup(inst,ctx,"series-retire"),close=lookup(inst,ctx,"close-owners");
-    step(&launch,ctx);RV got={0};unsigned changed=0;struct timespec pause={0,1000000};
+    wasmtime_component_func_t close=lookup(inst,ctx,"close-owners");
+    step(&launch,ctx);RV got={0};unsigned changed=0;
     for(unsigned i=0;;i++){
         assert(i<2000);step(&tick,ctx);check(wasmtime_component_func_call(&done,ctx,NULL,0,&got,1));
         assert(got.kind==WASMTIME_COMPONENT_BOOL);if(got.of.boolean)break;
-        for(unsigned k=0;k<64;k++)if(h->ports[0].active[k]){
-            RV key=ru32(k+1);check(wasmtime_component_func_call(&pump,ctx,&key,1,&got,1));
-        }
-        check(lb_tf_advance(d,&changed));nanosleep(&pause,NULL);
+        unsigned previous=changed;check(lb_tg_advance_all(&h->tasks,&changed));
+        if(changed==previous){bool ready=false;check(lb_tg_wait(&h->tasks,5,&ready));}
     }
     check(wasmtime_component_func_call(&take,ctx,NULL,0,&got,1));assert(got.kind==WASMTIME_COMPONENT_S64 && got.of.s64==73 && changed);
-    for(unsigned k=0;k<64;k++)if(h->ports[0].active[k]){
-        RV key=ru32(k+1);check(wasmtime_component_func_call(&retire,ctx,&key,1,NULL,0));
-    }
-    check(lb_tf_retire(d));plain_cases(h,inst,ctx);
+    check(lb_tg_retire_all(&h->tasks));plain_cases(h,inst,ctx);
     lb_wit_event ev={0};assert(lb_wit_turn_begin(&h->s.turns,(lb_wit_message){.op=242},&ev) && ev.done);
-    check(wasmtime_component_func_call(&d->drain,ctx,NULL,0,NULL,0));
+    check(lb_tg_drain(&h->tasks));
     relay_probe p={h,inst,ctx};assert(rcount(&p,"visits")==1 && rcount(&p,"cb-drops")==3 && !rcount(&p,"live-owners"));
     check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
 }
@@ -313,16 +276,7 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasmtime_component_linker_t *link=wasmtime_component_linker_new(engine);
     wasmtime_component_linker_instance_t *root=wasmtime_component_linker_root(link);
     if(in->mode==CURSORS || in->mode==CANCEL || in->mode>=MIXED){
-        check(lb_tc_link(root,"turn-series",s,256,h->ports));
-        check(lb_tc_link(root,"turn-finite",s,272,h->ports+1));
-        if(in->mode>=MIXED){
-            check(lb_tf_link(root,"turn-relay",s,512,LB_TF_RETAINED,&h->future.port));
-            check(lb_tf_link(root,"turn-relay-late",s,528,LB_TF_RETAINED,&h->late.port));
-            for(unsigned i=0;i<PLAIN_COUNT;i++){
-                char name[48];snprintf(name,sizeof name,"turn-%s",plain_names[i]);
-                check(lb_tf_link(root,name,s,544+16*i,i==ACCEPT || i==REJECT?LB_TF_FACTORY:LB_TF_SINGLE,&h->plain[i].port));
-            }
-        }
+        check(lb_tg_link_all(&h->tasks,root,s));
     }
     if(in->mode!=CURSORS && in->mode!=CANCEL)check(wasmtime_component_linker_instance_add_func(root,"turn",4,bridge,h,NULL));
     wasmtime_component_linker_instance_delete(root);
@@ -334,6 +288,7 @@ static bool application(lb_wit_turns *s,void *ptr){
     wasmtime_component_func_t bind=lookup(&instance,ctx,"bind-owners");
     wasmtime_error_t *err=NULL;wasmtime_component_val_t value={0},domain={.kind=WASMTIME_COMPONENT_U32,.of.u32=19};
     check(wasmtime_component_func_call(&bind,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && value.of.boolean);
+    if(in->mode>=MIXED)assert(lb_tg_open_all(&h->tasks,&instance,ctx));
     if(in->mode==CURSORS || in->mode==CANCEL){streams(h,&instance,ctx,in->mode==CANCEL);goto finished;}
     if(in->mode==REGISTRATIONS){run_relays(h,&instance,ctx);goto finished;}
     if(in->mode==MIXED){run_mixed(h,&instance,ctx);goto finished;}

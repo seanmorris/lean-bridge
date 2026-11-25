@@ -80,7 +80,8 @@ export const compileCHostComponent=async o=>{
 				"application-turn.h"
 				, "application-turn-cursor.h"
 				, "application-turn-cursor-link.h"
-				, ...hasFuture?["application-turn-future-link.h"]:[]]){
+				, ...hasFuture || futures["application-turn-tasks.h"]?["application-turn-future-link.h"]:[]
+				, ...futures["application-turn-tasks.h"]?["application-turn-channels.h"]:[]]){
 				const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
 				hashes[file]=sha256(bytes);await save(file,bytes);
 				}

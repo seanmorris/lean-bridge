@@ -15,6 +15,7 @@ import { witTurnCursorGraph,witTurnCursorHost,witTurnCursorPorts } from "./appli
 import { witTurnRelayHost } from "./application-turn-callback.mjs";
 import { witTurnRelayGraph } from "./application-turn-future.mjs";
 import { witTurnPlainGraph,witTurnPlainHost } from "./application-turn-plain.mjs";
+import { witTurnTaskHost } from "./application-turn-task-host.mjs";
 
 const reject=message=>{throw new TypeError("WIT application future: "+message);};
 const capacity=64;
@@ -197,7 +198,11 @@ export const witObjectFutureFiles=options=>{
 	}
 	const graph=objectFutureGraph({...options,methods: supported,files: {...files,...callbacks.files},callbacks: layout,complete: !remaining.length});
 	files["object-tasks.wit"]=graph.wit;files["object-tasks.wat"]=graph.wat;
-	if(graph.turn)files["object-turn-tasks.wat"]=graph.turn;
+	if(graph.turn)
+	{
+		files["object-turn-tasks.wat"]=graph.turn;
+		files["application-turn-tasks.h"]=witTurnTaskHost(p,supported,entries);
+	}
 	files["object-delivery.json"]=canonicalJson({schemaVersion: 2,publicName: graph.api,supported,remaining});
 	return {...files,...callbacks.files};
 };
