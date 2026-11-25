@@ -10,16 +10,19 @@ import {phpHostMembers,phpWasmHostMembers} from "../src/backends/php/host-member
 const fixture=new URL("./fixtures/javascript-host-meter/lean-bridge.hosts.json",import.meta.url);
 test("C member contracts preserve distinct constructor, property and anchored result sites",async ()=>{
 	const ir=JSON.parse(await readFile(fixture,"utf8"));
-	const [type]=ir.types; type.host.targets=["c","php"];
+	const [type]=ir.types; type.host.targets=["c","cpp","php"];
 	const identity=ir.declarations.find(d=>d.name==="identity");
 	identity.result={...identity.result,ownership: "borrow",lifetime: {scope: "receiver",anchor: "receiver"}};
-	const c=staticHostMembers(ir,"c"), php=phpHostMembers(ir);
+	const c=staticHostMembers(ir,"c"),cpp=staticHostMembers(ir,"cpp"), php=phpHostMembers(ir);
 	const originalKey=sha256Text(JSON.stringify([ir.component.id,type.id,type.resource.kindId],null,2)+"\n");
 	assert.equal(php.kinds[0].key,originalKey);
 	assert.equal(phpWasmHostMembers(ir).kinds[0].key,sha256Text("php-wasm-zend-v1:"+originalKey));
 	assert.notEqual(c.kinds[0].key,originalKey);
 	const common=members=>members.map(m=>({...m,symbol: undefined}));
 	assert.deepEqual(common(c.members),common(php.members));
+	assert.deepEqual(common(c.members),common(cpp.members));
+	assert.notEqual(c.kinds[0].key,cpp.kinds[0].key);
+	assert.ok(cpp.members.every(m=>m.symbol.startsWith("lean_bridge_host_cpp_")));
 	assert.deepEqual(c.members.map(m=>[m.op,m.args,m.result]),[
 		["method",[0],"uint32"],["constructor",["uint32"],0],["get",[0],"uint32"]
 		, ["set",[0,"uint32"],"unit"],["method",[0],0]

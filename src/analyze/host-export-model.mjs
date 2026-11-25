@@ -95,10 +95,11 @@ export const reconcileHostExports = options => {
 	if(selection.witCursorIO!==undefined && (!witCursorIO || ir || synchronous || !selection.asyncIterators?.length
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && k!=="witTaskCallbacks")))
 		fail("Unauthenticated WIT cursor IO selection");
-	if(ir && ["php","c"].includes(hostTarget) && selection.nativeEffectPolicy!==nativeEffectPolicy)
-		fail((hostTarget==="c"?"C":"PHP")+" host imports require compiled member evidence");
-	if(ir && hostTarget==="c" && (selection.cTaskCallbacks!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
-		fail("C host imports require synchronous owner calls until a worker binding is selected");
+	const cFamily=hostTarget==="c" || hostTarget==="cpp",ownerLabel=hostTarget==="cpp"?"C++":hostTarget==="c"?"C":"PHP";
+	if(ir && (hostTarget==="php" || cFamily) && selection.nativeEffectPolicy!==nativeEffectPolicy)
+		fail(ownerLabel+" host imports require compiled member evidence");
+	if(ir && cFamily && (selection[hostTarget+"TaskCallbacks"]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
+		fail(ownerLabel+" host imports require synchronous owner calls until a worker binding is selected");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
 	if(selection.phpWasmTaskObjects!==undefined && (!phpWasm || selection.phpNativeTaskObjects!==undefined || selection.nativeEffects?.length))
 		fail("Unauthenticated PHP-Wasm task objects");
@@ -216,7 +217,9 @@ export const reconcileHostExports = options => {
 	const matchingScheduler = { ruby, jvm, dotnet, perl, php: phpObjects && php, javascript: owner && js, python: selection.pythonTaskCallbacks === true }[hostTarget];
 	if(ir && schedulerCount && !matchingScheduler)
 		fail("Host imports and retained callbacks require the same runtime");
-	const importedError = { c: ["CHostError","C"], jvm: ["JvmHostException", "JVM"]
+	const importedError = { c: ["CHostError","C"]
+		, cpp: ["CppHostException","C++"]
+		, jvm: ["JvmHostException", "JVM"]
 		, ruby: ["RubyHostException", "Ruby"]
 		, dotnet: ["DotNetHostException", ".NET"]
 		, perl: ["PerlHostException", "Perl"]

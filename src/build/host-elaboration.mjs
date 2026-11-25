@@ -96,14 +96,15 @@ export const compileHostSources = async options => {
 			fail("Python worker declarations differ from the captured host source");
 	}
 	const phpWasmTaskObjects=Boolean(ir && options.target==="php-wasm" && (projectContract?.taskExports?.length || projectContract?.asyncIterators?.length));
-	if(ir && (target==="php" || target==="c"))
+	if(ir && ["c","cpp","php"].includes(target))
 	{
-		if(target==="c" && !projectContract) fail("C host members require a captured import source");
+		const label=target==="cpp"?"C++":target==="c"?"C":"PHP";
+		if(target!=="php" && !projectContract) fail(label+" host members require a captured import source");
 		if(projectContract)
 		{
 			const {hostImportsSource: text,hostImportsSourceSha256: hash}=projectContract;
 			if(typeof text!=="string" || sha256(text)!==hash || canonicalJson(parseBindingIr(text))!==canonicalJson(ir))
-				fail((target==="c"?"C":"PHP")+" host declarations differ from the captured import source");
+				fail(label+" host declarations differ from the captured import source");
 		}
 		staticHostMembers(ir,target);
 	}

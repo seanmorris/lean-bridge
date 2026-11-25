@@ -45,22 +45,25 @@ test("Lean compiles each native host namespace and rejects an object from its ne
 	}
 	// The provider and Lean compiler must agree in the *same* translation
 	// unit, including borrowed receivers, scalar widths and IO results.
-	const model=staticHostMembers(ir,"c"), impl=emitWordHostMembers(ir,model,"c");
 	const sdk=(await lean("--print-prefix")).stdout.trim();
 	const backend=dir=>fileURLToPath(new URL("../../src/backends/"+dir+"/",import.meta.url));
-	await writeFile(join(root,"Provider.c"),'#include "LeanBridge/Host/C.c"\n'+impl.header+"\n"+impl.native);
-	await exec(process.env.CC??"cc",["-std=gnu11"
-		, "-Werror=incompatible-pointer-types"
-		, "-DLB_DN_DOMAIN_PREFIX=checked_domain_"
-		, "-I"+join(sdk,"include")
-		, "-I"+backend("dotnet")
-		, "-I"+backend("c")
-		, "-c"
-		, "Provider.c"
-		, "-o"
-		, "Provider.o"],{cwd: root});
-	const symbols=(await exec("nm",["-g","--defined-only","Provider.o"],{cwd: root})).stdout;
-	for(const m of model.members) assert.ok(symbols.split("\n").some(s=>s.endsWith(" T "+m.symbol)),m.symbol);
+	for(const target of ["c","cpp"])
+	{
+		const model=staticHostMembers(ir,target),impl=emitWordHostMembers(ir,model,target);
+		await writeFile(join(root,"Provider.c"),'#include "LeanBridge/Host/'+targets[target]+'.c"\n'+impl.header+"\n"+impl.native);
+		await exec(process.env.CC??"cc",["-std=gnu11"
+			, "-Werror=incompatible-pointer-types"
+			, "-DLB_DN_DOMAIN_PREFIX=checked_domain_"
+			, "-I"+join(sdk,"include")
+			, "-I"+backend("dotnet")
+			, "-I"+backend("c")
+			, "-c"
+			, "Provider.c"
+			, "-o"
+			, "Provider.o"],{cwd: root});
+		const symbols=(await exec("nm",["-g","--defined-only","Provider.o"],{cwd: root})).stdout;
+		for(const m of model.members) assert.ok(symbols.split("\n").some(s=>s.endsWith(" T "+m.symbol)),m.symbol);
+	}
 	for(const [i,name] of names.entries())
 	{
 		const other=names[(i+1)%names.length];

@@ -14,7 +14,7 @@ for(const bits of [8, 16, 32, 64]) for(const [k, l] of [["int", "Int"], ["uint",
  * @param target - Select an isolated package symbol prefix and Lean namespace.
  */
 export const emitWordHostExports = (o, model, target) => {
-	const name = target === "c" ? "C" : target === "php" ? "Php" : target === "dotnet" ? "Dotnet" : null;
+	const name = target === "c" ? "C" : target === "cpp" ? "Cpp" : target === "php" ? "Php" : target === "dotnet" ? "Dotnet" : null;
 	if(!name) throw new TypeError("Unknown native host owner");
 	const module = "Bridge" + name + "Exports", host = "LeanBridge.Host." + name;
 	const { ir, entries, modules, identity } = o;
