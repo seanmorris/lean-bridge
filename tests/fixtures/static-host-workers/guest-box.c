@@ -1,6 +1,6 @@
 /* Integration fixture for the private Wasmtime adapter and compiled Lean
  * worker. Consumers of a released package must not implement this plumbing. */
-#include "application-dispatch.h"
+#include "application-operations.h"
 #include <assert.h>
 #include <poll.h>
 #include <stdio.h>
@@ -155,7 +155,7 @@ int main(int argc,char **argv){
     wasm_config_t *config=wasm_config_new();wasmtime_config_wasm_component_model_set(config,true);
     wasm_engine_t *engine=wasm_engine_new_with_config(config);
     wasmtime_component_t *graph=load_component(engine,"client-graph.wasm");
-    guest_calls_lean(engine,graph);wasmtime_component_delete(graph);
+    guest_calls_lean(engine,graph,false);guest_calls_lean(engine,graph,true);wasmtime_component_delete(graph);
     wasmtime_component_t *component=load_component(engine,argv[1]);
     wasmtime_component_linker_t *linker=wasmtime_component_linker_new(engine);
     wasmtime_store_t *one=wasmtime_store_new(engine,NULL,NULL),*two=wasmtime_store_new(engine,NULL,NULL);

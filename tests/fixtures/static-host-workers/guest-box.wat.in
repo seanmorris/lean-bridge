@@ -1,6 +1,7 @@
 ;; A real defining guest. Each Box has its own location, so equal values do
 ;; not imply equal objects. The guest destructor counts canonical owners.
 (module
+  ;; @test-drop-import@
   (import "cm32p2|_ex_@IFACE@" "box_new" (func $new (param i32) (result i32)))
   (import "cm32p2|_ex_@IFACE@" "member-error_new" (func $error (param i32) (result i32)))
   (memory (export "cm32p2_memory") 1)
@@ -64,6 +65,7 @@
     (i32.const 0))
   (func $destroy (export "cm32p2|@IFACE@|box_dtor") (param i32)
     (if (global.get $armed) (then unreachable))
+    ;; @test-drop-notify@
     (global.set $drops (i32.add (global.get $drops) (i32.const 1))))
   (export "cm32p2|@IFACE@|member-error_dtor" (func $destroy))
   (func (export "cm32p2||drops") (result i32) (global.get $drops))

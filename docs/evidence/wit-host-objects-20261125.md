@@ -30,4 +30,16 @@ On failure, the consumer calls the original error’s WIT message method and dro
 
 The exchange rejects wrong-type owners and occupied destinations without consuming them; two owners of the same type come back in stack order with their identities intact. An empty take traps and retires the binding. A separate fault-injection case arms the original guest destructor during duplicate interning: the tentative native reference is rolled back, the destination stays empty, and no native box remains registered after the caller releases its original ticket.
 
-The worker in this run has SHA-256 `08cf10e2dcb54e7e2f6a29fa675ea2cf87dd15806dec96131aacb08b47f94c34` and 52 native exports. The owner domain and lease library digests are unchanged. This is a compiled integration with a fixture-specific two-operation facade, not an installed WIT release. The generated full operation facade, public object-bearing futures and streams, and install receipts are still outstanding.
+The worker in this two-operation run has SHA-256 `08cf10e2dcb54e7e2f6a29fa675ea2cf87dd15806dec96131aacb08b47f94c34` and 52 native exports. The owner domain and lease library digests are unchanged.
+
+### Generated synchronous consumer interface
+
+The [operation generator](../../src/backends/wit/application-operation-files.mjs) replaces the two handwritten operation adapters. It stages a public `api.wit`, a Wasm facade and a native linker from the compiler-checked exports and their Binding IR failure declarations. The test builds the independent app with only the public API and the defining guest’s object types as WIT dependencies. It compares the imports in the app’s compiled core module with the generated operation inventory, then calls all 17 synchronous exports.
+
+The Wasm app distinguishes a returned `Except` value from an `EIO` failure; an object returned by either carries the original guest identity. An ordinary `IO.Error` delivers the exact message `meter disconnected`, while the declared `EIO String` delivers `host read failed`. Only operations whose Binding IR admits an escaping guest exception expose the original guest error as another failure case.
+
+The app passes binary data with embedded zero bytes, UTF-8 text, a 385-bit natural and a negative 385-bit integer through the facade. It also passes two distinct boxes in both orders. A 17-argument Lean operation exercises the canonical ABI’s indirect argument record; changing its last scalar selects a different original box.
+
+Passing a borrowed box alongside an integer with a zero high limb produces a boundary-validation error, not a Lean `IO` or `EIO` failure. The defining guest notifies a test-only observer from its destructor: the staged box owner is released exactly once before the trap retires the binding. The test does not reenter the poisoned graph to read the counter. It also rejects a changed `EIO` payload and an invented failure on a pure function before generating a facade.
+
+The clean run produced 53 native exports; the worker SHA-256 is `8c3ac7651f0f42c794096e4551248a7e311da31fb01193e260391c175fffc64e`. This is still a locally composed integration. The public object-bearing asynchronous interface, ordinary and reviewed package installations, and their release receipts remain outstanding.

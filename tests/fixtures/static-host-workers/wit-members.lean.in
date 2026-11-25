@@ -5,6 +5,11 @@ def keepOther (box other : Box) : IO Box := box.keepOther other
 def takeOther (box other : Box) : IO Box := box.takeOther other
 def anchored (box : Box) : IO Box := box.anchored
 
+-- Force the Component Model's indirect (>16 flattened parameters) calling convention.
+def pickWide (box : Box) (a b c d e f g h i j k l m n : UInt32)
+    (other : Box) (tail : UInt32) : IO Box :=
+  pure (if a+b+c+d+e+f+g+h+i+j+k+l+m+n == 14 && tail == 9 then other else box)
+
 def firstError (a b : UInt32) : IO Box := do
   try Box.create a catch original =>
     try

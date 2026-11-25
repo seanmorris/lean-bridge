@@ -4,6 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { buildWitApplicationConsumer } from "./wit-application-consumer.mjs";
+import { witApplicationOperations } from "../../src/backends/wit/application-operations.mjs";
 
 /**
  * Compile and run the fixture against the actual generated interface and native provider.
@@ -15,6 +16,14 @@ import { buildWitApplicationConsumer } from "./wit-application-consumer.mjs";
  */
 export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
 	const {wit,interfaceName}=b.witImports;
+	const entries=b.entries.filter(e=>!e.delivery);
+	const altered=structuredClone(b.api);
+	altered.errors.find(e=>e.id==="error:EIO.Workshop.mapped").payload={kind: "primitive",name: "uint32"};
+	const options={descriptor: b.witImports,entries,name: "workshop",version: "1.0.0"};
+	assert.throws(()=>witApplicationOperations({...options,api: altered}),/failure payload differs/u);
+	const invented=structuredClone(b.api);
+	invented.declarations.find(d=>d.source.declaration==="Workshop.choose").failure.errors.push("error:IO.Error");
+	assert.throws(()=>witApplicationOperations({...options,api: invented}),/unrecognized failure channels/u);
 	const run=async(command,args,env=process.env)=>{
 		try
 		{ return await processBuildRunner.capture({command,args,cwd: app,env}); }

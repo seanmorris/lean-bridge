@@ -28,6 +28,6 @@ export const extendWitApplication = async project => {
 	const extra=await readFile("tests/fixtures/static-host-workers/wit-members.lean.in","utf8");
 	await writeFile(join(project,"Workshop.lean"),source+"\n"+extra);
 	const path=join(project,"lean-bridge.exports.json"),config=JSON.parse(await readFile(path,"utf8"));
-	config.exports.push(...["readOnline","text","bytes","shift","natural","keepOther","takeOther","anchored","firstError"].map(n=>"Workshop."+n));
+	config.exports.push(...["readOnline","text","bytes","shift","natural","keepOther","takeOther","anchored","firstError","pickWide"].map(n=>"Workshop."+n));
 	await writeFile(path,canonicalJson(config));
 };

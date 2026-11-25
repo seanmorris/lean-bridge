@@ -6,6 +6,7 @@ import {cHostFacade} from "../backends/c/host-facade.mjs";
 import {cppHostFacade} from "../backends/cpp/host-facade.mjs";
 import {witApplicationHostImports} from "../backends/wit/application-host-imports.mjs";
 import {witApplicationExchange} from "../backends/wit/application-exchange.mjs";
+import {witOperationFiles} from "../backends/wit/application-operation-files.mjs";
 import {witApplicationMemberBindings} from "../backends/wit/application-member-bindings.mjs";
 import {witApplicationDispatch} from "../backends/wit/application-member-dispatch.mjs";
 import {staticHostMembers} from "../backends/native/static-host-members.mjs";
@@ -63,6 +64,8 @@ export const compileCHostComponent=async o=>{
 		}
 		const dispatch=witApplicationDispatch({ir,model,entries:direct,descriptor:witImports,name:o.name});
 		hashes.memberDispatch=sha256(dispatch);await save("application-dispatch.h",dispatch);
+		const ops=await witOperationFiles({ir,model,api:checked.api,entries:direct,descriptor:witImports,name:o.name,version:o.version});
+		for(const [file,data] of Object.entries(ops)){hashes[file]=sha256(data);await save(file,data);}
 	}
 	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h",...cpp?["cpp/host-worker-readiness.h","cpp/host-async.hpp","cpp/task-callback.hpp","cpp/task-loop.hpp","cpp/task-routine.hpp","cpp/task-values.hpp"]:[]]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
 	{
