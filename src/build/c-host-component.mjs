@@ -24,6 +24,7 @@ export const compileCHostComponent=async o=>{
 	const target=o.target==="cargo"?"rust":o.target??"c",cpp=target==="cpp",rust=target==="rust",lang=cpp?"Cpp":rust?"Rust":"C";
 	const requested=Boolean(contract?.taskExports?.length || contract?.asyncIterators?.length);
 	const workers=o.workerTransport===true && requested;
+	const publicWorkers=workers && o.publicWorkers===true && target==="c";
 	if(!["cpp","c","rust"].includes(target) || !ir || contract?.generatedHostModule!=="LeanBridge.Host."+lang || !contract.hostImportsSource
 		|| (requested!==workers) || contract.leanResources.length)
 		throw new TypeError("Expected synchronous application-owned C host imports");
@@ -42,7 +43,7 @@ export const compileCHostComponent=async o=>{
 	const domainInputs=["dotnet/host-domain.c","dotnet/host-domain.h","dotnet/host-frame.h",...rust?["rust/host-owner-cookie.c"]:["c/host-registry.h","c/host-registry.c"]];
 	if(cpp) domainInputs.push("cpp/host-shared.cpp","cpp/host-shared.hpp");
 	const support={};
-	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
+	for(const f of [...domainInputs,"dotnet/host-wire.h","c/task-integers.h","c/host-copied.h",...publicWorkers?["c/host-worker.h"]:[],...cpp?["cpp/host-binding.hpp","cpp/sync-values.hpp"]:[]])
 	{
 		const bytes=await readFile(new URL("../backends/"+f,import.meta.url));
 		hashes[f]=sha256(bytes); await save(f.split("/").at(-1),bytes);
@@ -73,7 +74,7 @@ export const compileCHostComponent=async o=>{
 	}
 	const base=gen("0".repeat(64));
 	const ownerPrefix="lb_cs_"+domainId+"_";
-	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp});
+	const facadeFor=(identity,prefix)=>rust?{header: "",source: "",symbols: [prefix+"_call",prefix+"_clear"]}:cHostFacade({ir,entries: direct,model,name: cpp?"lb_cpp_detail_"+identity:o.name,identity,prefix,cpp,...publicWorkers?{domainId,workerWire:kernel.wire,workerEntries:checked.entries.filter(e=>e.delivery)}:{}});
 	const wrapper=(identity,facade)=>cppHostFacade({ir,entries: direct,model,name: o.name,identity,facade,ownerPrefix,abi});
 	const publicBase=facadeFor("0".repeat(64),base.prefix);
 	const identity=sha256(canonicalJson({
@@ -111,7 +112,7 @@ export const compileCHostComponent=async o=>{
 	}
 	await save("public.h",facade.header);
 	await save("provider.c",actual.source+"\n"+facade.source);
-	const symbols=[...facade.symbols,...kernel?[actual.prefix+"_visit",actual.prefix+"_object",...kernel.wire.symbols]:[]];
+	const symbols=[...facade.symbols,...kernel&&!publicWorkers?[actual.prefix+"_visit",actual.prefix+"_object",...kernel.wire.symbols]:[]];
 	await save("public.map","{ global: "+symbols.join("; ")+"; local: *; };\n");
 	if(kernel) units.push(...await stageWordHostTasks({kernel,identity,app,save,run,cc,leanPrefix,runtimeRoot,env: checked.env}));
 	await run(cc,[...flags,...kernel?[kernel.ledger.flag]:[],...units,"provider.c","host-frame.c","-L.","-l:"+domain,...kernel?["-l:"+kernel.ledger.name]:[],...libs,"-llean_bridge_native","-Wl,--version-script=public.map","-Wl,-soname,"+component,"-o",component]);

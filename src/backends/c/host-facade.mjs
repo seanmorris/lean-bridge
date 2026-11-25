@@ -2,6 +2,7 @@
 import {cIdentifier} from "./generate.mjs";
 import {hostDeclarationName} from "../../abi/host-member-names.mjs";
 import {cHostCodecs} from "./host-codecs.mjs";
+import {cHostWorkers} from "./host-worker-api.mjs";
 
 /**
  * The application sees ordinary C member function pointers, typed references
@@ -17,18 +18,18 @@ export const cHostFacade=o=>{
 	names.forEach(reserve);
 	{
 		defs.push("typedef struct { uint64_t _private[2]; } "+p+"binding;",
-			"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","IO_ERROR","DECLARED_ERROR","HOST_ERROR","BUSY"].map(x=>p+x).join(", ")+" } "+p+"status;",
+			"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","IO_ERROR","DECLARED_ERROR","HOST_ERROR","BUSY",...o.workerWire?["PENDING","END","IDLE","CANCELLED","CALLBACK_ERROR","CALLBACK_CLOSED","TASK_IO_ERROR","STEP_ERROR","STEP_IO_ERROR"]:[]].map(x=>p+x).join(", ")+" } "+p+"status;",
 			"typedef struct { const uint8_t *data; size_t len; } "+p+"view;",
 			"typedef struct { uint8_t *data; size_t len; } "+p+"buffer;",
 			"typedef struct { const uint64_t *data; size_t len; bool negative; } "+p+"integer_view;",
 			"typedef struct { uint64_t *data; size_t len; bool negative; } "+p+"integer;",
-			"typedef struct { uint32_t host_code; "+p+"buffer message; } "+p+"diagnostic;");
+			"typedef struct { uint32_t host_code; "+p+"buffer message; "+(o.workerWire?"void *payload; void (*dispose_payload)(void *); ":"")+"} "+p+"diagnostic;");
 	}
 	const add=(suffix,ret,args,body)=>{
 		reserve(suffix);const n=p+suffix,decl=ret+" "+n+"("+args+")"; defs.push(decl+";");symbols.push(n);
 		code.push('__attribute__((visibility("default"))) '+decl+" {\n"+body+"\n}");
 	};
-	add("diagnostic_clear","void",p+"diagnostic *d","if(d) { free(d->message.data); *d=("+p+"diagnostic){0}; }");
+	add("diagnostic_clear","void",p+"diagnostic *d",o.workerWire?"if(d){"+p+"diagnostic v=*d;*d=("+p+"diagnostic){0};free(v.message.data);if(v.dispose_payload)v.dispose_payload(v.payload);}":"if(d) { free(d->message.data); *d=("+p+"diagnostic){0}; }");
 	for(const x of ["buffer","integer"]) add(x+"_clear","void",p+x+" *v","if(v) { free(v->data); *v=("+p+x+"){0}; }");
 	const {scalar,byRef}=cHostCodecs(ir,model.kinds,p,defs);
 	model.kinds.forEach((k,i)=>{
@@ -85,7 +86,7 @@ done_${i}:
 		`if(!binding) return ${p}INVALID; lb_cr_ref r=${br("*binding")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,r,&app);
     if(c) return lb_status(c); if(((lb_app *)app)->depth) return ${p}BUSY;
     lb_scope scope={.binding=r,.app=app}; uint64_t w[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
-    ++scope.app->depth; int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,-1,NULL,0,w,tags,&fault); --scope.app->depth;
+    ${o.workerWire?"scope.app->closing=true;while(scope.app->jobs)lw_finish(scope.app->jobs);\n    ":""}++scope.app->depth; int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,-1,NULL,0,w,tags,&fault); --scope.app->depth;
     if(rc) return lb_native(rc); c=LB_CR(binding_drop)(lb_component_key,&r); if(!c) *binding=(${binding}){0}; return lb_status(c);`);
 	for(const [i,e] of entries.entries())
 	{
@@ -94,9 +95,9 @@ done_${i}:
 		if(err && e.error.kind==="apply") add(name+"_failure_clear","void",err.type+" *v","if(v) { "+err.clear("*v")+" *v=("+err.type+"){0}; }");
 		const params=[binding+" binding",...a.map((v,j)=>v.arg+" a"+j),r.type+" *value",...err?[err.type+" *failure"]:[],p+"diagnostic *diag"];
 		const bad=c=>"return lb_status("+c+");",retired=()=>"lean_bridge_native_runtime_retire(); status="+p+"UNAVAILABLE; goto exit;";
-		add(name,p+"status",params.join(", "),`if(!value || !${r.empty("*value")} || !diag || diag->message.data || diag->message.len${err?" || !failure || !"+err.empty("*failure"):""}) return ${p}INVALID;
+		add(name,p+"status",params.join(", "),`if(!value || !${r.empty("*value")} || ${o.workerWire?"!lw_empty(diag)":"!diag || diag->message.data || diag->message.len"}${err?" || !failure || !"+err.empty("*failure"):""}) return ${p}INVALID;
     lb_cr_ref binding_ref=${br("binding")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,binding_ref,&app); if(c) return lb_status(c);
-    if(((lb_app*)app)->depth>=64) return ${p}LIMIT;
+    ${o.workerWire?"if(((lb_app*)app)->closing) return "+p+"BUSY;\n    ":""}if(((lb_app*)app)->depth>=64) return ${p}LIMIT;
     size_t budget=0; uint64_t w[${Math.max(1,a.length*3)}]={0},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
     ${a.map((v,j)=>v.pack("a"+j,"w+"+3*j,bad)).join("\n    ")}
     lb_scope scope={.binding=binding_ref,.app=app}; ++scope.app->depth;
@@ -109,12 +110,13 @@ done_${i}:
     goto exit;
 exit: ${prefix}_clear(out); lb_reset(&scope); --scope.app->depth; return status;`);
 	}
+	const worker=o.workerWire?cHostWorkers(o,{p,byRef,add,reserve,defs}):"";
 	const header="#ifndef "+guard+"\n#define "+guard+"\n#include <stdbool.h>\n#include <stddef.h>\n#include <stdint.h>\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n"+defs.join("\n")+"\n#ifdef __cplusplus\n}\n#endif\n#endif\n";
 	const source=`#include "public.h"
 #include "host-registry.h"
 static const char lb_component_key[]="${identity}";
 static const char *const lb_keys[]={${model.kinds.map(k=>JSON.stringify(k.key)).join(",")}};
-typedef struct { ${p}hosts methods; void *context; unsigned depth; } lb_app;
+typedef struct { ${p}hosts methods; void *context; unsigned depth; ${o.workerWire?"struct lw_job *jobs; bool closing;":""}} lb_app;
 typedef struct { lb_cr_ref binding,temp; lb_app *app; const char *key; void *buffer; } lb_scope;
 static void lb_reset(lb_scope *s) { free(s->buffer); s->buffer=NULL; if(s->temp.ticket) LB_CR(drop)(s->key,&s->temp); }
 static void lb_dispose(lb_cr_fn fn,void *ptr) { ((void (*)(void *))fn)(ptr); }
@@ -127,7 +129,7 @@ static int lb_dispatch(uint64_t id,int32_t op,const uint64_t *w,size_t n,uint64_
     lb_reset(scope);
     switch(op) { ${cases.join("\n")} default: return 2; }
 }
-${code.join("\n")}
+${worker?worker+"\n":""}${code.join("\n")}
 `;
 	return {header,source,symbols,prefix: p};
 };

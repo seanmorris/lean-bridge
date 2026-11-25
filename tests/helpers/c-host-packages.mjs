@@ -1,6 +1,6 @@
 /** @file Verify public CLI C host archives, then compile and run offline consumers. */
 import assert from "node:assert/strict";
-import {access,copyFile,mkdir,mkdtemp,readFile,realpath,rename,rm,writeFile} from "node:fs/promises";
+import {access,appendFile,copyFile,mkdir,mkdtemp,readFile,realpath,rename,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
@@ -9,10 +9,12 @@ import {buildCliNpmPackage} from "../../src/release/cli-npm-package.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
+import {addStaticWorkerJobs} from "./static-worker-project.mjs";
 
 const cpp=process.env.LEAN_BRIDGE_CPP_HOST_TEST==="1",target=cpp?"cpp":"c",label=cpp?"C++":"C";
-const variable="LEAN_BRIDGE_"+target.toUpperCase()+"_HOST_",replay=process.env[variable+"REPLAY"];
-const success=cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u;
+const workers=process.env.LEAN_BRIDGE_C_HOST_WORKERS==="1";
+const variable="LEAN_BRIDGE_"+target.toUpperCase()+"_HOST_"+(workers?"WORKER_":""),replay=process.env[variable+"REPLAY"];
+const success=workers?/installed C workers: identity, callbacks, errors and cleanup/u:cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u;
 test(label+(replay?" retained host archives replay without Lean":" offline CLI publishes ordinary and reviewed packages sharing one owner"),{timeout: 3600000},async t=>{
 	const env=process.env,root=await mkdtemp(join(tmpdir(),"c-host-publisher-"));
 	t.after(()=>rm(root,{recursive: true,force: true}));
@@ -32,6 +34,22 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 		if(!replay)
 		{
 			await prepareNativeHostFixture(src,target); await copyFile("LICENSE",join(src,"LICENSE"));
+			if(workers)
+			{
+				const {cfg,save}=await addStaticWorkerJobs(src,target);
+				const contract=join(src,"lean-bridge.hosts.json"),ir=JSON.parse(await readFile(contract,"utf8"));
+				const dial=structuredClone(ir.types[0]), read=structuredClone(ir.declarations.find(d=>d.name==="read"));
+				dial.name=dial.source.declaration="Dial";dial.id="host:meter.Dial";dial.resource.kindId="resource:meter.Dial";dial.host.identity="strong-canonical";
+				read.id=dial.id+".read";read.owner=read.receiver.type.id=dial.id;read.overloadKey="Dial.read()";read.source.declaration="Dial.read";
+				ir.types.push(dial);ir.declarations.push(read);await writeFile(contract,canonicalJson(ir));
+				await appendFile(join(src,"Jobs.lean"),(await readFile("tests/fixtures/static-host-workers/c-effects.lean.in","utf8")).replace("LeanBridge.Host.C","LeanBridge.Host."+(cpp?"Cpp":"C")));
+				const tasks=["handoff","signedEcho","largeResult","withBuffer","twice","prepareIO","lateIO","checkedRelay","dormant"].map(n=>"Jobs."+n);
+				cfg.taskExports.push(...tasks);cfg.taskIOErrors.push("Jobs.handoff","Jobs.twice","Jobs.lateIO","Jobs.checkedRelay");
+				cfg.exports.push(...tasks,"Jobs.finite","Jobs.broken");
+				for(const [open,next,close] of [["finite","nextFinite","closeFinite"],["broken","nextBroken","closeBroken"]])
+					cfg.asyncIterators.push({open:"Jobs."+open,next:"Jobs."+next,close:"Jobs."+close});
+				await save();
+			}
 			const cfg=join(src,"lean-bridge.exports.json"),config=JSON.parse(await readFile(cfg,"utf8"));
 			if(route==="peer")
 			{
@@ -41,7 +59,7 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 			if(route==="reviewed" || route==="rejected")
 			{
 				const ir=JSON.parse(review);
-				if(route==="rejected") delete ir.declarations.find(d=>d.name==="read").source.extensions["lean-bridge.dev/host-members"];
+				if(route==="rejected") delete ir.declarations.find(d=>d.name===(workers?"relay":"read")).source.extensions[workers?"lean-bridge.dev/task-failure":"lean-bridge.dev/host-members"];
 				await writeFile(join(src,"workshop.binding-ir.json"),canonicalJson(ir)); delete config.exports;
 			}
 			await writeFile(cfg,canonicalJson(config));
@@ -69,6 +87,12 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 		assert.deepEqual(JSON.parse(await readFile(join(dest,"share/lean-bridge/elaboration.json"))),ev);
 		assert.equal(manifest.hostImportsSourceSha256,ev.hostImportsSourceSha256);
 		assert.equal(manifest.bindingIrSha256,receipt.profiles[0].bindingIrSha256);assert.equal(manifest.runtimeIdentity,receipt.profiles[0].runtimeIdentity);
+		if(workers)
+		{
+			assert.equal(ev.selection.staticTaskOwner,target);assert.match(manifest.workerLedger,/^liblb_task_resources_[a-f0-9]{64}\.so$/u);
+			const stdout=await run("nm",["-D","--defined-only",join(dest,"lib",manifest.library)],dest,env);
+			assert.match(stdout,/\b(?:workshop|peer)_relay_start\b/u);assert.doesNotMatch(stdout,/\b(?:lbwire_|lbc_|lb_c_host_)/u);
+		}
 		for(const [path,expected] of Object.entries(manifest.files))
 		{
 			const bytes=await readFile(join(dest,path)); assert.equal(bytes.length,expected.bytes); assert.equal(sha256(bytes),expected.sha256);
@@ -79,6 +103,11 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 	const client=join(root,"consumer"); await mkdir(client);
 	const main="consumer."+target;
 	await copyFile(resolve("tests/fixtures/c-host-members",main),join(client,main));
+	if(workers)
+	{
+		await rename(join(client,main),join(client,"sync-owners.c"));
+		await copyFile("tests/fixtures/static-host-workers/consumer.c",join(client,main));
+	}
 	for(const route of ["ordinary","reviewed"])
 	{
 		for(const [first,second] of [["workshop","peer"],["peer","workshop"]])
@@ -93,11 +122,11 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 				const names=[];
 				for(const line of deps)
 				{
-					const m=/^\s*(lib(?:lb_(?:c|cpp)_host_\w+|lean_bridge_native|leanshared)\.so) => (.+?) \(/u.exec(line);
+					const m=/^\s*(lib(?:lb_(?:c|cpp)_host_\w+|lb_task_resources_\w+|lean_bridge_native|leanshared)\.so) => (.+?) \(/u.exec(line);
 					if(!m) continue;
 					const path=await realpath(m[2]); assert.ok(dirs.some(d=>path.startsWith(d+"/lib/")),path); names.push(m[1]);
 				}
-				assert.equal(names.length,5,"expected two components, one shared object domain and both embedded runtime libraries: "+names);
+				assert.equal(names.length,workers?6:5,"unexpected installed native library graph: "+names);
 			};
 			await loaded(bin);
 			assert.match(await run(bin,[],client,isolated),success);

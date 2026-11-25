@@ -167,6 +167,32 @@ value. The [complete C application](../../tests/fixtures/c-host-members/consumer
 registers both member tables, uses the same object from two packages, and
 releases the final owner after closing the bindings.
 
+### Use an application object in a task or stream
+
+When a package exports workers on its host binding, pass the same object handle
+to the generated `_start` function. A successful start keeps its own reference;
+you can drop yours. Call `_poll` on the main thread. On `PENDING`, watch its
+borrowed file descriptor for readability, then poll again. Never read or close
+that descriptor. On `OK`, call `_take` with zero-initialized output slots.
+For a stream, call `_pull` before each item. `END` or a step error finishes the
+stream; `_close` stops it early. Closing the binding cancels its outstanding
+work, not work on another binding.
+
+A task that needs a C operation on an object takes a typed callback. For
+example, `workshop_callback_box_to_box_new` wraps your function, context and
+optional destructor. The function runs during `_poll` on the binding thread.
+It borrows the input; to return the same object, clone it into the reply
+slot. Drop the callback handle after starting the task, or call its `_close`
+to revoke future calls. An invocation that closes itself may finish.
+
+A returned `Except` is a value. A thrown declared error has its own output;
+factory, task and stream-step I/O failures have distinct statuses. A callback
+can return `CALLBACK_ERROR` with a diagnostic containing its application code,
+UTF-8 message and optional owned payload. Supply malloc-compatible storage for
+the message and a destructor for the payload. Call `_diagnostic_clear` before
+reusing it. The [complete C consumer](../../tests/fixtures/static-host-workers/consumer.c)
+shows what to release on each branch. The [installed C worker checks](../evidence/static-host-workers-20261125.md#installed-c11-workers-on-application-objects) record both package routes.
+
 ## Wait for a task or pull a stream
 
 A C archive marked `native-c-task-v1` bundles the Lean runtime. Include the

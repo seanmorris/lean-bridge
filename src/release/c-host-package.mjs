@@ -26,13 +26,13 @@ export const buildCHostPackage=async o=>{
 	const app=await mkdtemp(join(workRoot,".c-host-"));
 	try
 	{
-		const b=await compileCHostComponent({...o,app});
+		const b=await compileCHostComponent({...o,app,workerTransport: !cpp,publicWorkers: !cpp});
 		const {manifest,identity: runtimeIdentity}=await readVerifiedNativeRuntime(o.runtimeRoot);
 		if(runtimeIdentity!==b.runtimeIdentity) throw new Error("C host runtime changed during compilation");
 		const floor=o.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR??"2.38";
 		if(!/^2\.(?:3[0-9]|[4-9][0-9])$/u.test(floor)) throw new TypeError("Invalid C host glibc floor");
 		const files=new Map();
-		for(const path of ["lib/"+b.component,"lib/"+b.domain,...Object.keys(manifest.files).filter(p=>p.startsWith("lib/"))])
+		for(const path of ["lib/"+b.component,"lib/"+b.domain,...b.workerLedger?["lib/"+b.workerLedger]:[],...Object.keys(manifest.files).filter(p=>p.startsWith("lib/"))])
 		{
 			const sdk=manifest.files[path],file=sdk?join(o.runtimeRoot,path):join(app,path.slice(4));
 			const bytes=await readFile(file); validateNativeElf(bytes);
@@ -75,12 +75,13 @@ export const buildCHostPackage=async o=>{
 		files.set(share+"/elaboration.json",canonicalJson(b.evidence));
 		files.set(share+"/generated.lean",await readFile(join(app,cpp?"BridgeCppExports.lean":"BridgeCExports.lean")));
 		files.set(share+"/runtime.json",canonicalJson(manifest));
+		if(b.workerWire) files.set(share+"/generated-workers.lean",await readFile(join(app,"BridgeCAsync.lean")));
 		files.set(share+"/licenses/LeanBridge-LICENSE",await readFile(new URL("../../LICENSE",import.meta.url)));
 		for(const f of ["LICENSE","LICENSES"]) files.set(share+"/licenses/Lean-"+f,await readFile(join(o.leanPrefix,f)));
 		for(const [path,bytes] of Object.entries(contract.notices)) files.set(share+"/licenses/"+path,bytes);
 		files.set("package-metadata.json",canonicalJson(contract.metadata??{}));
 		if(cpp) files.set("README.md","# "+name+" "+version+"\n\nInclude "+p+".hpp. Instantiate lean_bridge::"+p+"::Binding with your application classes in the template parameter order of the header. Constructors use std::make_shared; methods and properties call the named C++ members. The binding preserves std::shared_ptr identity and rethrows the original member exception. Use the main process thread to call or close it. Destruction on another thread queues closure until the next owner call or lean_bridge::sync_v1::drain_host_closes(). Link pkg-config "+name+" or CMake "+cmakeTarget+". This Linux x86-64 C++20 release includes the shared runtime and requires a compatible libstdc++ ABI.\n");
-		else files.set("README.md","# "+name+" "+version+"\n\nInclude "+p+".h and link using pkg-config "+name+" or CMake target "+cmakeTarget+" (Linux x86-64, glibc "+floor+"+). The runtime is included.\n\nRegister a table of C members with "+p+"_with_hosts on the main thread. A member returns zero on success or an application error code. Close the binding before freeing its context. Zero-initialize bindings, owners, aggregate outputs, and diagnostics; clear them with the matching public function before reuse. Adopt a payload with a destructor or NULL. Assignment aliases an owner; clone it for an independent lease. Members borrow receivers for the call. Return a clone for a leased result, not the borrowed receiver. Copied member outputs with a nonempty buffer transfer malloc-compatible storage. Returned Except is data; a thrown EIO and a host callback failure have distinct statuses.\n");
+		else files.set("README.md","# "+name+" "+version+"\n\nInclude "+p+".h and link using pkg-config "+name+" or CMake target "+cmakeTarget+" (Linux x86-64, glibc "+floor+"+). The runtime is included.\n\nRegister a table of C members with "+p+"_with_hosts on the main thread. A member returns zero on success or an application error code. Close the binding before freeing its context. Zero-initialize bindings, owners, aggregate outputs, and diagnostics; clear them with the matching public function before reuse. Adopt a payload with a destructor or NULL. Assignment aliases an owner; clone it for an independent lease. Members borrow receivers for the call. Return a clone for a leased result, not the borrowed receiver. Copied member outputs with a nonempty buffer transfer malloc-compatible storage. Returned Except is data; a thrown EIO and a host callback failure have distinct statuses.\n"+(b.workerWire?"\nStart object tasks and cursors on their binding. Poll on the process main thread; wait for readability on the borrowed descriptor without reading or closing it. Pull one stream item at a time. Close early to cancel. Retained callbacks run during poll; clone a borrowed object to return it. Callback drop releases your handle; close revokes the callback. A callback error may transfer a malloc-owned message and a payload with its destructor into a diagnostic. Clear the diagnostic after use.\n":""));
 		const records=[...files].map(([path,v])=>({path,bytes: Buffer.isBuffer(v)?v:Buffer.from(v),mode: 0o644}));
 		const inventory=Object.fromEntries(records.map(f=>[f.path,{bytes: f.bytes.length,sha256: sha256(f.bytes)}]));
 		const bindingIrSha256=hashBindingIr(b.api),component=contract.component;
@@ -93,6 +94,7 @@ export const buildCHostPackage=async o=>{
 			, runtimeIdentity, bindingIrSha256
 			, hostImportsSourceSha256: b.evidence.hostImportsSourceSha256
 			, hostDomain: b.domain
+			, ...b.workerLedger?{workerLedger:b.workerLedger}:{}
 			, library: b.component
 			, ...cpp?{cppHostAbi: b.abi,cppStandard: 20}:{}
 			, glibcMinimumVersion: floor

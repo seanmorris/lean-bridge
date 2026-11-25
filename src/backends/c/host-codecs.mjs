@@ -37,7 +37,7 @@ export const cHostCodecs=(ir,kinds,p,defs)=>{
 			if(dyn) return v+"=("+ (borrowed?arg:type)+"){("+(borrowed?"const ":"")+(integer?"uint64_t":"uint8_t")+" *)(uintptr_t)"+x+"[0],(size_t)"+x+"[1]"+(integer?",(bool)"+x+"[2]":"")+"};";
 			return v+"="+(n==="float32"?"lb_get_f32("+x+"[0])":n==="float64"?"lb_get_f64("+x+"[0])":"("+type+")"+x+"[0]")+";";
 		};
-		return {type,arg,key,raw,clear,empty,pack,unpack,nominal,dyn,integer,tag};
+		return {type,arg,key,raw,clear,empty,pack,unpack,nominal,dyn,integer,tag,wireTag: String(nominal?3+kind:integer?2:buf?1:0)};
 	};
 	const scalar=tag=>typeof tag==="number"?simple(null,tag,tag):simple(tag,tag);
 	const byRef=(t,name,depth=0)=>{
@@ -55,6 +55,7 @@ export const cHostCodecs=(ir,kinds,p,defs)=>{
 		defs.push("typedef struct { bool ok; "+a.type+" value; "+b.type+" error; } "+type+";");
 		return {
 			type
+			, wireTag: "(tags["+depth+"]?"+a.wireTag+":"+b.wireTag+")"
 			, empty: v=>"("+a.empty("("+v+").value")+" && "+b.empty("("+v+").error")+")"
 			, clear: v=>"if(("+v+").ok) { "+a.clear("("+v+").value")+" } else { "+b.clear("("+v+").error")+" }"
 			, unpack: (v,w,bad)=>"if(tags["+depth+"]>1) { "+bad("CR_INVALID")+" } ("+v+").ok=tags["+depth+"]!=0; if(("+v+").ok) { "+a.unpack("("+v+").value",w,bad)+" } else { "+b.unpack("("+v+").error",w,bad)+" }"

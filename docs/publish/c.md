@@ -85,12 +85,20 @@ end Workshop
 ```
 
 Build with `lean-bridge build --project . --target c --output release-c`.
-The `native-c-host-v1` receipt identifies the synchronous host profile.
+The `native-c-host-v1` receipt identifies the application-owned host profile.
 Distribute the verified archive: it contains the generated public header,
 native component, shared reference registry, and Lean runtime. Downstream
 users [register their C implementations](../consume/c.md#supply-c-objects-to-lean);
-they don't need your Lake project or a Lean compiler. Task and cursor exports
-use a different profile.
+they don't need your Lake project or a Lean compiler.
+
+To carry those same objects through a task or cursor, select its declaration in
+`taskExports` or `asyncIterators` on this host package. The archive includes
+the extra shared lease library and the compiled worker adapters. A worker can
+carry an imported object or send it to a retained C callback; it cannot invoke
+a C member on its worker thread. Use `taskIOErrors` to mark a returned
+`Except IO.Error` as a task failure when it isn't ordinary result data.
+See [using a bound C worker](../consume/c.md#use-an-application-object-in-a-task-or-stream).
+The separate task-only profile below does not require a host member table.
 
 ## Export tasks and pull streams
 

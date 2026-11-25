@@ -100,4 +100,5 @@ int main(void) {
     assert(peer_close(&b)==peer_OK && workshop_close(&a)==workshop_OK);
     assert(workshop_box_drop(&x)==workshop_OK && destroyed==2);
     puts("public C owners: exactly one destruction per payload, including after runtime retirement");
+    return 0;
 }

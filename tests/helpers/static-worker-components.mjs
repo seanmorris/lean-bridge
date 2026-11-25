@@ -6,6 +6,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
+import { cHostFacade } from "../../src/backends/c/host-facade.mjs";
 import { rustHostFacade } from "../../src/backends/rust/host-facade.mjs";
 import { compileCHostComponent } from "../../src/build/c-host-component.mjs";
 import { buildNativeSharedRuntime } from "../../src/build/native-component.mjs";
@@ -59,17 +60,20 @@ for(const owner of Object.keys(staticOwners)) test(owner+" private worker entrie
 		const deps=await inspect("readelf",["-d",b.component]);
 		for(const name of [b.domain,b.workerLedger,"libleanshared.so","liblean_bridge_native.so"]) assert.ok(deps.includes("["+name+"]"),name);
 		for(const [name,digest] of Object.entries(b.binaries)) assert.equal(sha256(await readFile(join(app,name))),digest);
-		if(owner==="rust")
+		if(owner==="rust" || owner==="c")
 		{
-			const emit=wire=>rustHostFacade({...b,ir: o.ir,wire});
-			assert.match(emit(b.workerWire),/pub fn relay/u);
+			const emit=wire=>owner==="rust"?rustHostFacade({...b,ir:o.ir,wire}):cHostFacade({...b,
+				ir:o.ir,name:"workshop",entries:b.entries.filter(e=>!e.delivery),workerEntries:b.entries.filter(e=>e.delivery),workerWire:wire}).header;
+			assert.match(emit(b.workerWire),owner==="rust"?/pub fn relay/u:/workshop_relay_start/u);
 			for(const mutate of [w=>{w.leases[0].tag++;},w=>{w.wait.open=w.wait.close;}
 				, w=>{const m=w.methods.find(x=>x.callbacks);m.callbacks[0][1]="uint32";}
-				, w=>{w.methods[0].names.take=w.methods[1].names.take;}]){
+				, w=>{w.methods[0].names.take=w.methods[1].names.take;}
+				, w=>{w.methods[0].tagBytes=0;}, w=>{w.methods.find(m=>m.delivery==="async-iterator").terminal="uint32";}])
+			{
 				const invalid=structuredClone(b.workerWire);mutate(invalid);
-				assert.throws(()=>emit(invalid),/Invalid Rust host worker/u);
-				}
-			await rustScope(app,runtimeRoot,b);
+				assert.throws(()=>emit(invalid),owner==="rust"?/Invalid Rust host worker/u:/Invalid C host worker/u);
+			}
+			if(owner==="rust") await rustScope(app,runtimeRoot,b);
 		}
 		t.diagnostic(JSON.stringify({owner,component: b.binaries[b.component],domain: b.binaries[b.domain],ledger: b.binaries[b.workerLedger],exports: symbols.length}));
 	} finally
