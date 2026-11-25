@@ -41,8 +41,10 @@ const captureContracts = async (project, inventory, target) => {
 	}
 	const taskExports = config.taskExports?.toSorted() ?? [];
 	const asyncIterators = [...config.asyncIterators ?? []].sort((a, b) => a.open < b.open ? -1 : 1);
-	const selected = [...taskExports, ...asyncIterators.map(s => s.open)];
-	if(!ir && !selected.length && config.nativeEffects === undefined)
+	const iterators = [...config.iterators ?? []].sort((a, b) => a.open < b.open ? -1 : 1);
+	const synchronous = !ir && !taskExports.length && !asyncIterators.length;
+	const selected = [...taskExports, ...asyncIterators.map(s => s.open), ...iterators.map(s => s.open)];
+	if(synchronous && config.nativeEffects === undefined)
 		fail("Standalone synchronous IO requires an explicit nativeEffects list; use [] for an in-memory API");
 	const exports = config.exports ? [...config.exports].sort() : reviewedExports ?? selected.toSorted();
 	if(!exports?.length || new Set(exports).size !== exports.length
@@ -51,7 +53,8 @@ const captureContracts = async (project, inventory, target) => {
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
 	return { ir, review, exports, taskExports, asyncIterators, generatedHostModule
 		, ...(Object.hasOwn(compiledHostTargets,target) && ir ? {hostImportsSource} : {})
-		, ...(!ir && !selected.length ? { synchronousIO: true } : {})
+		, ...(synchronous ? { synchronousIO: true } : {})
+		, ...(iterators.length ? {iterators} : {})
 		, nativeEffects: config.nativeEffects?.toSorted() ?? []
 		, ...(config.taskIOErrors ? { taskIOErrors: config.taskIOErrors.toSorted() } : {})
 		, leanResources: config.resources?.toSorted() ?? []

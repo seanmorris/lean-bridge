@@ -266,6 +266,32 @@ the original instance. A wrong callback return type fails the call even if the
 Lean function catches `IO.Error`; a Python exception raised by the callback
 can be caught by Lean or propagated unchanged.
 
+## Export a synchronous iterator
+
+Select a factory, a pull operation and a finalizer under `iterators` in
+`lean-bridge.exports.json`. Only the factory belongs in the public export list:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Counting"],
+  "exports": ["Counting.numbers"],
+  "iterators": [{"open": "Counting.numbers", "next": "Counting.next", "close": "Counting.finish"}],
+  "nativeEffects": [],
+  "targets": {"pypi": {"name": "lean-counting", "version": "1.0.0"}}
+}
+```
+
+The [Lean example](../../tests/fixtures/python-sync-iterator/Counting.lean)
+keeps the concrete cursor type private to the component. Its factory can be
+pure or use `BaseIO`, `IO`, or `EIO`. The pull takes that cursor and
+returns an immediate `Option α` in `BaseIO`, `IO`, or `EIO ε`;
+the finalizer takes the same cursor and returns `BaseIO Unit`.
+The compiler checks all three functions, including native effects in the
+pull and finalizer. A reviewed interface must agree on the pull effect,
+error types, and protocol names. Use `asyncIterators` for a task-backed
+pull. The standalone PyPI cursor package does not mix the two delivery modes.
+
 ## Export an async iterator
 
 Choose three public Lean definitions: a factory for your own cursor, a pull

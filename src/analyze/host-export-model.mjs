@@ -94,6 +94,10 @@ export const reconcileHostExports = options => {
 			|| canonicalJson(selection.members) !== canonicalJson(expected.members)) fail("Unverified host import selection");
 	}
 	const synchronous = selection.synchronousIO === true;
+	const cursors = selection.iterators ?? [];
+	if(selection.iterators !== undefined && (!Array.isArray(cursors) || !cursors.length || !synchronous || ir
+		|| cursors.some(p => !p || !selection.exports.includes(p.open) || new Set([p.open,p.next,p.close]).size !== 3)
+		|| new Set(cursors.map(p => p.open)).size !== cursors.length)) fail("Invalid immediate cursor selection");
 	const witCursorIO=selection.witCursorIO===true;
 	if(selection.witCursorIO!==undefined && (!witCursorIO || ir || synchronous || !selection.asyncIterators?.length
 		|| selection.nativeEffectPolicy!==nativeEffectPolicy || Object.keys(selection).some(k=>k.endsWith("TaskCallbacks") && k!=="witTaskCallbacks")))
@@ -153,8 +157,8 @@ export const reconcileHostExports = options => {
 	}
 	const localObjects=staticObjects || pythonObjects || rubyObjects || dotnetObjects || jvmObjects || perlObjects, hostValues=owner || phpObjects || localObjects;
 	const immediate = synchronous || ((!ir || hostValues) && (selection.taskExports?.length || selection.asyncIterators?.length));
-	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
-		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
+	if(synchronous && (!selection.nativeEffectPolicy || ir || !(cursors.length || metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect)))
+		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => (e.delivery && e.delivery!=="iterator") || e.taskIO)))
 		fail("A standalone native IO package requires a checked IO, BaseIO or EIO entry and no host imports or async protocols");
 	if(selection.nativeEffectPolicy && ir?.capabilities.some(c => c.id.startsWith("capability:native.")))
 		fail("Host imports cannot declare compiler-owned capability:native.* identifiers");
@@ -202,7 +206,7 @@ export const reconcileHostExports = options => {
 	const isOwned = t => t?.kind === "named" && ownedTypes.some(r => r.id === t.id);
 	// A borrow prevents consuming the caller's lease, not mutating the Lean
 	// object. IO/EIO/BaseIO and a cursor's BaseIO pull may write through it.
-	const mayWrite = e => e.effect !== "pure" || e.delivery === "async-iterator";
+	const mayWrite = e => e.effect !== "pure" || Boolean(e.protocol);
 	const resourceEffects = e => {
 		const effects = [];
 		if(e.parameters.some(p => isOwned(p.type)))
@@ -297,7 +301,7 @@ export const reconcileHostExports = options => {
 		const ids = new Set(startErrors(e));
 		if(e.taskIO)
 		{ ids.add(terminal); if(hasCallbacks(e)) ids.add(callbackError); if(e.hostMembers.length) ids.add(hostError); }
-		if(e.stepError || e.stepIO) ids.add(`error:AsyncStep.${e.declaration}`);
+		if(e.stepError || e.stepIO) ids.add(`error:${e.delivery==="iterator"?"Step":"AsyncStep"}.${e.declaration}`);
 		if(e.stepIO && e.protocolHostMembers?.pull?.length) ids.add(hostError);
 		return [...ids];
 	};
@@ -337,6 +341,10 @@ export const reconcileHostExports = options => {
 	};
 	const entries = metadata.entries.map(e => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
+		const cursor=e.delivery==="iterator", protocol=cursors.find(s=>s.open===e.declaration);
+		if(Boolean(protocol)!==cursor || (cursor && (canonicalJson(protocol)!==canonicalJson(e.protocol) || !["IO","BaseIO","EIO"].includes(e.stepEffect)
+			|| (e.stepEffect==="IO")!==(e.stepIO===true) || (e.stepEffect==="EIO")!==Boolean(e.stepError))) || (!cursor && e.stepEffect!==undefined))
+			fail("Unverified immediate pull protocol: "+e.declaration);
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
 		if(async && !hostValues && [e.result,e.error,e.stepError,...e.parameters.map(p=>p.type)].some(hostRef))
 			fail("Async host objects require an authenticated owner");
@@ -349,7 +357,7 @@ export const reconcileHostExports = options => {
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (!owner && async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
-			|| (!stream && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!stream || !(hostValues || witCursorIO) || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async)
+			|| (!stream && !cursor && (e.stepError || e.protocol)) || (e.stepIO!==undefined && (!(cursor || stream && (hostValues || witCursorIO)) || e.stepIO!==true || e.stepError)) || (e.delivery !== undefined && !async && !cursor)
 			|| (!async && e.effect === "pure" && ((!immediate && e.result?.constructor !== "result") || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({
@@ -358,17 +366,18 @@ export const reconcileHostExports = options => {
 			, documentation: doc(`Typed synchronous failure of ${e.declaration}.`)
 		});
 		if(e.stepError || e.stepIO) errors.push({
-			id: `error:AsyncStep.${e.declaration}`
-			, name: `AsyncStep_${e.declaration.replaceAll(".", "_")}`
+			id: `error:${cursor?"Step":"AsyncStep"}.${e.declaration}`
+			, name: `${cursor?"Step":"AsyncStep"}_${e.declaration.replaceAll(".", "_")}`
 			, category: "domain", payload: e.stepError ?? null
 			, documentation: doc(`Failure while pulling from ${e.declaration}.`)
 		});
 		return { name: snake(e.declaration.split(".").at(-1))
 			, declaration: e.declaration
 			, effect: e.effect
-			, ...(async ? { delivery: e.delivery } : {})
+			, ...(async || cursor ? { delivery: e.delivery } : {})
+			, ...(cursor ? {stepEffect: e.stepEffect} : {})
 			, ...(e.taskIO ? { taskIO: true } : {})
-			, ...(stream ? { protocol: e.protocol, ...(e.stepError ? { stepError: e.stepError } : {}), ...(e.stepIO ? {stepIO: true} : {}) } : {})
+			, ...(stream || cursor ? { protocol: e.protocol, ...(e.stepError ? { stepError: e.stepError } : {}), ...(e.stepIO ? {stepIO: true} : {}) } : {})
 			, ...(e.effect === "EIO" ? { error: e.error } : {})
 			, parameters: e.parameters.map(p => ({ name: snake(p.name), type: p.type }))
 			, result: e.result };
@@ -390,7 +399,7 @@ export const reconcileHostExports = options => {
 				, optional: false, default: null }))
 			, result: closures.has(e.declaration)?leased({kind: "named",id: closures.get(e.declaration).id}):site(e.result)
 			, mutability: "immutable"
-			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(e.result?.kind==="io-closure"?["allocates"]:[]), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...used(e).flatMap(n => members.get(n).effects)])].sort()
+			, effects: [...new Set([...(e.delivery && e.delivery!=="iterator" ? ["async"] : []), ...(e.result?.kind==="io-closure"?["allocates"]:[]), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...used(e).flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
 			, capabilities: capabilities(e), assurance: []
@@ -405,6 +414,7 @@ export const reconcileHostExports = options => {
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})
 					, ...(e.taskIO ? { "lean-bridge.dev/task-failure": "IO.Error" } : {})
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
+					, ...(e.delivery==="iterator" ? {"lean-bridge.dev/pull-effect": e.stepEffect} : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
 					, "lean-bridge.dev/host-members": owner ? used(e) : e.hostMembers
 					, ...(owner || phpWasm || localObjects ? {"lean-bridge.dev/host-member-phases": hostPhases(e)} : {})

@@ -53,6 +53,8 @@ export const buildHostProject = async options => {
 	if(config.hostImports && (targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "maven", "nuget", "cpan", "php-native","wit-wasi"].includes(target))) fail("Host imports require one supported native target or wit-wasi");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
+	if(config.iterators && (target!=="pypi" || config.hostImports || config.taskExports || config.asyncIterators))
+		fail("Immediate cursors currently require a standalone PyPI synchronous IO package");
 	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
 	const canonical=wit && config.targets?.[target]?.asyncAbi==="canonical";
 	const witObjects=wit && Boolean(config.hostImports);
@@ -68,7 +70,7 @@ export const buildHostProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
-		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "package", "resources"]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "iterators", "nativeEffects", "package", "resources"]
 		, targetFields: target === "cpan" ? ["module", "version"] : canonical ? ["name", "version", "asyncAbi"] : ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");

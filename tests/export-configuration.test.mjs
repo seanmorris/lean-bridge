@@ -29,6 +29,27 @@ const workspace = async t => {
 const configure = (directory, value) => writeFile(join(directory, exportConfigurationFile), JSON.stringify(value));
 const copySite = { ownership: "copy", lifetime: null };
 
+test("immediate and scheduled pulls require an unambiguous selected factory", async () => {
+	const direct = { open: "Counting.open", next: "Counting.next", close: "Counting.finish" };
+	const scheduled = { ...direct, open: "Counting.watch", next: "Counting.poll" };
+	const base = { schemaVersion: 1, modules: ["Counting"], exports: [direct.open, scheduled.open] };
+	const valid = { ...base, iterators: [direct], asyncIterators: [scheduled] };
+	assert.equal(validateExportConfiguration(valid), valid);
+	await assertJsonSchema("lean-export-configuration", valid);
+	for(const invalid of [
+		{ ...valid, asyncIterators: [direct] }
+		, { ...base, taskExports: [direct.open], iterators: [direct] }
+		, { ...base, iterators: [direct, direct] }
+		, { ...base, iterators: [{ ...direct, close: direct.next }] }
+		, { ...base, exports: [scheduled.open], iterators: [direct] }
+	]) assert.throws(() => validateExportConfiguration(invalid), { code: "invalid-export-configuration" });
+	for(const iterators of [[], [{}], [{ open: direct.open, next: direct.next }], [{ ...direct, unchecked: true }]]) {
+		const invalid = { ...base, iterators };
+		assert.throws(() => validateExportConfiguration(invalid), { code: "invalid-export-configuration" });
+		await assert.rejects(() => assertJsonSchema("lean-export-configuration", invalid));
+	}
+});
+
 test("host imports require an exact file, explicit modules and compiler-backed export checking", async t => {
 	const directory = await workspace(t);
 	const hostImports = "lean-bridge.hosts.json";

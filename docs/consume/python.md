@@ -174,6 +174,28 @@ function. By contrast, a returned `Except` is an ordinary `Ok` or `Err`
 value. A wrong Python type or out-of-range integer fails conversion before
 the exported function runs. See the [installed Python example](../../tests/fixtures/native-sync-io-clients/consumer.py).
 
+### Pull from a synchronous Lean iterator
+
+A package can export a normal Python iterator over a stateful Lean cursor.
+For the [Counting example](../../tests/fixtures/python-sync-iterator/Counting.lean):
+
+```python
+from lean_counting import numbers
+
+with numbers(99) as values:
+    for value in values:
+        print(value)
+        if value == 1:
+            break
+```
+
+The first `next()` opens the cursor. Each `next()` runs one Lean pull on
+the owning main thread; there is no prefetch, event loop or worker. A Lean
+`Option.some ()` yields Python `None`; only `Option.none` ends iteration.
+Exhaustion and pull errors close the cursor. Use `with` for deterministic
+cleanup on an early `break`: Python does not notify a retained iterator
+that its caller left a loop. Explicit `close()` is idempotent.
+
 ### Await a Lean task
 
 Install the [Timers release](../publish/pypi.md#export-a-lean-task-to-asyncio)

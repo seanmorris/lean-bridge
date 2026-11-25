@@ -100,7 +100,8 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 		|| !strings(allowed) || allowed.some(k => !nativeEffects.includes(k))
 		|| !strings(selection.modules) || !strings(selection.members) || !strings(selection.exports)
 		|| !Array.isArray(selection.asyncIterators) || !strings(audit.initializers) || !Array.isArray(audit.roots)) fail("missing or invalid compiler audit");
-	const roots = distinct([...audit.initializers, ...selection.exports, ...selection.asyncIterators.flatMap(p => [p.next, p.close])]);
+	const protocols = [...selection.iterators ?? [], ...selection.asyncIterators];
+	const roots = distinct([...audit.initializers, ...selection.exports, ...protocols.flatMap(p => [p.next, p.close])]);
 	const asyncRoots = new Set([...(selection.taskExports ?? []), ...selection.asyncIterators.flatMap(p => [p.open, p.next, p.close])]);
 	const names = audit.roots.map(r => r?.declaration);
 	if(!strings(names) || names.length !== roots.length || roots.some(k => !names.includes(k))) fail("compiled roots do not match the export, startup and pull selection");
@@ -147,7 +148,7 @@ export const resolveNativeHostEffects = (selection, audit, hostSymbols = new Map
 	const phases = new Map();
 	for(const name of selection.exports)
 	{
-		const p = selection.asyncIterators.find(p => p.open === name);
+		const p = protocols.find(p => p.open === name);
 		const rows = { startup, call: byRoot.get(name), ...(p ? { pull: byRoot.get(p.next), close: byRoot.get(p.close) } : {}) };
 		phases.set(name, Object.fromEntries(Object.entries(rows).filter(([, caps]) => caps.length).map(([phase, caps]) => [phase, caps.map(id)])));
 	}

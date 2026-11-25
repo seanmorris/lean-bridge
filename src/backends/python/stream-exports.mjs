@@ -65,7 +65,7 @@ static PyObject *lb_open_${i}(lean_object *v) {
         ` : stepError ? `if _r[0] == 2:
             raise LeanStreamError("${name}", ${unpack(stepError, "_r[1]")})
         ` : ""}return ${unpack(value, "_r[1]")}
-    return _LBStream(_start, _decode)
+    return ${entry.delivery==="iterator"?"_LBIterator":"_LBStream"}(_start, _decode)
 `
 	};
 };

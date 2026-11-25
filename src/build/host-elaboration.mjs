@@ -183,6 +183,7 @@ export const compileHostSources = async options => {
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
+		, ...(projectContract.iterators?.length ? {iterators: projectContract.iterators} : {})
 		, exportModules: roots, modules: [...built.keys()]
 	};
 	let request = join(app, "host-request.json");

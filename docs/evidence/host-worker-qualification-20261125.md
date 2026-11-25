@@ -69,14 +69,15 @@ are in addition to the installed examples above:
 | 1222 | IO, EIO and named failure contracts at the signature (102 cells). | Receiving a typed worker error does not establish how an immediate call returns an `Except`, preserves the original host exception, or retires a broken runtime. |
 | 1223 | Task, cancellation, synchronous iterator and asynchronous iterator at the signature (136 cells). | A host `foreach` or polling wrapper around an asynchronous Lean pull does not qualify a synchronous Lean iterator. |
 
-In particular, the [source configuration](../../src/analyze/export-configuration.mjs)
-selects `asyncIterators`; [Lean checks their next operation](../../src/analyze/HostExports.lean)
-for `BaseIO (Task …)`. The separate [iterator ABI test](../../tests/internal/abi/iterator-adapter.test.mjs)
-starts with constructed IR. Neither demonstrates publishing an ordinary-source
-synchronous iterator, or an independently reviewed one, whose pulls execute
-immediately. Qualify those with installed packages that observe one pull at a
-time, distinguish the last value from exhaustion, propagate a step failure,
-and close the cursor exactly once on early exit and on failure.
+The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
+`iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
+for an immediate option or a task-backed result, respectively.
+[Installed Python wheels](python-sync-iterators-20261125.md) exercise immediate
+iteration from ordinary source and a reviewed interface on CPython 3.11 and 3.12.
+The [iterator ABI unit test](../../tests/internal/abi/iterator-adapter.test.mjs)
+starts with constructed IR; it cannot stand in for an installed source package
+on another profile. Check each profile for one pull per demand, value versus
+exhaustion, start versus step failure, early exit, and exactly-once cleanup.
 
 - **1221:** Match copy, borrow, transfer and anchored leases to the owning type. Verify returned Lean closures separately from host callbacks: the caller, the captured owner and the invocation/disposal rules are different. For examples, see [WIT callable lifetimes](wit-callables-20260919.md) and [closure thread and lifetime checks](closure-thread-lifetime-20260925.md). [Two independently installed synchronous WIT packages](wit-host-objects-20261125.md#two-independently-installed-lean-packages-share-one-guest-object) preserve the defining guest's box across a success, mutation and declared failure. A second defining instance is rejected even if it came from the same component bytes.
 - **1222:** Check returned `Except`, immediate factory failure, worker/step failure, original callback exception, malformed boundary input and unexpected trap separately. The [two installed WIT workers](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader) preserve an owned exception across nested calls, a retained callback and future settlement; the defining guest records exactly one destruction. The separate process-trap control does not establish destructor counts on a terminal trap. The [native OS-effect receipt](native-host-effects-20261122.json) names C, C++, Cargo and PyPI; do not use it as evidence for a browser, Zend or Wasmtime profile.

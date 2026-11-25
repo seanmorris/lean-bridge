@@ -63,7 +63,7 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "iterators", "asyncIterators", "nativeEffects", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
 		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
@@ -88,19 +88,21 @@ export const validateExportConfiguration = configuration => {
 			|| !Array.isArray(allowed) || new Set(allowed).size !== allowed.length || allowed.some(c => !nativeEffects.includes(c)))
 			fail("invalid-export-configuration", "nativeEffects requires selected modules and distinct supported capabilities: " + nativeEffects.join(", "));
 	}
-	if(configuration.asyncIterators !== undefined)
+	const opens = new Set();
+	for(const field of ["iterators", "asyncIterators"])
 	{
-		const rows = configuration.asyncIterators, opens = new Set();
+		const rows = configuration[field];
+		if(rows === undefined) continue;
 		if(!Array.isArray(rows) || !rows.length || rows.length > 128 || !Array.isArray(configuration.modules) || !configuration.modules.length)
-			fail("invalid-export-configuration", "asyncIterators requires selected modules and one or more pull protocols");
+			fail("invalid-export-configuration", field + " requires selected modules and one or more pull protocols");
 		for(const row of rows)
 		{
-			closed(row, ["open", "next", "close"], "asyncIterators");
+			closed(row, ["open", "next", "close"], field);
 			if([row.open, row.next, row.close].some(n => typeof n !== "string" || !specializationName.test(n))
 				|| new Set([row.open, row.next, row.close]).size !== 3 || opens.has(row.open)
 				|| configuration.taskExports?.includes(row.open)
 				|| (configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(row.open))))
-				fail("invalid-export-configuration", "asyncIterators requires distinct open, next and close names and an unambiguous selected factory");
+				fail("invalid-export-configuration", field + " requires distinct open, next and close names and an unambiguous selected factory");
 			opens.add(row.open);
 		}
 	}

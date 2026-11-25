@@ -24,6 +24,7 @@ structure Request where
   exports : Array String
   taskExports : Array String
   asyncIterators : Array PullProtocol
+  iterators : Array PullProtocol := #[]
   resources : Array Nominal
   hostModule : Option String := none
   leanResources : Array String := #[]
@@ -337,7 +338,8 @@ def cursorMember (r : Request) (memberName : String) (cursor : Expr) : MetaM (Ex
 def usedMembers (r : Request) (deps : NameSet) : Array String :=
   r.members.filter (fun m => deps.contains m.toName)
 
-def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet) : MetaM (List (String × Json)) := do
+def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
+    (immediate := false) : MetaM (List (String × Json)) := do
   noWorkerHost r deps p.open.toName
   let head := result.getAppFn.constName?
   let args := result.getAppArgs
@@ -355,6 +357,21 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   unless (← isDefEq stop (← mkAppM ``BaseIO #[mkConst ``Unit])) do
     throwError "cursor close must return BaseIO Unit: {p.close}"
   let (step, pullDeps) ← cursorMember r p.next cursor
+  if immediate then
+    let head := step.getAppFn.constName?
+    let args := step.getAppArgs
+    let (stepEffect, item, errors) ← if head == some ``BaseIO && args.size == 1 then
+      pure ("BaseIO", args[0]!, [])
+    else if head == some ``IO && args.size == 1 then
+      pure ("IO", args[0]!, [("stepIO", toJson true)])
+    else if head == some ``EIO && args.size == 2 then
+      pure ("EIO", args[1]!, [("stepError", ← delivered r args[0]!)])
+    else throwError "synchronous cursor next must return an immediate BaseIO, IO or EIO Option: {p.next}"
+    unless item.getAppFn.constName? == some ``Option && item.getAppArgs.size == 1 do
+      throwError "synchronous cursor next requires an immediate Option, not a Task: {p.next}"
+    return [("effect", toJson effect), ("delivery", toJson "iterator"),
+      ("protocol", toJson p), ("stepEffect", toJson stepEffect),
+      ("result", ← delivered r item.getAppArgs[0]!)] ++ extra ++ errors
   unless step.getAppFn.constName? == some ``BaseIO && step.getAppArgs.size == 1 do
     throwError "cursor next must return BaseIO (Task ...): {p.next}"
   let task := step.getAppArgs[0]!
@@ -411,6 +428,12 @@ private partial def nativeLeaves (env : Environment) (root : Name) (pending : Li
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  unless r.iterators.isEmpty do
+    unless r.synchronousIO == some true && r.hostModule.isNone && r.taskExports.isEmpty && r.asyncIterators.isEmpty &&
+        r.nativeEffectPolicy == some "native-host-io-v1" &&
+        r.iterators.all (fun p => r.exports.contains p.open && p.open != p.next && p.open != p.close && p.next != p.close) &&
+        (r.iterators.map (·.open)).toList.eraseDups.length == r.iterators.size do
+      throwError "invalid synchronous cursor selection"
   if r.staticTaskOwner.isSome && !r.staticObjects then
     throwError "invalid static worker object owner"
   if r.witCursorIO.isSome && (r.witCursorIO != some true || r.hostModule.isSome || r.asyncIterators.isEmpty) then
@@ -506,7 +529,9 @@ def extract (r : Request) : MetaM Json := do
       let result := result.consumeMData
       let some head := result.getAppFn.constName? | throwError "expected synchronous IO result: {n}"
       let resultArgs := result.getAppArgs
-      let fields ← if let some protocol := r.asyncIterators.find? (·.open == publicName) then do
+      let fields ← if let some protocol := r.iterators.find? (·.open == publicName) then do
+        pullFields r protocol result deps true
+      else if let some protocol := r.asyncIterators.find? (·.open == publicName) then do
         for a in args do
           let _ ← delivered r (← a.fvarId!.getDecl).type r.hostValues
         pullFields r protocol result deps
@@ -547,7 +572,7 @@ def extract (r : Request) : MetaM Json := do
     unless policy == "native-host-io-v1" do throwError "unknown native effect policy: {policy}"
     let mut roots := startup
     for s in r.exports do roots := roots.insert s.toName
-    for p in r.asyncIterators do roots := (roots.insert p.next.toName).insert p.close.toName
+    for p in r.asyncIterators ++ r.iterators do roots := (roots.insert p.next.toName).insert p.close.toName
     let facts ← roots.toList.mapM fun n => do
       return Json.mkObj [("declaration", toJson n.toString), ("leaves", toJson (← nativeLeaves env n [n]))]
     extra := [("nativeEffectAudit", Json.mkObj [("policy", toJson policy),
