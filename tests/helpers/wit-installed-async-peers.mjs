@@ -23,46 +23,70 @@ const preserve=async(src,dest)=>{
 	catch(e)
 	{if(e.code!=="EXDEV")throw e;await copyFile(src,dest);}
 };
-const prepareClient=async(root,a,b)=>{
+const prepareClient=async(root,a,b,dual)=>{
 	const client=join(root,"independently authored application"),wasm=process.env.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools";
 	const run=(cmd,args,cwd)=>exec(cmd,args,{cwd,maxBuffer: 4194304});
 	const tool=(...args)=>run(wasm,args,client);
 	const [owner]=await buildInstalledWitGuests({out: client,wit: join(a.installed,"wit"),wasm,run});
-	await buildAsyncPeerApplication(client,tool);await checkAsyncPeerWorld(client,join(b.installed,"wit"),tool);
-	await buildAsyncPeerFailure(client,tool);
-	await buildRegistrationCancellation(client,tool);
+	await buildAsyncPeerApplication(client,tool);await checkAsyncPeerWorld(client,join(b.installed,"wit"),tool,dual);
+	if(!dual)await buildAsyncPeerFailure(client,tool);
+	await buildRegistrationCancellation(client,tool,dual);
 	const provider=join(client,"peer-provider.wasm");
 	const env={PATH: "/no-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1"};
 	const invoke=(dirs,inputs)=>exec(join(dirs[0],"bin/lean-bridge-wit-run"),[...dirs,"--",...inputs],{env,cwd: client,timeout: 30000});
+	let checkedRegistrations=0;
 	const bothOrders=async dirs=>{
 		for(const order of [dirs,dirs.toReversed()])
 		{
+			if(dual)
+			{
+				const providers=["registration-provider.wasm","gauge-provider.wasm"];
+				if(order[0]!==dirs[0])providers.reverse();
+				for(const victim of ["workshop","gauge"])for(const create of [0,1])for(const read of [0,1])
+				{
+					const result=await invoke(order,[owner,...providers,"cancel-registration-"+victim+"-"+create+read+".wasm"]);
+					assert.equal(result.stderr,"");checkRegistrationCounts(result.stdout);++checkedRegistrations;
+				}
+				for(const victim of ["workshop","gauge"])
+				{
+					const result=await invoke(order,[owner,...providers,"cancel-registration-"+victim+"-shared-10.wasm"]);
+					assert.equal(result.stderr,"");checkRegistrationCounts(result.stdout);++checkedRegistrations;
+				}
+				continue;
+			}
 			assert.deepEqual(await invoke(order,[owner,provider,"peers.wasm"]),{stdout: "73\n",stderr: ""});
 			assert.deepEqual(await invoke(order,["count-errors.wasm",provider,"peer-failure.wasm"]),{stdout: "65537\n",stderr: ""});
 			for(const createOrder of [0,1])for(const readOrder of [0,1])
 			{
 				const result=await invoke(order,[owner,"registration-provider.wasm","cancel-registration-"+createOrder+readOrder+".wasm"]);
-				assert.equal(result.stderr,"");checkRegistrationCounts(result.stdout);
+				assert.equal(result.stderr,"");checkRegistrationCounts(result.stdout);++checkedRegistrations;
 			}
 		}
 	};
-	return {invoke,bothOrders,owner,provider};
+	return {invoke,bothOrders,owner,provider,count: ()=>checkedRegistrations};
 };
-test("installed async WIT peers share an original box and cancel only the selected reader", {timeout: 3600000},async t=>{
+const dual=process.env.LEAN_BRIDGE_WIT_INDEPENDENT_REGISTRATIONS==="1";
+test(dual?"separately published WIT callback owners cancel only their own registration":"installed async WIT peers share an original box and cancel only the selected reader", {timeout: 3600000},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"wit-async-pair-"));t.after(()=>rm(root,{recursive: true,force: true}));
 	const replay=process.env.LEAN_BRIDGE_WIT_ASYNC_PEER_REPLAY,keep=process.env.LEAN_BRIDGE_WIT_ASYNC_PEER_HANDOFFS;
-	const releases=replay?resolve(replay):await mkdtemp(join(keep??root,"wit-async-releases-"));
+	const reuse=dual && !replay && process.env.LEAN_BRIDGE_WIT_WORKSHOP_HANDOFFS;
+	const releases=replay?resolve(replay):await mkdtemp(join(keep??root,dual?"wit-dual-releases-":"wit-async-releases-"));
 	if(keep || replay)t.diagnostic("verified handoff location: "+releases);
-	const cli=replay?null:await installWitAuthor(root),pkgs={},reviews={};
-	let client;
+	const cli=replay?null:await installWitAuthor(root),reviews={};
 	for(const route of ["ordinary","reviewed"])for(const name of ["workshop","gauge"])
 	{
 		const key=route+"-"+name,work=join(root,key),src=join(work,"source"),out=join(work,"release");
-		const handoff=join(releases,key),installed=join(root,"installed "+key);
+		const handoff=join(releases,key);
 		await mkdir(work);
-		if(!replay)
+		if(reuse && name==="workshop")
 		{
-			if(name==="gauge")await prepareGaugeWorker(src);
+			const old=join(reuse,key),{receipt: r}=await verify(old),[a]=r.packages[0].artifacts;
+			await mkdir(join(handoff,"archives"),{recursive: true});
+			for(const file of [receipt,receipt+".sha256",a.path])await preserve(join(old,file),join(handoff,file));
+		}
+		else if(!replay)
+		{
+			if(name==="gauge")await prepareGaugeWorker(src,dual);
 			else
 			{await prepareStaticWorkerProject(src,"wit-wasi");await extendWitApplication(src);}
 			if(route==="reviewed")await writeFile(join(src,name+".binding-ir.json"),canonicalJson(reviews[name]));
@@ -71,10 +95,17 @@ test("installed async WIT peers share an original box and cancel only the select
 				throw new Error([e.message,e.stdout,e.stderr].filter(Boolean).join("\n"),{cause: e});
 			});
 			const checked=await verify(out),[archive]=checked.receipt.packages[0].artifacts;
+			if(route==="ordinary")reviews[name]=await json(join(out,"binding-ir.json"));
 			await mkdir(join(handoff,"archives"),{recursive: true});
 			for(const file of [receipt,receipt+".sha256",archive.path])await preserve(join(out,file),join(handoff,file));
 			await rm(src,{recursive: true});await rm(out,{recursive: true});
 		}
+	}
+	// Every package is independently extracted. Only the active pair needs
+	// to occupy disk while the downstream executable runs.
+	const installedKeys=new Set();
+	const install=async(route,name)=>{
+		const key=route+"-"+name,work=join(root,key),handoff=join(releases,key),installed=join(root,"installed "+key);
 		const {receipt: r}=await verify(handoff);
 		assert.equal(r.packages.length,1);const [pkg]=r.packages,[a]=pkg.artifacts;
 		assert.equal(pkg.profile,"native-wit-object-task-v1");assert.equal(pkg.name,name);
@@ -82,31 +113,41 @@ test("installed async WIT peers share an original box and cancel only the select
 		await rename(join(work,basename(a.path,".tar.gz")),installed);
 		const meta=await json(join(installed,"lean-bridge-package.json")),ir=await json(join(installed,"share/lean-bridge/binding-ir.json"));
 		if(route==="ordinary")
-		{assert.equal(meta.reviewedSourceSha256,undefined);reviews[name]=ir;}
+		{assert.equal(meta.reviewedSourceSha256,undefined);if(reviews[name])assert.deepEqual(ir,reviews[name]);reviews[name]=ir;}
 		else
 		{assert.deepEqual(ir,reviews[name]);assert.equal(meta.reviewedSourceSha256,sha256(canonicalJson(ir)));}
-		assert.deepEqual(meta.inputs,name==="gauge"?["objects","application"]:["objects","callbacks","application"]);
+		assert.deepEqual(meta.inputs,name==="gauge" && !dual?["objects","application"]:["objects","callbacks","application"]);
 		for(const f of ["bin/lean-bridge-wit-run","lib/lean-bridge-wit-async-peer.so"])assert.equal(meta.files[f].sha256,sha256(await readFile(join(installed,f))));
-		pkgs[key]={installed,meta};
-		t.diagnostic(key+" "+a.bytes+" "+a.sha256);await rm(work,{recursive: true});
-		if(key==="ordinary-gauge")
-		{
-			const first=pkgs["ordinary-workshop"];
-			assert.notEqual(first.meta.library,meta.library);assert.equal(first.meta.hostDomain,meta.hostDomain);
-			client=await prepareClient(root,first,pkgs[key]);await client.bothOrders([first.installed,installed]);
-		}
-	}
-	const a=pkgs["ordinary-workshop"],b=pkgs["ordinary-gauge"];
-	const {owner,provider,invoke,bothOrders}=client;
-	for(const left of ["ordinary","reviewed"])for(const right of ["ordinary","reviewed"])
+		if(!installedKeys.has(key))t.diagnostic(key+" "+a.bytes+" "+a.sha256);
+		installedKeys.add(key);return {installed,meta};
+	};
+	const pair=[await install("ordinary","workshop"),await install("ordinary","gauge")],dirs=pair.map(p=>p.installed);
+	assert.notEqual(pair[0].meta.library,pair[1].meta.library);assert.equal(pair[0].meta.hostDomain,pair[1].meta.hostDomain);
+	const {owner,provider,invoke,bothOrders,count}=await prepareClient(root,pair[0],pair[1],dual);
+	if(dual)
 	{
-		if(left==="reviewed" || right==="reviewed")await bothOrders([pkgs[left+"-workshop"].installed,pkgs[right+"-gauge"].installed]);
+		const consumer="cancel-registration-gauge-00.wasm";
+		await assert.rejects(invoke(dirs,[owner,"registration-provider.wasm",consumer]),e=>e.code===2 && /callbacks.wasm/u.test(e.stderr));
+		await assert.rejects(invoke(dirs,[owner,"gauge-provider.wasm","registration-provider.wasm",consumer]),e=>e.code===1 && e.stdout==="");
+	} else
+	{
+		await assert.rejects(invoke(dirs,[owner,provider,"trap.wasm"]),e=>e.code===1 && /unreachable/u.test(e.stderr));
+		await assert.rejects(invoke(dirs,[owner,provider,"private-scheduler.wasm"]),e=>e.code===1 && /workshop\/scheduler/u.test(e.stderr));
+		await assert.rejects(invoke(dirs,[owner,"peers.wasm"]),e=>e.code===2 && /callbacks.wasm/u.test(e.stderr));
+		await assert.rejects(invoke([dirs[0],dirs[0]],[owner,provider,"peers.wasm"]),e=>e.code===1 && /duplicate WIT package interface/u.test(e.stderr));
 	}
-	const dirs=[a.installed,b.installed];
-	await assert.rejects(invoke(dirs,[owner,provider,"trap.wasm"]),e=>e.code===1 && /unreachable/u.test(e.stderr));
-	await assert.rejects(invoke(dirs,[owner,provider,"private-scheduler.wasm"]),e=>e.code===1 && /workshop\/scheduler/u.test(e.stderr));
-	await assert.rejects(invoke(dirs,[owner,"peers.wasm"]),e=>e.code===2 && /callbacks.wasm/u.test(e.stderr));
-	await assert.rejects(invoke([a.installed,a.installed],[owner,provider,"peers.wasm"]),e=>e.code===1 && /duplicate WIT package interface/u.test(e.stderr));
+	await bothOrders(dirs);
+	for(const [slot,name,route] of [[1,"gauge","reviewed"],[0,"workshop","reviewed"],[1,"gauge","ordinary"]])
+	{
+		await rm(dirs[slot],{recursive: true});dirs[slot]=(await install(route,name)).installed;
+		await bothOrders(dirs);
+	}
+	assert.equal(count(),dual?80:32);
+	if(dual)
+	{
+		t.diagnostic("80 cross-package cases: 64 distinct-box first-read/factory orders and 16 same-box cancellations; both defining guests balance their own acquisitions and drops");
+		return;
+	}
 	t.diagnostic("8 release/order combinations: one parked Gauge pull, one close, original Workshop callback result 73");
 	t.diagnostic("8 nested error paths: Gauge member error returned through Workshop's callback future; one error issued, one destroyed");
 	t.diagnostic("32 overlapping registration cases: independent factory/read orders, canceled read untouched, sibling invoked once, no remaining registrations");

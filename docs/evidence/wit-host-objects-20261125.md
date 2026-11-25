@@ -302,3 +302,41 @@ The [overlapping registration application](../../tests/fixtures/static-host-work
 | Gauge, reviewed | 61,022,928 | `94caf8c76571c8ea8c74603af96d598bfb25b19b8e018d7e6dc9bea6944cd34a` |
 
 Run `npm run test:wit-async-peer-packages` with the WIT publisher's toolchain. Set `LEAN_BRIDGE_WIT_ASYNC_PEER_HANDOFFS` to an existing directory to retain the four receipts and archives. To replay without publishing, set `LEAN_BRIDGE_WIT_ASYNC_PEER_REPLAY` to the reported handoff directory. Replay needs wasm-tools to build the independent application; running the installed application does not.
+
+### Independent callback owners in installed worker packages
+
+In this configuration, Gauge also publishes a Lean factory that accepts
+a callback. The application loads three Wasm providers into the store:
+one defines the shared box type, one defines Workshop's callback resource,
+and one defines Gauge's. Both factories receive a registration from their
+own provider and return a future. Both reads must report pending before
+the application cancels one.
+
+The [client](../../tests/fixtures/static-host-workers/peer-registration-cancel.wat.in)
+checks that cancellation leaves the victim's destination untouched. The
+survivor returns its original box with the expected mutation. Each provider
+reports its own acquisitions, visits and destructions: every acquired
+registration was dropped, there was exactly one surviving visit and no
+canceled visit, and the unused counters on the other provider stayed zero.
+Supplying one provider instead of two, or reversing the providers without
+reversing their packages, was rejected.
+
+The 64 distinct-box cases varied the canceled package, the order of the
+factories and reads, the launcher/package order, and both releases' source
+or reviewed configuration. A further 16 cases supplied the **same box** to
+both pending factories, in both package orders and with either victim. These
+distinguish canceling one registration from canceling everything that refers
+to an object. All 80 were checked by the installed launcher.
+
+| Package | Ordinary package-set receipt (SHA-256) | Reviewed package-set receipt (SHA-256) |
+| --- | --- | --- |
+| Workshop | `bec53eee301f5d411238660c0cc0908f8b42683cda90b8976feac537c492449b` | `8228988f28bb93467caa6717a73381b701471e07c4d12f7e0c5bb0361d058129` |
+| Gauge with callbacks | `3053726a1f7b41b801fb67a6f20c4a558f2fc0017850869d893af6ad435b0325` | `ee57eaf1be12683910fa677afd0178c3c23b1a7261e8add54c871dc7095ff778` |
+
+Run `npm run test:wit-independent-registration-owners`. To reuse an existing
+Workshop handoff when publishing the new Gauge variant, set
+`LEAN_BRIDGE_WIT_WORKSHOP_HANDOFFS` to its verified four-release directory.
+To replay this pair without publishing anything, set
+`LEAN_BRIDGE_WIT_ASYNC_PEER_REPLAY` to the **two-callback-provider**
+handoff directory. The [runner](../../tests/helpers/wit-installed-async-peers.mjs)
+only extracts the current pair at a time; it exercises all four combinations.

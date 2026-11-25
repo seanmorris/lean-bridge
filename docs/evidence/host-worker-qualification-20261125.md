@@ -17,6 +17,21 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | PHP-Wasm | [Zend interpreter packages](php-wasm-zend-packages-20261124.md): PHP class identity, pending work and isolation between two interpreters. A JavaScript object test alone does not establish this. |
 | WIT/WASI | [Guest-owned objects](wit-host-objects-20261125.md), [copied canonical values](wit-canonical-async-20261124.md) and [pollable task resources](wit-task-resource-world-20261123.md) have different runtime contracts. Evidence for one does not qualify the others. |
 
+### Returned functions that capture application objects
+
+For a signature such as `Box → IO (Box → IO Box)`, five of the twelve
+package targets above have installed ordinary, reviewed and worker-package
+evidence: C, C++, Cargo, PyPI and RubyGems. They are also the five host
+namespaces currently admitted by
+[the Lean source elaborator](../../src/analyze/HostExports.lean) for this
+factory result.
+
+The remaining targets for this case are **NuGet, Maven (Java and Kotlin),
+CPAN, native PHP, PHP-Wasm, npm and WIT/WASI**. Receiving a callback from
+one of those hosts is the opposite direction; returning a function over
+copied values does not test a captured application object. Neither counts
+as installed evidence for this case.
+
 ## Which installed profiles exercised OS access?
 
 | Profiles | Evidence for VO 1222 |
@@ -40,4 +55,4 @@ directory and its manifest digest, then run `npm run test:wasm-worker-effect-ref
 
 - **1221:** Match copy, borrow, transfer and anchored leases to the owning type. Verify returned Lean closures separately from host callbacks: the caller, the captured owner and the invocation/disposal rules are different. For examples, see [WIT callable lifetimes](wit-callables-20260919.md) and [closure thread and lifetime checks](closure-thread-lifetime-20260925.md). [Two independently installed synchronous WIT packages](wit-host-objects-20261125.md#two-independently-installed-lean-packages-share-one-guest-object) preserve the defining guest's box across a success, mutation and declared failure. A second defining instance is rejected even if it came from the same component bytes.
 - **1222:** Check returned `Except`, immediate factory failure, worker/step failure, original callback exception, malformed boundary input and unexpected trap separately. The [two installed WIT workers](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader) preserve an owned exception across nested calls, a retained callback and future settlement; the defining guest records exactly one destruction. The separate process-trap control does not establish destructor counts on a terminal trap. The [native OS-effect receipt](native-host-effects-20261122.json) names C, C++, Cargo and PyPI; do not use it as evidence for a browser, Zend or Wasmtime profile.
-- **1223:** Check cancellation before settlement, cancellation while a callback is pending, late results, unconsumed readers, demand and early iterator exit under the actual host scheduler. The [combined WIT install](wit-host-objects-20261125.md#copied-and-guest-owned-workers-in-one-release) covers a guest-owned object future and copied byte futures and cursors on the same binding. The [two-package cancellation test](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader) checks a late stream result while a sibling package completes its callback future. A separate guest cancels one of two pending Workshop registrations: it checks both destructor counts and the surviving call into Gauge. Cross-package registration ownership remains a distinct case.
+- **1223:** Check cancellation before settlement, cancellation while a callback is pending, late results, unconsumed readers, demand and early iterator exit under the actual host scheduler. The [combined WIT install](wit-host-objects-20261125.md#copied-and-guest-owned-workers-in-one-release) covers a guest-owned object future and copied byte futures and cursors on the same binding. The [two-package cancellation test](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader) checks a late stream result while a sibling package completes its callback future. The [independent registration owners](wit-host-objects-20261125.md#independent-callback-owners-in-installed-worker-packages) each count their own acquisitions, invocations and drops when either package’s read is canceled.

@@ -163,7 +163,18 @@ Set `WORKSHOP` and `GAUGE` to the extracted directories of two compatible `nativ
 "$WORKSHOP/bin/lean-bridge-wit-run" "$WORKSHOP" "$GAUGE" -- objects.wasm workshop-callbacks.wasm application.wasm
 ```
 
-Here Workshop needs a callback provider and Gauge does not. After `--`, pass the shared object provider first, one callback provider for each package that needs one (in package argument order), and your application last. Your application imports each package’s public WIT interfaces and exports one `run: async func() -> s64`. The runner services their futures and streams together. You don’t supply a scheduler.
+If both packages declare a callback interface, supply both providers. For
+example, with Gauge first:
+
+```sh
+"$GAUGE/bin/lean-bridge-wit-run" "$GAUGE" "$WORKSHOP" -- \
+  objects.wasm gauge-callbacks.wasm workshop-callbacks.wasm application.wasm
+```
+
+Each callback resource belongs to its defining provider. Canceling a Gauge
+reader does not revoke Workshop’s registration for the same object.
+
+After `--`, pass the shared object provider first, one callback provider for each package that needs one (in package argument order), and your application last. In the first command only Workshop needs a callback provider. Your application imports each package’s public WIT interfaces and exports one `run: async func() -> s64`. The runner services their futures and streams together. You don’t supply a scheduler.
 
 When building the application, put the defining `objects.wit` in your WIT dependencies **once**. Keep each release’s public interfaces in its own dependency directory. The [example application world](../../tests/fixtures/static-host-workers/async-peer-world.wit) includes Workshop’s application world and imports Gauge’s API and task interface. The original `box` type comes from the same defining instance on both sides.
 

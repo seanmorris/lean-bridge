@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {cp,readFile,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {witCoreInterface} from "../../src/backends/wit/application-operations.mjs";
+import {registrationGuest} from "./wit-registration-guest.mjs";
 
 /**
  * The downstream guest owns its interface and adds a read-only observer. No
@@ -10,13 +11,21 @@ import {witCoreInterface} from "../../src/backends/wit/application-operations.mj
  *
  * @param dir - Independent client's sources and previously checked provider.
  * @param run - Pinned wasm-tools command in the client's directory.
+ * @param dual - Both releases provide retained callbacks through separate guest instances.
  */
-export const buildRegistrationCancellation=async(dir,run)=>{
+export const buildRegistrationCancellation=async(dir,run,dual=false)=>{
 	const world=join(dir,"registration-audit-world");
 	await cp(join(dir,"combined-world"),world,{recursive: true});
 	const file=join(world,"deps/workshop/callbacks.wit"),wit=await readFile(file,"utf8");
 	assert.equal(wit.split("interface callbacks {").length,2);
-	await writeFile(file,wit.replace("interface callbacks {","interface callbacks {\n  audit: func(field: u32) -> u32;"));
+	const audit=src=>src.replace("interface callbacks {","interface callbacks {\n  audit: func(field: u32) -> u32;");
+	await writeFile(file,audit(wit));
+	if(dual)
+	{
+		const path=join(world,"deps/gauge/callbacks.wit"),guest=await readFile(path,"utf8");
+		assert.equal(guest.split("resource %call-box-to-box {").length,2);
+		await writeFile(path,audit(guest.replace("resource %call-box-to-box {","resource %call-box-to-box { make: static func(mode: u32) -> own<%call-box-to-box>;")));
+	}
 	const api=witCoreInterface("lean-bridge:workshop/callbacks@1.0.0");
 	let provider=await readFile(join(dir,"peer-provider.wat"),"utf8");
 	assert.equal(provider.split("(call $new ").length,3);
@@ -51,12 +60,22 @@ export const buildRegistrationCancellation=async(dir,run)=>{
 	await run("component","embed",world,"--world","registrations","registration-provider.wat","-o","registration-provider.core");
 	await run("component","new","registration-provider.core","-o","registration-provider.wasm");
 	await run("component","targets",world,"--world","registrations","registration-provider.wasm");
+	if(dual)
+	{
+		const gauge=witCoreInterface("lean-bridge:gauge/callbacks@1.0.0");
+		await writeFile(join(dir,"gauge-provider.wat"),provider.replaceAll(api,gauge));
+		await run("component","embed",world,"--world","gauge-registrations","gauge-provider.wat","-o","gauge-provider.core");
+		await run("component","new","gauge-provider.core","-o","gauge-provider.wasm");
+		await run("component","targets",world,"--world","gauge-registrations","gauge-provider.wasm");
+	}
 	const contract=await readFile(join(world,"deps/objects.wit"),"utf8"),[,name]=/^package ([^;]+)@1\.0\.0;/u.exec(contract);
 	const src=await readFile("tests/fixtures/static-host-workers/peer-registration-cancel.wat.in","utf8");
-	for(const createOrder of [0,1])for(const readOrder of [0,1])
+	const assignments=dual?[["workshop","gauge"],["gauge","workshop"]]:[["workshop","workshop"]];
+	for(const owners of assignments)for(const same of dual?[0,1]:[0])for(const createOrder of same?[1]:[0,1])for(const readOrder of same?[0]:[0,1])
 	{
-		const file="cancel-registration-"+createOrder+readOrder;
-		await writeFile(join(dir,file+".wat"),src.replaceAll("@OBJECTS@",name+"/objects@1.0.0").replaceAll("@VICTIM_FIRST@",String(createOrder)).replaceAll("@READ_VICTIM_FIRST@",String(readOrder)));
+		const file="cancel-registration-"+(dual?owners[1]+"-":"")+(same?"shared-":"")+createOrder+readOrder;
+		const client=registrationGuest(src,name+"/objects@1.0.0",owners);
+		await writeFile(join(dir,file+".wat"),client.replaceAll("@SAME_BOX@",String(same)).replaceAll("@VICTIM_FIRST@",String(createOrder)).replaceAll("@READ_VICTIM_FIRST@",String(readOrder)));
 		await run("parse",file+".wat","-o",file+".wasm");
 		await run("component","targets",world,"--world","instruments",file+".wasm");
 	}

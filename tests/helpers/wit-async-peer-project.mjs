@@ -1,6 +1,6 @@
 /** @file A separately authored Lean cursor with a deterministic pending pull. */
 import assert from "node:assert/strict";
-import {copyFile,mkdir,readFile,rename,writeFile} from "node:fs/promises";
+import {appendFile,copyFile,mkdir,readFile,rename,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {canonicalJson} from "../../src/capsule/node.mjs";
 import {witCoreInterface} from "../../src/backends/wit/application-operations.mjs";
@@ -12,8 +12,9 @@ import {extendWitMembers} from "./wit-application-project.mjs";
  * coordinate, operation inventory, notification descriptors and binding scope.
  *
  * @param project - Fresh Gauge author project.
+ * @param registrations - Publish an independent callback interface as well as the cursor.
  */
-export const prepareGaugeWorker=async project=>{
+export const prepareGaugeWorker=async(project,registrations=false)=>{
 	await prepareNativeHostFixture(project,"wit-wasi");await extendWitMembers(project);
 	await copyFile("LICENSE",join(project,"LICENSE"));
 	await rename(join(project,"Workshop.lean"),join(project,"Gauge.lean"));
@@ -23,6 +24,12 @@ export const prepareGaugeWorker=async project=>{
 	const c=JSON.parse(await readFile(select,"utf8"));
 	c.modules=["Gauge"];c.exports=["Gauge.finite","Gauge.release","Gauge.counts","Gauge.read"];
 	c.asyncIterators=[{open: "Gauge.finite",next: "Gauge.next",close: "Gauge.finish"}];
+	if(registrations)
+	{
+		await appendFile(join(project,"Gauge.lean"),"\nnamespace Gauge\nopen LeanBridge.Host.WitWasi\n"
+			+"def relay (box : Box) (f : Box → IO Box) : BaseIO (Task (Except IO.Error Box)) := IO.asTask (f box)\nend Gauge\n");
+		c.exports.push("Gauge.relay");c.taskExports=["Gauge.relay"];c.taskIOErrors=["Gauge.relay"];
+	}
 	c.targets["wit-wasi"].name="gauge";c.targets["wit-wasi"].asyncAbi="canonical";
 	await writeFile(select,canonicalJson(c));
 };
@@ -77,15 +84,19 @@ export const buildAsyncPeerApplication=async(dir,run)=>{
  * @param dir - Directory containing the downstream Wasm application.
  * @param gauge - Installed Gauge WIT directory.
  * @param run - Pinned wasm-tools command in the consumer directory.
+ * @param registrations - Gauge also supplies a distinct callback resource world.
  */
-export const checkAsyncPeerWorld=async(dir,gauge,run)=>{
+export const checkAsyncPeerWorld=async(dir,gauge,run,registrations=false)=>{
 	const world=join(dir,"combined-world"),deps=join(world,"deps");
 	for(const name of ["workshop","gauge"])await mkdir(join(deps,name),{recursive: true});
 	const workshop=join(dir,"app-wit");
 	await copyFile(join(workshop,"deps/objects.wit"),join(deps,"objects.wit"));
 	for(const file of ["api.wit","callbacks.wit","object-tasks.wit","application.wit"])await copyFile(join(workshop,file),join(deps,"workshop",file));
-	for(const file of ["api.wit","object-tasks.wit"])await copyFile(join(gauge,file),join(deps,"gauge",file));
-	await copyFile("tests/fixtures/static-host-workers/async-peer-world.wit",join(world,"world.wit"));
+	for(const file of ["api.wit","object-tasks.wit",...registrations?["callbacks.wit","application.wit"]:[]])await copyFile(join(gauge,file),join(deps,"gauge",file));
+	let definition=await readFile("tests/fixtures/static-host-workers/async-peer-world.wit","utf8");
+	if(registrations)definition=definition.replace("world instruments {","world instruments {\n  import lean-bridge:gauge/callbacks@1.0.0;")
+		+"\nworld gauge-registrations { include lean-bridge:gauge/registrations@1.0.0; import lean-bridge:workshop/api@1.0.0; }\n";
+	await writeFile(join(world,"world.wit"),definition);
 	await run("component","targets",world,"--world","instruments","peers.wasm");
 	const provider=await readFile(join(dir,"provider.wat"),"utf8"),method='(call $update (local.get $box) (i32.const 73) (i32.const 16))';
 	const check=value=>`(call $gauge-read (local.get $box) (i32.const 64))
