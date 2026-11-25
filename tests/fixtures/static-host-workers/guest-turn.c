@@ -221,6 +221,7 @@ static void streams(host *h,wasmtime_component_instance_t *inst,wasmtime_context
     check(wasmtime_component_func_call(&close,ctx,NULL,0,NULL,0));
 }
 #include "guest-turn-relay.h"
+#include "guest-turn-members.h"
 #include "guest-turn-plain.h"
 static void future_cases(host *h,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,bool trap){
     relay_probe p={h,inst,ctx};wasmtime_component_func_t start=lookup(inst,ctx,"user-begin");
@@ -290,7 +291,7 @@ static bool application(lb_wit_turns *s,void *ptr){
     check(wasmtime_component_func_call(&bind,ctx,&domain,1,&value,1));assert(value.kind==WASMTIME_COMPONENT_BOOL && value.of.boolean);
     if(in->mode>=MIXED)assert(lb_tg_open_all(&h->tasks,&instance,ctx));
     if(in->mode==CURSORS || in->mode==CANCEL){streams(h,&instance,ctx,in->mode==CANCEL);goto finished;}
-    if(in->mode==REGISTRATIONS){run_relays(h,&instance,ctx);goto finished;}
+    if(in->mode==REGISTRATIONS){check_members(h,&instance,ctx);run_relays(h,&instance,ctx);goto finished;}
     if(in->mode==MIXED){run_mixed(h,&instance,ctx);goto finished;}
     if(in->mode>=FUTURE_ERROR){future_cases(h,&instance,ctx,in->mode==FUTURE_TRAP);goto finished;}
     wasmtime_component_func_t run=lookup(&instance,ctx,"run");

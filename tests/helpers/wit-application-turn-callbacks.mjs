@@ -25,7 +25,8 @@ export const buildTurnCallbackGuests=async o=>{
 	const graphParts=["(component",send,owner.replace("(component","(component $owner"),"(instance $o (instantiate $owner))"];
 	graphParts.push(`(alias export $o "${b.witImports.interfaceName}" (instance $obj))`,witTurnOwners(b.witImports,null).replace("(component","(component $base"));
 	graphParts.push(`(instance $vault (instantiate $base (with "${b.witImports.interfaceName}" (instance $obj))))`,update,reg);
-	const callbackGraph=graphParts.join("\n");
+	const invokers=b.witImports.contract.methods.map((m,i)=>`(export "${m.name}" (func $mi "invoke-m${i}"))`);
+	const callbackGraph=graphParts.join("\n").trimEnd().slice(0,-1)+'(instance $members '+invokers.join(" ")+') (export "members" (instance $members)))';
 	await writeFile(join(app,"turn-callback.wat"),callbackGraph);
 	await run(wasm,["parse","turn-callback.wat","-o","turn-callback.wasm"]);
 	await run(wasm,["validate","--features","cm-async,cm-async-builtins","turn-callback.wasm"]);

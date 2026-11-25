@@ -65,7 +65,7 @@ export const compileCHostComponent=async o=>{
 		}
 		const dispatch=witApplicationDispatch({ir,model,entries: direct,descriptor: witImports,name: o.name});
 		hashes.memberDispatch=sha256(dispatch);await save("application-dispatch.h",dispatch);
-		const ops=await witOperationFiles({ir,model,api: checked.api,entries: direct,descriptor: witImports,name: o.name,version: o.version});
+		const ops=await witOperationFiles({ir,model,turn: publicWorkers,api: checked.api,entries: direct,descriptor: witImports,name: o.name,version: o.version});
 		for(const [file,data] of Object.entries(ops))
 		{hashes[file]=sha256(data);await save(file,data);}
 		if(publicWorkers)

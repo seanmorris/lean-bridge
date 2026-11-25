@@ -16,7 +16,10 @@ export const exerciseWitApplicationTurn=async o=>{
 	const {app,b,fixture,kit,wasm,runtimeRoot,run}=o;
 	const owner=(await run(wasm,["print","guest.wasm"])).stdout;
 	const template=await readFile(join(fixture,"guest-turn.wat.in"),"utf8");
-	const update=await readFile(join(fixture,"turn-update-driver.wat.in"),"utf8");
+	const members=await readFile(join(app,"turn-members.wat"),"utf8");
+	const method=name=>"invoke-m"+b.witImports.contract.methods.findIndex(m=>m.name===name);
+	const update=(await readFile(join(fixture,"turn-update-driver.wat.in"),"utf8")).replace("@MEMBERS@",()=>members.replace("(component","(component $member-code"))
+		.replaceAll("@OBJECTS@",b.witImports.interfaceName).replace("@SET@",method("set-level")).replace("@GET@",method("get-level"));
 	const audit=await readFile(join(fixture,"guest-lease-audit.wat.in"),"utf8");
 	const graph=template.replace("@OWNER@",()=>owner.replace("(component","(component $owner"))
 		.replace("@TABLE@",()=>witTurnOwners(b.witImports,null).replace("(component","(component $table"))
@@ -74,5 +77,6 @@ export const exerciseWitApplicationTurn=async o=>{
 	assert.match(r.stdout,/retained native tasks: reentrant original object, owned callback exception, caught exception then independent IO error, cancelled pending callback/u);
 	assert.match(r.stdout,/unchanged downstream application: series to retained relay to nested Lean update to canonical future: 73/u);
 	assert.match(r.stdout,/canonical object tasks: 65 immediate factory rejections, returned errors, both u32 bounds, independent readers and early drops/u);
+	assert.match(r.stdout,/eleven generated defining-member adapters: identity, transfers, mutation, copied buffers, wide limbs and original exceptions/u);
 	assert.match(r.stdout,/canonical callback futures: sixteen scheduling\/error combinations and native teardown on a guest trap/u);
 };

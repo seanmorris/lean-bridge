@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson } from "../../capsule/node.mjs";
 import { witApplicationOperations } from "./application-operations.mjs";
 import { witOperationFacade } from "./application-operation-facade.mjs";
+import { witTurnMembers } from "./application-turn-members.mjs";
 import { witOperationHost } from "./application-operation-host.mjs";
 
 /**
@@ -17,6 +18,7 @@ export const witOperationFiles=async options=>{
 	const {publicName,nativeName,nativeType,methods}=operations;
 	return {
 		"operations.wit": operations.wit
+		, ...options.turn?{"turn-members.wat": witTurnMembers(options.descriptor,scratch)}:{}
 		, "api.wit": operations.publicWit
 		, "operations.wat": witOperationFacade(operations,scratch)
 		, "application-operations.h": witOperationHost({...options,operations})
