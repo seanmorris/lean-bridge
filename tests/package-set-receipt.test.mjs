@@ -93,7 +93,7 @@ for(const delivery of ["task", "io"]) test(`C++ ${delivery} receipts require a C
 	]) assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...cpp, ...patch }] }));
 });
 
-const rustProfiles = { tasks: "native-rust-task-v1", "synchronous IO packages": "native-rust-io-v1" };
+const rustProfiles = { tasks: "native-rust-task-v1", "synchronous IO packages": "native-rust-io-v1", "host-object packages": "native-rust-host-v1" };
 for(const [title, id] of Object.entries(rustProfiles)) test(`Rust ${title} require exactly the compatible Cargo runtime provider; ordinary Rust stays embedded`, async t => {
 	const { receipt } = await createPackageSetHandoff(t);
 	const previous = receipt.packages.find(p => p.target === "cargo");

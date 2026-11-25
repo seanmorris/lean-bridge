@@ -34,6 +34,16 @@ const checksum = async (dir, prefix = "") => {
 	}
 	return files;
 };
+/**
+ * Verify an archive and populate Cargo's on-disk directory registry.
+ *
+ * @param vendor - Fresh local registry.
+ * @param name - Crate name from the verified receipt or lock.
+ * @param version - Exact Cargo version.
+ * @param archive - Source archive path.
+ * @param sum - Expected archive SHA-256.
+ * @param env - Extraction tool environment.
+ */
 const install = async (vendor, name, version, archive, sum, env) => {
 	const root = join(vendor, name + "-" + version);
 	assert.equal(sha256(await readFile(archive)), sum, archive);
@@ -43,8 +53,14 @@ const install = async (vendor, name, version, archive, sum, env) => {
 	await writeFile(join(root, ".cargo-checksum.json"), canonicalJson({ files, package: sum }), { flag: "wx" });
 	return root;
 };
+/**
+ * Read package coordinates and archive checksums from the generated Cargo lock.
+ *
+ * @param lock - Generated Cargo.lock text.
+ */
 const dependencies = lock => lock.split("[[package]]").slice(1).map(s => Object.fromEntries(
 	[...s.matchAll(/^(name|version|source|checksum) = "([^"\n]+)"$/gmu)].map(m => [m[1], m[2]])));
+export { install as installVerifiedRustCrate, dependencies as rustLockPackages };
 
 /**
  * Collect evidence from a relocated executable built from an offline registry.

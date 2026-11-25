@@ -32,9 +32,8 @@ test("two Cargo components share Rust application objects and original member er
 	const runtimeSrc=resolve("src/backends/rust/task-runtime/src");
 	for(const name of ["lean-bridge-host-runtime","duplicate-owner"])
 	{
-		const runtime=await crate(name,"[features]\nasync=[]\n",(await readFile(join(runtimeSrc,"lib.rs"),"utf8"))+"\npub mod owner; pub mod port;\n");
-		await copyFile(join(runtimeSrc,"resource.rs"),join(runtime,"src/resource.rs"));
-		for(const [src,dest] of [["host-owner","owner"],["host-port","port"]]) await copyFile(resolve("src/backends/rust",src+".rs"),join(runtime,"src",dest+".rs"));
+		const runtime=await crate(name,'[features]\ndefault=["host-objects"]\nasync=[]\nhost-objects=[]\n',await readFile(join(runtimeSrc,"lib.rs"),"utf8"));
+		for(const file of ["resource.rs","owner.rs","port.rs"]) await copyFile(join(runtimeSrc,file),join(runtime,"src",file));
 	}
 	for(const pkg of packages)
 	{

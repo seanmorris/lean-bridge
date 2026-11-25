@@ -87,7 +87,8 @@ const install = async (work, root, target) => {
 		assert.deepEqual(sync.runtime.artifacts, task.runtime.artifacts);
 		const support = await unpack(sync.runtime, sync.dir, "runtime"), cargo = env.LEAN_BRIDGE_CARGO ?? "cargo";
 		const descriptor = await json(join(support, "lean-bridge/package-receipt.json"));
-		assert.equal(descriptor.schemaVersion, 2); assert.deepEqual(descriptor.profiles, ["native-rust-io-v1", "native-rust-task-v1"]);
+		const old = replay && !(await readFile(join(support,"Cargo.toml"),"utf8")).includes("host-objects = []");
+		assert.equal(descriptor.schemaVersion, 2); assert.deepEqual(descriptor.profiles, ["native-rust-io-v1", "native-rust-task-v1", ...old?[]:["native-rust-host-v1"]]);
 		const rust = { ...env, RUSTC: env.LEAN_BRIDGE_RUSTC ?? "rustc", CARGO_TARGET_DIR: join(build, "target"), CARGO_NET_OFFLINE: "true" };
 		await mkdir(join(build, "src")); await copyFile(client, join(build, "src/main.rs"));
 		await writeFile(join(build, "Cargo.toml"), `[package]\nname="installed-peers"\nversion="0.1.0"\nedition="2021"\n[dependencies]\nlease-sync={path=${JSON.stringify(direct)}}\nlease-task={path=${JSON.stringify(async)}}\n[patch.crates-io]\nlean-bridge-task-runtime={path=${JSON.stringify(support)}}\n`);

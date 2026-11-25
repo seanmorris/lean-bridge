@@ -23,6 +23,8 @@ fn context() -> Checked<()> {
         Ok(_) => Ok(()), Err(old) if old==pid => Ok(()), _ => Err(OwnerError::WrongContext),
     }
 }
+#[doc(hidden)]
+pub fn check_context()->Checked<()> {context()}
 
 /// An owned application object. Borrowed results also keep their declared
 /// parent alive, even when Rust stores its fields in separate Rc allocations.

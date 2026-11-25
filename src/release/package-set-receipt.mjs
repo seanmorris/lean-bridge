@@ -30,7 +30,7 @@ const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1
 	, pypi: ["native-library-v1", "native-python-host-v1", "native-python-task-v1", "native-python-io-v1"]
 	, c: ["native-library-v1", "native-c-task-v1", "native-c-io-v1", "native-c-host-v1"]
 	, cpp: ["native-library-v1", "native-cpp-task-v1", "native-cpp-io-v1", "native-cpp-host-v1"]
-	, cargo: ["native-library-v1", "native-rust-task-v1", "native-rust-io-v1"]
+	, cargo: ["native-library-v1", "native-rust-task-v1", "native-rust-io-v1", "native-rust-host-v1"]
 	, rubygems: ["native-library-v1", "native-ruby-io-v1", "native-ruby-task-v1", "native-ruby-host-v1"]
 	, nuget: ["native-library-v1", "native-dotnet-io-v1", "native-dotnet-task-v1"]
 	, maven: ["native-library-v1", "native-jvm-io-v1", "native-jvm-task-v1"]
@@ -78,7 +78,7 @@ export const validatePackageSetReceipt = receipt => {
 		if(pkg.runtimeIdentity !== profiles.get(pkg.profile)?.runtimeIdentity) fail("package-set-runtime-mismatch", "Package runtime differs from its compiled profile");
 		if(!["runtime", "component", "api"].includes(pkg.role) || !["provided", "embedded", "dependency"].includes(pkg.runtimeDelivery)) invalid("Invalid package role or runtime delivery");
 		const pythonHosts = ["native-python-host-v1", "native-python-task-v1", "native-python-io-v1"].includes(pkg.profile);
-		const rustWithProvider = ["native-rust-task-v1", "native-rust-io-v1"].includes(pkg.profile);
+		const rustWithProvider = ["native-rust-task-v1", "native-rust-io-v1", "native-rust-host-v1"].includes(pkg.profile);
 		const runtimeTarget = pythonHosts || rustWithProvider || pkg.target === "npm" || pkg.target === "cpan" || pkg.target === "php-wasm";
 		if(pkg.role === "runtime" ? (!runtimeTarget || pkg.runtimeDelivery !== "provided" || pkg.ecosystem === "composer")
 			: pkg.runtimeDelivery !== (runtimeTarget ? "dependency" : "embedded")) invalid("Package role and runtime delivery disagree");
@@ -87,7 +87,7 @@ export const validatePackageSetReceipt = receipt => {
 			|| !pkg.version.startsWith(`1+${pkg.runtimeIdentity}.`) || !hash(pkg.version.split(".")[1]) || pkg.version.split(".").length !== 2))
 			invalid("Python host wheels require the exact shared runtime coordinate");
 		if(rustWithProvider && pkg.role === "runtime" && (pkg.name !== "lean-bridge-task-runtime" || !/^1\.0\.0-r[a-f0-9]{64}$(?![\s\S])/u.test(pkg.version)))
-			invalid("Rust IO and task crates require the exact shared runtime coordinate");
+			invalid("Rust host-object, IO and task crates require the exact shared runtime coordinate");
 		if(names.has(nameKey(pkg))) fail("package-set-coordinate-conflict", `Package name is supplied more than once: ${nameKey(pkg)}`);
 		names.set(nameKey(pkg), pkg); packages.set(coordinate(pkg), pkg);
 		if(!Array.isArray(pkg.requires) || pkg.requires.length > 16) invalid("Invalid in-set dependencies");

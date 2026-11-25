@@ -45,6 +45,21 @@ reactor. Publish the exact runtime archive once even if multiple components
 need it. A real task component enables async on that same version. See
 [calling synchronous IO](../consume/rust.md#call-synchronous-io).
 
+## Import application-owned Rust objects
+
+Point `hostImports` in `lean-bridge.exports.json` at the host declarations. For each imported type, include `rust` in its host targets and declare how object identity works. For a borrowed member result, name its receiver or parameter anchor. Import `LeanBridge.Host.Rust` in Lean and use the generated types and members directly:
+
+```lean
+import LeanBridge.Host.Rust
+open LeanBridge.Host.Rust
+
+def readMeter (box : Box) : IO UInt32 := box.read
+```
+
+Select the Lean wrapper functions to export and build with `--target cargo`. You can also supply a reviewed binding IR instead of an export list. The build checks it against the compiled declarations before it writes a package-set receipt. See the [example publisher](../../tests/helpers/rust-host-publish.mjs) for both routes.
+
+Distribute both archives in the receipt: the component and its exact `lean-bridge-task-runtime` dependency. Compatible components share the runtime; the `host-objects` feature does not enable async. The downstream application [binds its own Rust types](../consume/rust.md#let-lean-call-your-rust-objects). The [installed-package evidence](../evidence/rust-host-packages-20261125.md) records the releases and consumer checks. This profile supports synchronous members, not delivery of member calls from a worker thread.
+
 ## Export a task or pull stream
 
 If the Lean code uses files, environment variables, or other OS facilities,

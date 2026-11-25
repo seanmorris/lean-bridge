@@ -71,6 +71,29 @@ Two compatible packages use the same Rust type for the same Lean resource.
 An `EIO` error whose payload is a resource owns that lease; it can be passed
 to the other package just like a successful return value.
 
+### Let Lean call your Rust objects
+
+A `native-rust-host-v1` release lets a Lean function call inherent methods on your application's Rust types. Add the component crate as a normal Cargo dependency. Cargo selects its exact runtime; you do not need to enable async, pass native handles or install Lean.
+
+For example, the Workshop package declares two imported types, `Box` and `Dial`. After implementing their members on your own types, bind their names once:
+
+```rust
+workshop::bind_objects!(MeterHost { Box = Meter, Dial = Dial });
+
+fn check_identity() -> Result<(), Box<dyn std::error::Error>> {
+    let api = workshop::Binding::<MeterHost>::new()?;
+    let meter = api.make(15)?;
+    let same = api.identity(&meter)?;
+    assert!(same.ptr_eq(&meter));
+    api.close()?;
+    Ok(())
+}
+```
+
+Call the binding on the process main thread. Pass an `Rc<T>` you already own or a returned `HostRef<T>`. Both refer to the original object. If a member returns a child borrowed from its receiver or another argument, return `Borrowed::new(&parent, child_rc)` for the parent named in the contract. The returned `HostRef` keeps that parent alive. Keep the handle, not just a clone of the inner `Rc`, when the parent must stay alive.
+
+A fallible member can return `MemberResult<T>`. A host error propagated through Lean comes back as `HostCallError::Host` with the original error object. A Lean `IO.Error`, a declared `EIO` error and a bridge failure have separate variants; a returned `Except` is a value. The [complete Rust application](../../tests/fixtures/rust-host-members/archives.rs) implements both classes and uses them from two packages.
+
 ### Await a task or pull a stream
 
 If the release receipt says `native-rust-task-v1`, add only the component crate to your Cargo dependencies. Cargo resolves its exact `lean-bridge-task-runtime` dependency. Run these functions on a current-thread executor **on the process main thread**. Tasks and resource owners are not `Send`; there is no Lean scheduler for your application to drive.

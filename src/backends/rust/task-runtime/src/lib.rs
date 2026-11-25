@@ -1,6 +1,12 @@
 //! Shared owner-thread boundary and resource types for compiled Lean.
 use std::{convert::Infallible, fmt};
 mod resource;
+#[doc(hidden)]
+#[cfg(feature = "host-objects")]
+pub mod owner;
+#[doc(hidden)]
+#[cfg(feature = "host-objects")]
+pub mod port;
 pub use resource::Resource;
 #[doc(hidden)]
 pub use resource::abi;

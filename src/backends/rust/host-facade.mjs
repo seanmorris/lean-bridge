@@ -97,7 +97,8 @@ export const rustHostFacade = pkg => {
 			+(err?"return Err(HostCallError::Declared{declaration:"+JSON.stringify(e.declaration)+",payload:"+err.expr+"});":"return Err(Fault::Protocol.into());")+"} Ok("+ret.expr+")}");
 	}
 	return [
-		"pub use lean_bridge_host_runtime::{Fault,owner::{HostRef,Borrowed},port::{MemberResult,HostError,HostCallError}};"
+		...pkg.embedded?["extern crate lean_bridge_task_runtime as lean_bridge_host_runtime; mod assets;"]:[]
+		, "pub use lean_bridge_host_runtime::{Fault,owner::{HostRef,Borrowed},port::{MemberResult,HostError,HostCallError}};"
 		, "#[doc(hidden)] pub use lean_bridge_host_runtime::port as __port; pub use std::rc::Rc;"
 		, "use lean_bridge_host_runtime::{owner::Kind,port::{self as p,AsHost,Connection,Scratch,Frame,Failure,Word}}; use std::{convert::Infallible,marker::PhantomData};"
 		, ...needsBig?["pub use num_bigint::{BigInt,BigUint}; use num_bigint::Sign;"
@@ -106,9 +107,15 @@ export const rustHostFacade = pkg => {
 		, "#[doc(hidden)] pub trait Host:'static {"+types.join("\n")+methods.join("\n")+"}"
 		, "#[macro_export] macro_rules! bind_objects {($vis:vis $marker:ident {"+patterns.join(",")+" $(,)?})=>{$vis struct $marker; impl $crate::Host for $marker {"+impl.join("\n")+"}};}"
 		, "unsafe fn member<H:Host>(f:&Frame,op:i32,arg:&[Word])->Result<Word,Failure>{match op{"+cases.join(",")+",_=>Err(Fault::Protocol.into())}}"
-		, "#[link(name="+JSON.stringify(prefix)+")] extern \"C\" {#[link_name="+JSON.stringify(prefix+"_call")+"] fn entry(cookie:usize,id:u64,d:p::Dispatch,op:i32,a:*const u64,n:usize,o:*mut u64,t:*mut u8,e:*mut u32)->i32; #[link_name="+JSON.stringify(prefix+"_clear")+"] fn clear(o:*mut u64);}"
+		, pkg.embedded?[
+			"fn functions()->Result<(p::Call,p::Clear),Fault>{use std::ffi::{c_char,c_void}; use std::sync::OnceLock;"
+			, "#[link(name=\"dl\")] extern \"C\" {fn dlsym(h:*mut c_void,s:*const c_char)->*mut c_void;}"
+			, "static F:OnceLock<Result<(p::Call,p::Clear),Fault>>=OnceLock::new(); lean_bridge_host_runtime::owner::check_context()?;"
+			, "F.get_or_init(||{let h=assets::load()? as *mut c_void;unsafe{let a=dlsym(h,c\""+prefix+"_call\".as_ptr());let b=dlsym(h,c\""+prefix+"_clear\".as_ptr());"
+			, "if a.is_null() || b.is_null(){return Err(Fault::Load(\"Missing checked Rust host entry\".into()))}Ok((std::mem::transmute::<*mut c_void,p::Call>(a),std::mem::transmute::<*mut c_void,p::Clear>(b)))}}).clone()}"
+		].join("\n"):"#[link(name="+JSON.stringify(prefix)+")] extern \"C\" {#[link_name="+JSON.stringify(prefix+"_call")+"] fn entry(cookie:usize,id:u64,d:p::Dispatch,op:i32,a:*const u64,n:usize,o:*mut u64,t:*mut u8,e:*mut u32)->i32; #[link_name="+JSON.stringify(prefix+"_clear")+"] fn clear(o:*mut u64);}"
 		, "pub struct Binding<H:Host>{port:Connection,_types:PhantomData<H>} impl<H:Host> Binding<H>{"
-		, "pub fn new()->Result<Self,Fault>{Ok(Self{port:unsafe{Connection::open("+JSON.stringify(domainId)+",vec!["+kindArgs.join(",")+"],entry,clear,member::<H>)?},_types:PhantomData})}"
+		, "pub fn new()->Result<Self,Fault>{"+(pkg.embedded?"let(entry,clear)=functions()?;":"")+"Ok(Self{port:unsafe{Connection::open("+JSON.stringify(domainId)+",vec!["+kindArgs.join(",")+"],entry,clear,member::<H>)?},_types:PhantomData})}"
 		, "pub fn close(&self)->Result<(),Fault>{self.port.close()}",...exports,"}",""
 	].join("\n");
 };
