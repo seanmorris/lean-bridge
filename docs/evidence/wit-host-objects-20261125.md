@@ -288,6 +288,8 @@ The application opens Gauge's stream on a guest-owned box. The first pull waits 
 
 A separate replay verified the same four receipts and rebuilt only the downstream guests against the [combined public WIT worlds](../../tests/fixtures/static-host-workers/async-peer-world.wit). Inside Workshop's retained callback, the Wasm provider re-entered **Gauge's compiled Lean `read` method**, checked 42 on the original box, called Workshop's update and read 73 back through Gauge. All eight combinations and the negative controls passed again.
 
+A [second application](../../tests/fixtures/static-host-workers/peer-failure.wat.in) checks failure ownership. Gauge reads a deliberately failing box during Workshop's callback. The callback returns Gauge's original guest-owned member error; Workshop delivers it through its future as the typed `callback` failure, not an IO string or a process trap. Before disposal, the defining guest reports **one error created, none destroyed**. Dropping the received error and its future leaves **one created, one destroyed**. The defining destructor rejects the wrong resource identity or a second drop. The caller dropped its original box and callback immediately after starting the future. This passed in all eight release/order combinations, alongside the independent success and trap paths.
+
 | Worker package | Archive bytes | SHA-256 |
 | --- | ---: | --- |
 | Workshop, ordinary | 61,125,430 | `57643a8339f935b24bb40eb1e7f62567797b9c7e0acdf637469640e5e0107465` |

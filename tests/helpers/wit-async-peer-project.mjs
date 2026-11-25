@@ -90,12 +90,50 @@ export const checkAsyncPeerWorld=async(dir,gauge,run)=>{
 	const provider=await readFile(join(dir,"provider.wat"),"utf8"),method='(call $update (local.get $box) (i32.const 73) (i32.const 16))';
 	const check=value=>`(call $gauge-read (local.get $box) (i32.const 64))
         (if (i32.or (i32.load8_u (i32.const 64)) (i32.ne (i32.load (i32.const 68)) (i32.const ${value}))) (then unreachable))`;
-	for(const marker of [";; @test-callback-import@",method])assert.equal(provider.split(marker).length,2,marker);
+	const failing='(call $create (i32.const -2) (i32.const 16))';
+	for(const marker of [";; @test-callback-import@",method,failing])assert.equal(provider.split(marker).length,2,marker);
 	const api=witCoreInterface("lean-bridge:gauge/api@1.0.0");
 	await writeFile(join(dir,"peer-provider.wat"),provider
 		.replace(";; @test-callback-import@",()=>`(import "cm32p2|${api}" "read" (func $gauge-read (param i32 i32)))`)
+		.replace(failing,()=>`(call $gauge-read (local.get $box) (i32.const 64))
+        (if (i32.or (i32.ne (i32.load8_u (i32.const 64)) (i32.const 1)) (i32.load8_u (i32.const 68))) (then unreachable))
+        (i32.store8 (i32.const 16) (i32.const 1)) (i32.store (i32.const 20) (i32.load (i32.const 72)))`)
 		.replace(method,()=>[check(42),method,check(73)].join("\n        ")));
 	await run("component","embed",world,"--world","registrations","peer-provider.wat","-o","peer-provider.core");
 	await run("component","new","peer-provider.core","-o","peer-provider.wasm");
 	await run("component","targets",world,"--world","registrations","peer-provider.wasm");
+};
+
+/**
+ * Count creation and destruction of the actual nested Gauge error in its
+ * defining Wasm guest. The client can observe those counters through a
+ * diagnostic box, using only the public get-level method.
+ *
+ * @param dir - Directory containing the independent owner and public worlds.
+ * @param run - Pinned wasm-tools command in the consumer directory.
+ */
+export const buildAsyncPeerFailure=async(dir,run)=>{
+	const wit=join(dir,"app-wit/deps/objects.wit"),contract=await readFile(wit,"utf8");
+	const [,name]=/^package ([^;]+)@1\.0\.0;/u.exec(contract),objects=name+"/objects@1.0.0";
+	const owner=await readFile(join(dir,"owner.wat"),"utf8");
+	const sentinel="(call $error (i32.const 8))",destructor=`(export "cm32p2|${witCoreInterface(objects)}|member-error_dtor" (func $destroy))`;
+	for(const target of [sentinel,destructor,";; @installed-drop-observer@","(global $armed"])assert.equal(owner.split(target).length,2,target);
+	await writeFile(join(dir,"count-errors.wat"),owner
+		.replace(sentinel,"(call $issue)")
+		.replace("(global $armed",()=>`(global $issued (mut i32) (i32.const 0)) (global $freed (mut i32) (i32.const 0))
+      (func $issue (result i32) (global.set $issued (i32.add (global.get $issued) (i32.const 1))) (call $error (i32.const 8)))
+      (global $armed`)
+		.replace(";; @installed-drop-observer@",()=>`(if (i32.eq (i32.load (local.get $p)) (i32.const 77777)) (then
+        (return (call $result (i32.const 0) (i32.or (i32.shl (global.get $issued) (i32.const 16)) (global.get $freed))))))`)
+		.replace(destructor,()=>`(func (export "cm32p2|${witCoreInterface(objects)}|member-error_dtor") (param $kind i32)
+        (if (i32.ne (local.get $kind) (i32.const 8)) (then unreachable))
+        (if (i32.ge_u (global.get $freed) (global.get $issued)) (then unreachable))
+        (global.set $freed (i32.add (global.get $freed) (i32.const 1))))`));
+	await run("component","embed",wit,"--world","owner","count-errors.wat","-o","count-errors.core");
+	await run("component","new","count-errors.core","-o","count-errors.wasm");
+	await run("component","targets",wit,"--world","owner","count-errors.wasm");
+	const app=await readFile("tests/fixtures/static-host-workers/peer-failure.wat.in","utf8");
+	await writeFile(join(dir,"peer-failure.wat"),app.replaceAll("@OBJECTS@",objects));
+	await run("parse","peer-failure.wat","-o","peer-failure.wasm");
+	await run("component","targets",join(dir,"combined-world"),"--world","instruments","peer-failure.wasm");
 };
