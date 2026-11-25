@@ -41,6 +41,24 @@ export const witApplicationDispatch = options => {
 		bodies.push(`static inline lwit_owner *lwit_from_${witName(r.name)}(lwit_members *m,${t} ref){
     void *data=NULL;return ${t}_data(ref,&data)==${p}OK?lwit_unwrap(&m->kinds[${i}],${key(i)},data):NULL;
 }`);
+		bodies.push(`static inline bool lwit_accept_${i}(lwit_bridge *b,lb_val *value,${t} *out){
+    ${t} produced={0};if(!out || !${scalar(i).empty("*out")})return false;
+    if(lwit_intern(&b->members.kinds[${i}],${key(i)},value,lwit_adopt_${i},&produced)){*out=produced;return true;}
+    (void)${t}_drop(&produced);return false;
+}
+static inline bool lwit_import_${witName(r.name)}(lwit_bridge *b,lwit_owner *owner,${t} *out){
+    if(!b || !out || !${scalar(i).empty("*out")} || !lwit_is(&b->members.kinds[${i}],owner))return false;
+    lb_val value={0};if(!lwit_give(owner,&value))return false;
+    bool ok=lwit_accept_${i}(b,&value,out);
+    if(value.kind==WASMTIME_COMPONENT_RESOURCE && value.of.resource && lwit_open(b->members.store)){
+        if(!lwit_no_error(wasmtime_component_resource_any_drop(b->members.store->ctx,value.of.resource)))b->members.store->failed=true;
+    }
+    wasmtime_component_val_delete(&value);return ok;
+}
+static inline wasmtime_error_t *lwit_export_${witName(r.name)}(lwit_bridge *b,${t} ref,lwit_owner *out){
+    if(!b)return wasmtime_error_new("missing WIT application binding");
+    return lwit_retain(&b->members.kinds[${i}],lwit_from_${witName(r.name)}(&b->members,ref),out);
+}`);
 	}
 	for(const [i,m] of contract.methods.entries())
 	{
@@ -56,7 +74,7 @@ export const witApplicationDispatch = options => {
         ${a.ownership==="borrow"?`${v}.kind=WASMTIME_COMPONENT_RESOURCE;${v}.of.resource=wasmtime_component_resource_any_clone(o->any);`:`if(!lwit_no_error(lwit_retain(&b->members.kinds[${a.kind}],o,&stage${j})))goto done;`}}`;
 		});
 		const convert=!has?"if(value)goto done;":typeof m.result==="number"
-			?`if(!lwit_intern(&b->members.kinds[${m.result}],${key(m.result)},value,lwit_adopt_${m.result},out))goto done;`
+			?`if(!lwit_accept_${m.result}(b,value,out))goto done;`
 			:`{uint64_t w[3]={0};if(!value || !lb_input(LB_${m.result.toUpperCase()},value,&scope,w))goto done;${decode(m.result,result.type)}}`;
 		const f=m.error?`if(reply.kind!=WASMTIME_COMPONENT_RESULT)goto done;
     value=reply.of.result.val;

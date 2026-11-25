@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
+import { buildWitApplicationConsumer } from "./wit-application-consumer.mjs";
 
 /**
  * Compile and run the fixture against the actual generated interface and native provider.
@@ -58,6 +59,7 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
 	await writeFile(join(app,"composed.wat"),composed);
 	await run(wasm,["parse","composed.wat","-o","composed.wasm"]);
 	await run(wasm,["validate","composed.wasm"]);
+	await buildWitApplicationConsumer({app,fixture,descriptor: b.witImports,wasm,run});
 	const mismatches=[
 		["signed","%get-level: func() -> result<u32","%get-level: func() -> result<s32"]
 		, ["nominal","%identity: func() -> result<own<%box>","%identity: func() -> result<own<%member-error>"]
@@ -81,4 +83,5 @@ export const exerciseWitApplicationObjects = async ({app,runtimeRoot,b}) => {
 		, RAYON_NUM_THREADS: "1"
 	});
 	assert.match(executed.stdout,/guest-owned object survived a compiled Lean worker/u);
+	assert.match(executed.stdout,/independent Wasm consumer called Lean and ran original guest destructors/u);
 };

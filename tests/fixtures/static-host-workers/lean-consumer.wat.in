@@ -1,0 +1,26 @@
+;; Independently compiled user application. Only public WIT imports appear:
+;; it can borrow, inspect, and drop the same objects as the original guest.
+(module
+  (import "cm32p2|@OPS@" "first-error" (func $create (param i32 i32 i32)))
+  (import "cm32p2|@OPS@" "update" (func $update (param i32 i32 i32)))
+  (import "cm32p2|@IFACE@" "box_drop" (func $drop (param i32)))
+  (import "cm32p2|@IFACE@" "member-error_drop" (func $release-error (param i32)))
+  (import "cm32p2|@IFACE@" "[method]member-error.message" (func $message (param i32 i32)))
+  (import "cm32p2|@IFACE@" "[method]box.read" (func $read (param i32 i32)))
+  (memory (export "cm32p2_memory") 1)
+  ;; Only one short error string is copied at a time, after its previous use ends.
+  (func (export "cm32p2_realloc") (param i32 i32 i32 i32) (result i32) (i32.const 128))
+  (func (export "cm32p2||exercise") (param $seed i32) (param $next i32) (result i32) (local $v i32)
+    (call $create (local.get $seed) (local.get $next) (i32.const 0))
+    (local.set $v (i32.load (i32.const 4)))
+    (if (i32.load8_u (i32.const 0)) (then
+      (call $message (local.get $v) (i32.const 16))
+      (call $release-error (local.get $v))
+      (if (i32.ne (i32.load (i32.const 20)) (i32.const 11)) (then unreachable))
+      (return (i32.load8_u (i32.load (i32.const 16))))))
+    (call $update (local.get $v) (local.get $next) (i32.const 0))
+    (if (i32.or (i32.load8_u (i32.const 0)) (i32.ne (i32.load (i32.const 4)) (local.get $next))) (then unreachable))
+    (call $read (local.get $v) (i32.const 0))
+    (if (i32.load8_u (i32.const 0)) (then unreachable))
+    (call $drop (local.get $v))
+    (i32.load (i32.const 4))))

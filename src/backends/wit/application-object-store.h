@@ -131,12 +131,15 @@ static inline wasmtime_error_t *lwit_shutdown(lwit_store *s) {
     }
     s->ctx=NULL;return first;
 }
-static inline bool lwit_is(const lwit_class *k,const lwit_owner *v) {
-    if(!k || !k->type || !lwit_open(k->store) || !v || !v->any ||
-       !lwit_open(v->source) || k->store->ctx!=v->source->ctx)return false;
+static inline bool lwit_has_type(const lwit_store *s,const wasmtime_component_resource_type_t *expected,const lwit_owner *v) {
+    if(!expected || !lwit_open(s) || !v || !v->any ||
+       !lwit_open(v->source) || s->ctx!=v->source->ctx)return false;
     wasmtime_component_resource_type_t *type=wasmtime_component_resource_any_type(v->any);
-    bool same=wasmtime_component_resource_type_equal(type,k->type);
+    bool same=wasmtime_component_resource_type_equal(type,expected);
     wasmtime_component_resource_type_delete(type);return same;
+}
+static inline bool lwit_is(const lwit_class *k,const lwit_owner *v) {
+    return k && lwit_has_type(k->store,k->type,v);
 }
 static inline wasmtime_error_t *lwit_retain(lwit_class *k,const lwit_owner *v,lwit_owner *out) {
     if(!lwit_is(k,v) || !out || out->source || out->any)

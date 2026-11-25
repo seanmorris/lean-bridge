@@ -52,6 +52,7 @@ static void close_instance(session *s){
     wasmtime_component_export_index_delete(s->scope);
 }
 static uint32_t drops(session *s){V v=invoke(s,"drops",NULL,0,true);assert(v.kind==WASMTIME_COMPONENT_U32);return v.of.u32;}
+#include "lean-consumer.h"
 static void new_box(session *s,uint32_t n,lwit_owner *out){
     V arg=u32(n),v=result(s,&s->checked.on_box.m_create,&arg,1);
     assert(lwit_take(&s->store,&s->box,v.of.result.val,out));wasmtime_component_val_delete(&v);
@@ -153,6 +154,8 @@ int main(int argc,char **argv){
     assert(argc==6);
     wasm_config_t *config=wasm_config_new();wasmtime_config_wasm_component_model_set(config,true);
     wasm_engine_t *engine=wasm_engine_new_with_config(config);
+    wasmtime_component_t *graph=load_component(engine,"client-graph.wasm");
+    guest_calls_lean(engine,graph);wasmtime_component_delete(graph);
     wasmtime_component_t *component=load_component(engine,argv[1]);
     wasmtime_component_linker_t *linker=wasmtime_component_linker_new(engine);
     wasmtime_store_t *one=wasmtime_store_new(engine,NULL,NULL),*two=wasmtime_store_new(engine,NULL,NULL);
@@ -192,11 +195,22 @@ int main(int argc,char **argv){
     V after={0};ok(wasmtime_component_func_call(&audit,wasmtime_store_context(one),NULL,0,&after,1));
     assert(after.kind==WASMTIME_COMPONENT_U32 && after.of.u32==before+2);
     close_instance(&sibling);
+    lwit_bridge poisoned={0};assert(lwit_bridge_open(&other.store,&poisoned));
+    workshop_box held={0},unchanged={0};workshop_diagnostic d={0};lwit_owner original_error={0},duplicate={0};
+    assert(lwit_sync_make(&poisoned,15,&held,&original_error,&d)==workshop_OK);
+    ok(lwit_export_box(&poisoned,held,&duplicate));
     new_box(&other,99,&alias);
     wasmtime_component_func_t arm;assert(lwit_lookup(&other.store,NULL,"arm-drop",&arm));
     ok(wasmtime_component_func_call(&arm,other.store.ctx,NULL,0,NULL,0));
-    refused(lwit_drop(&alias));assert(other.store.failed && !alias.any);
+    /* Duplicate interning tentatively obtains a native ticket, then drops
+     * the redundant owner. A trap must roll back the provisional ticket. */
+    assert(!lwit_import_box(&poisoned,&duplicate,&unchanged) && other.store.failed);
+    assert(!duplicate.any && !unchanged._private[0] && !unchanged._private[1]);
+    assert(workshop_box_drop(&held)==workshop_OK);
+    for(lwit_owner *slot=other.store.owners;slot;slot=slot->next)assert(!slot->box);
+    ok(lwit_drop(&alias));assert(!alias.any);
     refused(lwit_retain(&other.box,&foreign,&alias));assert(!lwit_lookup(&other.store,NULL,"drops",&arm));
+    assert(lwit_bridge_close(&poisoned)==workshop_OK);
     close_instance(&other);assert(!foreign.any);
     wasmtime_store_delete(one);wasmtime_store_delete(two);ok(lwit_drop(&first));ok(lwit_drop(&wrong_kind));ok(lwit_drop(&foreign));
     wasmtime_component_linker_delete(linker);wasmtime_component_delete(component);wasm_engine_delete(engine);

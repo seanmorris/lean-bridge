@@ -5,6 +5,7 @@ import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {cHostFacade} from "../backends/c/host-facade.mjs";
 import {cppHostFacade} from "../backends/cpp/host-facade.mjs";
 import {witApplicationHostImports} from "../backends/wit/application-host-imports.mjs";
+import {witApplicationExchange} from "../backends/wit/application-exchange.mjs";
 import {witApplicationMemberBindings} from "../backends/wit/application-member-bindings.mjs";
 import {witApplicationDispatch} from "../backends/wit/application-member-dispatch.mjs";
 import {staticHostMembers} from "../backends/native/static-host-members.mjs";
@@ -48,13 +49,18 @@ export const compileCHostComponent=async o=>{
 	const support={};
 	if(wit)
 	{
-		for(const file of ["application-object-store.h","application-member-types.h","application-member-runtime.h","sync-io-values.h"])
+		for(const file of ["application-object-store.h","application-member-types.h","application-member-runtime.h","application-exchange.h","sync-io-values.h"])
 		{
 			const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
 			hashes[file]=sha256(bytes);await save(file,bytes);
 		}
 		const binding=witApplicationMemberBindings(witImports);
 		hashes.memberBinding=sha256(binding);await save("application-members.h",binding);
+		const exchange=witApplicationExchange(witImports);
+		for(const [file,data] of [["exchange.wit",witImports.wit+"\n"+exchange.wit],["exchange.wat",exchange.wat]])
+		{
+			hashes[file]=sha256(data);await save(file,data);
+		}
 		const dispatch=witApplicationDispatch({ir,model,entries:direct,descriptor:witImports,name:o.name});
 		hashes.memberDispatch=sha256(dispatch);await save("application-dispatch.h",dispatch);
 	}
