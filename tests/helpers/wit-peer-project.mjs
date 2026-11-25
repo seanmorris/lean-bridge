@@ -60,6 +60,17 @@ export const buildWitPeerGuests=async(wit,out,run)=>{
 		, '(export "other-box" (type $two "box"))'
 		, '(export "retain-box" (func $two "retain-box"))) (export "'+iface+'" (instance $mixed)))'].join("\n");
 	await writeFile(join(out,"foreign-owner.wat"),wrongOwner);await run("parse","foreign-owner.wat","-o","foreign-owner.wasm");await run("validate","foreign-owner.wasm");
+	// A defining object guest that could call the downstream facade from
+	// Box.read could try to close the very function whose body called it.
+	// The standalone graph does not supply that reverse dependency. Require
+	// the actual public close method in an otherwise valid defining guest.
+	const cyclicOwner=["(component"
+		, '(import "lean-bridge:workshop/api@1.0.0" (instance (export "remember-function" (type $f (sub resource)))'
+		, '(export "[method]remember-function.close" (func (param "self" (borrow $f))))))'
+		, definition,"(instance $owner (instantiate $definition))"
+		, '(export "'+iface+'" (instance $owner "'+iface+'")))'].join("\n");
+	await writeFile(join(out,"cyclic-owner.wat"),cyclicOwner);
+	await run("parse","cyclic-owner.wat","-o","cyclic-owner.wasm");await run("validate","cyclic-owner.wasm");
 	const client=(await fixture("installed-peers")).replaceAll("@OBJECTS@",iface);
 	await writeFile(join(out,"application.wat"),client);await run("parse","application.wat","-o","application.wasm");await run("validate","application.wasm");
 	const foreign=client.replace('(alias export $owner "box" (type $b))','(alias export $owner "box" (type $b)) (alias export $owner "member-error" (type $foreign))')

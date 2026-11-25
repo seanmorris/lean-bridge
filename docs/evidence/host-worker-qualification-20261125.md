@@ -27,8 +27,11 @@ owners. Installing a Composer package for native PHP does not test Zend in Wasm.
 
 For **WIT/WASI**, [installed synchronous and worker packages](wit-host-closures-20261125.md)
 now exercise captured objects, owned failures and disposal. Two independent
-worker packages passed 80 pending-callback cancellation cases; the separate
-synchronous peer and active self-disposal checks are still outstanding.
+worker packages passed 80 pending-callback cancellation cases. The
+[synchronous peer check](wit-host-closures-20261125.md#two-installed-synchronous-packages)
+passed all eight route/order combinations. Its graph rejected an object
+provider importing the downstream close method; it did not exercise an
+active self-close from a guest member.
 For **PHP-Wasm**, the [threaded and standalone packages](zend-host-closures-20261125.md)
 returned functions that captured a Zend object, including across nested calls
 and independent packages. The standalone installs also ran on a Chromium
