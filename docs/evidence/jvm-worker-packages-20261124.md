@@ -60,3 +60,27 @@ library caused rejection on both routes. A fourth author project removed the
 declared error payload site from `Jobs.refuse`; the CLI rejected the review
 before writing a package-set receipt. No Maven or npm registry was used to
 publish these artifacts.
+
+## File effects on demand and early stream cancellation
+
+The [Java](../../tests/fixtures/jvm-host-workers/EffectClient.java) and
+[Kotlin](../../tests/fixtures/jvm-host-workers/EffectFlow.kt) clients ran
+against ordinary and reviewed packages: four executions from relocated,
+offline Maven repositories. Both clients read the startup environment,
+read a real file synchronously and through a future or suspending call,
+and observed a change to the file between two stream demands. Cancelling
+Java's subscription and stopping Kotlin's flow with `take(2)` both produced
+the Lean close marker. Java also requested another item and cancelled again;
+neither yielded another item nor rewrote the replacement marker in the check.
+
+The producer rejected the worker, pull and close when the filesystem grant was
+removed. To repeat the check, set `LEAN_BRIDGE_JAVA` to the absolute JDK 22
+Java executable, `JAVA_HOME` and `LEAN_BRIDGE_KOTLIN_HOME` to the JDK and Kotlin
+2.2.0 installations, and `LEAN_BRIDGE_JVM_IO_M2_SEED` to the offline Maven
+plugin/dependency cache (without the Workshop artifact). Run
+`npm run test:jvm-worker-effects`.
+
+| Build | Verified package-set receipt (SHA-256) |
+| --- | --- |
+| Ordinary | `80116ff0607ec3621b157eed0f9e3e11d115c59c12cd1664de79e01a1c8678d0` |
+| Reviewed | `24800f92203da9f461f6230e4edcea5d348a5c644e52a9c409383117ef6446fc` |

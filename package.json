@@ -1420,6 +1420,7 @@
     "test:ruby-worker-effects": "node --test --test-concurrency=1 tests/helpers/ruby-host-worker-effects.mjs",
     "test:dotnet-worker-effects": "node --test --test-concurrency=1 tests/helpers/dotnet-host-worker-effects.mjs",
     "test:php-worker-effects": "node --test --test-concurrency=1 tests/helpers/php-host-worker-effects.mjs",
+    "test:jvm-worker-effects": "node --test --test-concurrency=1 tests/helpers/jvm-host-worker-effects.mjs",
     "test:perl-worker-replay": "node --test --test-concurrency=1 tests/helpers/perl-worker-replay.mjs",
     "test:perl-worker-source": "node --test --test-concurrency=1 tests/helpers/perl-worker-elaboration.mjs",
     "test:php-host-imports": "node --test --test-concurrency=1 tests/helpers/php-host-imports.mjs",
