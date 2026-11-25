@@ -9,8 +9,10 @@ import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
  *
  * @param root - Isolated test root.
  * @param component - Distinct Lake and package identity for an installed peer.
+ * @param functions - Include ordinary Lean factories in the installed worker fixture.
+ * @param [immediate] - Publish only immediate operations without any Lean tasks or streams.
  */
-export const prepareZendAuthorProject=async(root,component="workshop")=>{
+export const prepareZendAuthorProject=async(root,component="workshop",functions=false,immediate=false)=>{
 	const project=join(root,"source"),configPath=join(project,"lean-bridge.exports.json"),main=join(project,"Workshop.lean");
 	await prepareNativeHostFixture(project,"php");
 	const fixture=resolve("tests/fixtures/php-host-tasks"),source="prelude\n"+await readFile(join(fixture,"Workshop.lean"),"utf8");
@@ -27,8 +29,27 @@ export const prepareZendAuthorProject=async(root,component="workshop")=>{
 	await writeFile(imports,canonicalJson(hosts));
 	const lake=join(project,"lakefile.toml");await writeFile(lake,(await readFile(lake,"utf8")).replace('name = "workshop"','name = "'+component+'"')+'\n[[lean_lib]]\nname = "ZendMembers"\n');
 	cfg.modules.push("ZendMembers");cfg.exports.push(...["makeBox","fromClass","getLevel","setLevel","sameBox","recoverRead"].map(n=>"Workshop."+n));
-	await writeFile(join(project,"ZendMembers.lean"),await readFile(resolve("tests/fixtures/php-wasm-task-owner/ZendMembers.lean")));
+	let declarations=await readFile(resolve("tests/fixtures/php-wasm-task-owner/ZendMembers.lean"),"utf8");
+	if(functions)
+	{
+		const closures=await readFile(resolve("tests/fixtures/c-host-closures/Closures.lean"),"utf8");
+		declarations+="\n"+closures.slice(closures.indexOf("namespace Closures")).replaceAll("LeanBridge.Host.C","LeanBridge.Host.Php");
+		cfg.exports.push("Closures.remember","Closures.reader","Closures.identityReader");
+	}
+	if(immediate)
+	{
+		delete cfg.taskExports;delete cfg.taskIOErrors;delete cfg.asyncIterators;
+		cfg.nativeEffects=[];cfg.modules=["ZendMembers"];
+		cfg.exports=["Workshop.makeBox","Workshop.fromClass","Workshop.getLevel"
+			, "Workshop.setLevel","Workshop.sameBox","Workshop.recoverRead"
+			, "Workshop.either","Workshop.checked"
+			, ...functions?["Closures.remember","Closures.reader","Closures.identityReader"]:[]];
+		declarations+="\nnamespace Workshop\nopen LeanBridge.Host.Php\n"
+			+"def either (b : Box) : Except Box UInt32 := .error b\n"
+			+"def checked (b : Box) : EIO Box UInt32 := throw b\nend Workshop\n";
+	}
+	await writeFile(join(project,"ZendMembers.lean"),declarations);
 	cfg.targets={"php-wasm": {npm: {name: "@example/php-"+component,version: "1.0.0"},composer: {name: "example/php-"+component,version: "1.0.0"}}};
-	await writeFile(main,source);await writeFile(configPath,canonicalJson(cfg));
+	await writeFile(main,immediate?"import ZendMembers\n":source);await writeFile(configPath,canonicalJson(cfg));
 	return {project,configPath,main,source,cfg};
 };

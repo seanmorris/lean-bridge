@@ -14,12 +14,28 @@ import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
  * @param options.other - Independently installed peer component.
  * @param options.leases - Run the lease application and its pending-worker fault case.
  * @param options.zend - Run the class-bound PHP consumer.
+ * @param [options.immediate] - Require the standalone runtime without cross-origin isolation.
  */
-export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false,zend=false})=>{
+export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false,zend=false,immediate=false})=>{
 	const names=other?[name,other]:[name],callbacks=Boolean(other);
 	const imports=Object.fromEntries([...names,"@lean-bridge/runtime"].map(n=>[n,"/node_modules/"+n+"/index.mjs"]));
 	await writeFile(join(consumer,"index.html"),'<!doctype html><link rel="icon" href="data:,"><script type="importmap">'+JSON.stringify({imports})+'</script>',{flag: "wx"});
 	const program=await readFile(join(consumer,"installed.php"),"utf8");
+	if(immediate)
+	{
+		const evaluate=async({names,program})=>{
+			const {PhpWeb}=await import("/node_modules/php-wasm/PhpWeb.mjs");
+			if(globalThis.crossOriginIsolated)throw new Error("Standalone PHP must work without an isolated page");
+			const descriptors=await Promise.all(names.map(async n=>(await import(n)).default)),php=new PhpWeb({version: "8.4",autoTransaction: false,sharedLibs: descriptors});
+			let stdout="",stderr="";php.addEventListener("output",e=>{stdout+=e.detail.join("");});php.addEventListener("error",e=>{stderr+=e.detail.join("");});
+			await php.binary;await php.writeFile("/test.php",program);
+			const rc=await php.run("<?php "+[...descriptors.map(d=>d.autoload),"/test.php"].map(p=>"require '"+p+"';").join(" "));
+			return {rc,stdout,stderr};
+		};
+		const result=await runInstalledChromium({root,consumer,names: [name],isolated: false,assembledDirectory: consumer,timeoutMs: 90000,argument: {names,program},evaluate});
+		assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.match(result.stdout,/^Standalone Zend: synchronous identity, failures, reentry and cleanup passed$/u);
+		return "Chromium (no cross-origin isolation): "+result.stdout;
+	}
 	const faultProgram=await readFile("tests/fixtures/php-wasm-task-owner/"+(leases?"lease-fault.php":callbacks?"callback-fault.php":"fault.php"),"utf8");
 	await copyFile("tests/fixtures/php-wasm-task-owner/crash-worker.mjs",join(consumer,"crash-worker.mjs"));
 	const evaluate=async({names,program})=>{

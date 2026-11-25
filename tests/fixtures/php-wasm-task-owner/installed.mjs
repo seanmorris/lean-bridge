@@ -26,8 +26,10 @@ class ${cls} {
 }
 $api=LeanWorkshop\withHosts(['Box'=>${cls}::class]);
 $box=$api->make_box(BigInteger::of(5));
+$f=${process.env.CHECK_RETURNED_FUNCTIONS==="1"?"$api->remember($box)":"null"};
 $pending=$api->project($box,fn($v)=>$v===$box?$api->read($v):throw new LogicException('wrong interpreter'));
 vrzno_await((vrzno_shared('gate'))());
+if ($f!==null) {if ($f(new ${cls}(BigInteger::zero()))!==$box) throw new LogicException('wrong captured interpreter object');$f->close();}
 echo $pending->await();$pending->awaitCleanup();$api->close();`;
 		assert.equal(await php.run(program),0,err||out);assert.equal(err,"");assert.equal(out,String(5+offset));
 	};

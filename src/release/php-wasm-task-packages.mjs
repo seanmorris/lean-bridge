@@ -10,6 +10,17 @@ import {componentNpmIdentity} from "./component-package-receipt.mjs";
 import {createDeterministicZip} from "./deterministic-zip.mjs";
 
 export const phpWasmTaskProfile="php-wasm-threaded-task-v1";
+export const phpWasmSyncHostProfile="php-wasm-zend-host-io-v1";
+/**
+ * Select a standalone PHP owner without implicitly admitting OS effects or tasks.
+ *
+ * @param config - Source configuration captured for this release.
+ */
+export const assertPhpWasmSyncHostConfiguration=config=>{
+	assertExportConfigurationCapabilities(config,{target: "php-wasm",fields: ["package","modules","exports","nativeEffects","hostImports"],targetFields: ["npm","composer"]});
+	if(!config.hostImports || (config.nativeEffects!==undefined && (!Array.isArray(config.nativeEffects) || config.nativeEffects.length)))
+		throw new Error("Standalone PHP-Wasm host objects require in-memory synchronous operations");
+};
 /**
  * Validate this target's grants before compiling.
  *
@@ -41,22 +52,24 @@ export const phpTaskCoordinates=(api,configuration)=>{
  * @param options.files - Component npm archive file map.
  * @param options.coordinate - Matching npm name and version.
  * @param options.root - Private release staging directory.
- * @param options.runtimeIdentity - Exact pthread runtime fingerprint.
+ * @param options.runtimeIdentity - Fingerprint of the selected Lean runtime.
  * @param options.hosts - Captured PHP class import contract, when present.
+ * @param [options.immediate] - Package synchronous class bindings without a pthread runtime.
  */
-export const attachPhpTaskPackages=async({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity,hosts=null})=>{
-	const {composer}=phpTaskCoordinates(api,configuration),{files: generated,php,autoload,namespace}=await generatePhpWasmTaskFiles(api,componentIdentity,composer,worker,hosts);
+export const attachPhpTaskPackages=async({api,worker,componentIdentity,configuration,files,coordinate,root,runtimeIdentity,hosts=null,immediate=false})=>{
+	const profile=immediate?phpWasmSyncHostProfile:phpWasmTaskProfile;
+	const {composer}=phpTaskCoordinates(api,configuration),{files: generated,php,autoload,namespace}=await generatePhpWasmTaskFiles(api,componentIdentity,composer,worker,hosts,immediate);
 	const metadata=configuration.package??{}, pkg=JSON.parse(files.get("package.json"));
 	if(!hosts) files.set("component.mjs",files.get("index.mjs"));
 	for(const [k,v] of Object.entries(generated)) files.set(k,v);
 	files.set("index.d.ts","export declare const autoload: string;\ndeclare const host: { readonly autoload: string; readonly extensions: { getLibs(): never[]; getFiles(php: object): never[] }; getLibs(): never[]; getFiles(php: object): {path:string;url:URL}[] };\nexport default host;\n");
 	files.set("README.md","# "+coordinate.name+"\n\nImport the default PHP-Wasm descriptor, include it in sharedLibs, then require "+autoload+" from PHP. The Composer companion supplies the same API; use the descriptor's extensions member when mounting Composer's vendor directory.\n");
-	files.set("package.json",canonicalJson({...pkg,files: [...new Set([...pkg.files,...hosts?[]:["component.mjs"],"php","bridge"])],leanBridge: {...pkg.leanBridge,profile: phpWasmTaskProfile}}));
+	files.set("package.json",canonicalJson({...pkg,files: [...new Set([...pkg.files,...hosts?[]:["component.mjs"],"php","bridge"])],leanBridge: {...pkg.leanBridge,profile}}));
 	const temp=await mkdtemp(join(root,".composer-api-"));
 	try
 	{
 		const source=Object.fromEntries(Object.entries(php).filter(([k])=>k.startsWith("src/")));
-		source["composer.json"]=canonicalJson({...composer,type: "library",description: api.documentation.summary,...composerPackageMetadata(metadata),require: {php: ">=8.4 <8.5",...brickMathRequirement},autoload: {files: ["src/Api.php"]},extra: {"lean-bridge": {profile: phpWasmTaskProfile,componentIdentity,runtimeIdentity,npm: coordinate,namespace}}});
+		source["composer.json"]=canonicalJson({...composer,type: "library",description: api.documentation.summary,...composerPackageMetadata(metadata),require: {php: ">=8.4 <8.5",...brickMathRequirement},autoload: {files: ["src/Api.php"]},extra: {"lean-bridge": {profile,componentIdentity,runtimeIdentity,npm: coordinate,namespace}}});
 		for(const [p,bytes] of files) if(p.startsWith("notices/")) source[p]=bytes;
 		for(const [p,bytes] of Object.entries(source))
 		{await mkdir(dirname(join(temp,p)),{recursive: true});await writeFile(join(temp,p),bytes,{flag: "wx"});}

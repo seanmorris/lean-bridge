@@ -19,8 +19,8 @@ export const bindJavaScriptHostExports = o => {
 	const {wasm,domain,abi,model,operation,assertOpen,poison}=o;
 	const view=()=>new DataView(wasm.HEAP8.buffer);
 	const span=(p,n)=>Number.isInteger(p) && p>0 && p+n<=wasm.HEAP8.length;
-	const bind=(supplied,makeError=declared)=>{
-		assertOpen();const s=domain.bind(abi.componentIdentity,model,supplied);
+	const bind=(supplied,makeError=declared,memberBridge)=>{
+		assertOpen();const s=domain.bind(abi.componentIdentity,model,supplied,memberBridge);
 		const invoke=(m,index,values,owner=0,ticket=0n)=>{
 			assertOpen();
 			if(values.length!==m.args.length) throw new TypeError(m.name+" expects "+m.args.length+" arguments");
@@ -143,5 +143,14 @@ export const bindJavaScriptHostExports = o => {
 		for(const [i,m] of abi.methods.entries()) api[m.name]=(...args)=>invoke(m,i,args);
 		api.dispose=()=>{assertOpen();return s.close();};return Object.freeze(api);
 	};
+	if(model.zend)
+	{
+		const kinds=new Map(model.kinds.map(k=>["host:"+k.key,k.key]));
+		return Object.freeze({withZendOwner: (classes,translate,bridge)=>{
+			if(typeof bridge!=="function" || typeof translate!=="function") throw new TypeError("Missing Zend member or failure owner");
+			return bind(classes,(id,payload)=>translate(declared(id,payload)),bridge);
+		}
+		, zendRetains: (type,mirror)=>kinds.has(type) && !domain.abandoned() && domain.retains(kinds.get(type),mirror)});
+	}
 	return Object.freeze({withHosts: bind});
 };

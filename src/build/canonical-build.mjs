@@ -1015,6 +1015,8 @@ export const buildCanonicalProject = async ({
 			const record=await readExportConfiguration(root,{signal});
 			if(record.configuration.taskExports?.length || record.configuration.asyncIterators?.length)
 				return buildJavaScriptIOProject({projectRoot: root,engineRoot: engine,outputRoot,environment,runner,cache,signal,onProgress,lakeSnapshot,record,threaded: true,phpWasm: true});
+			if(record.configuration.hostImports)
+				return buildJavaScriptIOProject({projectRoot: root,engineRoot: engine,outputRoot,environment,runner,cache,signal,onProgress,lakeSnapshot,record,threaded: false,phpWasm: true});
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		}
 		if(normalized.includes("npm") || phpWasm)

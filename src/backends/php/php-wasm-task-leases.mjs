@@ -43,3 +43,51 @@ export const phpTaskLeases=(identities,leases,bindings)=>{
 	};
 	return {has: type=>kinds.has(type),borrow,packet};
 };
+
+const releaseFunction=row=>{
+	const fn=row.fn;if(!fn) return false;
+	row.fn=row.invoke=null;row.rows.delete(row);row.rows=null;
+	fn.dispose();return true;
+};
+// A stale PHP callable can survive in application storage indefinitely. Its
+// proxy must not retain the binding, other rows or the interpreter coordinator.
+const functionCapability=row=>Object.freeze({run: (...args)=>row.invoke?row.invoke(...args):'["fault"]',close: ()=>releaseFunction(row)});
+const functionPacket=(phase,kind,cap)=>Object.freeze({form: ()=>phase
+	, claim: expected=>{if(expected!==kind) return null;const value=cap;cap=null;return value;}
+	, discard: ()=>{const value=cap;cap=null;value?.close();}});
+
+/**
+ * One PHP binding owns the functions it receives, even if other bindings
+ * share the same compiled component or the same Zend interpreter.
+ *
+ * @param methods - Authenticated factories on this component.
+ * @param application - Build the checked inner operation around the actual function.
+ */
+export const phpTaskFunctions=(methods,application)=>{
+	const sites=new Map(methods.filter(m=>m.returnedFunction).map(m=>[m.result,m]));
+	const rows=new Set();let closed=false;
+	const packet=(phase,kind,fn)=>{
+		const method=sites.get(kind);
+		if(typeof fn!=="function" || typeof fn.dispose!=="function") throw new TypeError("Invalid returned Lean function");
+		const row={fn,invoke: null,rows};
+		try
+		{
+			if(closed || !method || phase!=="value") throw new TypeError("Inactive PHP function factory");
+			row.invoke=application(method,fn);rows.add(row);
+			return functionPacket(phase,kind,functionCapability(row));
+		} catch(error)
+		{
+			try
+			{releaseFunction(row);} catch { /* Preserve the publication error. */ }
+			throw error;
+		}
+	};
+	const revoke=()=>{
+		closed=true;let failed=false,first;
+		for(const row of rows) try
+		{releaseFunction(row);} catch(error)
+		{if(!failed) first=error;failed=true;}
+		if(failed) throw first;
+	};
+	return {has: kind=>sites.has(kind),packet,revoke};
+};

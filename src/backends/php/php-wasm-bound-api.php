@@ -28,7 +28,8 @@ LB_MODEL,true,flags: JSON_THROW_ON_ERROR);
         if (!is_object($owner)) throw new LeanBridgeError('Could not open the compiled PHP-Wasm binding');
         try {
             $types=[];foreach ($model['kinds'] as $kind) $types['host:'.$kind['key']]=$classes[$kind['name']];
-            $objects=new Domain($types,static fn($kind)=>$owner->mint($kind),$owner->id());
+            $objects=new Domain($types,static fn($kind)=>$owner->mint($kind),$owner->id(),
+                __LB_FUNCTIONS__ ? static fn($kind,$cap)=>$owner->retains($kind,$cap) : null);
             return new self($owner,$objects,$members);
         } catch (\Throwable $e) {try {Pump::read($owner->close());} finally {throw $e;}}
     }
@@ -48,10 +49,17 @@ LB_MODEL,true,flags: JSON_THROW_ON_ERROR);
                 try {if ($delivery instanceof Awaitable) $delivery->awaitCleanup();else $delivery->close();}
                 catch (\Throwable $e) {$first??=$e;}
             }
-        } finally {$this->domain->release();$this->domain=null;$this->members=null;}
+        } finally {
+            try {$this->domain->collect();} catch (\Throwable $e) {$first??=$e;}
+            try {$this->domain->release();} catch (\Throwable $e) {$first??=$e;}
+            $this->domain=null;$this->members=null;
+        }
         if ($first!==null) throw $first;
     }
-    public function __destruct() {try {$this->owner?->abandon();} finally {$this->domain?->release();}}
+    public function __destruct() {
+        try {$this->owner?->abandon();}
+        finally {try {$this->domain?->collect();} finally {$this->domain?->release();}}
+    }
     private function __clone() {}
     public function __serialize(): array {throw new \LogicException('Cannot serialize a PHP-Wasm binding');}
     public function __unserialize(array $data): void {throw new \LogicException('Cannot restore a PHP-Wasm binding');}

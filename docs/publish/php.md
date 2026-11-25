@@ -203,6 +203,16 @@ For retained callbacks, give a selected task a parameter of type `α → IO β`,
 
 To call an application PHP class, set `hostImports` to the PHP host contract for the project. Import its generated Lean module and select the immediate exports, tasks, and cursors that use it. The [example source](../../tests/fixtures/php-wasm-task-owner/ZendMembers.lean) calls a constructor, a static factory, and instance members from immediate `IO`. Workers can carry those PHP objects and exchange them through callbacks; they cannot call a PHP method directly from a pthread. Build with a task SDK containing the member dispatcher. The same three archives then expose [`withHosts()` in PHP](../php.md#let-lean-call-methods-on-your-php-objects); no JavaScript class adapter is required.
 
+### Publish immediate PHP-Wasm class bindings
+
+For a class-bound PHP-Wasm package that only exports immediate calls, select
+the Lean functions and the PHP class import contract in `hostImports`; omit
+`taskExports` and `asyncIterators`. Build with `--target php-wasm`. The
+`php-wasm-zend-host-io-v1` receipt lists the npm component, single-threaded
+runtime, and Composer API. This route needs the ordinary Wasm author toolchain,
+not the pthread SDK. Applications can use the package on pages without
+cross-origin isolation. See the [installed standalone example](../evidence/zend-host-closures-20261125.md#standalone-php-wasm).
+
 ### Share a resource between worker packages
 
 For a task that passes a Lean object between packages, list its qualified Lean type in `resources` in each package’s `lean-bridge.exports.json`. Compile both against the same pinned compiler and the same source for the declaring module and its imports. The packages can have different entry points: the compiled identity of the resource, not its PHP alias, determines whether they can exchange it. The generated Composer API supplies the class and lifecycle methods. See [the cross-package consumer example](../php.md#share-a-lean-object-between-php-wasm-packages).

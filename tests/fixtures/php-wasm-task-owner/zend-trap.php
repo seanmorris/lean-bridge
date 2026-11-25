@@ -14,6 +14,11 @@ function refused(string $type,Closure $call): Throwable {
 }
 $classes=['Box'=>FaultBox::class];$api=LeanWorkshop\withHosts($classes);$peer=LeanSidekick\withHosts($classes);
 $box=$api->make_box(BigInteger::of(3));$pending=null;$weak=null;$fatal=new Error('PHP engine trap');
+if (method_exists($api,'remember')) {
+    $capture=new FaultBox($box->level);$captured=WeakReference::create($capture);
+    $function=$peer->remember($capture);unset($capture);
+    if ($captured->get()===null) throw new LogicException('No captured Zend object before trap');
+}
 $origin=$api->project($box,function($v) use($peer,&$pending,&$weak,$fatal) {
     $held=new FaultBox($v->level);$weak=WeakReference::create($held);
     $pending=$peer->project($held,fn($x)=>$x->level);
@@ -21,6 +26,11 @@ $origin=$api->project($box,function($v) use($peer,&$pending,&$weak,$fatal) {
 });
 if (refused(Error::class,fn()=>$origin->await())!==$fatal) throw new LogicException('Replaced original PHP trap');
 refused(LeanSidekick\LeanBridgeError::class,fn()=>$peer->read($box));
+if (isset($function)) {
+    refused(LeanSidekick\LeanBridgeError::class,fn()=>$function($box));
+    $function->close();$function->close();
+    if ($captured->get()!==null) throw new LogicException('Zend capture leaked after retirement');
+}
 refused(LeanSidekick\LeanBridgeError::class,fn()=>$peer->close());
 gc_collect_cycles();if ($weak->get()!==null) throw new LogicException('Peer retained its input after faulted close');
 refused(LeanSidekick\LeanBridgeError::class,fn()=>$pending->await());

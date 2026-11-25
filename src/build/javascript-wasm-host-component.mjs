@@ -21,7 +21,7 @@ export const javaScriptHostBuildIdentity = o => {
 	const keys=[...sources,"component_scalar.h",...javascriptWasmTargetHeaders.map(n=>"include/lean/"+n)];
 	if(!validJavaScriptWasmCompilerIdentity(compiler) || Object.keys(inputs).length!==keys.length
 		|| keys.some(k=>typeof inputs[k]!=="string" || !/^[a-f0-9]{64}$/u.test(inputs[k]))) throw new Error("Incomplete JavaScript host compiler inputs");
-	const skeleton=generateJavaScriptHostExports({api,hosts: ir,identity: "0".repeat(64),modules: evidence.selection.exportModules});
+	const skeleton=generateJavaScriptHostExports({api,hosts: ir,identity: "0".repeat(64),modules: evidence.selection.exportModules,phpWasm: evidence.selection.phpWasmSyncObjects===true});
 	return sha256(canonicalJson({compiler,evidence,inputs,skeleton,flags,link,brokerSymbols}));
 };
 /**
@@ -32,7 +32,8 @@ export const javaScriptHostBuildIdentity = o => {
  */
 export const compileJavaScriptHostComponent = async o => {
 	const {app,projectContract: c,leanPrefix,emsdkRoot: sdk,leanRuntimeRoot: target,signal}=o;
-	if(!c?.ir || c.generatedHostModule!=="LeanBridge.Host.Javascript" || c.hostImportsSourceSha256!==sha256(c.hostImportsSource??"")
+	const zend=o.phpWasm===true;
+	if(!c?.ir || c.generatedHostModule!==(zend?"LeanBridge.Host.Php":"LeanBridge.Host.Javascript") || c.hostImportsSourceSha256!==sha256(c.hostImportsSource??"")
 		|| !Array.isArray(c.nativeEffects) || c.nativeEffects.length || [c.leanResources,c.taskExports,c.taskIOErrors,c.asyncIterators].some(x=>x?.length))
 		throw new TypeError("Expected synchronous JavaScript host imports and no worker or native OS effects");
 	const env={...process.env,...o.environment,EMSDK: sdk,EM_CONFIG: join(sdk,".emscripten"),EMCC_CORES: "1",LANG: "C.UTF-8",LC_ALL: "C.UTF-8"};
@@ -54,9 +55,9 @@ export const compileJavaScriptHostComponent = async o => {
 	}
 	for(const f of sources) await asset(f,await readFile(new URL("../backends/javascript/"+f,import.meta.url)));
 	await asset("component_scalar.h",await readFile(new URL("../../poc/lean-link-spike/component_scalar.h",import.meta.url)));
-	const built=await compileHostSources({...o,ir: c.ir,run,environment: env,target: "npm"});
+	const built=await compileHostSources({...o,ir: c.ir,run,environment: env,target: zend?"php-wasm":"npm"});
 	const {api,evidence}=built, modules=evidence.selection.exportModules;
-	const emit=identity=>generateJavaScriptHostExports({api,hosts: c.ir,identity,modules});
+	const emit=identity=>generateJavaScriptHostExports({api,hosts: c.ir,identity,modules,phpWasm: zend});
 	const identity=javaScriptHostBuildIdentity({api,ir: c.ir,compiler,evidence,inputs});
 	const gen=emit(identity), iface=evidence.interfaces.findIndex(f=>f.module===c.generatedHostModule);
 	if(iface<0 || sha256(await readFile(join(app,built.objects[iface])))!==evidence.interfaces[iface].cSha256) throw new Error("Checked JavaScript host C module missing");

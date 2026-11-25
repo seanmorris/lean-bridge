@@ -25,6 +25,7 @@ import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { javaScriptHostMembers } from "../backends/javascript/host-members.mjs";
 import { installWasmHostDomain } from "../runtime/wasm-host-loader.mjs";
 import { bindJavaScriptHostExports } from "../runtime/wasm-host-exports.mjs";
+import {phpWasmHostMembers} from "../backends/php/host-members.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -209,13 +210,14 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			let model, broker;
 			if(host)
 			{
+				const zend=descriptor.privateAbi.owner==="php-wasm-zend";
 				if(descriptor.id !== descriptor.bindingIr.component.id || descriptor.initializer !== null
 					|| !/^[a-f0-9]{64}$/u.test(descriptor.broker.integrity)
-					|| canonicalizeJsonValue(descriptor.privateAbi) !== canonicalizeJsonValue(javaScriptHostIOAbi(descriptor.bindingIr, descriptor.hostImports, descriptor.buildHash)))
+					|| canonicalizeJsonValue(descriptor.privateAbi) !== canonicalizeJsonValue(javaScriptHostIOAbi(descriptor.bindingIr, descriptor.hostImports, descriptor.buildHash,zend)))
 					throw new Error("JavaScript host component descriptor mismatch");
 				if(module._bridge_owned_runtime_abi?.() !== 1 || !module._bridge_lean_runtime_status)
 					throw new Error("Shared runtime lacks the JavaScript host initialization broker");
-				model = javaScriptHostMembers(descriptor.hostImports);
+				model = zend?phpWasmHostMembers(descriptor.hostImports):javaScriptHostMembers(descriptor.hostImports);
 			}
 			else if(io)
 			{

@@ -45,6 +45,7 @@ structure Request where
   phpNativeTaskObjects : Option Bool := none
   phpNativeFunctions : Option Bool := none
   phpWasmTaskObjects : Option Bool := none
+  phpWasmSyncObjects : Option Bool := none
   javascriptTaskCallbacks : Option Bool := none
   javascriptThreadedHostMembers : Option Bool := none
   witTaskCallbacks : Option Bool := none
@@ -178,7 +179,8 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
 def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
   let jsOwner := r.hostModule == some "LeanBridge.Host.Javascript" && (r.ownerHostMembers ||
     (r.javascriptThreadedHostMembers.isNone && r.taskExports.isEmpty && r.asyncIterators.isEmpty))
-  if effect == ``IO && (jsOwner || r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.WitWasi", "LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Perl"].contains m)) &&
+  let zendOwner := (r.phpWasmTaskObjects == some true && r.phpTaskObjects) || r.phpWasmSyncObjects == some true
+  if effect == ``IO && (jsOwner || zendOwner || r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.WitWasi", "LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.Perl"].contains m)) &&
       r.nativeEffectPolicy == some "native-host-io-v1" then
     if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
       let b := b.consumeMData
@@ -432,6 +434,11 @@ def extract (r : Request) : MetaM Json := do
     throwError "invalid CLR task object selection"
   if r.phpWasmTaskObjects.isSome && !r.phpTaskObjects then
     throwError "invalid PHP-Wasm task object selection"
+  if r.phpWasmSyncObjects.isSome && (r.phpWasmSyncObjects != some true || r.hostModule != some "LeanBridge.Host.Php" ||
+      r.phpNativeFunctions.isSome || r.phpNativeTaskObjects.isSome || r.phpWasmTaskObjects.isSome ||
+      r.ownerTaskCallbacks || !r.taskExports.isEmpty || !r.asyncIterators.isEmpty ||
+      r.nativeEffectPolicy != some "native-host-io-v1") then
+    throwError "invalid synchronous Zend owner"
   if let some m := r.hostModule then
     unless #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Jvm", "LeanBridge.Host.Dotnet",
              "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.WitWasi", "LeanBridge.Host.Perl", "LeanBridge.Host.Javascript", "LeanBridge.Host.Php"].contains m &&

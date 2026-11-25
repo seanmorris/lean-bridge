@@ -16,7 +16,7 @@ import { prepareHostJavaScriptCompiler } from "./javascript-wasm-owned-project.m
 import { compileJavaScriptTaskComponent } from "./javascript-wasm-task-component.mjs";
 import { assertJavaScriptTaskConfiguration,writeJavaScriptTaskPackages } from "../release/javascript-wasm-task-packages.mjs";
 import { readTaskInputs,taskProfile } from "../release/javascript-wasm-task-inputs.mjs";
-import { assertPhpWasmTaskConfiguration,phpWasmTaskProfile } from "../release/php-wasm-task-packages.mjs";
+import { assertPhpWasmSyncHostConfiguration,assertPhpWasmTaskConfiguration,phpWasmSyncHostProfile,phpWasmTaskProfile } from "../release/php-wasm-task-packages.mjs";
 
 const absent = async path => {
 	if(await lstat(path).catch(error => { if(error.code === "ENOENT") return null; throw error; }))
@@ -36,7 +36,7 @@ export const buildJavaScriptIOProject = async options => {
 	let staging, work, source;
 	try
 	{
-		(phpWasm?assertPhpWasmTaskConfiguration:threaded ? assertJavaScriptTaskConfiguration : assertJavaScriptIOConfiguration)(record.configuration);
+		(phpWasm?(threaded?assertPhpWasmTaskConfiguration:assertPhpWasmSyncHostConfiguration):threaded ? assertJavaScriptTaskConfiguration : assertJavaScriptIOConfiguration)(record.configuration);
 		if(environment.LEAN_BRIDGE_BUILD_BACKEND !== undefined && environment.LEAN_BRIDGE_BUILD_BACKEND !== "auto")
 			throw new CanonicalBuildError("unsupported-build-backend", "In-memory npm exports require the pinned local author SDK; an explicit isolated backend cannot fall back to it");
 		if(!cache || !["use", "refresh", "off"].includes(cache.policy)) throw new CanonicalBuildError("invalid-cache-policy", "Expected use, refresh or off");
@@ -70,10 +70,13 @@ export const buildJavaScriptIOProject = async options => {
 		await mkdir(dirname(output), {recursive: true});
 		staging = await mkdtemp(join(dirname(output), ".lean-js-io-release-"));
 		work = await mkdtemp(join(dirname(output), ".lean-js-io-objects-"));
-		onProgress?.({phase: "build", state: "info", message: threaded ? "Compiling Lean tasks for the shared pthread runtime" : "Compiling synchronous Lean IO for the JavaScript shared runtime"});
+		const message=threaded ? "Compiling Lean tasks for the shared pthread runtime"
+			: phpWasm ? "Compiling synchronous Lean IO for PHP-Wasm class bindings"
+				: "Compiling synchronous Lean IO for the JavaScript shared runtime";
+		onProgress?.({phase: "build", state: "info", message});
 		const {compilation, receipt} = await compiler.compile({staging, configurationSha256: record.sha256});
 		const manifest = {schemaVersion: 1
-			, profile: phpWasm?phpWasmTaskProfile:threaded ? taskProfile : hosts ? javaScriptHostProfile : javaScriptIOProfile
+			, profile: phpWasm?(threaded?phpWasmTaskProfile:phpWasmSyncHostProfile):threaded ? taskProfile : hosts ? javaScriptHostProfile : javaScriptIOProfile
 			, ...(threaded ? {taskInputsSha256: taskInputs.identity} : {})
 			, backend: compiler.backend
 			, component
@@ -86,7 +89,7 @@ export const buildJavaScriptIOProject = async options => {
 			, reviewedSourceSha256: compilation.evidence.reviewedSourceSha256
 			, packages: receipt.packages
 			, packageSet: handoff+"/package-set-receipt.json"};
-		await writeFile(join(staging, phpWasm?"php-wasm-task-release.json":threaded ? "javascript-wasm-task-release.json" : hosts ? "javascript-wasm-host-release.json" : "javascript-wasm-io-release.json"), canonicalJson(manifest), {flag: "wx"});
+		await writeFile(join(staging, phpWasm?(threaded?"php-wasm-task-release.json":"php-wasm-host-release.json"):threaded ? "javascript-wasm-task-release.json" : hosts ? "javascript-wasm-host-release.json" : "javascript-wasm-io-release.json"), canonicalJson(manifest), {flag: "wx"});
 		await writeCombinedPackageSet({root: staging, roots: [handoff], component, source: receipt.source, signal});
 		await source.verify();
 		if(threaded) await readTaskInputs(sdkRoot, {signal, expectedIdentity: taskInputs.identity});

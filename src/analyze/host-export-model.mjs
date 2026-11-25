@@ -50,6 +50,7 @@ export const nativeHostSelection = (ir, target) => {
  * @param evidence - Actual compiler selection and elaborated metadata.
  */
 export const taskWorkerInterface=(api,evidence)=>{
+	if(evidence.selection.phpWasmSyncObjects!==undefined) throw new TypeError("Synchronous Zend objects cannot use the JavaScript worker interface");
 	if(evidence.selection.staticTaskOwner!==undefined) throw new TypeError("Native static host object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.rubyTaskObjects) throw new TypeError("Ruby task object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.perlTaskObjects) throw new TypeError("Perl task object carriers cannot use the JavaScript worker interface");
@@ -108,6 +109,11 @@ export const reconcileHostExports = options => {
 	if(ir && syncOwner && !staticObjects && (selection[ownerScheduler]!==undefined || selection.taskExports?.length || selection.asyncIterators?.length))
 		fail(ownerLabel+" host imports require synchronous owner calls until a worker binding is selected");
 	const phpWasm=selection.phpWasmTaskObjects===true,phpObjects=selection.phpNativeTaskObjects===true || phpWasm;
+	const zendSync=selection.phpWasmSyncObjects===true;
+	if(selection.phpWasmSyncObjects!==undefined && (!zendSync || !ir || hostTarget!=="php" || selection.phpNativeFunctions!==undefined
+		|| selection.phpNativeTaskObjects!==undefined || selection.phpWasmTaskObjects!==undefined
+		|| Object.keys(selection).some(k=>k.endsWith("TaskCallbacks")) || selection.taskExports?.length || selection.asyncIterators?.length
+		|| selection.nativeEffectPolicy!==nativeEffectPolicy || selection.nativeEffects?.length)) fail("Unauthenticated synchronous Zend owner");
 	const phpFunctions=selection.phpNativeFunctions===true;
 	if(selection.phpNativeFunctions!==undefined && (!phpFunctions || !ir || hostTarget!=="php" || selection.phpWasmTaskObjects!==undefined || selection.nativeEffectPolicy!==nativeEffectPolicy))
 		fail("Unauthenticated native PHP returned-function owner");
@@ -298,7 +304,8 @@ export const reconcileHostExports = options => {
 	const closures=new Map();
 	const closureRef=e=>{
 		const jsOwner=hostTarget==="javascript" && (owner || (selection.javascriptThreadedHostMembers===undefined && !selection.taskExports?.length && !selection.asyncIterators?.length));
-		if(!ir || !(jsOwner || phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules["wit-wasi"],compiledHostModules.dotnet,compiledHostModules.jvm,compiledHostModules.perl].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
+		const closureOwner=phpWasm || zendSync?"php-wasm-zend-binding":hostTarget+"-host-binding";
+		if(!ir || !(jsOwner || phpWasm || zendSync || phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules["wit-wasi"],compiledHostModules.dotnet,compiledHostModules.jvm,compiledHostModules.perl].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
 			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous host factory");
 		const {argument,reply}=e.result;
 		for(const t of [argument,reply]) if(!(t?.kind==="primitive" || t?.kind==="named" && types.some(r=>r.id===t.id)))
@@ -306,12 +313,12 @@ export const reconcileHostExports = options => {
 		const key=sha256(canonicalJson({
 			component,declaration: e.declaration,argument,reply,imports
 			, capabilities: capabilities(e),errors: errorIds(e)
-			, ...hostTarget!=="python"?{owner: hostTarget+"-host-binding"}:{}
+			, ...hostTarget!=="python"?{owner: closureOwner}:{}
 		}));
 		const name="LeanClosure"+key.slice(0,20),id="bridge:"+name;
 		const parameter={...site(argument,true),name: "value",mutability: types.find(r=>r.id===argument.id)?.mutability??"immutable",optional: false,default: null};
 		const closureEffects=[...new Set(["fails","nondeterministic",...used(e).flatMap(n=>members.get(n).effects)])].sort();
-		const extensions={"lean-bridge.dev/closure-owner": hostTarget+"-host-binding","lean-bridge.dev/required-capabilities": capabilities(e)};
+		const extensions={"lean-bridge.dev/closure-owner": closureOwner,"lean-bridge.dev/required-capabilities": capabilities(e)};
 		closures.set(e.declaration,{
 			id, name, kind: "callback", representation: "identity"
 			, mutability: "immutable"

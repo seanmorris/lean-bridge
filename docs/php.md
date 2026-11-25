@@ -1489,6 +1489,23 @@ try {
 
 The constructor returns your PHP instance; Lean does not copy it into a record. Two packages in the same interpreter that import the same nominal type can use that instance. Bind the same application class in both. Closing one binding cancels and drains its outstanding deliveries without closing the other. A PHP method called synchronously by Lean can call another immediate export, but it cannot wait for a worker. Use an exported task callback for work that needs to suspend. See the [installed examples and checks](evidence/php-wasm-zend-packages-20261124.md).
 
+A Lean factory can also return a PHP invokable. For example, a package
+exporting `remember : Box → IO (Box → IO Box)` lets you keep the original
+application object without passing it on every call:
+
+```php
+$remember = $api->remember($box);
+try {
+    var_dump($remember($otherBox) === $box); // same PHP instance
+} finally {
+    $remember->close();
+}
+```
+
+Call the function while its binding is open. Closing it during one of its own
+calls lets that call finish and rejects later calls. Closing the binding also
+releases its functions. See the [installed Zend checks](evidence/zend-host-closures-20261125.md).
+
 #### Share a Lean object between PHP-Wasm packages
 
 When two packages use the same Lean heap and the same resource type, you can pass the PHP object directly between them. In this example, both packages import `Shared.Ticket`. A second handle sees the same mutation, even after the original handle closes.

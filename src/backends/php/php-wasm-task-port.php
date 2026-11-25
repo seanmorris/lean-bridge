@@ -3,6 +3,28 @@ declare(strict_types=1);
 namespace __LB_PUBLIC__\Internal;
 use LeanBridge\Internal\PhpWasmTasksV1\MemberStack;
 
+/** @internal The per-site public class supplies the PHP return type. */
+abstract class BoundFunction {
+    final protected function __construct(private ?object $cap,private readonly array $site,
+            private readonly string $declaration,private readonly ?array $error) {}
+    final protected function apply(mixed $value): mixed {
+        $ctx=($this->site[3])();
+        if ($ctx===null || $this->cap===null) throw new \LogicException('Returned PHP-Wasm function is closed');
+        [$binding,$domain,$members]=$ctx;$cap=$this->cap;
+        return Port::call(static fn(...$args)=>$cap->run(...$args),[$value],[$this->site[1]],null,null,
+            $this->declaration,$this->site[2],$this->error,null,[],$domain,$members,$binding);
+    }
+    final public function close(): void {
+        if ($this->cap===null) return;
+        $cap=$this->cap;$this->cap=null;
+        try {$cap->close();} finally {$ctx=($this->site[3])();if ($ctx!==null) $ctx[1]->collect();}
+    }
+    final public function __destruct() {try {$this->close();} catch (\Throwable) {}}
+    private function __clone() {}
+    final public function __serialize(): array {throw new \LogicException('Cannot serialize a returned Lean function');}
+    final public function __unserialize(array $data): void {throw new \LogicException('Cannot restore a returned Lean function');}
+}
+
 /** @internal Per-declaration functions supply the shape and the private owner key. */
 final class Port {
     private const LEASES=/*__LB_LEASES__*/[];
@@ -41,17 +63,25 @@ final class Port {
     }
     public static function call(string|\Closure $key, array $args, array $kinds, ?string $delivery, ?string $class,
             string $declaration, array|string $result, ?array $start, ?array $terminal, array $callbacks=[],
-            ?\LeanBridge\Internal\PhpWasmObjectsV1\Domain $domain=null,?ZendMembers $members=null,?object $binding=null): mixed {
+            ?\LeanBridge\Internal\PhpWasmObjectsV1\Domain $domain=null,?ZendMembers $members=null,?object $binding=null,?array $function=null): mixed {
         $budget=new Budget(); $encoded=[];
         $objects=$domain?->open();$scope=$callbacks ? new CallbackScope($callbacks,$args,$objects) : null;
         foreach ($args as $i=>$v) $encoded[]=$kinds[$i]==='callback' ? '' :
             ($objects?->has($kinds[$i])?$objects->pin($kinds[$i],$v):self::input($kinds[$i],$v,$budget));
         $submit=is_string($key)?vrzno_shared($key):$key;
         if (!is_callable($submit)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing PHP-Wasm host for '.$declaration);
-        $decode=static function(mixed $packet) use ($declaration,$result,$start,$terminal,$objects): mixed {
+        $decode=static function(mixed $packet) use ($declaration,$result,$start,$terminal,$objects,$function): mixed {
             if (is_object($packet)) {
                 try {
                     $phase=$packet->form();
+                    if ($phase==='value' && $function!==null) {
+                        $cap=$packet->claim($result);$class=$function[0];
+                        if (!is_object($cap)) throw new \UnexpectedValueException('Missing returned Lean function');
+                        try {
+                            $make=\Closure::bind(static fn()=>new $class($cap,$function,$declaration,$start),null,BoundFunction::class);
+                            return $make();
+                        } catch (\Throwable $error) {try {$cap->close();} finally {throw $error;}}
+                    }
                     if ($phase==='value') return self::unpack($packet,$result,$objects);
                     $error=match ($phase) {'start'=>$start,'worker'=>$terminal,default=>null};
                     if ($error===null) throw new \__LB_PUBLIC__\LeanBridgeError('Undeclared resource error in '.$declaration);
@@ -87,8 +117,13 @@ final class Port {
                 finally {$objects->close($failed);}
             }
         }
+        if ($delivery===null) {
+            $failed=true;
+            try {$v=$decode($submit(...$encoded));$failed=false;return $v;}
+            finally {$objects?->close($failed);}
+        }
         $reply=$submit(...$encoded);
-        if (is_string($reply) || $delivery===null || (is_object($reply) && $reply->form()!=='owner')) return $decode($reply);
+        if (is_string($reply) || (is_object($reply) && $reply->form()!=='owner')) return $decode($reply);
         if (!is_object($reply)) throw new \__LB_PUBLIC__\LeanBridgeError('Missing task owner for '.$declaration);
         $open=$delivery==='task'
             ? \Closure::bind(static fn()=>new $class($reply,$decode,$scope,$objects,$binding),null,\__LB_PUBLIC__\Awaitable::class)

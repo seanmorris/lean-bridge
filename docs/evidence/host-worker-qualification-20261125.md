@@ -19,20 +19,20 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 
 ### Returned functions that capture application objects
 
-For a signature such as `Box → IO (Box → IO Box)`, ten of the twelve
-package targets above have installed ordinary, reviewed and worker-package
-evidence: C, C++, Cargo, CPAN, Maven (Java and Kotlin), npm, NuGet, native PHP, PyPI and RubyGems.
-[The source elaborator](../../src/analyze/HostExports.lean) admits the PHP
-factory only with the native PHP owner; the shared PHP namespace alone
-does not qualify the Zend Wasm runtime.
+For a signature such as `Box → IO (Box → IO Box)`, C, C++, Cargo, CPAN,
+Maven (Java and Kotlin), npm, NuGet, native PHP, PyPI and RubyGems have
+installed ordinary, reviewed and worker-package evidence.
+Native PHP and PHP-Wasm use the same Lean namespace but different object
+owners. Installing a Composer package for native PHP does not test Zend in Wasm.
 
 For **WIT/WASI**, [installed synchronous and worker packages](wit-host-closures-20261125.md)
 now exercise captured objects, owned failures and disposal. Two independent
 worker packages passed 80 pending-callback cancellation cases; the separate
 synchronous peer and active self-disposal checks are still outstanding.
-**PHP-Wasm** still needs installed evidence for its Zend return path. Receiving
-a callback from PHP is the opposite direction; returning a function over
-copied values does not test a captured application object.
+For **PHP-Wasm**, the [threaded and standalone packages](zend-host-closures-20261125.md)
+returned functions that captured a Zend object, including across nested calls
+and independent packages. The standalone installs also ran on a Chromium
+page without a pthread pool. Receiving a callback from PHP is the opposite direction.
 
 ## Which installed profiles exercised OS access?
 
@@ -54,6 +54,26 @@ and `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` to the [verified pthread author SDK](../
 directory and its manifest digest, then run `npm run test:wasm-worker-effect-refusals`.
 
 ## Checks before closing the nodes
+
+The [baseline contract](../type-surface.v1.json) distinguishes **17 consumer
+profiles** and two author routes. Its unit is a shape at a position on one
+profile and route, not a package ecosystem. The acceptance questions below
+are in addition to the installed examples above:
+
+| Node | Required positions and behavior | What the worker examples cannot establish |
+| --- | --- | --- |
+| 1221 | Resource, host object, host callback and returned closure, each as a parameter, result, field, callback parameter and callback result (680 cells). | Returning a closure from a factory does not exercise passing it back, storing it in a field, or exchanging it as the argument or result of a callback. Each requires evidence for its own identity and lifetime. |
+| 1222 | IO, EIO and named failure contracts at the signature (102 cells). | Receiving a typed worker error does not establish how an immediate call returns an `Except`, preserves the original host exception, or retires a broken runtime. |
+| 1223 | Task, cancellation, synchronous iterator and asynchronous iterator at the signature (136 cells). | A host `foreach` or polling wrapper around an asynchronous Lean pull does not qualify a synchronous Lean iterator. |
+
+In particular, the [source configuration](../../src/analyze/export-configuration.mjs)
+selects `asyncIterators`; [Lean checks their next operation](../../src/analyze/HostExports.lean)
+for `BaseIO (Task …)`. The separate [iterator ABI test](../../tests/internal/abi/iterator-adapter.test.mjs)
+starts with constructed IR. Neither demonstrates publishing an ordinary-source
+synchronous iterator, or an independently reviewed one, whose pulls execute
+immediately. Qualify those with installed packages that observe one pull at a
+time, distinguish the last value from exhaustion, propagate a step failure,
+and close the cursor exactly once on early exit and on failure.
 
 - **1221:** Match copy, borrow, transfer and anchored leases to the owning type. Verify returned Lean closures separately from host callbacks: the caller, the captured owner and the invocation/disposal rules are different. For examples, see [WIT callable lifetimes](wit-callables-20260919.md) and [closure thread and lifetime checks](closure-thread-lifetime-20260925.md). [Two independently installed synchronous WIT packages](wit-host-objects-20261125.md#two-independently-installed-lean-packages-share-one-guest-object) preserve the defining guest's box across a success, mutation and declared failure. A second defining instance is rejected even if it came from the same component bytes.
 - **1222:** Check returned `Except`, immediate factory failure, worker/step failure, original callback exception, malformed boundary input and unexpected trap separately. The [two installed WIT workers](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader) preserve an owned exception across nested calls, a retained callback and future settlement; the defining guest records exactly one destruction. The separate process-trap control does not establish destructor counts on a terminal trap. The [native OS-effect receipt](native-host-effects-20261122.json) names C, C++, Cargo and PyPI; do not use it as evidence for a browser, Zend or Wasmtime profile.

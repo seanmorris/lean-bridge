@@ -29,6 +29,7 @@ const fail = message => { throw Object.assign(new Error(message), { code: "host-
  */
 export const threadedHostSource=(contract,evidence,target="javascript")=>{
 	if(!["php","javascript"].includes(target)) fail("Unknown threaded host provider");
+	if(evidence?.selection.phpWasmSyncObjects!==undefined) fail("Standalone Zend objects cannot enter a worker package");
 	const php=target==="php",label=php?"PHP-Wasm":"JavaScript";
 	const {ir,hostImportsSource: source,hostImportsSourceSha256: hash}=contract;
 	if(!ir)
@@ -176,6 +177,7 @@ export const compileHostSources = async options => {
 		, ...(dotnetTaskObjects ? {dotnetTaskObjects: true} : {})
 		, ...(staticTaskOwner ? {staticTaskOwner} : {})
 		, ...(phpWasmTaskObjects ? {phpWasmTaskObjects: true} : {})
+		, ...(ir && options.target==="php-wasm" && !phpWasmTaskObjects ? {phpWasmSyncObjects: true} : {})
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(options.target === "wit-wasi" && !ir && projectContract.asyncIterators?.length ? { witCursorIO: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})

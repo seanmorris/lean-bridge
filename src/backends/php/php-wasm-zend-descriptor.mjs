@@ -2,7 +2,7 @@
 import {createPhpCallbackHub} from "./php-wasm-task-mailbox.mjs";
 import {phpWasmObjectDomain} from "./php-wasm-task-objects.mjs";
 import {phpWasmMemberOwner} from "./php-wasm-member-owner.mjs";
-import {phpTaskLeases} from "./php-wasm-task-leases.mjs";
+import {phpTaskFunctions,phpTaskLeases} from "./php-wasm-task-leases.mjs";
 import {phpZendTaskOperation,translateZendWorkerFailure} from "./php-wasm-task-owner.mjs";
 
 // A PHP binding cancels only the tasks and cursors that it admitted. Two
@@ -64,22 +64,32 @@ const open=async(def,compiled,core,state,objects,hub)=>{
 	{
 		const classes=Object.fromEntries(def.leases.map(r=>[r.name,compiled.resourceClass(r.type)]));
 		const resources=phpTaskLeases(state.leaseCaps??=new WeakMap(),def.leases,classes);
-		const use=t=>objects.has(t)?objects:resources;
+		const members=phpWasmMemberOwner(def.model,objects);
+		const functions=phpTaskFunctions(def.methods,(m,fn)=>{
+			const f=m.returnedFunction,inner={...m,args: [f.argument],result: f.reply};
+			return phpZendTaskOperation(inner,(...args)=>core.call(members.send,fn,args),hub,objects,members,leases);
+		});
+		const use=t=>objects.has(t)?objects:functions.has(t)?functions:resources;
 		const leases={has: t=>use(t).has(t)
 			, borrow: (t,v)=>use(t).borrow(t,v)
 			, packet: (p,t,v)=>use(t).packet(p,t,v)
 			, tagged: (p,t,v)=>objects.tagged(p,t,v,resources)};
-		const members=phpWasmMemberOwner(def.model,objects);
 		const ops=def.methods.map(m=>(...encoded)=>{
 			let transport;
 			const call=(...args)=>owned.track(m,core.call(members.send,binding[m.name],args),()=>transport.cancel());
 			transport=phpZendTaskOperation(m,call,hub,objects,members,leases)(...encoded);return transport;
 		});
 		let closing;
-		const close=()=>closing??=(async()=>{try
-{await owned.drain();} finally
-		{await core.release();}})().then(()=>'["end"]',()=>'["fault"]');
+		const close=()=>closing??=(async()=>{
+			try
+{try
+{functions.revoke();} finally
+{await owned.drain();}}
+			finally
+{await core.release();}
+		})().then(()=>'["end"]',()=>'["fault"]');
 		return Object.freeze({id: ()=>objects.id,mint: objects.mint
+			, retains: (type,cap)=>compiled.zendRetains(type,objects.borrow(type,cap))
 			, run: (slot,...args)=>!closing && Number.isInteger(slot) && ops[slot]?ops[slot](...args):'["fault"]'
 			, close: ()=>hub.monitor(close()),abandon: ()=>{void close();}});
 	} catch(e)
@@ -113,6 +123,67 @@ export const createPhpZendDescriptor=(def,compiled,files,ownerRuntime)=>{
 			core=coordinator(compiled,classes);heap.components.set(compiled,core);
 		}
 		php.shared[key]=()=>open(def,compiled,core,state,objects,hub).catch(()=>"Could not open compiled Zend binding");
+		state.namespaces.set(ns,def.key);return files;
+	};
+	return Object.freeze({getLibs: ()=>[],getFiles});
+};
+
+/**
+ * Attach a single-threaded component. Opening, invoking and closing the
+ * binding all run on the active interpreter stack; there is no task owner.
+ *
+ * @param def - Methods and nominal classes derived from synchronous public IR.
+ * @param compiled - Authenticated standalone component, not a pthread executor.
+ * @param files - Prepared PHP library assets.
+ * @param ownerRuntime - Installed single-threaded runtime identity.
+ */
+export const createPhpZendSyncDescriptor=(def,compiled,files,ownerRuntime)=>{
+	if(typeof ownerRuntime!=="function" || typeof compiled.withZendOwner!=="function" || !def.model.zend
+		|| def.methods.some(m=>m.delivery || m.callbacks)) throw new TypeError("Expected a synchronous Zend component");
+	const reg=Symbol.for("lean-bridge.php-wasm.sync-host.v1"),pool=Symbol.for("lean-bridge.php-wasm.sync-classes.v1");
+	const prototypes=ownerRuntime[pool]??=new Map();
+	const getFiles=php=>{
+		const state=php[reg]??={ownerRuntime,namespaces: new Map(),objects: phpWasmObjectDomain([],prototypes)};
+		const {objects}=state,key=def.key+"_bind",ns=def.namespace.toLowerCase();
+		if(state.ownerRuntime!==ownerRuntime) throw new Error("Conflicting synchronous Zend runtimes");
+		if(state.namespaces.get(ns)===def.key) return [];
+		if(state.namespaces.has(ns) || key in php.shared) throw new Error("Conflicting synchronous Zend binding");
+		for(const k of def.model.kinds) objects.register("host:"+k.key);
+		const classes=Object.fromEntries(def.model.kinds.map(k=>[k.name,objects.classFor("host:"+k.key)]));
+		php.shared[key]=()=>{
+			const members=phpWasmMemberOwner(def.model,objects);
+			const binding=compiled.withZendOwner(classes,translateZendWorkerFailure,members.send);
+			try
+			{
+				let depth=0,closed=false;
+				const op=(m,fn)=>phpZendTaskOperation(m,(...args)=>{
+					++depth;
+					try
+					{return fn(...args);} finally
+					{--depth;}
+				},null,objects,members,leases);
+				const functions=phpTaskFunctions(def.methods,(m,fn)=>op({...m,args: [m.returnedFunction.argument],result: m.returnedFunction.reply},fn));
+				const leases={has: t=>functions.has(t) || objects.has(t)
+					, borrow: objects.borrow
+					, packet: (p,t,v)=>functions.has(t)?functions.packet(p,t,v):objects.packet(p,t,v)
+					, tagged: objects.tagged};
+				const methods=def.methods.map(m=>op(m,binding[m.name]));
+				const close=()=>{
+					if(depth) throw new Error("Cannot close an active Zend binding");
+					if(closed)return;closed=true;
+					try
+					{functions.revoke();} finally
+					{binding.dispose();}
+				};
+				return Object.freeze({id: ()=>objects.id
+					, mint: objects.mint
+					, busy: ()=>depth!==0
+					, retains: (type,cap)=>compiled.zendRetains(type,objects.borrow(type,cap))
+					, run: (i,...args)=>!closed && Number.isInteger(i) && methods[i]?methods[i](...args):'["fault"]'
+					, close});
+			} catch(e)
+			{binding.dispose();throw e;}
+		};
 		state.namespaces.set(ns,def.key);return files;
 	};
 	return Object.freeze({getLibs: ()=>[],getFiles});

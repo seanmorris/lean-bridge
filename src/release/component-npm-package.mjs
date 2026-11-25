@@ -119,6 +119,8 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 	const relocate = source => source.replaceAll("../../abi/", "../abi/").replaceAll("../../binding-ir/", "../binding-ir/")
 		.replaceAll("../runtime/wasm-host-", "./wasm-host-")
 		.replaceAll("../backends/javascript/host-members.mjs", "./host-members.mjs")
+		.replaceAll("../backends/php/host-members.mjs", "./zend-host-members.mjs")
+		.replaceAll("../native/static-host-members.mjs", "./static-host-members.mjs")
 		.replaceAll("../release/component-scalar-codec.mjs", "./component-scalar-codec.mjs")
 		.replaceAll("../abi/host-member-names.mjs", "./host-member-names.mjs")
 		.replaceAll("../abi/component-host-io.mjs", "./component-host-io.mjs")
@@ -158,9 +160,11 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
+	runtimeFiles.set("internal/zend-host-members.mjs", relocate(await readFile(new URL("../backends/php/host-members.mjs", import.meta.url), "utf8")));
 	for(const path of ["abi/component-host-io", "abi/host-member-names"
 		, "abi/wasm-host-factories"
 		, "backends/javascript/host-members"
+		, "backends/native/static-host-members"
 		, "runtime/wasm-host-domain"
 		, "runtime/wasm-host-exports"
 		, "runtime/wasm-host-functions"

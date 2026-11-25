@@ -18,13 +18,14 @@ const leaf=t=>typeof t==="number"?64+t:componentScalarTypes.indexOf(t);
  * @param options - Captured modules, public and host IR, immutable build identity.
  */
 export const generateJavaScriptHostExports = options => {
-	const {api,hosts,identity,modules}=options, abi=javaScriptHostIOAbi(api,hosts,identity);
+	const {api,hosts,identity,modules,phpWasm=false}=options, abi=javaScriptHostIOAbi(api,hosts,identity,phpWasm);
 	if(!modules?.length || modules.some(m=>!qual.test(m)) || abi.methods.some(m=>!qual.test(m.declaration)))
 		throw new TypeError("Invalid Lean export names");
-	const imports=generateJavaScriptHostExterns(hosts,identity), {prefix}=imports, module="BridgeJsHost"+identity;
+	const imports=generateJavaScriptHostExterns(hosts,identity,{zend: phpWasm}), {prefix}=imports, module="BridgeJsHost"+identity;
+	const hostModule=phpWasm?"LeanBridge.Host.Php":"LeanBridge.Host.Javascript";
 	const closure=t=>t!==null && typeof t==="object" && !Array.isArray(t);
 	const type=t=>closure(t)?"("+type(t.argument)+" → _root_.IO "+type(t.reply)+")":Array.isArray(t)?"(_root_.Except "+type(t[1])+" "+type(t[0])+")"
-		:"_root_."+(typeof t==="number"?"LeanBridge.Host.Javascript."+hosts.types[t].name:scalar[t]);
+		:"_root_."+(typeof t==="number"?hostModule+"."+hosts.types[t].name:scalar[t]);
 	const nodes=[], byShape=new Map();
 	const index=t=>{
 		const key=JSON.stringify(t); if(byShape.has(key)) return byShape.get(key);
@@ -59,7 +60,7 @@ export const generateJavaScriptHostExports = options => {
 			,"case "+(2*total+i)+": return pub_drop(f,"+i+");");
 		}
 	}
-	const entryLean=[...new Set([...modules,"LeanBridge.Host.Javascript"].map(m=>"import "+m))
+	const entryLean=[...new Set([...modules,hostModule].map(m=>"import "+m))
 		, "namespace "+module, ...leans
 		, "@[export "+prefix+"error_text] def errorText (e : IO.Error) : String := toString e"
 		, "end "+module
