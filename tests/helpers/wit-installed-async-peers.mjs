@@ -13,6 +13,7 @@ import {prepareStaticWorkerProject} from "./static-worker-project.mjs";
 import {extendWitApplication} from "./wit-application-project.mjs";
 import {buildInstalledWitGuests} from "./wit-application-command-client.mjs";
 import {prepareGaugeWorker,buildAsyncPeerApplication,checkAsyncPeerWorld,buildAsyncPeerFailure} from "./wit-async-peer-project.mjs";
+import {buildRegistrationCancellation,checkRegistrationCounts} from "./wit-peer-registration-cancel.mjs";
 
 const exec=promisify(execFile),json=async p=>JSON.parse(await readFile(p,"utf8")),receipt="package-set-receipt.json";
 const verify=dir=>readVerifiedPackageSetReceipt({receiptPath: join(dir,receipt)});
@@ -29,6 +30,7 @@ const prepareClient=async(root,a,b)=>{
 	const [owner]=await buildInstalledWitGuests({out: client,wit: join(a.installed,"wit"),wasm,run});
 	await buildAsyncPeerApplication(client,tool);await checkAsyncPeerWorld(client,join(b.installed,"wit"),tool);
 	await buildAsyncPeerFailure(client,tool);
+	await buildRegistrationCancellation(client,tool);
 	const provider=join(client,"peer-provider.wasm");
 	const env={PATH: "/no-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1"};
 	const invoke=(dirs,inputs)=>exec(join(dirs[0],"bin/lean-bridge-wit-run"),[...dirs,"--",...inputs],{env,cwd: client,timeout: 30000});
@@ -37,6 +39,11 @@ const prepareClient=async(root,a,b)=>{
 		{
 			assert.deepEqual(await invoke(order,[owner,provider,"peers.wasm"]),{stdout: "73\n",stderr: ""});
 			assert.deepEqual(await invoke(order,["count-errors.wasm",provider,"peer-failure.wasm"]),{stdout: "65537\n",stderr: ""});
+			for(const i of [0,1])
+			{
+				const result=await invoke(order,[owner,"registration-provider.wasm","cancel-registration-"+i+".wasm"]);
+				assert.equal(result.stderr,"");checkRegistrationCounts(result.stdout);
+			}
 		}
 	};
 	return {invoke,bothOrders,owner,provider};
@@ -102,4 +109,5 @@ test("installed async WIT peers share an original box and cancel only the select
 	await assert.rejects(invoke([a.installed,a.installed],[owner,provider,"peers.wasm"]),e=>e.code===1 && /duplicate WIT package interface/u.test(e.stderr));
 	t.diagnostic("8 release/order combinations: one parked Gauge pull, one close, original Workshop callback result 73");
 	t.diagnostic("8 nested error paths: Gauge member error returned through Workshop's callback future; one error issued, one destroyed");
+	t.diagnostic("16 overlapping registration cases: canceled read untouched, sibling invoked once, defining guest owns no remaining registrations");
 });

@@ -292,6 +292,8 @@ A [second application](../../tests/fixtures/static-host-workers/peer-failure.wat
 
 After dropping that error and future, the application starts a second callback future **in the same store**, without rebinding either package. Workshop makes the update, Gauge observes it, and the application receives a successful box containing 73. All eight release/order combinations completed the recovery and retained the one-create/one-destroy error counts. This is the recoverable-error path; a Wasm trap still terminates the command.
 
+The [overlapping registration application](../../tests/fixtures/static-host-workers/peer-registration-cancel.wat.in) starts two Workshop callback futures before cancelling one pending read. It checks that the cancelled buffer is unchanged and the other future returns the original box with value 73. The [defining guest](../../tests/helpers/wit-peer-registration-cancel.mjs) counts each registration separately: the cancelled callback received no calls, its sibling received one, and both returned every acquired registration to its destructor. The sibling re-entered compiled Gauge code. All **16** combinations passed: four ordinary/reviewed package pairings, two launcher orders and two reader-start orders. Both callbacks belong to Workshop; this is not a test with one callback registration owned by each Lean package.
+
 | Worker package | Archive bytes | SHA-256 |
 | --- | ---: | --- |
 | Workshop, ordinary | 61,125,430 | `57643a8339f935b24bb40eb1e7f62567797b9c7e0acdf637469640e5e0107465` |
