@@ -24,6 +24,7 @@ export const checkHostFunctionReleases=async(t,o)=>{
 	await writeFile(join(src,"Closures.lean"),lean.replaceAll("LeanBridge.Host.C","LeanBridge.Host."+o.module));
 	await appendFile(join(src,"lakefile.toml"),'\n[[lean_lib]]\nname = "Closures"\n');
 	const cfg=await json(cfgFile),sync=["Closures.remember","Closures.reader","Closures.identityReader"];
+	if(o.addFunctions) sync.push(...await o.addFunctions(src));
 	cfg.modules.push("Closures");cfg.exports.push(...sync);
 	const build=out=>run(process.execPath,[cli,"build","--target",o.target,"--project",src,"--output",out,"--json","--progress","none"],root,process.env,900000);
 	await writeFile(cfgFile,canonicalJson({...cfg,exports: [...cfg.exports,"Closures.fileReader"]}));

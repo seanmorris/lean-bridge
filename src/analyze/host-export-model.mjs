@@ -297,8 +297,8 @@ export const reconcileHostExports = options => {
 	};
 	const closures=new Map();
 	const closureRef=e=>{
-		if(!ir || !(phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules.dotnet].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
-			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous C, C++, .NET, native PHP, Python, Ruby or Rust host factory");
+		if(!ir || !(phpFunctions || [compiledHostModules.python,compiledHostModules.ruby,compiledHostModules.c,compiledHostModules.cpp,compiledHostModules.rust,compiledHostModules.dotnet,compiledHostModules.jvm].includes(selection.hostModule)) || selection.nativeEffectPolicy!==nativeEffectPolicy
+			|| e.effect!=="IO" || e.delivery) fail("Returned IO closures require a checked synchronous C, C++, .NET, JVM, native PHP, Python, Ruby or Rust host factory");
 		const {argument,reply}=e.result;
 		for(const t of [argument,reply]) if(!(t?.kind==="primitive" || t?.kind==="named" && types.some(r=>r.id===t.id)))
 			fail("Unauthenticated returned closure carrier");

@@ -83,6 +83,22 @@ are supported. The compiler records a lease, not a copy, on a result or
 error site containing an imported class. Callers receive their application
 object through the generated API; they do not close the error payload.
 
+A synchronous IO factory can also return a function that closes over an
+imported object. For example, select this declaration in `exports`:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    return captured
+```
+
+The generated Java and Kotlin APIs return an `AutoCloseable` callable. Its
+argument and reply use the declared JVM types, and its lifetime is bounded
+by the binding that created it. Select the factory itself, not its function
+body, in `exports`. An OS effect inside the returned function still needs
+the corresponding grant.
+
 ## Export synchronous IO
 
 Select the Lean declarations by name and declare their OS access. For

@@ -45,6 +45,10 @@ export const buildJvmHostPackage = async o => {
 			, entry: skeleton.entryLean
 			, header: skeleton.header
 			, members: skeleton.model.implementation
+			, ...entries.some(e=>e.result.kind==="io-closure") ? { returnedFunctions: {
+				api: sha256(await readFile(new URL("../backends/jvm/host-api.mjs",import.meta.url)))
+				, leases: sha256(await readFile(new URL("../backends/jvm/host-functions.java",import.meta.url)))
+			} } : {}
 			, ...kernel ? { workers: kernel.fingerprint, workerAssets } : {}
 			, wire: sha256(wire), name: o.name, version: o.version }));
 		const gen = await generateJvmHostExports({ ...options, identity: componentIdentity });

@@ -88,6 +88,27 @@ re-enable calls through this package or another package using that runtime.
 Closing the binding ends calls through that binding; it does not close
 your application object.
 
+A factory can return a Lean function that remembers a particular meter.
+For a package exporting `remember : Box → IO (Box → IO Box)`:
+
+```java
+try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
+    Meter captured = api.make(12);
+    try (var remember = api.remember(captured)) {
+        if (remember.invoke(api.make(19)) != captured) throw new AssertionError();
+    }
+}
+```
+
+Keep the binding open while using the function. Closing just the function
+releases its capture; closing the binding revokes all functions it created.
+An invocation already executing can finish if its own function is closed
+from an application method. Later calls fail with `IllegalStateException`.
+The callable also implements the standard Java functional interface for its
+signature. For example, a worker that takes a `Function<Meter,Meter>` accepts
+`remember` directly. If a member throws, the worker receives the original
+exception, including a checked exception.
+
 If Lean returns `Except Meter Meter`, both branches of the generated
 `Result<Meter,Meter>` carry the original object. If Lean *throws* a meter
 through `EIO Meter Unit`, catch the error class for that declaration. For

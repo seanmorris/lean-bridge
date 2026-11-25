@@ -1,4 +1,5 @@
 /** @file The scoped Java/Kotlin API for application-supplied classes. */
+import { readFileSync } from "node:fs";
 import { copiedJvmAssets } from "./copied-assets.mjs";
 import { jvmHostCarrier } from "./host-native-members.mjs";
 import { jvmHostWorkerApi } from "./host-worker-api.mjs";
@@ -19,7 +20,8 @@ export const jvmHostReadme = host => {
 		return m.mode === "new" ? "new " + owner + "(" + params + ")" : (m.mode === "static" ? "static " : "") + name(m.out) + " " + owner + "." + m.name + "(" + params + ")";
 	});
 	return "\nBind your public classes with Api.bindHosts(" + host.ir.types.map(t => t.name+".class").join(", ") + "). Use the returned binding in try-with-resources (Kotlin: use). Its required members are:\n\n"
-		+ members.map(m => "- `"+m+"`").join("\n") + "\n\nA returned host reference is your original object. For a declared error containing one, catch the generated error for the declaration and pass its host class token(s) to payload. The payload remains valid after the binding closes.\n";
+		+ members.map(m => "- `"+m+"`").join("\n") + "\n\nA returned host reference is your original object. For a declared error containing one, catch the generated error for the declaration and pass its host class token(s) to payload. The payload remains valid after the binding closes.\n"
+		+ (host.entries.some(e=>e.result.kind==="io-closure")?"\nCall a returned Lean function with invoke. It also implements the matching Java Function, Supplier, Consumer or Runnable, and can be passed directly to a compatible callback. Close the function to release its capture; close its binding to revoke all its functions.\n":"");
 };
 /**
  * Return the same package name used for JNI symbol generation and public sources.
@@ -105,7 +107,10 @@ export const generateJvmHostApi = o => {
 			+ ids.map(i => "java.util.Objects.requireNonNull(" + cls(i) + ");").join(" ") + " return " + expr + "; }\n";
 		return { jt: r.kind === "named" ? "Object" : "Result<?,?>", accessor };
 	};
-	const names = new Set(["close", "bindHosts", "encode", "tag", "payload", "nativeLive"]), methods = [];
+	const names = new Set(["close", "bindHosts", "encode", "tag", "payload", "nativeLive"]), methods = [], returned=[];
+	const hasFunctions=entries.some(e=>e.result.kind==="io-closure");
+	const params = gens.map((t, i) => "Class<" + t + "> " + cls(i)), values = gens.map((_, i) => cls(i)).join(",");
+	const tokens=params.map(p=>"private final "+p+";").join(" "), setTokens=gens.map((_,i)=>"this."+cls(i)+"="+cls(i)+";").join(" ");
 	const classes = new Set(["NativePort", "HostWire", "HostContract", "HostMembers", "Unit", "Api", "Result", "LeanIOException", "LeanEIOError", "NativeAssets"]);
 	const ktSync = [], ktType = r => {
 		if(r.kind==="apply") return ns+".Result<"+r.arguments.map(ktType).join(",")+">";
@@ -133,13 +138,53 @@ ${accessor}}\n`);
 			const ex = name[0].toUpperCase() + name.slice(1) + "Error"; errorClass(ex,e.error,d);
 			err = "if (status==1) throw new " + ex + "(" + get(e.error, "answer[1]") + ");";
 		}
+		const factory=e.result.kind==="io-closure",fn="Returned"+name[0].toUpperCase()+name.slice(1);
 		if(o.workerWire)
 		{
 			const esc=s=>"\u0060"+s+"\u0060", params=e.parameters.map(p=>esc(p.name)+": "+ktType(p.type));
-			ktSync.push(`    fun ${esc(name)}(${params.join(",")}): ${unit?"kotlin.Unit":ktType(e.result)} = binding.${esc(name)}(${e.parameters.map(p=>esc(p.name)).join(",")})`);
+			ktSync.push(`    fun ${esc(name)}(${params.join(",")}): ${factory?ns+".Api."+fn+g:unit?"kotlin.Unit":ktType(e.result)} = binding.${esc(name)}(${e.parameters.map(p=>esc(p.name)).join(",")})`);
+		}
+		if(factory)
+		{
+			if(e.effect!=="IO" || e.delivery || classes.has(fn)) fail("invalid returned-function site "+name); classes.add(fn);
+			const {argument,reply}=e.result,voidReply=reply.kind==="primitive" && reply.name==="unit";
+			const voidArg=argument.kind==="primitive" && argument.name==="unit",a=type(argument,true),b=type(reply,true);
+			const functional=voidArg?(voidReply?"Runnable":"java.util.function.Supplier<"+b+">")
+				:voidReply?"java.util.function.Consumer<"+a+">":"java.util.function.Function<"+a+","+b+">";
+			const bridge=voidArg?(voidReply?"void run()":b+" get()"):voidReply?"void accept("+a+" value)":b+" apply("+a+" value)";
+			returned.push(`    public static final class ${fn}${g} implements AutoCloseable, ${functional} {
+        private final HostFunctions.Lease lease;
+        ${tokens}
+        private ${fn}(HostFunctions.Group group,${params.join(",")}) {
+            ${setTokens}
+            lease=new HostFunctions.Lease(this,group,${entries.length+index},${entries.length*2+index});
+        }
+        public ${voidReply?"void":type(reply)} invoke(${type(argument)} value) throws Exception {
+            try {
+                Object[] answer=lease.invoke(${makeInput(argument,"value")}); checkFunction(answer,${d});
+                ${voidReply?'HostWire.decode("unit",void.class,answer[1]);':"return "+get(reply,"answer[1]")+";"}
+            } finally { java.lang.ref.Reference.reachabilityFence(this); }
+        }
+        @Override public void close() throws Exception { lease.close(); }
+        @Override public ${bridge} {
+            try { ${voidReply?"":"return "}invoke(${voidArg?"Unit.INSTANCE":"value"}); }
+            catch (Exception error) { throw HostFunctions.unchecked(error); }
+        }
+    }`);
+			methods.push(`        public ${fn}${g} ${name}(${args.join(",")}) throws Exception {
+            var fn=new ${fn}<>(functions,${values});
+            try {
+                Object[] answer=functions.invoke(${index},new Object[]{${[...input,"fn.lease.cell"].join(",")}});
+                checkFunction(answer,${d}); fn.lease.ticket(); return fn;
+            } catch (Throwable error) {
+                try { fn.close(); } catch (Throwable cleanup) { if(cleanup!=error) error.addSuppressed(cleanup); }
+                throw error;
+            } finally { java.lang.ref.Reference.reachabilityFence(this); }
+        }`);
+			continue;
 		}
 		methods.push(`        public ${unit ? "void" : type(e.result)} ${name}(${args.join(",")}) throws Exception {
-            Object[] answer=${o.workerWire?"scope.invoke(":"NativePort.invoke(port,"}${index},new Object[]{${input.join(",")}});
+            Object[] answer=${hasFunctions?"functions.invokeOn(this,":o.workerWire?"scope.invoke(":"NativePort.invoke(port,"}${index},new Object[]{${input.join(",")}});
             long status=tag(answer);
             if(status==2) throw new LeanIOException(${d},(String)HostWire.decode("string",String.class,answer[1]));
             ${err}
@@ -147,14 +192,20 @@ ${accessor}}\n`);
             ${unit ? 'HostWire.decode("unit",void.class,answer[1]);' : "return " + get(e.result, "answer[1]") + ";"}
         }`);
 	}
-	const params = gens.map((t, i) => "Class<" + t + "> " + cls(i)), values = gens.map((_, i) => cls(i)).join(",");
 	const workers = o.workerWire && jvmHostWorkerApi({ api, ir, ns, wire: o.workerWire, evidence, names, errorClass });
+	if(hasFunctions) java("HostFunctions",readFileSync(new URL("./host-functions.java",import.meta.url),"utf8"));
 	java("Unit", "public enum Unit { INSTANCE }\n");
 	java("Result", "public sealed interface Result<V,E> { record Ok<V,E>(V value) implements Result<V,E> {} record Err<V,E>(E error) implements Result<V,E> {} }\n");
 	java("LeanIOException", "public final class LeanIOException extends java.io.UncheckedIOException { private final String decl; LeanIOException(String d,String msg) { super(d+\": \"+msg,new java.io.IOException(msg)); decl=d; } public String declaration(){return decl;} }\n");
 	java("LeanEIOError", "public abstract class LeanEIOError extends RuntimeException { private final String decl; LeanEIOError(String d){super(d+\" failed\"); decl=d;} public String declaration(){return decl;} public abstract Object payload(); }\n");
 	java("Api", `public final class Api {
-    private Api(){}${workers?"\n"+workers.direct.join("\n"):""}
+    private Api(){}${workers?"\n"+workers.direct.join("\n"):""}${hasFunctions?`
+    private static void checkFunction(Object[] answer,String declaration) {
+        long status=tag(answer);
+        if(status==2) throw new LeanIOException(declaration,(String)HostWire.decode("string",String.class,answer[1]));
+        if(status!=0) throw new IllegalStateException("Invalid native function result");
+    }
+${returned.join("\n")}`:""}
     public static ${g} Bound${g} bindHosts(${params.join(",")}) throws Exception {
         Bound${g} bound=new Bound<>(${values});
         NativePort.invoke(bound.port,-2,null); return bound;
@@ -165,13 +216,13 @@ ${accessor}}\n`);
     private static long tag(Object r) { return (Long)((Object[])r)[0]; }
     private static Object payload(Object r) { return ((Object[])r)[1]; }
     public static final class Bound${g} implements AutoCloseable {
-        private final HostMembers port;${workers?"\n        private final HostTaskScope scope;":""}
+        private final HostMembers port;${workers?"\n        private final HostTaskScope scope;":""}${hasFunctions?"\n        private final HostFunctions.Group functions;":""}
         ${params.map(p => "private final " + p + ";").join(" ")}
         private Bound(${params.join(",")}) {
             ${gens.map((_, i) => "this." + cls(i) + "=" + cls(i) + ";").join(" ")}
-            port=HostContract.bind(Unit.class,${values});${workers?" scope=new HostTaskScope(port);":""}
+            port=HostContract.bind(Unit.class,${values});${workers?" scope=new HostTaskScope(port);":""}${hasFunctions?" functions=new HostFunctions.Group(this,port,"+(workers?"scope":"null")+");":""}
         }
-        @Override public void close() throws Exception { ${workers?"scope.close();":"NativePort.invoke(port,-1,null);"} }
+        @Override public void close() throws Exception { ${hasFunctions?"try { functions.close(); } finally { java.lang.ref.Reference.reachabilityFence(this); }":workers?"scope.close();":"NativePort.invoke(port,-1,null);"} }
 ${[...methods,...workers?.bound??[]].join("\n")}
     }
 }\n`);

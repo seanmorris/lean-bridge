@@ -176,7 +176,7 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
 /-- A function delivered by a factory is not a retained host callback.
     Only admit a host with a binding-owned invocation and revocation path. -/
 def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
-  if effect == ``IO && (r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Dotnet"].contains m)) &&
+  if effect == ``IO && (r.phpNativeFunctions == some true || r.hostModule.any (fun m => #["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.C", "LeanBridge.Host.Cpp", "LeanBridge.Host.Rust", "LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm"].contains m)) &&
       r.nativeEffectPolicy == some "native-host-io-v1" then
     if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
       let b := b.consumeMData

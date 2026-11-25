@@ -61,6 +61,21 @@ fun example() {
 `use` closes the binding even if the call throws. These calls are synchronous;
 no coroutine, JNI handle or separate runtime installation is needed.
 
+If a package exports a Lean function factory such as
+`remember : Box → IO (Box → IO Box)`, use a second scope for the function:
+
+```kotlin
+Api.bindHosts(Meter::class).use { api ->
+    val captured = api.make(12)
+    api.remember(captured).use { remember ->
+        check(remember.invoke(api.make(19)) === captured)
+    }
+}
+```
+
+Closing the function releases its capture. Closing its binding revokes every
+function it returned, without closing your meter.
+
 If the package exports workers with application objects, its Kotlin
 binding exposes suspending functions and cold flows. In a suspending
 function, the Workshop worker package can be used like this:

@@ -10,7 +10,7 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 | C | The [C11 worker client](static-host-workers-20261125.md#installed-c11-workers-on-application-objects) tests both build systems and peer link orders. [Returned C callables](c-host-closures-20261125.md) check original object identity, stale aliases, independent bindings, self-drop and destructor counts after failure. |
 | C++ | [C++20 consumer](static-host-workers-20261125.md#installed-c20-futures-and-streams-on-application-objects): generated futures and streams, both build systems and link orders. [Move-only returned functions](cpp-host-closures-20261125.md) preserve shared pointers and exceptions, finish an in-flight call on self-close, and release captures on the owner thread. |
 | NuGet | [.NET 8 packages](dotnet-worker-packages-20261124.md): two assemblies share the host-class registry. [Returned C# callables](dotnet-host-closures-20261125.md) retain the original application object, release captures on the owner thread, and remain usable in a sibling task callback when another binding closes. |
-| Maven | [Java and Kotlin](jvm-worker-packages-20261124.md): separate client programs run against relocated Maven packages, including both component load orders. |
+| Maven | [Java and Kotlin](jvm-worker-packages-20261124.md): separate client programs run against relocated Maven packages, including both component load orders. [Returned functions](jvm-host-closures-20261125.md) keep the original JVM object, propagate checked exceptions through retained callbacks, and release captures after scope loss or runtime retirement. |
 | RubyGems | [MRI platform gems](ruby-worker-gems-20261124.md) exercise an independently packaged peer. [Three installed closure configurations](ruby-host-closures-20261125.md) cover captured Ruby objects, original exceptions, self-disposal, fiber ownership and stale Proc conversion. |
 | CPAN | [Perl distributions](perl-worker-packages-20261124.md): threaded and unthreaded Perl 5.36.3 and 5.38.2, with prebuilt and locally compiled generated XS. |
 | Native PHP | [Composer client](php-host-task-packages-20261124.md): application objects and callbacks through Amp futures and `foreach`. [Returned Lean functions](php-host-closures-20261125.md) capture the original PHP object and release it after self-close, owner disposal, retirement or a destructor throwing during the factory. |
@@ -19,15 +19,15 @@ Use these installed-consumer records when reviewing VO 1221 (identity and callab
 
 ### Returned functions that capture application objects
 
-For a signature such as `Box → IO (Box → IO Box)`, seven of the twelve
+For a signature such as `Box → IO (Box → IO Box)`, eight of the twelve
 package targets above have installed ordinary, reviewed and worker-package
-evidence: C, C++, Cargo, NuGet, native PHP, PyPI and RubyGems.
+evidence: C, C++, Cargo, Maven (Java and Kotlin), NuGet, native PHP, PyPI and RubyGems.
 [The source elaborator](../../src/analyze/HostExports.lean) admits the PHP
 factory only with the native PHP owner; the shared PHP namespace alone
 does not qualify the Zend Wasm runtime.
 
-The remaining targets for this case are **Maven (Java and Kotlin),
-CPAN, PHP-Wasm, npm and WIT/WASI**. Receiving a callback from
+The remaining targets for this case are **CPAN, PHP-Wasm, npm and WIT/WASI**.
+Receiving a callback from
 one of those hosts is the opposite direction; returning a function over
 copied values does not test a captured application object. Neither counts
 as installed evidence for this case.
