@@ -121,6 +121,27 @@ print $meter->read, "\n";  # 42
 
 `$meter` is the original blessed Perl object, not a handle. The binding closes on return or exception. A new call into these Lean functions needs a new block. If a Perl method dies and Lean propagates that IO error unchanged, the caller receives the original exception. If Lean maps it to a declared `EIO` error, the caller receives the generated exception and its payload.
 
+### Call a returned Lean function on a Perl object
+
+If your package exports a function factory such as
+`remember : Box → IO (Box → IO Box)`, its result is a Perl code reference.
+Use it inside the same `with_hosts` block:
+
+```perl
+LeanBridge::Workshop::with_hosts({Box => 'App::Meter'}, sub {
+    my $captured = LeanBridge::Workshop::make(18);
+    my $remember = LeanBridge::Workshop::remember($captured);
+    my $result = $remember->(LeanBridge::Workshop::make(24));
+    $remember->close;
+    return $result;  # the original $captured object
+});
+```
+
+You can pass the code reference directly to a worker that expects a
+compatible callback. Leaving the block revokes every function created in
+it, even on exception. A later block, fork or interpreter thread cannot
+invoke that function.
+
 ### Pass a Perl object through a worker
 
 In the [worker version of Workshop](../publish/cpan.md#carry-a-perl-object-through-a-worker),

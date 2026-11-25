@@ -73,6 +73,21 @@ The synchronous profile supports the 19 copied scalar types and nested returned 
 
 Use a host import when the Perl application owns the object and Lean needs to call its methods. The [Workshop project](../../tests/fixtures/perl-host-project/Workshop.lean) imports `LeanBridge.Host.Perl`. Its [host contract](../../tests/fixtures/perl-host-project/lean-bridge.hosts.json) declares a `Box` constructor, a mutable `level` property, a read method and an identity method. Lean Bridge generates the imported module; do not add a source module with that name.
 
+A selected IO factory can return a unary Lean function over the imported
+class. For example:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    return captured
+```
+
+Select the factory in `exports`. A [Perl consumer](../consume/perl.md#call-a-returned-lean-function-on-a-perl-object)
+gets a code reference scoped to its `with_hosts` block. Returning a function
+doesn't make either the factory or its calls asynchronous. Declare OS access
+used inside the returned function just as you would for an ordinary IO call.
+
 The [export configuration](../../tests/fixtures/perl-host-project/lean-bridge.exports.json) names the contract in `hostImports` and selects the application functions under `exports`. To build that example from the repository root:
 
 ```sh

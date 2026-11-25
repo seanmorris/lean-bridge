@@ -14,11 +14,27 @@ import {processBuildRunner} from "./process-runner.mjs";
  * Load the XS sources and add lexical worker cleanup only for mixed packages.
  *
  * @param worker - Include the owner-only worker ingress and shutdown hook.
+ * @param functions - Include lexical revocation for returned functions over host objects.
  */
-export const perlHostHeaders = async (worker=null) => {
+export const perlHostHeaders = async (worker=null,functions=false) => {
 	const headers={};
 	for(const f of ["host-frame.h","host-scope.h","host-wire.h","sync-wire.h","host-domain.h"])
 		headers[f]=await readFile(new URL("../backends/perl/"+f,import.meta.url));
+	if(functions)
+	{
+		headers["host-functions.h"]=await readFile(new URL("../backends/perl/host-functions.h",import.meta.url));
+		// Sweep the releasing scope even when another package still uses the
+		// same nominal kind. Unbinding alone only frees its last kind owner.
+		const retire="\n  ENTER; SAVETMPS; lbp_host_enter(aTHX_ ph_session); phf_retire(); FREETMPS; LEAVE;";
+		const hooks=[["static SV *ph_slots;",'\n#include "host-functions.h"'],["ph_slots=SvREFCNT_inc(slots);"," phf_accepting=1;"],["SV *slots=ph_slots; ph_slots=NULL;",retire]];
+		let scope=headers["host-scope.h"].toString();
+		for(const [hook,extra] of hooks)
+		{
+			if(scope.split(hook).length!==2)throw new Error("Perl function owner hook differs from its checked scope");
+			scope=scope.replace(hook,hook+extra);
+		}
+		headers["host-scope.h"]=Buffer.from(scope);
+	}
 	if(worker)
 	{
 		headers["task-wire.h"]=worker.assets.header;
@@ -72,7 +88,7 @@ export const compilePerlHostComponent = async o => {
 		const {entries,objects,evidence,api,env}=checked;
 		const options={ir,entries,modules: projectContract.modules,name,version,api,evidence,runtimeIdentity};
 		const kernel=mixed?await perlHostTaskKernel({...options,checked}):null;
-		const headers=await perlHostHeaders(kernel), componentIdentity=perlHostComponentIdentity(options,headers,kernel);
+		const headers=await perlHostHeaders(kernel,entries.some(e=>e.result.kind==="io-closure")), componentIdentity=perlHostComponentIdentity(options,headers,kernel);
 		const generated=generatePerlHostExports({...options,entries: entries.filter(e=>!e.delivery),identity: componentIdentity,worker: kernel});
 		const library="liblbc_perl_"+sha256(name)+".so";
 		const save=(p,s)=>writeFile(join(app,p),s,{flag: "wx"});

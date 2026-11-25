@@ -56,6 +56,6 @@ export const checkHostFunctionReleases=async(t,o)=>{
 		assert.equal(kind.source.extensions["lean-bridge.dev/closure-owner"],o.backend+"-host-binding");assert.equal(decl.result.ownership,"lease");
 		assert.equal(kind.callable.invocation,"many");assert.equal(kind.callable.selfDisposal,"defer");assert.ok(kind.callable.failure.errors.includes(o.error));
 		if(route==="reviewed")assert.deepEqual(api,first);else if(!first)first=api;
-		await o.consume({root,out,route,worker,receipt,src});t.diagnostic(route+" "+result.receiptSha256);
+		await o.consume({root,out,route,worker,receipt,src,cli});t.diagnostic(route+" "+result.receiptSha256);
 	}
 };

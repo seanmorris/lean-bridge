@@ -44,7 +44,12 @@ export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker
 		fields.push("lean_object *(*s"+i+")("+params+");");
 		renames.push("#define "+m.symbol+" ph_impl_"+i); initializers.push("ph_impl_"+i);
 		trampolines.push(`lean_object *${m.symbol}(${params}) {
-  if (ph_table) return ph_table->s${i}(${argv.join(",")});
+  if (ph_table && lean_bridge_native_component_ready("${identity}")) {
+    lean_object *result=ph_table->s${i}(${argv.join(",")});
+    if (lean_bridge_native_component_ready("${identity}")) return result;
+    lean_dec(result);
+    return lean_io_result_mk_error(lean_mk_io_user_error(lean_mk_string("Perl host runtime retired during member call")));
+  }
   ${sites.flatMap((s,j)=>s.c==="lean_object *" && m.sites[j].ownership!=="borrow" ? ["lean_dec(v"+j+");"] : []).join(" ")}
   return lean_io_result_mk_error(lean_mk_io_user_error(lean_mk_string("no active Perl host binding")));
 }`);
@@ -53,13 +58,22 @@ export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker
 		? `(lean_obj_tag(${v})==1 ? lbp_branch(aTHX_ "${name}::Ok",${output(t.arguments[0],"lean_ctor_get("+v+",0)")}) : lbp_branch(aTHX_ "${name}::Err",${output(t.arguments[1],"lean_ctor_get("+v+",0)")}) )`
 		: `ph_out(aTHX_ ph_session,${perlHostCarrier(types,t).tag},${v})`;
 	const symbols=["nat_text","int_text","error_text","start"].map(s=>prefix+s);
-	for(const [i,d] of entries.entries())
+	const functions=entries.flatMap((d,i)=>d.result.kind==="io-closure"?[{d,i}]:[]);
+	const applyXS=[],closeXS=[],packages=[];
+	const methods=entries.map((d,i)=>({d,i}));
+	for(const {d,i} of functions)methods.push({d,i: entries.length+i,apply: i});
+	const arrow=t=>"("+leanType(types,t.argument)+" → IO "+leanType(types,t.reply)+")";
+	for(const {d,i,apply} of methods)
 	{
-		if(!qual.test(d.declaration) || !/^[a-z][a-z0-9_]*$/u.test(d.name) || reserved.has(d.name) || allowed[i].publicName!==d.name
+		if(!qual.test(d.declaration) || !/^[a-z][a-z0-9_]*$/u.test(d.name) || reserved.has(d.name) || allowed[apply??i].publicName!==d.name
 			|| d.parameters.length>64 || d.delivery || !["IO","EIO","pure","BaseIO"].includes(d.effect) || (d.effect==="pure" && !sum(d.result))) fail("unsupported operation "+d.name);
-		const sites=d.parameters.map(p=>perlHostCarrier(types,p.type)), argv=indices(sites), params=argsOf(sites,true), eio=d.effect==="EIO", ret=leanType(types,d.result);
-		const symbol=prefix+"call_"+i, inner="ph_lean_entry_"+i, call="(_root_."+d.declaration+(sites.length?" "+argv.join(" "):"")+")";
-		leans.push(`@[export ${inner}] def invoke${i} ${d.parameters.map((p,j)=>"(v"+j+" : "+leanType(types,p.type)+")").join(" ")} : IO ${eio?"(_root_.Except "+leanType(types,d.error)+" "+ret+")":ret} := ${({IO: "",EIO: "EIO.toIO' ",pure: "pure ",BaseIO: "liftM "})[d.effect]}${call}`);
+		const inside=apply!==undefined,factory=!inside && d.result.kind==="io-closure",result=inside?d.result.reply:d.result;
+		if(d.result.kind==="io-closure" && d.effect!=="IO")fail("returned function requires a synchronous IO factory");
+		const refs=inside?[d.result,d.result.argument]:d.parameters.map(p=>p.type);
+		const sites=refs.map(t=>t.kind==="io-closure"?{fn: true,i: -1,c: "lean_object *",unbox: x=>x}:perlHostCarrier(types,t)),argv=indices(sites),params=argsOf(sites,true);
+		const eio=d.effect==="EIO",ret=factory?arrow(result):leanType(types,result),pkg=name+"::Returned::"+d.name;
+		const symbol=prefix+"call_"+i, inner="ph_lean_entry_"+i, call=inside?"(v0 v1)":"(_root_."+d.declaration+(sites.length?" "+argv.join(" "):"")+")";
+		leans.push(`@[export ${inner}] def invoke${i} ${refs.map((t,j)=>"(v"+j+" : "+(t.kind==="io-closure"?arrow(t):leanType(types,t))+")").join(" ")} : IO ${eio?"(_root_.Except "+leanType(types,d.error)+" "+ret+")":ret} := ${({IO: "",EIO: "EIO.toIO' ",pure: "pure ",BaseIO: "liftM "})[d.effect]}${call}`);
 		header.push(`extern lean_object *${inner}(${params||"void"});`);
 		const signature=`lean_object *${symbol}(const ph_methods *tbl${params?", "+params:""})`;
 		interfaceDecl.push(signature+";"); symbols.push(symbol);
@@ -68,15 +82,18 @@ export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker
   lean_object *io=${inner}(${argv.join(",")});
   ph_table=previous; return io;
 }`);
-		xs.push(`void
+		const start=inside?`XS_INTERNAL(phf_apply_${apply}) {
+    dXSARGS; if (items!=1) croak("returned Perl function requires one argument");
+    SV *v1=ST(0);`:`void
 ${d.name}(${argv.join(", ")})
 ${argv.map(v=>"    SV *"+v).join("\n")}
-  PPCODE:
-    lbp_check_interpreter(aTHX);
+  PPCODE:`;
+		const emitted=`${start}
+    lbp_check_interpreter(aTHX);${factory||inside?"\n    SV *published=sv_2mortal(newSV(0));":""}
     ENTER; SAVETMPS; lbp_host_enter(aTHX_ ph_session);
     if (!ph_ready()) croak("Lean component unavailable");
     ph_frame *f=ph_enter(aTHX_ ph_slots); f->session=ph_session;
-    ${sites.map((s,j)=>`SSGROW(4); lean_object *a${j}=ph_in(aTHX_ ph_session,${s.tag},v${j},NULL); SAVEDESTRUCTOR_X(ph_drop_lean,a${j});`).join("\n    ")}
+    ${sites.map((s,j)=>`SSGROW(4); lean_object *a${j}=${s.fn?"phf_retain(aTHX_ cv,"+apply+")":"ph_in(aTHX_ ph_session,"+s.tag+",v"+j+",NULL)"}; SAVEDESTRUCTOR_X(ph_drop_lean,a${j});`).join("\n    ")}
     lbp_check_interpreter(aTHX);
     if (!ph_ready()) croak("Lean component unavailable after argument conversion");
     SSGROW(4);
@@ -93,9 +110,24 @@ ${argv.map(v=>"    SV *"+v).join("\n")}
     }
     ${eio?`int ok=lean_obj_tag(v)==1; v=lean_ctor_get(v,0);
     if (!ok) croak_sv(lbs_failure(aTHX_ "${name}::Error::${d.name}","${d.declaration}",${output(d.error,"v")}));`:""}
-    SV *answer=newSVsv(${output(d.result,"v")});
-    FREETMPS; LEAVE; SPAGAIN; SP=PL_stack_base+ax-1; XPUSHs(sv_2mortal(answer));
+    ${factory?'sv_setsv(published,phf_publish(aTHX_ '+i+',"'+pkg+'",phf_apply_'+i+',v));':inside?"sv_setsv(published,"+output(result,"v")+");":"SV *answer=newSVsv("+output(result,"v")+");"}
+    FREETMPS; LEAVE; SPAGAIN; SP=PL_stack_base+ax-1; XPUSHs(${factory||inside?"published":"sv_2mortal(answer)"});${inside?" PUTBACK;\n}":""}
+`;
+		(inside?applyXS:xs).push(emitted);
+		if(factory)
+		{
+			closeXS.push(`MODULE = ${name}    PACKAGE = ${pkg}
+
+void
+close(self)
+    SV *self
+  PPCODE:
+    phf_close(aTHX_ self,${i}); XSRETURN_EMPTY;
 `);
+			packages.push(`package ${pkg};
+sub DESTROY { local $@; eval { $_[0]->close }; }
+package ${name};`);
+		}
 	}
 	const interfaceHeader=["#pragma once","#include <lean/lean.h>"
 		, "typedef struct {",...fields,"} ph_methods;",...interfaceDecl
@@ -136,7 +168,7 @@ static const lbp_host_spec ph_specs[]={${model.kinds.map(k=>"{"+JSON.stringify(k
 #define ph_start ${prefix}start
 #define ph_ready() lean_bridge_native_component_ready("${identity}")
 ${workerPrelude}#include "host-scope.h"
-
+${applyXS.length?applyXS.join("\n")+"\n":""}
 MODULE = ${name}    PACKAGE = ${name}
 PROTOTYPES: DISABLE
 
@@ -149,12 +181,12 @@ ${worker?"_with_hosts":"with_hosts"}(input,body)
     SSize_t n=av_top_index(out)+1; SPAGAIN; SP=PL_stack_base+ax-1; EXTEND(SP,n);
     for (SSize_t i=0;i<n;++i) PUSHs(sv_2mortal(SvREFCNT_inc(*av_fetch(out,i,0))));
 
-${xs.join("\n")}${worker?"\n\nvoid\n_retire_scoped_workers()\n  PPCODE:\n    lbp_check_interpreter(aTHX); if (!ph_session) croak(\"no active Perl host binding\"); phw_retire_all(); XSRETURN_EMPTY;\n\n"+async.xs:""}`;
+${xs.join("\n")}${worker?"\n\nvoid\n_retire_scoped_workers()\n  PPCODE:\n    lbp_check_interpreter(aTHX); if (!ph_session) croak(\"no active Perl host binding\"); "+(functions.length?"phf_retire(); ":"")+"phw_retire_all(); XSRETURN_EMPTY;\n\n"+async.xs:""}${closeXS.length?"\n"+closeXS.join("\n"):""}`;
 	const entryLean=[...modules.map(m=>"import "+m),"import LeanBridge.Host.Perl"
 		, "namespace BridgePerlExports",model.helpers
 		, "@[export "+prefix+"error_text] def errorText (e : IO.Error) : String := toString e"
 		, ...leans
 		, "end BridgePerlExports"
 		, ""].join("\n");
-	return {entryLean,interfaceHeader,leanHeader,component,xsSource,symbols,implementation: model.implementation+(async?"\n"+async.module:"")};
+	return {entryLean,interfaceHeader,leanHeader,component,xsSource,symbols,implementation: model.implementation+(async?"\n"+async.module:"")+(packages.length?"\n"+packages.join("\n"):"")};
 };

@@ -1,7 +1,7 @@
 /** @file Run generated application-facing Perl calls against a single precompiled Lean library. */
 import assert from "node:assert/strict";
 import {execFile} from "node:child_process";
-import {copyFile,mkdir,mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
+import {appendFile,copyFile,mkdir,mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
@@ -35,6 +35,14 @@ test("compiler-selected public Perl operations share one non-Perl Lean ELF acros
 	const sourceFile=join(project,"Workshop.lean"), cfgFile=join(project,"lean-bridge.exports.json");
 	await writeFile(sourceFile,(await readFile(sourceFile,"utf8"))+extra);
 	const cfg=JSON.parse(await readFile(cfgFile,"utf8")); cfg.exports.push(...["reply","replaced","plain","chooseObject","rejectObject","exhaust"].map(n=>"Workshop."+n));
+	const functions=process.env.LEAN_BRIDGE_TEST_PERL_FUNCTIONS==="1";
+	if(functions)
+	{
+		const closures=await readFile("tests/fixtures/c-host-closures/Closures.lean","utf8");
+		await writeFile(join(project,"Closures.lean"),closures.replaceAll("LeanBridge.Host.C","LeanBridge.Host.Perl"));
+		cfg.modules.push("Closures");await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "Closures"\n');
+		cfg.exports.push("Closures.remember","Closures.reader","Closures.identityReader");
+	}
 	await writeFile(cfgFile,canonicalJson(cfg));
 	const inventory=await inspectLeanProject(project);
 	const source=await openHostProjectSource({project,inventory,targets: ["cpan"],component: elaboratedComponent(inventory.project),leanPrefix: lean});
@@ -80,6 +88,11 @@ test("compiler-selected public Perl operations share one non-Perl Lean ELF acros
 		const exampleEnv={PATH: "/unavailable",LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1"};
 		const example=await exec(perl,["-I"+prefix,exampleFile],{cwd: root,env: exampleEnv});
 		assert.equal(example.stderr,""); assert.equal(example.stdout,"42\n");
+		if(functions)
+		{
+			const checked=await exec(perl,["-I"+prefix,resolve("tests/fixtures/perl-host-closures/installed.pl")],{cwd: root,env: exampleEnv});
+			assert.equal(checked.stderr,"");assert.match(checked.stdout,/scoped cleanup passed/u);t.diagnostic(perl+": "+checked.stdout.trim());
+		}
 	}
 	t.diagnostic("Single compiled component SHA-256: "+sha256(await readFile(lib)));
 });

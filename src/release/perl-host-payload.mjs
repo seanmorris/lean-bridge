@@ -26,7 +26,7 @@ const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRu
 	if(!same(checked.api,api)) fail("public API differs from compiler evidence");
 	const options={name,version,ir,api,evidence,runtimeIdentity: nativeRuntimeIdentity,modules,entries: checked.entries};
 	const worker=mixed?await perlHostTaskKernel({...options,checked: {...checked,evidence}}):null;
-	const headers=await perlHostHeaders(worker), componentIdentity=perlHostComponentIdentity(options,headers,worker);
+	const headers=await perlHostHeaders(worker,checked.entries.some(e=>e.result.kind==="io-closure")), componentIdentity=perlHostComponentIdentity(options,headers,worker);
 	const generated=generatePerlHostExports({...options,entries: checked.entries.filter(e=>!e.delivery),identity: componentIdentity,worker});
 	let ledger=null, ledgerBytes;
 	if(worker)
