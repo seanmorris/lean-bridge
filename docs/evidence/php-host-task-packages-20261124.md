@@ -50,6 +50,26 @@ client also exercised fork rejection where the PHP installation provided
 includes archive and worker hashes, the shared registry and lease library,
 and per-interpreter results.
 
+## Filesystem access during a task and cursor
+
+The [effects client](../../tests/fixtures/php-host-tasks/effects.php) ran on
+PHP 8.2.35 and 8.5.10 against both builds: four relocated, offline executions.
+Lean reads the startup environment once. A synchronous call and an Amp future
+read a file; two successive cursor pulls see different contents after PHP
+changes the file. Breaking out of `foreach` writes the Lean finalizer's
+marker. A later close and iteration leave the replacement marker untouched.
+
+Without the filesystem grant, the producer identifies the task, pull and close
+that require it and emits no release. With both grants, it still refuses an
+owner-blocking `IO.wait` in the finalizer. To repeat both refusals and the
+installed clients, set the scheduler cache and `LEAN_BRIDGE_PHP_HOST_INTERPRETERS`
+as below, then run `npm run test:php-worker-effects`.
+
+| Effects build | Verified package-set receipt (SHA-256) |
+| --- | --- |
+| Ordinary | `956f97227d3ed71de578f6277584eaadecc63e8b2d05914a33e533f195b71338` |
+| Reviewed | `887949a37e6a6866dcd14755b277a2da24df7ba13f7e7bf2b63aa4a91cc12a80` |
+
 ## Reproduce
 
 Use Linux x86-64, the pinned Lean toolchain, a C compiler, Composer, and
