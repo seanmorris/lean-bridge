@@ -17,13 +17,13 @@ export const buildRustHostPackage = async o => {
 	const {workRoot,runtimeRoot,environment,signal}=o, app=await mkdtemp(join(workRoot,".rust-host-"));
 	try
 	{
-		const b=await compileCHostComponent({...o,app,target: "cargo"});
+		const b=await compileCHostComponent({...o,app,target: "cargo",workerTransport: true});
 		const {manifest,identity: runtimeIdentity}=await readVerifiedNativeRuntime(runtimeRoot);
 		if(runtimeIdentity!==b.runtimeIdentity) throw new Error("Rust host SDK changed during compilation");
 		const floor=environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR??"2.38";
 		if(!/^2\.(?:3[0-9]|[4-9][0-9])$/u.test(floor)) throw new TypeError("Invalid Rust host glibc floor");
 		const files=new Map();
-		for(const lib of [b.component,b.domain,"libleanshared.so","liblean_bridge_native.so"])
+		for(const lib of [b.component,b.domain,...b.workerLedger?[b.workerLedger]:[],"libleanshared.so","liblean_bridge_native.so"])
 		{
 			const path="lib/"+lib,sdk=manifest.files[path],file=sdk?join(runtimeRoot,path):join(app,lib);
 			const bytes=await readFile(file);validateNativeElf(bytes);
@@ -34,7 +34,8 @@ export const buildRustHostPackage = async o => {
 			files.set(path,bytes);
 		}
 		const gen={entryLean: await readFile(join(app,"BridgeRustExports.lean")),header: await readFile(join(app,"entry-abi.h"))};
-		return await writeRustTaskRelease({...o,host: {ir: o.ir,model: b.model,domain: b.domain,domainId: b.domainId},prefix: b.prefix,entries: b.entries,api: b.api,evidence: b.evidence,files,floor,gen,manifest,runtimeIdentity,bindingIrSha256: hashBindingIr(b.api),componentIdentity: b.identity});
+		if(b.workerWire) gen.workerLean=await readFile(join(app,"BridgeCAsync.lean"));
+		return await writeRustTaskRelease({...o,host: {ir: o.ir,model: b.model,domain: b.domain,domainId: b.domainId,wire: b.workerWire,ledger: b.workerLedger},prefix: b.prefix,entries: b.entries,api: b.api,evidence: b.evidence,files,floor,gen,manifest,runtimeIdentity,bindingIrSha256: hashBindingIr(b.api),componentIdentity: b.identity});
 	} finally
 	{ await rm(app,{recursive: true,force: true}); }
 };

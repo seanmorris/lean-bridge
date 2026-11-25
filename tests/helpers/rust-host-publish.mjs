@@ -1,11 +1,12 @@
 /** @file Publish real Rust host component crates with the offline-installed candidate CLI. */
 import assert from "node:assert/strict";
-import { access, copyFile, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, appendFile, copyFile, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
+import { addStaticWorkerJobs } from "./static-worker-project.mjs";
 
 const seed=async (project,name)=>{
 	await cp("tests/fixtures/cpp-host-workshop",project,{recursive: true});await copyFile("LICENSE",join(project,"LICENSE"));
@@ -43,8 +44,10 @@ const seed=async (project,name)=>{
  * @param root - Disposable build scratch.
  * @param out - Private output directory for verified releases.
  * @param env - Compiler and offline Cargo cache.
+ * @param workers - Include actual worker declarations and early-rejection review.
+ * @param check - Exercise completed release pairs before building the next route.
  */
-export const publishRustHosts=async (root,out,env)=>{
+export const publishRustHosts=async (root,out,env,workers=false,check=async()=>{})=>{
 	const cliPkg=await buildCliNpmPackage({outputRoot: join(root,"cli-candidate")});
 	const tools=join(root,"tools");await mkdir(tools);
 	await run("npm",["install","--offline","--prefix",tools,"--ignore-scripts","--no-audit","--no-fund","--cache",join(root,"npm-cache"),cliPkg.archive],root,env);
@@ -53,10 +56,27 @@ export const publishRustHosts=async (root,out,env)=>{
 	{
 		const project=await mkdtemp(join(root,"producer-")),release=join(out,route),name=route==="peer"?"peer":"workshop";
 		await seed(project,name);
+		if(workers)
+		{
+			const {cfg,save}=await addStaticWorkerJobs(project,"rust");
+			await appendFile(join(project,"Jobs.lean"),await readFile("tests/fixtures/static-host-workers/cargo-effects.lean.in"));
+			const tasks=["handoff","laterFailure","prepareIO","checkedRelay","signedEcho","largeResult","echoBytes","withBuffer","dormant"].map(n=>"Jobs."+n);
+			cfg.taskExports.push(...tasks);cfg.taskIOErrors.push("Jobs.handoff","Jobs.laterFailure","Jobs.checkedRelay");
+			cfg.exports.push(...tasks,"Jobs.finite","Jobs.broken");
+			for(const [open,next,close] of [["finite","nextFinite","closeFinite"],["broken","nextBroken","closeBroken"]])
+				cfg.asyncIterators.push({open: "Jobs."+open,next: "Jobs."+next,close: "Jobs."+close});
+			await save();
+		}
 		if(route==="reviewed" || route==="rejected")
 		{
 			const path=join(project,"lean-bridge.exports.json"),cfg=JSON.parse(await readFile(path,"utf8"));delete cfg.exports;await writeFile(path,canonicalJson(cfg));
-			const doc=JSON.parse(review);if(route==="rejected") delete doc.declarations.find(d=>d.name==="child").source.extensions["lean-bridge.dev/host-members"];
+			const doc=JSON.parse(review);
+			if(route==="rejected")
+			{
+				const d=doc.declarations.find(d=>d.name===(workers?"relay":"child"));
+				const key=workers?"lean-bridge.dev/task-failure":"lean-bridge.dev/host-members";
+				assert.ok(Object.hasOwn(d.source.extensions,key));delete d.source.extensions[key];
+			}
 			await writeFile(join(project,"workshop.binding-ir.json"),canonicalJson(doc));
 		}
 		const build=()=>run(process.execPath,[cli,"build","--project",project,"--target","cargo","--output",release,"--json","--progress","none"],root,env,900000);
@@ -74,6 +94,7 @@ export const publishRustHosts=async (root,out,env)=>{
 			assert.equal(ev.reviewedSourceSha256,route==="reviewed"?sha256(review):null);if(route==="reviewed") assert.equal(api,review);
 		}
 		await rm(project,{recursive: true});
+		if(route==="peer" || route==="reviewed") await check(route==="peer"?"ordinary":"reviewed");
 	}
 	await rm(tools,{recursive: true});
 };

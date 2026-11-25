@@ -52,7 +52,7 @@ const withVersion = (source, before, after) => {
  */
 export const writeRustTaskRelease = async o => {
 	const { workRoot, environment, signal, projectContract, name, version, prefix, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity } = o;
-	const host=o.host, synchronous = Boolean(host) || projectContract.synchronousIO === true, profile = host ? hostProfile : synchronous ? ioProfile : taskProfile;
+	const host=o.host, synchronous = host ? !host.wire : projectContract.synchronousIO === true, profile = host ? hostProfile : synchronous ? ioProfile : taskProfile;
 	validateOrdinaryCargoSettings({ name, version });
 	if(name.replaceAll("_", "-") === runtimeName || ["num-bigint", "sha2", "async-io", "futures-core"].includes(name.replaceAll("_", "-")))
 		throw new Error("Rust task crate name conflicts with its dependencies");
@@ -66,7 +66,7 @@ export const writeRustTaskRelease = async o => {
 	{
 		if(!n.startsWith("lib/")) throw new Error("Unexpected Rust native payload " + n);
 		const f = n.slice(4);
-		if(f !== lib && !["liblean_bridge_native.so", "libleanshared.so"].includes(f) && !(host ? f===host.domain && /^liblb_rust_host_domain_[0-9a-f]{64}\.so$/u.test(f) : /^liblb_task_resources_[0-9a-f]{64}\.so$/u.test(f))) throw new Error("Unexpected Rust native dependency " + f);
+		if(f !== lib && !["liblean_bridge_native.so", "libleanshared.so"].includes(f) && !(host ? (f===host.domain && /^liblb_rust_host_domain_[0-9a-f]{64}\.so$/u.test(f) || host.wire && f===host.ledger && /^liblb_task_resources_[0-9a-f]{64}\.so$/u.test(f)) : /^liblb_task_resources_[0-9a-f]{64}\.so$/u.test(f))) throw new Error("Unexpected Rust native dependency " + f);
 		(["liblean_bridge_native.so", "libleanshared.so"].includes(f) ? common : app).set(native(f), b);
 	}
 	const supportManifest = (await asset("task-runtime/Cargo.toml")).toString(), supportLock = (await asset("task-runtime/Cargo.lock")).toString();
@@ -74,7 +74,7 @@ export const writeRustTaskRelease = async o => {
 	common.set("src/resource.rs", await asset("task-runtime/src/resource.rs"));
 	common.set("src/callback.rs", await asset("task-runtime/src/callback.rs"));
 	common.set("src/delivery.rs", await asset("task-runtime/src/delivery.rs"));
-	for(const file of ["owner.rs","port.rs"]) common.set("src/"+file,await asset("task-runtime/src/"+file));
+	for(const file of ["owner.rs","port.rs","worker.rs"]) common.set("src/"+file,await asset("task-runtime/src/"+file));
 	common.set("lean-bridge/runtime.json", canonicalJson(manifest));
 	common.set("README.md", "Shared Linux x86-64 Lean runtime, resource identity and errors. Cargo selects this crate through your component's exact dependency. Only task components request the async feature for executor-independent task and stream delivery.\n");
 	const license = await readFile(new URL("../../LICENSE", import.meta.url));
@@ -94,7 +94,7 @@ export const writeRustTaskRelease = async o => {
 		: await generateRustTaskSources({ prefix, entries, synchronousIO: synchronous, resources: api.types.filter(t => t.kind === "resource"), evidence: assets });
 	for(const [f, s] of Object.entries(generated)) app.set(f, s);
 	const metadata = cargoPackageMetadata({ description: synchronous ? "Synchronous compiled Lean IO" : "Compiled Lean tasks and pull streams", ...projectContract.metadata });
-	const dependency = synchronous ? `{ version = "=${runtimeVersion}", default-features = false${host?', features = ["host-objects"]':""} }` : `"=${runtimeVersion}"`;
+	const dependency = synchronous ? `{ version = "=${runtimeVersion}", default-features = false${host?', features = ["host-objects"]':""} }` : host ? `{ version = "=${runtimeVersion}", features = ["host-objects"] }` : `"=${runtimeVersion}"`;
 	app.set("Cargo.toml", `[package]\nname = "${name}"\nversion = "${version}"\nedition = "2021"\nrust-version = "1.90"\n${metadata}\nreadme = "README.md"\n[dependencies]\nnum-bigint = "=0.4.6"\nsha2 = "=0.10.9"\n${runtimeName} = ${dependency}\n`);
 	const baseLock = withVersion((await asset(synchronous ? "sync-component.lock" : "task-component.lock")).toString(), 'name = "lean-bridge-task-placeholder"\nversion = "0.0.0"', `name = "${name}"\nversion = "${version}"`);
 	const localLock = withVersion(baseLock, seed, final);
@@ -107,8 +107,9 @@ export const writeRustTaskRelease = async o => {
 	if(host)
 	{
 		app.set("lean-bridge/host-imports.json",projectContract.hostImportsSource);
-		app.set("README.md","# "+name+"\n\nLinux x86-64, glibc "+floor+"+, Rust 1.90+. Add this crate normally; Cargo supplies the exact shared runtime. Use bind_objects!(MyHost { "+host.model.kinds.map(k=>k.name+"=Your"+k.name).join(", ")+" }); then Binding::<MyHost>::new() on the process main thread. The macro forwards to your inherent methods. Use Rc for application-owned objects. A member may return its value or MemberResult<T>. HostCallError::Host preserves the original Rc<dyn Error>; Declared and Io are distinct errors; a returned Lean Except remains Result data. A panic retires the runtime. Call close or drop the binding on its owner thread. No Lean compiler, native link flags or executor are required.\n");
+		app.set("README.md","# "+name+"\n\nLinux x86-64, glibc "+floor+"+, Rust 1.90+. Add this crate normally; Cargo supplies the exact shared runtime. Use bind_objects!(MyHost { "+host.model.kinds.map(k=>k.name+"=Your"+k.name).join(", ")+" }); then Binding::<MyHost>::new() on the process main thread. The macro forwards to your inherent methods. Use Rc for application-owned objects. A member may return its value or MemberResult<T>. HostCallError::Host preserves the original Rc<dyn Error>; Declared and Io are distinct errors; a returned Lean Except remains Result data. A panic retires the runtime. Call close or drop the binding on its owner thread. No Lean compiler or native link flags are required."+ (host.wire?" Await tasks and pull streams on the binding thread. Closing the binding cancels outstanding work.":"") +"\n");
 	}
+	if(gen.workerLean) app.set("lean-bridge/generated-workers.lean",gen.workerLean);
 	app.set("lean-bridge/generated.lean", gen.entryLean); app.set("lean-bridge/adapter.h", gen.header);
 	app.set("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1, role: "component", profile, name, version, componentIdentity, bindingIrSha256, runtimeIdentity, supportId, glibcMinimumVersion: floor, files: inventory(app) }));
 	const stage = await mkdtemp(join(workRoot, ".cargo-task-"));

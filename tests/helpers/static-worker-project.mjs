@@ -13,8 +13,18 @@ export const staticOwners = { c: ["C","c","CCallbackError"], cpp: ["Cpp","cpp","
  * @param owner - Language whose generated members the Lean source imports.
  */
 export const prepareStaticWorkerProject = async (project, owner) => {
-	const [module]=staticOwners[owner], select=join(project,"lean-bridge.exports.json");
 	await prepareNativeHostFixture(project,owner); await copyFile("LICENSE",join(project,"LICENSE"));
+	return addStaticWorkerJobs(project,owner);
+};
+
+/**
+ * Add the same worker declarations to an already staged host project.
+ *
+ * @param project - Existing consumer-profile project.
+ * @param owner - Language used by its generated member module.
+ */
+export const addStaticWorkerJobs = async (project,owner) => {
+	const [module]=staticOwners[owner], select=join(project,"lean-bridge.exports.json");
 	const source=await readFile("tests/fixtures/static-host-workers/Jobs.lean","utf8");
 	await writeFile(join(project,"Jobs.lean"),source.replace("LeanBridge.Host.Rust","LeanBridge.Host."+module));
 	await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "Jobs"\n');

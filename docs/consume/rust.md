@@ -96,6 +96,25 @@ A fallible member can return `MemberResult<T>`. A host error propagated through 
 
 ### Await a task or pull a stream
 
+An object binding can expose tasks and streams alongside ordinary methods. Pass the same `Rc<T>` or `HostRef<T>` you use for synchronous calls. For example, given the Workshop binding and meter above:
+
+```rust
+let same = api.echo(&meter)?.await?;
+assert!(same.ptr_eq(&meter));
+
+let same = api.relay(&meter, |object| Ok(object))?.await?;
+let mut items = api.series(&same)?;
+if let Some(item) = items.next().await {
+    let first = item?;
+    assert!(first.ptr_eq(&same));
+}
+items.close()?; // No further pulls.
+```
+
+Run this code on the process main thread using a current-thread executor. Lean workers carry the object; they do not call its Rust methods on worker threads. A retained callback runs on the binding thread and can call another bound method. A factory failure, a task failure and an ordinary returned `Result` stay distinct. A terminal stream error arrives once.
+
+Drop a task or call `cancel()` to stop receiving its result. Closing or dropping the binding cancels its outstanding tasks and streams; a peer binding stays usable. An explicit close during an active call or callback returns `Fault::Busy`. A Rust callback panic retires the shared native runtime.
+
 If the release receipt says `native-rust-task-v1`, add only the component crate to your Cargo dependencies. Cargo resolves its exact `lean-bridge-task-runtime` dependency. Run these functions on a current-thread executor **on the process main thread**. Tasks and resource owners are not `Send`; there is no Lean scheduler for your application to drive.
 
 This example uses the task lab's API:
@@ -133,7 +152,7 @@ The closure runs on the executor's owning thread, including when Lean calls it *
 
 Return `CallbackError::new(my_error)` to signal a declared host failure. If Lean propagates that error through the same task, match `Error::Callback { declaration, error }` and use `error.downcast_ref::<MyError>()` to recover the original payload. The payload can contain owner-local values. Errors from callback-free APIs keep their ordinary `Send` and `Sync` bounds. Lean can catch a callback error; a newly created error with identical text doesn't acquire its identity. A Rust panic is different: the bridge catches an unwinding panic, retires the shared native runtime, and reports `Fault::CallbackPanic`. A binary built with `panic = "abort"` terminates as usual.
 
-Settlement, cancellation or dropping the task releases its reference to the Rust closure, even if Lean saved the function for later. For earlier explicit disposal, use `RetainedCallback::new(f)`, pass `handle.function()` and call `handle.close()`. An invocation that closes itself can finish; later calls fail. Callbacks currently exchange the 19 copied scalar types, including strings, bytes and exact integers, not resources or arbitrary aggregates.
+Settlement, cancellation or dropping the task releases its reference to the Rust closure, even if Lean saved the function for later. For earlier explicit disposal, use `RetainedCallback::new(f)`, pass `handle.function()` and call `handle.close()`. An invocation that closes itself can finish; later calls fail. Free-standing task callbacks exchange the 19 copied scalar types, including strings, bytes and exact integers. Methods on a host-object binding can also pass the application's declared object types to and from a callback. Neither form accepts arbitrary aggregates.
 
 The [installed callback evidence](../evidence/rust-retained-tasks-20261122.json) identifies the original crates, the consumer that exercised both, and the scope of the checks.
 

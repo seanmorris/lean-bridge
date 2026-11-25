@@ -163,3 +163,7 @@ impl Connection {
 }
 impl Drop for Connection {fn drop(&mut self){let _=self.close();}}
 fn status(rc:i32)->Fault {match rc {5=>Fault::InvalidValue,9=>Fault::WrongContext,10|15=>Fault::Unavailable,11=>Fault::Allocation,12=>Fault::Limit,14=>Fault::Busy,_=>Fault::Protocol}}
+
+#[cfg(feature="async")]
+#[doc(hidden)]
+pub mod worker { include!("worker.rs"); }

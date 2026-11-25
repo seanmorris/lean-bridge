@@ -1,0 +1,37 @@
+
+namespace Jobs
+open LeanBridge.Host.Rust
+
+-- Two distinct owner-side callback slots and an object of a second kind.
+def handoff (box : Box) (lookup : Box → IO Dial) (read : Dial → IO UInt32) :
+    BaseIO (Task (Except IO.Error UInt32)) := IO.asTask do read (← lookup box)
+def laterFailure (b : Box) (reject : Bool) : BaseIO (Task (Except IO.Error Box)) :=
+  IO.asTask do if reject then throw (IO.userError "late IO") else return b
+def prepareIO (b : Box) (reject : Bool) : IO (Task Box) := do
+  if reject then throw (IO.userError "factory IO")
+  return Task.pure b
+def checkedRelay (b : Box) (reject : Bool) (f : Box → IO Box) :
+    EIO Box (Task (Except IO.Error Box)) := do
+  if reject then throw b
+  IO.asTask (f b)
+def signedEcho (v : Int16) : Task Int16 := Task.pure v
+def largeResult (v : Int) : Task (Except UInt8 Int) := Task.pure (.ok v)
+def echoBytes (b : ByteArray) : Task ByteArray := Task.pure b
+def withBuffer (dial : Dial) (b : ByteArray) : Task ByteArray :=
+  let _ := dial
+  Task.pure b
+def finite (b : Box) : BaseIO Cursor := series b
+def nextFinite (c : Cursor) : BaseIO (Task (Option Box)) := BaseIO.asTask do
+  return if ← c.first.swap false then some c.box else none
+def closeFinite (c : Cursor) : BaseIO Unit := close c
+def broken (b : Box) : BaseIO Cursor := series b
+def nextBroken (_ : Cursor) : BaseIO (Task (Except IO.Error (Option Box))) :=
+  IO.asTask (throw (IO.userError "pull IO"))
+def closeBroken (c : Cursor) : BaseIO Unit := close c
+-- Deterministically pending: no timeout, sleeping worker or busy loop.
+initialize parked : IO.Ref (Option (IO.Promise UInt32)) ← IO.mkRef none
+def dormant : BaseIO (Task UInt32) := do
+  let p ← IO.Promise.new
+  parked.set (some p)
+  return p.result?.map fun n => n.getD 0
+end Jobs

@@ -45,6 +45,8 @@ impl<E: fmt::Debug,H: std::error::Error + 'static> std::error::Error for Error<E
 /// pointers and symbol lookup remain private to the component.
 #[doc(hidden)]
 pub trait Source<T, E, H = Infallible> {
+    /// Binding-owned sources wake a waiting executor when the binding closes.
+    fn observe(&mut self, _w: &Waker) {}
     fn request(&mut self) -> Result<(), Fault>;
     /// None means ready; a borrowed descriptor signals readiness without reads.
     fn readiness(&mut self) -> Result<Option<BorrowedFd<'_>>, Fault>;
@@ -116,6 +118,7 @@ impl<T,E,H> Driver<T,E,H> {
     fn poll_value(&mut self, cx: &mut Context<'_>) -> Poll<Result<Option<T>, Error<E,H>>> {
         if self.pid != std::process::id() { return Poll::Ready(Err(Fault::WrongContext.into())); }
         let s = self.source.as_mut().ok_or(Fault::Closed)?;
+        s.observe(cx.waker());
         if let Some(fd) = s.readiness()? {
             if self.watch.is_none() {
                 // The native owner retains its fd. The reactor owns only a
