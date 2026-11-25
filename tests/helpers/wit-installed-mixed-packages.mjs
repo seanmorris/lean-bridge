@@ -3,27 +3,29 @@ import assert from "node:assert/strict";
 import {execFile} from "node:child_process";
 import {mkdir,mkdtemp,readFile,rename,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
-import {basename,join,resolve} from "node:path";
+import {basename,join} from "node:path";
 import {promisify} from "node:util";
 import test from "node:test";
 import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {hashBindingIr} from "../../src/binding-ir/canonical.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {buildInstalledWitGuests} from "./wit-application-command-client.mjs";
+import {installWitAuthor} from "./wit-installed-author.mjs";
 import {prepareStaticWorkerProject} from "./static-worker-project.mjs";
 import {extendWitApplication} from "./wit-application-project.mjs";
 import {assertJsonSchema} from "./json-schema.mjs";
 
-const exec=promisify(execFile),cli=resolve("scripts/lean-bridge.mjs"),json=async p=>JSON.parse(await readFile(p,"utf8"));
+const exec=promisify(execFile),json=async p=>JSON.parse(await readFile(p,"utf8"));
 test("installed mixed WIT applications run original objects, callbacks, futures and streams on both release routes",{timeout: 900000},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"wit-installed-mixed-"));t.after(()=>rm(root,{recursive: true,force: true}));
+	const cli=await installWitAuthor(root);
 	let original;
 	for(const route of ["ordinary","reviewed"])
 {
 		const work=join(root,route),src=join(work,"source"),out=join(work,"release"),consumer=join(work,"independent guest");
 		await mkdir(work);await prepareStaticWorkerProject(src,"wit-wasi");await extendWitApplication(src);
 		if(original)await writeFile(join(src,"workshop.binding-ir.json"),canonicalJson(original));
-		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"]);
+		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"],{cwd: work});
 		const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(out,"package-set-receipt.json")});
 		await assertJsonSchema("package-set-receipt",receipt);assert.equal(receipt.packages.length,1);
 		const [pkg]=receipt.packages,[artifact]=pkg.artifacts;assert.equal(pkg.profile,"native-wit-object-task-v1");assert.equal(pkg.runtimeDelivery,"embedded");

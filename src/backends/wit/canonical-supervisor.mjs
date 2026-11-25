@@ -1,5 +1,5 @@
 /** @file Run an async signed-result guest while the native reactor owns the outer event loop. */
-export const canonicalSupervisor = `  (component $supervisor
+export const canonicalSupervisorComponent = `(component
     (import "app" (func $run async (result s64)))
     (core module $mem (memory (export "m") 1))
     (core instance $mem (instantiate $mem))
@@ -36,7 +36,9 @@ export const canonicalSupervisor = `  (component $supervisor
     (func (export "launch") async (canon lift (core func $i "launch") async (callback (func $i "cb"))))
     (func (export "tick") async (canon lift (core func $i "tick") async (callback (func $i "tick-cb"))))
     (func (export "done") (result bool) (canon lift (core func $i "done")))
-    (func (export "take") (result s64) (canon lift (core func $i "take"))))
+    (func (export "take") (result s64) (canon lift (core func $i "take"))))`;
+/** Link the same supervisor to the final guest in the fixed single-package graph. */
+export const canonicalSupervisor = `  ${canonicalSupervisorComponent.replace("(component","(component $supervisor")}
   (instance $s (instantiate $supervisor (with "app" (func $app "run"))))
   (export "launch" (func $s "launch")) (export "tick" (func $s "tick"))
   (export "done" (func $s "done")) (export "take" (func $s "take"))`;

@@ -69,6 +69,7 @@ export const compileWitApplicationCommand=async o=>{
 	const {app,out,b,name,template,cc,sdk,runtimeRoot,run}=o,binary=name+"-run";
 	await writeFile(join(out,"application-command.h"),witCommandHeader(template,b.entries,name),{flag: "wx"});
 	const mixed=template.methods.length>0;
+	if(mixed)await copyFile(new URL("../backends/wit/application-turn-package.h",import.meta.url),join(out,"application-turn-package.h"));
 	await copyFile(new URL("../backends/wit/"+(mixed?"application-command-turn.c":"application-command.c"),import.meta.url),join(out,"application-command.c"));
 	await copyFile(new URL("../backends/wit/application-command-inputs.h",import.meta.url),join(out,"application-command-inputs.h"));
 	await run(cc,[

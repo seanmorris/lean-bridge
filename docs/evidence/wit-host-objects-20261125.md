@@ -269,3 +269,13 @@ Two checks cover different parts of this change:
 - The [compiled-worker test](../../tests/helpers/wit-application-command-client.mjs) exercises one actual Lean package under Wasmtime. Its original box travels through a cursor, a retained guest callback, a synchronous update and a future: **73**. The synchronous suite returns **1** and early reader exit returns **17**. Invalid arguments and a trapping callback remain distinguishable.
 
 Running two native dispatchers tests call routing. It does not yet demonstrate two independently installed **async Lean packages** exchanging an original object while both have futures pending, or cancelling one package's reader without affecting the other.
+
+### Closing one callback provider
+
+Only the graph supervisor can bind the shared object table. Each package owns its callback table, not the shared table or its sibling's registrations. At graph shutdown, the supervisor disables every table before invoking any guest destructor.
+
+The [ownership test](../../tests/helpers/wit-turn-peer-owners.mjs) instantiates three independent resource providers in Wasmtime: one for shared objects and one for each package's callbacks. In both close orders the retired callback is dropped once, the sibling's callback stays usable, and the original shared object remains usable through the other table. Repeating close does not double-drop. A failed group bind also leaves *all* tables closed and returns newly transferred owners to their defining destructors. This tests the private ownership protocol; it does not replace an installed two-package cancellation test.
+
+The ordinary and reviewed [synchronous release tests](../../tests/helpers/wit-installed-object-packages.mjs) also distinguish a malformed application from a runtime trap. Both test guests have a trapping initializer. The one exporting `run() -> u64` fails type validation **before** its initializer executes; the one exporting the required `run() -> s64` reaches the initializer and reports its trap. Both relocated releases executed the valid owning application with no compiler or SDK on its search path.
+
+The [readiness test](../../tests/fixtures/static-host-workers/peer-wait.c) supplies two native pipes in both package orders. A quiet peer does not hide its sibling’s readable descriptor. The shared wait never consumes or closes that descriptor, honors an immediately ready future, ignores a delivered one, and rejects an invalid descriptor or a full wait buffer.

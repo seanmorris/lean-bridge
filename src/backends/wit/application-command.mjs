@@ -1,7 +1,7 @@
 /** @file Compose independently built object, callback and application components with the compiled Lean facade. */
 import {canonicalSupervisor} from "./canonical-supervisor.mjs";
 import {witApplicationExchange} from "./application-exchange.mjs";
-import {witTurnOwners} from "./application-turn-owners.mjs";
+import {witTurnOwnerLifecycle,witTurnOwners} from "./application-turn-owners.mjs";
 import {cIdentifier} from "../c/generate.mjs";
 import {copiedChannelType} from "./application-turn-copied.mjs";
 
@@ -9,6 +9,33 @@ const fail=message=>{throw new TypeError("WIT application command: "+message);};
 const nested=(wat,id,role)=>{
 	if(typeof wat!=="string" || !wat.startsWith("(component"))fail("missing component: "+id);
 	return wat.replace("(component","(component $"+id+(role?' (@custom "lean-bridge-guest-slot-v1" "'+role+'")':""));
+};
+/**
+ * Both installed launchers must import exactly the same private scheduler
+ * interface as the independently compiled package's native adapter.
+ *
+ * @param syncPorts - Validated instance type for synchronous operations.
+ * @param methods - Source-selected asynchronous operations in dispatch order.
+ */
+export const witPackageScheduler=(syncPorts,methods)=>{
+	const fields=[`(type $sync ${syncPorts}) (export "sync-ports" (instance (type $sync)))`];
+	const aliases=['(alias export $scheduler "sync-ports" (instance $transport))'],channels=[];
+	for(const method of methods)
+	{
+		const {name,shape}=method;
+		if(method.copied)
+		{
+			const port="copied-"+name;
+			fields.push(`(type $${port} ${copiedChannelType(method)}) (export "${port}" (instance (type $${port})))`);
+			aliases.push(`(alias export $scheduler "${port}" (instance $${port}))`);
+			channels.push(`(with "${port}" (instance $${port}))`);
+		}
+		const n="turn-"+name,input=shape==="stream"?'(param "value" u64)':'(param "left" u64) (param "right" u64)';
+		fields.push(`(export "${n}" (func (param "op" u32) (param "key" u32) ${input} (result (tuple u32 u32 u64 u64))))`);
+		aliases.push(`(alias export $scheduler "${n}" (func $${n}))`);
+		channels.push(`(with "${n}" (func $${n}))`);
+	}
+	return {type: `(instance ${fields.join("\n")})`,aliases,channels};
 };
 /**
  * The native embedding sees private scheduling functions. Only the defining
@@ -37,24 +64,8 @@ export const witApplicationCommand=o=>{
 	const parts=["(component"],channels=[],transport=mixed?`lean-bridge:${name}/scheduler@${version}`:null;
 	if(mixed)
 	{
-		const fields=[`(type $sync ${modules.syncPorts}) (export "sync-ports" (instance (type $sync)))`];
-		const aliases=['(alias export $scheduler "sync-ports" (instance $transport))'];
-		for(const method of methods)
-		{
-			const {name,shape}=method;
-			if(method.copied)
-			{
-				const port="copied-"+name;
-				fields.push(`(type $${port} ${copiedChannelType(method)}) (export "${port}" (instance (type $${port})))`);
-				aliases.push(`(alias export $scheduler "${port}" (instance $${port}))`);
-				channels.push(`(with "${port}" (instance $${port}))`);
-			}
-			const n="turn-"+name,input=shape==="stream"?'(param "value" u64)':'(param "left" u64) (param "right" u64)';
-			fields.push(`(export "${n}" (func (param "op" u32) (param "key" u32) ${input} (result (tuple u32 u32 u64 u64))))`);
-			aliases.push(`(alias export $scheduler "${n}" (func $${n}))`);
-			channels.push(`(with "${n}" (func $${n}))`);
-		}
-		parts.push(`(type $scheduler-type (instance ${fields.join("\n")}))`,`(import "${transport}" (instance $scheduler (type $scheduler-type)))`,...aliases);
+		const s=witPackageScheduler(modules.syncPorts,methods);channels.push(...s.channels);
+		parts.push(`(type $scheduler-type ${s.type})`,`(import "${transport}" (instance $scheduler (type $scheduler-type)))`,...s.aliases);
 	}
 	else parts.push(`(type $native-type ${ops.nativeType}) (import "${ops.nativeName}" (instance $native (type $native-type)))`);
 	parts.push(nested(modules.owner,"owner","objects"),nested(modules.exchange,"cells-code"),nested(modules.facade,"facade"),
@@ -85,7 +96,7 @@ export const witApplicationCommand=o=>{
 	if(mixed)
 	{
 		const vault=registered?"$owners":"$vault";
-		for(const [name,method] of [["bind-owners","bind"],["close-owners","close"]])parts.push(`(export "${name}" (func ${vault} "${method}"))`);
+		parts.push(witTurnOwnerLifecycle("$vault",registered?["$owners"]:[]));
 		parts.push(nested(modules.tasks,"tasks"),`(instance $jobs (instantiate $tasks ${taskImports.join(" ")} (with "leases" (instance ${vault})) ${channels.join(" ")}))`);
 		for(const {name,shape} of methods)for(const port of (shape==="stream"?["pump","retire","drain"]:["poll","deliver","reap","retire","close","drain"]))
 		{
@@ -94,7 +105,7 @@ export const witApplicationCommand=o=>{
 		appImports.push(`(with "${delivery.publicName}" (instance $jobs "${delivery.publicName}"))`);
 	}
 	parts.push(nested(modules.application,"downstream","application"),`(instance $app (instantiate $downstream ${appImports.join(" ")}))`,
-		methods.length?canonicalSupervisor:'(export "run" (func $app "run"))',")");
+		methods.length?canonicalSupervisor:'(export "run" (func $app "run") (func (result s64)))',")");
 	return {world,wat: parts.join("\n"),roles,transport};
 };
 

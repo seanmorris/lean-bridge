@@ -84,7 +84,7 @@ export const compileCHostComponent=async o=>{
 				, "application-turn-sync-link.h"
 				, ...Object.keys(futures).some(n=>n.endsWith("-turn-copied.h"))?["application-turn-copied-link.h"]:[]
 				, ...hasFuture || futures["application-turn-tasks.h"]?["application-turn-future-link.h"]:[]
-				, ...futures["application-turn-tasks.h"]?["application-turn-channels.h"]:[]]){
+				, ...futures["application-turn-tasks.h"]?["application-turn-channels.h","application-turn-wait.h"]:[]]){
 				const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
 				hashes[file]=sha256(bytes);await save(file,bytes);
 				}

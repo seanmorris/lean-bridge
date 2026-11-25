@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {readFile,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {witApplicationExchange} from "../../src/backends/wit/application-exchange.mjs";
-import {witTurnOwners} from "../../src/backends/wit/application-turn-owners.mjs";
+import {witTurnOwnerLifecycle,witTurnOwners} from "../../src/backends/wit/application-turn-owners.mjs";
 import {canonicalSupervisor} from "../../src/backends/wit/canonical-supervisor.mjs";
 
 /**
@@ -20,6 +20,7 @@ export const buildTurnCallbackGuests=async o=>{
 	const reg=(await readFile(join(fixture,"turn-callback-graph.wat.in"),"utf8"))
 		.replace("@PROVIDER@",()=>provider.replace("(component","(component $provider"))
 		.replace("@EXTENSION@",()=>witTurnOwners(b.witImports,callbacks).replace("(component","(component $extension"))
+		.replace("@LIFECYCLE@",()=>witTurnOwnerLifecycle("$vault",["$ext"]))
 		.replace("@RESPONDER@",()=>responder.replace("(component","(component $responder"))
 		.replaceAll("@OBJECTS@",b.witImports.interfaceName).replaceAll("@CALLBACKS@",callbacks.interfaceName).replaceAll("@API@",ops.publicName);
 	const send='(import "turn" (func $turn (param "frame" u64) (param "owner" u64) (result (tuple u64 u64))))';

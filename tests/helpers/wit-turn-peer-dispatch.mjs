@@ -28,3 +28,13 @@ test("two WIT dispatchers reenter on one native owner and unwind parked frames",
 	assert.equal(result.stdout.trim(), "two dispatchers; both nested orders; four parked frames unwound");
 	assert.equal(result.stderr, "");
 });
+
+test("two WIT packages share one bounded wait without consuming peer notifications", async t => {
+	const root = await mkdtemp(join(tmpdir(), "wit-peer-wait-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const flags = ["-std=gnu11", "-Wall", "-Wextra", "-Werror"
+		, "-I" + resolve("src/backends/wit")];
+	const exe = join(root, "wait");
+	await run(process.env.CC ?? "cc", [...flags, resolve("tests/fixtures/static-host-workers/peer-wait.c"), "-o", exe]);
+	await run(exe, [], { timeout: 10000 });
+});

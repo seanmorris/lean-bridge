@@ -41,7 +41,8 @@ const body=(k,i)=>{
  * has no clone contract, so it can be moved and released but not copied. With
  * callbacks, extend the pre-existing object table: the registration provider
  * can already use it to re-enter synchronous Lean. Both layers allocate
- * serials from that same table, and close disables both before running drops.
+ * serials from that same table. A registration table can retire its own
+ * callbacks but has no authority to bind or retire the shared object table.
  *
  * @param descriptor - Compiled guest-defined resource contract.
  * @param callbacks - Optional compiled callback contract.
@@ -93,9 +94,8 @@ export const witTurnOwners=(descriptor,callbacks)=>{
 	if(delegated)
 	{
 		const shared=[["issue","(result u32)","(result i32)"]
-			, ["bind",'(param "domain" u32) (result bool)',"(param i32) (result i32)"]
+			, ["active-domain","(result u32)","(result i32)"]
 			, ["count","(result u32)","(result i32)"]
-			, ["close","",""]
 			, ["release-lease",'(param "kind" u32) (param "ticket" u64) (result bool)',"(param i32 i64) (result i32)"]
 			, ["same-lease",'(param "kind" u32) (param "left" u64) (param "right" u64) (result bool)',"(param i32 i64 i64) (result i32)"]];
 		for(const [n,t,c] of shared)
@@ -113,8 +113,9 @@ export const witTurnOwners=(descriptor,callbacks)=>{
       (global $live (mut i32) (i32.const 0))
       (func (export "bind") (param $d i32) (result i32)
         (if (i32.or (i32.or (global.get $closed) (global.get $domain)) (i32.eqz (local.get $d))) (then (return (i32.const 0))))
-        ${delegated?"(if (i32.eqz (call $base-bind (local.get $d))) (then (return (i32.const 0))))":""}
+        ${delegated?"(if (i32.ne (call $base-active-domain) (local.get $d)) (then (return (i32.const 0))))":""}
         (global.set $domain (local.get $d)) (i32.const 1))
+      (func (export "active-domain") (result i32) (global.get $domain))
       (func $issue (export "issue") (result i32) ${delegated?"(call $base-issue)":`
         (if (i32.or (i32.eqz (global.get $domain)) (i32.eq (global.get $last) (i32.const -1))) (then (return (i32.const 0))))
         (global.set $last (i32.add (global.get $last) (i32.const 1))) (global.get $last)`})
@@ -148,13 +149,45 @@ export const witTurnOwners=(descriptor,callbacks)=>{
         ${local.flatMap(({k,i})=>k.retain?[`(if (i32.eq (local.get $kind) (i32.const ${i})) (then (return (call $sameTickets${i} (local.get $left) (local.get $right)))))`]:[]).join(" ")}
         ${delegated?"(call $base-same-lease (local.get $kind) (local.get $left) (local.get $right))":"(i32.const 0)"})
       (func (export "count") (result i32) (global.get $live) ${delegated?"(call $base-count) i32.add":""})
-      (func (export "close") (global.set $closed (i32.const 1)) (global.set $domain (i32.const 0))
-        ${delegated?"(call $base-close)":""} ${local.map(({i})=>`(call $drain${i})`).join(" ")}))
+      (func $seal (export "seal") (global.set $closed (i32.const 1)) (global.set $domain (i32.const 0)))
+      (func (export "close") (call $seal) ${local.map(({i})=>`(call $drain${i})`).join(" ")}))
     (core instance $i (instantiate $m (with "" (instance ${links.join(" ")}))))
     (func (export "bind") (param "domain" u32) (result bool) (canon lift (core func $i "bind")))
     ${delegated?"":'(func (export "issue") (result u32) (canon lift (core func $i "issue")))'}
+    ${delegated?"":'(func (export "active-domain") (result u32) (canon lift (core func $i "active-domain")))'}
     (func (export "release-lease") (param "kind" u32) (param "ticket" u64) (result bool) (canon lift (core func $i "release-lease")))
     (func (export "same-lease") (param "kind" u32) (param "left" u64) (param "right" u64) (result bool) (canon lift (core func $i "same-lease")))
     (func (export "count") (result u32) (canon lift (core func $i "count")))
+    (func (export "seal") (canon lift (core func $i "seal")))
     (func (export "close") (canon lift (core func $i "close"))) ${lift.join("\n")})`;
+};
+
+/**
+ * Give only the graph owner authority over the shared domain. Open the base
+ * first. Seal every table before any guest destructor can run on shutdown.
+ *
+ * @param base - Instance identifier of the shared object table.
+ * @param registrations - Instance identifiers of package-local callback tables.
+ */
+export const witTurnOwnerLifecycle=(base,registrations)=>{
+	if(!registrations.length)return `(export "bind-owners" (func ${base} "bind")) (export "close-owners" (func ${base} "close"))`;
+	const tables=[base,...registrations],lower=[],imports=[],links=[];
+	for(const [i,table] of tables.entries())for(const name of ["bind","seal","close"])
+	{
+		const id=name+i;
+		lower.push(`(core func $${id} (canon lower (func ${table} "${name}")))`);
+		imports.push(`(import "" "${id}" (func $${id} ${name==="bind"?"(param i32) (result i32)":""}))`);
+		links.push(`(export "${id}" (func $${id}))`);
+	}
+	const all=name=>tables.map((_,i)=>`(call $${name}${i})`).join(" ");
+	return `${lower.join("\n")}
+	(core module $lifecycle ${imports.join("\n")}
+	  (func $close (export "close") ${all("seal")} ${all("close")})
+	  (func (export "bind") (param $d i32) (result i32)
+	    (if (i32.eqz (call $bind0 (local.get $d))) (then (return (i32.const 0))))
+	    ${registrations.map((_,i)=>`(if (i32.eqz (call $bind${i+1} (local.get $d))) (then (call $close) (return (i32.const 0))))`).join("\n")}
+	    (i32.const 1)))
+	(core instance $lifecycle (instantiate $lifecycle (with "" (instance ${links.join(" ")}))))
+	(func (export "bind-owners") (param "domain" u32) (result bool) (canon lift (core func $lifecycle "bind")))
+	(func (export "close-owners") (canon lift (core func $lifecycle "close")))`;
 };

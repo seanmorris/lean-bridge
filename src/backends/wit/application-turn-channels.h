@@ -13,7 +13,7 @@ static inline wasmtime_error_t *lb_tg_link_one(lb_tg_port *c,const lb_tg_spec *s
     unsigned base=lb_tg_code(i,0);
     return s->kind==LB_TG_STREAM?lb_tc_link(root,s->name,turns,base,&c->stream.port):lb_tf_link(root,s->name,turns,base,s->kind,&c->future.port);
 }
-static inline bool lb_tg_open_one(lb_tg_port *c,const lb_tg_spec *s,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx){
+static inline bool lb_tg_open_one_at(lb_tg_port *c,const lb_tg_spec *s,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx,const char *scope){
     const bool stream=s->kind==LB_TG_STREAM;const char *prefix=s->name+5;
     const char *names[]={"retire","drain",stream?"pump":"poll","deliver","reap","close"};
     wasmtime_component_func_t *fs[6];
@@ -25,8 +25,8 @@ static inline bool lb_tg_open_one(lb_tg_port *c,const lb_tg_spec *s,wasmtime_com
         lb_tf_driver *d=&c->future;d->ctx=ctx;
         fs[0]=&d->retire;fs[1]=&d->drain;fs[2]=&d->poll;fs[3]=&d->deliver;fs[4]=&d->reap;fs[5]=&d->close;
     }
-    size_t n=strlen(prefix);if(n>SIZE_MAX-9)return false;
-    char *full=malloc(n+9);if(!full)return false;memcpy(full,prefix,n);full[n]='-';
+    size_t ns=strlen(scope),np=strlen(prefix);if(ns>SIZE_MAX-9 || np>SIZE_MAX-9-ns)return false;
+    size_t n=ns+np;char *full=malloc(n+9);if(!full)return false;memcpy(full,scope,ns);memcpy(full+ns,prefix,np);full[n]='-';
     bool ok=true;for(unsigned j=0;j<(stream?3u:6u);j++){
         size_t len=strlen(names[j]);memcpy(full+n+1,names[j],len);
         wasmtime_component_export_index_t *id=wasmtime_component_instance_get_export_index(inst,ctx,NULL,full,n+1+len);
@@ -34,6 +34,9 @@ static inline bool lb_tg_open_one(lb_tg_port *c,const lb_tg_spec *s,wasmtime_com
         if(id)wasmtime_component_export_index_delete(id);
         if(!ok)break;
     }free(full);return ok;
+}
+static inline bool lb_tg_open_one(lb_tg_port *c,const lb_tg_spec *s,wasmtime_component_instance_t *inst,wasmtime_context_t *ctx){
+    return lb_tg_open_one_at(c,s,inst,ctx,"");
 }
 static inline wasmtime_error_t *lb_tg_advance_one(lb_tg_port *c,const lb_tg_spec *s,unsigned *changed){
     if(s->kind!=LB_TG_STREAM){

@@ -12,19 +12,21 @@ import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-recei
 import {witCoreInterface} from "../../src/backends/wit/application-operations.mjs";
 import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
 import {extendWitMembers} from "./wit-application-project.mjs";
+import {installWitAuthor} from "./wit-installed-author.mjs";
 import {assertJsonSchema} from "./json-schema.mjs";
 
-const exec=promisify(execFile),cli=resolve("scripts/lean-bridge.mjs"),json=async path=>JSON.parse(await readFile(path,"utf8"));
+const exec=promisify(execFile),json=async path=>JSON.parse(await readFile(path,"utf8"));
 const fixtures=resolve("tests/fixtures/static-host-workers"),wasm=process.env.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools";
 test("relocated WIT packages execute synchronous Lean IO with application-owned objects",{timeout: 900000},async t=>{
 	const root=await mkdtemp(join(tmpdir(),"wit-installed-objects-"));t.after(()=>rm(root,{recursive: true,force: true}));
+	const cli=await installWitAuthor(root);
 	let original;
 	for(const route of ["ordinary","reviewed"])
 {
 		const work=join(root,route),src=join(work,"source"),out=join(work,"release");
 		await mkdir(work);await prepareNativeHostFixture(src,"wit-wasi");await extendWitMembers(src);await copyFile("LICENSE",join(src,"LICENSE"));
 		if(original)await writeFile(join(src,"workshop.binding-ir.json"),canonicalJson(original));
-		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"]);
+		await exec(process.execPath,[cli,"build","--project",src,"--target","wit-wasi","--output",out,"--json","--progress","none"],{cwd: work});
 		const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(out,"package-set-receipt.json")});
 		await assertJsonSchema("package-set-receipt",receipt);
 		assert.equal(receipt.packages.length,1);const [pkg]=receipt.packages,[a]=pkg.artifacts;
@@ -67,6 +69,16 @@ test("relocated WIT packages execute synchronous Lean IO with application-owned 
 		await writeFile(join(work,"private.wat"),'(component (import "private-exchange" (instance)) (core module $m (func (export "run") (result i64) (i64.const 1))) (core instance $i (instantiate $m)) (func (export "run") (result s64) (canon lift (core func $i "run"))))');
 		await wc("parse","private.wat","-o","private.wasm");await wc("validate","private.wasm");
 		await assert.rejects(invoke("guest-box.wasm","private.wasm"),e=>e.code===1 && /private-exchange/u.test(e.stderr));
+		// Same core ABI, different Component Model contracts. A wrong run type
+		// must fail graph validation, before the trapping initializer can run.
+		for(const ty of ["u64","s64"])
+		{
+			const wat='(component (core module $m (func $init unreachable) (start $init) (func (export "f") (result i64) i64.const 1)) (core instance $i (instantiate $m))';
+			await writeFile(join(work,ty+".wat"),wat+` (func (export "run") (result ${ty}) (canon lift (core func $i "f"))))`);
+			await wc("parse",ty+".wat","-o",ty+".wasm");await wc("validate",ty+".wasm");
+			await assert.rejects(invoke("guest-box.wasm",ty+".wasm"),e=>e.code===1 && (ty==="s64"
+				? /unreachable/u.test(e.stderr) : /type|ascri/u.test(e.stderr) && !/unreachable/u.test(e.stderr)));
+		}
 		t.diagnostic(route+" "+a.bytes+" bytes "+a.sha256+" — original owners, exact IO/EIO errors, mutation and cleanup; no SDK on PATH");
 		await rm(work,{recursive: true});
 }

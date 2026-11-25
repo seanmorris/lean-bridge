@@ -33,7 +33,7 @@
   (instance $i (instantiate $responder (with "r0" (type $box)) (with "r1" (type $err)) (with "r2" (type $registration))
     (with "registration" (func $ext "copy-k2")) (with "argument" (func $ext "copy-k0"))
     (with "value" (func $ext "hold-k0")) (with "error" (func $ext "hold-k1")) (with "invoke" (func $cb "[method]call-box-to-box.invoke"))))
-  (export "invoke" (func $i "invoke")) (export "bind-owners" (func $ext "bind")) (export "close-owners" (func $ext "close"))
+  (export "invoke" (func $i "invoke")) @LIFECYCLE@
   (export "live-owners" (func $ext "count")) (export "release" (func $ext "release-lease")) (export "same" (func $ext "same-lease"))
   (export "cb-drops" (func $c "callback-drops")) (export "visits" (func $c "callback-visits")) (export "drops" (func $o "drops"))
   (export "objects" (instance $obj)) (export "callbacks" (instance $cb))
