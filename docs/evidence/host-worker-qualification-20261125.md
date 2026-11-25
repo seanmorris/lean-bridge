@@ -69,6 +69,16 @@ are in addition to the installed examples above:
 | 1222 | IO, EIO and named failure contracts at the signature (102 cells). | Receiving a typed worker error does not establish how an immediate call returns an `Except`, preserves the original host exception, or retires a broken runtime. |
 | 1223 | Task, cancellation, synchronous iterator and asynchronous iterator at the signature (136 cells). | A host `foreach` or polling wrapper around an asynchronous Lean pull does not qualify a synchronous Lean iterator. |
 
+For **resource fields**, start with the [hosted owned-record acceptance](owned-checked-record-promotion-20261026-aligned.md),
+not another build of the same fixture. The [actual Lean record](../../tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean)
+has `Claim.holder : Ticket`. Across 17 profiles the full ordinary and reviewed
+packages exercise borrowed and transferred claims, leased results, and claims
+exchanged with synchronous callables. The standalone result-only packages
+do not exercise transfers or callback inputs. These are results for the
+archived releases and this concrete resource field. A closure *receiving*
+a claim is not a closure *stored inside* a field. Neither it nor a Lean
+`Ticket` field establishes ownership of an application-hosted object field.
+
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
 for an immediate option or a task-backed result, respectively.
