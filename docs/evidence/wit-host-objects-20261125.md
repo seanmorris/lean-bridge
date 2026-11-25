@@ -290,6 +290,8 @@ A separate replay verified the same four receipts and rebuilt only the downstrea
 
 A [second application](../../tests/fixtures/static-host-workers/peer-failure.wat.in) checks failure ownership. Gauge reads a deliberately failing box during Workshop's callback. The callback returns Gauge's original guest-owned member error; Workshop delivers it through its future as the typed `callback` failure, not an IO string or a process trap. Before disposal, the defining guest reports **one error created, none destroyed**. Dropping the received error and its future leaves **one created, one destroyed**. The defining destructor rejects the wrong resource identity or a second drop. The caller dropped its original box and callback immediately after starting the future. This passed in all eight release/order combinations, alongside the independent success and trap paths.
 
+After dropping that error and future, the application starts a second callback future **in the same store**, without rebinding either package. Workshop makes the update, Gauge observes it, and the application receives a successful box containing 73. All eight release/order combinations completed the recovery and retained the one-create/one-destroy error counts. This is the recoverable-error path; a Wasm trap still terminates the command.
+
 | Worker package | Archive bytes | SHA-256 |
 | --- | ---: | --- |
 | Workshop, ordinary | 61,125,430 | `57643a8339f935b24bb40eb1e7f62567797b9c7e0acdf637469640e5e0107465` |
