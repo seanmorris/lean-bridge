@@ -1418,6 +1418,7 @@
     "test:perl-worker-filtered-engine": "node --test --test-concurrency=1 tests/helpers/perl-filtered-worker-package.mjs",
     "test:perl-worker-effects": "node --test --test-concurrency=1 tests/helpers/perl-host-worker-effects.mjs",
     "test:ruby-worker-effects": "node --test --test-concurrency=1 tests/helpers/ruby-host-worker-effects.mjs",
+    "test:dotnet-worker-effects": "node --test --test-concurrency=1 tests/helpers/dotnet-host-worker-effects.mjs",
     "test:php-worker-effects": "node --test --test-concurrency=1 tests/helpers/php-host-worker-effects.mjs",
     "test:perl-worker-replay": "node --test --test-concurrency=1 tests/helpers/perl-worker-replay.mjs",
     "test:perl-worker-source": "node --test --test-concurrency=1 tests/helpers/perl-worker-elaboration.mjs",

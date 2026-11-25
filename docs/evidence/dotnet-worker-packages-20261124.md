@@ -63,3 +63,21 @@ for the native transport boundary and scope-specific cancellation behavior.
 Set `LEAN_BRIDGE_DOTNET_WORKER_HANDOFFS` to an existing private directory to
 keep the package receipts and archives without keeping compilers or NuGet
 caches. `LEAN_BRIDGE_DOTNET_WORKER_REPLAYS=2` exercises each load order twice.
+
+## File effects through Task and IAsyncEnumerable
+
+Run `npm run test:dotnet-worker-effects` to build and restore a NuGet package
+from a local-only feed, relocate the .NET 8 client, then run with no producer
+tools on its path. The [C# client](../../tests/fixtures/dotnet-host-workers/Effects.cs)
+reads Lean's startup environment value and observes a real file through both
+a synchronous call and a `Task<uint>`. Two `MoveNextAsync` calls see separate
+file contents. Early `DisposeAsync` writes the finalizer marker; a later
+pull and a second disposal leave the replacement marker untouched.
+
+Removing filesystem permission refused the worker, pull and close without
+creating a release. Both granted releases passed:
+
+| Build | Verified package-set receipt (SHA-256) |
+| --- | --- |
+| Ordinary | `1a23085d72ad13c0b29761a9a2896e01b2c63a1a75a32fdd59c25fec20b8f810` |
+| Reviewed | `2390ce5c4a503a4e8aa13c8fbfe319b8efd3397fdd4624acb1a71929d04b80aa` |
