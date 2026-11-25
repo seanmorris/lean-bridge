@@ -24,3 +24,14 @@ passed on both primary routes.
 Run `npm run test:ruby-host-workers` with the pinned Lean toolchain, native
 runtime and MRI 3.3 configured for the producer. These are local installed-gem
 results, not a hosted CI run or a registry publication.
+
+## File effects and early iterator exit
+
+Two relocated MRI 3.3.12 installs ran the [same Ruby application](../../tests/fixtures/ruby-host-workers/effects.rb) from ordinary and reviewed packages. Inside its host binding, Ruby observed the environment captured during initialization and a synchronous file read. The worker returned a real `Task`; its `await` read the file. The first cursor pull saw the original contents; after Ruby edited the file, the next iteration saw the change. Breaking out of `each` wrote the Lean finalizer's marker. A later `next` raised `StopIteration`, and calling `close` again left the application's replacement marker untouched. Removing the filesystem grant named the worker, pull and close roots and produced no package.
+
+| Gem | Bytes | SHA-256 | Package-set receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary | 50,101,248 | `0ea6f976987c45a99a4d9b996e0c24740b9ca58eb59dd201805176a8a7c1b34d` | `fe8ffeb33a9fa845d0af0296874b2a46fb6bd8b313ff74e85ad6765934f88951` |
+| Reviewed | 50,101,248 | `31bb53160bf3ae97ac032e4932cd2f955a7b4e21c698347a48cf18ede81a51be` | `7cb1140e1b94f930f1065e1c037be1cc3d09aa56598f14b96087ff8e730c8b6e` |
+
+Run `npm run test:ruby-worker-effects` with the publisher toolchain. To retain or replay only release bytes, use the [worker-effect handoff options](perl-worker-packages-20261124.md#granted-effects-through-a-worker-and-cursor). Deployment uses the installed gem without Lean, a compiler, or a network connection.
