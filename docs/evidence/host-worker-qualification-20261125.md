@@ -79,6 +79,29 @@ archived releases and this concrete resource field. A closure *receiving*
 a claim is not a closure *stored inside* a field. Neither it nor a Lean
 `Ticket` field establishes ownership of an application-hosted object field.
 
+For **a returned function passed back as an argument**, there is also existing
+installed evidence for pure Lean functions on resource-containing records:
+
+- The [Python client](../../tests/fixtures/structured-types/owned-installed-python.py)
+  passes a Lean identity function into `callback_record`, into a returned
+  higher-order dispatcher, and into `retain_callback`. By contrast, calling
+  an escaped, call-borrowed Python lambda is refused. Its SHA-256 matches
+  `packages.ordinary.consumerSha256` and `packages.reviewed.consumerSha256` in
+  the [Python execution record](owned-python-execution-20260927.json).
+- The [native PHP client](../../tests/fixtures/structured-types/owned-installed-php.php)
+  passes the Lean function to `retain_callback`, closes the original wrapper
+  and still calls the returned function. A similarly returned PHP lambda
+  expires. Both routes pin the client as `packages.<route>.sourceSha256` in the
+  [native PHP record](owned-php-integration-20260928.json).
+
+These are actual calls to [`retainCallback : (Bundle → Bundle) → Bundle → Bundle`](../../tests/fixtures/onboarding/owned-cpp-composition/Owned.lean).
+They do not cover a function capturing an application's host object and
+performing IO, or a callable stored in a record. For the latter, the
+[`HiddenCallback.callback` fixture](../../tests/fixtures/onboarding/owned-aggregates/Owned.lean)
+and its [compiler test](../../tests/owned-aggregate-metadata.test.mjs)
+explicitly report the missing retention policy. A positive test for
+passing the function back must not replace that negative field test.
+
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
 for an immediate option or a task-backed result, respectively.
