@@ -128,6 +128,20 @@ original C++ exception. If Lean maps it to `EIO String`, catch
 `lean_bridge::sync_v1::DeclaredError<std::string>` instead. A returned
 `Except` remains a value.
 
+If an export returns a Lean function, use it as a move-only C++ callable:
+
+```cpp
+auto meter = api.make(40);
+auto read_plus = api.reader(meter);
+auto answer = read_plus(2);  // 42; reads the captured meter now
+read_plus.close();           // destruction also releases the callable
+```
+
+Call it on the original process’s main thread. It does not keep its binding
+open. After the binding closes, invoking a saved callable throws
+`lean_bridge::sync_v1::Closed`. If the last owner is destroyed from
+another thread, release runs through the owner queue, not on that thread.
+
 For a borrowed member result, use an aliasing `shared_ptr` when returning a
 subobject: `std::shared_ptr<Dial>(parent, &parent->dial)`. It points at the
 field but keeps the original parent alive. If the contract says the result

@@ -74,6 +74,19 @@ or `{ "scope": "parameter", "anchor": "dial" }` for an argument named
 owner's control block. Use a lease for a result with an independent owner.
 See the [borrowed member example](../../tests/fixtures/cpp-host-anchors/Workshop.lean).
 
+A synchronous factory can return a unary Lean IO function over imported C++
+classes or copied scalars. For example, with `Box` from `LeanBridge.Host.Cpp`:
+
+```lean
+def reader (meter : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun offset => do return (← meter.read) + offset
+```
+
+Select the factory in `exports`. The consumer receives a move-only object
+with `operator()` and `close()`; no function pointer or scheduler is part
+of the interface. A grant for filesystem access is still required if the
+returned function reads a file when invoked.
+
 ## Export tasks and streams
 
 If the Lean code uses files, environment variables, or other OS facilities,

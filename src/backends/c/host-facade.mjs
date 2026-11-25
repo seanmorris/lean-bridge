@@ -13,7 +13,7 @@ import {cHostWorkers} from "./host-worker-api.mjs";
 export const cHostFacade=o=>{
 	const {ir,entries,model,identity,prefix}=o;
 	const factories=entries.map((e,i)=>({e,i})).filter(({e})=>e.result?.kind==="io-closure"),closures=factories.length>0;
-	if(closures && (o.cpp || o.wit))throw new TypeError("Unadmitted host closure facade");
+	if(closures && o.wit)throw new TypeError("Unadmitted host closure facade");
 	const p=cIdentifier(o.name)+"_",guard="LB_C_PUBLIC_"+identity.toUpperCase(),defs=[],code=[],symbols=[];
 	const used=new Set(),reserve=n=>{if(used.has(n)) throw new TypeError("C host public name collision: "+n);used.add(n);return n;};
 	const names=["binding","hosts","status","diagnostic","view","buffer","integer","integer_view"];

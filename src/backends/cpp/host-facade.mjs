@@ -1,5 +1,6 @@
 /** @file Generate a C++20 binding to real application classes and original member exceptions. */
 import {cIdentifier,cKeywords} from "../c/generate.mjs";
+import {cppHostReturnedFunction} from "./host-returned-function.mjs";
 import {hostDeclarationName} from "../../abi/host-member-names.mjs";
 import {cppHostCodecs} from "./host-codecs.mjs";
 import {cppHostWorkers} from "./host-worker-api.mjs";
@@ -47,15 +48,23 @@ export const cppHostFacade=o=>{
 			+(borrowed?"if(!hd::anchored(value,anchor)) return UINT32_MAX; ":"")
 			+(unit?"":r.write("value","*out"))+" return 0; } catch(...) { return UINT32_MAX; } }");
 	}
-	const names=new Set(["close","binding","require","state","pin","share","reset","methods","frame","check","limbs","read_integer","write_integer","dispose","release_types",
-		...o.workerEntries?.length?["worker_check"]:[],...classes.flatMap((_,i)=>["pin"+i,"share"+i]),...model.members.map((_,i)=>"member"+i)]);
-	for(const e of [...entries,...o.workerEntries??[]]){
+	const names=new Set([
+		"close","binding","require","state","pin","share","reset","methods"
+		, "frame","check","limbs","read_integer","write_integer","dispose"
+		, "release_types"
+		, ...o.workerEntries?.length?["worker_check"]:[]
+		, ...classes.flatMap((_,i)=>["pin"+i,"share"+i])
+		, ...model.members.map((_,i)=>"member"+i)
+	]);
+	for(const e of [...entries,...o.workerEntries??[]])
+	{
 		const n=id(cIdentifier(e.name));
 		if(names.has(n)) throw new TypeError("C++ binding member name is reserved: "+n);
 		names.add(n);
 	}
 	const exports=entries.map(e=>{
 		const name=cIdentifier(e.name);
+		if(e.result.kind==="io-closure")return cppHostReturnedFunction({e,p,name,id,ref,async: !!o.workerEntries?.length});
 		const args=e.parameters.map(t=>ref(t.type,name+"_arg")),value=ref(e.result,name+"_value"),error=e.effect==="EIO"?ref(e.error,name+"_failure"):null;
 		const unit=value.n==="unit",guard=(v,n)=>v.clear(n)?"hd::Finally "+n+"_end([&]{ "+v.clear(n)+" });":"";
 		return (unit?"void":value.type)+" "+id(name)+"("+args.map((a,j)=>"const "+a.type+"& v"+j).join(",")+") const {\n"
@@ -69,7 +78,7 @@ export const cppHostFacade=o=>{
 			+"check(rc); "+(unit?"return;":"return "+value.read("value")+";")+"\n}";
 	});
 	const stdlib=Object.entries(abi).map(([k,v])=>"!defined("+k+") || "+(k==="__GLIBCXX__"?k+" < "+v:k+" != "+v)).join(" || ");
-	const workers=o.workerEntries?.length?cppHostWorkers({entries:o.workerEntries,ir,p,ref,id}):[];
+	const workers=o.workerEntries?.length?cppHostWorkers({entries: o.workerEntries,ir,p,ref,id}):[];
 	const async=workers.length>0;
 	const guard="LB_CPP_BINDING_"+identity.toUpperCase(), ns=id(cIdentifier(o.name));
 	return [
