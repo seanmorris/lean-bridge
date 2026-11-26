@@ -240,6 +240,17 @@ Set `LEAN_BRIDGE_PHP_PARKED_HANDOFFS` to retain the archives. To repeat just
 the offline install and client, unset that variable and point
 `LEAN_BRIDGE_PHP_PARKED_REPLAY` at the reported handoff directory.
 
+### Who owns a blocked native pull?
+
+Closing a stream and discarding one waiter are different operations. The
+November 22 installation records establish the following:
+
+| Consumer action | What the installed program observed |
+| --- | --- |
+| C: close the cursor | The [C client](../../tests/fixtures/c-lean-tasks/consumer.c) waited for the worker and polled the still-pending cursor. Closing it immediately invalidated the borrowed file descriptor (`EBADF`). The Lean finalizer count rose from two to three **before** the client opened the gate. The worker then finished. [Ordinary and reviewed installs](c-task-streams-20261122.json) used both pkg-config and CMake. |
+| C++: destroy the stream, keep the pending step | The [C++ client](../../tests/fixtures/cpp-lean-tasks/consumer.cpp) moved the stream onto a second thread and destroyed it there. Back on the owner thread, the outstanding step threw `Cancelled`. Lean reported exactly one extra finalizer before the client released the worker. [Both routes](cpp-task-streams-20261122.json) ran through pkg-config and CMake. |
+| Rust: drop only the future returned by `next()` | In the [archived Rust client](https://github.com/seanmorris/lean-bridge/blob/bcce2f989b19f7e83247e19920b27c62429547d8/tests/fixtures/rust-task-lab/pulse_checks.rs), a replacement reader received an item from the **same** Lean pull. The client closed the stream *after* receiving that item. The [two-crate installation](rust-tasks-20261122.json) ran this particular check on the ordinary crate; using the reviewed peer elsewhere in that executable does not extend this result to that peer. |
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
