@@ -46,6 +46,25 @@ checks on those exact archives without rebuilding Lean, set
 `LEAN_BRIDGE_PERL_WORKER_REPLAY` to the resulting handoff root and run
 `npm run test:perl-worker-replay`. Nothing in this test uploads to CPAN.
 
+## Which calls preserve the original Perl reference?
+
+The [installed worker client](../../tests/fixtures/perl-host-workers/public.pl)
+allocates two blessed objects with the same value. It passes the first to
+`relay`, compares the callback argument using `refaddr`, returns the second,
+and checks that `get` yields the second reference. These are three distinct
+positions: the export argument, callback argument and callback result.
+The ordinary, reviewed and peer worker archives above contain the declared
+box-to-box callback, and all three matched their original receipts.
+
+For an **immediate** export result, see the separately
+[installed synchronous CPAN packages](perl-host-imports-20261124.md#cpan-host-packages).
+Their [application](../../tests/fixtures/perl-host-meter/installed-pair.pl)
+passes the object between components and checks that `identity` returns
+the original reference, in both load orders. The [record packages](perl-host-record-fields-20261126.md)
+cover object fields. Together these installs cover all five positions on
+both authoring routes. This audit checked the clients against the revisions
+that recorded these installations; it did not rerun the four-ABI matrix.
+
 ## Filtered publisher source
 
 The Nix Perl engine reads only files in [its source filter](../../nix/perl-engine-source-boundary.json). The uncorrected filter omitted transitive imports and Perl worker templates and still named a deleted C frame source. Unlike an unfiltered checkout, the filtered tree could not load the publisher.
