@@ -9,6 +9,7 @@ import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {nativeFixtureEnvironment,installCopiedConsumer,copiedCleanEnvironment,runCopied} from "./copied-fixture-install.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
+import {fixtureCmake} from "./fixture-cmake.mjs";
 import {prepareStagedQuoteProject,checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
 
 const cases=["borrow expires after success","borrow expires after failure"
@@ -22,8 +23,7 @@ const parseResult=stdout=>{
 test("installed C callback borrows a captured Lean function until return",{timeout: 7200000},async t=>{
 	const env=nativeFixtureEnvironment(["c"]),work=await mkdtemp(join(tmpdir(),"c-incoming-"));
 	t.after(()=>rm(work,{recursive: true,force: true}));
-	const cmakeTool=env.LEAN_BRIDGE_CMAKE??"/usr/bin/cmake";
-	await runCopied(cmakeTool,["--version"],work,copiedCleanEnvironment);
+	const cmakeTool=await fixtureCmake(work,env);
 	const keep=env.LEAN_BRIDGE_C_INCOMING_KEEP,replay=env.LEAN_BRIDGE_C_INCOMING_REPLAY;assert.ok(!(keep && replay));
 	const resume=env.LEAN_BRIDGE_C_INCOMING_RESUME;assert.ok(!resume || (!keep && !replay));
 	const sets=resume?resolve(resume):replay?resolve(replay):await mkdtemp(join(keep??work,"handoffs-"));

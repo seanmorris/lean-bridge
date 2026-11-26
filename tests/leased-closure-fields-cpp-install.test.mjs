@@ -6,6 +6,7 @@ import {join, resolve} from "node:path";
 import test from "node:test";
 import {buildCanonicalProject} from "../src/build/canonical-build.mjs";
 import {generateOwnedCppPackage} from "../src/backends/cpp/owned-package.mjs";
+import {fixtureCmake} from "./helpers/fixture-cmake.mjs";
 import {canonicalJson, sha256} from "../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../src/release/package-set-receipt.mjs";
 import {copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied} from "./helpers/copied-fixture-install.mjs";
@@ -98,6 +99,7 @@ for(const route of ["ordinary", "reviewed"]) test("installed C++ direct function
 }, async t => {
 	const dir = await mkdtemp(join(tmpdir(), "cpp-tariff-")), handoff = join(dir, "handoff"), consumer = join(dir, "consumer");
 	t.after(() => rm(dir, {recursive: true, force: true}));
+	const cmake=await fixtureCmake(dir,environment);
 	if(replay) await copyPackageSetHandoff(join(resolve(replay), route), handoff);
 	else await buildHandoff(dir, route, handoff, t);
 	const {receipt, result} = await readVerifiedPackageSetReceipt({receiptPath: join(handoff, "package-set-receipt.json")});
@@ -156,7 +158,6 @@ target_compile_options(host-fields PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 target_compile_definitions(host-fields PRIVATE TARIFF_TEST_OBSERVER=1)` : ""}
 `);
 	const env = {...copiedCleanEnvironment, PATH: join(root, "tools")};
-	const cmake = process.env.LEAN_BRIDGE_CMAKE ?? "/usr/bin/cmake";
 	await runCopied(cmake, ["-S", root, "-B", "build", "-G", "Unix Makefiles"
 		, "-DCMAKE_CXX_COMPILER=/usr/bin/c++"
 		, "-DCMAKE_MAKE_PROGRAM=/usr/bin/make"
