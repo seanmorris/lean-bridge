@@ -16,6 +16,22 @@ The [application](../../tests/fixtures/rust-host-members/archives.rs) passed in 
 
 Run `npm run test:rust-host-packages` for the publisher and downstream checks. The [Cargo harness](../../tests/helpers/rust-host-packages.mjs) can also replay a retained set of archives via `LEAN_BRIDGE_RUST_HOST_REPLAY`. Replay verifies the package-set receipts, archive hashes, inner file inventories, and embedded binding and elaboration records before invoking Cargo.
 
+### Replaying the synchronous error policy
+
+To rerun only the synchronous Cargo clients against these exact archives,
+set `LEAN_BRIDGE_RUST_HOST_REPLAY` to the three-release directory and use:
+
+```sh
+node --test --test-name-pattern='ordinary and reviewed Rust host archives' tests/helpers/rust-host-packages.mjs
+```
+
+Set `LEAN_BRIDGE_RUST_HOST_ERROR_OUTPUT` to retain one JSON record per source
+route. The two additional client modes test the exception's last reference
+after its binding closes, then catch a nested member panic and attempt to use
+both components. These modes were not part of the ten historical runs above.
+Use the release's exact Cargo dependencies; the installer checks each archive
+against the crate lockfile before building offline.
+
 ### Running alongside IO and task packages
 
 A separate [four-crate check](../../tests/helpers/mixed-rust-host-crates.mjs) installed fresh synchronous IO and task archives alongside Workshop and its peer. All four required the same runtime archive by hash and version. Cargo enabled `async`, `default` and `host-objects` on just one provider. The relocated executable passed a Lean-owned resource through a task, used a declared error carrying that resource, ran the host-object client, closed its bindings, and then repeated the IO/task operations. This shows that the profiles coexist; it does **not** pass a Rust-owned object to a worker.

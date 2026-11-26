@@ -5,11 +5,12 @@ import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { installVerifiedRustCrate, rustLockPackages } from "./rust-task-install.mjs";
 import { publishRustHosts } from "./rust-host-publish.mjs";
+import { checkHostErrorInterface } from "./check-host-error-interface.mjs";
 
 const json=async f=>JSON.parse(await readFile(f,"utf8"));
 const exercise=async (root,out,route,env,workers=false)=>{
@@ -24,6 +25,13 @@ const exercise=async (root,out,route,env,workers=false)=>{
 			assert.deepEqual(result.profiles,["native-rust-host-v1"]);assert.equal(result.archives,2);
 			const api=await json(join(dir,"binding-ir.json")),ev=await json(join(dir,"host-export-evidence.json"));
 			assert.equal(hashBindingIr(api),receipt.profiles[0].bindingIrSha256);
+			if(!workers)
+			{
+				const ordinary=await readFile(join(out,"ordinary/binding-ir.json"));
+				assert.equal(ev.reviewedSourceSha256,name==="reviewed"?sha256(ordinary):null);
+				if(name==="reviewed") assert.deepEqual(api,JSON.parse(ordinary));
+				checkHostErrorInterface(api);
+			}
 			if(workers) assert.equal(ev.selection.staticTaskOwner,"rust");
 			let component,runtime;
 			for(const pkg of receipt.packages)
@@ -53,7 +61,9 @@ const exercise=async (root,out,route,env,workers=false)=>{
 				{runtime=info;assert.equal(pkg.name,"lean-bridge-task-runtime");assert.ok(meta.profiles.includes("native-rust-host-v1"));}
 			}
 			assert.ok(component && runtime);assert.equal(component.support,runtime.support);
-			const proof=workers?{bindingIr: receipt.profiles[0].bindingIrSha256,owner: ev.selection.staticTaskOwner,reviewed: ev.reviewedSourceSha256,source: ev.sourceTreeSha256}:{};
+			const proof={bindingIr: receipt.profiles[0].bindingIrSha256
+				, reviewed: ev.reviewedSourceSha256
+				, source: ev.sourceTreeSha256,...workers?{owner: ev.selection.staticTaskOwner}:{}};
 			reports.push({name,receipt: result.receiptSha256,component: component.hash,runtime: runtime.hash,...proof});
 		}
 		const registry=join(env.CARGO_HOME??join(homedir(),".cargo"),"registry/cache");
@@ -88,10 +98,24 @@ const exercise=async (root,out,route,env,workers=false)=>{
 		for(const path of [client,ce.CARGO_TARGET_DIR,ce.CARGO_HOME,vendor]) await rm(path,{recursive: true,force: true});
 		const isolated={PATH: "/no-tools",LEAN_NUM_THREADS: "1",TMPDIR: scratch,LANG: "C",LD_LIBRARY_PATH: ""};
 		assert.doesNotMatch(await run("ldd",[bin],temp,{...env,LD_LIBRARY_PATH: ""}),/liblean|liblb_rust/u);
-		for(const mode of workers?["workers","panic-worker"]:["forward","reverse","invalid-receiver","invalid-parameter","panic"])
+		const executions=[];
+		for(const mode of workers?["workers","panic-worker"]:["forward","reverse","invalid-receiver","invalid-parameter","panic","policy-forward","policy-reverse"])
 		{
 			const output=await run(bin,[mode],temp,isolated);
-			assert.match(output,workers?/worker checks passed/u:/strong cleanup|retired both archives; closed cleanly/u);
+			if(mode.startsWith("policy-"))
+			{
+				assert.equal(output,"error policy: sole owner 23->42; drops 1; caught nested panic; reads 1,1");
+				executions.push({mode,observation: output});
+			} else assert.match(output,workers?/worker checks passed/u:/strong cleanup|retired both archives; closed cleanly/u);
+		}
+		if(!workers && env.LEAN_BRIDGE_RUST_HOST_ERROR_OUTPUT)
+		{
+			const dest=resolve(env.LEAN_BRIDGE_RUST_HOST_ERROR_OUTPUT);
+			assert.equal(executions.length,2); await mkdir(dest,{recursive: true});
+			await writeFile(join(dest,route+".json"),canonicalJson({route
+				, releases: reports
+				, consumerSha256: sha256(await readFile("tests/fixtures/rust-host-members/archives.rs"))
+				, executions}));
 		}
 		return reports;
 	} finally
