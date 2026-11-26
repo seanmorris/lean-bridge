@@ -1556,6 +1556,7 @@
     "test:javascript-threaded-task-probe": "LEAN_BRIDGE_JS_THREADED_TASK_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-threaded-task-installed.mjs",
     "test:javascript-parked-reader": "node --test --test-concurrency=1 tests/helpers/javascript-parked-reader-installed.mjs",
     "test:javascript-once-callback": "node --test --test-concurrency=1 tests/helpers/javascript-once-callback-installed.mjs",
+    "test:javascript-callback-cancellation": "node --test --test-concurrency=1 tests/helpers/javascript-callback-cancellation-installed.mjs",
     "test:javascript-shared-task-probe": "LEAN_BRIDGE_JS_TASK_PLUGINS=1 npm run test:javascript-threaded-task-probe",
     "test:javascript-generated-tasks": "LEAN_BRIDGE_JS_GENERATED_TASK_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-generated-tasks.mjs",
     "test:javascript-task-author-cli": "LEAN_BRIDGE_JS_TASK_CLI_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-task-cli.mjs",

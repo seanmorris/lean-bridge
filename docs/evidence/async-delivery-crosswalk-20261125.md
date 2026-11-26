@@ -95,6 +95,28 @@ For each [CPython capture](python-resource-leases-20261123.json), set `LEAN_BRID
 to that ABI's root and `LEAN_BRIDGE_PYTHON` to its interpreter, then run `node --test tests/helpers/python-resource-installed.mjs`.
 Fresh captures also run the new clients; historical replay still verifies the original acceptance bytes.
 
+### Cancelling a callback and registering the same function again
+
+The Budget [ordinary](npm-callback-cancellation-20261126/ordinary.json)
+and [reviewed](npm-callback-cancellation-20261126/reviewed.json) npm releases
+passed in Node, executed strict TypeScript, a Chromium page, mounted React
+and a dedicated browser worker. Cancelling before entry never invoked the
+application callback. Cancelling after entry rejected the original task
+once and drained the runtime **before** the application answered.
+
+The [client](../../tests/fixtures/javascript-callback-cancellation/calls.mjs)
+then passed the *same* JavaScript function to a second task. Neither a
+late success (777) nor a late exception from its old invocation settled
+the new task. A sibling task completed; the replacement waited for its
+own reply, returned 42 once, and refused cancellation after settlement.
+Frame, allocation, pending-operation, notification and native-owner counts
+all returned to zero. This tests a stale callback reply, not an iterator.
+
+Run `npm run test:javascript-callback-cancellation` with the [threaded
+toolchain](threaded-task-probe.md), or set
+`LEAN_BRIDGE_NPM_CALLBACK_CANCEL_REPLAY` to the retained Budget handoff
+directory containing both routes to rerun the installations without a build.
+
 ### Cancelling a pull already waiting on Lean
 
 The earlier npm [Jobs client](../../tests/fixtures/javascript-wasm-task-runtime/public-consumer.mjs)
