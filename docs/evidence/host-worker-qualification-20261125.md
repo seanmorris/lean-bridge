@@ -264,8 +264,9 @@ passed with prebuilt XS on all four Perl ABIs. The [native Composer installs](ho
 passed in PHP 8.2 and 8.5 on both routes. The [offline Maven installs](host-callback-input-records-20261126.md#installed-java-and-kotlin-consumers)
 also passed in separate Java and Kotlin applications. Both
 [PHP-Wasm packages](host-callback-input-records-20261126.md#php-wasm-callers)
-passed all eight Node/Chromium installation and loading combinations. That
-qualifies input fields on **16 of 17 profiles**; WIT/WASI remains.
+passed all eight Node/Chromium installation and loading combinations. The
+[relocated WIT/WASI clients](host-callback-input-records-20261126.md#witwasi-callers)
+also passed on both routes, bringing this input-field case to **17 of 17 profiles**.
 
 A separate [incoming-function check](npm-incoming-functions-20261126.md)
 passes a Lean function directly into the host callback. All five consumers
@@ -273,6 +274,11 @@ rejected the expired borrow and kept an independent lease on each of the
 [matched npm releases](npm-incoming-functions-20261126/matched/pair.json).
 Both used the same runtime archive. An older ordinary release passed the
 same checks with a different runtime.
+
+The [managed runtime clients](dotnet-function-fields-20261126.md#a-function-passed-directly-into-a-callback)
+also tested nested failure, comparison of live and expired views, and zero
+owners after thread exit. Those .NET, Java and Kotlin runs exercised real
+compiled code; they are not paired NuGet or Maven installation results.
 
 ### Does a callback allow one call or many?
 
@@ -309,8 +315,11 @@ the original CLR exception and released the retained delegate's capture.
 The [Maven packages](native-once-callback-20261126.md#java-and-kotlin)
 passed both a Java future client and a Kotlin suspend client. The
 [native Composer packages](native-once-callback-20261126.md#native-php)
-passed on PHP 8.2 and 8.5. That gives **15 of 17** consumer profiles on
-both author routes. Perl and WIT/WASI remain for this rule.
+passed on PHP 8.2 and 8.5. The [CPAN packages](native-once-callback-20261126.md#perl)
+passed 256 two-worker races across 16 relocated installs. That gives **16 of 17**
+consumer profiles on both author routes. WIT/WASI has installed
+[pollable-task evidence](native-once-callback-20261126.md#witwasi-pollable-tasks);
+its standalone canonical-future install is still required for this rule.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile
