@@ -1,0 +1,26 @@
+{
+  "clientSha256": "ed543d7a78d4d27ab215a101ad9cf0f8bee35861c20e4712b4534872a628c3f5",
+  "held": 3,
+  "identities": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "packageSetSha256": "fccef8314d53f6baead3ede43e1f4eacbd929ff38ef4bb46568bccc400c86a39",
+  "probeSha256": "e8bbcebe1eb5606fc4b5e25232928e953fe56b0d2502471c1c5192e257ddb82a",
+  "relocated": [
+    "clone survives explicit close of the original field",
+    "caller-built record survives a round trip and drop",
+    "extracted function owns its captured price",
+    "repacked function outlives the original owner",
+    "host FnMut borrow expires even inside a returned record",
+    "closed field is not a valid input",
+    "a later valid record still works"
+  ],
+  "route": "reviewed"
+}

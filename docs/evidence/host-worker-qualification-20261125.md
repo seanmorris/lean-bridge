@@ -165,7 +165,9 @@ exercise a scalar function field after its original wrapper closes. The
 owner, invokes the remaining leases, and verifies that a raw alias is invalid
 after its last lease is released. The [C++20 record client](cpp-staged-callback-results-20261126.md#a-caller-builds-a-record-with-a-function-field)
 distinguishes a copied or repacked Lean function from a C++ lambda whose
-borrow has expired. These tests do not exercise a function field containing
+borrow has expired. The [Rust field client](rust-staged-callback-results-20261126.md#a-rust-record-owns-its-function-field)
+checks `Clone`, `drop`, a caller-built record and rejection of an expired
+`FnMut` with no remaining native owner. These tests do not exercise a function field containing
 a captured application object or a durable host callback.
 
 The [C callback exchange](c-callback-function-fields-20261125.md) separately

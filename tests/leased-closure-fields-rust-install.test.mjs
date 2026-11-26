@@ -96,9 +96,13 @@ for(const route of ["ordinary", "reviewed"]) test("installed Rust direct functio
 	const cargo = args => runCopied(environment.LEAN_BRIDGE_CARGO, args, root, compilerEnv);
 	const probe = await readFile(join(fixtures, "tariff-rust-probe.rs"));
 	await saveLakeFile(root, "observer.rs", probe);
+	const fields = await readFile(join(fixtures, "tariff-fields.rs"));
+	await saveLakeFile(root, "field-tests/consumer.rs", fields);
+	await saveLakeFile(root, "field-tests/observer.rs", probe);
 	const bins = ["observer", ...rejected.map(([name]) => name)];
 	let manifest = await readFile(join(root, "Cargo.toml"), "utf8");
 	for(const name of bins) manifest += `\n[[bin]]\nname = "${name}"\npath = "${name}.rs"\n`;
+	manifest += '\n[[bin]]\nname = "fields"\npath = "field-tests/observer.rs"\n';
 	await saveLakeFile(root, "Cargo.toml", manifest);
 	const refused = [];
 	for(const [name, statement] of rejected)
@@ -111,9 +115,11 @@ for(const route of ["ordinary", "reviewed"]) test("installed Rust direct functio
 		});
 		refused.push(name);
 	}
-	await cargo(["build", "--offline", "--locked", "--bin", "observer"]);
+	await cargo(["build", "--offline", "--locked", "--bin", "observer", "--bin", "fields"]);
 	const binary = join(dir, "relocated-observer"), plain = join(dir, "relocated-consumer");
 	await rename(join(root, "target/debug/observer"), binary);
+	const fieldBinary = join(dir, "relocated-fields");
+	await rename(join(root, "target/debug/fields"), fieldBinary);
 	await rename(join(root, "target/debug/consumer"), plain);
 	await rm(consumer, {recursive: true}); await rm(handoff, {recursive: true});
 	await rm(join(dir, "rust-dependencies"), {recursive: true, force: true});
@@ -136,5 +142,21 @@ for(const route of ["ordinary", "reviewed"]) test("installed Rust direct functio
 		, dependenciesSha256: dependencies.sha256, lockSha256: dependencies.lockSha256
 		, compileRejected: refused, relocated: lines, held, identities};
 	await saveLakeFile(dest, route + ".execution.json", canonicalJson(evidence));
+	const fieldRun = await runCopied(fieldBinary, [], dir);
+	assert.equal(fieldRun.stderr, "");
+	const fieldCases = fieldRun.stdout.trim().split("\n");
+	assert.equal(fieldCases.pop(), "identities:0,0,0,0,0,0,0,0");
+	assert.equal(fieldCases.pop(), "held:" + held);
+	assert.deepEqual(fieldCases, [
+		"clone survives explicit close of the original field"
+		, "caller-built record survives a round trip and drop"
+		, "extracted function owns its captured price"
+		, "repacked function outlives the original owner"
+		, "host FnMut borrow expires even inside a returned record"
+		, "closed field is not a valid input", "a later valid record still works"
+	]);
+	await saveLakeFile(dest, route + ".fields.json", canonicalJson({route
+		, packageSetSha256: result.receiptSha256, clientSha256: sha256(fields)
+		, probeSha256: sha256(probe), relocated: fieldCases, held, identities}));
 	t.diagnostic("Offline Cargo and relocated observer passed: " + result.receiptSha256);
 });

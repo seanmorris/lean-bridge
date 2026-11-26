@@ -45,3 +45,22 @@ clients without recompiling Lean, retain both package sets with
 `LEAN_BRIDGE_RUST_TARIFF_KEEP=/new/directory` on a producer run, then set
 `LEAN_BRIDGE_RUST_TARIFF_REPLAY` to that directory on the next run. Each
 consumer compiles against its own vendored dependencies offline.
+
+## A Rust record owns its function field
+
+The [field client](../../tests/fixtures/structured-types/tariff-fields.rs)
+clones a tariff, closes the original function and invokes the clone. It also
+constructs a tariff from an owned function, echoes it through compiled Lean
+and drops the input before invoking the result. Extracting the function or
+repacking it from a clone likewise preserves its captured price.
+
+A host `FnMut` is different. Passing it to `pack_quote` does not make the
+borrow durable: calling the returned field directly or through Lean yields
+`Error::CallbackFailed` without entering the host function. A closed field
+is refused as input and the next valid record succeeds.
+
+The [ordinary](rust-staged-callback-results-20261126/ordinary.fields.json)
+and [reviewed](rust-staged-callback-results-20261126/reviewed.fields.json)
+offline installs ran after relocating the binary and removing the crate,
+feed and sources. The observer first saw three live identities for a known
+live function, then zero after each of the seven cases and thread exit.
