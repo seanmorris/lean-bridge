@@ -125,6 +125,23 @@ the noncooperative worker later finished. Disposing a different cursor with
 a parked reader also woke it. That [installed NuGet record](dotnet-tasks-20261122.json)
 checked the close count **after** disposal, not before it.
 
+A [second C# client](../../tests/fixtures/dotnet-tasks/Parked.cs) checked the count **before**
+disposal. Once Lean entered the pull, another thread cancelled the token. The waiting reader
+received the original token and the Lean finalizer had already run once, even though the
+worker was still waiting. A separate installed package could still return an item. When
+the worker was released, it finished without delivering a late item; native live owners
+returned to zero. On a fresh cursor, disposing first woke the reader instead. Further
+pulls stayed terminal and repeated disposal did not run the finalizer again.
+Both package load orders passed on the [ordinary](dotnet-parked-pull-20261126/ordinary.json)
+and [reviewed](dotnet-parked-pull-20261126/reviewed.json) NuGet packages.
+
+To replay with the .NET 8 SDK, set `LEAN_BRIDGE_DOTNET_TASK_REPLAY` to the original
+Pulse capture directory containing `acceptance.json`, `LEAN_BRIDGE_DOTNET_TASK_EXPECTED`
+to `docs/evidence/dotnet-tasks-20261122.json`, and `LEAN_BRIDGE_DOTNET_PARKED_PULL=1`.
+Run `node --test --test-name-pattern='both exact task packages' tests/helpers/dotnet-io-installed.mjs`.
+The replay verifies the original installed package and assembly identities, builds the
+second client separately, and runs it without the feed, project, package cache or build tools.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

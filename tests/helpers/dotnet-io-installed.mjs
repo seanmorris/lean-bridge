@@ -229,8 +229,37 @@ const checkInstalled = async (t, { tasks, callbacks, prefix, capture, replay }) 
 		await run(dotnet, ["build", "Client.csproj", "-c", "Release", "--no-restore", "--disable-build-servers", "-m:1", "/p:UseSharedCompilation=false", "-o", stage], project, install, 300_000);
 		await rename(stage, moved);
 		for(const p of installed) assert.equal(sha256(await readFile(join(moved, p.assembly + ".dll"))), p.assemblySha256);
+		const parked = tasks && !callbacks && (!replay || env.LEAN_BRIDGE_DOTNET_PARKED_PULL === "1");
+		const parkedApp = join(scratch, "parked-consumer"), parkedClient = resolve("tests/fixtures/dotnet-tasks/Parked.cs");
+		if(parked)
+		{
+			if(replay)
+			{
+				const pin = await parse(resolve("docs/evidence/dotnet-tasks-20261122.json"));
+				assert.equal(sha256(await readFile(join(root, "acceptance.json"))), pin.acceptanceSha256);
+				assert.deepEqual(installed, pin.installed.rows.find(row => row.route === route).installed);
+				assert.deepEqual(clients, pin.installed.clients);
+			}
+			// Never overwrite the archived source or use regenerated assemblies.
+			await copyFile(parkedClient, join(project, "Program.cs"));
+			await run(dotnet, ["build", "Client.csproj", "-c", "Release", "--no-restore", "--no-incremental", "--disable-build-servers", "-m:1", "/p:UseSharedCompilation=false", "-o", parkedApp], project, install, 300_000);
+			for(const p of installed) assert.equal(sha256(await readFile(join(parkedApp, p.assembly + ".dll"))), p.assemblySha256);
+		}
 		await rm(feed, { recursive: true }); await rm(cache, { recursive: true }); await rm(project, { recursive: true });
 		const withoutTools = { PATH: "/unavailable", LANG: "C.UTF-8", DOTNET_NOLOGO: "1", DOTNET_EnableDiagnostics: "0", DOTNET_PROCESSOR_COUNT: "1", LEAN_NUM_THREADS: "1", TMPDIR: scratch };
+		if(parked)
+		{
+			const observations = [];
+			for(const order of ["pulse-first", "peer-first"])
+			{
+				const output = await run(dotnet, [join(parkedApp, "Client.dll"), order], scratch, withoutTools, 120_000);
+				assert.equal(output, order + ": parked token cancellation finalized before disposal; disposal woke a second blocked pull; no late items or live owners");
+				observations.push(output);
+			}
+			const out = resolve(env.LEAN_BRIDGE_DOTNET_PARKED_PULL_OUTPUT ?? "build/dotnet-parked-pull");
+			await mkdir(out, {recursive: true});
+			await writeFile(join(out, route + ".json"), canonicalJson({route, installed, observations, consumerSha256: sha256(await readFile(parkedClient)), observerSha256: clients["Audit.cs"]}));
+		}
 		const calls = [];
 		for(const order of [callbacks ? "feedback-first" : tasks ? "pulse-first" : "journal-first", "peer-first"])
 		{

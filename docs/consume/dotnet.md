@@ -221,6 +221,8 @@ A task can be awaited more than once. Cancelling its token cancels delivery
 and asks Lean to stop; a worker that ignores cancellation cannot deliver a
 late result. A stream opens on its first pull, never prefetches another item,
 and closes on exhaustion, `break`, cancellation or `DisposeAsync`.
+If you cancel while `MoveNextAsync()` is waiting, the reader wakes with your token.
+You don't have to dispose the cursor to trigger cleanup, and the worker can't deliver a late item.
 Leaving `Run` closes outstanding deliveries. A cancelled await raises
 `OperationCanceledException` with the supplied token.
 
