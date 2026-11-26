@@ -21,7 +21,10 @@ test("PHP-Wasm task callback budgets are per registration in installed Node and 
 		if(!replay) await buildBudgetSet(work,sets,route,ordinary);
 		const handoff=join(sets,route),{api,receipt,result,compiler}=await inspectBudgetSet(handoff,route);
 		const runtime=receipt.packages.find(p=>p.role==="runtime").artifacts[0].sha256;
-		if(route==="ordinary") {ordinary=api;runtimeSha256=runtime;}
+		if(route==="ordinary")
+		{
+			ordinary=api;runtimeSha256=runtime;
+		}
 		else assert.equal(runtime,runtimeSha256,"The review must not change the installed PHP worker runtime");
 		assert.ok(!digests.has(result.receiptSha256));digests.add(result.receiptSha256);
 		const executions=await exercisePhpTaskRelease(handoff,t,undefined,false,false,false,false,false,{budget: true});

@@ -11,7 +11,7 @@ import { generatePythonHostProvider } from "./host-provider.mjs";
 import { pythonHostArguments, pythonWorkerMethods } from "./worker-methods.mjs";
 import { streamCodec, streamEntryLean, streamStub } from "./stream-exports.mjs";
 import { iteratorEntryLean } from "../native/pull-entry.mjs";
-import { callbackLean, callbackMethods, callbackPrototypes, ioOutcome, ioPython, retainedEntry } from "./task-callback.mjs";
+import { budgetHeader, callbackLean, callbackMethods, callbackPrototypes, ioOutcome, ioPython, retainedEntry } from "./task-callback.mjs";
 import {pythonHostRecords} from "./host-records.mjs";
 
 const scalars = {
@@ -317,22 +317,33 @@ export const generatePythonHostExtension = options => {
 			|| (e.effect === "EIO" && !payload(e.error, imported) && !delivered(e.error, owned)))
 			throw new TypeError("returned sums and EIO errors require copied payloads or declared synchronous host objects");
 	}
-	const codecs = new Map(), slots = new Map();
-	for(const e of entries) for(const p of e.parameters) if(p.type.kind === "io-callback")
+	const codecs = new Map(), slots = new Map(), onceSlots = new Set();
+	const contract = options.callbackContract;
+	for(const e of entries) for(const [index,p] of e.parameters.entries()) if(p.type.kind === "io-callback")
 	{
 		if(e.delivery !== "task" || ![p.type.argument, p.type.reply].every(t => t?.kind === "primitive" && Object.hasOwn(scalars, t.name) || scoped && t?.kind==="named" && imported.some(r=>r.id===t.id)))
 			throw new TypeError("expected a retained task callback with copied scalar values" + (scoped ? " or declared Python objects" : ""));
+		if(contract)
+		{
+			const d = contract.declarations.find(d => d.source.declaration === e.declaration);
+			const site = d?.parameters[index], type = contract.types.find(t => t.id === site?.type.id);
+			if(type?.kind !== "callback" || !["once","many"].includes(type.callable.invocation))
+				throw new TypeError("Expected the checked callback contract for " + e.declaration);
+			if(type.callable.invocation === "once") onceSlots.add(slots.size);
+		}
 		slots.set(p, slots.size);
 	}
 	const callbacks = slots.size > 0, outcomes = callbacks || entries.some(e => e.taskIO);
 	const publicNames = [...provider.resources, ...leaseNames, ...entries.map(e => e.name)];
+	if(onceSlots.size && publicNames.includes("CallbackAlreadyInvoked")) throw new TypeError("reserved Python callback budget error name");
+	const budgetClass = onceSlots.size ? 'from builtins import set as _lb_budget_set\nclass CallbackAlreadyInvoked(RuntimeError):\n    """This task registration has already admitted its one callback."""\n\n' : "";
 	const streamIO = entries.some(e => e.stepIO);
 	if(streamIO && publicNames.includes("LeanStreamIOError")) throw new TypeError("reserved Python stream error name");
 	if((outcomes && publicNames.includes("LeanTaskError")) || (callbacks && publicNames.includes("RetainedCallback")))
 		throw new TypeError("reserved Python task name");
 	const immediate = synchronous || ((!ir || scoped) && entries.some(row => row.delivery));
 	const functions = entries.map((e, i) => e.parameters.some(p => slots.has(p))
-		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots, owned: scoped?resources:owned, scoped })
+		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots, onceSlots, owned: scoped?resources:owned, scoped })
 		: e.result?.kind==="io-closure"?closureEntry(resources,e,i,codecs,immediate,scoped)
 			: emit(resources, e, i, codecs, synchronous, immediate, scoped,{collect: closures, ...records.lower(e)}));
 	const callbackCodecs = callbacks ? [...slots].map(([p, id]) => {
@@ -421,7 +432,7 @@ static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
 ${scoped?"#define LB_SCOPED_CALLBACKS 1\n#define PyCapsule_New lb_worker_cap":""}
 ${tasks ? asset("../native/task-notification.h") + "\n" + asset("task-delivery.h") : ""}
 ${cursors ? "#define LB_IMMEDIATE_CURSOR 1\n" : ""}${streams || cursors ? asset("stream-delivery.h") : ""}
-${outcomes ? ioOutcome + "\n" : ""}${callbacks ? '#define LB_PORT_NAME LB_COMPONENT ".callback-port-v1"\n#define LB_PORT_KIND "lean-bridge/python-callback-port-v1"\n#define LB_CB_REQUEST lb_py_cb_request\n#define LB_CB_TRACK lb_py_cb_track\n' + asset("../native/task-callback-queue.h") + "\n" + asset("task-callback.h") + "\n" + callbackCodecs + "\n" : ""}${[...codecs.values()].map(f => f.c).join("\n")}
+${outcomes ? ioOutcome + "\n" : ""}${callbacks ? '#define LB_PORT_NAME LB_COMPONENT ".callback-port-v1"\n#define LB_PORT_KIND "lean-bridge/python-callback-port-v1"\n#define LB_CB_REQUEST lb_py_cb_request\n#define LB_CB_TRACK lb_py_cb_track\n' + asset("../native/task-callback-queue.h") + "\n" + budgetHeader(asset("task-callback.h"), onceSlots) + "\n" + callbackCodecs + "\n" : ""}${[...codecs.values()].map(f => f.c).join("\n")}
 ${records.c ? records.c + "\n" : ""}${functions.map(f => f.c).join("\n")}
 ${worker?"#undef PyCapsule_New\n"+worker:""}
 static PyMethodDef lb_methods[] = {${closures?'\n    {"_close_closure", lb_closure_close, METH_O, NULL}, {"_closure_closed", lb_closure_closed, METH_O, NULL},':""}
@@ -461,6 +472,7 @@ class ${r.name}(_Protocol):
 		, ...(closures ? ["from typing import Generic as _FnGeneric, TypeVar as _FnVar, Self as _FnSelf, Never as _FnNever\n_FnA = _FnVar('_FnA')\n_FnR = _FnVar('_FnR')\nclass LeanClosure(_FnGeneric[_FnA, _FnR]):\n    def __new__(cls, _: _FnNever, /) -> _FnSelf: ...\n    def __call__(self, value: _FnA, /) -> _FnR: ...\n    @property\n    def closed(self) -> bool: ...\n    def close(self) -> None: ...\n    def __enter__(self) -> _FnSelf: ...\n    def __exit__(self, *exc: object) -> None: ...\n"] : [])
 		, ...(syncIO ? ["class LeanIOError(RuntimeError):\n    declaration: str\n    message: str\n    def __init__(self, declaration: str, message: str) -> None: ...\n"] : [])
 		, ...(outcomes ? ["class LeanTaskError(RuntimeError):\n    declaration: str\n"] : [])
+		, ...(onceSlots.size ? ["class CallbackAlreadyInvoked(RuntimeError): ...\n"] : [])
 		, ...(callbacks ? ["from typing import Callable as _Callable, Generic as _CBGeneric, TypeVar as _CBVar\n_CBArg = _CBVar('_CBArg')\n_CBReply = _CBVar('_CBReply')\nclass RetainedCallback(_CBGeneric[_CBArg, _CBReply]):\n    def __init__(self, callback: _Callable[[_CBArg], _CBReply]) -> None: ...\n    def close(self) -> None: ...\n    def __call__(self, value: _CBArg) -> _CBReply: ...\n"] : [])
 		, ...(streams ? [streamStub.replace("payload: object", "payload: " + stepPayload)] : [])
 		, ...(cursors ? [asset("sync-iterator.pyi").replace("payload: object","payload: "+stepPayload)] : [])
@@ -582,6 +594,6 @@ class LeanClosure(_FnGeneric[_FnA, _FnR]):
 		hostLean: provider.lean, entryLean, entryDeclarations, source, stub
 		, types: types.join("\n")
 		, bindingIrSha256: ir ? hashBindingIr(ir) : null
-		, python: `${scoped?"from . import _native\n"+asset("worker-binding.py")+"\ndef bind_hosts(*, "+hostNames+"):\n    return _LBHostBinding(("+hostNames+",))\n":provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}${leased ? "\nfrom ._native import " + leaseNames.join(", ") : ""}\n\n${syncIO ? syncIOClass : ""}${support}\n${tasks ? asset("task-await.py") : ""}${scoped ? "\n_LBWait._binding = staticmethod(_lb_binding)\n" : ""}\n${streams ? asset("stream-await.py") : cursors ? asset("sync-iterator.py") : ""}${streamIO ? "\nclass LeanStreamIOError(RuntimeError):\n    def __init__(self, declaration, message):\n        self.declaration = declaration\n        super().__init__(message)\n" : ""}\n${outcomes ? ioPython + "\n" : ""}${callbacks ? asset("task-callback.py") + "\n" : ""}${functions.map((f,i) => (scoped ? ({task: "@_lb_bound_task\n", "async-iterator": "@_lb_bound_stream\n"}[entries[i].delivery] ?? "@_lb_bound_call\n") : "")+f.python).join("\n")}`
+		, python: `${scoped?"from . import _native\n"+asset("worker-binding.py")+"\ndef bind_hosts(*, "+hostNames+"):\n    return _LBHostBinding(("+hostNames+",))\n":provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}${leased ? "\nfrom ._native import " + leaseNames.join(", ") : ""}\n\n${syncIO ? syncIOClass : ""}${support}\n${tasks ? asset("task-await.py") : ""}${scoped ? "\n_LBWait._binding = staticmethod(_lb_binding)\n" : ""}\n${streams ? asset("stream-await.py") : cursors ? asset("sync-iterator.py") : ""}${streamIO ? "\nclass LeanStreamIOError(RuntimeError):\n    def __init__(self, declaration, message):\n        self.declaration = declaration\n        super().__init__(message)\n" : ""}\n${outcomes ? ioPython + "\n" : ""}${callbacks ? budgetClass + asset("task-callback.py") + "\n" : ""}${functions.map((f,i) => (scoped ? ({task: "@_lb_bound_task\n", "async-iterator": "@_lb_bound_stream\n"}[entries[i].delivery] ?? "@_lb_bound_call\n") : "")+f.python).join("\n")}`
 	};
 };

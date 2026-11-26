@@ -284,6 +284,13 @@ the exported task settles or is cancelled. To stop it sooner, wrap it in
 executing can finish; later calls fail. An escaped Lean closure cannot call
 back into an expired Python scope.
 
+If the package declares a callback parameter as `once`, Lean can invoke that
+registration once. If it tries again, the package raises
+`CallbackAlreadyInvoked` when you await the task, unless Lean handled the
+failure itself. Passing the same function to a new task or a second parameter
+gives it a separate allowance. The limit does not affect your own Python
+calls to that function.
+
 If Lean propagates the callback's original error back to the await that owns
 it, Python receives the same exception object. Lean can also catch it and
 return a value, or throw a new error with the same message. A declared

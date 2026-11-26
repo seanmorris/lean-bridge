@@ -247,6 +247,14 @@ its failure channel. Lean checks that exact signature. Without this selection,
 doesn't silently reinterpret it. A successful value can still contain its own
 `Except`. Keep the selection for reviewed builds, too.
 
+Each callback parameter allows repeated calls by default. To admit only one,
+add `"taskCallbackPolicies": [{"declaration": "Retained.repeatCall", "parameter": "f", "invocation": "once"}]`
+to the configuration. Use the binder name from the Lean declaration.
+In this example the second call to `f` fails, even if Lean caught an
+exception from the first one. A different parameter or a fresh invocation
+of `repeatCall` gets its own allowance. A reviewed interface cannot change
+the allowance selected by the source project.
+
 The package runs callback-capable factories on Lean's scheduler, including
 calls made before the factory returns a task. It dispatches each invocation
 to the owning Python event loop and resolves a Lean promise with the reply.

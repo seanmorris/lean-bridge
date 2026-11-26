@@ -70,7 +70,7 @@ export const buildHostProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
-		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "iterators", "nativeEffects", "package", "resources"]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "iterators", "nativeEffects", "package", "resources", ...target === "pypi" ? ["taskCallbackPolicies"] : []]
 		, targetFields: target === "cpan" ? ["module", "version"] : canonical ? ["name", "version", "asyncAbi"] : ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");

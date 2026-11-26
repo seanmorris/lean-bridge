@@ -9,6 +9,18 @@ import { pythonHostArguments } from "./worker-methods.mjs";
 
 const cb = p => p.type.kind === "io-callback";
 export const callbackLean = taskCallbackLean("lb_py_cb");
+/**
+ * Emit the native admission path only for packages with checked one-shot binders.
+ * Leave previous many-call packages byte-identical.
+ *
+ * @param template - Owner-side callback broker.
+ * @param slots - Native slots for one-shot parameters.
+ */
+export const budgetHeader = (template, slots) => {
+	const scoped = template.replace(/^\/\* BEGIN PYTHON CALLBACK BUDGET \*\/\n([\s\S]*?)^\/\* END PYTHON CALLBACK BUDGET \*\/\n/gmu, slots.size ? "$1" : "");
+	return slots.size ? scoped + "\nstatic int lb_cb_once_slot(uint32_t slot) { switch (slot) { "
+		+ [...slots].map(i => "case " + i + ":").join(" ") + " return 1; default: return 0; } }\n" : scoped;
+};
 export const callbackMethods = `{"_cb_open", lb_cb_open, METH_NOARGS, NULL}, {"_cb_fd", lb_cb_fd, METH_O, NULL},
     {"_cb_drain", lb_cb_drain, METH_VARARGS, NULL}, {"_cb_close", lb_cb_close, METH_O, NULL},`;
 export const callbackPrototypes = `extern lean_object *lb_py_cb_request(lean_object *, uint32_t, lean_object *, lean_object *);
@@ -90,7 +102,7 @@ static PyObject *lb_invoke_${i}(PyObject *mod, PyObject *args) {
 }`;
 	const python = `async def ${name}(${parameters.map(p => p.name).join(", ")}):
     with _LBCallbacks({${callbacks.map(x => slot(x) + ": " + x.p.name).join(", ")}}${options.scoped?", _lb_binding()":""}) as _scope:
-        _outer = _native.${name}(_scope.port${ordinary.map(x => ", " + x.p.name).join("")})
+${callbacks.some(x => options.onceSlots?.has(slot(x))) ? "        _scope.callbacks[None] = (_lb_budget_set(), CallbackAlreadyInvoked)\n" : ""}        _outer = _native.${name}(_scope.port${ordinary.map(x => ", " + x.p.name).join("")})
         _t = _lb_outcome(await _lb_await(_outer), _scope.faults, "${declaration}", False)
 ${typed ? `        if not _t[0]:
             raise _lb_error_type("${declaration}", ${err.decode ? err.decode("_t[1]") : "_t[1]"})

@@ -70,6 +70,33 @@ static lean_object *lb_cb_fault(PyObject *faults) {
     Py_XDECREF(record); Py_XDECREF(key); Py_XDECREF(cap);
     Py_XDECREF(tb); Py_XDECREF(e); Py_XDECREF(t); return v;
 }
+/* BEGIN PYTHON CALLBACK BUDGET */
+static int lb_cb_once_slot(uint32_t slot);
+/* Only an actual repeated admission becomes a declared policy error. A
+   broken native registration or allocation failure interrupts the owner. */
+static int lb_cb_admit_once(lb_req *q, PyObject *key, PyObject *callbacks, PyObject *faults) {
+    PyObject *state = PyDict_GetItemWithError(callbacks, Py_None);
+    lean_object *v = NULL;
+    if (!state || !PyTuple_CheckExact(state) || PyTuple_GET_SIZE(state) != 2
+        || !PySet_CheckExact(PyTuple_GET_ITEM(state, 0)) || !PyExceptionClass_Check(PyTuple_GET_ITEM(state, 1))) {
+        PyErr_SetString(PyExc_RuntimeError, "invalid callback budget state");
+    } else {
+        PyObject *spent = PyTuple_GET_ITEM(state, 0);
+        int seen = PySet_Contains(spent, key);
+        if (!seen && PySet_Add(spent, key) == 0) return 1;
+        if (seen > 0) {
+            if (PyDict_Size(faults) >= 4096) PyErr_SetString(PyExc_RuntimeError, "retained callback exception budget exceeded");
+            else {
+                PyErr_SetString(PyTuple_GET_ITEM(state, 1), "callback-already-invoked");
+                v = lb_cb_fault(faults);
+            }
+        }
+    }
+    if (!v) v = lean_mk_io_user_error(lean_mk_string("Python callback admission failed"));
+    lean_dec(q->arg); lb_cb_reply(q->promise, 0, v); free(q);
+    return PyErr_Occurred() ? -1 : 0;
+}
+/* END PYTHON CALLBACK BUDGET */
 static PyObject *lb_cb_drain(PyObject *mod, PyObject *args) {
     (void)mod; PyObject *cap, *callbacks, *faults;
     if (!PyArg_ParseTuple(args, "OO!O!", &cap, &PyDict_Type, &callbacks, &PyDict_Type, &faults)) return NULL;
@@ -86,6 +113,16 @@ static PyObject *lb_cb_drain(PyObject *mod, PyObject *args) {
         PyObject *key = PyLong_FromUnsignedLong(q->slot);
         PyObject *f = key ? PyDict_GetItemWithError(callbacks, key) : NULL;
         const lb_codec *codec = lb_cb_codec(q->slot);
+/* BEGIN PYTHON CALLBACK BUDGET */
+        if (f && codec && lb_cb_once_slot(q->slot)) {
+            int admitted = lb_cb_admit_once(q, key, callbacks, faults);
+            if (admitted <= 0) {
+                Py_DECREF(key);
+                if (admitted < 0) return NULL;
+                continue;
+            }
+        }
+/* END PYTHON CALLBACK BUDGET */
         if (!f || !codec) { if (!PyErr_Occurred()) PyErr_SetString(PyExc_RuntimeError, "unknown retained callback"); }
         PyObject *arg = f && codec ? codec->in(q->arg) : NULL;
         PyObject *value = arg ? PyObject_CallOneArg(f, arg) : NULL;
