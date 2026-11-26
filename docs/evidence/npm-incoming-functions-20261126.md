@@ -79,6 +79,9 @@ a strong session reference of its own. With that reference made weak, the
 observer saw a known live owner in its positive control, then zero after
 each of the six cases and zero after thread exit. Python and Ruby each saw
 only the deliberately open session after every case, then zero on shutdown.
+Run `npm run test:rust-lease-shapes` with the Rust toolchain and an offline
+Cargo cache to type-check the shared session code with transfer-only,
+borrowed-result, receiver and callback-result APIs. This needs no Lean rebuild.
 
 This was an adapter replay against the ordinary compiler output, **not** five
 package installs. The original Lean source digest is

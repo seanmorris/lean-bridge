@@ -44,8 +44,8 @@ export const ownedRustTransferRuntime = `
             let matching = self.input_move.borrow().as_ref().is_some_and(|value| Rc::ptr_eq(value, signal));
             if !matching { return; }
             self.input_move.borrow_mut().take();
-            if signal.consumed() && self.state.affinity().is_ok() {
-                if let LeaseKind::Owned(slot) = &self.kind {
+            if let LeaseKind::Owned(slot) = &self.kind {
+                if signal.consumed() && slot.state.affinity().is_ok() {
                     let mut owner = slot.owner.replace(std::ptr::null_mut());
                     if !owner.is_null() { let _ = unsafe { result_release(&mut owner) }; }
                 }
