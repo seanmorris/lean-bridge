@@ -66,10 +66,13 @@ For #1222, the [synchronous npm Ledger installs](javascript-wasm-sync-io-2026112
 executed direct IO, returned and thrown errors, and validation before a state
 change in Node JavaScript and a Chromium page. Their strict TypeScript client
 was typechecked, not run. The [two-package trap test](javascript-wasm-callback-io-retirement-20261123.md)
-distinguishes an application throwing a JS error from a real guest trap on
-those same two hosts. Neither result qualifies an executed TypeScript
-program, a mounted React UI, or a dedicated browser worker for the full Ledger
-contract. The [five synchronous iterator clients](javascript-immediate-iterators-20261125.md)
+distinguishes an application throwing a JS error from a real guest trap in
+Node, a Chromium page, a Node worker and a dedicated Chromium module worker.
+On each Ledger route, four browser workers trapped while the parent retained
+its ticket and advanced its own counter to 24. This is installed
+worker evidence for cross-package retirement, not for the separate 45-check
+scalar IO suite. Neither report ran a strict TypeScript program or mounted
+React UI for the full Ledger contract. The [five synchronous iterator clients](javascript-immediate-iterators-20261125.md)
 exercise immediate cursor operations on those profiles; keep that evidence,
 but don't count it as a run of the scalar IO or cross-package trap cases.
 
