@@ -13,7 +13,7 @@ export const witTaskCallbackRequest = opts => {
 	const cb=type?.callable;
 	if(type?.kind!=="callback" || type.source.extensions?.["lean-bridge.dev/callback-scheduler"]!=="wasmtime-store-owner"
 		|| parameter.ownership!=="lease" || parameter.lifetime?.scope!=="explicit" || parameter.lifetime.anchor!==null
-		|| cb?.invocation!=="many" || cb.reentry!=="same-agent" || cb.selfDisposal!=="defer" || cb.resultMode!=="value"
+		|| !["once","many"].includes(cb?.invocation) || cb.reentry!=="same-agent" || cb.selfDisposal!=="defer" || cb.resultMode!=="value"
 		|| cb.parameters.length!==1 || cb.parameters[0].ownership!=="copy" || cb.result.ownership!=="copy"
 		|| cb.failure.mode!=="declared" || cb.failure.unexpected!=="poison-runtime"
 		|| cb.failure.errors.length!==1 || cb.failure.errors[0]!=="error:WitCallbackError")
@@ -28,6 +28,7 @@ export const witTaskCallbackRequest = opts => {
 	];
 	const state={witName: "call-"+param,fields: [{type: own}],payload: own};
 	const descriptor={slot,parameter: param,resource: witName,state: state.witName
+		, ...cb.invocation==="once"?{invocation: "once"}:{}
 		, arg: argument.scalarName,reply: reply.scalarName
 		, read: fns[0].witName,resolve: fns[1].witName,reject: fns[2].witName};
 	return {resource,functions: fns,state,descriptor};

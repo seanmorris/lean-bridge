@@ -10,6 +10,7 @@ import { compileWitTaskResources } from "../backends/wit/task-model.mjs";
 import { generateWitTaskSession } from "../backends/wit/task-session.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
 import { generateSyncWire } from "../backends/c/sync-wire.mjs";
+import { retainedOnceSlots } from "../backends/native/task-callback.mjs";
 import { nativeDeliveryHeader } from "./jvm-io-owner.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "./native-artifacts.mjs";
 import { snapshotWasmtimeCapi } from "./native-wit-projection.mjs";
@@ -45,9 +46,10 @@ export const linkWitHost = async options => {
 		, modules: evidence.selection.exportModules, entries
 		, ...ledger?{resources: api.types.filter(type=>type.kind==="resource")}:{}
 		, ...witCallbacks?{witCallbacks}:{}
+		, ...evidence.selection.taskCallbackPolicies?.length?{onceByDeclaration: retainedOnceSlots(api)}:{}
 		, synchronousIO: !tasks, witDelivery: tasks, integerMode: "words" };
 	const template = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks,resources: config.resources,witCallbacks}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
+	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks,resources: config.resources,witCallbacks,onceByDeclaration: config.onceByDeclaration}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
 	const delivery = await nativeDeliveryHeader(false);
 	const integers = template.integerMode ? await readFile(new URL("../backends/c/task-integers.h",import.meta.url)) : null;
 	const notification=tasks && await readFile(new URL("../backends/native/task-notification.h",import.meta.url));

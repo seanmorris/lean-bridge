@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { witConversionPrelude } from "./copied-conversions.mjs";
 import { decodeWitWireValue } from "./sync-io-host.mjs";
 import { witCallbackTable } from "./task-callback-table.mjs";
+import { nativeOnceWireStatus } from "../c/task-wire.mjs";
 
 /**
  * Generate private imports; the embedding owns the store, its event loop and teardown.
@@ -73,6 +74,8 @@ export const renderWitTaskImports = async model => {
 		()=>defs.join("\n")+"\nstatic const lb_task_method lb_methods[] = {\n"+rows.join(",\n")+"\n};"
 			+(heap.length?"\nstatic const lb_heap_method lb_heap_methods[] = {\n"+heapRows.join(",\n")+"\n};":"")
 			+"\n"+callbacks.declarations+"\n"+callbacks.tables)
+		.replace("/* LB_ONCE_OBSERVATION */",wire.methods.some(m=>m.once) ? `
+                    else if (lb_budgeted_method(b->method) && taken==${nativeOnceWireStatus}) { decode=NULL; state="callback-already-invoked"; }` : "")
 		.replace("/* LB_HEAP_IMPORTS */",()=>heapCode)
 		.replace("/* LB_CALLBACK_IMPORTS */",()=>callbackCode);
 	return ["#include <wasmtime.h>","#include <wasmtime/component.h>"

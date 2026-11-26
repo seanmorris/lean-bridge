@@ -5,6 +5,7 @@ import { nativeEffectPolicy } from "../../analyze/native-host-effects.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
+import { retainedOnceSlots } from "../native/task-callback.mjs";
 import { taskResourceTypes } from "../c/task-resources.mjs";
 import { renderCopiedWitComponent } from "./copied-component.mjs";
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
@@ -147,6 +148,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 			if(e.effect==="IO") states.push({witName: "factory-callback-failed",fields: [{type: text}],payload: text});
 			if(e.taskIO) states.push({witName: "worker-callback-failed",fields: [{type: text}],payload: text});
 			states.push(...calls.map(c=>c.state));
+			if(calls.some(c=>c.descriptor.invocation==="once")) states.push({witName: "callback-already-invoked",fields: [],payload: null});
 		}
 		if(e.stepIO)
 			states.push({witName: "io-failed",fields: [{type: text}],payload: text});
@@ -202,6 +204,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	].join("\n");
 	const wat = renderCopiedWitComponent({ surface: { functions }, functions, resources, types, typeBody, importName, exportName, preserveTypes: true });
 	const prefix = "lbc_wit_"+sha256(api.component.id);
-	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: heapTypes,witCallbacks: callbacks.size>0});
+	const onceByDeclaration=selection.taskCallbackPolicies?.length ? retainedOnceSlots(api) : undefined;
+	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: heapTypes,witCallbacks: callbacks.size>0,onceByDeclaration});
 	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap };
 };

@@ -15,8 +15,11 @@ import {generatePhpIOFiles} from "../src/backends/php/io-package.mjs";
 import {hashBindingIr} from "../src/binding-ir/canonical.mjs";
 import {preparePerlIOFiles} from "../src/backends/perl/sync-io.mjs";
 import {sha256} from "../src/capsule/node.mjs";
+import {compileWitTaskResources} from "../src/backends/wit/task-model.mjs";
+import {generateWitTaskSession} from "../src/backends/wit/task-session.mjs";
+import {nativeEffectPolicy} from "../src/analyze/native-host-effects.mjs";
 
-for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php","perl"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
+for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php","perl","wit"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
 	const v={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: v,reply: v};
 	const parameters=[{name: "n",type: v},{name: "f",type: fn},{name: "g",type: fn}],name="Budget.probe";
 	const entry={name: "probe",declaration: name,module: "Budget",parameters
@@ -25,6 +28,11 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php","perl"]) test(
 		, taskExports: [name],taskIOErrors: [name],[target+"TaskCallbacks"]: true};
 	const metadata={kind: "lean-bridge-host-export-metadata",schemaVersion: 1
 		, leanVersion: "4.32.2",entries: [entry]};
+	if(target==="wit")
+	{
+		Object.assign(selection,{nativeEffectPolicy,nativeEffects: [],modules: ["Budget"],asyncIterators: []});
+		metadata.nativeEffectAudit={policy: nativeEffectPolicy,initializers: [],roots: [{declaration: name,leaves: []}]};
+	}
 	const component={name: "budget",id: "budget@1.0.0",version: "1.0.0"};
 	const checked={...selection,...target==="php"?{phpNativeCallbackBudgets: true}:{},taskCallbackPolicies: [{declaration: name,parameter: "g",invocation: "once"}]};
 	const {api,entries}=reconcileHostExports({metadata,selection: checked,component});
@@ -32,7 +40,8 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php","perl"]) test(
 	const componentIdentity="1".repeat(64),integerMode=target==="c"?"gmp":"words";
 	const selector=["ruby","dotnet","jvm","php","perl"].includes(target)?target+"Delivery":target+"Callbacks";
 	const opts={entries,modules: ["Budget"],name: "budget"
-		, componentIdentity,[selector]: true,integerMode};
+		, componentIdentity,[selector]: true,integerMode
+		, ...target==="wit"?{witDelivery: true}:{}};
 	const plain=generateCTaskExports(opts),built=generateCTaskExports({...opts,onceByDeclaration});
 	assert.deepEqual(generateCTaskExports({...opts,onceByDeclaration: new Map()}),plain);
 	for(const bad of [new Map([[name,[0]]]),new Map([["Other.entry",[2]]]),new Map([[name,[2,2]]])])
@@ -40,6 +49,42 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php","perl"]) test(
 	assert.doesNotMatch(plain.header+plain.source+plain.entryLean,/CALLBACK_ALREADY_INVOKED|cbBudgetClaim/u);
 	assert.match(built.entryLean,/Budget.probe v0 \(cbInvoke port 1\) \(cbInvokeOnce port used2 denied 2\)/u);
 	assert.match(built.header,/CALLBACK_ALREADY_INVOKED/u);
+	if(target==="wit")
+	{
+		const make=(api,selection,observed=metadata)=>compileWitTaskResources({api
+			, bindingIrSha256: hashBindingIr(api)
+			, settings: {name: "budget",version: "1.0.0"}
+			, evidence: {selection,metadata: observed
+				, hostImportsSourceSha256: null
+				, interfaces: ["Budget"]
+				, sourceTreeSha256: componentIdentity
+				, compilerSha256: componentIdentity
+				, extractorSha256: componentIdentity
+				, configurationSha256: componentIdentity}});
+		const bounded=make(api,checked),plain=make(reconcileHostExports({metadata,selection,component}).api,selection);
+		const render=m=>generateWitTaskSession(m,Buffer.from([0,97,115,109]));
+		const generated=await render(bounded),old=await render(plain);
+		assert.doesNotMatch(old.header+old.source+plain.wit,/callback-already-invoked|CALLBACK_ALREADY_INVOKED|LB_ONCE_(?:STATE|OBSERVATION)/u);
+		assert.match(bounded.wit,/call-g\(own<callback-probe-p3>\), callback-already-invoked/u);
+		assert.match(generated.source,/taken==16\) \{ decode=NULL; state="callback-already-invoked"/u);
+		assert.match(generated.header,/budget_wit_CALLBACK_ALREADY_INVOKED/u);
+		assert.match(generated.source,/words\[2\]=0; decode=lb_cb_text/u);
+		const shifted=structuredClone(bounded);shifted.wire.methods[0].onceSlots=[1];
+		await assert.rejects(render(shifted),/WIT callback allowance differs/u);
+		const unbacked=structuredClone(plain);unbacked.methods[0].callbacks[0].invocation="once";
+		await assert.rejects(render(unbacked),/WIT callback allowance differs/u);
+		// Two exports can use exactly the same argument types with different policies.
+		const second="Budget.unlimited",selected=structuredClone(checked),observed=structuredClone(metadata);
+		for(const key of ["exports","taskExports","taskIOErrors"]) selected[key].push(second);
+		observed.entries.push({...entry,name: "unlimited",declaration: second});
+		observed.nativeEffectAudit.roots.push({declaration: second,leaves: []});
+		const mixedApi=reconcileHostExports({metadata: observed,selection: selected,component}).api;
+		const mixed=make(mixedApi,selected,observed),host=await render(mixed);
+		assert.deepEqual(mixed.methods.map(m=>m.callbacks.map(cb=>cb.invocation??"many")),[["many","once"],["many","many"]]);
+		assert.match(mixed.wit,/variant probe-observation \{[^}]*callback-already-invoked/u);
+		assert.doesNotMatch(mixed.wit.match(/variant unlimited-observation \{[^}]*\}/u)[0],/callback-already-invoked/u);
+		assert.match(host.source,/lb_budgeted_method\(size_t i\) \{ return i==0; \}/u);
+	}
 	if(target==="perl")
 	{
 		const name="LeanBridge::Budget",prefix="lbc_perl_"+sha256(name);

@@ -7,10 +7,15 @@
  * @file Bind each nominal WIT request to its authenticated native callback port and parameter.
  */
 export const witCallbackTable = (methods,wire,prefix) => {
-	const defs=[],ports=[],requests=[];
+	const defs=[],ports=[],requests=[],budgeted=[];
 	for(const [i,m] of wire.methods.entries())
 	{
 		const calls=methods[i]?.callbacks??[],native=m.callbacks??[];
+		const once=calls.filter(r=>r.invocation==="once").map(r=>r.slot);
+		if(calls.some(r=>r.invocation!==undefined && r.invocation!=="once") || m.once!==(once.length?true:undefined)
+			|| (once.length ? !Array.isArray(m.onceSlots) || m.onceSlots.length!==once.length || once.some((slot,j)=>slot!==m.onceSlots[j]) : m.onceSlots!==undefined))
+			throw new TypeError("WIT callback allowance differs from its native parameter");
+		if(once.length) budgeted.push(i);
 		if(calls.length!==native.length || calls.some((r,j)=>r.slot!==native[j][0] || r.arg!==native[j][1] || r.reply!==native[j][2] || m.args[r.slot]!=="callback"))
 			throw new TypeError("WIT request identity and native callback slot disagree");
 		if(!calls.length)
@@ -34,6 +39,7 @@ export const witCallbackTable = (methods,wire,prefix) => {
 			, ...[r.resource,r.state,r.read,r.resolve,r.reject].map(v=>JSON.stringify(v))
 			, "LB_"+r.arg.toUpperCase(),"LB_"+r.reply.toUpperCase()].join(",")+"}");
 	}
+	if(budgeted.length) defs.push("static bool lb_budgeted_method(size_t i) { return "+budgeted.map(i=>"i=="+i).join(" || ")+"; }");
 	return {count: requests.length,declarations: defs.join("\n")
 		, tables: requests.length
 			?"static const lb_cb_port lb_cb_ports[]={"+ports.join(",")+"};\nstatic const lb_cb_method lb_cb_methods[]={"+requests.join(",")+"};":""

@@ -62,7 +62,7 @@ const bindings = model=>{
 	};
 	defs.push("typedef struct "+p+"session "+p+"session;",
 		"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","TRAPPED","START_ERROR","BUSY","FINISHED"].map(n=>p+n).join(", ")+" } "+p+"status;",
-		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END",...model.methods.some(m=>m.callbacks?.length)?["FACTORY_FAILED","FACTORY_CALLBACK_FAILED","WORKER_CALLBACK_FAILED"]:[],...model.methods.some(m=>m.stepIO)?["STEP_IO_FAILED"]:[]].map(n=>p+n).join(", ")+" } "+p+"state;",
+		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END",...model.methods.some(m=>m.callbacks?.length)?["FACTORY_FAILED","FACTORY_CALLBACK_FAILED","WORKER_CALLBACK_FAILED"]:[],...model.methods.some(m=>m.stepIO)?["STEP_IO_FAILED"]:[],...model.wire.methods.some(m=>m.once)?["CALLBACK_ALREADY_INVOKED"]:[]].map(n=>p+n).join(", ")+" } "+p+"state;",
 		"typedef struct { const char *data; size_t size; } "+p+"text;",
 		"typedef struct { char *data; size_t size; } "+p+"string;");
 	if(binary) defs.push("typedef struct { const uint8_t *data; size_t size; } "+p+"byte_view;",
@@ -168,7 +168,7 @@ ${binary?`/* byte_view borrows packed bytes for one call or callback. Returned b
  * your registration after start, or revoke to refuse future invocations. The
  * context destructor runs after the last task and active invocation release it.
  * Observe FACTORY_FAILED, FAILED or the declared *_CALLBACK_FAILED state;
- * inspect its matching errors field and dispose the errors before reuse. */
+ * inspect its matching errors field and dispose the errors before reuse.${model.wire.methods.some(m=>m.once)?"\n * CALLBACK_ALREADY_INVOKED reports a spent one-call allowance and has no error payload.":""} */
 `:""}${defs.join("\n")}
 static inline void ${p}string_dispose(${p}string *s) { if (s) { free(s->data); s->data=NULL; s->size=0; } }
 #ifdef __cplusplus
@@ -195,7 +195,9 @@ export const renderWitTaskHeader = model=>bindings(model).header;
 export const generateWitTaskSession = async (model,component)=>{
 	const {header,code,symbols,p,binary}=bindings(model), prefix=model.name.replaceAll("-","_");
 	const callback=model.methods.some(m=>m.callbacks?.length)?await readFile(new URL("task-callback-session.h",import.meta.url),"utf8"):"";
-	const session=(await readFile(new URL("task-session.h",import.meta.url),"utf8")).replace("/* LB_CALLER_DISPATCH */",()=>callback);
+	const session=(await readFile(new URL("task-session.h",import.meta.url),"utf8")).replace("/* LB_CALLER_DISPATCH */",()=>callback)
+		.replace("/* LB_ONCE_STATE */",model.wire.methods.some(m=>m.once) ? `
+        else if (lb_budgeted_method(i) && lb_name(label,"callback-already-invoked")) { next=LBP(CALLBACK_ALREADY_INVOKED); }` : "");
 	const heapSession=model.heap?.length?await readFile(new URL("task-lease-session.h",import.meta.url),"utf8"):null;
 	return {prefix,header,symbols
 		, source: [

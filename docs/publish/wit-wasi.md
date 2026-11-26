@@ -191,6 +191,20 @@ For a worker returning `Task (Except IO.Error α)`, also list the declaration in
 
 A task can also take a retained host function, such as the `UInt32 → IO UInt32` parameter in [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean). Select the task in `taskExports` and, for this example, `taskIOErrors`. The generated start returns an owner immediately; factory errors arrive when the consumer observes that task. The checked WIT world gives each callback parameter its own request type. The installed C API dispatches those requests as [typed store-thread callbacks](../consume/wit-wasi.md#give-a-task-a-host-callback).
 
+For a **pollable** task, add an entry to `taskCallbackPolicies` to admit at
+most one invocation of a named parameter:
+
+```json
+"taskCallbackPolicies": [
+  { "declaration": "Budget.probe", "parameter": "f", "invocation": "once" }
+]
+```
+
+The first attempt consumes the allowance even if the callback throws. Other
+parameters keep their own policy. The public WIT observation for a second
+attempt is `callback-already-invoked`, distinct from a callback returning
+an error with that text. This option does not select canonical futures.
+
 To pass a Lean object rather than a copy, add its qualified declaration to `resources` in each package that uses it. For example, Peer selects `"resources": ["Shared.Ticket"]` and `"taskExports": ["Peer.bump"]`. The [Lean implementation](../../tests/fixtures/javascript-wasm-resource-tasks/Peer.lean) takes a Ticket, changes its count, and returns the same Ticket in a task. A task argument borrows the object. A direct task result, cursor item, typed factory error, or terminal pull error can return an owned object. This does not admit arbitrary objects nested inside copied aggregates.
 
 Build both packages against the same defining module and compiler. Lean Bridge derives the resource identity from these inputs; matching field layouts are not enough. The build packages the shared lease library automatically. See [how consumers pass the object between packages](../consume/wit-wasi.md#pass-a-lean-object-between-task-packages).

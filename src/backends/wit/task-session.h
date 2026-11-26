@@ -242,7 +242,7 @@ static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait
 #endif
         }
 #if LB_CALLBACKS
-        else if (lb_cb_ports[i].factory && lb_name(label,"factory-failed")) { next=LBP(FACTORY_FAILED); }
+        else if (lb_cb_ports[i].factory && lb_name(label,"factory-failed")) { next=LBP(FACTORY_FAILED); }/* LB_ONCE_STATE */
         else if (lb_cb_ports[i].factory_host && lb_name(label,"factory-callback-failed")) { next=LBP(FACTORY_CALLBACK_FAILED); }
         else if (lb_cb_ports[i].worker_host && lb_name(label,"worker-callback-failed")) { next=LBP(WORKER_CALLBACK_FAILED); }
 #endif

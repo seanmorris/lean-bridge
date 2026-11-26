@@ -207,7 +207,7 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
                     int taken=m->take(t->native,words,tags); lb_task_decoder decode=m->ready; state=m->request?"item":"ready";
 #if LB_CALLBACKS
                     const lb_cb_port *port=&lb_cb_ports[b->method];
-                    if (port->factory && taken==port->factory_status) { decode=port->factory; state="factory-failed"; }
+                    if (port->factory && taken==port->factory_status) { decode=port->factory; state="factory-failed"; }/* LB_ONCE_OBSERVATION */
                     else if (port->fd && taken==14) {
                         if (!words[2] || !((tags[0]==2 && port->factory_host) || (tags[0]==3 && port->worker_host))) {
                             err=wasmtime_error_new("Unexpected retained callback failure origin"); goto done;

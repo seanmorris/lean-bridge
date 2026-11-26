@@ -113,7 +113,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 			if(once !== undefined && (!Array.isArray(once) || !once.length || once.some((slot,i)=>
 				!Number.isSafeInteger(slot) || slot < 0 || e.parameters[slot]?.type.kind !== "io-callback"
 				|| (i > 0 && slot <= once[i-1])))) throw new TypeError("Invalid one-call wire slots");
-			if(once && (checkedWasm || witCallbacks || hostValues)) throw new TypeError("One-call wire requires a standalone native task");
+			if(once && (checkedWasm || hostValues)) throw new TypeError("One-call wire requires a standalone native task");
 			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks, wasmHost, hostValues, once });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}

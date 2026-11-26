@@ -118,3 +118,8 @@ The client checks both prebuilt and installer-generated XS. Set
 `LEAN_BRIDGE_PERL_BUDGET_KEEP` to retain the handoffs, or
 `LEAN_BRIDGE_PERL_BUDGET_REPLAY` to use existing ordinary and reviewed
 distributions.
+For WIT/WASI pollable tasks, run `npm run test:wit-pollable-once-callback`
+with the pinned Lean compiler, wasm-tools and Wasmtime C SDK. Set
+`LEAN_BRIDGE_WIT_BUDGET_KEEP` to retain both handoffs or
+`LEAN_BRIDGE_WIT_BUDGET_REPLAY` to replay them. The C client uses only
+the installed Wasmtime API. This test does not exercise canonical futures.

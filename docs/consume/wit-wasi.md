@@ -401,6 +401,12 @@ Dropping your registration after start is safe: the task holds its own reference
 
 To reject a call, set the error byte span and return `false`. The host copies text replies and errors before releasing the callback context; an input span can be returned directly. For a callback-bearing task, start returns the task before running the Lean factory. Observe `FACTORY_FAILED` for a Lean factory error, `FAILED` for a declared worker failure, or `FACTORY_CALLBACK_FAILED` / `WORKER_CALLBACK_FAILED` for a host rejection. A returned Lean `Except.error` is still a `READY` value. Inspect the state, not the message.
 
+If a pollable package declares a one-call callback, the second attempt does
+not enter your callback. Observe `CALLBACK_ALREADY_INVOKED`; it carries no
+error payload. The allowance is per parameter of each task, not per callback
+registration. Reusing the same registration in a new task starts a fresh
+allowance.
+
 ### Pull an asynchronous sequence
 
 The [Meter example](../../tests/fixtures/wit-task-package/cursors.lean) exposes a feed that produces one item per request. Pass an open main-thread session to this function. It prints each integer, skips items that carry a text error, and drops the cursor on exit.
