@@ -8,8 +8,8 @@ import { createOwnedCompiledNativeModel, generateOwnedNativeLeanAdapters } from 
 import { compileOwnedPhpZendModel } from "../backends/php/owned-zend-model.mjs";
 
 const transport = "owned-zend-v1";
-const zendLayout = (ir, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords) =>
-	compileOwnedPhpZendModel(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords });
+const zendLayout = (ir, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords, callbackViewEquality) =>
+	compileOwnedPhpZendModel(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords, callbackViewEquality });
 
 /**
  * Typed Lean carriers are target-independent. The Zend layout, machine words
@@ -26,11 +26,12 @@ export const createOwnedPhpWasmModel = options => {
 		, anchoredResults: options.anchoredResults ?? true
 		, callbackResultAnchors: options.callbackResultAnchors ?? true });
 	const zend = zendLayout(native.bindingIr, Boolean(native.ownedGraph.inputTransfers), Boolean(native.ownedGraph.resultAnchors),
-		Boolean(native.ownedGraph.receiverExports), Boolean(native.ownedGraph.callbackResultAnchors), Boolean(native.ownedGraph.hostCallbacks), options.hostInputRecords ?? true);
+		Boolean(native.ownedGraph.receiverExports), Boolean(native.ownedGraph.callbackResultAnchors), Boolean(native.ownedGraph.hostCallbacks), options.hostInputRecords ?? true, options.callbackViewEquality ?? true);
 	return Object.freeze({ ...native
 		, profile: "php-wasm-copied-v1", pointerBits: 32
 		, ownedGraph: { ...native.ownedGraph, transport
 			, layoutSha256: zend.layoutSha256
+			, ...zend.callbackArgumentIdentity ? {callbackArgumentIdentity: zend.callbackArgumentIdentity} : {}
 			, ...zend.recordInputs ? {hostInputRecords: zend.recordInputs.contract} : {} } });
 };
 
@@ -47,16 +48,18 @@ export const generateOwnedPhpWasmLeanAdapters = model => {
 	const transferredInputs = model.schemaVersion === 8 || ((callbackResults || receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);
 	const hostCallbacks = model.schemaVersion === 7 || ((callbackResults || receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);
 	const recordInputs = model.ownedGraph?.hostInputRecords;
-	const zend = zendLayout(model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults, hostCallbacks, recordInputs !== undefined);
+	const viewIdentity = model.ownedGraph?.callbackArgumentIdentity;
+	const zend = zendLayout(model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults, hostCallbacks, recordInputs !== undefined, viewIdentity !== undefined);
 	if(model.profile !== "php-wasm-copied-v1" || model.pointerBits !== 32 || model.byteOrder !== "little"
 		|| ![6, 7, 8, 9, 10, 11].includes(model.schemaVersion) || model.ownedGraph?.schemaVersion !== (callbackResults ? 6 : receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)
 		|| (!callbackResults && model.ownedGraph.callbackResultAnchors !== undefined)
 		|| (!hostCallbacks && model.ownedGraph.hostCallbacks !== undefined)
+		|| viewIdentity !== zend.callbackArgumentIdentity
 		|| (recordInputs !== undefined && (!zend.recordInputs || canonicalJson(recordInputs) !== canonicalJson(zend.recordInputs.contract)))
 		|| model.ownedGraph.transport !== transport || model.ownedGraph.layoutSha256 !== zend.layoutSha256)
 		throw new TypeError("PHP-Wasm ownership model differs from the checked 32-bit transport");
 	const ownedGraph = { ...model.ownedGraph };
-	delete ownedGraph.transport; delete ownedGraph.layoutSha256; delete ownedGraph.hostInputRecords;
+	delete ownedGraph.transport; delete ownedGraph.layoutSha256; delete ownedGraph.hostInputRecords; delete ownedGraph.callbackArgumentIdentity;
 	const semantic = { ...model, profile: "native-library-v1", pointerBits: 64, ownedGraph };
 	const adapters = generateOwnedNativeLeanAdapters(semantic);
 	const expected = [

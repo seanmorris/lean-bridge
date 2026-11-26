@@ -8,7 +8,7 @@ import { compileOwnedPhpZendModel } from "./owned-zend-model.mjs";
 import { ownedZendWalkSource } from "./owned-zend-walk.mjs";
 import { ownedZendCallbacks } from "./owned-zend-callbacks.mjs";
 import { ownedZendRecordCalls } from "./owned-zend-host-records.mjs";
-import { ownedZendBorrowCalls, ownedZendBorrowEntries, ownedZendBorrowHandles } from "./owned-zend-borrow-calls.mjs";
+import { ownedZendBorrowCalls, ownedZendBorrowEntries, ownedZendBorrowHandles, ownedZendIdentityHandle } from "./owned-zend-borrow-calls.mjs";
 
 const calls = model => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
@@ -127,15 +127,16 @@ static ZEND_FUNCTION(lgo_retire) {
  * @param generated - Private native adapters generated with wordBits32 and hostCallbacks.
  * @param options - Capabilities recorded by the compiled component.
  * @param options.hostInputRecords - Enable caller-created functions in selected record fields.
+ * @param options.callbackViewEquality - Enable identity comparison for direct callback views.
  */
-export const generateOwnedPhpZendExtension = (generated,{hostInputRecords = true} = {}) => {
+export const generateOwnedPhpZendExtension = (generated,{hostInputRecords = true,callbackViewEquality = true} = {}) => {
 	const transferredInputs = generated.layout.functions.some(fn => fn.transfers?.length);
 	const anchoredResults = generated.layout.functions.some(fn => fn.anchor !== undefined);
 	const receiverExports = generated.layout.functions.some(fn => fn.receiver === 0);
 	const callbackResultAnchors = generated.layout.callbacks.some(fn => fn.anchor !== undefined);
 	const hostCallbacks = Boolean(generated.carriers.callbackSource);
 	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
-	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords });
+	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords, callbackViewEquality });
 	if(canonicalJson(model.layout) !== canonicalJson(generated.layout)) throw new TypeError("Zend transport requires its exact wasm32 native layout");
 	if(hostCallbacks ? generated.carriers.hostCallbacks?.length !== model.callbacks.length : generated.carriers.hostCallbacks !== undefined)
 		throw new TypeError("Zend transport requires compiler-authenticated host callback carriers");
@@ -157,7 +158,7 @@ static int lgo_initialize(void) {
 ${ownedZendCallbacks(model, generated.carriers)}${ownedZendRecordCalls(model)}
 ${wholeOwners ? ownedZendBorrowCalls(model) : calls(model)}
 ${handles}
-${wholeOwners ? ownedZendBorrowHandles(model) : ""}\
+${wholeOwners ? ownedZendBorrowHandles(model) : model.callbackArgumentIdentity ? ownedZendIdentityHandle : ""}\
 static PHP_MINIT_FUNCTION(${model.stem}) {
   lgo_resource_type = zend_register_list_destructors_ex(lgo_resource_destroy, NULL, ${JSON.stringify(model.namespace + " owned value")}, module_number);
 ${wholeOwners ? `  lgo_root_resource_type = zend_register_list_destructors_ex(lgo_root_destroy, NULL, ${JSON.stringify(model.namespace + " whole owner")}, module_number);\n` : ""}\
@@ -171,7 +172,8 @@ ${registrations.map(([entry, info]) => `  ZEND_NS_NAMED_FE(${JSON.stringify(mode
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, close, ZEND_FN(lgo_close), lgo_handle_args)
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, shutdown, ZEND_FN(lgo_shutdown_entry), lgo_no_args)
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, retire, ZEND_FN(lgo_retire), lgo_no_args)
-${wholeOwners ? ["check", "close", "share"].map(name => `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, owner_${name}, ZEND_FN(lgo_owner_${name}), lgo_handle_args)`).join("\n") + `\n  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, equal, ZEND_FN(lgo_equal), lgo_equal_args)\n` : ""}\
+${wholeOwners ? ["check", "close", "share"].map(name => `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, owner_${name}, ZEND_FN(lgo_owner_${name}), lgo_handle_args)`).join("\n") + "\n" : ""}\
+${wholeOwners || model.callbackArgumentIdentity ? `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, equal, ZEND_FN(lgo_equal), lgo_equal_args)\n` : ""}\
   PHP_FE_END
 };
 zend_module_entry ${model.stem}_module_entry = {

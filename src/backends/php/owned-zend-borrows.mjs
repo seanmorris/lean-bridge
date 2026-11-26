@@ -133,7 +133,13 @@ const replace = (source, before, after) => {
  */
 export const ownedZendBorrowFiles = model => {
 	const files = { ...model.files };
-	if(!model.anchoredResults && !model.wholeOwners) return files;
+	const zendBindings = source => source.replaceAll("instanceof NativeBinding", "instanceof ZendBinding")
+		.replaceAll("Expected native PHP resources", "Expected Zend resources");
+	if(!model.anchoredResults && !model.wholeOwners)
+	{
+		if(model.callbackArgumentIdentity) files["src/Internal/Values.php"]=zendBindings(files["src/Internal/Values.php"]);
+		return files;
+	}
 	const namespace = `\\${model.namespace}`;
 	const callbackValue = source => !model.callbackResultAnchors ? source : source.replace(
 		"    public function __invoke(mixed ...$arguments): mixed"
@@ -156,9 +162,7 @@ export const ownedZendBorrowFiles = model => {
 	}) : { value: zendValue, access: ownedZendBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
 	files["src/Api.php"] = replace(files["src/Api.php"], native.value, zend.value);
 	files["src/Internal/Values.php"] = replace(files["src/Internal/Values.php"], native.access, zend.access);
-	files["src/Internal/Values.php"] = files["src/Internal/Values.php"]
-		.replaceAll("instanceof NativeBinding", "instanceof ZendBinding")
-		.replaceAll("Expected native PHP resources", "Expected Zend resources");
+	files["src/Internal/Values.php"] = zendBindings(files["src/Internal/Values.php"]);
 	files["src/Api.php"] += String.raw`
 function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = null): Value {
     if (\func_num_args() > 3) throw new \ArgumentCountError('copy_value accepts a payload and optional selector');
@@ -178,7 +182,21 @@ function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = n
  * @param literal - Existing checked PHP literal encoder.
  */
 export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
-	if(!model.anchoredResults && !model.wholeOwners) return source;
+	const whole = model.anchoredResults || model.wholeOwners;
+	if(!whole && !model.callbackArgumentIdentity) return source;
+	source = replace(source, "    // The Zend resource destructor handles implicit release", String.raw`    public function sameIdentity(self $other): bool {
+        $this->check(); $other->check();
+        return $this->type === $other->type && Native::sameIdentity($this->type, $this->resource, $other->resource);
+    }
+    // The Zend resource destructor handles implicit release`);
+	const compare = String.raw`    public static function sameIdentity(int $type, mixed $left, mixed $right): bool {
+        self::main(); $symbol = self::symbol('equal');
+        try { return $symbol($type, $left, $right); }
+        catch (\Exception $error) { throw new @NAMESPACE@\LeanBridgeError($error->getMessage(), $error->getCode(), $error); }
+    }
+`;
+	const marker = "    private static function malformed(GraphInvalidWire $error): never {";
+	if(!whole) return replace(source, marker, compare + marker);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const nominals = Object.fromEntries(model.types.filter(node => node.representation !== "copied").flatMap(node =>
 		(node.identity || node.kind === "record" ? [node.publicType] : node.cases.map(branch => branch.publicName))
@@ -194,11 +212,6 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
 	}
 	const ownedTypes = model.callbackResultAnchors ? Object.fromEntries(model.types
 		.filter(node => node.representation !== "copied").map(node => [node.index, true])) : null;
-	source = replace(source, "    // The Zend resource destructor handles implicit release", String.raw`    public function sameIdentity(self $other): bool {
-        $this->check(); $other->check();
-        return $this->type === $other->type && Native::sameIdentity($this->type, $this->resource, $other->resource);
-    }
-    // The Zend resource destructor handles implicit release`);
 	source = replace(source, "    private static int $depth = 0;", `    private const NOMINALS = ${literal(nominals)};
     private const RESULTS = ${literal(results)};
     private const PARAMETERS = ${literal(parameters)};
@@ -210,12 +223,7 @@ ${model.callbackResultAnchors ? `    private const OWNED_TYPES = ${literal(owned
         try { return $symbol($type, $owner); }
         catch (\Exception $error) { throw new @NAMESPACE@\LeanBridgeError($error->getMessage(), $error->getCode(), $error); }
     }
-    public static function sameIdentity(int $type, mixed $left, mixed $right): bool {
-        self::main(); $symbol = self::symbol('equal');
-        try { return $symbol($type, $left, $right); }
-        catch (\Exception $error) { throw new @NAMESPACE@\LeanBridgeError($error->getMessage(), $error->getCode(), $error); }
-    }
-    private static function copyTyped(int $type, mixed $value): @NAMESPACE@\Value {
+${compare}    private static function copyTyped(int $type, mixed $value): @NAMESPACE@\Value {
         return self::execute(['entry' => 'copy' . $type, 'parameters' => [$type], 'host' => [false],
             'wholeParameters' => [], 'result' => $type, 'whole' => true], [$value]);
     }

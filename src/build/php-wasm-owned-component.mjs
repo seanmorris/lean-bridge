@@ -27,19 +27,21 @@ export const generateCompiledPhpWasmOwned = (model, metadata, adapters) => {
 	const hostCallbacks = Boolean(model.ownedGraph?.hostCallbacks);
 	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
 	const hostInputRecords = model.ownedGraph?.hostInputRecords !== undefined;
-	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords };
+	const callbackViewEquality = model.ownedGraph?.callbackArgumentIdentity !== undefined;
+	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords, callbackViewEquality };
 	if(canonicalJson(createOwnedPhpWasmModel(inputs)) !== canonicalJson(model)
 		|| canonicalJson(generateOwnedPhpWasmLeanAdapters(model)) !== canonicalJson(adapters))
 		throw new TypeError("PHP-Wasm ownership sources differ from compiler inputs");
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const native = generateOwnedNativeValueAdapters({ ...inputs, wordBits: 32, transferredInputs });
-	const extension = generateOwnedPhpZendExtension(native,{hostInputRecords}), php = generateOwnedPhpZendPhp(extension.model);
+	const extension = generateOwnedPhpZendExtension(native,{hostInputRecords,callbackViewEquality}), php = generateOwnedPhpZendPhp(extension.model);
 	if(native.carriers.leanSource !== adapters.leanSource || native.carriers.module !== adapters.module)
 		throw new TypeError("PHP-Wasm ownership carrier source drift");
 	const manifest = { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, profile: "php-wasm-owned-zend-v1"
 		, bindingIrSha256: model.bindingIrSha256
 		, layoutSha256: extension.model.layoutSha256
+		, ...callbackViewEquality ? {callbackArgumentIdentity: extension.model.callbackArgumentIdentity} : {}
 		, ...hostInputRecords ? {hostInputRecords: extension.model.recordInputs.contract} : {}
 		, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 		, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
@@ -66,6 +68,7 @@ export const generateCompiledPhpWasmOwned = (model, metadata, adapters) => {
 		, sources: [...hostCallbacks ? ["owned/callbacks.c"] : [], `extension/${manifest.extension}.c`]
 		, receipt: { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 			, transport: "owned-zend-v1"
+			, ...callbackViewEquality ? {callbackArgumentIdentity: extension.model.callbackArgumentIdentity} : {}
 			, ...hostInputRecords ? {hostInputRecords: extension.model.recordInputs.contract} : {}
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}

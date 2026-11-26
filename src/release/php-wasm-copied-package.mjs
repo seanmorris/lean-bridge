@@ -169,6 +169,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
 	const projection = model.io ?? (model.ownedGraph ? compileOwnedPhpZendModel(model.bindingIr, {
 		hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
+		, callbackViewEquality: model.ownedGraph.callbackArgumentIdentity !== undefined
 		, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 		, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 		, receiverExports: Boolean(model.ownedGraph.receiverExports)

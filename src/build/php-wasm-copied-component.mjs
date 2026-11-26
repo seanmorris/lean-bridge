@@ -148,6 +148,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 		, validateModel: model => {
 			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr, {
 				hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
+				, callbackViewEquality: model.ownedGraph.callbackArgumentIdentity !== undefined
 				, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 				, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 				, receiverExports: Boolean(model.ownedGraph.receiverExports)

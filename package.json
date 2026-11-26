@@ -1544,6 +1544,7 @@
     "test:callback-frame-facades": "node --test --test-concurrency=1 tests/helpers/callback-frame-facades.mjs",
     "test:managed-callback-frame-facades": "node --test --test-concurrency=1 tests/helpers/managed-frame-facades.mjs",
     "test:php-callback-frame-facade": "node --test --test-concurrency=1 tests/helpers/php-frame-facade.mjs",
+    "test:zend-direct-transport": "node --test tests/helpers/zend-direct-transport.mjs",
     "test:perl-callback-frame-facade": "node --test --test-concurrency=1 tests/helpers/perl-frame-facade.mjs",
     "test:native-incoming-function": "node --test --test-concurrency=1 tests/helpers/native-incoming-installed.mjs",
     "test:rust-lease-shapes": "node --test tests/helpers/rust-lease-shapes.mjs",

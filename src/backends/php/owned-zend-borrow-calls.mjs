@@ -208,7 +208,9 @@ static ZEND_FUNCTION(lgo_owner_share) {
   if (!status) status = lgo_root_wrap(root->lease, (unsigned)type, return_value);
   lgo_error(status, NULL, 0); if (EG(exception)) RETURN_THROWS();
 }
-ZEND_BEGIN_ARG_INFO_EX(lgo_equal_args, 0, 0, 3)
+${ownedZendIdentityHandle}`;
+
+export const ownedZendIdentityHandle = `ZEND_BEGIN_ARG_INFO_EX(lgo_equal_args, 0, 0, 3)
   ZEND_ARG_INFO(0, type)
   ZEND_ARG_INFO(0, left)
   ZEND_ARG_INFO(0, right)

@@ -2229,6 +2229,14 @@ The host copies `main.php` into PHP's virtual filesystem and requires it as a fi
 
 ### PHP-Wasm ownership and errors
 
+When a visitor receives a Lean function directly, the argument is borrowed
+until the visitor returns or throws. Save an independent lease with
+`$keep = $quote->retain()`. Packages that declare
+`callbackArgumentIdentity: canonical-while-live` let you compare the live
+views with `$quote->sameIdentity($keep)`. After the visitor exits, use
+`$keep`, not `$quote`, and close it when finished. This requires neither
+FFI nor a whole-result owner.
+
 If a record contains a Lean function, call `$record->quote->retain()` to
 keep a separate lease, then `close()` that lease when done. In wasm32 PHP,
 pass `Brick\Math\BigInteger::of(2)` to a `UInt32` function. A PHP closure

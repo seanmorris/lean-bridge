@@ -22,9 +22,10 @@ import { phpHostRecords } from "./owned-host-records.mjs";
  * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Admit synchronous PHP callback transport.
  * @param options.hostInputRecords - Generate call-scoped record inputs; old packages omit this capability.
+ * @param options.callbackViewEquality - Compare direct callback borrows without adding whole-result owners.
  */
-export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true, hostInputRecords = true } = {}) => {
-	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
+export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true, hostInputRecords = true, callbackViewEquality = true } = {}) => {
+	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, callbackViewEquality: hostCallbacks && callbackViewEquality });
 	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	anchoredResults = values.c.anchoredResults;
 	receiverExports = values.receiverExports;
@@ -123,6 +124,7 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchor
 		}))
 	};
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
+		, ...!wholeOwners && values.canonicalEquality ? {callbackArgumentIdentity: "canonical-while-live"} : {}
 		, ...anchoredResults ? { anchoredResults: true } : {}
 		, ...callbackResultAnchors ? { callbackResultAnchors: true } : {}
 		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : callbackResultAnchors ? { wholeOwners: true, ...!hostCallbacks ? { hostCallbacks: false } : {} } : !hostCallbacks ? { hostCallbacks: false } : {}

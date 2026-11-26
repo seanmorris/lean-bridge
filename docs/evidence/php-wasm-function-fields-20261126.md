@@ -27,3 +27,27 @@ Run `npm run test:php-wasm-function-fields` with the
 Set `LEAN_BRIDGE_ZEND_TARIFF_KEEP` to an existing scratch directory to
 retain the handoffs. Set `LEAN_BRIDGE_ZEND_TARIFF_REPLAY` to their common
 directory instead to install the same releases again without rebuilding Lean.
+
+For a Lean function passed directly to the PHP visitor, set
+`LEAN_BRIDGE_ZEND_TARIFF_REQUIRE_INCOMING=1`. The
+[application](../../tests/fixtures/structured-types/tariff-zend-direct.php)
+checks live identity, expiry, retention, the original exception, nested
+failure, and independent captures using the wasm32 `BigInteger` API. The
+host keeps a working closure alive, explicitly closes the binding and
+samples the same broker before and after that close. A separate check
+refreshes PHP and reopens the package. The field-only packages above
+predate this export.
+
+`npm run test:zend-direct-transport` is a smaller compiler check: it takes
+an authenticated `visitQuote` Lean stage, verifies the optional capability,
+compiles the generated Zend C against the wasm32 PHP headers, and checks the
+method on the generated PHP class in the real PHP 8.4 interpreter. It does
+not replace either installed-package run.
+
+The shutdown control also passed against the original ordinary
+[input-record package](php-wasm-host-inputs-20261126/ordinary.json) in
+PHP 8.4 on Node. Its existing application observations were unchanged;
+the broker saw a live callable before the explicit close and zero after
+it in the same request. In a separate lazy-load run, the public flat
+callback returned 5 with zero live identities, and the refreshed binding
+returned 42 with zero. Neither run used the new direct visitor.
