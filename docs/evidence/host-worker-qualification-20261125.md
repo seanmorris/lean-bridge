@@ -266,8 +266,9 @@ also passed in separate Java and Kotlin applications. This brings the
 input-field case to 15 of the 17 profiles; PHP-Wasm and WIT/WASI remain.
 
 A separate [incoming-function check](npm-incoming-functions-20261126.md)
-passes a Lean function directly into the host callback. All five ordinary
-npm consumers reject the expired borrow and keep an independent lease.
+passes a Lean function directly into the host callback. All five consumers
+rejected the expired borrow and kept an independent lease on each of the
+two npm releases. Their runtime archives differ.
 
 ### Does a callback allow one call or many?
 

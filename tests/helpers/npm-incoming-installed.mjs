@@ -6,7 +6,7 @@ import {join,resolve} from "node:path";
 import test from "node:test";
 import {canonicalJson} from "../../src/capsule/node.mjs";
 import {ledgerFrameworkArchives} from "./javascript-ledger-delivery.mjs";
-import {buildIncomingFunctionPackage,verifyIncomingFunction} from "./npm-incoming-package.mjs";
+import {buildIncomingFunctionPackage,compareIncomingPackages,verifyIncomingFunction} from "./npm-incoming-package.mjs";
 import {runFiveInstalledNpm} from "./npm-five-installed.mjs";
 
 test("installed npm callbacks can retain, but cannot outlive, an incoming Lean function borrow",{timeout: 7_200_000},async t=>{
@@ -29,6 +29,7 @@ test("installed npm callbacks can retain, but cannot outlive, an incoming Lean f
 		, "page.mjs": join(ui,"page.mjs")
 		, "worker.mjs": join(ui,"worker.mjs")
 	};
+	const observations=[];
 	for(const route of routes)
 	{
 		if(!replay) await buildIncomingFunctionPackage({work,set: join(set,route),route});
@@ -47,6 +48,8 @@ test("installed npm callbacks can retain, but cannot outlive, an incoming Lean f
 			});
 		}
 		await writeFile(join(output,route+".json"),canonicalJson(row));
+		observations.push(row);
 	}
+	if(!only) await writeFile(join(output,"pair.json"),canonicalJson(compareIncomingPackages(...observations)));
 	t.diagnostic("Handoffs: "+set);
 });
