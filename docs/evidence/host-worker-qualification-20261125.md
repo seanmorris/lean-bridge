@@ -178,6 +178,9 @@ return to baseline after each case, then zero after owner-thread exit.
 The [RubyGems consumer](ruby-function-fields-20261126.md) also retains and
 repacks the field, returns it directly from a callback, and observes the
 native count return to its warmed baseline on both routes.
+The [native PHP client](php-function-fields-20261126.md) exercised both
+routes on PHP 8.2 and 8.5; the broker returned to baseline before request
+shutdown and to zero afterward.
 These tests do not exercise a function field containing
 a captured application object or a durable host callback.
 

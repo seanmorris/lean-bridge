@@ -1346,6 +1346,7 @@
     "test:dotnet-function-fields": "node --test tests/helpers/dotnet-function-fields-installed.mjs",
     "test:jvm-function-fields": "node --test tests/helpers/jvm-function-fields-installed.mjs",
     "test:ruby-function-fields": "node --test tests/helpers/ruby-function-fields-installed.mjs",
+    "test:php-function-fields": "node --test tests/helpers/php-function-fields-installed.mjs",
     "test:npm-function-fields": "node --test tests/helpers/npm-function-fields-installed.mjs",
     "test:rust-staged-callbacks": "LEAN_BRIDGE_OWNED_RUST_STAGED_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-rust-install.test.mjs",
     "test:owned-python-transfers": "LEAN_BRIDGE_OWNED_PYTHON_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-python-transfers.test.mjs tests/owned-python-transfer-packaging.test.mjs",

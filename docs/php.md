@@ -364,6 +364,23 @@ are distinct from the [session-owned aggregate API](#resource-containing-values)
 The [installed resource checks](evidence/php-heap-lease-20261123.json)
 record the packages, runtime versions, and broker counts after shutdown.
 
+### Keep a Lean function from a PHP record
+
+A generated record can contain a callable Lean function. Keep your own
+reference with `retain()` if the record's original reference will close.
+This example uses the [Tariff Composer package](evidence/php-function-fields-20261126.md):
+
+```php
+$quote = \LeanTariffQuotes\make_tariff(40)->quote;
+$mine = $quote->retain();
+try {
+    $quote->close();
+    echo $mine(2), PHP_EOL;  // 42
+} finally {
+    $mine->close();
+}
+```
+
 ### Pass a resource to a native PHP task
 
 The caller owns its ticket; the Lean worker holds its own reference as soon
