@@ -60,6 +60,24 @@ libraries with the source, original archives and compiler search path removed. T
 declared error used distinct output slots. The result is for a Lean-owned ticket with a file descriptor,
 not a test of ownership of an application-created C object. Reproduce with `npm run test:c-resource-error-owner`.
 
+## When the declared error owns an application object
+
+The [WIT client](../../tests/fixtures/static-host-workers/installed-peers.wat.in)
+receives a box from `Gauge.reject : Box → EIO Box UInt32`. The application
+guest created the box. It checks that the error payload and the original
+refer to the same box, then drops both its original handle and the successful
+return from Workshop. With the error payload as its only handle to that box,
+it calls the independent `Workshop.mapped` and reads **73**. After it drops
+the error, the guest counts **one** live owner: the counter it is using to
+take the measurement. It then drops the counter.
+
+The [installed packages](wit-host-closures-20261125.md#two-installed-synchronous-packages)
+ran all four ordinary/reviewed pairings in both load orders. This covers a
+guest-created object carried by a synchronous WIT error. A [separate worker
+test](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader)
+observed the defining guest's error destructor run once after a callback and
+a future. Neither test places an application object in a record field.
+
 ## Which native failures actually retire a runtime?
 
 The trigger matters. A host method returning an invalid object is not the
