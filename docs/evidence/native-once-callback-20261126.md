@@ -136,6 +136,20 @@ callback errors, typed startup failure, and same-text factory and terminal IO
 failures remained distinct. Both callback owners were destroyed and the broker
 returned to zero live leases. This covers pollable tasks, not canonical futures.
 
+The canonical runner has a separate [guest callback dispatcher](../../src/backends/wit/canonical-callback.mjs).
+In an executable Wasm test, one guest registration handled three owned requests:
+a byte-list argument produced a signed 64-bit reply, a guest failure preserved
+its UTF-8 text and embedded NUL, and a late reply returned false. The issuer
+observed exactly three consumed requests. Run `npm run test:wit-canonical-callbacks`.
+
+To check the link against both original pollable packages, set
+`LEAN_BRIDGE_WIT_CALLBACK_TASK_RELEASES` to their handoff directory and
+`LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the canonical runner's Wasmtime 51 SDK.
+`npm run test:wit-canonical-callback-link` verifies the sealed receipts, rebuilds
+the exact archived Wasm bytes, validates the composed type graph for nine Lean
+methods and eleven request sites, and compiles the native import declarations
+against that SDK. Neither check is an installed canonical-future result.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native

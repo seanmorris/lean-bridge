@@ -5,6 +5,7 @@ import { reconcileHostExports } from "../src/analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../src/analyze/native-host-effects.mjs";
 import { compileWitTaskResources } from "../src/backends/wit/task-model.mjs";
 import { renderWitTaskHeader } from "../src/backends/wit/task-session.mjs";
+import { canonicalCallbackBindings } from "../src/backends/wit/canonical-callback.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 
 const u32={kind: "primitive",name: "uint32"},str={kind: "primitive",name: "string"},cb={kind: "io-callback",argument: u32,reply: str};
@@ -65,4 +66,17 @@ test("equal callback signatures at different sites get distinct, consumable requ
 test("the Wasmtime world will not accept another host's retained-callback evidence",()=>{
 	assert.throws(()=>build({...selection,witTaskCallbacks: false,phpTaskCallbacks: true}),/require the Wasmtime store owner/u);
 	assert.throws(()=>build({...selection,javascriptTaskCallbacks: true}),/Ambiguous retained-callback host/u);
+});
+
+test("the canonical graph shares guest registrations but authenticates each private request site",()=>{
+	const model=build(),{signatures,sites,providerWit,wat}=canonicalCallbackBindings(model);
+	assert.equal(signatures.length,1);assert.equal(sites.length,4);
+	assert.deepEqual(sites.map(v=>[v.method,v.request.slot,v.signature]),[[0,0,0],[0,2,0],[1,0,0],[1,2,0]]);
+	assert.doesNotMatch(providerWit,/request|poll|slot|ticket/u);
+	for(const site of sites) assert.ok(wat.includes('(export "dispatch-'+site.request.resource+'"'));
+	model.methods[0].callbacks[0].invocation="once";
+	assert.throws(()=>canonicalCallbackBindings(model),/allowance differs/u);
+	delete model.methods[0].callbacks[0].invocation;
+	model.methods[0].callbacks[0].resolve=model.methods[1].callbacks[0].resolve;
+	assert.throws(()=>canonicalCallbackBindings(model),/nominal WIT callback request/u);
 });

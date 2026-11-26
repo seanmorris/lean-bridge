@@ -1,23 +1,37 @@
+/** @file Bind nominal WIT requests to their authenticated native callback ports. */
+/**
+ * Reconcile invocation allowances per binder, not per callable type. Both
+ * the pollable embedding and the canonical guest graph use this check.
+ *
+ * @param method - Component operations and nominal request identities.
+ * @param native - Corresponding native wire entry from the compiler.
+ */
+export const checkedWitCallbackSites=(method,native)=>{
+	if(!method || !native || method.declaration!==native.declaration)
+		throw new TypeError("WIT method and native task wire disagree");
+	const calls=method.callbacks??[],slots=native.callbacks??[];
+	const once=calls.filter(r=>r.invocation==="once").map(r=>r.slot);
+	if(calls.some(r=>r.invocation!==undefined && r.invocation!=="once") || native.once!==(once.length?true:undefined)
+		|| (once.length ? !Array.isArray(native.onceSlots) || native.onceSlots.length!==once.length || once.some((slot,j)=>slot!==native.onceSlots[j]) : native.onceSlots!==undefined))
+		throw new TypeError("WIT callback allowance differs from its native parameter");
+	if(calls.length!==slots.length || calls.some((r,j)=>r.slot!==slots[j][0] || r.arg!==slots[j][1] || r.reply!==slots[j][2] || native.args[r.slot]!=="callback"))
+		throw new TypeError("WIT request identity and native callback slot disagree");
+	return calls;
+};
+
 /**
  * Emit and cross-check the private Wasmtime callback declarations.
  *
  * @param methods - Nominal request descriptors from the checked WIT world.
  * @param wire - Native entry points compiled for the same declarations.
  * @param prefix - Component's native status and symbol prefix.
- * @file Bind each nominal WIT request to its authenticated native callback port and parameter.
  */
 export const witCallbackTable = (methods,wire,prefix) => {
 	const defs=[],ports=[],requests=[],budgeted=[];
 	for(const [i,m] of wire.methods.entries())
 	{
-		const calls=methods[i]?.callbacks??[],native=m.callbacks??[];
-		const once=calls.filter(r=>r.invocation==="once").map(r=>r.slot);
-		if(calls.some(r=>r.invocation!==undefined && r.invocation!=="once") || m.once!==(once.length?true:undefined)
-			|| (once.length ? !Array.isArray(m.onceSlots) || m.onceSlots.length!==once.length || once.some((slot,j)=>slot!==m.onceSlots[j]) : m.onceSlots!==undefined))
-			throw new TypeError("WIT callback allowance differs from its native parameter");
-		if(once.length) budgeted.push(i);
-		if(calls.length!==native.length || calls.some((r,j)=>r.slot!==native[j][0] || r.arg!==native[j][1] || r.reply!==native[j][2] || m.args[r.slot]!=="callback"))
-			throw new TypeError("WIT request identity and native callback slot disagree");
+		const calls=checkedWitCallbackSites(methods[i],m);
+		if(m.once) budgeted.push(i);
 		if(!calls.length)
 		{ ports.push("{0}"); continue; }
 		const n=m.names, normal=m.args.flatMap((arg,slot)=>arg==="callback"?[]:[slot]);

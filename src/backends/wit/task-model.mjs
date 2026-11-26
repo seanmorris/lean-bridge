@@ -206,5 +206,5 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	const prefix = "lbc_wit_"+sha256(api.component.id);
 	const onceByDeclaration=selection.taskCallbackPolicies?.length ? retainedOnceSlots(api) : undefined;
 	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: heapTypes,witCallbacks: callbacks.size>0,onceByDeclaration});
-	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap };
+	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap,nativeType: typeBody };
 };
