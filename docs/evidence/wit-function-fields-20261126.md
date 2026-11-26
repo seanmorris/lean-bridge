@@ -33,3 +33,13 @@ session and checks the result, each argument, and the live owner count.
 It also checks that an invalid callback in the second record prevents
 dispatch of the first. Compiling that client against the generated header
 checks its C API, but does not count as an installed-package run.
+
+For a bare function passed directly to a visitor, set
+`LEAN_BRIDGE_WIT_TARIFF_REQUIRE_INCOMING=1` with `test:wit-function-fields`.
+The [application](../../tests/fixtures/structured-types/tariff-incoming-wasmtime.c)
+keeps a lease across successful and failed callbacks, checks nested calls,
+and refuses a borrowed function in a different session. A
+[separate observer](../../tests/fixtures/structured-types/tariff-incoming-wasmtime-observer.c)
+checks the broker between calls and after closing the session.
+`npm run test:wit-incoming-interface` checks the emitted world and compiles
+the client, without claiming that either release has executed it.
