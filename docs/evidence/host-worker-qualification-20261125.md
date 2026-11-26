@@ -242,6 +242,11 @@ their native owner count. This is separate from invocation-count policy.
 The [CPAN consumer](perl-function-fields-20261126.md) ran both paths on
 threaded and unthreaded Perl 5.36 and 5.38. The native broker returned
 to baseline before shutdown in all eight installs.
+The [wasm32 PHP client](php-wasm-function-fields-20261126.md) ran each
+source route in Node and Chromium, with both autoloaders and both loading
+modes. All 17 profiles now have both authoring routes for this scalar
+function-field and direct function-reply case. This does not qualify
+arbitrary host callbacks supplied inside input records.
 
 An [installed npm input-record test](npm-function-fields-20261126.md#passing-a-javascript-function-inside-an-input-record)
 passes a caller-created JS function through a field on both author routes.

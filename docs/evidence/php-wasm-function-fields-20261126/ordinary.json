@@ -1,0 +1,193 @@
+{
+  "archives": [
+    {
+      "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1da1b72f71ef135a5536b979c155ec9d8d76c744b591baaf42b33793acc20b73.tgz",
+      "bytes": 1661059,
+      "directory": "runtime/package",
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "role": "runtime",
+      "sha256": "6d2ed5a1b38b056bff932f85d6ba1cb3c93b32147b58baa5a8fa301df81e5a7a",
+      "version": "0.0.0-copied1.1da1b72f71ef135a5536b979c155ec9d8d76c744b591baaf42b33793acc20b73"
+    },
+    {
+      "archive": "example-tariff-quotes-1.0.0.tgz",
+      "bytes": 161634,
+      "directory": "component/package",
+      "ecosystem": "npm",
+      "name": "@example/tariff-quotes",
+      "role": "component",
+      "sha256": "c71e0395ef0985122a075c3b791db64e10e211b66cc5ecee7d72c31b9c92a240",
+      "version": "1.0.0"
+    },
+    {
+      "archive": "example-tariff-quotes-1.0.0-php-wasm.zip",
+      "bytes": 84780,
+      "directory": "composer",
+      "ecosystem": "composer",
+      "name": "example/tariff-quotes",
+      "role": "api",
+      "sha256": "91e7a939acbe2ed51faad4092f477b896c577083b0eb8155c2530d2e9d883759",
+      "version": "1.0.0"
+    }
+  ],
+  "bindingIrSha256": "c499ccd8e1d680fc2cbe79fbc6acd90ae86abbb76e2c7663cb0d9cc353b1fcb9",
+  "installed": {
+    "component": "3579f768052b8500b2c238390dbd02a0c0ba85d02b3787f1c44525c2a8912e47",
+    "composer": "9fe123bf9a08a13f56265527a2592e4a3a118090ecd5040aca332430b051f626",
+    "host": "96cf2f53b47f2890d6b1046bec811d74500fee6a74611a2c4d8a9114e7664250"
+  },
+  "observations": [
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "composer",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "composer",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": {
+        "after": 0,
+        "baseline": 0,
+        "held": 2,
+        "refreshed": [
+          "42",
+          0
+        ],
+        "result": "42",
+        "stageCalls": 1,
+        "visits": 0
+      }
+    }
+  ],
+  "observer": {
+    "binarySha256": "acfc27f0ced118f50894d84d150aaffabec8dc2c33ce9e2e0bd948114d705aba",
+    "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+    "sourceSha256": "31ca8d7f5f5fccd834e592b6adfd460843a902f08f2c4c3dd65bb6289c13c163",
+    "testOnly": true
+  },
+  "receiptSha256": "1198bce0ac4db9a42f04efe84d1e7a1fed5c9a11505271c7669a23b7aafb34ef",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtime": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "sources": {
+    "php-wasm-sync-io-probe/installed-node.mjs": "53e707c60e849803a4edfdebed16befaebdf7cf24365dc874dafb1d86940c1e6",
+    "structured-types/tariff-zend-host.mjs": "d19b2a10699d6fe6a351773e9e4ab65ecfaaaaa18f9c7d86b51f849176bc0a93",
+    "structured-types/tariff-zend.php": "8a1ec3e234c24c41878c7e2c272b55a551930a12ae488905345d7ae6b5713864"
+  }
+}

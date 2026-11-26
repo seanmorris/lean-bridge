@@ -2193,6 +2193,13 @@ The host copies `main.php` into PHP's virtual filesystem and requires it as a fi
 
 ### PHP-Wasm ownership and errors
 
+If a record contains a Lean function, call `$record->quote->retain()` to
+keep a separate lease, then `close()` that lease when done. In wasm32 PHP,
+pass `Brick\Math\BigInteger::of(2)` to a `UInt32` function. A PHP closure
+registered for one call does not gain a longer lifetime by being returned
+inside a record. The [installed Node and Chromium example](evidence/php-wasm-function-fields-20261126.md)
+exercises both cases.
+
 PHP-Wasm exposes the same copied `Payload`, binary `Bytes`, canonical `Box` identity, PHP callbacks, and invokable Lean closures as [native PHP](#native-php-ownership-and-errors). Alpha changes the record's Boolean and count; the callback and returned callable each produce `42` in this example.
 
 The `finally` blocks close the returned callable and the box even when a call fails. Closing a resource twice is allowed; using a closed wrapper raises `LeanAlpha\DisposedResource`. Keep each resource in the PHP-Wasm instance that created it. A second instance owns a separate Lean heap and identity domain.

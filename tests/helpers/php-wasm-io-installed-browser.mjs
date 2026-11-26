@@ -13,15 +13,16 @@ import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
  * @param options - Relocated consumer, pinned PHP distribution and Node test diagnostics.
  */
 export const exerciseInstalledIOBrowser = async options => {
-	const { app, host, t, callbacks, immediate = false } = options;
-	const roots = { "/component/": await realpath(join(app,"node_modules/php-wasm-ledger"))
+	const { app, host, t, callbacks, immediate = false, component = "php-wasm-ledger", observer, checkResult, recordFault } = options;
+	const roots = { "/component/": await realpath(join(app,"node_modules",component))
 		, "/runtime/": await realpath(join(app,"node_modules/@lean-bridge/php-wasm-copied-runtime"))
 		, "/host/": await realpath(host) };
 	const vendorRoot = join(app,"vendor"), vendor = [];
 	for(const path of await nativeArtifactPaths(vendorRoot)) vendor.push([path,(await readFile(join(vendorRoot,path))).toString("base64")]);
 	const program = await readFile(join(app,"consumer.php"),"utf8");
 	const assets = new Map([["/installed.mjs",await readFile(join(app,"installed.mjs"))]]);
-	const imports = { "php-wasm-ledger": "/component/index.mjs", "@lean-bridge/php-wasm-copied-runtime": "/runtime/index.mjs" };
+	const imports = { [component]: "/component/index.mjs", "@lean-bridge/php-wasm-copied-runtime": "/runtime/index.mjs" };
+	if(observer) assets.set("/observer.so",await readFile(join(app,"observer.so")));
 	if(callbacks)
 	{
 		imports["php-wasm-switchboard"] = "/switchboard/index.mjs";
@@ -72,6 +73,7 @@ export const exerciseInstalledIOBrowser = async options => {
 					return runCallbackHost({ ...options, Host, probe: new URL("/snapshot.so",globalThis.location.href).href });
 				},options);
 				assert.equal(result,"callbacks:"+fault+":retired:0"); t.diagnostic("Chromium/"+result);
+				recordFault?.({host:"Chromium",fault,result});
 			} finally
 			{ await page.close(); }
 		}
@@ -89,7 +91,9 @@ export const exerciseInstalledIOBrowser = async options => {
 					const vendor = files?.map(([p,b])=>[p,Uint8Array.from(atob(b),c=>c.charCodeAt(0))]);
 					return runInstalled({Host,loading,program,vendor,immediate});
 				},{loading,program,files: mode === "composer" ? vendor : null,immediate});
-				assert.equal(result,immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30"); t.diagnostic("Chromium/"+mode+"/"+loading+": "+result);
+				if(checkResult) checkResult(result);
+				else assert.equal(result,immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30");
+				t.diagnostic("Chromium/"+mode+"/"+loading+": "+result);
 				observations.push({host: "Chromium", mode, loading, result});
 			} finally
 			{ await page.close(); }
