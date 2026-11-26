@@ -16,6 +16,18 @@ test("installed XS preserves one-call admission and the original Perl exception 
 	assert.ok(perls.length===4 && new Set(perls).size===4 && perls.every(isAbsolute) && deps);
 	const work=await mkdtemp(join(tmpdir(),"perl-budget-"));t.after(()=>rm(work,{recursive: true,force: true}));
 	const keep=env.LEAN_BRIDGE_PERL_BUDGET_KEEP,replay=env.LEAN_BRIDGE_PERL_BUDGET_REPLAY;assert.ok(!(keep && replay));
+	// Check the same platform contract as Makefile.PL before compiling two Lean
+	// projects. Original archives still enforce their own recorded floor on replay.
+	const platform=resolve("src/backends/perl/Platform.pm"),floor=env.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR??"2.38";
+	const abiKeys=new Set();
+	for(const perl of perls)
+	{
+		const check="require $ARGV[0]; "+(replay?"":"LeanBridge::Runtime::Platform::platform($ARGV[1]); ")
+			+"print LeanBridge::Runtime::Platform::abi_key()";
+		const key=await run(perl,["-MFuture=0.54","-MIO::Async=0.805","-e",check,platform,floor],work,{...env,PERL5LIB: deps});
+		assert.match(key,/^[a-f0-9]{64}$/u);abiKeys.add(key);
+	}
+	assert.equal(abiKeys.size,4,"Expected four distinct installed Perl ABIs");
 	const sets=replay?resolve(replay):await mkdtemp(join(keep??work,"handoffs-"));
 	const output=resolve(env.LEAN_BRIDGE_PERL_BUDGET_OUTPUT??"build/perl-budget");await mkdir(output,{recursive: true});
 	const client=resolve("tests/fixtures/native-callback-budget/client.pl"),source=await readFile(client);

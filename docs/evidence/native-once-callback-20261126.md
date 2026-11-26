@@ -163,6 +163,10 @@ handoffs, or set `LEAN_BRIDGE_PHP_NATIVE_BUDGET_REPLAY` to an existing
 directory containing both route handoffs. This is not the PHP-Wasm test.
 For CPAN, run `npm run test:perl-once-callback` with the [four Perl
 interpreters and offline Future/IO::Async dependencies](../contributing/testing.md).
+The qualifier checks those interpreters, dependencies, and the package's
+glibc floor before compiling. On a glibc 2.36 build host, set
+`LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` for local qualification. The
+default stays 2.38; a library requiring a newer symbol version must still fail.
 The client checks both prebuilt and installer-generated XS. Set
 `LEAN_BRIDGE_PERL_BUDGET_KEEP` to retain the handoffs, or
 `LEAN_BRIDGE_PERL_BUDGET_REPLAY` to use existing ordinary and reviewed
