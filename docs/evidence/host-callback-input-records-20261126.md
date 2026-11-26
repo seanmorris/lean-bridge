@@ -29,6 +29,16 @@ from lean_tariff_quotes import TariffInput, apply_tariff
 assert apply_tariff(TariffInput(quote=lambda units: 40 + units), 2) == 42
 ```
 
+CPython 3.12.14 ran ten cases against each fresh, relocated wheel. The
+[ordinary](python-host-input-records-20261126/ordinary.staged.json) and
+[reviewed](python-host-input-records-20261126/reviewed.staged.json) results
+match their [ordinary wheel receipt](python-host-input-records-20261126/ordinary.package-set.json)
+and [reviewed wheel receipt](python-host-input-records-20261126/reviewed.package-set.json).
+A nested Python function could reenter Lean; an escaped function could not
+call Python again. The client recovered the original exception and rejected
+a closed field before dispatch. The independent observer counted one live
+identity after each case and zero after the session closed.
+
 Only borrowed record parameters with explicitly selected function fields
 get the new form. A copy, transferred owner, lifetime anchor, or callback
 reply cannot use it to manufacture a durable function. Nor does a checked

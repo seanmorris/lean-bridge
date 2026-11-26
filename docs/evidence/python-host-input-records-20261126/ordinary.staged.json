@@ -1,0 +1,34 @@
+{
+  "cases": [
+    "flat scalar reply",
+    "returned and independently owned functions",
+    "recovery checked before invocation",
+    "original callback exception",
+    "invalid replies and later success",
+    "caller function in input record",
+    "nested caller functions",
+    "returned host field expired",
+    "field failure identity and preflight",
+    "closed field refuses without callback dispatch"
+  ],
+  "consumerSha256": "bcd6981ef5f9cbc87d530180b967b23236815381add05bc6b16fa2c0c864cb4d",
+  "fieldConsumerSha256": "86799dd5e39972aee06e85e18d92d2a93632326e43acb7b9cb69bf5c6a143c7e",
+  "identities": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0
+  ],
+  "interpreter": "3.12.14",
+  "packageSetSha256": "3a3a34198056d1e651813838f6eb062a3e6662431004e5440feb950441ef9dd8",
+  "probeSha256": "6fc222da003ed814d8c0f8c05dc510548ef374e9b4f8f97a858fbe166686e7f7",
+  "route": "ordinary",
+  "schemaVersion": 1
+}
