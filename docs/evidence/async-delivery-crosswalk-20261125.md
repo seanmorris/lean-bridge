@@ -314,6 +314,28 @@ Run `node --test tests/helpers/rust-task-installed.mjs` with the
 runs the historical client unchanged and the new client as a separate
 relocated binary. Neither has the build tree or Cargo on its path.
 
+## Count for managed task, cancellation and async-iterator signatures
+
+On **.NET, Java and Kotlin**, the installed clients below exercise all
+three signatures on both author routes. That is 18 profile/route/signature
+combinations in addition to the 34 synchronous-iterator combinations
+already qualified across all profiles. The lower bound for #1223 is
+**52/136 (38%)**. It is a count of verified behavior, not time remaining.
+
+| Consumer | What the installed application observed |
+| --- | --- |
+| .NET 8 | [Pulse and Signals](dotnet-tasks-20261122.json) awaited real Lean tasks, cancelled cooperative and noncooperative workers from another thread, preserved the original cancellation token, and enforced one outstanding pull. Both [parked](dotnet-parked-pull-20261126/ordinary.json) [replays](dotnet-parked-pull-20261126/reviewed.json) used those same NuGet packages. A [separate resource client](dotnet-stream-terminal-20261126/ordinary.json) observed terminal cleanup before disposing the cursor; [Feedback](dotnet-retained-tasks-20261122.json) exercised nested callbacks, original exceptions and shared shutdown. |
+| Java 22 | The [Maven clients](jvm-tasks-20261123.json) exercised futures and subscriber demand in both package load orders. On the original [ordinary](jvm-parked-pull-20261126/ordinary.json) and [reviewed](jvm-parked-pull-20261126/reviewed.json) Timers packages, a blocked subscription stayed silent when cancelled and invalid demand signalled exactly once. The worker completed late without leaking an owner or descriptor. |
+| Kotlin 2.2 | A separate compiled application on the same Maven installs awaited suspend functions, collected a cold Flow, stopped after the first item, and distinguished an error item from a typed step failure. Its parked collector received no late item after job cancellation. The [retained JVM clients](jvm-retained-tasks-20261123.json) separately invoked nested callbacks and observed exception identity, cancellation and retirement in each language. |
+
+Run `node --test tests/helpers/managed-delivery-reconciliation.mjs` to
+recheck the original capture digests, the clients that actually ran, both
+author routes, both load orders, and the package identities in each replay.
+This is a reconciliation of installed runs, not a new SDK build. The
+evidence applies to the tested CLR owner loop and JVM schedulers on
+Linux x86-64. It does not assume that results carry over to a different
+scheduler, optional package feature, or release.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
