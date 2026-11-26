@@ -8,6 +8,7 @@ import { generateOwnedRustConversions } from "./owned-conversions.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
 import { ownedRustInputTransfers } from "./owned-transfers.mjs";
 import { ownedRustAnchoredTransfers, ownedRustValueCopies } from "./owned-borrows.mjs";
+import { ownedRustCallbackView, ownedRustRawRecords, ownedRustRecordView } from "./owned-host-records.mjs";
 
 const support = `
 enum OwnedFailure { Error(Error), Panic(Box<dyn std::any::Any + Send>) }
@@ -52,10 +53,11 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 	const callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(conversions.types.map(node => [node.id, node]));
-	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? []];
+	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? [], ...c.hostFieldCalls];
 	const wrappedResult = item => wholeOwners && !item.retain && !item.copy && nodes.get(item.result).representation !== "copied";
 	const returnType = item => wrappedResult(item) ? `Value<${nodes.get(item.result).hostName}>` : nodes.get(item.result).hostName;
 	const raw = [], helpers = [], traits = [], publicCalls = [], nativeEntries = [];
+	raw.push(...ownedRustRawRecords(nodes));
 	if(hostCallbacks && callbackAnchors) traits.push(
 		"mod owned_callback_reply_sealed {"
 		, "    pub trait Sealed<T> {}"
@@ -71,16 +73,18 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		const host = params.map((_, index) => Boolean(c.hostArgument?.(item, index)));
 		const wrapped = params.map((_, index) => wholeOwners && (item.anchor === index || item.transfers?.includes(index)));
 		const slots = params.map((node, index) => ({ node, index })).slice(offset);
-		const generic = slots.filter(({ index }) => host[index]);
-		return { params, host, wrapped
-			, generic: generic.length ? `<${generic.map(({ node, index }) => `F${index}: OwnedCallback${node.index}`).join(", ")}>` : ""
-			, publicParams: slots.map(({ node, index }) => `a${index}: ${host[index] ? `F${index}` : `${item.transfers?.includes(index) ? "&mut " : node.scalar ? "" : "&"}${wrapped[index] ? `Value<${node.hostName}>` : node.input}`}`).join(", ")
-			, privateParams: slots.map(({ node, index }) => `${host[index] ? "mut " : ""}a${index}: ${host[index] ? `F${index}` : `&${item.transfers?.includes(index) ? "mut " : ""}${wrapped[index] ? `Value<${node.hostName}>` : node.input}`}`).join(", ")
+		const records = params.map((node, index) => item.hostRecordSlots?.some(s => s.index === index)
+			? ownedRustRecordView({node, index, nodes, callbacks: c.callbacks}) : undefined);
+		const generic = slots.flatMap(({ node, index }) => host[index] ? [`F${index}: OwnedCallback${node.index}`] : records[index]?.generic ?? []);
+		return { params, host, wrapped, records
+			, generic: generic.length ? `<${generic.join(", ")}>` : ""
+			, publicParams: slots.map(({ node, index }) => `a${index}: ${records[index]?.argType ?? (host[index] ? `F${index}` : `${item.transfers?.includes(index) ? "&mut " : node.scalar ? "" : "&"}${wrapped[index] ? `Value<${node.hostName}>` : node.input}`)}`).join(", ")
+			, privateParams: slots.map(({ node, index }) => `${host[index] ? "mut " : ""}a${index}: ${records[index]?.argType ?? (host[index] ? `F${index}` : `&${item.transfers?.includes(index) ? "mut " : ""}${wrapped[index] ? `Value<${node.hostName}>` : node.input}`)}`).join(", ")
 			, arguments: slots.map(({ node, index }) => `${!host[index] && node.scalar ? "&" : ""}a${index}`).join(", ") };
 	};
 	all.forEach((item, index) => {
-		const { params, host } = signature(item), result = nodes.get(item.result);
-		const types = ["*mut c_void", ...params.flatMap((node, i) => [host[i] ? `*const OwnedHost${node.index}` : `${node.leaf ? "" : "*const "}${node.raw}`, ...item.transfers?.includes(i) ? ["*mut *mut c_void"] : [], ...item.anchor === i ? ["*mut c_void"] : []]), `*mut ${result.raw}`, "*mut *mut c_void"];
+		const { params, host, records } = signature(item), result = nodes.get(item.result);
+		const types = ["*mut c_void", ...params.flatMap((node, i) => [records[i] ? `*const OwnedRawHostRecord${node.index}` : host[i] ? `*const OwnedHost${node.index}` : `${node.leaf ? "" : "*const "}${node.raw}`, ...item.transfers?.includes(i) ? ["*mut *mut c_void"] : [], ...item.anchor === i ? ["*mut c_void"] : []]), `*mut ${result.raw}`, "*mut *mut c_void"];
 		const names = ["session", ...params.flatMap((_, i) => [`a${i}`, ...item.transfers?.includes(i) || item.anchor === i ? [`a${i}_owner`] : []]), "out", "owner"];
 		const arguments_ = names.join(", "), parameters = names.map((name, i) => `${name}: ${types[i]}`).join(", ");
 		nativeEntries.push({ field: `call${index}`, symbol: item.cName, type: `unsafe extern "C" fn(${types.join(", ")}) -> u32` });
@@ -166,22 +170,16 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		helpers.push(`pub(crate) fn owned_invoke${index}${sig.generic}(${sig.privateParams}) -> Result<${returnType(item)}, Error> {`
 			, "    let state = current_state()?;", `    let ${sig.params.length ? "mut " : ""}budget = OwnedBudget::new();`
 			, ...sig.wrapped.flatMap((wrapped, i) => wrapped ? [`    let owner${i} = a${i}.lease(&state)?;`, `    let a${i} = a${i}.get()?;`] : [])
-			, ...sig.params.map((param, i) => `    ${sig.host[i] ? `owned_check_callback${param.index}(&a${i}, &mut budget, &state)?;` : `owned_check${param.index}(a${i}, 0, &mut budget, &state)?;`}`)
+			, ...sig.params.flatMap((param, i) => sig.records[i]?.check ?? [`    ${sig.host[i] ? `owned_check_callback${param.index}(&a${i}, &mut budget, &state)?;` : `owned_check${param.index}(a${i}, 0, &mut budget, &state)?;`}`])
 			, "    let call = OwnedCall::new(Rc::clone(&state), budget.clone());"
 			, `    let ${sig.params.length ? "mut " : ""}scope = OwnedScope::new(budget);`);
 		sig.params.forEach((param, i) => {
-			if(!sig.host[i]) helpers.push(`    let view${i} = owned_to${param.index}(a${i}, &mut scope, &state)?;`);
+			if(sig.records[i]) helpers.push(...sig.records[i].make);
+			else if(!sig.host[i]) helpers.push(`    let view${i} = owned_to${param.index}(a${i}, &mut scope, &state)?;`);
 			else
 			{
 				const callback = c.callbacks.find(item => item.id === param.id), result = nodes.get(callback.result);
-				helpers.push(`    let closure${i} = a${i}.closure().map(|value| value.raw(&state)).transpose()?;`
-					, `    let recovery${i} = if closure${i}.is_none() { a${i}.recovery().cloned() } else { None };`
-					, `    let recovery_view${i} = recovery${i}.as_ref().map(|value| owned_to${result.index}(${callback.anchor !== undefined ? "value.owned_reply()?" : "value"}, &mut scope, &state)).transpose()?;`
-					, `    let mut context${i} = OwnedContext${param.index} { function: std::cell::RefCell::new(&mut a${i}), call: &call };`
-					, `    let view${i} = OwnedHost${param.index} {`
-					, `        call: if closure${i}.is_none() { Some(owned_callback${param.index}::<F${i}>) } else { None },`
-					, `        context: if closure${i}.is_none() { (&mut context${i} as *mut OwnedContext${param.index}<'_, F${i}>).cast() } else { std::ptr::null_mut() },`
-					, `        closure: closure${i}.unwrap_or(std::ptr::null_mut()), recovery: recovery_view${i}.as_ref().map_or(std::ptr::null(), |value| value),`, "    };");
+				helpers.push(...ownedRustCallbackView({node: param, callback, result, suffix: i, argument: "a" + i, generic: "F" + i}));
 			}
 		});
 		if(moving.length) helpers.push(`    let mut moves = OwnedInputTransfers::new(Rc::clone(&state), ${moving.length})?;`
@@ -198,12 +196,12 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		helpers.push("    call.budget.replace(scope.budget.clone());"
 			, `    let mut raw: ${result.raw} = Default::default(); let mut output = OwnedOutput::new(Rc::clone(&state));`
 			, ...item.anchor !== undefined ? ["    output.anchored_result = true;"] : []
-			, `    let status = unsafe { owned_native${index}(${moving.length ? "session" : "state.require()?"}${sig.params.map((param, i) => moving.includes(i) ? `, ${param.leaf ? "" : "&"}${wholeOwners ? "view" : "moved"}${i}, moves.owner(${moving.indexOf(i)})` : `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}${item.anchor === i ? ", anchor" : ""}`).join("")}, &mut raw, &mut output.owner.value) };`
+			, `    let status = unsafe { owned_native${index}(${moving.length ? "session" : "state.require()?"}${sig.params.map((param, i) => moving.includes(i) ? `, ${param.leaf ? "" : "&"}${wholeOwners ? "view" : "moved"}${i}, moves.owner(${moving.indexOf(i)})` : `, ${!sig.records[i] && (sig.host[i] || !param.leaf) ? "&" : ""}view${i}${item.anchor === i ? ", anchor" : ""}`).join("")}, &mut raw, &mut output.owner.value) };`
 			, ...moving.length ? ["    moves.finish();"] : []
 			, "    call.finish(status)?;", "    let mut result_scope = OwnedScope::new(call.budget.into_inner());"
 			, ...wrappedResult(item) ? [`    let value = unsafe { owned_from${result.index}(&raw, 0, &mut result_scope, &mut output)? };`
 				, "    owned_checkpoint()?; Value::from_owned(output.hold()?, value)"] : [`    unsafe { owned_from${result.index}(&raw, 0, &mut result_scope, &mut output) }`], "}");
-		if(c.functions.includes(item)) publicCalls.push(`pub fn ${item.cName.slice(c.prefix.length + 1)}${sig.generic}(${sig.publicParams}) -> Result<${returnType(item)}, Error> {`
+		if(c.functions.includes(item) || item.hostRecordSlots) publicCalls.push(`pub fn ${item.cName.slice(c.prefix.length + 1)}${sig.generic}(${sig.publicParams}) -> Result<${returnType(item)}, Error> {`
 			, `    owned_values::owned_invoke${index}(${sig.arguments})`, "}");
 	});
 	for(const node of nodes.values()) if(node.identity)
@@ -243,7 +241,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 				, `        self.get()?.call(${sig.params.slice(1).map((_, i) => `a${i + 1}`).join(", ")})`, "    }", "}");
 		}
 	}
-	for(const item of c.functions.filter(item => item.receiver === 0))
+	for(const item of [...c.functions, ...c.hostFieldCalls].filter(item => item.receiver === 0))
 	{
 		const sig = signature(item, 1), node = sig.params[0];
 		const name = item.cName.slice(c.prefix.length + 1), moving = item.transfers?.includes(0);

@@ -154,6 +154,14 @@ Host errors return to the original Rust caller. Original panic payloads resume
 only after C has returned; no Rust panic crosses a C trampoline. Signatures that
 cannot derive failure recovery from their arguments require
 with_recovery(callback, typed_value). Recovery is never a successful result.
+` : ""}${generated.c.hostFieldCalls.length ? `
+For a caller-created function in a borrowed record, pass a mutable input record
+to the matching _with_host_fields function. The function can borrow local data
+and mutate its own capture. It cannot be called after that bridge call returns.
+An input record created with From<&Record> instead borrows the source fields:
+no copied containers or new leases are needed. Returned records keep their
+ordinary Lean function types and never take ownership of a Rust closure.
+${generated.types.filter(n => n.hostInput).map(n => "- " + n.hostInput.name + ": " + n.hostInput.fields.filter(f => f.host).map(f => f.publicName).join(", ")).join("\n")}
 ` : ""}
 Conversions enforce depth 128, 262,144 visits and 16 MiB native/storage budgets. Invalid
 inputs, malformed outputs and partial conversions release their temporary owners.
@@ -166,6 +174,8 @@ Rust and GMP retain their normal fatal allocator-exhaustion policies.
 		, language: "rust-1.90"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "resume-after-native-return"
+		, ...generated.c.hostFieldCalls.length ? { hostInputRecords: generated.types.filter(n => n.hostInput)
+			.map(n => ({type: n.id, input: n.hostInput.name, fields: n.hostInput.fields.filter(f => f.host).map(f => f.publicName), lifetime: "call"})) } : {}
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
 			, values: "checked-whole-result", anchor: "original-argument-owner"
 			, parameterNumbering: "callback-local"

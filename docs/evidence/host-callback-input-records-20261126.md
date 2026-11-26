@@ -76,3 +76,37 @@ including nested calls, expired borrows, and the original exception followed
 by a healthy retry. Its independent observer saw only the session between
 cases and zero after thread exit. This is a check of freshly generated C++
 headers, not yet an installed C++ archive on either source route.
+
+## Rust callers
+
+```rust
+use tariff_quotes::{apply_tariff_with_host_fields, Error, TariffInput};
+
+fn quote_twice() -> Result<(u32, u32), Error> {
+    let mut price = 40;
+    let mut row = TariffInput {
+        quote: |units| { let result = units + price; price += 1; Ok(result) },
+    };
+    Ok((apply_tariff_with_host_fields(&mut row, 2)?,
+        apply_tariff_with_host_fields(&mut row, 2)?)) // (42, 43)
+}
+```
+
+The callback can borrow a Rust local; it does not need to be `'static`.
+Use `TariffInput::from(&leased_tariff)` to pass an existing Lean function
+in the same position. A returned tariff still contains a checked Lean lease:
+calling it after an application callback's borrow has expired fails without
+entering the callback again.
+
+The [Rust client](../../tests/fixtures/structured-types/tariff-host-fields.rs)
+ran seven cases against the compiled adapter in the ordinary **C** release.
+It preserved a moved error and a caught panic payload, recovered after each,
+and rejected both an expired borrow and a closed lease. The independent
+observer saw three live identities in its positive control and zero at
+every cleanup checkpoint. A separate compiler test mixes two input records,
+two function fields, borrowed text and a scalar; Rust rejects dropping the
+source while its input view is still in use.
+
+These are adapter and compiler checks, not installed Cargo receipts.
+`npm run test:rust-staged-callbacks` builds both source routes, installs each
+crate offline, and runs the relocated binaries without the build tree.
