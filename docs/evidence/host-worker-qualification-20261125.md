@@ -196,6 +196,13 @@ ends, a saved wrapper must not re-enter the application. This tests
 forwarding a **call-borrowed registration**, not creating a new long-lived
 registration by returning a bare JavaScript function.
 
+The [ordinary-package executions](npm-application-functions-20261126/ordinary.json)
+passed in all five clients: three calls per client reached the original
+application function, the original exception propagated, and no stale call
+entered application code. The executed TypeScript client also returned 903
+through its typed entry points. An ordinary result alone does not increase
+the paired count in the table.
+
 Set `LEAN_BRIDGE_APP_QUOTE_KEEP` to an existing directory to retain the
 package sets, or `LEAN_BRIDGE_APP_QUOTE_REPLAY` to the resulting `sets-*`
 directory to rerun the installed clients without rebuilding Lean.

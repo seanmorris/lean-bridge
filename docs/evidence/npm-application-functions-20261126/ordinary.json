@@ -1,0 +1,69 @@
+{
+  "archives": [
+    {
+      "bytes": 99767,
+      "path": "@example-tariff-quotes-1.0.0.tgz",
+      "sha256": "7fc383068228336e733bd6570292257bc42c2eb533dedb7dbabbbfe48ff554f1"
+    },
+    {
+      "bytes": 1676803,
+      "path": "lean-bridge-runtime-0.0.0-abi2.ae3b114c3563244686b64caebef7e5b9deff056c12907a18fb35220e9ec1edf7.tgz",
+      "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+    }
+  ],
+  "bindingIrSha256": "7ddb91e36c77149a5d311fa5559a3efa5ffda2652b2443ec6ec346a430de0b7a",
+  "browser": {
+    "page": {
+      "after": 0,
+      "calls": 3,
+      "errorPreserved": true,
+      "staleCalls": 0,
+      "value": 42
+    },
+    "react": {
+      "after": 0,
+      "calls": 3,
+      "errorPreserved": true,
+      "staleCalls": 0,
+      "value": 72
+    },
+    "worker": {
+      "after": 0,
+      "calls": 3,
+      "errorPreserved": true,
+      "staleCalls": 0,
+      "value": 72
+    }
+  },
+  "installedBytes": [
+    "c6d8dda54acfa248f5f5ae29f97170afef5a366a04e1d0e0b3e34031922a9d1d",
+    "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  ],
+  "node": {
+    "after": 0,
+    "calls": 3,
+    "errorPreserved": true,
+    "staleCalls": 0,
+    "value": 42
+  },
+  "receiptSha256": "8306265bc8e89fb3abff5e2333d5697119eabd9a23f43fe00f974fb70efabf46",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "sourceHashes": {
+    "calls.d.mts": "0d15a6cb9c2d6370820c732bea6a3c65fcd1367dfc241e865dfc93d1e9edfd0a",
+    "calls.mjs": "dfea98e78ab51701331a7dbf2e380eb305f1de14389e79a5cb20e8466d0d67d6",
+    "observer.mjs": "aa0116bad442b8d501c54c68a089e4873381b0b9309f1c2f691e4d6f464f0997",
+    "page.mjs": "6e7d42f2ecfa4754c80f1d80329c54787a91cc5c83db62270c63018be1ae0b09",
+    "typed.mts": "919669f607351ad03e5008446b41220705f60591ee1587da7d8ed5a24c9b9246",
+    "worker.mjs": "e916d49cdd522d1f549603c1e33a738b5fd381ad95597d28df0d19cdc3ec635b"
+  },
+  "sourceSha256": "a5b7145185c50be1f7984d06b262556e5ef1ec94d67b8c9bab9dbb301b074415",
+  "typescript": {
+    "after": 0,
+    "calls": 3,
+    "errorPreserved": true,
+    "staleCalls": 0,
+    "typedValue": 903,
+    "value": 42
+  }
+}
