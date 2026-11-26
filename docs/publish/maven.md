@@ -77,6 +77,15 @@ invoke a JVM member from an arbitrary Lean scheduler thread. Calls to those
 members belong on the JVM owner. Imported classes and Lean-owned resources
 remain distinct; this author profile does not combine their declarations.
 
+A synchronous `IO` export may accept or return a flat public Lean structure
+containing an imported JVM class and scalar fields. Select the functions
+normally. Lean checks the constructor and field projections; both Java and
+Kotlin get typed record classes. Host objects retain identity, mutable byte
+arrays are copied, and one returned record has a shared 16 MiB copy budget.
+Review may change field documentation, but not field order or ownership.
+This record support does not select asynchronous delivery or declare an EIO
+record payload.
+
 A synchronous export can return an imported class in either branch of
 `Except`, or throw it in a declared `EIO` error. Nested `Except` values
 are supported. The compiler records a lease, not a copy, on a result or

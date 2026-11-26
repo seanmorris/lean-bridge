@@ -4,6 +4,7 @@ import test from "node:test";
 import {hostRecordTypes} from "../../src/analyze/host-records.mjs";
 import {pythonHostRecords} from "../../src/backends/python/host-records.mjs";
 import {dotnetHostRecords} from "../../src/backends/dotnet/host-records.mjs";
+import {jvmHostRecords} from "../../src/backends/jvm/host-records.mjs";
 
 const box = {id: "host:meter.Box", name: "Box"};
 const selection = {hostModule: "LeanBridge.Host.Python", exportModules: ["Workshop"], nativeEffectPolicy: "native-host-io-v1"};
@@ -33,7 +34,7 @@ test("public host records use the compiler's projections and declared host ident
 });
 
 test("a synchronous object-field admission cannot enable async or a different host", () => {
-	for(const change of [{hostModule: "LeanBridge.Host.Jvm"}, {nativeEffectPolicy: null}, {taskExports: ["Workshop.read"]}])
+	for(const change of [{hostModule: "LeanBridge.Host.Perl"}, {nativeEffectPolicy: null}, {taskExports: ["Workshop.read"]}])
 		assert.throws(() => hostRecordTypes([site(record)], {...selection, ...change}, [box]), /not a synchronous host-bound export/u);
 	for(const change of [{module: "Other"}, {effect: "EIO"}, {delivery: "iterator"}])
 		assert.throws(() => hostRecordTypes([{...site(record), ...change}], selection, [box]), /not a synchronous host-bound export/u);
@@ -77,4 +78,15 @@ test("CLR record names and properties cannot shadow their generated types or dis
 	for(const field of ["from_native_fields", "dispose", "fields", "get_type", "pair", "t0"])
 		assert.throws(() => emit("Pair", field), /Colliding CLR record property/u);
 	assert.ok(emit("Pair", "held").entries.has("Gauge.Pair"));
+});
+
+test("JVM record properties keep their source identities without colliding with class tokens", () => {
+	const emit = (name, names) => {
+		const fields = names.map(field => ({name: field, type: {kind: "named", id: box.id}}));
+		const type = {kind: "record", name, fields, source: {declaration: "Gauge." + name}};
+		return jvmHostRecords({types: [type]}, "<T0>", () => "T0", () => {}, new Set(["Api"]));
+	};
+	for(const name of ["T0", "Api", "String", "Fields"]) assert.throws(() => emit(name, ["meter"]), /Invalid JVM record name/u);
+	for(const names of [["class"], ["source_meter", "source_Meter"]]) assert.throws(() => emit("Pair", names), /Colliding JVM record getter/u);
+	assert.equal(emit("Pair", ["source_meter"]).get("Gauge.Pair").fields[0].getter, "getSourceMeter");
 });

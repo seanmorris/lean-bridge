@@ -20,7 +20,7 @@ const reject = why => { throw new TypeError("Invalid native host record: " + why
 export const lowerWordHostRecord = (entry, target, lean) => {
 	const parameters = entry.parameters.map(p => p.type), result = entry.result;
 	if(![...parameters, result].some(isRecord)) return null;
-	if(!["php", "dotnet"].includes(target) || entry.effect !== "IO" || entry.delivery) reject("expected a synchronous record-capable host");
+	if(!["php", "dotnet", "jvm"].includes(target) || entry.effect !== "IO" || entry.delivery) reject("expected a synchronous record-capable host");
 	for(const t of [...parameters, result].filter(isRecord))
 	{
 		if(!qualified(t.declaration) || !qualified(t.constructor) || !t.constructor.startsWith(t.declaration + ".")

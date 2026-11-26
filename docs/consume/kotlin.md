@@ -61,6 +61,12 @@ fun example() {
 `use` closes the binding even if the call throws. These calls are synchronous;
 no coroutine, JNI handle or separate runtime installation is needed.
 
+For a record that contains a host class, use the generated class from the
+package (for example, `org.leanbridge.workshop.Pair`, not `kotlin.Pair`).
+Its Java getters are Kotlin properties: `pair.lead === meter` tests identity;
+`pair.sample` gives you a fresh byte array. `use` releases the record's
+references. A separately returned function keeps its captures until it closes.
+
 If a package exports a Lean function factory such as
 `remember : Box → IO (Box → IO Box)`, use a second scope for the function:
 

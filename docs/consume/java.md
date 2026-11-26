@@ -88,6 +88,13 @@ re-enable calls through this package or another package using that runtime.
 Closing the binding ends calls through that binding; it does not close
 your application object.
 
+When a synchronous export uses a record containing your class, the generated
+record has the same type parameter as the binding. For example, `Pair<Meter>`
+has typed getters: `pair.getLead()` returns the original meter, while
+`pair.getSample()` returns a copy of the byte array. Use try-with-resources for
+each record you receive. Closing the record ends access through its getters;
+it doesn't close its meters or revoke a Lean function that retained them.
+
 A factory can return a Lean function that remembers a particular meter.
 For a package exporting `remember : Box → IO (Box → IO Box)`:
 

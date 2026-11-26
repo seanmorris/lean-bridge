@@ -2,6 +2,8 @@
 import { readFile } from "node:fs/promises";
 import { generateJvmNativeMembers, jvmHostCarrier } from "./host-native-members.mjs";
 import { jvmWorkerControl } from "./worker-control.mjs";
+import {lowerWordHostRecord} from "../native/word-host-records.mjs";
+import {jniRecordLeaf, jniRecordWriter} from "./host-records.mjs";
 
 const qual = /^(?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*$/u;
 const fail = message => { throw new TypeError("JVM host exports: " + message); };
@@ -31,6 +33,7 @@ export const generateJvmHostExports = async o => {
 	const { ir, entries, modules, identity } = o, types = ir.types;
 	if(!/^[a-f0-9]{64}$/u.test(identity) || !modules.length || modules.some(n => !qual.test(n)) || (!entries.length && !o.workerWire)) fail("invalid component inputs");
 	const model = await generateJvmNativeMembers(ir), header = [model.header], defs = [], bodies = [], outputs = [];
+	let recordOutput = false;
 	const factories=entries.flatMap((d,i)=>d.result.kind==="io-closure"?[{d,i}]:[]);
 	if(factories.some(({d})=>d.effect!=="IO" || d.delivery))fail("invalid returned-function factory");
 	const methods=entries.map((d,i)=>({d,i}));
@@ -50,14 +53,21 @@ export const generateJvmHostExports = async o => {
 		if(!qual.test(d.declaration) || d.delivery || !["IO", "EIO", "BaseIO", "pure"].includes(d.effect)
 			|| d.parameters.length > 64 || (d.effect === "pure" && !either(d.result) && !o.workerWire)) fail("unsupported synchronous declaration " + d.declaration);
 		const inside=apply!==undefined,factory=!inside && d.result.kind==="io-closure",resultRef=inside?d.result.reply:d.result;
-		const parts=inside?[d.result,d.result.argument]:d.parameters.map(p=>p.type);
+		const row=inside?null:lowerWordHostRecord(d,"jvm",t=>leanType(types,t));
+		const parts=inside?[d.result,d.result.argument]:row?.flat??d.parameters.map(p=>p.type);
 		const args=parts.map(t=>t.kind==="io-closure"?{kind: "function",c: "lean_object *",unbox: v=>v}:jvmHostCarrier(types,t)),params=args.map((_,j)=>"v"+j);
-		const result = factory?arrow(resultRef):leanType(types,resultRef), eio = d.effect === "EIO", fn = "lb_jh_export_" + i;
+		const result = factory?arrow(resultRef):row?.tuple??leanType(types,resultRef), eio = d.effect === "EIO", fn = "lb_jh_export_" + i;
 		const ret = eio ? "(_root_.Except " + leanType(types, d.error) + " " + result + ")" : result;
-		const call = inside?"(v0 v1)":"(_root_." + d.declaration + (params.length ? " " + params.join(" ") : "") + ")";
+		const call = inside?"(v0 v1)":row?.call??"(_root_." + d.declaration + (params.length ? " " + params.join(" ") : "") + ")";
 		defs.push(`@[export ${fn}] def execute${i} ${params.map((n,j)=>"("+n+" : "+(parts[j].kind==="io-closure"?arrow(parts[j]):leanType(types,parts[j]))+")").join(" ")} : IO ${ret} := ${eio ? "EIO.toIO' " : d.effect === "pure" ? "pure " : ""}${call}`);
 		header.push("extern lean_object *" + fn + "(" + (args.map(c => c.c).join(",") || "void") + ");");
-		const ok = factory?"jh_publish_function(f,"+i+",cell,v)":toWire(resultRef), err = eio && toWire(d.error);
+		const recordFn="jh_row_"+i;
+		if(row?.fields)
+		{
+			recordOutput=true;
+			outputs.push(jniRecordWriter(recordFn,row.fields.map(t=>jvmHostCarrier(types,t).code)));
+		}
+		const ok = factory?"jh_publish_function(f,"+i+",cell,v)":row?.fields?recordFn+"(f,v)":toWire(resultRef), err = eio && toWire(d.error);
 		bodies.push(`static jobject jh_entry_${i}(lb_jh_frame *f) {
     JNIEnv *e=f->env; jobject answer=NULL; lean_object *io=NULL, *values[${Math.max(args.length, 1)}]={0};
     if (!f->input || (*e)->GetArrayLength(e,(jobjectArray)f->input)!=${args.length+Number(factory)}) { jh_bad(e); return NULL; }${factory?`
@@ -107,7 +117,7 @@ ${registry?registry+"\n":""}static jobject jh_pair(lb_jh_frame *f,jlong tag,jobj
     (*e)->SetObjectArrayElement(e,pair,0,status); if ((*e)->ExceptionCheck(e)) return NULL;
     (*e)->SetObjectArrayElement(e,pair,1,payload); return pair;
 }
-${outputs.join("\n")}
+${recordOutput?jniRecordLeaf+"\n":""}${outputs.join("\n")}
 ${bodies.join("\n")}
 static jobject execute(lb_jh_frame *f,void *ptr) {
     jint op=*(jint *)ptr;

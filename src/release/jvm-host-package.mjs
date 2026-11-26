@@ -2,7 +2,7 @@
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import { compileHostSources } from "../build/host-elaboration.mjs";
 import { compileJvmHostDomain, compileJvmIOOwner } from "../build/jvm-io-owner.mjs";
 import { jvmHostTaskKernel, stageJvmHostTasks } from "../build/jvm-host-task-kernel.mjs";
@@ -45,6 +45,7 @@ export const buildJvmHostPackage = async o => {
 			, entry: skeleton.entryLean
 			, header: skeleton.header
 			, members: skeleton.model.implementation
+			, ...api.types.some(t => t.kind === "record") ? {recordApi: sha256(await readFile(new URL("../backends/jvm/host-records.mjs", import.meta.url)))} : {}
 			, ...entries.some(e=>e.result.kind==="io-closure") ? { returnedFunctions: {
 				api: sha256(await readFile(new URL("../backends/jvm/host-api.mjs",import.meta.url)))
 				, leases: sha256(await readFile(new URL("../backends/jvm/host-functions.java",import.meta.url)))
@@ -124,7 +125,7 @@ ${workerVeneer}`);
 		const host = { domain, veneer, model: gen.model, entries, ir, workerWire: kernel?.wire };
 		return await writeJvmIORelease({ ...o, prefix, host, files, owner, api
 			, evidence, runtimeIdentity, componentIdentity
-			, bindingIrSha256: hashBindingIr(api), manifest, floor
+			, bindingIrSha256: hostPublicHash(api), manifest, floor
 			, ...kernel?{ wire: kernel.wire, jvmEntry: kernel.port, ledgerId: kernel.ledger.id }:{} });
 	}
 	finally

@@ -1,0 +1,15 @@
+{
+  "clients": {
+    "Installed.java": "abcd2b89a634c3dbaf59cb8d17d1cc108227ffdce8a83ce4c400ed60d72c6ae0",
+    "Installed.kt": "6f845543bd93b6a90bb145c72bfcf38cc4bda3cabd4b868a95a4f72fc55f9ecd",
+    "WrongMeter.java": "ceef80c36e1b5fd3ab9140eab9c5e2923248801b4f301308919d8d794c321856",
+    "WrongMeter.kt": "ec1391c720e311713e28d10fc2fa8a186f6e8a2d3fa60fdedd4ff311edd80f17"
+  },
+  "observations": {
+    "Installed": "Java: original meters, copied arrays, checked Nat, partial-result cleanup, retained closure and final release",
+    "InstalledKt": "Kotlin: original meters, property copies, wide Nat, retained choose and independent disposal"
+  },
+  "packageSetSha256": "5c195f4124ae5d732d9641dd702de2669180a5c4c038cac91a4fc6bf9d787182",
+  "reviewedSourceSha256": null,
+  "route": "ordinary"
+}

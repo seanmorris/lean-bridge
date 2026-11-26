@@ -111,6 +111,8 @@ field and exported a meter.
 The [NuGet record consumer](dotnet-host-record-fields-20261126.md) additionally checks that a closed-generic
 `Pair<Meter>` cannot be replaced with `Pair<object>`, mutable byte-array properties do not alias,
 and the original CLR objects survive closure capture but are released on disposal.
+The [separate Java and Kotlin Maven clients](jvm-host-record-fields-20261126.md)
+check their own static types and evaluate the getters on the original JVM objects.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

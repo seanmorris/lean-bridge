@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { copiedJvmAssets } from "./copied-assets.mjs";
 import { jvmHostCarrier } from "./host-native-members.mjs";
 import { jvmHostWorkerApi } from "./host-worker-api.mjs";
+import {jvmHostRecords} from "./host-records.mjs";
 import { jvmIOScalarTypes, jvmIOIdentifier, jvmIOReserved } from "./sync-io.mjs";
 
 const box = { int: "Integer", long: "Long", boolean: "Boolean", float: "Float", double: "Double", short: "Short", byte: "Byte" };
@@ -21,6 +22,7 @@ export const jvmHostReadme = host => {
 	});
 	return "\nBind your public classes with Api.bindHosts(" + host.ir.types.map(t => t.name+".class").join(", ") + "). Use the returned binding in try-with-resources (Kotlin: use). Its required members are:\n\n"
 		+ members.map(m => "- `"+m+"`").join("\n") + "\n\nA returned host reference is your original object. For a declared error containing one, catch the generated error for the declaration and pass its host class token(s) to payload. The payload remains valid after the binding closes.\n"
+		+ (host.entries.some(e=>[e.result,...e.parameters.map(p=>p.type)].some(r=>r.kind==="host-record")) ? "\nPublic records retain your original host objects. Byte-array properties return copies. Close a record to release its references, not its application objects.\n" : "")
 		+ (host.entries.some(e=>e.result.kind==="io-closure")?"\nCall a returned Lean function with invoke. It also implements the matching Java Function, Supplier, Consumer or Runnable, and can be passed directly to a compatible callback. Close the function to release its capture; close its binding to revoke all its functions.\n":"");
 };
 /**
@@ -68,14 +70,19 @@ export const generateJvmHostApi = o => {
 	if(!/^liblb_jni_[a-f0-9]{64}\.so$/u.test(veneer.name) || !/^[a-f0-9]{64}$/u.test(veneer.sha256)) fail("JNI entry identity");
 	const files = {}, dir = ns.replaceAll(".", "/"), java = (name, source) => { files["src/main/java/" + dir + "/" + name + ".java"] = "package " + ns + ";\n" + source; };
 	const gens = ir.types.map((_, i) => "T" + i), g = "<" + gens.join(",") + ">", cls = i => "type" + i;
-	const type = (r, inner = false) => {
-		if(r.kind === "apply" && r.constructor === "result") return "Result<" + r.arguments.map(x => type(x, true)).join(",") + ">";
+	const leaf = (r, inner = false) => {
 		const c = jvmHostCarrier(ir.types, r); if(c.kind === "nominal") return gens[c.index];
 		const s = jvmIOScalarTypes[c.kind][0]; return inner ? box[s] ?? s : s;
 	};
+	const classes = new Set(["NativePort", "HostWire", "HostContract", "HostMembers", "Unit", "Api", "Result", "LeanIOException", "LeanEIOError", "NativeAssets"]);
+	const records = jvmHostRecords(api, g, leaf, java, classes);
+	const record = r => r.kind === "host-record" ? records.get(r.declaration) : null;
+	const type = (r, inner = false) => r.kind === "apply" && r.constructor === "result"
+		? "Result<" + r.arguments.map(x => type(x, true)).join(",") + ">" : record(r)?.pub ?? leaf(r, inner);
 	const token = r => r.kind === "named" ? cls(jvmHostCarrier(ir.types, r).index) : type(r) + ".class";
 	const makeInput = (r, v) => "encode(" + JSON.stringify(r.kind === "named" ? "nominal" : r.name) + "," + token(r) + "," + v + ")";
 	const get = (r, v) => {
+		if(record(r)) return record(r).read + "(" + v + ")";
 		if(r.kind === "apply") return "(tag(" + v + ")==0 ? new Result.Ok<>(" + get(r.arguments[0], "payload(" + v + ")") + ") : new Result.Err<>(" + get(r.arguments[1], "payload(" + v + ")") + "))";
 		if(r.kind === "named") return token(r) + ".cast(" + v + ")";
 		return "(" + type(r, true) + ")HostWire.decode(" + JSON.stringify(r.name) + "," + token(r) + "," + v + ")";
@@ -108,10 +115,17 @@ export const generateJvmHostApi = o => {
 		return { jt: r.kind === "named" ? "Object" : "Result<?,?>", accessor };
 	};
 	const names = new Set(["close", "bindHosts", "encode", "tag", "payload", "nativeLive"]), methods = [], returned=[];
+	for(const rec of records.values())
+	{
+		names.add(rec.read);
+		methods.push(`        private ${rec.pub} ${rec.read}(Object raw) {
+            if(!(raw instanceof Object[] row) || row.length!=${rec.fields.length}) throw new IllegalStateException("invalid native record");
+            return ${rec.name}.fromNative(${rec.fields.map((f,i)=>get(f.ref,"row["+i+"]")).join(",")});
+        }`);
+	}
 	const hasFunctions=entries.some(e=>e.result.kind==="io-closure");
 	const params = gens.map((t, i) => "Class<" + t + "> " + cls(i)), values = gens.map((_, i) => cls(i)).join(",");
 	const tokens=params.map(p=>"private final "+p+";").join(" "), setTokens=gens.map((_,i)=>"this."+cls(i)+"="+cls(i)+";").join(" ");
-	const classes = new Set(["NativePort", "HostWire", "HostContract", "HostMembers", "Unit", "Api", "Result", "LeanIOException", "LeanEIOError", "NativeAssets"]);
 	const ktSync = [], ktType = r => {
 		if(r.kind==="apply") return ns+".Result<"+r.arguments.map(ktType).join(",")+">";
 		if(r.kind==="named") return gens[jvmHostCarrier(ir.types,r).index];
@@ -131,7 +145,18 @@ ${accessor}}\n`);
 		const name = jvmIOIdentifier(e.name), d = JSON.stringify(e.declaration);
 		if(!ident.test(name) || names.has(name)) fail("duplicate or reserved export " + name); names.add(name);
 		const unit = e.result.kind === "primitive" && e.result.name === "unit";
-		const args = e.parameters.map((p, i) => type(p.type) + " a" + i), input = e.parameters.map((p, i) => makeInput(p.type, "a" + i));
+		const args = e.parameters.map((p, i) => type(p.type) + " a" + i), input = [], snapshots = [];
+		for(const [i,p] of e.parameters.entries())
+		{
+			const rec=record(p.type);
+			if(!rec)
+			{
+				input.push(makeInput(p.type, "a"+i)); continue;
+			}
+			snapshots.push("var row"+i+"=a"+i+".snapshot();");
+			for(const f of rec.fields) input.push(makeInput(f.ref,"row"+i+"."+f.slot));
+		}
+		const setup=snapshots.length?snapshots.join("\n            ")+"\n            ":"";
 		let err = "";
 		if(e.effect === "EIO")
 		{
@@ -172,7 +197,7 @@ ${accessor}}\n`);
         }
     }`);
 			methods.push(`        public ${fn}${g} ${name}(${args.join(",")}) throws Exception {
-            var fn=new ${fn}<>(functions,${values});
+            ${setup}var fn=new ${fn}<>(functions,${values});
             try {
                 Object[] answer=functions.invoke(${index},new Object[]{${[...input,"fn.lease.cell"].join(",")}});
                 checkFunction(answer,${d}); fn.lease.ticket(); return fn;
@@ -184,7 +209,7 @@ ${accessor}}\n`);
 			continue;
 		}
 		methods.push(`        public ${unit ? "void" : type(e.result)} ${name}(${args.join(",")}) throws Exception {
-            Object[] answer=${hasFunctions?"functions.invokeOn(this,":o.workerWire?"scope.invoke(":"NativePort.invoke(port,"}${index},new Object[]{${input.join(",")}});
+            ${setup}Object[] answer=${hasFunctions?"functions.invokeOn(this,":o.workerWire?"scope.invoke(":"NativePort.invoke(port,"}${index},new Object[]{${input.join(",")}});
             long status=tag(answer);
             if(status==2) throw new LeanIOException(${d},(String)HostWire.decode("string",String.class,answer[1]));
             ${err}
