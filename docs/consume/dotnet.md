@@ -811,8 +811,22 @@ tariff.Quote.Dispose();
 Console.WriteLine(Api.ApplyTariff(new Tariff(quote), 2)); // 42
 ```
 
-Putting an ordinary C# delegate in a record does not extend its lifetime.
-Use the returned Lean function when a later call needs a durable callable.
+A package that declares `TariffInput` also accepts a function you write in
+C#. For example, the delegate below reads the current fee on each call:
+
+```csharp
+uint fee = 40;
+var input = new TariffInput(units => units + fee);
+Console.WriteLine(Api.ApplyTariffWithHostFields(input, 2)); // 42
+fee = 5;
+Console.WriteLine(Api.ApplyTariffWithHostFields(input, 2)); // 7
+```
+
+You can reuse the input, but each call only borrows the delegate until it
+returns. If Lean sends that function back, invoking it later throws without
+calling your delegate. Pass a leased Lean function instead when the returned
+record needs a callable that outlives the call. Passing a `Tariff` to the
+same method preserves that lease; the new input wrapper does not own it.
 
 ### Structured callback values
 

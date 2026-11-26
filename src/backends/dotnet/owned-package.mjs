@@ -26,7 +26,7 @@ export const generateOwnedDotnetPackage = (ir, evidence = null, { transferredInp
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
 	const anchors = model.c.functions.some(fn => fn.anchor !== undefined);
 	const callbackAnchors = model.c.callbacks.filter(fn => fn.anchor !== undefined);
-	const receivers = model.functions.filter(fn => fn.receiver === 0), wholeOwners = model.wholeOwners;
+	const receivers = model.functions.filter(fn => fn.receiver === 0 && !fn.hostRecordSlots), wholeOwners = model.wholeOwners;
 	if(["gmp", "lean_bridge_native", "leanshared"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned C# component name collides with a dependency or exceeds its name limit");
 	if(evidence !== null && (evidence.componentId !== ir.component.id || evidence.library !== `lib${prefix}_dotnet.so`
@@ -35,6 +35,8 @@ export const generateOwnedDotnetPackage = (ir, evidence = null, { transferredInp
 	const cleanup = ownedDotnetThreadExit(prefix), path = `src/${model.assembly}`;
 	const schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;
 	const contract = { schemaVersion
+		, ...model.c.hostFieldCalls.length ? {hostInputRecords: model.types.filter(n => n.hostInput)
+			.map(n => ({type: n.id, input: n.hostInput.publicType, fields: n.hostInput.fields.filter(f => f.host).map(f => f.publicName), lifetime: "call"}))} : {}
 		, backend: callbackAnchors.length ? "owned-dotnet-v5" : receivers.length ? "owned-dotnet-v4" : anchors ? "owned-dotnet-v3" : transfers ? "owned-dotnet-v2" : "owned-dotnet-v1"
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
 			, values: "checked-whole-result", anchor: "original-argument-owner"
@@ -133,7 +135,11 @@ internal static class OwnedLoader
 	files["NuGet.Config"] = '<configuration><packageSources><clear /></packageSources></configuration>\n';
 	files["README.md"] = `# ${model.assembly}
 
-Install the prepared NuGet package and call ${model.namespace}.Api. The package includes and automatically loads the compiled Lean component, compatible shared runtime, and private GMP dependency. Consumers need .NET 8 on Linux x86-64 with the declared glibc floor. Lean and native compilers are producer tools, not consumer dependencies.
+${model.c.hostFieldCalls.length ? `Pass a delegate in a borrowed record using its Input type and the matching WithHostFields method. Returned records keep their original leased function type. A returned function that still points to an expired delegate cannot invoke it.
+
+${model.types.filter(n => n.hostInput).map(n => "- " + n.hostInput.publicType + ": " + n.hostInput.fields.filter(f => f.host).map(f => f.publicName).join(", ")).join("\n")}
+
+` : ""}Install the prepared NuGet package and call ${model.namespace}.Api. The package includes and automatically loads the compiled Lean component, compatible shared runtime, and private GMP dependency. Consumers need .NET 8 on Linux x86-64 with the declared glibc floor. Lean and native compilers are producer tools, not consumer dependencies.
 
 Records and variant cases are sealed C# records. Array and List use typed arrays. Nat and Int use BigInteger, Char uses Rune, String preserves Unicode and NUL, and ByteArray uses byte[]. Unit arguments use default(Unit); exported Unit results return void. Option and Result retain their branches, including nested Some(None) and Some(default(Unit)). Aliases retain their metadata without extra CLR wrappers. Negative Nat, invalid UTF-16, null payloads, cycles and invalid variant branches reject.
 

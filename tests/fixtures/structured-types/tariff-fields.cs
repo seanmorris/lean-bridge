@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using LeanBridge.TariffQuotes;
 
-internal static class Program
+internal static partial class Program
 {
     static void Check(bool ok) { if (!ok) throw new InvalidOperationException("Wrong tariff value"); }
     static void Fails(Action action, int status)
@@ -102,7 +102,9 @@ internal static class Program
         Check(Api.FlatQuote((a, b) => a * b, 6, 7) == 42 && saved.Invoke(3) == 42);
         saved.Dispose(); recovery.Dispose(); Settled("afterCallbackFailure");
         Console.WriteLine("binding reusable");
+        HostInputCases();
     }
+    static partial void HostInputCases();
     static void Main()
     {
         Exception? failed = null;

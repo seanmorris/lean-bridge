@@ -97,8 +97,46 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 			return { ...branch, publicName, fields: fields(branch.fields, publicName, true) };
 		})
 	}));
+	const inputs = [], byId = new Map(types.map(node => [node.id, node]));
+	const inputName = base => {
+		let name = base + "Input";
+		while(occupied.has(name)) name += "Input";
+		return claim(name);
+	};
+	for(const node of types.filter(n => n.hostInput))
+	{
+		const view = node.hostInput;
+		view.publicType = inputName(node.publicType);
+		view.fields = fields(view.fields,view.publicType);
+		for(const f of view.fields.filter(f => f.host))
+		{
+			const child = byId.get(f.type);
+			if(child.fieldSlot) continue;
+			const slot = child.fieldSlot = inputName(child.publicType);
+			inputs.push(`/// <summary>A borrowed delegate or leased function for an input record field.</summary>
+public readonly struct ${slot}
+{
+    internal readonly ${child.publicType}? Lease;
+    internal readonly ${child.delegateType}? Callback;
+    private ${slot}(${child.publicType}? lease, ${child.delegateType}? callback) { Lease = lease; Callback = callback; }
+    public static implicit operator ${slot}(${child.publicType} lease) => new(lease, null);
+    public static implicit operator ${slot}(${child.delegateType} callback) => new(null, callback);
+}`);
+		}
+		const params = delegatesOnly => view.fields.map(f => `${f.host ? byId.get(f.type)[delegatesOnly ? "delegateType" : "fieldSlot"] : type(f.type)} ${f.publicName}`).join(", ");
+		inputs.push(`/// <summary>An input-only record; delegate fields are borrowed until the enclosing call returns.</summary>
+public sealed record ${view.publicType}(${params(false)})
+{
+    public ${view.publicType}(${params(true)}) : this(${view.fields.map(f => (f.host ? "("+byId.get(f.type).fieldSlot+")" : "")+f.publicName).join(", ")}) { }
+    public static implicit operator ${view.publicType}(${node.publicType} source)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(source);
+        return new(${view.fields.map(f => "source."+f.publicName).join(", ")});
+    }
+}`);
+	}
 	const methods = new Set([...members, "Api"]);
-	const functions = c.functions.map(fn => {
+	const functions = [...c.functions,...c.hostFieldCalls].map(fn => {
 		const publicName = pascal(fn.cName.slice(c.prefix.length + 1));
 		if(methods.has(publicName)) fail(`reserved or duplicate function: ${publicName}`);
 		methods.add(publicName); return { ...fn, publicName
@@ -106,7 +144,7 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 	});
 	if(receivers) for(const node of types)
 		if(functions.some(fn => fn.receiver === 0 && fn.parameters[0] === node.id)) node.ownerType = claim(node.publicType + "Value");
-	const receiverDeclarations = ownedDotnetReceiverDeclarations({ c, types, functions });
+	const receiverDeclarations = ownedDotnetReceiverDeclarations({ c, types, functions: functions.filter(fn => !fn.hostRecordSlots) });
 	const definitions = new Map(ir.types.map(node => [node.id, node]));
 	const contract = ref => ref.kind === "primitive" ? ref.name : ref.kind === "named"
 		? definitions.get(ref.id).name : `${ref.constructor}<${ref.arguments.map(contract).join(", ")}>`;
@@ -216,7 +254,7 @@ ${wholeOwners ? receivers ? ownedDotnetWholeValues.replace("public sealed class 
 ${callbackReplies ? ownedDotnetCallbackResult : ""}\
 ${dotnetGraphCompoundTypes}
 ${callbacks.map(fn => `public delegate ${fn.hostReturnType} ${fn.delegateType}(${fn.hostParameters.map((type, index) => `${type} arg${index}`).join(", ")});`).join("\n")}
-${declarations.join("\n\n")}
+${[...declarations,...inputs].join("\n\n")}
 ${receivers ? receiverDeclarations.source + "\n" : ""}\
 ${aliases.map(alias => `// Lean alias ${alias.name} = ${alias.contractType}; C#: ${alias.managedType}`).join("\n")}
 ${equality}`;

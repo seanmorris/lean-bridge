@@ -187,17 +187,18 @@ export const ownedDotnetWholeScope = transfers => `
  * @param fn - One public function, copy, retain or closure invocation.
  */
 export const ownedDotnetAnchoredCall = (context, fn) => {
-	const { c, nodes, calls, symbols, parameterType, returnType } = context;
+	const { c, nodes, calls, symbols, parameterType, returnType, hostField } = context;
 	const result = nodes.get(fn.result), parameters = fn.parameters.map(id => nodes.get(id));
 	const moving = fn.transfers ?? [], wraps = index => moving.includes(index) || fn.anchor === index;
 	const whole = result.representation !== "copied" && !fn.rawResult;
 	const copy = calls.find(item => item.wholeCopy && item.id === result.id);
 	if(whole && !copy) throw new TypeError(`Missing C# whole-value copy for ${result.id}`);
 	const write = (node, index, scope, checking) => fn.handle && index === 0 ? `${scope}.Root(arg${index})`
-		: c.hostArgument?.(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
-			: `OwnedConvert.Write${node.index}(${wraps(index) ? `${scope}.Whole(arg${index})` : `arg${index}`}, ${scope})`;
+		: hostField(fn,index) ? `Input${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
+			: c.hostArgument?.(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
+				: `OwnedConvert.Write${node.index}(${wraps(index) ? `${scope}.Whole(arg${index})` : `arg${index}`}, ${scope})`;
 	const nativeTypes = parameters.flatMap((node, index) => [
-		c.hostArgument?.(fn, index) ? `OwnedCallback${node.index}*` : node.raw + (node.leaf ? "" : "*")
+		hostField(fn,index) ? node.hostInput.raw+"*" : c.hostArgument?.(fn, index) ? `OwnedCallback${node.index}*` : node.raw + (node.leaf ? "" : "*")
 		, ...moving.includes(index) ? ["nint*"] : []
 		, ...fn.anchor === index ? ["nint"] : []
 	]);
