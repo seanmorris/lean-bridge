@@ -200,6 +200,11 @@ The [installed Rust task evidence](../evidence/rust-tasks-20261122.json) records
 
 ### Pass a callback to a Lean task
 
+A standalone task can declare a callback parameter single-use. Awaiting an
+uncaught second call returns `Error::Boundary(Fault::CallbackAlreadyInvoked { declaration })`.
+The denied call never enters your Rust closure. Each task and parameter has
+its own allowance, even when you pass the same callable twice.
+
 Pass a Rust closure to a callback-taking task. Its argument is owned; it returns `Ok(reply)` or `Err(CallbackError)`. Captures can use `Rc` and need not be `Send`. In the task lab, Lean calls the closure twice:
 
 ```rust

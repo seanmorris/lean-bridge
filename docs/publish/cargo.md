@@ -117,6 +117,17 @@ If Cargo repackages the runtime, its registry checksum can differ from the prepa
 
 ### Export a callback-taking task
 
+For a standalone task, use `taskCallbackPolicies` to allow a parameter
+one invocation instead of the default repeated calls:
+
+```json
+{"taskCallbackPolicies":[{"declaration":"Budget.probe","parameter":"f","invocation":"once"}]}
+```
+
+Use the Lean parameter name. The first invocation spends the allowance even
+if the callback returns an error. The ordinary and reviewed source routes
+check the same policy. Host-object bindings do not yet accept this option.
+
 Select a declaration such as `Retained.repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String))` in `taskExports`. To treat that particular task's outer `Except IO.Error` as a terminal failure, also list the declaration in `taskIOErrors`. A normal returned `Except ε α` is a value; the build does not infer an exception convention from its name. Callback parameters must have the actual Lean type `α → IO β` with supported copied scalar arguments and replies.
 
 The installed component generates the Rust closure signature, schedules the factory off the owner thread, and delivers the result through the executor. Neither the publisher nor the consumer supplies FFI or polling glue. See [the Rust callback example](../consume/rust.md#pass-a-callback-to-a-lean-task).

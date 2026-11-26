@@ -67,6 +67,7 @@ export const generateCppTaskHeader = options => {
 	for(const r of resources)
 		if(reserved.has(r.name) || r.name.startsWith("_") || r.name.includes("__")
 			|| (synchronous && r.name === "DeclaredError") || (cursors && r.name === "Cursor")
+			|| (options.onceByDeclaration?.size && r.name === "CallbackAlreadyInvoked")
 			|| "Int Nat Future Stream Routine Ok Err Result StartError StepError IOError TaskIOError RetainedCallback CallbackTrap CallbackClosed Cancelled Closed Busy Unavailable WrongContext".split(" ").includes(r.name))
 			throw new TypeError("Reserved C++ resource class name");
 		else names.add(r.name);

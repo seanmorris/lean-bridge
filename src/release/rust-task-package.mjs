@@ -91,7 +91,7 @@ export const writeRustTaskRelease = async o => {
 	const provider = pack(common, runtimeName, runtimeVersion);
 	const assets={ runtimeIdentity, library: lib, libraries };
 	const generated = host ? {"src/lib.rs": rustHostFacade({...host,entries,prefix,embedded: true}),"src/assets.rs": copiedRustAssets(assets,{task: true})}
-		: await generateRustTaskSources({ prefix, entries, synchronousIO: synchronous, resources: api.types.filter(t => t.kind === "resource"), evidence: assets });
+		: await generateRustTaskSources({ prefix, entries, synchronousIO: synchronous, resources: api.types.filter(t => t.kind === "resource"), evidence: assets, onceStatus: gen.onceStatus, onceByDeclaration: o.onceByDeclaration });
 	for(const [f, s] of Object.entries(generated)) app.set(f, s);
 	const metadata = cargoPackageMetadata({ description: synchronous ? "Synchronous compiled Lean IO" : "Compiled Lean tasks and pull streams", ...projectContract.metadata });
 	const dependency = synchronous ? `{ version = "=${runtimeVersion}", default-features = false${host?', features = ["host-objects"]':""} }` : host ? `{ version = "=${runtimeVersion}", features = ["host-objects"] }` : `"=${runtimeVersion}"`;
@@ -103,6 +103,7 @@ export const writeRustTaskRelease = async o => {
 	else app.set("README.md", `# ${name}\n\nLinux x86-64, glibc ${floor}+, Rust 1.90+. Cargo supplies the runtime automatically. Use a current-thread executor on the process main thread. Await the returned Task; drop it to cancel without blocking. A stream pulls only on demand. Call next().await or use the futures Stream trait. Returned Except values stay Rust Results; declared factory and step failures are Error::Start and Error::Step. IO errors carry the declaring function and message. Never reuse native state in a forked child.\n`);
 	if(entries.some(retainedTask)) app.set("README.md", app.get("README.md") + "\nCallback-taking tasks accept Rust closures that return Result<Reply, CallbackError>. The executor runs closures on the main thread, even during factory initialization. Await the task for typed factory rejection, IO or declared terminal IO failure. An unchanged callback error retains its Rust identity. Drop or cancel the task to release all callback captures; RetainedCallback also permits explicit close. An unwinding Rust callback panic retires the native runtime.\n");
 	if(entries.some(e => e.taskIO && !retainedTask(e))) app.set("README.md", app.get("README.md") + "\nA task declaring terminal IO errors without a callback uses ordinary Task<T>. Its factory can fail immediately; a later task failure is Fault::TaskIo on await. No callback queue is allocated.\n");
+	if(o.onceByDeclaration?.size) app.set("README.md",app.get("README.md")+"\nA callback parameter declared once has one invocation per task registration. An uncaught second call returns Error::Boundary(Fault::CallbackAlreadyInvoked { declaration }) without invoking the Rust closure. A failure on the first call does not reset the allowance.\n");
 	app.set("lean-bridge/binding-ir.json", canonicalJson(api)); app.set("lean-bridge/elaboration.json", canonicalJson(evidence));
 	if(host)
 	{

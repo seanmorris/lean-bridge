@@ -30,6 +30,8 @@ const quote = JSON.stringify;
 export const generateRustTaskSources = async options => {
 	const { prefix, entries, resources = [], evidence } = options;
 	const synchronous = options.synchronousIO === true, errorType = synchronous ? "CallError" : "Error";
+	if(options.onceByDeclaration?.size && (!Number.isSafeInteger(options.onceStatus) || options.onceStatus<=0))
+		throw new TypeError("Rust one-call callbacks require the compiled admission status");
 	const cursors = entries.some(e => e.delivery === "iterator");
 	if(cursors && !synchronous || synchronous && (entries.some(e => (e.delivery && e.delivery !== "iterator") || e.taskIO) || !(cursors || entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect)))))
 		throw new TypeError("Invalid standalone Rust IO delivery contract");
@@ -112,7 +114,8 @@ export const generateRustTaskSources = async options => {
 			const name = ident(e.name);
 			if(names.has(name)) throw new TypeError("Rust export name collides: " + name);
 			names.add(name);
-			rustRetainedEntry({ e, i, name, prefix, ident, shape, guard, sym, bufFree, pub, funcs }); continue;
+			const onceStatus=options.onceByDeclaration?.has(e.declaration)?options.onceStatus:undefined;
+			rustRetainedEntry({ e, i, name, prefix, ident, shape, guard, sym, bufFree, pub, funcs, onceStatus }); continue;
 		}
 		// Match the C generator's traversal (including nested Except) so aggregate
 		// disposers and their ABI layouts agree with the compiled component.

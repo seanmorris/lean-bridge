@@ -25,6 +25,9 @@ pub enum Fault {
     Io { declaration: &'static str, message: String },
     TaskIo { declaration: &'static str, message: String },
     CallbackPanic { declaration: &'static str },
+    /// A second worker invocation of a one-call callback did not enter Rust.
+    #[cfg(feature = "async")]
+    CallbackAlreadyInvoked { declaration: &'static str },
     Load(String), Readiness(String), InvalidValue, Closed, Cancelled, Busy,
     WrongContext, Unavailable, Allocation, Limit, Protocol,
 }
@@ -33,6 +36,8 @@ impl fmt::Display for Fault {
         match self {
             Self::Io { declaration, message } | Self::TaskIo { declaration, message } => write!(f, "{declaration}: {message}"),
             Self::CallbackPanic { declaration } => write!(f, "{declaration}: Rust callback panicked; Lean runtime retired"),
+            #[cfg(feature = "async")]
+            Self::CallbackAlreadyInvoked { declaration } => write!(f, "{declaration}: callback-already-invoked"),
             Self::Load(s) | Self::Readiness(s) => f.write_str(s),
             x => write!(f, "{x:?}"),
         }

@@ -29,7 +29,7 @@ pub fn ${name}(${ps.map(x => x.name + ":" + type(x)).join(",")})->${out}{native:
     ${guard(value, "out")} ${error ? guard(error, "err") : ""}
     let mut msg:Guard<Buffer>=unsafe{Guard::zero(Clear::Void(a.${bufFree}))}; let(mut origin,mut phase)=(0,0);
     let s=unsafe{(a.${take})(h,&mut out.v${error ? ",&mut err.v" : ""},&mut msg.v,&mut origin,&mut phase)};
-    ${error ? `if s==3{return Err(Error::Start(${error.read}(a,&mut err.v)?));}` : ""}
+    ${options.onceStatus ? `if s==${options.onceStatus}{return Err(Fault::CallbackAlreadyInvoked{declaration:${decl}}.into());}\n    ` : ""}${error ? `if s==3{return Err(Error::Start(${error.read}(a,&mut err.v)?));}` : ""}
     if s==4 {
         if origin!=0 { let error=faults.get(origin as usize-1).ok_or(Fault::Protocol)?.clone();return Err(Error::Callback{declaration:${decl},error}); }
         let message=text(&msg.v)?;

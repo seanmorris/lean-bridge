@@ -5,8 +5,9 @@ import {reconcileHostExports} from "../src/analyze/host-export-model.mjs";
 import {generateCTaskExports} from "../src/backends/c/task-exports.mjs";
 import {generateCppTaskHeader} from "../src/backends/cpp/task-exports.mjs";
 import {retainedOnceSlots} from "../src/backends/native/task-callback.mjs";
+import {generateRustTaskSources} from "../src/backends/rust/task-crate.mjs";
 
-for(const target of ["c","cpp"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",()=>{
+for(const target of ["c","cpp","rust"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
 	const v={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: v,reply: v};
 	const parameters=[{name: "n",type: v},{name: "f",type: fn},{name: "g",type: fn}],name="Budget.probe";
 	const entry={name: "probe",declaration: name,module: "Budget",parameters
@@ -29,7 +30,26 @@ for(const target of ["c","cpp"]) test(target+" rejects a stale reviewed callback
 	assert.doesNotMatch(plain.header+plain.source+plain.entryLean,/CALLBACK_ALREADY_INVOKED|cbBudgetClaim/u);
 	assert.match(built.entryLean,/Budget.probe v0 \(cbInvoke port 1\) \(cbInvokeOnce port used2 denied 2\)/u);
 	assert.match(built.header,/CALLBACK_ALREADY_INVOKED/u);
-	if(target==="cpp") assert.match(generateCppTaskHeader({entries,prefix: built.prefix,onceByDeclaration}),/throw CallbackAlreadyInvoked\{\}/u);
+	if(target==="cpp")
+	{
+		const header={entries,prefix: built.prefix};
+		assert.match(generateCppTaskHeader({...header,onceByDeclaration}),/throw CallbackAlreadyInvoked\{\}/u);
+		const declaration="Budget.CallbackAlreadyInvoked",id="lean:"+declaration;
+		const source={declaration,extensions: {"lean-bridge.dev/resource-identity": componentIdentity}};
+		const resources=[{kind: "resource",id,host: null,source,resource: {kindId: "resource:"+declaration+"/"+componentIdentity}}];
+		assert.doesNotThrow(()=>generateCppTaskHeader({...header,resources}));
+		assert.throws(()=>generateCppTaskHeader({...header,resources,onceByDeclaration}),/Reserved C\+\+ resource class name/u);
+	}
+	if(target==="rust")
+	{
+		const prefix=built.prefix,library="lib"+prefix+".so";
+		const opts={prefix,entries,evidence: {library,runtimeIdentity: componentIdentity,libraries: {[library]: componentIdentity}}};
+		await assert.rejects(generateRustTaskSources({...opts,onceByDeclaration}),/compiled admission status/u);
+		const plain=await generateRustTaskSources(opts);
+		assert.doesNotMatch(plain["src/native.rs"],/CallbackAlreadyInvoked/u);
+		const api=await generateRustTaskSources({...opts,onceByDeclaration,onceStatus: built.onceStatus});
+		assert.ok(api["src/native.rs"].includes("if s=="+built.onceStatus+"{return Err(Fault::CallbackAlreadyInvoked"));
+	}
 	const wrong=structuredClone(api);wrong.declarations[0].parameters[2].type=api.declarations[0].parameters[1].type;
 	assert.throws(()=>reconcileHostExports({metadata,selection: checked,component
 		, review: {source: JSON.stringify(wrong)}}),/Reviewed API differs/u);

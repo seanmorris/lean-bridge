@@ -70,7 +70,7 @@ export const buildCTaskPackage = async options => {
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, witDelivery: canonical, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php || canonical ? "words" : "gmp" };
 		const callbackHeaders = new Map();
-		if((target==="c" || cpp) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
+		if((target==="c" || cpp || rust) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
@@ -167,7 +167,7 @@ export const buildCTaskPackage = async options => {
 		if(php) return await writePhpIORelease({ ...options, prefix: p, wire, phpPort, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(perl) return await writePerlIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, ledgerId, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
-		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
+		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity, onceByDeclaration: config.onceByDeclaration });
 		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(dotnet) return await writeDotnetIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
