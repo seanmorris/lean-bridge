@@ -229,6 +229,26 @@ leased function, then separately throw during a callback after a nested
 allocation. Both languages recover the original exception and invoke their
 saved functions again.
 
+### Does a callback allow one call or many?
+
+Running a callback exactly once in an example doesn't show the binding
+would reject a second call. The [registry unit test](../../tests/callback-runtime.test.mjs)
+gives a callback an explicit `once` plan and verifies that rejection. The
+[registry](../../src/runtime/callbacks.mjs) counts admission before entering
+application code. This is not evidence from a client of an installed package.
+
+In the [reviewed owned-function frontend](../../src/analyze/reviewed-owned-source.mjs),
+the admitted policy is repeated calls, same-agent reentry and deferred
+self-disposal. The [threaded npm author check](../../tests/helpers/javascript-wasm-task-callback-cli.mjs)
+changes `many` to `once` in the review and expects the build to **reject**
+the mismatch. Neither a successful single invocation nor this publisher
+refusal qualifies an author-selected one-call contract. For that case, check
+an installed public registration: consume its allowance on first entry,
+refuse a second entry without calling the host (including reentry and a
+first call that threw), and keep an independent registration usable.
+
+### Synchronous iterators by profile
+
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
 for an immediate option or a task-backed result, respectively.
