@@ -1,0 +1,70 @@
+{
+  "archives": [
+    {
+      "bytes": 53923960,
+      "path": "archives/example-tariff-quotes-1.0.0-linux-x86_64.zip",
+      "sha256": "b8fcf8a3ec2d1d75859e7fbb3a675f97b7fba6a1eb586fc8f63c224863a88f53"
+    }
+  ],
+  "bindingIrSha256": "1e2365fcb3d12f9b9d76b6a1a2fe468a7cf298578a46df31c0ada5a4b9d38836",
+  "composerVersion": "Composer version 2.5.5 2023-03-21 11:50:05",
+  "lockSha256": "712c47894213ad9b3ae540b41db4675b7eb143abeecaecd330afdc87eb1cfee5",
+  "observations": [
+    {
+      "after": 1,
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 9,
+      "hostInput": {
+        "calls": 3,
+        "held": 4,
+        "inner": 1,
+        "settled": {
+          "capture": 1,
+          "error": 1,
+          "expired": 1,
+          "lease": 1,
+          "reentry": 1,
+          "validation": 1
+        }
+      },
+      "interpreterSha256": "6235d84f7020b7dcf3dd3b035afcc277955353f7c463f9283fba26f06da2a098",
+      "php": "8.2.35",
+      "result": 42,
+      "stageCalls": 1,
+      "visits": 0
+    },
+    {
+      "after": 1,
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 9,
+      "hostInput": {
+        "calls": 3,
+        "held": 4,
+        "inner": 1,
+        "settled": {
+          "capture": 1,
+          "error": 1,
+          "expired": 1,
+          "lease": 1,
+          "reentry": 1,
+          "validation": 1
+        }
+      },
+      "interpreterSha256": "12989a0efe078564045ed6e38232bb6cea04064db1d31ee2f4d99985daabfc66",
+      "php": "8.5.10",
+      "result": 42,
+      "stageCalls": 1,
+      "visits": 0
+    }
+  ],
+  "receiptSha256": "9f88a0646ba95a1de1de2de8241dabe5dd797b67ca84d189b9663f122f71af6d",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "sources": {
+    "tariff-fields.php": "837b3f339d3372c6259b6c96bfe67b9eedbc08c898ce04157513e87e0a9d0969",
+    "tariff-host-fields.php": "fa9154ceb1cba6a17ad92527f8b14dddcccb6375fd231962aeed028ad6ca92ba",
+    "tariff-observer.php": "799b17061f11ab5589c07c9b689e6c76b3e33bf6604cb396d80ba3e1a71e8765"
+  }
+}

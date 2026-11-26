@@ -260,8 +260,9 @@ qualify it as well. Both [offline Cargo installs](host-callback-input-records-20
 passed all seven scenarios. The [two RubyGems installs](host-callback-input-records-20261126.md#ruby-callers)
 and [both C# NuGet installs](host-callback-input-records-20261126.md#c-callers-1)
 also passed. The [ordinary and reviewed CPAN installs](host-callback-input-records-20261126.md#perl-callers)
-passed with prebuilt XS on all four Perl ABIs. This brings the input-field
-case to twelve of the 17 profiles.
+passed with prebuilt XS on all four Perl ABIs. The [native Composer installs](host-callback-input-records-20261126.md#native-php-callers)
+passed in PHP 8.2 and 8.5 on both routes. This brings the input-field case
+to 13 of the 17 profiles.
 
 ### Does a callback allow one call or many?
 

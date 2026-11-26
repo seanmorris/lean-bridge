@@ -224,9 +224,14 @@ received its own expected argument. An invalid callback in the second record
 prevented all four from running. A weakly typed PHP caller cannot silently
 coerce a number to the text field or a numeric string to the integer field.
 
-These are direct adapter results. The earlier Composer receipts cover leased
-fields only. Run `npm run test:php-function-fields` to build both source routes
-and exercise the callback inputs after offline installation and relocation.
+Both [ordinary](php-host-input-records-20261126/ordinary.json) and
+[reviewed](php-host-input-records-20261126/reviewed.json) Composer packages
+subsequently passed the callback-input client after offline installation
+and relocation. PHP 8.2.35 and 8.5.10 each ran the six input cases from
+each package. The input callback ran three times with one reentry; four
+identities were live while the leases were held, one after each case, and
+zero at shutdown. The two-record test above is a separate check.
+Use `npm run test:php-function-fields` to repeat the installed checks.
 
 ## JVM record layout
 
