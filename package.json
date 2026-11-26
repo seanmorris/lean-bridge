@@ -1526,6 +1526,7 @@
     "test:rust-once-callback": "node --test --test-concurrency=1 tests/helpers/rust-budget-installed.mjs",
     "test:ruby-once-callback": "node --test --test-concurrency=1 tests/helpers/ruby-budget-installed.mjs",
     "test:dotnet-once-callback": "node --test --test-concurrency=1 tests/helpers/dotnet-budget-installed.mjs",
+    "test:jvm-once-callback": "node --test --test-concurrency=1 tests/helpers/jvm-budget-installed.mjs",
     "test:npm-incoming-function": "node --test --test-concurrency=1 tests/helpers/npm-incoming-installed.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",
     "test:native-immediate-cursor": "node --test --test-concurrency=1 tests/helpers/native-immediate-cursor.mjs",

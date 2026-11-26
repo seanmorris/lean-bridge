@@ -4,6 +4,7 @@
  * @file
  */
 import { readFile } from "node:fs/promises";
+import { nativeOnceWireStatus } from "../c/task-wire.mjs";
 import { copiedJvmAssets } from "./copied-assets.mjs";
 import { jvmLeaseModels, jvmLeaseSource, verifyJvmLeaseSites } from "./io-resources.mjs";
 
@@ -102,18 +103,19 @@ const result = (t, d = 0) => {
 export { argument as jvmWorkerScalarInput, result as jvmWorkerScalarOutput, spelling as jvmWorkerScalarType };
 
 const callbackSpecs = (api, m, decl, ns) => {
-	const slots = new Map(), spec = m.callbacks ?? [];
+	const slots = new Map(), spec = m.callbacks ?? [], once = [];
 	for(const [j, a, b] of spec)
 	{
 		const param = decl.parameters[j], ref = api.types?.find(t => t.id === param?.type?.id), cb = ref?.callable;
 		if(!Number.isSafeInteger(j) || j < 0 || m.args[j] !== "callback" || slots.has(j) || m.delivery !== "task"
 			|| param?.ownership !== "lease" || param.lifetime?.scope !== "explicit" || ref?.kind !== "callback"
 			|| ref.source?.extensions?.["lean-bridge.dev/callback-scheduler"] !== "jvm-virtual-thread"
-			|| cb?.invocation !== "many" || cb.reentry !== "same-agent" || cb.selfDisposal !== "defer" || cb.resultMode !== "value"
+			|| !["once","many"].includes(cb?.invocation) || cb.reentry !== "same-agent" || cb.selfDisposal !== "defer" || cb.resultMode !== "value"
 			|| cb.parameters?.length !== 1 || cb.parameters[0].type?.kind !== "primitive" || cb.parameters[0].type.name !== a
 			|| cb.result?.type?.kind !== "primitive" || cb.result.type.name !== b || cb.failure?.unexpected !== "poison-runtime"
 			|| cb.failure.errors?.length !== 1 || cb.failure.errors[0] !== "error:JvmCallbackException")
 			throw new TypeError("Invalid compiler-selected JVM callback contract");
+		if(cb.invocation === "once") once.push(j);
 		const ja = spelling(a, ns, false, true), jb = spelling(b, ns, false, true), input = a !== "unit", output = b !== "unit";
 		const java = input ? output ? `java.util.function.Function<${ja}, ${jb}>` : `java.util.function.Consumer<${ja}>`
 			: output ? `java.util.function.Supplier<${jb}>` : "Runnable";
@@ -124,6 +126,8 @@ const callbackSpecs = (api, m, decl, ns) => {
 		slots.set(j, { java, kotlin, bind });
 	}
 	if(m.args.some((t, j) => (t === "callback") !== slots.has(j))) throw new TypeError("Missing compiler-selected JVM callback slot");
+	if(m.once !== (once.length ? true : undefined) || JSON.stringify(m.onceSlots) !== JSON.stringify(once.length ? once : undefined))
+		throw new TypeError("Unverified JVM callback allowance");
 	return slots;
 };
 
@@ -187,6 +191,12 @@ export const generateJvmIO = async options => {
 	const shape = t => leases.get(t) ?? t;
 	const names = new Set(), classes = new Set(["Api", "Wire", "Unit", "NativeAssets", "Result", "LeanEIOError", "LeanIOException"]);
 	const methods = [], kotlin = [], ownedErrors = [];
+	if(wire.methods.some(m=>m.once)) java("CallbackAlreadyInvokedException", `/** The task and parameter already used their single admission. */
+public final class CallbackAlreadyInvokedException extends IllegalStateException {
+    private final String declaration;
+    CallbackAlreadyInvokedException(String decl) { super("callback-already-invoked"); declaration = decl; }
+    public String declaration() { return declaration; }
+}\n`);
 	const typedError = (ex, shape, decl) => {
 		if(classes.has(ex)) throw new TypeError("Colliding JVM IO exception: " + ex);
 		classes.add(ex);
@@ -242,7 +252,7 @@ export const generateJvmIO = async options => {
 			methods.push(`    public static java.util.concurrent.CompletableFuture<${value}> ${name}(${nativeArgs}) {
         return Delivery.task(new CallbackPort<${value}>(${i}, ${m.args.length}, ${m.tagBytes},
             f -> { ${init} }, (f,status,state) -> {
-                if (status == 14) throw state.original(f.scalar()); ${startError} ${late}
+                ${m.once ? `if (status == ${nativeOnceWireStatus}) throw new CallbackAlreadyInvokedException(${declaration});\n                ` : ""}if (status == 14) throw state.original(f.scalar()); ${startError} ${late}
                 Wire.success(status); return ${result(m.result)};
             }, new CallbackPort.Slot[]{${m.args.map((_, j) => slots.get(j)?.bind ?? "null").join(", ")}}));
     }`);

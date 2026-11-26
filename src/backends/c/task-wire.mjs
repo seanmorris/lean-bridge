@@ -141,7 +141,7 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
 		, delivery: e.delivery
 		, ...(a.wasmTasks || a.witCallbacks) ? {terminal: e.taskIO ? "string" : null} : {}
 		, callbacks: callbacks.map(({ j, arg, reply }) => [j, arg, reply])
-		, ...a.once ? { once: true } : {}
+		, ...a.once ? { once: true, onceSlots: [...a.once] } : {}
 		, tagBytes: Math.max(1, depth(err), depth(result)) };
 	return { source, names, method };
 };

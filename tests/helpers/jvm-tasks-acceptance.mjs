@@ -6,15 +6,16 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { constants, createReadStream } from "node:fs";
-import { access, copyFile, cp, mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { basename, delimiter, dirname, join, relative, resolve } from "node:path";
+import { basename, delimiter, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
+import { installMavenTasks } from "./jvm-maven-installed.mjs";
 
 const env = { ...process.env, LEAN_NUM_THREADS: "1" }, capture = env.LEAN_BRIDGE_JVM_TASK_CAPTURE, replay = env.LEAN_BRIDGE_JVM_TASK_REPLAY;
 const fixture = resolve("tests/fixtures/jvm-tasks"), json = async p => JSON.parse(await readFile(p, "utf8"));
@@ -74,40 +75,7 @@ const inspect = async (root, route, work, retained = false) => {
 		, reviewedSourceSha256: evidence.reviewedSourceSha256 };
 	return { paths, proof };
 };
-/**
- * Install original component archives offline, then relocate the resolved JVM classpath.
- *
- * @param proj - Empty destination for this consumer's isolated Maven project.
- * @param work - Directory containing the offline repository settings.
- * @param packages - Verified package records and original JAR/POM files.
- * @param tasks - Expect a pinned coroutine dependency (absent from synchronous packages).
- */
-const install = async (proj, work, packages, tasks = true) => {
-	const repo = join(proj, "tool-repo"), dest = join(proj, "installed"), mvn = env.LEAN_BRIDGE_MAVEN ?? "mvn";
-	await mkdir(proj); await cp(resolve(env.LEAN_BRIDGE_JVM_TASK_M2_SEED), repo, { recursive: true, mode: constants.COPYFILE_FICLONE });
-	for(const p of packages) await assert.rejects(access(join(repo, "com/acme", p.proof.name.split(":")[1])), { code: "ENOENT" });
-	const dependencies = packages.map(p => "<dependency><groupId>com.acme</groupId><artifactId>" + p.proof.name.split(":")[1] + "</artifactId><version>" + (p.version ?? "1.0.0") + "</version></dependency>").join("");
-	await writeFile(join(proj, "pom.xml"), '<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>client</groupId><artifactId>tasks</artifactId><version>1</version><dependencies>' + dependencies + "</dependencies></project>", { flag: "wx" });
-	const flags = ["--offline", "-B", "-q", "-ntp", "-s", join(work, "settings.xml"), "-Dmaven.repo.local=" + repo];
-	for(const p of packages) await run(mvn, [...flags, "org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file", "-Dfile=" + p.paths[0], "-DpomFile=" + p.paths[1]], proj, env);
-	await run(mvn, [...flags, "org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath", "-Dmdep.outputFile=resolved.txt"], proj, env);
-	const resolved = (await readFile(join(proj, "resolved.txt"), "utf8")).trim().split(delimiter).map(f => relative(repo, f));
-	assert.ok(resolved.every(s => !s.startsWith("..") && s.endsWith(".jar")));
-	await rename(repo, dest);
-	for(const p of packages)
-	{
-		const installed = resolved.find(s => basename(s) === basename(p.paths[0])); assert.ok(installed);
-		for(const a of p.proof.artifacts) assert.equal(await digest(join(dest, dirname(installed), basename(a.path))), a.sha256);
-	}
-	const coroutine = resolved.find(s => s.endsWith("/kotlinx-coroutines-core-jvm-1.8.0.jar"));
-	if(tasks)
-	{
-		assert.ok(coroutine); assert.equal(await digest(join(dest, coroutine)), packages[0].proof.detail.coroutinesSha256);
-	}
-	else assert.equal(coroutine, undefined);
-	assert.ok(resolved.some(s => s.endsWith("/kotlin-stdlib-2.2.0.jar")));
-	return { resolved, classpath: resolved.map(s => join(dest, s)).join(delimiter) };
-};
+const install = (proj, work, packages, tasks = true) => installMavenTasks(proj, work, packages, env, tasks);
 const mixed = env.LEAN_BRIDGE_JVM_MIXED_OUTPUT;
 export { inspect as inspectJvmTask, install as installJvmTasks };
 test("independently installed synchronous and task Maven profiles share one native owner", { skip: !mixed, timeout: 600_000 }, async t => {

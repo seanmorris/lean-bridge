@@ -76,7 +76,7 @@ export { args as dotnetScalarArgument, decode as dotnetScalarResult, type as dot
  */
 const parameterTypes = (m, d, api, project, shape = ref => ref?.name) => {
 	const slots = new Map();
-	let once = false;
+	const once = [];
 	for(const [i, from, to] of m.callbacks ?? [])
 	{
 		const p = d.parameters[i], cb = api.types?.find(t => t.id === p?.type?.id)?.callable;
@@ -86,9 +86,10 @@ const parameterTypes = (m, d, api, project, shape = ref => ref?.name) => {
 			|| cb.resultMode !== "value" || cb.failure?.errors?.[0] !== "error:DotNetCallbackException")
 			throw new TypeError("Invalid retained .NET callback contract");
 		slots.set(i, to === "unit" ? `global::System.Action<${project(from)}>` : `global::System.Func<${project(from)}, ${project(to)}>`);
-		if(cb.invocation === "once") once = true;
+		if(cb.invocation === "once") once.push(i);
 	}
-	if(m.once !== (once ? true : undefined)) throw new TypeError("Unverified .NET callback allowance");
+	if(m.once !== (once.length ? true : undefined) || JSON.stringify(m.onceSlots) !== JSON.stringify(once.length ? once : undefined))
+		throw new TypeError("Unverified .NET callback allowance");
 	return m.args.map((t, i) => slots.get(i) ?? project(t));
 };
 // CLR identity includes the defining assembly, so each verified Lean kind

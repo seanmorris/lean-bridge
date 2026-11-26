@@ -21,7 +21,7 @@ export const buildNativeBudget=async options=>{
 	const cfg=JSON.parse(await readFile(join(common,"lean-bridge.exports.json")));
 	cfg.modules.push("Racing");
 	const declarations=["Racing.duringStart","Racing.race","Racing.replace"];
-	const extraModules=["rubygems","nuget"].includes(target)?["TypedBudget","FactoryFault"]:target==="cargo"?["TypedBudget"]:[];
+	const extraModules=["rubygems","nuget","maven"].includes(target)?["TypedBudget","FactoryFault"]:target==="cargo"?["TypedBudget"]:[];
 	for(const module of extraModules)
 	{
 		await copyFile(join(extra,module+".lean"),join(project,module+".lean"));
@@ -33,7 +33,7 @@ export const buildNativeBudget=async options=>{
 		cfg.taskExports.push(n);cfg.taskIOErrors.push(n);
 		cfg.taskCallbackPolicies.push({declaration: n,parameter: "f",invocation: "once"});
 	}
-	cfg.targets={[target]: {name: target+"-budget",version: "1.0.0"}};
+	cfg.targets={[target]: {name: target==="maven"?"org.leanbridge:callback-budget":target+"-budget",version: "1.0.0"}};
 	if(route==="ordinary") cfg.exports=cfg.taskExports;
 	else
 	{

@@ -93,7 +93,7 @@ export const generateCTaskExports = options => {
 					: options.dotnetDelivery ? "The .NET task ABI requires word carriers; select exactly one host"
 						: "The task callback ABI requires Rust, C++ or Ruby word carriers, or the public C profile with GMP; select exactly one host");
 	const budgets=options.onceByDeclaration, hasBudget=Boolean(budgets?.size);
-	if(hasBudget && (wasm || !(publicC || options.cppCallbacks || options.rustCallbacks || options.rubyDelivery || options.dotnetDelivery) || !retained))
+	if(hasBudget && (wasm || !(publicC || options.cppCallbacks || options.rustCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery) || !retained))
 		throw new TypeError("Unsupported native callback budget host");
 	for(const [name,slots] of budgets??[])
 	{
