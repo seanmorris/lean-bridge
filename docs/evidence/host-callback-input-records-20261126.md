@@ -168,13 +168,15 @@ function fields, a string, and an integer. C# accepts a delegate and a
 leased Lean function in the same record, and rejects a delegate returning
 a string where the field requires a `uint`.
 
-The [consumer](../../tests/fixtures/structured-types/tariff-host-fields.cs)
-ran against newly compiled C# and native adapters with the compiled Lean
-component, private GMP, and runtime from the [ordinary NuGet archive](dotnet-function-fields-20261126/ordinary.json).
-All 14 scenarios passed. The live identity count rose from one to four
-while leases were held, then returned to one after reentry, expired
-borrows, host exceptions, and input validation. After the owner thread
-exited there were zero. This is a runtime check, not a fresh NuGet install.
+The [C# consumer](../../tests/fixtures/structured-types/tariff-host-fields.cs)
+passed all 14 scenarios on freshly built [ordinary](dotnet-host-input-records-20261126/ordinary.json)
+and [reviewed](dotnet-host-input-records-20261126/reviewed.json) NuGet releases.
+Each run installed the local archive, relocated the application and executed
+it with the .NET runtime and no author tools on its path. The live identity
+count rose from one to four while leases were held, returned to one after
+reentry, expired borrows, host exceptions and validation, and reached zero
+when the owner thread exited. The receipts pin two different archives and
+the same consumer source.
 Run `npm run test:dotnet-function-fields` for both NuGet authoring routes.
 The earlier [leased-field receipts](dotnet-function-fields-20261126.md)
 predate these input views and do not qualify delegate inputs.

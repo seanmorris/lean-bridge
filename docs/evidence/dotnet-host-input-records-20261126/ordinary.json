@@ -1,0 +1,46 @@
+{
+  "archive": {
+    "bytes": 53942424,
+    "path": "archives/tariff-quotes.1.0.0.nupkg",
+    "sha256": "54eaf1ffd47500ac45637f5c12cd5a7607fb06db8d16c993837776426375f1e8"
+  },
+  "bindingIrSha256": "5330e49d8401375a15b711bde940982ec3b51908e0cb572430809157131b3d81",
+  "clientAssemblySha256": "fc3c1aa89c712d81cfb14908d90b2523794cbae4c0c0e5ffb35a47f5bf8bba14",
+  "clientSha256": "23437b5876db65eaf79edfc38c70b739ddef2a9835cb1712ff1da7fa7f074704",
+  "live": {
+    "afterCallbackFailure": 1,
+    "afterThreadExit": 0,
+    "baseline": 1,
+    "closed": 1,
+    "echo": 1,
+    "expired": 1,
+    "held": 4,
+    "host-capture": 1,
+    "host-error": 1,
+    "host-expired": 1,
+    "host-lease": 1,
+    "host-nested": 1,
+    "host-validation": 1,
+    "repack": 1,
+    "retain": 1
+  },
+  "receiptSha256": "7b20b7e3fd1ac0bb784f86efee6e1ca527366f5291f8427edeb2084a3d2c5a7a",
+  "relocated": [
+    "explicitly retained field survives source disposal",
+    "caller-built record crosses Lean",
+    "repacked function survives the input",
+    "ordinary delegate cannot escape through a field",
+    "closed field rejected",
+    "staged callback returns a native function",
+    "host exception retains identity",
+    "binding reusable",
+    "delegate field captures managed state across two calls",
+    "nested calls have distinct input frames",
+    "escaped field and direct result refuse a late delegate",
+    "original delegate exception and healthy retry",
+    "genuine Lean field survives its source and rejects a closed input",
+    "invalid input rejected before dispatch"
+  ],
+  "reviewedSourceSha256": null,
+  "route": "ordinary"
+}

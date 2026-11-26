@@ -84,9 +84,14 @@ test("relocated .NET 8 applications call and return leased function fields",{tim
 		await copyPackageSetHandoff(join(set,route),handoff);
 		const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
 		const [pkg]=receipt.packages;assert.equal(pkg.target,"nuget");assert.equal(pkg.name,"tariff-quotes");
-		const manifest=JSON.parse((await runCopied("unzip",["-p",join(handoff,pkg.artifacts[0].path),"lean-bridge/dotnet/binding-manifest.json"],work)).stdout);
+		const manifest=JSON.parse((await runCopied("/usr/bin/unzip",["-p",join(handoff,pkg.artifacts[0].path),"lean-bridge/dotnet/binding-manifest.json"],work)).stdout);
 		const advertised=manifest.ownedValues.hostInputRecords;
-		if(!replay || advertised !== undefined) assert.deepEqual(advertised,[
+		if(replay && advertised===undefined)
+		{
+			const old=new URL("../../docs/evidence/dotnet-function-fields-20261126/"+route+".json",import.meta.url);
+			assert.equal(result.receiptSha256,JSON.parse(await readFile(old)).receiptSha256);
+		}
+		else assert.deepEqual(advertised,[
 			{type: "lean:Owned.Tariff",input: "TariffInput",fields: ["Quote"],lifetime: "call"}
 		]);
 		const extra=advertised !== undefined;
