@@ -251,6 +251,33 @@ November 22 installation records establish the following:
 | C++: destroy the stream, keep the pending step | The [C++ client](../../tests/fixtures/cpp-lean-tasks/consumer.cpp) moved the stream onto a second thread and destroyed it there. Back on the owner thread, the outstanding step threw `Cancelled`. Lean reported exactly one extra finalizer before the client released the worker. [Both routes](cpp-task-streams-20261122.json) ran through pkg-config and CMake. |
 | Rust: drop only the future returned by `next()` | In the [archived Rust client](https://github.com/seanmorris/lean-bridge/blob/bcce2f989b19f7e83247e19920b27c62429547d8/tests/fixtures/rust-task-lab/pulse_checks.rs), a replacement reader received an item from the **same** Lean pull. The client closed the stream *after* receiving that item. The [two-crate installation](rust-tasks-20261122.json) ran this particular check on the ordinary crate; using the reviewed peer elsewhere in that executable does not extend this result to that peer. |
 
+### Replacing the Rust waiter versus closing its owner
+
+A [new installed client](../../tests/fixtures/rust-task-lab/parked_stream.rs)
+ran on the original Cargo archives in both package orders. It exercised
+each package as the stream owner, with the other available as a peer. The
+[execution record](rust-parked-pull-20261126.json) identifies the archives,
+client and all twelve observations. Each recorded exactly one Lean pull and
+one cursor finalizer.
+
+- Dropping the pending `next()` future preserved the cursor. A replacement
+  reader registered its own waker; the stream released the old waker. Opening
+  the gate woke the replacement and returned the original item.
+- Explicit `close()` finalized the cursor **before** the gate opened. A new
+  waiter immediately returned `None`. Repeated close and eventual drop did
+  not repeat the finalizer.
+- Dropping the stream itself also finalized before the gate opened. There
+  was no stream left to poll. Both stop paths released the last executor
+  waker, and the other package completed a task while the first worker was
+  still blocked. A later task on the original package succeeded.
+
+To replay, set `LEAN_BRIDGE_RUST_TASK_REPLAY` to the original two-crate
+handoff and `LEAN_BRIDGE_RUST_TASK_PARKED_OUTPUT` to an output directory.
+Run `node --test tests/helpers/rust-task-installed.mjs` with the
+[locked Cargo dependencies](rust-tasks-20261122.json) available. The harness
+runs the historical client unchanged and the new client as a separate
+relocated binary. Neither has the build tree or Cargo on its path.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

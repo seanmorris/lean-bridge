@@ -68,7 +68,7 @@ export { install as installVerifiedRustCrate, dependencies as rustLockPackages }
  * @param options - Scratch directory, retained release set and Rust toolchain.
  */
 export const runInstalledRustTasks = async options => {
-	const { root, kept, environment } = options;
+	const { root, kept, environment, parkedClient } = options;
 	const fx = join(kept, "client");
 	const work = await mkdtemp(join(root, "installed-")), vendor = join(work, "registry"), client = join(work, "client");
 	const cargo = environment.LEAN_BRIDGE_CARGO ?? "cargo", rustc = environment.LEAN_BRIDGE_RUSTC ?? "rustc";
@@ -183,6 +183,12 @@ export const runInstalledRustTasks = async options => {
 	}
 	await run(cargo, ["build", "--locked", "--offline", "-j1"], client, env);
 	await mkdir(join(client, "src/bin"));
+	if(parkedClient)
+	{
+		await copyFile(parkedClient, join(client, "src/bin/parked.rs"));
+		await run(cargo, ["build", "--bin", "parked", "--locked", "--offline", "-j1"], client, env);
+		await copyFile(join(env.CARGO_TARGET_DIR, "debug/parked"), join(root, "relocated-parked"));
+	}
 	await writeFile(join(client, "src/bin/external.rs"), 'fn accepts<S:futures_core::stream::FusedStream>(s:S)->S{s}\nfn main(){let _=accepts(task_lab::series(false,false,"").unwrap());}\n');
 	await run(cargo, ["check", "--offline", "--locked", "--bin", "external", "-j1"], client, env);
 	await writeFile(join(client, "src/bin/invalid.rs"), 'fn send<T:Send>(){}\nfn main(){send::<task_lab::Task<i64>>();send::<task_lab::Ticket>();let b=task_lab::badge(1).unwrap();let _=task_lab_peer::count(&b); }\n');
@@ -192,10 +198,26 @@ export const runInstalledRustTasks = async options => {
 	const bin = join(root, "relocated-consumer");
 	await copyFile(join(env.CARGO_TARGET_DIR, "debug/rust-task-app"), bin);
 	await rm(work, { recursive: true });
-	const output = (await run(bin, [], root, { PATH: "/unavailable", CARGO_HOME: "/unavailable", LEAN_SYSROOT: "/unavailable", TMPDIR: root, LEAN_NUM_THREADS: "1" })).trim();
+	const isolated = { PATH: "/unavailable", CARGO_HOME: "/unavailable", LEAN_SYSROOT: "/unavailable", TMPDIR: root, LEAN_NUM_THREADS: "1" };
+	const output = (await run(bin, [], root, isolated)).trim();
 	assert.match(output, /cross-crate resource cleanup passed$/u);
 	if(retained) assert.match(output, /retained callback checks passed/u);
+	let parked;
+	if(parkedClient)
+	{
+		const orders = {};
+		for(const order of [["ordinary", "reviewed"], ["reviewed", "ordinary"]])
+		{
+			const lines = (await run(join(root, "relocated-parked"), [order[0]], root, isolated)).trim().split("\n");
+			const outcomes = { replace: "item", close: "end", drop: "owner-dropped" };
+			assert.deepEqual(lines, order.flatMap(route => ["replace", "close", "drop"].map(mode =>
+				route + " " + mode + " pulls=1 closes=1 observed=" + outcomes[mode])));
+			orders[order.join("-then-")] = lines;
+		}
+		parked = { clientSha256: sha256(await readFile(parkedClient)), orders };
+	}
 	return { reports
+		, ...parked ? { parked } : {}
 		, output
 		, consumerSha256: sha256(await readFile(join(fx, "consumer.rs")))
 		, wakeChecksSha256: sha256(await readFile(join(fx, "pulse_checks.rs")))

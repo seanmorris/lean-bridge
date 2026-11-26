@@ -190,7 +190,9 @@ async fn example() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-A factory may reject before returning a task (`Error::Start(payload)`). A stream starts a pull only when polled. A terminal `Error::Step(payload)` arrives once; subsequent pulls return `None`. Dropping a waiter for `next()` leaves its single pull attached to the stream. Dropping the stream or a task requests cancellation without waiting for an uncooperative Lean worker. An ordinary synchronous `IO` function returns its result immediately.
+A factory may reject before returning a task (`Error::Start(payload)`). A stream starts a pull only when polled. A terminal `Error::Step(payload)` arrives once; subsequent pulls return `None`.
+
+If a timeout drops only the future returned by `next()`, polling the stream again waits for the **same item**. To abandon the cursor, close or drop the stream itself. After `close()`, `next().await` returns `None`. The [installed two-crate example](../evidence/async-delivery-crosswalk-20261125.md#replacing-the-rust-waiter-versus-closing-its-owner) shows both operations while Lean is still working. Dropping a task also requests cancellation without waiting for an uncooperative worker. An ordinary synchronous `IO` function returns its result immediately.
 
 When the API includes a named resource, pass it by reference. A returned resource owns its own lease. Use `try_clone()` to keep a second lease and `same_object()` to compare Lean identity, even between compatible crates. Dropping an owner releases its lease; an already-started Lean task keeps its own reference.
 
