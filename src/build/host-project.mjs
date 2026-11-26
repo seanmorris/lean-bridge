@@ -69,7 +69,7 @@ export const buildHostProject = async options => {
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
-	const budgets = target === "pypi" || (!config.hostImports && ["c","cpp","cargo","rubygems","nuget","maven","php-native"].includes(target));
+	const budgets = target === "pypi" || (!config.hostImports && ["c","cpp","cargo","rubygems","nuget","maven","php-native","cpan"].includes(target));
 	assertExportConfigurationCapabilities(config, { target
 		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "iterators", "nativeEffects", "package", "resources", ...budgets ? ["taskCallbackPolicies"] : []]
 		, targetFields: target === "cpan" ? ["module", "version"] : canonical ? ["name", "version", "asyncAbi"] : ["name", "version"] });

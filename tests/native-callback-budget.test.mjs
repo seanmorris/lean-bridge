@@ -13,8 +13,10 @@ import {generateJvmIO} from "../src/backends/jvm/sync-io.mjs";
 import {compilePhpTaskSurface} from "../src/backends/php/io-surface.mjs";
 import {generatePhpIOFiles} from "../src/backends/php/io-package.mjs";
 import {hashBindingIr} from "../src/binding-ir/canonical.mjs";
+import {preparePerlIOFiles} from "../src/backends/perl/sync-io.mjs";
+import {sha256} from "../src/capsule/node.mjs";
 
-for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
+for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php","perl"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
 	const v={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: v,reply: v};
 	const parameters=[{name: "n",type: v},{name: "f",type: fn},{name: "g",type: fn}],name="Budget.probe";
 	const entry={name: "probe",declaration: name,module: "Budget",parameters
@@ -28,7 +30,7 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php"]) test(target+
 	const {api,entries}=reconcileHostExports({metadata,selection: checked,component});
 	const onceByDeclaration=retainedOnceSlots(api);assert.deepEqual([...onceByDeclaration],[[name,[2]]]);
 	const componentIdentity="1".repeat(64),integerMode=target==="c"?"gmp":"words";
-	const selector=["ruby","dotnet","jvm","php"].includes(target)?target+"Delivery":target+"Callbacks";
+	const selector=["ruby","dotnet","jvm","php","perl"].includes(target)?target+"Delivery":target+"Callbacks";
 	const opts={entries,modules: ["Budget"],name: "budget"
 		, componentIdentity,[selector]: true,integerMode};
 	const plain=generateCTaskExports(opts),built=generateCTaskExports({...opts,onceByDeclaration});
@@ -38,6 +40,31 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php"]) test(target+
 	assert.doesNotMatch(plain.header+plain.source+plain.entryLean,/CALLBACK_ALREADY_INVOKED|cbBudgetClaim/u);
 	assert.match(built.entryLean,/Budget.probe v0 \(cbInvoke port 1\) \(cbInvokeOnce port used2 denied 2\)/u);
 	assert.match(built.header,/CALLBACK_ALREADY_INVOKED/u);
+	if(target==="perl")
+	{
+		const name="LeanBridge::Budget",prefix="lbc_perl_"+sha256(name);
+		const wire=slots=>generateSyncWire(prefix,entries,{tasks: true,onceByDeclaration: slots});
+		const pins={version: "0.001",runtimeVersion: "0.001",runtimeIdentity: componentIdentity};
+		const emit=(api,selection,wire)=>{
+			const evidence={selection,metadata,hostImportsSourceSha256: null
+				, interfaces: [{module: "Budget",sourceSha256: componentIdentity}]
+				, sourceTreeSha256: componentIdentity
+				, compilerSha256: componentIdentity
+				, extractorSha256: componentIdentity
+				, configurationSha256: componentIdentity};
+			const files=new Map([["lib/lib"+prefix+".so",Buffer.from("generator test")]]);
+			return preparePerlIOFiles({api,name,prefix,wire,files,evidence,componentIdentity,bindingIrSha256: hashBindingIr(api)},pins);
+		};
+		const prior=reconcileHostExports({metadata,selection,component}).api;
+		const plain=await emit(prior,selection,wire());
+		assert.doesNotMatch(plain.files.get("Component.xs"),/CallbackAlreadyInvoked/u);
+		for(const stale of [undefined,new Map([["Budget.probe",[1]]])])
+			await assert.rejects(emit(api,checked,wire(stale)),/Perl IO wire differs/u);
+		await assert.rejects(emit(prior,selection,wire(onceByDeclaration)),/Perl IO wire differs/u);
+		const enabled=await emit(api,checked,wire(onceByDeclaration));
+		assert.match(enabled.files.get("Component.xs"),/if \(status==16\).*LeanBridge::Budget::CallbackAlreadyInvoked/u);
+		assert.match(enabled.files.get("lib/LeanBridge/Budget.pm"),/package LeanBridge::Budget::CallbackAlreadyInvoked;/u);
+	}
 	if(target==="php")
 	{
 		const surface=(api,selection)=>compilePhpTaskSurface({name: "example/callback-budget"

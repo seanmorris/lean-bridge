@@ -26,13 +26,17 @@ extern void ${n.trap}(void);`;
  */
 export const retainedArguments = (api,declaration,method,shape) => {
 	const slots=new Set();
+	const once=declaration.parameters.flatMap((p,i)=>api.types.find(t=>t.kind==="callback" && t.id===p.type?.id)?.callable.invocation==="once"?[i]:[]);
+	if(method.once!==(once.length?true:undefined) || (once.length
+		? !Array.isArray(method.onceSlots) || once.length!==method.onceSlots.length || once.some((v,i)=>method.onceSlots[i]!==v)
+		: method.onceSlots!==undefined)) throw new TypeError("Unverified Perl callback allowance");
 	for(const [index,argument,reply] of method.callbacks??[])
 	{
 		const p=declaration.parameters[index], type=api.types.find(t=>t.id===p?.type?.id), c=type?.callable;
 		if(!Number.isSafeInteger(index)||index<0||slots.has(index)||method.args[index]!=="callback"
 			||method.delivery!=="task"||p?.ownership!=="lease"||p.lifetime?.scope!=="explicit"||p.lifetime.anchor!==null
 			||type?.kind!=="callback"||type.source?.extensions?.["lean-bridge.dev/callback-scheduler"]!=="owner-event-loop"
-			||c?.invocation!=="many"||c.reentry!=="same-agent"||c.selfDisposal!=="defer"||c.resultMode!=="value"
+			||c?.invocation!==(once.includes(index)?"once":"many")||c.reentry!=="same-agent"||c.selfDisposal!=="defer"||c.resultMode!=="value"
 			||c.parameters.length!==1||c.parameters[0].ownership!=="copy"||c.result.ownership!=="copy"
 			||shape(c.parameters[0].type)!==argument||shape(c.result.type)!==reply
 			||c.failure?.mode!=="declared"||c.failure?.unexpected!=="poison-runtime"
@@ -181,7 +185,8 @@ ${fn}_take(token, faults)
         av_push(saved,newSVsv(*original));
         croak_sv(sv_bless(carrier,gv_stashpv("${ns}::_Cause",GV_ADD)));
     }
-    ${m.effect==="EIO"?`if (status==3) croak_sv(lbs_failure(aTHX_ "${ns}::Error::${m.name}",${decl},${value(m.error,ns)}));`:""}
+    ${m.once?`if (status==16) croak_sv(lbs_failure(aTHX_ "${ns}::CallbackAlreadyInvoked",${decl},sv_2mortal(newSVpvs("callback-already-invoked"))));
+    `:""}${m.effect==="EIO"?`if (status==3) croak_sv(lbs_failure(aTHX_ "${ns}::Error::${m.name}",${decl},${value(m.error,ns)}));`:""}
     if (status==13) croak_sv(lbs_failure(aTHX_ "${ns}::IOError",${decl},lbs_bytes(aTHX_ out,1)));
     if (status==4) croak_sv(lbs_failure(aTHX_ "${ns}::TaskIOError",${decl},lbs_bytes(aTHX_ out,1)));
     ${fail("delivery")}

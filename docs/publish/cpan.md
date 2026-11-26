@@ -217,6 +217,20 @@ Select the worker and its terminal `IO.Error` in `lean-bridge.exports.json`:
 
 The callback must take one copied primitive and return one copied primitive in `IO`. The compiler checks the argument and reply types; the installed API supplies the worker's callback queue and wakes the Perl loop. The [consumer example](../consume/perl.md#pass-a-callback-to-a-lean-worker) needs neither a polling loop nor an XS wrapper.
 
+For a standalone task, add a named entry to `taskCallbackPolicies` to
+allow at most one invocation of a parameter:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Retained.repeatCall", "parameter": "f", "invocation": "once"}
+]
+```
+
+In this example the second attempt would be refused before Perl ran the
+sub. Concurrent workers for the same task share the allowance. The ordinary
+and reviewed routes check the original Lean binder name. Omit the policy
+to allow repeated calls; it is not a setting for `hostImports` packages.
+
 ### Export resource-bearing tasks and streams
 
 In the [Depot source](../../tests/fixtures/resource-tasks/Depot.lean), `checked` returns `EIO Ticket (Task Ticket)`. Both a successful result and a declared failure carry a ticket. Identify the [shared type](../../tests/fixtures/resource-tasks/Shared.lean) by its full Lean name:

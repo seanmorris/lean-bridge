@@ -1528,6 +1528,7 @@
     "test:dotnet-once-callback": "node --test --test-concurrency=1 tests/helpers/dotnet-budget-installed.mjs",
     "test:jvm-once-callback": "node --test --test-concurrency=1 tests/helpers/jvm-budget-installed.mjs",
     "test:php-native-once-callback": "node --test --test-concurrency=1 tests/helpers/php-native-budget-installed.mjs",
+    "test:perl-once-callback": "node --test --test-concurrency=1 tests/helpers/perl-budget-installed.mjs",
     "test:npm-incoming-function": "node --test --test-concurrency=1 tests/helpers/npm-incoming-installed.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",
     "test:native-immediate-cursor": "node --test --test-concurrency=1 tests/helpers/native-immediate-cursor.mjs",

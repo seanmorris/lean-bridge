@@ -278,7 +278,7 @@ export const reconcileHostExports = options => {
 		const e = metadata.entries.find(e => e.declaration === declaration);
 		const matches = e?.parameters.filter(p => p.name === parameter);
 		const key = declaration + ":" + parameter;
-		if(!(js || zendBudgets || nativePhpBudgets || selection.pythonTaskCallbacks === true || (!ir && (c || cpp || rust || ruby || dotnet || jvm))) || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
+		if(!(js || zendBudgets || nativePhpBudgets || selection.pythonTaskCallbacks === true || (!ir && (c || cpp || rust || ruby || dotnet || jvm || perl))) || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
 			|| policies.has(key) || !["once", "many"].includes(invocation)) fail("Invalid task callback policy: " + key);
 		policies.set(key, invocation);
 	}

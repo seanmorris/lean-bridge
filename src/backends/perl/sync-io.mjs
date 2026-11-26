@@ -8,6 +8,7 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
+import { retainedOnceSlots } from "../native/task-callback.mjs";
 import { perlStringLiteral as q, projectPerlNames } from "./naming.mjs";
 import { perlTaskAssets, taskDeclarations, taskModules, taskXs } from "./task-xs.mjs";
 import { immediateDeclarations, immediateModules, immediateShutdown, immediateXs } from "./direct-xs.mjs";
@@ -33,7 +34,8 @@ const certified = (name, api, evidence) => {
 	const owned=resources.length?heapResourceIdentities({...evidence,resources}):[];
 	const reviewed = reconcileHostExports({ ...evidence, owned, component: api.component, ir: null, review: { source: canonicalJson(api) } });
 	if(!same(reviewed.api,api)) throw new TypeError("Perl IO API differs from source evidence");
-	return generateSyncWire("lbc_perl_" + sha256(name),reviewed.entries,{ tasks, resources: api.types.filter(t=>t.kind==="resource") });
+	const onceByDeclaration=evidence.selection.taskCallbackPolicies?.length && evidence.selection.perlTaskCallbacks===true ? retainedOnceSlots(reviewed.api) : undefined;
+	return generateSyncWire("lbc_perl_" + sha256(name),reviewed.entries,{ tasks, resources: api.types.filter(t=>t.kind==="resource"),onceByDeclaration });
 };
 const hook = (source, needle, replacement) => {
 	if(source.split(needle).length !== 2) throw new TypeError("Missing or ambiguous CPAN installer hook");
@@ -102,6 +104,8 @@ const verify = (api, wire, ns, kinds) => {
 	const stem = "lbwire_lbc_perl_" + sha256(ns) + "_v1";
 	if(wire.clear !== stem + "_clear" || !methods.length || api.declarations.length !== methods.length) throw new TypeError("Invalid CPAN IO wire");
 	const byId=new Map([...kinds.values()].map(r=>[r.id,r.wire]));
+	if(methods.some(m=>m.once) && [...kinds.values()].some(r=>r.name==="CallbackAlreadyInvoked"))
+		throw new TypeError("Resource class collides with the Perl callback policy exception");
 	const type=t=>byId.get(t?.id)??shape(t);
 	const site=(p,raw,argument)=>{
 		const expected=byId.get(p?.type?.id);
@@ -179,7 +183,11 @@ sub message { $_[0]->payload }
 package ${ns}::EIOError;
 our @ISA = ('${ns}::Failure');
 `;
-	return common + methods.filter(m => m.effect === "EIO").map(m => `package ${ns}::Error::${m.name}; our @ISA = ('${ns}::EIOError');`).join("\n")
+	const policy=methods.some(m=>m.once) ? `package ${ns}::CallbackAlreadyInvoked;
+our @ISA = ('${ns}::Failure');
+sub message { $_[0]->payload }
+` : "";
+	return common + policy + methods.filter(m => m.effect === "EIO").map(m => `package ${ns}::Error::${m.name}; our @ISA = ('${ns}::EIOError');`).join("\n")
 		+ "\n" + ["Ok", "Err"].map(k => `package ${ns}::${k};
 sub new { die "Expected one payload\\n" unless @_ == 2; bless {value => $_[1]}, $_[0] }
 sub value { $_[0]->{value} }`).join("\n");

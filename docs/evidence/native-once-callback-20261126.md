@@ -112,3 +112,9 @@ Composer cache. `LEAN_BRIDGE_TEST_PHPS` accepts a JSON array of absolute PHP
 CLI paths with FFI. Use `LEAN_BRIDGE_PHP_NATIVE_BUDGET_KEEP` to retain the
 handoffs, or set `LEAN_BRIDGE_PHP_NATIVE_BUDGET_REPLAY` to an existing
 directory containing both route handoffs. This is not the PHP-Wasm test.
+For CPAN, run `npm run test:perl-once-callback` with the [four Perl
+interpreters and offline Future/IO::Async dependencies](../contributing/testing.md).
+The client checks both prebuilt and installer-generated XS. Set
+`LEAN_BRIDGE_PERL_BUDGET_KEEP` to retain the handoffs, or
+`LEAN_BRIDGE_PERL_BUDGET_REPLAY` to use existing ordinary and reviewed
+distributions.

@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+// The producer can use a single thread. Give the runtime multiple Lean workers for the races.
+putenv('LEAN_NUM_THREADS=4');
 require __DIR__.'/vendor/autoload.php';
 use Amp\Future;
 use Amp\TimeoutCancellation;
