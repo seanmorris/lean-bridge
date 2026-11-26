@@ -24,6 +24,17 @@ returning a number did not let the outer call succeed or either peer
 dispatch again. This is the host-member policy, not the behavior of every
 Rust callable adapter.
 
+**Ruby regression under test:** In an earlier installed Workshop/Peer gem
+pair, a synchronous `read_leaf` call returned `97` after its Ruby member
+caught an exception from a nested `fallback` worker. The worker trap had
+already retired their shared runtime. The outer call should report that
+the runtime is unavailable, not deliver the number. If the Ruby member
+doesn't catch the fatal exception, the caller should receive that original
+exception after Lean unwinds. The [regression client](../../tests/fixtures/ruby-host-workers/error-policy.rb)
+exercises both cases in both load orders. Run `npm run test:ruby-host-workers`
+for fresh ordinary and reviewed gem installs. This regression is not
+counted above until both release routes pass.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

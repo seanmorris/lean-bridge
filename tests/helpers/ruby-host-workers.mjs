@@ -17,7 +17,9 @@ const run = async (command,args,o={}) => {
 	catch(e)
 	{ throw new Error([e.message,e.stdout,e.stderr].filter(Boolean).join("\n"), {cause: e}); }
 };
-test("compiled gems preserve Ruby classes and failures across workers, cursors and two binding scopes", {timeout: 1200000}, async t => {
+test("compiled gems preserve Ruby classes and failures across workers, cursors and two binding scopes", {
+	timeout: process.env.LEAN_BRIDGE_RUBY_HOST_TASK_OUTPUT ? 7_200_000 : 1_200_000
+}, async t => {
 	const keep=process.env.LEAN_BRIDGE_RUBY_HOST_TASK_OUTPUT, root=await mkdtemp(join(keep ?? tmpdir(),"ruby-host-workers-"));
 	if(!keep) t.after(()=>rm(root,{recursive: true,force: true}));
 	const project=join(root,"author"), file=join(project,"lean-bridge.exports.json");
@@ -73,7 +75,35 @@ test("compiled gems preserve Ruby classes and failures across workers, cursors a
 	await rm(project,{recursive: true}); await rm(peerProject,{recursive: true});
 	for(const [name,g] of [["ordinary",first],["reviewed",reviewed]])
 	{
-		const result=await exerciseRubyWorkerGems({root,ruby,primary: g.out,peer: peer.out});
+		const scripts=["consumer.rb","private-tokens.rb","error-policy.rb"];
+		const result=await exerciseRubyWorkerGems({root,ruby,primary: g.out,peer: peer.out,scripts});
+		if(keep)
+		{
+			const releases=[];
+			for(const out of [g.out,peer.out])
+			{
+				const raw=await readFile(join(out,"package-set-receipt.json")), r=JSON.parse(raw);
+				const ev=await json(join(out,"host-export-evidence.json")), [pkg]=r.packages;
+				assert.equal(ev.sourceTreeSha256,r.source.treeSha256);
+				const api=await json(join(out,"binding-ir.json"));
+				for(const target of ["mapped","reject"])
+				{
+					const fn=api.declarations.find(d=>d.name===target);
+					assert.equal(fn.source.extensions["lean-lang.org/effect"],"EIO");
+					assert.equal(fn.failure.unexpected,"poison-runtime");
+					assert.equal(fn.failure.mode,"declared");assert.equal(fn.failure.errors.length,1);
+				}
+				assert.equal(Boolean(ev.reviewedSourceSha256),out===reviewed.out);
+				releases.push({name: pkg.name,receipt: sha256(raw)
+					, archive: pkg.artifacts[0].sha256, runtime: pkg.runtimeIdentity
+					, bindingIr: r.profiles[0].bindingIrSha256
+					, source: ev.sourceTreeSha256, reviewed: ev.reviewedSourceSha256});
+			}
+			const clientSha256=sha256(await readFile("tests/fixtures/ruby-host-workers/error-policy.rb"));
+			const policy=result.filter(s=>s.includes("nested fatal, dispatch 1/1"));
+			assert.equal(policy.length,4);
+			await writeFile(join(root,name+".error-policy.json"),canonicalJson({route: name,releases,clientSha256,policy}));
+		}
 		result.forEach(line=>t.diagnostic(name+" "+line));
 	}
 });

@@ -93,14 +93,25 @@ const member = (resources, r, d, i) => {
 		, c: `static VALUE lb_member_${i}(VALUE arg) {
     lb_call *a=(lb_call *)arg; VALUE v[${Math.max(1, sites.length)}];
     ${kinds.map((k, j) => "v[" + j + "]=" + k.to("a->values[" + j + "]") + ";").join("\n    ")}
+    lb_require_ready();
     VALUE answer=rb_funcallv_public(${self ? "v[0]" : "lb_rh_type(session," + owner + ")"},rb_intern(${text(name)}),${params.length},${params.length ? "v+" + n : "NULL"});
+    if (!lb_ready()) return Qnil;
     ${d.kind === "property" && params.length ? "(void)answer; a->io=lean_io_result_mk_ok(lean_box(0));" : "a->io=lean_io_result_mk_ok(" + admitted + ");"} return Qnil;
 }
 lean_object *${sym}(${kinds.map((k, j) => k.c + " p" + j).join(",") || "void"}) {
     lb_call a={0}; int state=0;
     ${kinds.map((k, j) => "a.values[" + j + "]=" + k.box("p" + j) + ";").join(" ")}
     if (!top) a.io=lean_io_result_mk_error(lean_mk_io_user_error(lean_mk_string("no active Ruby call")));
-    else { rb_protect(lb_member_${i},(VALUE)&a,&state); if(state) a.io=lb_rh_fault_result(top,state); }
+    else if (!lb_ready()) a.io=lb_unavailable();
+    else {
+        rb_protect(lb_member_${i},(VALUE)&a,&state);
+        if (state && lb_ready()) a.io=lb_rh_fault_result(top,state);
+        if (!lb_ready()) {
+            if (state) lb_keep_retired_exception();
+            if (a.io) lean_dec(a.io);
+            a.io=lb_unavailable();
+        }
+    }
     ${kinds.flatMap((k, j) => k.c !== "lean_object *" || sites[j].ownership !== "borrow" ? ["lean_dec(a.values[" + j + "]);"] : []).join(" ")}
     return a.io;
 }`};
@@ -125,9 +136,11 @@ const entry = (resources, e, i, immediate, custom={}) => {
 		, c: `static VALUE lb_entry_${i}(VALUE data) {
     lb_call *a=(lb_call *)data;
     ${args.map((k, j) => "a->values[" + j + "]=" + k.from("a->args[" + j + "]") + ";").join("\n    ")}
+    lb_require_ready();
     ${args.flatMap((k, j) => k.i === undefined ? [] : ["lb_rh_admit(a->values[" + j + "]);"]).join(" ")}
     ${args.flatMap((k, j) => k.c === "lean_object *" ? ["lean_inc(a->values[" + j + "]);"] : []).join(" ")}
     a->io=${symbol}(${args.map((k, j) => k.unbox("a->values[" + j + "]")).join(",")});
+    lb_require_ready();
     lean_object *v=lean_ctor_get(a->io,0);
     if (!lean_io_result_is_ok(a->io)) {
         VALUE original=lb_rh_original(top,v);
@@ -219,6 +232,20 @@ static void lb_worker_sweep(void) {
     }
 }` : ""}
 static _Thread_local lb_rh_frame *top;
+/* Keep an uncaught exception from an already-retired nested call until Lean
+ * returns. Do not invoke its Ruby formatter or unwind through Lean frames. */
+static _Thread_local volatile VALUE *lb_retired_exception;
+static int lb_ready(void) { return lean_bridge_native_component_ready("rubyhost:${identity}"); }
+static void lb_require_ready(void) { if (!lb_ready()) rb_raise(rb_eRuntimeError,"Lean component unavailable"); }
+static inline lean_object *lb_unavailable(void) {
+    return lean_io_result_mk_error(lean_mk_io_user_error(lean_mk_string("Lean component unavailable")));
+}
+static inline void lb_keep_retired_exception(void) {
+    VALUE e=rb_errinfo();
+    if (lb_retired_exception && NIL_P(*lb_retired_exception) && RB_TYPE_P(e,T_OBJECT) && rb_obj_is_kind_of(e,rb_eException))
+        *lb_retired_exception=e;
+    rb_set_errinfo(Qnil);
+}
 static VALUE declared_error,io_error,unit,ok_value,err_value;
 static VALUE rb_structured(VALUE klass,VALUE value) { return rb_funcallv_public(klass,rb_intern("new"),1,&value); }
 static const lb_rh_spec specs[]={${resources.map(r => "{" + text(domainKey(ir, r)) + "," + Number(r.host.identity === "strong-canonical") + "}").join(",")}};
@@ -236,11 +263,15 @@ static VALUE unbind(VALUE mod) { (void)mod;${workerObjects || closures ? `
     ${workerObjects?"lb_ruby_worker_end(); lb_worker_sweep(); binding_fiber=Qnil;":""}${closures?" collect_tickets(1);":""}` : ""} lb_rh_unbind(&session); return Qnil; }
 static VALUE count(VALUE mod) { (void)mod; return SIZET2NUM(lb_rh_live()); }
 static VALUE lb_invoke(VALUE (*fn)(VALUE),VALUE *args) {
-    lb_rh_owner(); if(!lean_bridge_native_component_ready("rubyhost:${identity}")) rb_raise(rb_eRuntimeError,"Lean component unavailable");
+    lb_rh_owner(); lb_require_ready();
     lb_rh_frame f,*previous=top; lb_rh_enter(session,&f); top=&f;${closures?" collect_tickets(0);":""}
+    volatile VALUE escaped=Qnil; volatile VALUE *prior_exception=lb_retired_exception; lb_retired_exception=&escaped;
     int state=0; lb_call a={.args=args}; VALUE result=rb_protect(fn,(VALUE)&a,&state);
     if(a.msg) lean_dec(a.msg); if(a.io) lean_dec(a.io); for(unsigned i=0;i<${arity};i++) if(a.values[i]) lean_dec(a.values[i]);
-    top=previous; lb_rh_leave(&f); if(state) rb_jump_tag(state); return result;
+    top=previous; lb_retired_exception=prior_exception; lb_rh_leave(&f);
+    if(!NIL_P(escaped)) rb_exc_raise(escaped);
+    if(state) rb_jump_tag(state);
+    lb_require_ready(); return result;
 }
 ${members.map(m => m.c).concat(exports.map(e => e.c)).join("\n")}${workerObjects ? '\nstatic const char *const worker_keys[]={' + kinds.map(r => text(r.hash)).join(",") + '};\n#include "worker-host-leases.h"' : ""}
 __attribute__((visibility("default"))) void Init_${extension}(void) {

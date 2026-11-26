@@ -35,10 +35,18 @@ export const exerciseRubyWorkerGems=async options=>{
 		const observations=[];
 		for(const script of scripts)
 		{
-			assert.ok(["consumer.rb","private-tokens.rb"].includes(script));
+			assert.ok(["consumer.rb","private-tokens.rb","error-policy.rb"].includes(script));
 			await copyFile(new URL("../fixtures/ruby-host-workers/"+script,import.meta.url),join(scratch,script));
-			const {stdout,stderr}=await run(ruby,[script],{cwd: scratch,env: {PATH: "/no-producer-tools",GEM_HOME: moved,GEM_PATH: moved,LEAN_NUM_THREADS: "1"},timeout: 60000});
-			assert.equal(stderr,"");assert.match(stdout,/Ruby worker:/u);observations.push(stdout.trim());
+			const modes=["forward","reverse"].flatMap(order=>["catch","propagate"].map(mode=>[order,mode]));
+			for(const args of script==="error-policy.rb"?modes:[[]])
+			{
+				const env={PATH: "/no-producer-tools",GEM_HOME: moved,GEM_PATH: moved,LEAN_NUM_THREADS: "1"};
+				const {stdout,stderr}=await run(ruby,[script,...args],{cwd: scratch,env,timeout: 60000});
+				assert.equal(stderr,"");
+				if(script==="error-policy.rb") assert.equal(stdout.trim(),"Ruby worker: "+args.join(" ") + ", sole owner 23->42 then collected, nested fatal, dispatch 1/1, live=0");
+				else assert.match(stdout,/Ruby worker:/u);
+				observations.push(stdout.trim());
+			}
 		}
 		return observations;
 	} finally

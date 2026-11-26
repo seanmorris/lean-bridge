@@ -106,6 +106,12 @@ ensure
 end
 ```
 
+When the package also exposes a borrowed input record, you can supply your
+own Ruby function. For example, `TariffInput.new(quote: ->(n) { n + 40 })`
+can be passed to `apply_tariff_with_host_fields`. Lean can call the function
+during that call; returning the record does not keep the callable alive.
+See the [Ruby input-record example](../evidence/host-callback-input-records-20261126.md#ruby-callers).
+
 A synchronous export may return your object in an `Ok` or `Err`, or raise
 `api::DeclaredError` with the object in `payload`. Read the active arm of a
 nested result through `value`. These are ordinary Ruby references: they still
