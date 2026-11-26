@@ -138,13 +138,21 @@ test("CLI builds ordinary and reviewed Python host packages and pip consumes the
 	for(const name of files) await copyFile(join(fixture, name), join(project, name));
 	const run = async (...args) => {
 		const { stdout } = await exec(process.execPath, [cli, ...args, "--format", "json"], { cwd: root, env }).catch(error => {
-			throw new Error(`${error.message}\n${error.stdout}\n${error.stderr}`);
+			const report = error.stdout?.trim().startsWith("{") ? JSON.parse(error.stdout) : null;
+			throw Object.assign(new Error(`${error.message}\n${error.stdout}\n${error.stderr}`), {report});
 		});
 		return JSON.parse(stdout);
 	};
 	let publicApi, interfaces;
 	const retained = new Map();
-	await assert.rejects(run("build", "--project", project, "--target", "pypi", "--target", "c", "--output", join(root, "invalid")), /Host imports require a single [^\n]* target/u);
+	await assert.rejects(run("build", "--project", project, "--target", "pypi", "--target", "c", "--output", join(root, "invalid")), error => {
+		const report = error.report;
+		assert.equal(report.status, "failed");
+		assert.deepEqual(report.selection.targets, ["c", "pypi"]);
+		assert.deepEqual(report.diagnostics.map(d => d.code), ["invalid-host-project"]);
+		assert.match(report.diagnostics[0].message, /host imports.*(?:one|single).*target/iu);
+		return true;
+	});
 	await assert.rejects(access(join(root, "invalid")), { code: "ENOENT" });
 	for(const route of ["ordinary", "reviewed"])
 	{
