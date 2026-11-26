@@ -10,6 +10,7 @@ import {cHostRecords} from "../../src/backends/c/host-records.mjs";
 import {cppHostRecords} from "../../src/backends/cpp/host-records.mjs";
 import {cppHostCodecs} from "../../src/backends/cpp/host-codecs.mjs";
 import {rustHostFacade} from "../../src/backends/rust/host-facade.mjs";
+import {perlHostRecords} from "../../src/backends/perl/host-records.mjs";
 import {lowerWordHostRecord} from "../../src/backends/native/word-host-records.mjs";
 
 const box = {id: "host:meter.Box", name: "Box"};
@@ -40,7 +41,7 @@ test("public host records use the compiler's projections and declared host ident
 });
 
 test("a synchronous object-field admission cannot enable async or a different host", () => {
-	for(const change of [{hostModule: "LeanBridge.Host.Perl"}, {nativeEffectPolicy: null}, {taskExports: ["Workshop.read"]}])
+	for(const change of [{hostModule: "LeanBridge.Host.Perl", perlTaskObjects: true}, {nativeEffectPolicy: null}, {taskExports: ["Workshop.read"]}])
 		assert.throws(() => hostRecordTypes([site(record)], {...selection, ...change}, [box]), /not a synchronous host-bound export/u);
 	for(const change of [{module: "Other"}, {effect: "EIO"}, {delivery: "iterator"}])
 		assert.throws(() => hostRecordTypes([{...site(record), ...change}], selection, [box]), /not a synchronous host-bound export/u);
@@ -55,6 +56,38 @@ test("native PHP records require the native owner and cannot enter Zend or sched
 		, {asyncIterators: ["Station.open"]}
 	])
 		assert.throws(() => hostRecordTypes([site(record)], {...php, ...change}, [box]), /not a synchronous host-bound export/u);
+});
+
+test("Perl host records reserve error classes and public methods before generating XS", () => {
+	const row = (name, keys) => {
+		const declaration = "Workshop." + name;
+		const fields = keys.map(key => ({name: key, projection: declaration + "." + key, type: {kind: "named", id: box.id}}));
+		return {...record, declaration, constructor: declaration + ".mk", fields};
+	};
+	const emit = (...rows) => perlHostRecords(rows.map(site), [box], "LeanBridge::Gauge");
+	for(const name of ["Failure", "IOError", "EIOError", "Runtime", "Returned"])
+		assert.throws(() => emit(row(name, ["meter"])), /Colliding Perl host record class/u);
+	for(const keys of [["close"], ["new"], ["can"], ["DESTROY"], ["firstBox", "first_box"]])
+		assert.throws(() => emit(row("Pair", keys)), /Colliding Perl host record field/u);
+	const pair = row("Pair", ["firstBox", "secondBox"]);
+	assert.throws(() => emit(pair, {...pair, fields: [...pair.fields].reverse()}), /Inconsistent Perl host record fields/u);
+	assert.throws(() => emit(pair, {...pair, declaration: "Other.Pair"}), /Colliding Perl host record class/u);
+	const model = emit(pair, row("Rack", ["owner"]), pair);
+	assert.equal(model.schemas.size, 2);
+	assert.match(model.xs, /PACKAGE = LeanBridge::Gauge::Pair/u);
+	assert.match(model.xs, /first_box\(self\)/u);
+	const unsupported = row("Rack", ["bad"]); unsupported.fields[0].type.id = "other:Box";
+	assert.throws(() => emit(unsupported), /unsupported member site/u);
+});
+
+test("Perl lowers only validated projections and caps the whole call, not each record", () => {
+	const perl = {...selection, hostModule: "LeanBridge.Host.Perl"};
+	assert.equal(hostRecordTypes([site(record)], perl, [box])[0].representation, "owned");
+	const wide = {...record, fields: Array.from({length: 33}, (_, i) => ({...record.fields[0], name: "f" + i, projection: "Workshop.Rack.f" + i}))};
+	const lower = (...args) => lowerWordHostRecord({...site(record), declaration: "Workshop.call", parameters: args.map(type => ({type}))}, "perl", () => "Box");
+	assert.equal(lower(wide).flat.length, 33);
+	assert.throws(() => lower(wide, wide), /64 flattened/u);
+	assert.throws(() => lower({...record, fields: [{...record.fields[0], projection: "Other.Rack.primaryMeter"}]}), /invalid fields or projections/u);
 });
 
 test("record properties and class names cannot shadow generated Python conversions", () => {

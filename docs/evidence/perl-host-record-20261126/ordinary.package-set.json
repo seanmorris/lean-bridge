@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "gauge@1.0.0",
+    "name": "gauge",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 175256,
+          "path": "archives/LeanBridge-Gauge-0.001.tar.gz",
+          "sha256": "25eb3a4a088c6adb0106b8435695933d5a3f63ece43bef19c1f8fe80a8ee3d0e"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Gauge",
+      "profile": "native-perl-host-v1",
+      "requires": [
+        {
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cpan",
+      "version": "0.001"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51422277,
+          "path": "archives/LeanBridge-Runtime-0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471.tar.gz",
+          "sha256": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Runtime",
+      "profile": "native-perl-host-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cpan",
+      "version": "0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "af1633e8ff20ffb9e01c5d72afea2a04b385d3d9ac47ebcdb088da568b97ccc2",
+      "id": "native-perl-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "43d06fcdeaebb33e8f839fdd480a129ce44a4db766680a3d476321158c05425f"
+  }
+}

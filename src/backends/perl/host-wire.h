@@ -13,6 +13,15 @@ enum {
   PH_FLOAT32, PH_FLOAT64, PH_NOMINAL=64
 };
 static void ph_drop_lean(pTHX_ void *o) { PERL_UNUSED_CONTEXT; lean_dec((lean_object *)o); }
+/* Math::BigInt::bstr may return an integer scalar for a small value. Use
+   Perl's string view of the validated decimal, not its public POK flag. */
+static const char *ph_integer_bytes(pTHX_ SV *value,int natural,STRLEN *length) {
+  SV *text=lbp_bigint_text(aTHX_ value,natural);
+  if (SvROK(text)) croak("invalid Perl host integer text");
+  const char *digits=SvPV(text,*length);
+  if (*length>LBS_MAX) croak("invalid Perl host integer text");
+  return digits;
+}
 static SV *ph_out(pTHX_ lbp_host_session *s, int k, b_lean_obj_arg v) {
   if (k>=PH_NOMINAL) return lbp_host_object(aTHX_ s,k-PH_NOMINAL,v);
   switch(k) {
@@ -78,9 +87,8 @@ static lean_object *ph_in(pTHX_ lbp_host_session *s,int k,SV *v,SV *anchor) {
       return bytes;
     }
     case PH_NAT: case PH_INT: {
-      SV *text=lbp_bigint_text(aTHX_ v,k==PH_NAT);
-      if (SvROK(text) || !SvPOK(text) || SvCUR(text)>LBS_MAX) croak("invalid Perl host integer text");
-      return k==PH_NAT ? lean_cstr_to_nat(SvPVX(text)) : lean_cstr_to_int(SvPVX(text));
+      STRLEN length; const char *digits=ph_integer_bytes(aTHX_ v,k==PH_NAT,&length);
+      return k==PH_NAT ? lean_cstr_to_nat(digits) : lean_cstr_to_int(digits);
     }
     default: croak("unknown Perl host carrier");
   }

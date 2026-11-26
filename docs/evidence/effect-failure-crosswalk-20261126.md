@@ -120,6 +120,12 @@ partway through a compiled record result. Both authoring routes leave the
 binding usable. Disposal and strict object identity are observable here;
 the Rust weak-pointer observation is not a JavaScript GC guarantee.
 
+On all four [Perl configurations](perl-host-record-fields-20261126.md), an
+invalid second argument caused no member call. A failed output conversion
+released the intermediate meter, as observed through a weak reference, and
+left an existing closure usable. A thrown application exception reached the
+caller unchanged. Neither case is a declared EIO error containing a record.
+
 The [capabilities index](host-worker-qualification-20261125.md#which-installed-profiles-exercised-os-access)
 records which profiles permit real OS effects and which refuse to package
 them. Do not infer a filesystem grant from an in-memory test. Likewise, a

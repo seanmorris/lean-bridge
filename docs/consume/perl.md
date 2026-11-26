@@ -121,6 +121,32 @@ print $meter->read, "\n";  # 42
 
 `$meter` is the original blessed Perl object, not a handle. The binding closes on return or exception. A new call into these Lean functions needs a new block. If a Perl method dies and Lean propagates that IO error unchanged, the caller receives the original exception. If Lean maps it to a declared `EIO` error, the caller receives the generated exception and its payload.
 
+### Pass a record containing Perl objects
+
+A package can export a record class such as `LeanBridge::Gauge::Pair`. Its
+constructor takes the fields in declaration order. Using the `App::Meter`
+class above:
+
+```perl
+use Math::BigInt;
+use LeanBridge::Gauge;
+
+my ($left, $right) = (App::Meter->new(7), App::Meter->new(4));
+my $output = LeanBridge::Gauge::with_hosts({Box => 'App::Meter'}, sub {
+    my $row = LeanBridge::Gauge::Pair->new($left, pack('C', 1), Math::BigInt->new(42), $right);
+    return LeanBridge::Gauge::flip($row);
+});
+my $meter = $output->lead;       # the original $right object
+$output->close;
+print $meter->read, "\n";        # 4
+```
+
+The record holds ordinary Perl references. It can outlive the block, and
+closing it does not close an object you already retrieved. Byte strings
+and `Math::BigInt` fields are copied: changing a getter result does not
+change the stored value. Use a fresh `with_hosts` block to pass a retrieved
+meter to another component.
+
 ### Call a returned Lean function on a Perl object
 
 If your package exports a function factory such as

@@ -20,7 +20,7 @@ const reject = why => { throw new TypeError("Invalid native host record: " + why
 export const lowerWordHostRecord = (entry, target, lean) => {
 	const parameters = entry.parameters.map(p => p.type), result = entry.result;
 	if(![...parameters, result].some(isRecord)) return null;
-	if(!["php", "dotnet", "jvm", "c", "cpp", "rust", "javascript"].includes(target) || entry.effect !== "IO" || entry.delivery) reject("expected a synchronous record-capable host");
+	if(!["php", "dotnet", "jvm", "c", "cpp", "rust", "javascript", "perl"].includes(target) || entry.effect !== "IO" || entry.delivery) reject("expected a synchronous record-capable host");
 	for(const t of [...parameters, result].filter(isRecord))
 	{
 		if(!qualified(t.declaration) || !qualified(t.constructor) || !t.constructor.startsWith(t.declaration + ".")
@@ -32,7 +32,7 @@ export const lowerWordHostRecord = (entry, target, lean) => {
 	const flat = [];
 	const arg = t => { const n = flat.length; flat.push(t); return "v" + n; };
 	const args = parameters.map(t => isRecord(t) ? "(_root_." + t.constructor + " " + t.fields.map(f => arg(f.type)).join(" ") + ")" : arg(t));
-	if(["c", "cpp", "rust", "javascript"].includes(target) && flat.length > 64) reject("host exports support at most 64 flattened input fields");
+	if(["c", "cpp", "rust", "javascript", "perl"].includes(target) && flat.length > 64) reject("host exports support at most 64 flattened input fields");
 	const body = "(_root_." + entry.declaration + (args.length ? " " + args.join(" ") : "") + ")";
 	if(!isRecord(result)) return {flat, call: body};
 	const tuple = result.fields.reduceRight((tail, f) => "(" + lean(f.type) + " × " + tail + ")", "_root_.Unit");

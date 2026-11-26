@@ -2,6 +2,8 @@
 import { perlHostCarrier, perlNativeHostMembers } from "./host-native-members.mjs";
 import { perlHostWorkerApi } from "./host-worker-api.mjs";
 import { projectPerlNames } from "./naming.mjs";
+import {perlHostRecords} from "./host-records.mjs";
+import {lowerWordHostRecord} from "../native/word-host-records.mjs";
 
 const fail = why => { throw new TypeError("Perl host exports: "+why); };
 const qual = /^(?:[A-Za-z][A-Za-z0-9_]*\.)*[A-Za-z][A-Za-z0-9_]*$/u;
@@ -35,6 +37,8 @@ export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker
 	const model=perlNativeHostMembers(ir,name,identity,true), {prefix}=model, types=ir.types;
 	const fields=[], trampolines=[], renames=[], initializers=[], header=[], interfaceDecl=[], native=[], leans=[], xs=[];
 	const allowed=projectPerlNames(name,entries);
+	const records=perlHostRecords(entries,types,name);
+	if(worker && records.schemas.size) fail("record fields require a synchronous owner");
 	// Perl's method lookup and the lexical binding API reserve these names
 	// for both synchronous functions and event-loop entry points.
 	for(const m of worker?.wire.methods??[]) if(reserved.has(m.name)) fail("unsupported operation "+m.name);
@@ -69,10 +73,23 @@ export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker
 			|| d.parameters.length>64 || d.delivery || !["IO","EIO","pure","BaseIO"].includes(d.effect) || (d.effect==="pure" && !sum(d.result))) fail("unsupported operation "+d.name);
 		const inside=apply!==undefined,factory=!inside && d.result.kind==="io-closure",result=inside?d.result.reply:d.result;
 		if(d.result.kind==="io-closure" && d.effect!=="IO")fail("returned function requires a synchronous IO factory");
-		const refs=inside?[d.result,d.result.argument]:d.parameters.map(p=>p.type);
+		const lowered=!inside && lowerWordHostRecord(d,"perl",t=>leanType(types,t));
+		const pub=inside?[d.result,d.result.argument]:d.parameters.map(p=>p.type);
+		const refs=lowered?lowered.flat:pub;
+		const inputDecl=[], source=[];
+		if(lowered) for(const [k,t] of pub.entries())
+		{
+			const desc=records.schemas.get(t.declaration);
+			if(!desc)
+			{source.push("v"+k);continue;}
+			inputDecl.push("AV *row"+k+"=phr_borrow(aTHX_ &"+desc.symbol+",v"+k+");");
+			for(const [j] of desc.fields.entries()) source.push("phr_field(aTHX_ row"+k+","+j+")");
+		}
+		const publicArgs=pub.map((_,j)=>"v"+j);
+		const outputRow=records.schemas.get(result.declaration);
 		const sites=refs.map(t=>t.kind==="io-closure"?{fn: true,i: -1,c: "lean_object *",unbox: x=>x}:perlHostCarrier(types,t)),argv=indices(sites),params=argsOf(sites,true);
-		const eio=d.effect==="EIO",ret=factory?arrow(result):leanType(types,result),pkg=name+"::Returned::"+d.name;
-		const symbol=prefix+"call_"+i, inner="ph_lean_entry_"+i, call=inside?"(v0 v1)":"(_root_."+d.declaration+(sites.length?" "+argv.join(" "):"")+")";
+		const eio=d.effect==="EIO",ret=outputRow?lowered.tuple:factory?arrow(result):leanType(types,result),pkg=name+"::Returned::"+d.name;
+		const symbol=prefix+"call_"+i, inner="ph_lean_entry_"+i, call=inside?"(v0 v1)":lowered?lowered.call:"(_root_."+d.declaration+(sites.length?" "+argv.join(" "):"")+")";
 		leans.push(`@[export ${inner}] def invoke${i} ${refs.map((t,j)=>"(v"+j+" : "+(t.kind==="io-closure"?arrow(t):leanType(types,t))+")").join(" ")} : IO ${eio?"(_root_.Except "+leanType(types,d.error)+" "+ret+")":ret} := ${({IO: "",EIO: "EIO.toIO' ",pure: "pure ",BaseIO: "liftM "})[d.effect]}${call}`);
 		header.push(`extern lean_object *${inner}(${params||"void"});`);
 		const signature=`lean_object *${symbol}(const ph_methods *tbl${params?", "+params:""})`;
@@ -85,15 +102,15 @@ export const generatePerlHostExports = ({ir,entries,modules,name,identity,worker
 		const start=inside?`XS_INTERNAL(phf_apply_${apply}) {
     dXSARGS; if (items!=1) croak("returned Perl function requires one argument");
     SV *v1=ST(0);`:`void
-${d.name}(${argv.join(", ")})
-${argv.map(v=>"    SV *"+v).join("\n")}
+${d.name}(${publicArgs.join(", ")})
+${publicArgs.map(v=>"    SV *"+v).join("\n")}
   PPCODE:`;
 		const emitted=`${start}
     lbp_check_interpreter(aTHX);${factory||inside?"\n    SV *published=sv_2mortal(newSV(0));":""}
     ENTER; SAVETMPS; lbp_host_enter(aTHX_ ph_session);
     if (!ph_ready()) croak("Lean component unavailable");
     ph_frame *f=ph_enter(aTHX_ ph_slots); f->session=ph_session;
-    ${sites.map((s,j)=>`SSGROW(4); lean_object *a${j}=${s.fn?"phf_retain(aTHX_ cv,"+apply+")":"ph_in(aTHX_ ph_session,"+s.tag+",v"+j+",NULL)"}; SAVEDESTRUCTOR_X(ph_drop_lean,a${j});`).join("\n    ")}
+    ${lowered?["size_t budget=LBS_MAX;",...inputDecl].join("\n    ")+"\n    ":""}${sites.map((s,j)=>`SSGROW(4); lean_object *a${j}=${s.fn?"phf_retain(aTHX_ cv,"+apply+")":"ph_in(aTHX_ ph_session,"+s.tag+","+ (lowered?source[j]:"v"+j)+",NULL)"}; SAVEDESTRUCTOR_X(ph_drop_lean,a${j});${lowered?" phr_charge_value(aTHX_ &budget,"+s.tag+",a"+j+");":""}`).join("\n    ")}
     lbp_check_interpreter(aTHX);
     if (!ph_ready()) croak("Lean component unavailable after argument conversion");
     SSGROW(4);
@@ -110,7 +127,7 @@ ${argv.map(v=>"    SV *"+v).join("\n")}
     }
     ${eio?`int ok=lean_obj_tag(v)==1; v=lean_ctor_get(v,0);
     if (!ok) croak_sv(lbs_failure(aTHX_ "${name}::Error::${d.name}","${d.declaration}",${output(d.error,"v")}));`:""}
-    ${factory?'sv_setsv(published,phf_publish(aTHX_ '+i+',"'+pkg+'",phf_apply_'+i+',v));':inside?"sv_setsv(published,"+output(result,"v")+");":"SV *answer=newSVsv("+output(result,"v")+");"}
+    ${factory?'sv_setsv(published,phf_publish(aTHX_ '+i+',"'+pkg+'",phf_apply_'+i+',v));':inside?"sv_setsv(published,"+output(result,"v")+");":"SV *answer=newSVsv("+(outputRow?"phr_result(aTHX_ &"+outputRow.symbol+",ph_session,v,&budget)":output(result,"v"))+");"}
     FREETMPS; LEAVE; SPAGAIN; SP=PL_stack_base+ax-1; XPUSHs(${factory||inside?"published":"sv_2mortal(answer)"});${inside?" PUTBACK;\n}":""}
 `;
 		(inside?applyXS:xs).push(emitted);
@@ -167,7 +184,7 @@ static const lbp_host_spec ph_specs[]={${model.kinds.map(k=>"{"+JSON.stringify(k
 #define PH_CAPTURE "${name}::_HostMembers::_capture"
 #define ph_start ${prefix}start
 #define ph_ready() lean_bridge_native_component_ready("${identity}")
-${workerPrelude}#include "host-scope.h"
+${records.header}${workerPrelude}#include "host-scope.h"
 ${applyXS.length?applyXS.join("\n")+"\n":""}
 MODULE = ${name}    PACKAGE = ${name}
 PROTOTYPES: DISABLE
@@ -188,5 +205,5 @@ ${xs.join("\n")}${worker?"\n\nvoid\n_retire_scoped_workers()\n  PPCODE:\n    lbp
 		, ...leans
 		, "end BridgePerlExports"
 		, ""].join("\n");
-	return {entryLean,interfaceHeader,leanHeader,component,xsSource,symbols,implementation: model.implementation+(async?"\n"+async.module:"")+(packages.length?"\n"+packages.join("\n"):"")};
+	return {entryLean,interfaceHeader,leanHeader,component,xsSource: records.xs?xsSource+"\n"+records.xs:xsSource,symbols,implementation: model.implementation+(async?"\n"+async.module:"")+(packages.length?"\n"+packages.join("\n"):"")};
 };

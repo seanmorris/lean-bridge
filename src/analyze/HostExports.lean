@@ -163,6 +163,7 @@ def hostRecord? (r : Request) (e : Expr) : MetaM (Option Json) := do
       r.hostModule == some "LeanBridge.Host.Dotnet" || r.hostModule == some "LeanBridge.Host.Jvm" ||
       r.hostModule == some "LeanBridge.Host.C" || r.hostModule == some "LeanBridge.Host.Cpp" || r.hostModule == some "LeanBridge.Host.Rust" ||
       (r.hostModule == some "LeanBridge.Host.Javascript" && r.javascriptThreadedHostMembers.isNone) ||
+      (r.hostModule == some "LeanBridge.Host.Perl" && r.perlTaskObjects.isNone) ||
       (r.hostModule == some "LeanBridge.Host.Php" && r.phpNativeFunctions == some true))
       && r.nativeEffectPolicy == some "native-host-io-v1"
       && !r.resources.isEmpty && r.taskExports.isEmpty && r.asyncIterators.isEmpty && r.iterators.isEmpty do

@@ -123,9 +123,11 @@ binding. The peer increments the original meter and keeps the last owner alive.
 The [five npm programs](javascript-host-record-fields-20261126.md) exercise
 the independent peer in Node JavaScript, executed strict TypeScript, a
 Chromium page, mounted React and a dedicated browser worker.
-That is **14 of 17 profiles** with an installed caller-constructed
-application-object record on both routes. The three still to verify for this
-case are Perl, WIT/WASI and PHP-Wasm. The surrounding JavaScript is not an
+The [installed Perl clients](perl-host-record-fields-20261126.md) pass a meter
+from the returned record to an independent CPAN package and observe its final release.
+That is **15 of 17 profiles** with an installed caller-constructed
+application-object record on both routes. The two still to verify for this
+case are WIT/WASI and PHP-Wasm. The surrounding JavaScript is not an
 installed Zend interpreter test. This count is not a percentage of #1221.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.

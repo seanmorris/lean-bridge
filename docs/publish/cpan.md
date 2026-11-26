@@ -96,6 +96,28 @@ lean-bridge build --project tests/fixtures/perl-host-project --target cpan --out
 
 This produces a `native-perl-host-v1` component and its exact shared runtime distribution. Publish the two archives as described [below](#publish-to-cpan). The application [binds its own Perl class](../consume/perl.md#supply-a-perl-class-to-lean). Calls to the object's members run on the initiating interpreter thread.
 
+### Export a record that holds Perl objects
+
+Use a flat Lean structure containing at least one imported host object in a
+synchronous `IO` argument or result. Its other fields may be copied scalars:
+
+```lean
+structure Pair where
+  lead : Box
+  sample : ByteArray
+  sequence : Nat
+  spare : Box
+
+def flip (pair : Pair) : IO Pair := do
+  let n ← pair.lead.read
+  return ⟨pair.spare, pair.sample.push n.toUInt8, pair.sequence + 1, pair.lead⟩
+```
+
+Select the function by its qualified name in `exports`. Lean supplies the
+constructor and projections; the Perl author does not declare memory
+offsets. A reviewed API must preserve the field names, order and ownership.
+The consumer receives a [generated Perl record class](../consume/perl.md#pass-a-record-containing-perl-objects).
+
 ### Export an immediate iterator
 
 For a synchronous pull, select the constructor under `exports` and its

@@ -1,7 +1,7 @@
 /** @file Build the Perl-independent Lean component once, before compiling any Perl XS. */
 import {mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
 import {join,resolve} from "node:path";
-import {hashBindingIr} from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {generatePerlHostExports} from "../backends/perl/host-exports.mjs";
 import {validatePerlIOSettings} from "../backends/perl/sync-io.mjs";
@@ -15,9 +15,11 @@ import {processBuildRunner} from "./process-runner.mjs";
  *
  * @param worker - Include the owner-only worker ingress and shutdown hook.
  * @param functions - Include lexical revocation for returned functions over host objects.
+ * @param records - Include private storage and conversion for public host-object records.
  */
-export const perlHostHeaders = async (worker=null,functions=false) => {
+export const perlHostHeaders = async (worker=null,functions=false,records=false) => {
 	const headers={};
+	if(records) headers["host-records.h"]=await readFile(new URL("../backends/perl/host-records.h",import.meta.url));
 	for(const f of ["host-frame.h","host-scope.h","host-wire.h","sync-wire.h","host-domain.h"])
 		headers[f]=await readFile(new URL("../backends/perl/"+f,import.meta.url));
 	if(functions)
@@ -88,7 +90,7 @@ export const compilePerlHostComponent = async o => {
 		const {entries,objects,evidence,api,env}=checked;
 		const options={ir,entries,modules: projectContract.modules,name,version,api,evidence,runtimeIdentity};
 		const kernel=mixed?await perlHostTaskKernel({...options,checked}):null;
-		const headers=await perlHostHeaders(kernel,entries.some(e=>e.result.kind==="io-closure")), componentIdentity=perlHostComponentIdentity(options,headers,kernel);
+		const headers=await perlHostHeaders(kernel,entries.some(e=>e.result.kind==="io-closure"),api.schemaVersion===4), componentIdentity=perlHostComponentIdentity(options,headers,kernel);
 		const generated=generatePerlHostExports({...options,entries: entries.filter(e=>!e.delivery),identity: componentIdentity,worker: kernel});
 		const library="liblbc_perl_"+sha256(name)+".so";
 		const save=(p,s)=>writeFile(join(app,p),s,{flag: "wx"});
@@ -140,7 +142,7 @@ export const compilePerlHostComponent = async o => {
 			if(+m[1]>2 || (+m[1]===2 && (+m[2]>+floor.slice(2) || (+m[2]===+floor.slice(2) && +m[3]>0)))) throw new Error("Perl host component exceeds glibc "+floor);
 		const ledgerBytes=kernel?await readFile(join(app,kernel.ledger.name)):null;
 		if(ledgerBytes) validateNativeElf(ledgerBytes);
-		return {...options,...kernel?{kernel,ledgerBytes}:{},componentIdentity,bindingIrSha256: hashBindingIr(api),library,bytes,generated,headers};
+		return {...options,...kernel?{kernel,ledgerBytes}:{},componentIdentity,bindingIrSha256: hostPublicHash(api),library,bytes,generated,headers};
 	} finally
 	{ await rm(app,{recursive: true,force: true}); }
 };

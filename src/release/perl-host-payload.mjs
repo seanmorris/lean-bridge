@@ -1,5 +1,6 @@
 /** @file Regenerate the CPAN host payload from the captured source and compiled interface. */
-import {parseBindingIr,hashBindingIr} from "../binding-ir/canonical.mjs";
+import {parseBindingIr} from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {nativeEffectPolicy} from "../analyze/native-host-effects.mjs";
 import {reconcileHostExports} from "../analyze/host-export-model.mjs";
@@ -26,7 +27,7 @@ const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRu
 	if(!same(checked.api,api)) fail("public API differs from compiler evidence");
 	const options={name,version,ir,api,evidence,runtimeIdentity: nativeRuntimeIdentity,modules,entries: checked.entries};
 	const worker=mixed?await perlHostTaskKernel({...options,checked: {...checked,evidence}}):null;
-	const headers=await perlHostHeaders(worker,checked.entries.some(e=>e.result.kind==="io-closure")), componentIdentity=perlHostComponentIdentity(options,headers,worker);
+	const headers=await perlHostHeaders(worker,checked.entries.some(e=>e.result.kind==="io-closure"),api.schemaVersion===4), componentIdentity=perlHostComponentIdentity(options,headers,worker);
 	const generated=generatePerlHostExports({...options,entries: checked.entries.filter(e=>!e.delivery),identity: componentIdentity,worker});
 	let ledger=null, ledgerBytes;
 	if(worker)
@@ -47,7 +48,7 @@ const build = async ({name,version,api,evidence,hostSource,reviewSource,nativeRu
 		, profile: mixed?"native-perl-task-v1":"native-perl-host-v1"
 		, component: api.component
 		, componentIdentity
-		, bindingIrSha256: hashBindingIr(api)
+		, bindingIrSha256: hostPublicHash(api)
 		, elaborationSha256: sha256(canonicalJson(evidence))
 		, hostImportsSha256: sha256(hostSource)
 		, reviewedSourceSha256: evidence.reviewedSourceSha256
