@@ -3,6 +3,7 @@ import {cIdentifier,cKeywords} from "../c/generate.mjs";
 import {cppHostReturnedFunction} from "./host-returned-function.mjs";
 import {hostDeclarationName} from "../../abi/host-member-names.mjs";
 import {cppHostCodecs} from "./host-codecs.mjs";
+import {cppHostRecords} from "./host-records.mjs";
 import {cppHostWorkers} from "./host-worker-api.mjs";
 
 const id=s=>cKeywords.has(s)?s+"_":s;
@@ -22,7 +23,7 @@ const bigSupport=[
  */
 export const cppHostFacade=o=>{
 	const {ir,model,entries,facade,identity,ownerPrefix: owner,abi}=o,p=facade.prefix;
-	const {scalar,ref,integers}=cppHostCodecs({ir,model,p});
+	const {scalar,ref: valueRef,integers}=cppHostCodecs({ir,model,p});
 	const classes=model.kinds.map(k=>"Host_"+k.name),keys=model.kinds.map(k=>JSON.stringify(k.key));
 	const adapt=model.kinds.map((k,i)=>{
 		const raw=scalar(i).raw,T=classes[i];
@@ -62,6 +63,13 @@ export const cppHostFacade=o=>{
 		if(names.has(n)) throw new TypeError("C++ binding member name is reserved: "+n);
 		names.add(n);
 	}
+	const returned=entries.filter(e=>e.result.kind==="io-closure").map(e=>"Returned_"+cIdentifier(e.name));
+	const reserved=new Set([
+		...names,...classes,"Binding","State","Big"
+		, "hd","sv","av","ha","std","boost",...returned
+	]);
+	const records=cppHostRecords(entries,p,valueRef,reserved);
+	const ref=(t,n)=>records.types.get(t.declaration)??valueRef(t,n);
 	const exports=entries.map(e=>{
 		const name=cIdentifier(e.name);
 		if(e.result.kind==="io-closure")return cppHostReturnedFunction({e,p,name,id,ref,async: !!o.workerEntries?.length});
@@ -106,6 +114,7 @@ export const cppHostFacade=o=>{
 		, "static void dispose(hd::Pending *ptr) noexcept { auto *s=static_cast<State*>(ptr); "+(async?"s->closing=true; s->jobs.close(); ":"")+"if(s->open && "+p+"close(&s->binding)!="+p+"OK) return; release_types(*s); delete s; }"
 		, "std::shared_ptr<State> require() const { hd::drain(); if(!state || !state->open) throw sv::Closed{}; if(state->pid!=getpid()) throw sv::WrongContext{}; "+(async?"if(state->closing) throw sv::Busy{}; ":"")+"return state; }"
 		, ...adapt,...integers()?[bigSupport]:[],...handlers
+		, ...records.declarations.length?["public:",...records.declarations,"private:",...records.conversions]:[]
 		, ...async?["static void worker_check("+p+"status rc){ switch(rc){case "+p+"OK:return;case "+p+"CANCELLED:throw av::Cancelled{};case "+p+"CALLBACK_CLOSED:throw av::CallbackClosed{};case "+p+"STALE:throw av::Closed{};case "+p+"BUSY:throw av::Busy{};case "+p+"UNAVAILABLE:throw av::Unavailable{};default:check(rc);}}"]:[]
 		, "public: Binding() { hd::drain(); auto *raw=new State{}; raw->dispose=&dispose; state=std::shared_ptr<State>(raw,[](State *s){ "+(async?"if(s->loop.local())s->deliver();else if(s->loop.same_process())s->loop.post(*s);":"hd::retire(s);")+" });"
 		, ...classes.map((T,i)=>"hd::registry("+owner+"bind_type("+keys[i]+",&typeid("+T+"))); ++state->claimed;")

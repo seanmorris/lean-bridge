@@ -7,6 +7,8 @@ import {dotnetHostRecords} from "../../src/backends/dotnet/host-records.mjs";
 import {jvmHostRecords} from "../../src/backends/jvm/host-records.mjs";
 import {cHostCodecs} from "../../src/backends/c/host-codecs.mjs";
 import {cHostRecords} from "../../src/backends/c/host-records.mjs";
+import {cppHostRecords} from "../../src/backends/cpp/host-records.mjs";
+import {cppHostCodecs} from "../../src/backends/cpp/host-codecs.mjs";
 import {lowerWordHostRecord} from "../../src/backends/native/word-host-records.mjs";
 
 const box = {id: "host:meter.Box", name: "Box"};
@@ -112,4 +114,14 @@ test("C11 record helpers use nominal tickets and do not collide with existing pu
 	assert.throws(() => emit([...record.fields, {...record.fields[0], name: "primary_meter"}]), /collision/u);
 	const wide = {...record, fields: Array.from({length: 33}, (_, i) => ({...record.fields[0], name: "f" + i, projection: "Workshop.Rack.f" + i}))};
 	assert.throws(() => lowerWordHostRecord({...site(record), parameters: [{type: wide}, {type: wide}]}, "c", () => "Box"), /64 flattened/u);
+});
+
+test("C++ host records reserve public and private binding names before emitting types", () => {
+	const {ref} = cppHostCodecs({ir: {types: [box]}, model: {kinds: [box]}, p: "app_"});
+	const emit = (names, used = []) => cppHostRecords([site({...record, fields: names.map(name => ({...record.fields[0], name}))})], "app_", ref, new Set(used));
+	for(const name of ["Rack", "lb_make_record_0", "lb_read_record_0"])
+		assert.throws(() => emit(["lead"], [name]), /Colliding C\+\+ host record name/u);
+	for(const fields of [["lead", "lead"], ["lb_field_0"], ["switch", "switch_"]])
+		assert.throws(() => emit(fields), /Colliding C\+\+ host record field/u);
+	assert.equal(emit(["primaryMeter"]).types.get("Workshop.Rack").type, "Rack");
 });

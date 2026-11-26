@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51771263,
+          "path": "archives/workshop-1.0.0-cpp.tar.gz",
+          "sha256": "ae4a43dca77686729878d159e0519b0a07feb284edb94a3b677b1b4010ff6f15"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "workshop",
+      "profile": "native-cpp-host-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "8ce0b8a7a0ddd227b7ca6acbee17c80b696bcb8cdb6788d2557ac89a8ca83484",
+      "id": "native-cpp-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "2ac73a829b76533bd692f340c45e54f729838041c3d67c4ba16ee415bc842d7e"
+  }
+}

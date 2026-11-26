@@ -67,6 +67,11 @@ constructor uses `std::make_shared`, a method calls the declared member, and
 a property calls its named getter or setter. See [the consumer example](../consume/cpp.md#pass-application-objects-to-lean).
 The archive records the producing libstdc++ ABI and its header checks
 compatibility at compile time. A plain `IO` entry does not return a future.
+A synchronous `IO` function can also take or return a flat public Lean
+structure with imported application objects and copied scalar fields. The
+generated binding provides a C++ value type with typed getters. The compiler
+checks the Lean constructor, projections, field order, and host identities on
+both the ordinary and reviewed routes. See the [C++ record example](../consume/cpp.md#keep-c-objects-in-a-lean-record).
 To return a task or cursor on the same binding, select it in `taskExports` or
 `asyncIterators`. The generated C++20 member returns a future or a pull stream
 and the archive includes the dispatcher headers. A Lean worker may carry an

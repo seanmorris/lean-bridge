@@ -115,6 +115,13 @@ The [separate Java and Kotlin Maven clients](jvm-host-record-fields-20261126.md)
 check their own static types and evaluate the getters on the original JVM objects.
 The [C11 client](c-host-record-fields-20261126.md) separately counts each meter's
 destruction. A returned row survives binding closure; a getter can outlive that row.
+The [C++ client](cpp-host-record-fields-20261126.md) instead checks the shared
+ownership control block and uses weak pointers to observe the same two lifetimes.
+That is **8 of 17 profiles** with an installed caller-constructed application-object
+record on both routes. The nine still to verify for this case are Perl, Rust,
+WIT/WASI, PHP-Wasm, Node JavaScript, Node TypeScript, browser JavaScript,
+mounted React, and a dedicated browser worker. A shared package does not
+substitute for executing each client. This count is not a percentage of #1221.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

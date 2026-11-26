@@ -177,6 +177,29 @@ entry; call `lean_bridge::sync_v1::drain_host_closes()` there if no more
 calls are expected. Link the package's CMake target or pkg-config name;
 both include the matching reference registry and Lean runtime.
 
+### Keep C++ objects in a Lean record
+
+A record holding application objects is a value type nested in the binding.
+In the Gauge package, `Binding<Meter>::Pair` holds two `std::shared_ptr<Meter>`
+values, a byte vector and a multiprecision integer:
+
+```cpp
+using Api = lean_bridge::workshop::Binding<Meter>;
+Api api;
+auto left = std::make_shared<Meter>(23), right = std::make_shared<Meter>(19);
+Api::Pair input{left, {9, 8}, 42, right};
+auto flipped = api.flip(input);
+assert(flipped.lead() == right);
+assert(flipped.sequence() == 43);
+```
+
+Copying a record shares ownership of the original meters and copies its byte
+and integer values. The getters work after the binding closes. Let the record
+go out of scope to release its references; a shared pointer obtained from a
+getter can live longer than the record. This differs from a returned Lean
+function, which needs its binding to remain open.
+See the [complete C++ client and installed results](../evidence/cpp-host-record-fields-20261126.md).
+
 ### Await work on an application object
 
 When the package exports a task on its binding, pass your `shared_ptr` as
