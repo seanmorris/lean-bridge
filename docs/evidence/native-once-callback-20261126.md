@@ -202,6 +202,23 @@ above, set `LEAN_BRIDGE_LEAN_PREFIX` to the matching toolchain and
 containing `include/` and `lib/`. This checks runtime behavior, not the
 contents or relocatability of a newly produced canonical package.
 
+The standalone installation test then ran the same two applications against
+the [ordinary](native-once-callback-20261126/wit-canonical/ordinary.json)
+and [reviewed](native-once-callback-20261126/wit-canonical/reviewed.json)
+canonical packages. On each relocated install, the first guest completed
+27 checks, including 16 two-worker races. The sibling guest got 21 and 41
+from its two surviving futures after dropping the middle reader. Guest
+registrations and native tasks returned to zero. Neither guest needed the
+producer SDK on its execution path.
+
+The [ordinary receipt](native-once-callback-20261126/wit-canonical/ordinary.package-set.json)
+and [reviewed receipt](native-once-callback-20261126/wit-canonical/reviewed.package-set.json)
+identify two distinct archives with the same broker, Lean runtime and Wasmtime
+51.0.0 library. Independent verification covered all 16 ordinary and 17
+reviewed manifest-listed files, including the runner, WIT world and original
+reviewed input. The three downstream Wasm binaries were regenerated from the
+application, sibling and provider sources and checked against both reports.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native

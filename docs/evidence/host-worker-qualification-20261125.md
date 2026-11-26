@@ -316,10 +316,11 @@ The [Maven packages](native-once-callback-20261126.md#java-and-kotlin)
 passed both a Java future client and a Kotlin suspend client. The
 [native Composer packages](native-once-callback-20261126.md#native-php)
 passed on PHP 8.2 and 8.5. The [CPAN packages](native-once-callback-20261126.md#perl)
-passed 256 two-worker races across 16 relocated installs. That gives **16 of 17**
-consumer profiles on both author routes. WIT/WASI has installed
-[pollable-task evidence](native-once-callback-20261126.md#witwasi-pollable-tasks);
-its standalone canonical-future install is still required for this rule.
+passed 256 two-worker races across 16 relocated installs. Both WIT/WASI
+interfaces now have installed results: [pollable tasks](native-once-callback-20261126.md#witwasi-pollable-tasks)
+and [canonical futures](native-once-callback-20261126.md#witwasi-canonical-futures).
+That completes **17 of 17 profiles on both author routes for this one-call
+rule**. It does not qualify the separate direct-function borrow.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile
