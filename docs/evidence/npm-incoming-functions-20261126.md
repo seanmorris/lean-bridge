@@ -88,6 +88,28 @@ the Lean closure directly as a lambda argument. It keeps the borrow and an
 explicit lease across success and failure, checks the identity of the thrown
 exception, and exercises a failed nested callback while the outer borrow is
 still live. The consumer compiles against the generated public header.
+
+## Installed Python, Ruby and Rust clients
+
+The [ordinary](native-incoming-functions-20261126/ordinary.package-set.json) and
+[reviewed](native-incoming-functions-20261126/reviewed.package-set.json) receipts
+each identify a wheel, gem and crate. The [paired execution report](native-incoming-functions-20261126/pair.json)
+links each installed consumer, its independent observer, the exact archive and
+the compiled component. All six packages used the same embedded runtime identity.
+
+Lean passed a function directly into a [Python callback](../../tests/fixtures/structured-types/tariff-incoming.py),
+[Ruby block](../../tests/fixtures/structured-types/tariff-incoming.rb) or
+[Rust closure](../../tests/fixtures/structured-types/tariff-incoming.rs).
+The original borrow expired whether the callback returned or failed. An
+explicitly retained copy remained callable and a failing nested callback did
+not invalidate the outer borrow. Python and Ruby kept one session identity
+between the six scenarios and none after thread exit. Rust observed three
+identities while a lease was held and zero between cases and at the end.
+
+Run `npm run test:native-incoming-function` to build both routes. Set
+`LEAN_BRIDGE_NATIVE_INCOMING_KEEP` to retain the package sets and their locked
+Cargo dependencies, or `LEAN_BRIDGE_NATIVE_INCOMING_REPLAY` to the resulting
+`sets-*` directory to rerun the installed clients without rebuilding Lean.
 Installed qualification requires the same consumer to run from the relocated
 CMake package, with the broker returning to baseline after each case and zero
 after thread exit. Set `LEAN_BRIDGE_CPP_TARIFF_KEEP` to retain the two

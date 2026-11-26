@@ -1,0 +1,167 @@
+{
+  "reports": [
+    {
+      "receiptSha256": "424efa44a9c4ca7ff99090611e544fcd4e5b92d34e38cf8d23d9e38f856045d8",
+      "results": {
+        "cargo": {
+          "archive": {
+            "bytes": 53860961,
+            "path": "archives/tariff-quotes-1.0.0.crate",
+            "sha256": "3a59710f6d943c80abf48be29e2fdd2ab0601e6454851b70a9449b259cf3bc47"
+          },
+          "bindingIrSha256": "feefbc1d634abf41261fb92e8c8337af2151cc71c5dbddca4bc9b78a5a7f3805",
+          "clientSha256": "b8ee0dd139f87f371b018f50a47d1d441d1f0c81487de5d0492a040749090964",
+          "componentSha256": "fb99cde613fa9846f59de0c993776ccec1ecb2dda3f1759dfefed5f7cc6a0497",
+          "dependenciesSha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd",
+          "held": 3,
+          "lockSha256": "b583ebe2075055f282ff2706f1636a552cacccb3d4350839cc74ab50c2582a0e",
+          "members": 34,
+          "observed": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observerSha256": "a3b8ab41e26eb2fb221337a0ae169b80dd8adbd323910409d6971f12166e55ad",
+          "reviewedSourceSha256": null,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "pypi": {
+          "archive": {
+            "bytes": 53900591,
+            "path": "archives/tariff_quotes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+            "sha256": "2c4d6101f6daa4d3fc779147f138431dd4fa33dc256bc11fd84e1a5bca644899"
+          },
+          "bindingIrSha256": "feefbc1d634abf41261fb92e8c8337af2151cc71c5dbddca4bc9b78a5a7f3805",
+          "clientSha256": "d218791aa872c8e504c96f44dcd4425b4a5ab513940b459e64df3fc108f36a22",
+          "componentSha256": "fb99cde613fa9846f59de0c993776ccec1ecb2dda3f1759dfefed5f7cc6a0497",
+          "dependency": null,
+          "members": 40,
+          "observed": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "observerSha256": "2f0ad1c835f5e9233beae6e8ae758bcd86df992a596ff553ef282c591112dbe1",
+          "python": "3.12.14",
+          "reviewedSourceSha256": null,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "rubygems": {
+          "archive": {
+            "bytes": 52648448,
+            "path": "archives/tariff-quotes-1.0.0-x86_64-linux.gem",
+            "sha256": "5463b1e5d49e39fa2ab88341fc0eb8dc037b0fadd331aa86ee9868f96a268dde"
+          },
+          "bindingIrSha256": "feefbc1d634abf41261fb92e8c8337af2151cc71c5dbddca4bc9b78a5a7f3805",
+          "clientSha256": "e98cb78c184c7230e9e912fe254d10edd208c16825a0b9f581304eb522235625",
+          "componentSha256": "fb99cde613fa9846f59de0c993776ccec1ecb2dda3f1759dfefed5f7cc6a0497",
+          "members": 41,
+          "observed": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "observerSha256": "773fce3cfc2c721c70ff41539770d436d652dcc7c99f12b57909ad460354dd3b",
+          "reviewedSourceSha256": null,
+          "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        }
+      },
+      "route": "ordinary"
+    },
+    {
+      "receiptSha256": "bf6db084858e2bbd7021f90a7816e20f158706408104fe41ecc106cc822653f4",
+      "results": {
+        "cargo": {
+          "archive": {
+            "bytes": 53866672,
+            "path": "archives/tariff-quotes-1.0.0.crate",
+            "sha256": "60904d9f993ae985ab9ab4404b7e7590c5cdd7023d091af2d12dfe14516899f7"
+          },
+          "bindingIrSha256": "170135a2d3ecc3821055eb3057cf6946b562d9ea8e826608f968f1e3e09df5aa",
+          "clientSha256": "b8ee0dd139f87f371b018f50a47d1d441d1f0c81487de5d0492a040749090964",
+          "componentSha256": "daf7c0b5949fd93d6e5bb3cb417bf70aa06d27328402fbc433a8e6fee94d8d33",
+          "dependenciesSha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd",
+          "held": 3,
+          "lockSha256": "b583ebe2075055f282ff2706f1636a552cacccb3d4350839cc74ab50c2582a0e",
+          "members": 34,
+          "observed": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "observerSha256": "a3b8ab41e26eb2fb221337a0ae169b80dd8adbd323910409d6971f12166e55ad",
+          "reviewedSourceSha256": "27e336bc168cd27d5780da31ff76836c8807ee179097833cc89e4b5f5299f8fb",
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "pypi": {
+          "archive": {
+            "bytes": 53904438,
+            "path": "archives/tariff_quotes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+            "sha256": "6cb8c8709c57cd0230a698dad9685a8a29d49b6ef98c74a8f49c6bbcbf283f3d"
+          },
+          "bindingIrSha256": "170135a2d3ecc3821055eb3057cf6946b562d9ea8e826608f968f1e3e09df5aa",
+          "clientSha256": "d218791aa872c8e504c96f44dcd4425b4a5ab513940b459e64df3fc108f36a22",
+          "componentSha256": "daf7c0b5949fd93d6e5bb3cb417bf70aa06d27328402fbc433a8e6fee94d8d33",
+          "dependency": null,
+          "members": 40,
+          "observed": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "observerSha256": "2f0ad1c835f5e9233beae6e8ae758bcd86df992a596ff553ef282c591112dbe1",
+          "python": "3.12.14",
+          "reviewedSourceSha256": "27e336bc168cd27d5780da31ff76836c8807ee179097833cc89e4b5f5299f8fb",
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "rubygems": {
+          "archive": {
+            "bytes": 52654592,
+            "path": "archives/tariff-quotes-1.0.0-x86_64-linux.gem",
+            "sha256": "e400ce87d3ef27c4ee46a7892087094609099015f29e9b7f9e1a8667f0dfc59d"
+          },
+          "bindingIrSha256": "170135a2d3ecc3821055eb3057cf6946b562d9ea8e826608f968f1e3e09df5aa",
+          "clientSha256": "e98cb78c184c7230e9e912fe254d10edd208c16825a0b9f581304eb522235625",
+          "componentSha256": "daf7c0b5949fd93d6e5bb3cb417bf70aa06d27328402fbc433a8e6fee94d8d33",
+          "members": 41,
+          "observed": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "observerSha256": "773fce3cfc2c721c70ff41539770d436d652dcc7c99f12b57909ad460354dd3b",
+          "reviewedSourceSha256": "27e336bc168cd27d5780da31ff76836c8807ee179097833cc89e4b5f5299f8fb",
+          "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        }
+      },
+      "route": "reviewed"
+    }
+  ],
+  "sourceSha256": "8df990ee7666a9ea95544392fd379b3e656eefaaebce56dc1d92fdaa69661793"
+}

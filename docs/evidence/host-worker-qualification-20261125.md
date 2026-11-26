@@ -128,8 +128,9 @@ Match the newer reports against the particular cell they exercise:
 - For a **Lean function as a callback result**, see the direct staged-reply
   installs below (17 profiles on both routes). For a **Lean function as a
   callback parameter**, use the [incoming-function releases](npm-incoming-functions-20261126.md)
-  instead. Both routes have installed passes for **7 of 17 profiles** in
-  that incoming direction: five npm profiles, C11 and C++20. An
+  instead. Both routes have installed passes for **10 of 17 profiles** in
+  that incoming direction: five npm profiles, C11, C++20, and the
+  [Python, Ruby and Rust clients](npm-incoming-functions-20261126.md#installed-python-ruby-and-rust-clients). An
   application supplying its own callable as the *reply* is a
   different cell. For example, the [CPython staged-reply client](python-staged-callback-results-20261125.md)
   returns a Lean function and rejects a Python lambda.
@@ -364,6 +365,10 @@ same checks with a different runtime.
 The [installed C11 clients](npm-incoming-functions-20261126.md#installed-c11-clients)
 passed on both author routes through pkg-config and relocated CMake, bringing
 the direct incoming-function check to **6 of 17 profiles**.
+
+The [C++20 releases](npm-incoming-functions-20261126.md#installed-c20-clients)
+and [wheel, gem and crate](npm-incoming-functions-20261126.md#installed-python-ruby-and-rust-clients)
+subsequently passed the same direction, taking the installed count to 10.
 
 The [managed runtime clients](dotnet-function-fields-20261126.md#a-function-passed-directly-into-a-callback)
 also tested nested failure, comparison of live and expired views, and zero
