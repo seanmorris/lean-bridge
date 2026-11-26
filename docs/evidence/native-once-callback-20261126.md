@@ -91,6 +91,21 @@ distinct. Closing the registration released its capture and the native
 broker finished with zero live leases. The two NuGet archives are distinct;
 both contain the same native runtime libraries.
 
+## Java and Kotlin
+
+The [ordinary Maven package](native-once-callback-20261126/jvm/ordinary.json)
+and [reviewed Maven package](native-once-callback-20261126/jvm/reviewed.json)
+each ran two independently compiled applications: the
+[Java future client](../../tests/fixtures/native-callback-budget/JavaBudget.java)
+and [Kotlin suspend client](../../tests/fixtures/native-callback-budget/KotlinBudget.kt).
+Both ran offline on a Java 22 runtime containing only `java.base`, with JNI
+checking enabled. Each application raced two Lean workers 16 times per
+release. Only one invocation reached the host in each race. Independent
+slots and tasks remained usable. The original exception, same-text factory
+and terminal errors, and typed startup failure (payload 73) stayed distinct.
+Both clients observed the capture released and zero live broker leases.
+The distinct JARs used the same broker, Lean runtime and owner library.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
@@ -106,6 +121,10 @@ to reuse the sealed gems.
 For .NET, run `npm run test:dotnet-once-callback` or set
 `LEAN_BRIDGE_DOTNET_BUDGET_REPLAY` to the handoff directory containing
 `ordinary/` and `reviewed/`.
+For Java and Kotlin, run `npm run test:jvm-once-callback` with JDK 22,
+Kotlin 2.2.0 and the offline Maven seed in `LEAN_BRIDGE_JVM_TASK_M2_SEED`.
+Set `LEAN_BRIDGE_JVM_BUDGET_REPLAY` to the directory containing both
+sealed Maven handoffs to skip rebuilding.
 For native PHP, run `npm run test:php-native-once-callback` with
 `LEAN_BRIDGE_PHP_SCHEDULER_CACHE` pointing to the pinned Amp and Revolt
 Composer cache. `LEAN_BRIDGE_TEST_PHPS` accepts a JSON array of absolute PHP

@@ -306,8 +306,10 @@ The [MRI gems](native-once-callback-20261126.md#ruby) distinguished admission,
 factory IO, terminal IO, typed errors and original Ruby exceptions.
 The [two .NET 8 installs](native-once-callback-20261126.md#net) also preserved
 the original CLR exception and released the retained delegate's capture.
-That gives **12 of 17** consumer profiles on both author routes. Java,
-Kotlin, native PHP, Perl and WIT/WASI remain for this rule.
+The [Maven packages](native-once-callback-20261126.md#java-and-kotlin)
+passed both a Java future client and a Kotlin suspend client. That gives
+**14 of 17** consumer profiles on both author routes. Native PHP, Perl and
+WIT/WASI remain for this rule.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile
