@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {hostRecordTypes} from "../../src/analyze/host-records.mjs";
 import {pythonHostRecords} from "../../src/backends/python/host-records.mjs";
+import {dotnetHostRecords} from "../../src/backends/dotnet/host-records.mjs";
 
 const box = {id: "host:meter.Box", name: "Box"};
 const selection = {hostModule: "LeanBridge.Host.Python", exportModules: ["Workshop"], nativeEffectPolicy: "native-host-io-v1"};
@@ -63,4 +64,17 @@ test("record properties and class names cannot shadow generated Python conversio
 	assert.match(emit.lower(entry).pythonArgs, /_lb_host_fields\(Rack, _lb_host_record_0\)/u);
 	assert.match(emit.stubs[0], /from builtins import int as _lb_record_int/u);
 	assert.match(emit.stubs[0], /@_lb_record_property\n +def count\(self\) -> _lb_record_int/u);
+});
+
+test("CLR record names and properties cannot shadow their generated types or disposal API", () => {
+	const emit = (name, field) => {
+		const member = {name: field, type: {kind: "named", id: box.id}};
+		const type = {kind: "record", name, fields: [member], source: {declaration: "Gauge." + name}};
+		return dotnetHostRecords({types: [type]}, "<T0>", "where T0:class", () => "T0");
+	};
+	for(const name of ["Bound", "System", "T0"])
+		assert.throws(() => emit(name, "lead"), /Invalid CLR record name/u);
+	for(const field of ["from_native_fields", "dispose", "fields", "get_type", "pair", "t0"])
+		assert.throws(() => emit("Pair", field), /Colliding CLR record property/u);
+	assert.ok(emit("Pair", "held").entries.has("Gauge.Pair"));
 });

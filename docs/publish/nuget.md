@@ -62,6 +62,16 @@ with a single `--target nuget`. An optional reviewed `.binding-ir.json`
 describes the **public exports**; it does not replace the import contract.
 The prepared package exposes [ordinary typed C# methods](../consume/dotnet.md#let-lean-call-your-c-class)
 and includes the shared native library that tracks host-object identity.
+
+For a synchronous `IO` export, an application structure can contain both
+imported host classes and copied values. Export a function that takes or
+returns the structure; no C# layout annotation is needed. The
+[Gauge module](../../tests/fixtures/dotnet-host-record/Workshop.lean) uses two
+`Box` fields, a `ByteArray` and a `Nat`. Its generated NuGet API exposes
+`Pair<T>` with the application's class as `T`. A reviewed interface can edit
+field descriptions, but the constructor, field order and types must agree
+with the compiler.
+
 For a returned `Except` containing a bound class, the public IR marks the
 result as a lease. A declared `EIO` with such a payload records its ownership
 in `lean-bridge.dev/error-payload-site`. In either case, C# receives the

@@ -140,6 +140,15 @@ binding, not the C# object. If another package still binds the same nominal
 kind, it can keep using the object. After the last binding closes, Lean
 references retained under the old binding are stale.
 
+A package can also take or return a record containing your C# objects.
+The [Gauge example](../evidence/dotnet-host-record-fields-20261126.md)
+returns a `Pair<Meter>`. Its `Lead` and `Spare` properties are the
+application's meters; `ReferenceEquals` can compare them. Its `Sample`
+property is a copied `byte[]`, so modifying it does not alter the record.
+Use `using` on each returned record. Disposing the record releases its
+references without disposing the meters. A live record can still be read
+after the binding closes.
+
 If a package exports a function that returns another Lean function, keep the
 creating binding open while you use the result. For example, `Remember`
 captures one C# object and returns it when invoked with another:

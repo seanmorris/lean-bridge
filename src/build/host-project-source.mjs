@@ -35,7 +35,7 @@ const captureContracts = async (project, inventory, target) => {
 	let review, reviewedExports;
 	if(reviews.length)
 	{
-		const source = await capturedText(project, reviews[0]), api = parseHostPublic(source, Boolean(ir && ["pypi", "rubygems", "php-native"].includes(target)));
+		const source = await capturedText(project, reviews[0]), api = parseHostPublic(source, Boolean(ir && ["pypi", "rubygems", "php-native", "nuget"].includes(target)));
 		if(api.declarations.some(d => d.kind !== "function" || d.owner !== null || !d.source?.declaration)) fail("Expected reviewed public application functions");
 		review = { ...reviews[0], source, semanticSha256: hostPublicHash(api) };
 		reviewedExports = api.declarations.map(d => d.source.declaration).sort();

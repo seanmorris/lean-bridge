@@ -2,7 +2,7 @@
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { generateDotnetHostExports } from "../backends/dotnet/host-exports.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import { compileDotnetHostDomain } from "../build/dotnet-host-domain.mjs";
 import { dotnetHostTaskKernel, stageDotnetHostTasks } from "../build/dotnet-host-task-kernel.mjs";
 import { compileHostSources } from "../build/host-elaboration.mjs";
@@ -41,6 +41,7 @@ export const buildDotnetHostPackage = async o => {
 			const bytes = await readFile(new URL("../backends/" + file, import.meta.url)); hashes[file] = sha256(bytes);
 			if(file.endsWith(".h")) await save(file.split("/").at(-1), bytes);
 		}
+		if(api.types.some(t=>t.kind==="record")) hashes["dotnet/host-records.mjs"]=sha256(await readFile(new URL("../backends/dotnet/host-records.mjs",import.meta.url)));
 		const componentIdentity = sha256(canonicalJson({ api, evidence
 			, domain: domain.id, runtimeIdentity, hashes
 			, source: baseline.source, header: baseline.header, entry: baseline.entryLean
@@ -99,7 +100,7 @@ export const buildDotnetHostPackage = async o => {
 			files.set(path, bytes);
 		}
 		const host = { ir, domain, entries, model: gen.model,...kernel?{workerWire: kernel.wire}:{} };
-		return await writeDotnetIORelease({ ...o, host, prefix, files, api, evidence, runtimeIdentity, componentIdentity, bindingIrSha256: hashBindingIr(api), manifest, floor,ledgerId: kernel?.ledger.id });
+		return await writeDotnetIORelease({ ...o, host, prefix, files, api, evidence, runtimeIdentity, componentIdentity, bindingIrSha256: hostPublicHash(api), manifest, floor,ledgerId: kernel?.ledger.id });
 	} finally
 	{ await rm(app, { recursive: true, force: true }); }
 };

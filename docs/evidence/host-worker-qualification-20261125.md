@@ -108,6 +108,9 @@ The [native PHP consumer](php-host-record-fields-20261126.md) checks the
 same application meters across a cloned record and a returned function.
 It also exercises failure after a native result has already copied one
 field and exported a meter.
+The [NuGet record consumer](dotnet-host-record-fields-20261126.md) additionally checks that a closed-generic
+`Pair<Meter>` cannot be replaced with `Pair<object>`, mutable byte-array properties do not alias,
+and the original CLR objects survive closure capture but are released on disposal.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

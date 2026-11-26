@@ -6,6 +6,7 @@ import { dotnetHostCarrier } from "./host-native-members.mjs";
 import { dotnetScalarArgument, dotnetScalarResult, dotnetScalarType } from "./sync-io.mjs";
 import { verifiedDotnetAssets } from "./verified-assets.mjs";
 import { dotnetHostWorkerApi } from "./host-worker-api.mjs";
+import {dotnetHostRecords} from "./host-records.mjs";
 
 /**
  * List the C# signatures the consumer must supply, without private wire details.
@@ -35,16 +36,19 @@ export const generateDotnetHostApi = async o => {
 	const gens = ir.types.map((_, i) => "T" + i), g = "<" + gens.join(",") + ">", constraints = gens.map(t => "where " + t + " : class").join(" ");
 	const sum = t => t.kind === "apply" && t.constructor === "result" && t.arguments.length === 2;
 	const site = t => dotnetHostCarrier(ir.types, t);
-	const input = (p, j) => {
-		if(site(p.type).index !== undefined) return "input[" + 3*j + "]=call.Input(v" + j + ");";
+	const input = (p, j, value) => {
+		if(site(p.type).index !== undefined) return "input[" + 3*j + "]=call.Input(" + value + ");";
 		// dn_get checks the unused high bits. The general IO port accepts a
 		// sign-extended ulong, but these signed narrow carriers do not.
 		const width = ({ int8: "byte", int16: "ushort", int32: "uint" })[p.type.name];
-		return width ? "input[" + 3*j + "]=unchecked((" + width + ")v" + j + ");" : dotnetScalarArgument(p.type.name, "v"+j, j);
+		return width ? "input[" + 3*j + "]=unchecked((" + width + ")" + value + ");" : dotnetScalarArgument(p.type.name, value, j);
 	};
-	const type = t => sum(t) ? "Result<" + t.arguments.map(type).join(",") + ">" : site(t).index === undefined ? dotnetScalarType(t.name) : gens[site(t).index];
-	const decode = (t, n = 0) => sum(t) ? "(Tag(tags[" + n + "]) ? " + type(t) + ".Ok(" + decode(t.arguments[0], n+1) + ") : " + type(t) + ".Err(" + decode(t.arguments[1], n+1) + "))"
-		: site(t).index === undefined ? dotnetScalarResult(t.name) : "(" + type(t) + ")HostRefs.Read(output[0])!";
+	const leaf=t=>site(t).index===undefined?dotnetScalarType(t.name):gens[site(t).index];
+	const records=dotnetHostRecords(api,g,constraints,leaf);
+	const record=t=>t.kind==="host-record"?records.entries.get(t.declaration):null;
+	const type = t => record(t)?.pub??(sum(t) ? "Result<" + t.arguments.map(type).join(",") + ">" : leaf(t));
+	const decode = (t, n = 0) => record(t)?.read??(sum(t) ? "(Tag(tags[" + n + "]) ? " + type(t) + ".Ok(" + decode(t.arguments[0], n+1) + ") : " + type(t) + ".Err(" + decode(t.arguments[1], n+1) + "))"
+		: site(t).index === undefined ? dotnetScalarResult(t.name) : "(" + type(t) + ")HostRefs.Read(output[0])!");
 	const impl = [], pub = [], methods = new Set([...gens, "Bound", "Binding", "Dispose", "GetType", "GetHashCode", "Equals", "ToString", "MemberwiseClone", "Finalize", "ReferenceEquals"]);
 	const hasFunctions=entries.some(e=>e.result.kind==="io-closure");
 	// Match the native table: each factory at i has apply at N+i and drop
@@ -86,15 +90,26 @@ export const generateDotnetHostApi = async o => {
 		}
 		else if(!apply)pub.push(`    public ${ret} ${method}(${parameters.join(",")}) => ${hasFunctions?`this.owner.Invoke(Host_=>${invoke})`:o.workerWire?`this.scope.Invoke(() => ${invoke})`:invoke};`);
 		const local = e.parameters.map((p, j) => type(p.type) + " v" + j);
+		const setup=[],flat=[];
+		for(const [j,p] of e.parameters.entries())
+		{
+			const rec=record(p.type);
+			if(!rec)
+			{
+				flat.push({type: p.type,value: "v"+j}); continue;
+			}
+			setup.push("var row"+j+"=(v"+j+" ?? throw new global::System.ArgumentNullException(nameof(v"+j+"))).Snapshot();");
+			for(const f of rec.fields) flat.push({type: f.ref,value: "row"+j+"."+f.property});
+		}
 		impl.push(`    internal static ${ret} Call${i}${g}(HostMembers binding${local.length ? "," + local.join(",") : ""}) ${constraints} {
         using var call=new HostCall(binding); using var frame=new Frame();
-        ulong* input=stackalloc ulong[${Math.max(1,local.length*3)}]; new System.Span<ulong>(input,${Math.max(1,local.length*3)}).Clear();
-        ${e.parameters.map(input).join("\n        ")}
+        ${setup.length?setup.join("\n        ")+"\n        ":""}ulong* input=stackalloc ulong[${Math.max(1,flat.length*3)}]; new System.Span<ulong>(input,${Math.max(1,flat.length*3)}).Clear();
+        ${flat.map((p,j)=>input(p,j,p.value)).join("\n        ")}
         ulong* output=stackalloc ulong[4]; new System.Span<ulong>(output,4).Clear();
         byte* tags=stackalloc byte[65]; uint fault=0;
         var clear=Clear;
         try {
-            int status=Entry(call.Id,HostCall.Entry,${i},input,${local.length},output,tags,&fault); call.Check(fault);
+            int status=Entry(call.Id,HostCall.Entry,${i},input,${flat.length},output,tags,&fault); call.Check(fault);
             if(status==0) ${unit ? "return;" : "return " + (factory?"output[0]":decode(e.result)) + ";"}
             ${e.effect === "EIO" ? "if(status==3) throw new DeclaredError<" + type(e.error) + ">(" + JSON.stringify(e.declaration) + "," + decode(e.error) + ");" : ""}
             if(status==4) throw new LeanIOException(${JSON.stringify(e.declaration)},${dotnetScalarResult("string")});
@@ -116,7 +131,7 @@ public sealed class DeclaredError<T>(string declaration,T payload):System.Except
 public sealed class LeanIOException(string declaration,string message):System.IO.IOException(message) { public string Declaration { get; }=declaration; }
 public sealed class WrongContextException():System.InvalidOperationException("Lean IO requires the original process main thread") {}
 public sealed class RuntimeUnavailableException():System.InvalidOperationException("The Lean runtime is unavailable") {}
-public static class Api {
+${records.classes?records.classes+"\n":""}public static class Api {
     public static Bound${g} BindHosts${g}() ${constraints} => new(HostContract.Bind(${gens.map(n => "typeof(" + n + ")").join(",")}));${hasFunctions?"\n    public static void DrainHostCloses() => HostFunctionReleases.Drain();":""}${worker?"\n"+worker.staticPub.join("\n"):""}
 }
 public sealed class Bound${g} : System.IDisposable ${constraints} {
@@ -136,7 +151,7 @@ ${[...pub,...worker?.boundPub??[]].join("\n")}
 using LeanBridge.GeneratedHost;
 namespace ${assembly};
 internal static unsafe partial class Wire {
-    private static class Assets {
+${records.readers?records.readers+"\n":""}    private static class Assets {
 ${verifiedDotnetAssets(evidence)}
     }
     private static nint Symbol(string name) => System.Runtime.InteropServices.NativeLibrary.GetExport(Assets.Handle,name);
