@@ -106,6 +106,21 @@ and terminal errors, and typed startup failure (payload 73) stayed distinct.
 Both clients observed the capture released and zero live broker leases.
 The distinct JARs used the same broker, Lean runtime and owner library.
 
+## Native PHP
+
+PHP 8.2.35 and 8.5.10 ran the same [Composer client](../../tests/fixtures/native-callback-budget/client.php)
+against both the [ordinary package](native-once-callback-20261126/php/ordinary.json)
+and the [reviewed package](native-once-callback-20261126/php/reviewed.json).
+In all four runs, only one of two racing workers reached PHP in each of 16
+trials. A callback that threw consumed its permit. The client distinguished
+the original exception (even a previously caught policy refusal), factory
+and terminal IO errors with identical messages, and typed payload 73.
+The retained capture was collected and the broker finished with zero leases.
+Both archives embed the same broker and Lean runtime. The reviewed input
+reconstructed from the ordinary interface and the author's change matches
+the compiler's recorded source digest. These are native PHP runs, not Zend
+inside WebAssembly.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
