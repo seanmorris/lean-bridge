@@ -150,6 +150,29 @@ the exact archived Wasm bytes, validates the composed type graph for nine Lean
 methods and eleven request sites, and compiles the native import declarations
 against that SDK. Neither check is an installed canonical-future result.
 
+## WIT/WASI canonical futures
+
+The [downstream application](../../tests/helpers/wit-canonical-budget-client.mjs)
+imports nine Lean task methods and reads standard WIT futures. Its
+[provider](../../tests/fixtures/native-callback-budget/canonical-provider.wat)
+owns the callbacks. Lean workers enqueue requests; only the Wasmtime store
+owner invokes the provider. A task retains each callback slot separately.
+Dropping a reader before delivery releases the registration without calling it.
+
+Both source routes passed a native scheduler check. For each, the test
+recompiled the four original Lean modules and matched the compiler, sources,
+generated C and native runtime libraries to the sealed pollable release.
+Using those modules, Wasmtime 51 ran 27 canonical futures per route. The
+application counted actual callback calls, checked the results of 16
+two-worker races and distinguished a one-call refusal from guest, factory,
+worker and typed failures. Guest registrations returned to zero.
+
+To reproduce, use the two release inputs for `test:wit-canonical-callback-link`
+above, set `LEAN_BRIDGE_LEAN_PREFIX` to the matching toolchain and
+`LEAN_BRIDGE_WIT_CALLBACK_NATIVE_RUNTIME` to the matching runtime directory
+containing `include/` and `lib/`. This checks runtime behavior, not the
+contents or relocatability of a newly produced canonical package.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
@@ -190,3 +213,8 @@ with the pinned Lean compiler, wasm-tools and Wasmtime C SDK. Set
 `LEAN_BRIDGE_WIT_BUDGET_KEEP` to retain both handoffs or
 `LEAN_BRIDGE_WIT_BUDGET_REPLAY` to replay them. The C client uses only
 the installed Wasmtime API. This test does not exercise canonical futures.
+For canonical futures, run `npm run test:wit-canonical-once-callback` using
+the pinned Lean compiler, wasm-tools and the complete Wasmtime 51 C SDK
+(`LEAN_BRIDGE_ASYNC_WASMTIME_C_API`). Set `LEAN_BRIDGE_WIT_CANONICAL_BUDGET_KEEP`
+to retain the original handoffs, or `LEAN_BRIDGE_WIT_CANONICAL_BUDGET_REPLAY`
+to verify and run both existing archives without rebuilding Lean.

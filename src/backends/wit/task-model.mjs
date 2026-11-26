@@ -75,7 +75,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	const { entries } = reconcileHostExports({ ...evidence, owned, ir: null, component: api.component, review: { source: canonicalJson(api) } });
 	if(entries.length !== tasks.length+streams.length || new Set([...tasks,...streams.map(s=>s.open)]).size !== entries.length)
 		throw new TypeError("Every WIT task export must map to one checked declaration");
-	const resources = [], types = [], functions = [], methods = [], labels = new Set();
+	const resources = [], types = [], functions = [], methods = [], callbackTasks = [], labels = new Set();
 	const bool = scalar({ kind: "primitive", name: "bool" });
 	const permitIndex=2*entries.length;
 	const methodLabels=api.declarations.map(d=>witVariantMember(d.name,labels,fail));
@@ -157,6 +157,15 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 			const payload=delivered(e.stepError); states.push({witName: "failed",fields: [{type: payload}],payload});
 		}
 		const observation = { index, witName, wit: witName, wat: "$t"+index, variant: true, cases: states };
+		if(calls.length)
+		{
+			let next=0;
+			const params=e.parameters.map((p,slot)=>{
+				const call=calls.find(c=>c.descriptor.slot===slot);
+				return call?{name: call.descriptor.parameter,callback: slot}:{name: args[next++].witName,type: p.type};
+			});
+			callbackTasks.push({method: index,label,params,result: e.result,observation});
+		}
 		const owner = handle(false);
 		const start = sig((stream?"open-":"start-")+label, args, startError && !calls.length ? resultOf(owner,startError) : owner);
 		const borrow=[field(stream?"cursor":"task",handle(true))];
@@ -206,5 +215,5 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	const prefix = "lbc_wit_"+sha256(api.component.id);
 	const onceByDeclaration=selection.taskCallbackPolicies?.length ? retainedOnceSlots(api) : undefined;
 	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: heapTypes,witCallbacks: callbacks.size>0,onceByDeclaration});
-	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap,nativeType: typeBody };
+	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap,nativeType: typeBody,callbackTasks };
 };

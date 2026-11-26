@@ -69,8 +69,14 @@ export const buildCTaskPackage = async options => {
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, witDelivery: canonical, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php || canonical ? "words" : "gmp" };
+		const canonicalCallbacks=canonical && entries.some(retainedTask);
+		if(canonicalCallbacks)
+		{
+			if(evidence.selection.witTaskCallbacks!==true) throw new TypeError("Canonical callback delivery requires the Wasmtime store owner");
+			config.name="wit-"+sha256(api.component.id);config.witCallbacks=true;
+		}
 		const callbackHeaders = new Map();
-		if(!canonical && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
+		if(evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
@@ -81,7 +87,7 @@ export const buildCTaskPackage = async options => {
 		if(php && !synchronous) config.phpDelivery = true;
 		if(dotnet && synchronous && entries.some(e=>e.delivery==="iterator")) config.dotnetCursorExit = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
-		const wire = (ruby || dotnet || jvm || perl || php) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources, onceByDeclaration: config.onceByDeclaration });
+		const wire = (ruby || dotnet || jvm || perl || php || canonicalCallbacks) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources, onceByDeclaration: config.onceByDeclaration, ...canonicalCallbacks?{witCallbacks: true}:{} });
 		const phpSurface = synchronous ? compilePhpSyncSurface : compilePhpTaskSurface;
 		const phpPort = php && generatePhpIOPort(phpSurface({ name, version, api, evidence, bindingIrSha256 }));
 		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix, wire.wait && await asset("../backends/jvm/task-reactor.c"));
@@ -163,7 +169,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
-		if(canonical) return await writeCanonicalWitRelease({ ...options, app, run, gen, prefix: p, files, entries, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, nativeIdentity: componentIdentity });
+		if(canonical) return await writeCanonicalWitRelease({ ...options, app, run, gen, wire, prefix: p, files, entries, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, nativeIdentity: componentIdentity });
 		if(php) return await writePhpIORelease({ ...options, prefix: p, wire, phpPort, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(perl) return await writePerlIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, ledgerId, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });

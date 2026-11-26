@@ -4,6 +4,7 @@ import {dirname,join,resolve} from "node:path";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {validateNativeElf} from "../build/native-artifacts.mjs";
 import {canonicalAppModel,canonicalNativeHooks,splitCanonicalTemplate} from "../backends/wit/canonical-app.mjs";
+import {prepareCanonicalCallbackPackage} from "./wit-canonical-callback-package.mjs";
 import {createDeterministicTarGzFromFiles} from "./deterministic-archive.mjs";
 import {writePackageSetReceipt} from "./package-set-receipt.mjs";
 
@@ -47,22 +48,28 @@ export {sdkIdentity as canonicalWasmtimeIdentity};
  */
 export const writeCanonicalWitRelease=async o=>{
 	const {app,prefix,run,api,evidence,gen,environment,files,projectContract,name,version,floor,entries,manifest,runtimeIdentity,bindingIrSha256}=o;
-	const model=canonicalAppModel({api,entries,prefix,name,version}),sdk=join(app,"canonical-sdk");
+	const callbacks=Boolean(o.wire),sdk=join(app,"canonical-sdk");
 	const sdkFiles=await snapshotSdk(environment.LEAN_BRIDGE_ASYNC_WASMTIME_C_API,sdk);
 	const sdkLib=sdkFiles.get("lib/libwasmtime.so");files.set("lib/libwasmtime.so",sdkLib);
 	const save=(name,b)=>writeFile(join(app,name),b,{flag: "wx"});
 	const tools=environment.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools";
 	if(!/^wasm-tools 1\.245\.1\b/u.test((await run(tools,["--version"],app)).stdout)) throw new Error("Canonical WIT requires wasm-tools 1.245.1");
-	await save("application.wit",model.wit);await save("canonical.wat",model.wat);
-	await save("guest-contract.wat",model.guestContract);
-	await run(tools,["component","targets","application.wit","guest-contract.wat"],app);
-	await run(tools,["parse","canonical.wat","-o","canonical.wasm"],app);
-	await run(tools,["validate","--features","cm-async,cm-async-builtins","canonical.wasm"],app);
-	const template=await readFile(join(app,"canonical.wasm")),[head,tail]=splitCanonicalTemplate(template);
-	const embed=(name,b)=>"static const uint8_t "+name+"[]={"+[...b].join(",")+"};\n";
-	const hooks=canonicalNativeHooks(model),driver=await asset("../backends/wit/canonical-command.c"),reactor=await asset("../backends/wit/canonical-future-reactor.h");
-	await save("package.h",'#include "'+prefix+'.h"\n#define LB_SLOTS 64\n#define LB_METHODS '+model.channels.length+"\n"+embed("template_head",head)+embed("template_tail",tail));
-	await save("canonical-hooks.h",hooks);await save("canonical-command.c",driver);await save("canonical-future-reactor.h",reactor);
+	let template,hooks,driver,reactor,wit;
+	if(callbacks) ({template,hooks,driver,reactor,wit}=await prepareCanonicalCallbackPackage(o,tools));
+	else
+	{
+		const model=canonicalAppModel({api,entries,prefix,name,version});wit=model.wit;
+		await save("application.wit",model.wit);await save("canonical.wat",model.wat);
+		await save("guest-contract.wat",model.guestContract);
+		await run(tools,["component","targets","application.wit","guest-contract.wat"],app);
+		await run(tools,["parse","canonical.wat","-o","canonical.wasm"],app);
+		await run(tools,["validate","--features","cm-async,cm-async-builtins","canonical.wasm"],app);
+		template=await readFile(join(app,"canonical.wasm"));const [head,tail]=splitCanonicalTemplate(template);
+		const embed=(name,b)=>"static const uint8_t "+name+"[]={"+[...b].join(",")+"};\n";
+		hooks=canonicalNativeHooks(model);driver=await asset("../backends/wit/canonical-command.c");reactor=await asset("../backends/wit/canonical-future-reactor.h");
+		await save("package.h",'#include "'+prefix+'.h"\n#define LB_SLOTS 64\n#define LB_METHODS '+model.channels.length+"\n"+embed("template_head",head)+embed("template_tail",tail));
+		await save("canonical-hooks.h",hooks);await save("canonical-command.c",driver);await save("canonical-future-reactor.h",reactor);
+	}
 	const binary=name+"-run";
 	await run(environment.CC??"cc",["-std=c11","-O1","-g0"
 		, "-Wall","-Wextra","-Werror"
@@ -84,7 +91,7 @@ export const writeCanonicalWitRelease=async o=>{
             if(+m[1]>2 || (+m[1]===2 && (+m[2]>+floor.slice(2) || (+m[2]===+floor.slice(2) && +m[3]>0)))) throw new Error("Canonical WIT library exceeds glibc "+floor);
 	}
 	if(command.includes(Buffer.from(o.workRoot))) throw new Error("Canonical WIT command retained private staging path");
-	files.set("bin/"+binary,command);files.set("wit/application.wit",model.wit);
+	files.set("bin/"+binary,command);files.set("wit/application.wit",wit);
 	const share="share/lean-bridge";
 	files.set(share+"/binding-ir.json",canonicalJson(api));files.set(share+"/elaboration.json",canonicalJson(evidence));
 	files.set(share+"/runtime.json",canonicalJson(manifest));files.set(share+"/generated.lean",gen.entryLean);
@@ -100,6 +107,7 @@ export const writeCanonicalWitRelease=async o=>{
 	}
 	files.set("package-metadata.json",canonicalJson(projectContract.metadata??{}));
 	files.set("README.md","# "+name+" "+version+"\n\nExtract the whole archive. Build a Wasm component for wit/application.wit, then run `bin/"+binary+" /path/to/application.wasm`. The command prints the signed 64-bit result of the guest’s async run export. The guest imports Lean functions by their WIT names and uses canonical futures and streams. No SDK, scheduler hooks or Lean compiler are needed at runtime. Linux x86-64, glibc "+floor+" or later.\n\nEach factory permits 64 outstanding operations. Results remain pinned until read or abandoned. A cursor pulls only on stream demand; dropping its reader closes the cursor. If next fails, the stream sends one typed error frame and ends. A returned Except is an ordinary item. Exiting the application closes remaining Lean owners; it does not promise to stop Lean worker computation. Factory failure is the outer WIT result; selected worker IO failures are inside the future. An ordinary returned Except is a value. Strings use UTF-8. ByteArray values use list<u8> and keep all bytes, including NUL. String and byte arguments share a 16 MiB limit per call. Numeric, Boolean, Char and nested result values are supported. No WASI or host capabilities are linked.\n");
+	if(callbacks) files.set("README.md","# "+name+" "+version+"\n\nExtract the whole archive. Implement the callback-provider and application worlds in wit/application.wit. The provider owns the registrations; it may add constructors for the application's captures. Run `bin/"+binary+" provider.wasm application.wasm` on Linux x86-64, glibc "+floor+" or later. No Lean compiler or Wasmtime SDK is required after installation.\n\nA task borrows its callback arguments at startup and retains them until completion or reader abandonment. The application receives a canonical future; the runner dispatches requests on the store owner. Declared factory, worker and guest failures stay distinct. A one-call rejection carries no payload. Dropping a reader releases the task and registrations, but does not promise to stop non-cooperative Lean work.\n");
 	const records=[...files].map(([path,v])=>({path,bytes: Buffer.from(v),mode: path==="bin/"+binary?0o755:0o644}));
 	const componentIdentity=sha256(canonicalJson({nativeIdentity: o.nativeIdentity
 		, template: sha256(template)

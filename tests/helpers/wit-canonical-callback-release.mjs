@@ -9,11 +9,14 @@ import {reconcileHostExports} from "../../src/analyze/host-export-model.mjs";
 import {generateCTaskExports} from "../../src/backends/c/task-exports.mjs";
 import {retainedOnceSlots} from "../../src/backends/native/task-callback.mjs";
 import {canonicalCallbackBindings} from "../../src/backends/wit/canonical-callback.mjs";
-import {renderWitTaskImports} from "../../src/backends/wit/task-host.mjs";
+import {splitWitApplicationSlots} from "../../src/backends/wit/canonical-app.mjs";
 import {compileWitTaskResources} from "../../src/backends/wit/task-model.mjs";
 import {hashBindingIr} from "../../src/binding-ir/canonical.mjs";
 import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {prepareCanonicalCallbackPackage} from "../../src/release/wit-canonical-callback-package.mjs";
+import {canonicalBudgetGuest} from "./wit-canonical-budget-client.mjs";
+import {executeCanonicalBudgetNative} from "./wit-canonical-budget-native.mjs";
 
 const exec=(cmd,args,cwd,input)=>{
 	const r=spawnSync(cmd,args,{cwd,input,timeout: 180000,env: {...process.env,RAYON_NUM_THREADS: "1"}});
@@ -52,8 +55,35 @@ for(const route of ["ordinary","reviewed"]) test(route+" compiled task world sup
 		, componentIdentity: "0".repeat(64)});
 	assert.equal(gen.prefix,m.prefix);
 	await writeFile(join(dir,m.prefix+".h"),gen.header);
-	await writeFile(join(dir,"task-host.h"),await renderWitTaskImports(m));
-	exec(process.env.CC??"cc",["-std=gnu11","-Wall","-Wextra","-Werror","-I"+resolve(sdk,"include"),"-fsyntax-only","-x","c","-"],dir,
-		'#include "task-host.h"\nint main(void){(void)lb_tasks_link;(void)lb_tasks_shutdown;return 0;}\n');
+	const prepared=await prepareCanonicalCallbackPackage({app: dir
+		, api
+		, evidence
+		, entries
+		, bindingIrSha256
+		, name: "budget",version: "1.0.0",prefix: gen.prefix,wire: m.wire
+		, run: (cmd,args,cwd)=>({stdout: exec(cmd,args,cwd).toString()})},tools);
+	assert.match(prepared.wit,/future<result<u32, pair-failure>>/u);
+	const sections=splitWitApplicationSlots(prepared.template,["callbacks","application"]);
+	const clients=[await readFile(new URL("../fixtures/native-callback-budget/canonical-provider.wat",import.meta.url)),canonicalBudgetGuest()];
+	const pieces=[],guestBinaries=[];
+	for(const [i,s] of clients.entries())
+	{
+		const bytes=exec(tools,["parse","-"],dir,s),header=[4];
+		let n=bytes.length;
+		while(n>=128)
+		{
+			header.push((n&127)|128);n>>>=7;
+		}
+		header.push(n);
+		guestBinaries.push(bytes);
+		pieces.push(sections[i],Buffer.from(header),bytes);
+	}
+	exec(tools,["validate","--features","cm-async,cm-async-builtins","-"],dir,Buffer.concat([...pieces,sections[2]]));
+	exec(process.env.CC??"cc",["-std=c11","-Wall","-Wextra","-Werror","-I"+resolve(sdk,"include"),"-fsyntax-only","canonical-command.c"],dir);
+	if(process.env.LEAN_BRIDGE_WIT_CALLBACK_NATIVE_RUNTIME)
+	{
+		await executeCanonicalBudgetNative({dir,evidence,gen,wire: m.wire,previous,clients: guestBinaries,sdk});
+		t.diagnostic("real Lean and Wasmtime: 27 canonical futures checked by downstream application");
+	}
 	t.diagnostic(previous.componentSha256+": nine methods, eleven sites, ten one-call binders, one guest signature");
 });

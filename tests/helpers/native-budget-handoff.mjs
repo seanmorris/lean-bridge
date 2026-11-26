@@ -35,6 +35,11 @@ export const buildNativeBudget=async options=>{
 	}
 	const names={maven: "org.leanbridge:callback-budget","php-native": "example/callback-budget","wit-wasi": "budget"};
 	cfg.targets={[target]: target==="cpan"?{module: "LeanBridge::Budget",version: "0.001"}:{name: names[target]??target+"-budget",version: "1.0.0"}};
+	if(options.canonical)
+	{
+		if(target!=="wit-wasi") throw new TypeError("Only WIT has a canonical task ABI");
+		cfg.targets[target].asyncAbi="canonical";
+	}
 	if(route==="ordinary") cfg.exports=cfg.taskExports;
 	else
 	{
