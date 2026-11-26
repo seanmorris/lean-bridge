@@ -25,6 +25,15 @@ The ten executions establish the behavior of those individual packages,
 not a same-runtime comparison. For that comparison the paired test verifies
 identical runtime archive bytes, downstream source bytes and observations.
 
+The [matched ordinary release](npm-incoming-functions-20261126/matched/ordinary.json)
+and [matched reviewed release](npm-incoming-functions-20261126/matched/reviewed.json)
+each passed those five clients against the **same runtime archive**. The
+[pair receipt](npm-incoming-functions-20261126/matched/pair.json) identifies it
+by SHA-256 (`f63c2564…`), alongside the Lean source digest and both package
+receipts. The component archives differ. Both installations ran identical
+client sources and produced the same borrow expiry, retention and cleanup
+observations. The earlier ordinary receipt remains a separate result.
+
 The [release test](../../tests/helpers/npm-incoming-installed.mjs) checks the
 compiled signature, verifies both npm archives, installs them offline, and
 compares the browser's bundled Wasm assets with the installed bytes. The

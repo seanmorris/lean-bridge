@@ -270,7 +270,9 @@ qualifies input fields on **16 of 17 profiles**; WIT/WASI remains.
 A separate [incoming-function check](npm-incoming-functions-20261126.md)
 passes a Lean function directly into the host callback. All five consumers
 rejected the expired borrow and kept an independent lease on each of the
-two npm releases. Their runtime archives differ.
+[matched npm releases](npm-incoming-functions-20261126/matched/pair.json).
+Both used the same runtime archive. An older ordinary release passed the
+same checks with a different runtime.
 
 ### Does a callback allow one call or many?
 
