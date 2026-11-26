@@ -458,6 +458,24 @@ A callback can call another Lean export or an owned closure on the same thread. 
 
 The [Rust callable acceptance record](../evidence/rust-callables-20260919.md) covers both package paths, compile-time rejections, error and panic cleanup, exhausted closure registries, nested calls and source-free execution. Recursive callback values use the graph adapter described below. Resource-containing values use the explicit ownership profile described further down. Asynchronous callbacks remain unsupported.
 
+#### Borrow a Lean function inside a Rust callback
+
+In the Tariff example, Lean passes a function to your Rust callback. Call it
+with `.call()`. The generated `visit_quote_with` entry lets Rust infer the
+function's type:
+
+```rust
+let total = tariff_quotes::visit_quote_with(40, |quote, units| quote.call(units), 2)?;
+assert_eq!(total, 42);
+```
+
+The function is borrowed for that invocation only. To use it after your
+callback returns, call `quote.retain()?` **inside** the callback and keep the
+returned lease. Keeping the original wrapper does not keep the borrow alive,
+even when a lease exists. The generated crate README lists the closure entry
+for each eligible export. The [qualification record](../evidence/npm-incoming-functions-20261126.md#native-callbacks)
+distinguishes the compiled-adapter checks from installed-package checks.
+
 ### Structured callback values
 
 Callbacks and returned closures also accept acyclic arrays, Lists, options,

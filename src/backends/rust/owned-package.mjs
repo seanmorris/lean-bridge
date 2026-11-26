@@ -153,7 +153,7 @@ passed as callback arguments. A captured host callback cannot outlive its borrow
 Host errors return to the original Rust caller. Original panic payloads resume
 only after C has returned; no Rust panic crosses a C trampoline. Signatures that
 cannot derive failure recovery from their arguments require
-with_recovery(callback, typed_value). Recovery is never a successful result.
+with_recovery(callback, typed_value). Recovery is never a successful result.${generated.closureEntries.length ? "\n\nTo let Rust infer an incoming Lean function's type, use the closure entry below. The original entry also accepts an already leased callable or explicit recovery.\n\n"+generated.closureEntries.map(e=>"- "+e.original+" → "+e.name).join("\n") : ""}
 ` : ""}${generated.c.hostFieldCalls.length ? `
 For a caller-created function in a borrowed record, pass a mutable input record
 to the matching _with_host_fields function. The function can borrow local data
@@ -174,6 +174,7 @@ Rust and GMP retain their normal fatal allocator-exhaustion policies.
 		, language: "rust-1.90"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "resume-after-native-return"
+		, ...generated.closureEntries.length ? {directClosureEntries: generated.closureEntries} : {}
 		, ...generated.c.hostFieldCalls.length ? { hostInputRecords: generated.types.filter(n => n.hostInput)
 			.map(n => ({type: n.id, input: n.hostInput.name, fields: n.hostInput.fields.filter(f => f.host).map(f => f.publicName), lifetime: "call"})) } : {}
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1

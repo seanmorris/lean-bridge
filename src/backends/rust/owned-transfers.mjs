@@ -75,7 +75,7 @@ impl OwnedInputTransfers {
     }
     fn add(&mut self, lease: Rc<Lease>, group: usize) -> Result<(), Error> {
         lease.transfer_ready()?;
-        if !Rc::ptr_eq(&lease.state, &self.state) || group >= self.groups.len() { return Err(Error::InvalidArgument); }
+        if !lease.belongs_to(&self.state) || group >= self.groups.len() { return Err(Error::InvalidArgument); }
         let identity = Rc::as_ptr(&lease);
         if let Some((_, previous)) = self.leases.get(&identity) {
             return if *previous == group { Ok(()) } else { Err(Error::InvalidArgument) };

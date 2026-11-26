@@ -62,3 +62,31 @@ CMake package, with the broker returning to baseline after each case and zero
 after thread exit. Set `LEAN_BRIDGE_CPP_TARIFF_KEEP` to retain the two
 handoffs or `LEAN_BRIDGE_CPP_TARIFF_REPLAY` to replay them. Older Tariff
 archives without `visitQuote` do not qualify.
+
+## Native callbacks
+
+C11, C++20, Python, Ruby and Rust adapters passed a downstream callback
+that takes a Lean function directly. Each exercised success and failure with
+and without retention, nested failure while the outer borrow remains valid,
+and a fresh capture. After return, calling the original borrowed function
+failed even while the retained copy still returned 45. In Rust the
+`visit_quote_with` entry accepts `|quote, n| quote.call(n)` without an
+explicit parameter type; the original entry still accepts recovery wrappers.
+
+The independent Rust observer first detected a live native session after the
+callback, even though calling the expired wrapper failed. The wrapper held
+a strong session reference of its own. With that reference made weak, the
+observer saw a known live owner in its positive control, then zero after
+each of the six cases and zero after thread exit. Python and Ruby each saw
+only the deliberately open session after every case, then zero on shutdown.
+
+This was an adapter replay against the ordinary compiler output, **not** five
+package installs. The original Lean source digest is
+`8df990ee7666a9ea95544392fd379b3e656eefaaebce56dc1d92fdaa69661793`;
+the verified compiled component digest is
+`f47f1c5c0e4bf3a66ba28354970f69888b1a0843b254788981c63203f9fb911e`.
+Use `LEAN_BRIDGE_FRAME_DIRECT=1` and `LEAN_BRIDGE_FRAME_NATIVE_STAGE` with
+`npm run test:callback-frame-facades` to replay an original ordinary stage,
+or set `LEAN_BRIDGE_FRAME_C_HANDOFF` instead to use two C package handoffs.
+The replay verifies its input and compiles the public clients; no source
+change or rebuild of the Lean component is needed.

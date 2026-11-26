@@ -7,6 +7,7 @@ import test from "node:test";
 import {buildCanonicalProject} from "../src/build/canonical-build.mjs";
 import {canonicalJson, sha256} from "../src/capsule/node.mjs";
 import {generateOwnedRustCallables} from "../src/backends/rust/owned-callables.mjs";
+import {generateOwnedRustPackage} from "../src/backends/rust/owned-package.mjs";
 import {readVerifiedPackageSetReceipt} from "../src/release/package-set-receipt.mjs";
 import {copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied} from "./helpers/copied-fixture-install.mjs";
 import {saveLakeFile} from "./helpers/lake-workspace.mjs";
@@ -31,6 +32,22 @@ const json = async f => JSON.parse(await readFile(f));
 const environment = {...nativeFixtureEnvironment(["rust"]), CARGO_NET_OFFLINE: "true"
 	, CARGO_HOME: process.env.CARGO_HOME ?? resolve(".toolchains/cargo-copied")};
 const replay = process.env.LEAN_BRIDGE_RUST_TARIFF_REPLAY, keep = process.env.LEAN_BRIDGE_RUST_TARIFF_KEEP;
+
+test("Rust exposes an inferred closure entry without stealing a declared function's name", () => {
+	const ir=leasedClosureFieldReviewedIr({staged: true,incoming: true});
+	const d=ir.declarations.find(x=>x.name==="visitQuote"), other=structuredClone(d);
+	other.name+="With";other.id+="With";other.overloadKey+="With";other.source.declaration+="With";
+	ir.declarations.push(other);
+	const p=generateOwnedRustPackage(ir),entry=p.contract.directClosureEntries.find(e=>e.declaration===d.id);
+	assert.deepEqual(entry,{declaration: d.id,original: "visit_quote",name: "visit_quote_with_closure"});
+	assert.match(p.apiSource,/pub fn visit_quote<F1: OwnedCallback\d+>/u);
+	assert.match(p.apiSource,/pub fn visit_quote_with_closure<F1: FnMut\(Callback\w+, u32\) -> Result<u32, Error>>/u);
+	assert.ok(p.files["README.md"].includes("visit_quote → visit_quote_with_closure"));
+	const old=generateOwnedRustPackage(leasedClosureFieldReviewedIr({staged: true}));
+	assert.equal(old.contract.directClosureEntries,undefined);
+	assert.ok(!old.files["README.md"].includes("closure entry below"));
+	assert.deepEqual(generateOwnedRustCallables(ir,{hostCallbacks: false}).closureEntries,[]);
+});
 
 test("Rust borrows sibling fields and keeps each callback parameter independently typed", async t => {
 	const ir = leasedClosureFieldReviewedIr({exchange: true});

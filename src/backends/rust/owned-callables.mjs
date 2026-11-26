@@ -68,14 +68,20 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		, "impl<T: Clone> OwnedCallbackReply<T> for T { fn owned_reply(&self) -> Result<&T, Error> { Ok(self) } }"
 		, "impl<T: ValueType> OwnedCallbackReply<T> for Value<T> { fn owned_reply(&self) -> Result<&T, Error> { self.get() } }"
 	);
-	const signature = (item, offset = 0) => {
+	const directBounds = new Map(), closureEntries = [];
+	const usedNames = new Set([...c.functions, ...c.hostFieldCalls].map(f => f.cName.slice(c.prefix.length + 1)));
+	for(const t of ir.types) if(t.name) usedNames.add(t.name);
+	for(const n of nodes.values()) if(n.hostInput) usedNames.add(n.hostInput.name);
+	const signature = (item, offset = 0, infer = false) => {
 		const params = item.parameters.map(id => nodes.get(id));
 		const host = params.map((_, index) => Boolean(c.hostArgument?.(item, index)));
 		const wrapped = params.map((_, index) => wholeOwners && (item.anchor === index || item.transfers?.includes(index)));
 		const slots = params.map((node, index) => ({ node, index })).slice(offset);
 		const records = params.map((node, index) => item.hostRecordSlots?.some(s => s.index === index)
 			? ownedRustRecordView({node, index, nodes, callbacks: c.callbacks}) : undefined);
-		const generic = slots.flatMap(({ node, index }) => host[index] ? [`F${index}: OwnedCallback${node.index}`] : records[index]?.generic ?? []);
+		const generic = slots.flatMap(({ node, index }) => host[index]
+			? [`F${index}: ${(infer ? directBounds.get(node.id) : null) ?? "OwnedCallback" + node.index}`]
+			: records[index]?.generic ?? []);
 		return { params, host, wrapped, records
 			, generic: generic.length ? `<${generic.join(", ")}>` : ""
 			, publicParams: slots.map(({ node, index }) => `a${index}: ${records[index]?.argType ?? (host[index] ? `F${index}` : `${item.transfers?.includes(index) ? "&mut " : node.scalar ? "" : "&"}${wrapped[index] ? `Value<${node.hostName}>` : node.input}`)}`).join(", ")
@@ -104,6 +110,10 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		const borrowed = callback.anchor !== undefined;
 		const replyType = borrowed ? "Self::Reply" : result.hostName;
 		const bound = `FnMut(${params.map(param => param.hostName).join(", ")}) -> Result<${borrowed ? "R" : result.hostName}, Error>`;
+		// An opaque OwnedCallback bound accepts wrappers and recovery values,
+		// but Rust cannot derive the parameter type of |f, n| f.call(n) from it.
+		if(automatic && !borrowed && params.some(p => c.callbacks.some(cb => cb.id === p.id)))
+			directBounds.set(node.id, bound);
 		const generic = borrowed ? `F: ${bound}, R: OwnedCallbackReply<${result.hostName}>` : `F: ${bound}`;
 		traits.push("#[doc(hidden)]", `pub trait OwnedCallback${i} {`
 			, ...borrowed ? [`    type Reply: OwnedCallbackReply<${result.hostName}>;`] : []
@@ -203,6 +213,17 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 				, "    owned_checkpoint()?; Value::from_owned(output.hold()?, value)"] : [`    unsafe { owned_from${result.index}(&raw, 0, &mut result_scope, &mut output) }`], "}");
 		if(c.functions.includes(item) || item.hostRecordSlots) publicCalls.push(`pub fn ${item.cName.slice(c.prefix.length + 1)}${sig.generic}(${sig.publicParams}) -> Result<${returnType(item)}, Error> {`
 			, `    owned_values::owned_invoke${index}(${sig.arguments})`, "}");
+		if(c.functions.includes(item) && sig.params.some((p,i) => sig.host[i] && directBounds.has(p.id)))
+		{
+			const original = item.cName.slice(c.prefix.length + 1), inferred = signature(item, 0, true);
+			let name = original + "_with";
+			while(usedNames.has(name)) name += "_closure";
+			usedNames.add(name);
+			closureEntries.push({declaration: item.id, original, name});
+			publicCalls.push("/// Accepts a Rust closure and infers the type of its incoming Lean function."
+				, `pub fn ${name}${inferred.generic}(${inferred.publicParams}) -> Result<${returnType(item)}, Error> {`
+				, `    owned_values::owned_invoke${index}(${inferred.arguments})`, "}");
+		}
 	});
 	for(const node of nodes.values()) if(node.identity)
 	{
@@ -267,6 +288,6 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 			, "pub struct WithRecovery<F, R> { function: F, recovery: R }"
 			, "pub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }"] : []
 		, ...traits, ...publicCalls, ""].join("\n");
-	return { ...conversions, apiSource, nativeEntries
+	return { ...conversions, apiSource, nativeEntries, closureEntries
 		, source: [conversions.source, support, ...c.functions.some(item => item.transfers?.length) ? [wholeOwners ? ownedRustAnchoredTransfers : ownedRustInputTransfers(conversions)] : [], ...raw, ...helpers, ""].join("\n") };
 };

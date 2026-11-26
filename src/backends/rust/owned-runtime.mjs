@@ -151,7 +151,7 @@ pub(crate) mod owned_runtime {
             owners.retain(|weak| weak.strong_count() != 0);
             owners.try_reserve(1).map_err(|_| Error::Allocation)?;
             let slot = Rc::new(Slot { owner: Cell::new(std::ptr::null_mut()), state: Rc::clone(self) });
-            let lease = Rc::new(Lease { state: Rc::clone(self), kind: LeaseKind::Owned(Rc::clone(&slot))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result" : ""} });
+            let lease = Rc::new(Lease { state: Rc::downgrade(self), kind: LeaseKind::Owned(Rc::clone(&slot))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result" : ""} });
             owners.push(Rc::downgrade(&slot));
             slot.owner.set(std::mem::replace(&mut owner.value, std::ptr::null_mut()));
             Ok(lease)
@@ -169,15 +169,21 @@ pub(crate) mod owned_runtime {
     }
 
     enum LeaseKind { Owned(Rc<Slot>), Borrowed(Rc<Cell<bool>>) }
-    pub(crate) struct Lease { pub(crate) state: Rc<State>, kind: LeaseKind${transferredInputs ? ", input_move: RefCell<Option<Rc<InputMoveSignal>>>" : ""}${wholeOwners ? ", borrowed_result: bool" : ""} }
+    // An owning slot pins the session. A callback view must not pin it after
+    // its frame returns, even if the application keeps that expired wrapper.
+    pub(crate) struct Lease { pub(crate) state: Weak<State>, kind: LeaseKind${transferredInputs ? ", input_move: RefCell<Option<Rc<InputMoveSignal>>>" : ""}${wholeOwners ? ", borrowed_result: bool" : ""} }
     impl Lease {
+        pub(crate) fn belongs_to(&self, state: &Rc<State>) -> bool {
+            self.state.as_ptr() == Rc::as_ptr(state)
+        }
         pub(crate) fn require(&self) -> Result<(), Error> {
-            self.state.require()?;${transferredInputs ? "\n            if self.input_move.borrow().as_ref().is_some_and(|signal| signal.consumed()) { return Err(Error::Closed); }" : ""}
+            let state = self.state.upgrade().ok_or(Error::Closed)?;
+            state.require()?;${transferredInputs ? "\n            if self.input_move.borrow().as_ref().is_some_and(|signal| signal.consumed()) { return Err(Error::Closed); }" : ""}
             let active = match &self.kind {
                 LeaseKind::Owned(slot) => ${anchoredResults ? `{
                     let owner = ${transferredInputs ? "self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get())" : "slot.owner.get()"};
                     if owner.is_null() { return Err(Error::Closed); }
-                    checked(unsafe { result_validate(self.state.require()?, owner) })?; true
+                    checked(unsafe { result_validate(state.require()?, owner) })?; true
                 }` : wholeOwners && transferredInputs ? "!self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get()).is_null()" : "!slot.owner.get().is_null()"},
                 LeaseKind::Borrowed(active) => active.get(),
             };
@@ -185,7 +191,7 @@ pub(crate) mod owned_runtime {
         }${wholeOwners ? `
         pub(crate) fn owner(&self, state: &Rc<State>) -> Result<*mut c_void, Error> {
             self.require()?;
-            if !Rc::ptr_eq(&self.state, state) { return Err(Error::InvalidArgument); }
+            if !self.belongs_to(state) { return Err(Error::InvalidArgument); }
             match &self.kind {
                 LeaseKind::Owned(slot) => Ok(${transferredInputs ? "self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get())" : "slot.owner.get()"}),
                 LeaseKind::Borrowed(_) => Err(Error::InvalidArgument),
@@ -197,7 +203,7 @@ ${transferredInputs ? wholeOwners ? ownedRustAnchoredTransferRuntime : ownedRust
         pub(crate) fn new(state: &Rc<State>) -> Result<Self, Error> {
             state.require()?;
             let active = Rc::new(Cell::new(true));
-            let lease = Rc::new(Lease { state: Rc::clone(state), kind: LeaseKind::Borrowed(Rc::clone(&active))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result: true" : ""} });
+            let lease = Rc::new(Lease { state: Rc::downgrade(state), kind: LeaseKind::Borrowed(Rc::clone(&active))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result: true" : ""} });
             Ok(Self { active, lease })
         }
     }
@@ -219,7 +225,7 @@ impl<Kind> Resource<Kind> {
         let lease = self.lease.as_ref().ok_or(Error::Closed)?;
         lease.require()?;
         if self.handle.is_null() { return Err(Error::Closed); }
-        if !std::rc::Rc::ptr_eq(&lease.state, state) { return Err(Error::InvalidArgument); }
+        if !lease.belongs_to(state) { return Err(Error::InvalidArgument); }
         Ok(self.handle)
     }
 ${transferredInputs && !wholeOwners ? `    pub(crate) fn transfer_lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
@@ -245,7 +251,7 @@ ${anchoredResults ? "" : `impl<Kind> PartialEq for Resource<Kind> {
         }
         match` : "self.handle == other.handle && match"} (&self.lease, &other.lease) {
             (None, None) => true,
-            (Some(a), Some(b)) => std::rc::Rc::ptr_eq(&a.state, &b.state),
+            (Some(a), Some(b)) => std::rc::Weak::ptr_eq(&a.state, &b.state),
             _ => false,
         }
     }
