@@ -386,6 +386,29 @@ the managed clients and synchronous iterators above.
 actual consumer source digests, original route records, runtimes, and
 observations. This does not rebuild those packages or promote a release.
 
+## Count for the five npm clients
+
+All five clients qualify for Task, cancellation and async iteration on
+both author routes. Combined with the earlier profiles, that is
+**94/136 (69%)**: synchronous iterators everywhere, plus the three async
+contracts in ten profiles. Each row below answers a different question;
+the three fixtures are separate releases.
+
+| Installed package | What the callers established |
+| --- | --- |
+| Workshop and peer | The [public client at the recorded revision](https://github.com/seanmorris/lean-bridge/blob/9431fd59c410a87e1b1ea72767b477f8f3c4805a/tests/fixtures/javascript-threaded-host/calls.mjs) ran in Node JavaScript, a Chromium page and a deployed module worker. It caught a typed step failure, observed exhaustion and early close, cancelled pending work, then distinguished closing a binding from retiring the runtime. The [separate TypeScript and React replay](#the-workshop-replay) on those Workshop archives checks the original callback error, automatic finalization and actual unmount. |
+| Budget | All five clients ran the same [callback registration and cancellation races](#cancelling-a-callback-and-registering-the-same-function-again). An old reply did not settle a replacement or prevent an independent task from running. |
+| Reader | All five [cancelled a genuinely parked Lean pull](#cancelling-a-pull-already-waiting-on-lean); a second demand could not take its result, and cleanup waited for the actual worker. |
+
+`node --test tests/helpers/npm-async-reconciliation.mjs` checks the
+observations and source digests. For the archive check as well, supply
+`LEAN_BRIDGE_JS_DELIVERY_RELEASES` (Workshop and peer),
+`LEAN_BRIDGE_NPM_ONCE_CALLBACK_REPLAY` (Budget) and
+`LEAN_BRIDGE_NPM_PARKED_READER_REPLAY` (Reader). The check verifies seven
+original package receipts and extracts the module bytes from each archive
+to compare with the deployment records where those are available. The
+Node worker control does not count as a sixth profile.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
