@@ -17,7 +17,8 @@ import { checkStagedQuoteIdentities,prepareStagedQuoteProject } from "./staged-q
 const require = createRequire(import.meta.url), name = "@example/tariff-quotes";
 const read = async path => JSON.parse(await readFile(path, "utf8"));
 const hash = async path => sha256(await readFile(path));
-const expected = base => ({ keptValue: base + 2, entries: 0, stageCalls: 1, stagedValue: base + 4, nextValue: 42 });
+const applicationField = {visits:2,innerCalls:2,first:42,second:42,recovered:42};
+const expected = base => ({ keptValue: base + 2, entries: 0, stageCalls: 1, stagedValue: base + 4, nextValue: 42, applicationField });
 test("five installed npm clients own callable record fields on both author routes", {timeout: 7_200_000}, async t => {
 	const work = await mkdtemp(join(tmpdir(), "npm-tariff-")); t.after(() => rm(work, {recursive: true, force: true}));
 	const { LEAN_BRIDGE_NPM_TARIFF_KEEP: keep, LEAN_BRIDGE_NPM_TARIFF_REPLAY: replay } = process.env;
@@ -46,6 +47,7 @@ test("five installed npm clients own callable record fields on both author route
 	const files = {"calls.mjs": join(client, "tariff-fields.mjs"), "typed.mts": join(client, "tariff-fields.mts"),
 		"page.mjs": join(ui, "page.mjs"), "worker.mjs": join(ui, "worker.mjs")};
 	files["observer.mjs"] = join(client, "tariff-observer.mjs"); files["observer.d.mts"] = join(client, "tariff-observer.d.mts");
+	files["host-field.mjs"] = join(client, "tariff-host-field.mjs"); files["host-field.d.mts"] = join(client, "tariff-host-field.d.mts");
 	const check = (actual, expectedCalls) => {
 		const {baseline, held, after, ...values} = actual;
 		assert.equal(baseline, 0); assert.ok(Number.isInteger(held) && held > baseline);
@@ -71,7 +73,7 @@ test("five installed npm clients own callable record fields on both author route
 		check(node, expected(40));
 		await writeFile(join(app, "tsconfig.json"), JSON.stringify({files: ["typed.mts"], compilerOptions: {strict: true, module: "NodeNext", target: "ES2022", types: [], lib: ["ES2024", "DOM"]}}));
 		await run(process.execPath, [require.resolve("typescript/bin/tsc"), "-p", "tsconfig.json"], app, noTools);
-		const typescript = JSON.parse(await run(process.execPath, ["typed.mjs"], app, noTools)); check(typescript, {value: 42, entries: 0});
+		const typescript = JSON.parse(await run(process.execPath, ["typed.mjs"], app, noTools)); check(typescript, {value: 42, entries: 0, applicationField});
 		await writeFile(join(app, "index.html"), '<main></main><script>globalThis.recordReady=Promise.withResolvers();onerror=e=>recordReady.reject(String(e));onunhandledrejection=e=>recordReady.reject(String(e.reason))</script><script type="module" src="./page.mjs"></script>');
 		await build({root: app, configFile: false, envDir: false, publicDir: false, logLevel: "error", worker: {format: "es"}, build: {target: "esnext", assetsInlineLimit: 0, minify: false}});
 		const installedBytes = [await hash(join(installed, "internal/component.so.wasm")), await hash(join(app, "node_modules/@lean-bridge/runtime/internal/main.wasm"))].sort();

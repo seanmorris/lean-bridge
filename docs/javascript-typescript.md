@@ -601,6 +601,12 @@ Passing a plain JavaScript function to a call-scoped callback parameter
 doesn't give it that lifetime. Putting it into a returned record doesn't
 extend the borrow: calling it later fails before JavaScript enters the callback.
 
+You can also supply a plain function *inside* a record. For example,
+`api.applyTariff({ quote: units => units + 7 }, 35)` returns 42.
+The function may read current application state or call Lean again during
+that call. If Lean returns the record through `echoTariff`, the returned
+field cannot call that JavaScript function later.
+
 ### Borrowed callback results
 
 Pass the selected argument as a whole owner, without calling `get()` on it.

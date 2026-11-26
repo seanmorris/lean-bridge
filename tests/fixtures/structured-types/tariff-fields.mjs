@@ -1,5 +1,6 @@
 /** @file Ordinary application calls shared by Node, a page, React and a dedicated worker. */
 import {observeTariff} from "./observer.mjs";
+import {hostField} from "./host-field.mjs";
 const {api,live} = await observeTariff(() => import("@example/tariff-quotes"));
 
 export function exercise(alternate) {
@@ -43,6 +44,7 @@ export function exercise(alternate) {
 	rejected(() => api.echoTariff({quote: keep}), e => /disposed|expired/u.test(e.message));
 	const next = api.makeTariff(6).quote;
 	const nextValue = next(36); next.dispose(); check(nextValue === 42, "binding not reusable");
+	const applicationField = hostField(api);
 	const after = live(); check(after === baseline, "leaked a native identity");
-	return {keptValue, entries, stageCalls, stagedValue, nextValue, baseline, held, after};
+	return {keptValue, entries, stageCalls, stagedValue, nextValue, baseline, held, after, applicationField};
 }

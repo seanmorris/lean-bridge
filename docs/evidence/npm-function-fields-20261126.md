@@ -43,3 +43,19 @@ existing directory to retain the package sets. To repeat just the installs
 and downstream checks, set `LEAN_BRIDGE_NPM_TARIFF_REPLAY` to the reported
 handoff directory instead. The [harness](../../tests/helpers/npm-function-fields-installed.mjs)
 verifies the receipts and installed compiler metadata on both paths.
+
+## Passing a JavaScript function inside an input record
+
+A second run used the same archives with a [caller-created record](../../tests/fixtures/structured-types/tariff-host-field.mjs).
+Its `quote` function reads a mutable JavaScript object and calls a second
+Lean function before returning. Changing the object's offset from 7 to 12
+between calls changes the calculation: both 35 + 7 and 30 + 12 return 42.
+Each call enters the host exactly once. A field that throws returns the
+original error to its caller, and a fresh record still works afterwards.
+
+Returning the caller's field through `echoTariff` does not extend its
+borrow. Calling the escaped field directly or passing it back to Lean fails
+with status 10 without another host entry. All five clients finished with
+zero live Wasm identities. The [ordinary](npm-host-field-calls-20261126/ordinary.json)
+and [reviewed](npm-host-field-calls-20261126/reviewed.json) records retain
+these observations separately from the original leased-field run above.

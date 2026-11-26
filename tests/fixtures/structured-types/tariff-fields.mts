@@ -1,4 +1,5 @@
 import {observeTariff} from "./observer.mjs";
+import {hostField} from "./host-field.mjs";
 import type {Tariff, TariffInput} from "@example/tariff-quotes";
 const {api, live} = await observeTariff(() => import("@example/tariff-quotes"));
 const baseline = live();
@@ -34,5 +35,6 @@ if (false) {
 	void forged;
 }
 packed.quote.dispose(); kept.dispose();
+const applicationField=hostField(api,(quote): TariffInput => ({quote}));
 const after = live(); if (after !== baseline) throw new Error("leaked a native identity");
-console.log(JSON.stringify({value, entries, baseline, held, after}));
+console.log(JSON.stringify({value, entries, baseline, held, after, applicationField}));

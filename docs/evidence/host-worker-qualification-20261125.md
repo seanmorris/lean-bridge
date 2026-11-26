@@ -231,6 +231,11 @@ saved functions again.
 
 ### Does a callback allow one call or many?
 
+An [installed npm input-record test](npm-function-fields-20261126.md#passing-a-javascript-function-inside-an-input-record)
+passes a caller-created JS function through a field on both author routes.
+It can reenter Lean during the call but not after the returned borrow expires.
+This covers input fields in all five npm profiles, not durable registrations.
+
 Running a callback exactly once in an example doesn't show the binding
 would reject a second call. The [registry unit test](../../tests/callback-runtime.test.mjs)
 gives a callback an explicit `once` plan and verifies that rejection. The
