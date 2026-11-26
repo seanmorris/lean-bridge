@@ -1,0 +1,69 @@
+{
+  "archives": {
+    "LeanBridge-Runtime": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9",
+    "LeanBridge-TariffQuotes": "36df799662e551c0d9ebc7245a6608407d00eb7280d5267e35990cbbd3fd9d85"
+  },
+  "bindingIrSha256": "7f8bffccefde396ea6333dfc2b4d3422ab9e71dd9ba23611387b781abb5e4562",
+  "clientSha256": "590c3d40923a79ebc9e64a89c8084ed8826f7c2f679f43a3e89312f2aaebcbad",
+  "observations": [
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "8cb94567eb794a13cd3f07d0f75e288a51c6c85c2d9302836753ffad5ef57a65",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "35a0ca0e942f8625b69bca962e62818464d697ec849ec9a47f53bf4151ba1bb9",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "f31b48bee475e99e4d3460da784dc6ee1ce9932ab95c86eee3759a02cc69c6e8",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.38.2"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "6547f4de774448d1ea8bcfb043ae936ba8ff645d7188d1ea20fb4d3b73f34efb",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.38.2"
+    }
+  ],
+  "receiptSha256": "0f2068ab598d6818d4b6f2482a09f068bd63b63a698469786c809aea02fc920b",
+  "reviewedSourceSha256": null,
+  "route": "ordinary"
+}

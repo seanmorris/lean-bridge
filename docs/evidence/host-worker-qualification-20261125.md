@@ -235,17 +235,20 @@ leased function, then separately throw during a callback after a nested
 allocation. Both languages recover the original exception and invoke their
 saved functions again.
 
-### Does a callback allow one call or many?
-
 The [installed Wasmtime client](wit-function-fields-20261126.md) also
 qualifies a leased callable field and a direct higher-order callback reply.
 Both WIT source routes rejected stale calls before host entry and restored
 their native owner count. This is separate from invocation-count policy.
+The [CPAN consumer](perl-function-fields-20261126.md) ran both paths on
+threaded and unthreaded Perl 5.36 and 5.38. The native broker returned
+to baseline before shutdown in all eight installs.
 
 An [installed npm input-record test](npm-function-fields-20261126.md#passing-a-javascript-function-inside-an-input-record)
 passes a caller-created JS function through a field on both author routes.
 It can reenter Lean during the call but not after the returned borrow expires.
 This covers input fields in all five npm profiles, not durable registrations.
+
+### Does a callback allow one call or many?
 
 Running a callback exactly once in an example doesn't show the binding
 would reject a second call. The [registry unit test](../../tests/callback-runtime.test.mjs)

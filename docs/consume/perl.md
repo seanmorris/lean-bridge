@@ -1167,6 +1167,14 @@ $counter->close;
 
 Callbacks may reenter the generated API. A resource first seen as a callback argument is borrowed: saving its Perl reference alone does not keep it open after the callback. If you already hold a lease, or a generated API returns that same resource as a leased result during the callback, the canonical wrapper stays open. A callback can close a resource used in its own call; the active Lean frame retains what it needs to finish. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a call-scoped host callback beyond that call. An expired callback fails safely when invoked later.
 
+A generated record can hold a Lean function. To keep a field function after
+closing the original, call `my $saved = $record->quote->retain`, invoke it
+with `$saved->call(3)`, then `$saved->close`. Returning that function from
+a synchronous callback passes the function itself back to Lean. Putting a
+call-scoped Perl callback in a returned record does **not** keep the Perl
+callback alive. The [installed CPAN example](../evidence/perl-function-fields-20261126.md)
+exercises both lifetimes.
+
 A synchronous callback that returns a standalone resource normally takes a Perl coderef. If any argument has the same resource type as the result, Lean can use that argument while unwinding a failed call. If there is no matching argument, supply a live recovery object when registering the callback:
 
 ```perl
