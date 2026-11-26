@@ -264,6 +264,8 @@ The first attempt spends that allowance, even if your sub dies. A second
 attempt never enters Perl. If Lean propagates the refusal, `get` throws
 the package's `CallbackAlreadyInvoked` object; `->declaration` identifies
 the export. You can reuse the same sub in another parameter or a new task.
+The [installed example](../evidence/native-once-callback-20261126.md#perl)
+shows what happens when two Lean workers try to call that sub at once.
 
 An ordinary exception does not disable the runtime. If the bridge cannot match a native callback failure to the Perl exception that produced it, it retires the shared runtime instead. Catching that diagnostic inside a host method does not let the enclosing call return a value. Further calls through either component require a fresh process.
 

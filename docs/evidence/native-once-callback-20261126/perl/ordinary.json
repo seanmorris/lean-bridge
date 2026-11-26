@@ -1,0 +1,92 @@
+{
+  "archive": {
+    "bytes": 194309,
+    "path": "archives/LeanBridge-Budget-0.001.tar.gz",
+    "sha256": "dbcd22f738085c0f69b16279da6a6ac62fe13e9c230e5c0fcc96d43b51a16252"
+  },
+  "bindingIrSha256": "fb9173dc018142d1ed15dee9136b59dd6b9d60a0a326b9690be1bcc41590b1ae",
+  "clientSha256": "7a027972f0d4c7921da9297c69af2c950422985f99818471a7ccb845d3f29a85",
+  "observations": [
+    {
+      "abiKey": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "live": 0,
+      "mode": "prebuilt-only",
+      "perl": "5.36.3",
+      "races": 16,
+      "threads": 1,
+      "xsSha256": "187cb8d6be9ad2f7e05c59428bf93c026224a7a3c534dcd70c524ff0fa1170e9"
+    },
+    {
+      "abiKey": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "live": 0,
+      "mode": "build-xs",
+      "perl": "5.36.3",
+      "races": 16,
+      "threads": 1,
+      "xsSha256": "bb864e719369982b9a3b45f11a18779838eafaa9c0446deeab67de0bf6462858"
+    },
+    {
+      "abiKey": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "live": 0,
+      "mode": "prebuilt-only",
+      "perl": "5.36.3",
+      "races": 16,
+      "threads": 0,
+      "xsSha256": "3d8c117d80889965c04fc7bbd4902d0cb7352c35b5fabb56d0153219eb69af97"
+    },
+    {
+      "abiKey": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "live": 0,
+      "mode": "build-xs",
+      "perl": "5.36.3",
+      "races": 16,
+      "threads": 0,
+      "xsSha256": "194f5eff4c5d34a1616ba7e5994127ce0f7c2478a01e191f5ff0b18c1e994d96"
+    },
+    {
+      "abiKey": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "live": 0,
+      "mode": "prebuilt-only",
+      "perl": "5.38.2",
+      "races": 16,
+      "threads": 1,
+      "xsSha256": "67e15e8dd43c2f31376f0be8ae8c2576804170a406ab8edc01d110c54611bd6c"
+    },
+    {
+      "abiKey": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "live": 0,
+      "mode": "build-xs",
+      "perl": "5.38.2",
+      "races": 16,
+      "threads": 1,
+      "xsSha256": "8585fbcf94f6c2e210a9c7b3a53daac8be00cdf10c8785d173a7157f52c83c6d"
+    },
+    {
+      "abiKey": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "live": 0,
+      "mode": "prebuilt-only",
+      "perl": "5.38.2",
+      "races": 16,
+      "threads": 0,
+      "xsSha256": "6b2dde278435067d804b51c08d87ebb464255ab77c35db5ac2a2f350af9f05d4"
+    },
+    {
+      "abiKey": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "live": 0,
+      "mode": "build-xs",
+      "perl": "5.38.2",
+      "races": 16,
+      "threads": 0,
+      "xsSha256": "ec029e9d9c9f7d60ae60d8435cfbec690a28feba22283459a50bfc75ebe8c190"
+    }
+  ],
+  "receiptSha256": "49605989a38c5ac3c2eacd8d432f445d1a71365bd1758fa792f7343cf0b2a4e3",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtime": {
+    "bytes": 51422277,
+    "path": "archives/LeanBridge-Runtime-0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471.tar.gz",
+    "sha256": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+  },
+  "sourceTreeSha256": "016aa733872fb1cfef3b3797b2465f5f7c87200da15e6b300ee39377c64fa277"
+}

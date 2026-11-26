@@ -121,6 +121,28 @@ reconstructed from the ordinary interface and the author's change matches
 the compiler's recorded source digest. These are native PHP runs, not Zend
 inside WebAssembly.
 
+## Perl
+
+The same [downstream Perl program](../../tests/fixtures/native-callback-budget/client.pl)
+ran against the [ordinary](native-once-callback-20261126/perl/ordinary.json)
+and [reviewed](native-once-callback-20261126/perl/reviewed.json) CPAN packages.
+Each ran on Perl 5.36.3 and 5.38.2, threaded and unthreaded, with both
+prebuilt and installer-compiled XS. Across those 16 installations, exactly
+one worker entered Perl in each of 256 two-worker races. Throwing spent
+the callback's allowance. Reusing the same callback in another slot or task
+did not spend that slot's allowance. The client distinguished a policy
+refusal, the original Perl exception, and a typed startup failure (73).
+Closing the registration released the captured object. All four broker
+counters (identities, wrappers, callbacks and scopes) ended at zero.
+
+The [ordinary package receipt](native-once-callback-20261126/perl/ordinary.package-set.json)
+and [reviewed package receipt](native-once-callback-20261126/perl/reviewed.package-set.json)
+identify distinct component archives and the same runtime archive. Independent
+verification covered all 25 manifest-listed component files and all 36 runtime
+files on each route, including the Lean component and the four prebuilt XS
+binaries. The reviewed author input reconstructed from the ordinary interface
+matches the compiler's recorded SHA-256 (`8780c3c5…`).
+
 ## WIT/WASI pollable tasks
 
 The [ordinary](native-once-callback-20261126/wit-pollable/ordinary.json) and
