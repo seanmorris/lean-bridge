@@ -121,6 +121,21 @@ reconstructed from the ordinary interface and the author's change matches
 the compiler's recorded source digest. These are native PHP runs, not Zend
 inside WebAssembly.
 
+## WIT/WASI pollable tasks
+
+The [ordinary](native-once-callback-20261126/wit-pollable/ordinary.json) and
+[reviewed](native-once-callback-20261126/wit-pollable/reviewed.json) releases
+shipped the same component, WIT world, and three runtime libraries in distinct
+archives. Each component matched its installed world with `wasm-tools component
+targets`. The [Wasmtime client](../../tests/fixtures/native-callback-budget/wit-client.c)
+linked from the relocated package and ran without the SDK.
+
+In each of 16 two-worker races per release, only one call reached the host.
+The other received the payload-free `callback-already-invoked` case. Guest
+callback errors, typed startup failure, and same-text factory and terminal IO
+failures remained distinct. Both callback owners were destroyed and the broker
+returned to zero live leases. This covers pollable tasks, not canonical futures.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
