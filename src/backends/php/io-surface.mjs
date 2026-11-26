@@ -8,6 +8,7 @@ import { heapResourceIdentities } from "../../analyze/heap-resource-identity.mjs
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
+import { retainedOnceSlots } from "../native/task-callback.mjs";
 import { validateOrdinaryPhpSettings } from "./copied-model.mjs";
 import { phpClassName, phpFieldName, reservedPhpNames } from "./copied-names.mjs";
 
@@ -55,6 +56,8 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 	if(typeof name!=="string"||typeof version!=="string") fail("missing Composer coordinates");
 	validateOrdinaryPhpSettings({name,version});
 	const s=evidence?.selection;
+	if(s?.phpWasmCallbackBudgets!==undefined || (s?.phpNativeCallbackBudgets!==undefined && (phpWasm || !tasks)))
+		fail("callback policy belongs to a different PHP delivery");
 	if(phpWasm && (tasks || !Array.isArray(s?.nativeEffects) || s.nativeEffects.length || s.leanResources?.length || s.taskIOErrors?.length))
 		fail("expected an in-memory PHP-Wasm selection without leases or scheduled operations");
 	const async = Boolean(s?.taskExports?.length || s?.asyncIterators?.length);
@@ -69,13 +72,15 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 	if(!/^[A-Za-z][A-Za-z0-9]*(?:[-_][A-Za-z0-9]+)*$/u.test(api.component.name)) fail("invalid component namespace");
 	const namespace="Lean"+pascal(api.component.name),prefix=phpWasm ? "lbc_php_wasm_"+sha256(api.component.id) : "lbc_php_"+sha256(name);
 	const resources = api.types.filter(type => type.kind === "resource");
-	const wire=generateSyncWire(prefix,entries,{ tasks, resources, phpWasm });
+	const onceByDeclaration=s.phpNativeCallbackBudgets ? retainedOnceSlots(actual) : undefined;
+	const wire=generateSyncWire(prefix,entries,{ tasks, resources, phpWasm, onceByDeclaration });
 	const publicNames=new Set(),errorClasses=new Set(["ioerror","declaredfailure","leanbridgeerror","bytes","ok","err"]);
 	const leases = new Map();
 	const typeOf = t => checkType(t, leases, phpWasm ? wasmTypes : scalarTypes);
 	if(tasks) for(const n of ["taskioerror","pullstream"]) errorClasses.add(n);
 	if(wire.methods.some(m=>m.delivery==="iterator")) errorClasses.add("cursor");
 	if(wire.methods.some(m=>m.callbacks)) for(const n of ["retainedcallback","callbackclosed"]) errorClasses.add(n);
+	if(wire.methods.some(m=>m.once)) errorClasses.add("callbackalreadyinvoked");
 	for(const r of wire.leases ?? [])
 	{
 		const publicName = phpClassName(r.name), lower = publicName.toLowerCase();
@@ -97,7 +102,7 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 			{
 				const t=api.types.find(x=>x.id===p.type.id), c=t?.callable, slot=w.callbacks?.find(x=>x[0]===j);
 				if(s.phpTaskCallbacks!==true || w.delivery!=="task" || !slot || p.optional || p.default!==null || p.ownership!=="lease" || p.lifetime?.scope!=="explicit" || p.lifetime.anchor!==null
-					|| t.kind!=="callback" || t.source.extensions["lean-bridge.dev/callback-scheduler"]!=="owner-event-loop" || c?.invocation!=="many"
+					|| t?.kind!=="callback" || t.source.extensions["lean-bridge.dev/callback-scheduler"]!=="owner-event-loop" || c?.invocation!==(w.onceSlots?.includes(j)?"once":"many")
 					|| c.reentry!=="same-agent" || c.selfDisposal!=="defer" || c.resultMode!=="value" || c.parameters.length!==1
 					|| c.parameters[0].ownership!=="copy" || c.result.ownership!=="copy" || c.parameters[0].type.name!==slot[1] || c.result.type.name!==slot[2]
 					|| c.failure.unexpected!=="poison-runtime" || c.failure.errors.join()!=="error:PhpCallbackException") fail("unverified retained callback");

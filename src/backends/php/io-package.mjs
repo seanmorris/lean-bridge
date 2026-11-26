@@ -96,7 +96,8 @@ const taskNative=(m,i,model,port,decode)=>{
             if ($status===0) return ${stream ? "["+result+"]" : result};
             ${stream ? "if ($status===2) return [];" : ""}
             ${failure(m.terminalFailure,stream ? 3 : 4,m.stepDeclaration??m.declaration,m.terminal)}${callback ? `
-            if ($status===14) throw $pump->original(WireValues::output('uint32',$tags,$data));
+            if ($status===14) throw $pump->original(WireValues::output('uint32',$tags,$data));${m.once ? `
+            if ($status===16) throw new \\${ns}\\CallbackAlreadyInvoked(${q(m.declaration)});` : ""}
             ${failure(m.failure,m.effect==="IO" ? 13 : 3,m.declaration,m.error)}` : ""}
             ${bad}
         };
@@ -158,7 +159,10 @@ namespace ${ns};
 require_once __DIR__ . '/Internal/Loader.php';${leased ? "\nrequire_once __DIR__ . '/Internal/Leases.php';\nrequire_once __DIR__ . '/Internal/LeaseCodec.php';" : ""}
 require_once __DIR__ . '/Internal/Native.php';
 require_once __DIR__ . '/Internal/WireValues.php';${direct ? "\nrequire_once __DIR__ . '/Internal/Cursor.php';" : ""}${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}${retained ? "\nrequire_once __DIR__ . '/Internal/Callbacks.php';" : ""}
-${phpIOPublicDeclarations(methods,branches)}
+${phpIOPublicDeclarations(methods,branches)}${methods.some(m=>m.once) ? `
+final class CallbackAlreadyInvoked extends \\RuntimeException {
+    public function __construct(public readonly string $declaration) { parent::__construct('callback-already-invoked'); }
+}` : ""}
 `;
 	const native=`<?php
 declare(strict_types=1);

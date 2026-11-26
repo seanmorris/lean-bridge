@@ -307,6 +307,21 @@ or exception. The same protocol works when the factory calls PHP before
 returning its task. See the [Composer consumer example](../php.md#pass-a-callback-to-a-lean-worker)
 and the [reproduced archive and installed results](../evidence/php-retained-tasks-20261123.json).
 
+For a standalone native task, you can limit one callback parameter to one
+invocation per task. For example, add this entry to the configuration above:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Retained.repeatCall", "parameter": "f", "invocation": "once"}
+]
+```
+
+This changes the example: the second `f` call is refused before PHP runs
+it. Concurrent workers share that parameter's allowance; other parameters
+and later task starts get their own. Use the original Lean binder name in
+the policy. Both author routes check it. Omit the entry to allow repeated
+calls. This native policy does not apply to packages with `hostImports`.
+
 ### Export a directly owned IO result
 
 If `Depot` imports `Shared` and returns `Shared.Ticket`, select both the

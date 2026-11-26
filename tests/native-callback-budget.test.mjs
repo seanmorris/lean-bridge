@@ -1,7 +1,7 @@
 /** @file Keep native worker callback allowances attached to the checked binder. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import {reconcileHostExports} from "../src/analyze/host-export-model.mjs";
+import {reconcileHostExports,taskWorkerInterface} from "../src/analyze/host-export-model.mjs";
 import {generateCTaskExports} from "../src/backends/c/task-exports.mjs";
 import {generateCppTaskHeader} from "../src/backends/cpp/task-exports.mjs";
 import {retainedOnceSlots} from "../src/backends/native/task-callback.mjs";
@@ -10,8 +10,11 @@ import {generateSyncWire} from "../src/backends/c/sync-wire.mjs";
 import {generateRubySyncSources} from "../src/backends/ruby/sync-io.mjs";
 import {generateDotnetTasks} from "../src/backends/dotnet/sync-io.mjs";
 import {generateJvmIO} from "../src/backends/jvm/sync-io.mjs";
+import {compilePhpTaskSurface} from "../src/backends/php/io-surface.mjs";
+import {generatePhpIOFiles} from "../src/backends/php/io-package.mjs";
+import {hashBindingIr} from "../src/binding-ir/canonical.mjs";
 
-for(const target of ["c","cpp","rust","ruby","dotnet","jvm"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
+for(const target of ["c","cpp","rust","ruby","dotnet","jvm","php"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
 	const v={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: v,reply: v};
 	const parameters=[{name: "n",type: v},{name: "f",type: fn},{name: "g",type: fn}],name="Budget.probe";
 	const entry={name: "probe",declaration: name,module: "Budget",parameters
@@ -21,11 +24,11 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm"]) test(target+" reje
 	const metadata={kind: "lean-bridge-host-export-metadata",schemaVersion: 1
 		, leanVersion: "4.32.2",entries: [entry]};
 	const component={name: "budget",id: "budget@1.0.0",version: "1.0.0"};
-	const checked={...selection,taskCallbackPolicies: [{declaration: name,parameter: "g",invocation: "once"}]};
+	const checked={...selection,...target==="php"?{phpNativeCallbackBudgets: true}:{},taskCallbackPolicies: [{declaration: name,parameter: "g",invocation: "once"}]};
 	const {api,entries}=reconcileHostExports({metadata,selection: checked,component});
 	const onceByDeclaration=retainedOnceSlots(api);assert.deepEqual([...onceByDeclaration],[[name,[2]]]);
 	const componentIdentity="1".repeat(64),integerMode=target==="c"?"gmp":"words";
-	const selector=["ruby","dotnet","jvm"].includes(target)?target+"Delivery":target+"Callbacks";
+	const selector=["ruby","dotnet","jvm","php"].includes(target)?target+"Delivery":target+"Callbacks";
 	const opts={entries,modules: ["Budget"],name: "budget"
 		, componentIdentity,[selector]: true,integerMode};
 	const plain=generateCTaskExports(opts),built=generateCTaskExports({...opts,onceByDeclaration});
@@ -35,6 +38,40 @@ for(const target of ["c","cpp","rust","ruby","dotnet","jvm"]) test(target+" reje
 	assert.doesNotMatch(plain.header+plain.source+plain.entryLean,/CALLBACK_ALREADY_INVOKED|cbBudgetClaim/u);
 	assert.match(built.entryLean,/Budget.probe v0 \(cbInvoke port 1\) \(cbInvokeOnce port used2 denied 2\)/u);
 	assert.match(built.header,/CALLBACK_ALREADY_INVOKED/u);
+	if(target==="php")
+	{
+		const surface=(api,selection)=>compilePhpTaskSurface({name: "example/callback-budget"
+			, version: "1.0.0"
+			, api
+			, bindingIrSha256: hashBindingIr(api)
+			, evidence: {metadata
+				, selection
+				, interfaces: ["Budget"]
+				, hostImportsSourceSha256: null
+				, sourceTreeSha256: componentIdentity
+				, compilerSha256: componentIdentity
+				, extractorSha256: componentIdentity
+				, configurationSha256: componentIdentity}});
+		const plain=surface(reconcileHostExports({metadata,selection,component}).api,selection);
+		const model=surface(api,checked);assert.deepEqual(model.methods[0].onceSlots,[2]);
+		assert.throws(()=>surface(api,{...checked,taskCallbackPolicies: [{declaration: name,parameter: "f",invocation: "once"}]}),/Reviewed API differs/u);
+		assert.throws(()=>surface(api,{...checked,phpWasmCallbackBudgets: true}),/different PHP delivery/u);
+		assert.throws(()=>taskWorkerInterface(api,{selection: checked}),/Native PHP callback allowances/u);
+		const emit=m=>{
+			const library="lib"+m.prefix+".so";
+			return generatePhpIOFiles(m,{componentIdentity
+				, runtimeIdentity: componentIdentity
+				, componentId: component.id
+				, library
+				, libraries: Object.fromEntries([library,"libleanshared.so","liblean_bridge_native.so"].map(l=>[l,componentIdentity]))});
+		};
+		assert.doesNotMatch(Object.values(await emit(plain)).join("\n"),/CallbackAlreadyInvoked/u);
+		const files=await emit(model);
+		assert.match(files["src/Api.php"],/final class CallbackAlreadyInvoked extends \\RuntimeException/u);
+		assert.ok(files["src/Internal/Native.php"].includes("if ($status===16) throw new \\LeanBudget\\CallbackAlreadyInvoked('Budget.probe');"));
+		assert.match(files["src/Internal/Native.php"],/if \(\$status===14\) throw \$pump->original/u);
+		assert.match(model.wire.source,/CALLBACK_ALREADY_INVOKED\) s = 16;/u);
+	}
 	if(target==="dotnet")
 	{
 		const wire=generateSyncWire(built.prefix,entries,{tasks: true,onceByDeclaration});

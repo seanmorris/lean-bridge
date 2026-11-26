@@ -51,6 +51,7 @@ export const nativeHostSelection = (ir, target) => {
  * @param evidence - Actual compiler selection and elaborated metadata.
  */
 export const taskWorkerInterface=(api,evidence)=>{
+	if(evidence.selection.phpNativeCallbackBudgets!==undefined) throw new TypeError("Native PHP callback allowances cannot use the JavaScript worker interface");
 	if(evidence.selection.phpWasmSyncObjects!==undefined) throw new TypeError("Synchronous Zend objects cannot use the JavaScript worker interface");
 	if(evidence.selection.staticTaskOwner!==undefined) throw new TypeError("Native static host object carriers cannot use the JavaScript worker interface");
 	if(evidence.selection.rubyTaskObjects) throw new TypeError("Ruby task object carriers cannot use the JavaScript worker interface");
@@ -266,6 +267,10 @@ export const reconcileHostExports = options => {
 	// signature, not to a generated parameter name or a reviewed type label.
 	const policies = new Map();
 	const zendBudgets=selection.phpWasmCallbackBudgets===true;
+	const nativePhpBudgets=selection.phpNativeCallbackBudgets===true;
+	if(selection.phpNativeCallbackBudgets!==undefined && (!nativePhpBudgets || !php || ir || selection.phpWasmCallbackBudgets!==undefined
+		|| selection.phpNativeTaskObjects || selection.phpWasmTaskObjects || !selection.taskCallbackPolicies?.length))
+		fail("Invalid native PHP task callback policy owner");
 	if(selection.phpWasmCallbackBudgets!==undefined && (!zendBudgets || !php || selection.phpNativeTaskObjects || !selection.taskCallbackPolicies?.length))
 		fail("Invalid PHP-Wasm task callback policy owner");
 	for(const {declaration, parameter, invocation} of selection.taskCallbackPolicies ?? [])
@@ -273,7 +278,7 @@ export const reconcileHostExports = options => {
 		const e = metadata.entries.find(e => e.declaration === declaration);
 		const matches = e?.parameters.filter(p => p.name === parameter);
 		const key = declaration + ":" + parameter;
-		if(!(js || zendBudgets || selection.pythonTaskCallbacks === true || (!ir && (c || cpp || rust || ruby || dotnet || jvm))) || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
+		if(!(js || zendBudgets || nativePhpBudgets || selection.pythonTaskCallbacks === true || (!ir && (c || cpp || rust || ruby || dotnet || jvm))) || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
 			|| policies.has(key) || !["once", "many"].includes(invocation)) fail("Invalid task callback policy: " + key);
 		policies.set(key, invocation);
 	}

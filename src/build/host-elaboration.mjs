@@ -183,6 +183,7 @@ export const compileHostSources = async options => {
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, ...(projectContract.taskCallbackPolicies ? {taskCallbackPolicies: projectContract.taskCallbackPolicies} : {})
 		, ...(options.target==="php-wasm" && projectContract.taskCallbackPolicies ? {phpWasmCallbackBudgets: true} : {})
+		, ...(options.target==="php-native" && !ir && projectContract.taskCallbackPolicies ? {phpNativeCallbackBudgets: true} : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
 		, ...(projectContract.iterators?.length ? {iterators: projectContract.iterators} : {})

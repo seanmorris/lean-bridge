@@ -294,8 +294,8 @@ and the [installed results and archive hashes](evidence/php-task-delivery-202611
 
 ### Pass a callback to a Lean worker
 
-Pass a PHP callable to the generated function. Lean can invoke it more than
-once; each invocation runs on the PHP event loop, not on a Lean worker thread.
+Pass a PHP callable to the generated function. By default Lean can invoke it more
+than once; each invocation runs on the PHP event loop, not on a Lean worker thread.
 Here Lean calls the same function twice:
 
 ```php
@@ -314,6 +314,12 @@ revoke it sooner, wrap it in the package's `RetainedCallback` and call `close()`
 A call already executing may finish; a later invocation throws `CallbackClosed`.
 A callback may call another export or await a different task. Do not await the
 callback's own unfinished task: that task needs your reply before it can finish.
+
+If the package author allows only one invocation, a second attempt never
+enters PHP. If Lean propagates that refusal, `await()` throws the package's
+`CallbackAlreadyInvoked`; its `$declaration` names the Lean export. The
+first attempt spends the allowance even if your callable throws. You can
+still pass the same callable to another parameter or start a new task with it.
 
 If your callback throws a PHP `Exception`, Lean can catch it. If Lean propagates
 it, `await()` throws the **same PHP object**. If Lean instead throws a new IO

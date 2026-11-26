@@ -105,3 +105,9 @@ to reuse the sealed gems.
 For .NET, run `npm run test:dotnet-once-callback` or set
 `LEAN_BRIDGE_DOTNET_BUDGET_REPLAY` to the handoff directory containing
 `ordinary/` and `reviewed/`.
+For native PHP, run `npm run test:php-native-once-callback` with
+`LEAN_BRIDGE_PHP_SCHEDULER_CACHE` pointing to the pinned Amp and Revolt
+Composer cache. `LEAN_BRIDGE_TEST_PHPS` accepts a JSON array of absolute PHP
+CLI paths with FFI. Use `LEAN_BRIDGE_PHP_NATIVE_BUDGET_KEEP` to retain the
+handoffs, or set `LEAN_BRIDGE_PHP_NATIVE_BUDGET_REPLAY` to an existing
+directory containing both route handoffs. This is not the PHP-Wasm test.
