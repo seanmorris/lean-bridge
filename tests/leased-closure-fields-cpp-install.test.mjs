@@ -10,7 +10,7 @@ import {canonicalJson, sha256} from "../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../src/release/package-set-receipt.mjs";
 import {copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied} from "./helpers/copied-fixture-install.mjs";
 import {saveLakeFile} from "./helpers/lake-workspace.mjs";
-import {prepareStagedQuoteProject} from "./helpers/staged-quote-project.mjs";
+import {checkStagedQuoteIdentities, prepareStagedQuoteProject} from "./helpers/staged-quote-project.mjs";
 import {leasedClosureFieldReviewedIr} from "./helpers/owned-aggregate-fixture.mjs";
 import {copyPackageSetHandoff, retainPackageSetEvidence} from "./helpers/package-set.mjs";
 
@@ -27,6 +27,19 @@ const parseResult = stdout => {
 	return {checks: scenarios.length, scenarios};
 };
 const environment = nativeFixtureEnvironment(["cpp"]), replay = process.env.LEAN_BRIDGE_CPP_TARIFF_REPLAY;
+const requireIncoming = process.env.LEAN_BRIDGE_CPP_TARIFF_REQUIRE_INCOMING === "1";
+
+test("a C++ callback can take the direct Lean closure through the generated public header", async t => {
+	const surface = generateOwnedCppPackage(leasedClosureFieldReviewedIr({staged: true, incoming: true}));
+	const dir = await mkdtemp(join(tmpdir(), "cpp-incoming-api-"));
+	t.after(() => rm(dir, {recursive: true, force: true}));
+	await saveLakeFile(dir, "include/" + surface.c.prefix + ".h", surface.c.header);
+	for(const [path, contents] of Object.entries(surface.files)) await saveLakeFile(dir, path, contents);
+	await runCopied("/usr/bin/c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror"
+		, "-pthread", "-Iinclude", "-fsyntax-only"
+		, join(fixture, "tariff-incoming.cpp")]
+	, dir, {PATH: "/usr/bin:/bin"});
+});
 
 test("C++ selects only borrowed callback fields and accepts mixed input/leased records", async t => {
 	const ir = leasedClosureFieldReviewedIr({exchange: true});
@@ -61,7 +74,7 @@ void use(const api::Tariff& leased) {
 
 const buildHandoff = async (dir, route, handoff, t) => {
 	const project = join(dir, "source"), output = join(dir, "producer");
-	await prepareStagedQuoteProject(project, route, "cpp");
+	await prepareStagedQuoteProject(project, route, "cpp", {incoming: requireIncoming});
 	try
 	{
 		await buildCanonicalProject({projectRoot: project, outputRoot: output
@@ -98,6 +111,16 @@ for(const route of ["ordinary", "reviewed"]) test("installed C++ direct function
 	const manifest = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
 	const model = JSON.parse(await readFile(join(installed, "share/lean-bridge/component/model.json")));
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), route === "reviewed");
+	const ir = model.bindingIr, incoming = ir.declarations.some(d => d.source.declaration === "Owned.visitQuote");
+	if(requireIncoming) assert.ok(incoming, "requested C++ release must actually export the callback with the incoming function");
+	if(incoming)
+	{
+		checkStagedQuoteIdentities(model, ir, receipt.profiles[0], route, {incoming: true});
+		const visit = ir.declarations.find(d => d.source.declaration === "Owned.visitQuote");
+		const [fn] = ir.types.find(v => v.id === visit.parameters[1].type.id).callable.parameters;
+		assert.equal(fn.ownership, "borrow"); assert.equal(fn.lifetime.scope, "call");
+		await saveLakeFile(root, "incoming.cpp", await readFile(join(fixture, "tariff-incoming.cpp")));
+	}
 	const probe = await readFile(join(fixture, "tariff-cpp-probe.cpp"));
 	await saveLakeFile(root, "observer.cpp", probe);
 	const fieldSource = await readFile(join(fixture, "tariff-fields.cpp"));
@@ -122,6 +145,10 @@ add_executable(fields fields.cpp observer.cpp)
 target_link_libraries(fields PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
 target_compile_features(fields PRIVATE cxx_std_20)
 target_compile_options(fields PRIVATE -Wall -Wextra -Werror -UNDEBUG)
+${incoming ? `add_executable(incoming incoming.cpp observer.cpp)
+target_link_libraries(incoming PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
+target_compile_features(incoming PRIVATE cxx_std_20)
+target_compile_options(incoming PRIVATE -Wall -Wextra -Werror -UNDEBUG)` : ""}
 ${hostFields ? `add_executable(host-fields host-fields.cpp observer.cpp)
 target_link_libraries(host-fields PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
 target_compile_features(host-fields PRIVATE cxx_std_20)
@@ -140,7 +167,28 @@ target_compile_definitions(host-fields PRIVATE TARIFF_TEST_OBSERVER=1)` : ""}
 	const lines = run.stdout.trimEnd().split("\n");
 	assert.equal(lines.pop(), "identities:1,1,1,1,1,1,0");
 	assert.deepEqual(lines, cases);
-	const dest = resolve("build/staged-cpp-callback");
+	const dest = resolve(requireIncoming ? process.env.LEAN_BRIDGE_CPP_INCOMING_OUTPUT ?? "build/cpp-incoming-function" : "build/staged-cpp-callback");
+	if(incoming)
+	{
+		const {stdout,stderr} = await runCopied(join(root, "build/incoming"), [], root);
+		assert.equal(stderr, "");
+		const outcomes=stdout.trimEnd().split("\n");
+		assert.deepEqual(outcomes, ["borrow expires after success"
+			, "borrow expires after failure", "lease survives success"
+			, "lease survives failure", "inner failure leaves outer borrow valid"
+			, "fresh calls use their own captures"
+			, "identities:1,1,1,1,1,1,0"]);
+		const report = {route, outcomes
+			, archive: receipt.packages[0].artifacts[0]
+			, receiptSha256: result.receiptSha256
+			, bindingIrSha256: model.bindingIrSha256
+			, reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr?.sourceSha256 ?? null
+			, runtimeIdentity: receipt.profiles[0].runtimeIdentity
+			, clientSha256: sha256(await readFile(join(root, "incoming.cpp")))
+			, executableSha256: sha256(await readFile(join(root, "build/incoming")))
+			, probeSha256: sha256(probe)};
+		await saveLakeFile(dest, route + ".incoming.json", canonicalJson(report));
+	}
 	await saveLakeFile(dest, route + ".package-set.json", canonicalJson(receipt));
 	const evidence = {schemaVersion: 1, route
 		, packageSetSha256: result.receiptSha256

@@ -50,3 +50,15 @@ The test builds ordinary and reviewed C archives, then compiles a pkg-config
 client and a relocated CMake client. Use `LEAN_BRIDGE_C_INCOMING_KEEP` to
 retain the handoffs or `LEAN_BRIDGE_C_INCOMING_REPLAY` to replay them.
 The npm receipts above do not qualify this C interface.
+
+For C++20, run `npm run test:cpp-incoming-function`. Its
+[consumer](../../tests/fixtures/structured-types/tariff-incoming.cpp) takes
+the Lean closure directly as a lambda argument. It keeps the borrow and an
+explicit lease across success and failure, checks the identity of the thrown
+exception, and exercises a failed nested callback while the outer borrow is
+still live. The consumer compiles against the generated public header.
+Installed qualification requires the same consumer to run from the relocated
+CMake package, with the broker returning to baseline after each case and zero
+after thread exit. Set `LEAN_BRIDGE_CPP_TARIFF_KEEP` to retain the two
+handoffs or `LEAN_BRIDGE_CPP_TARIFF_REPLAY` to replay them. Older Tariff
+archives without `visitQuote` do not qualify.
