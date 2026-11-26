@@ -130,7 +130,10 @@ Match the newer reports against the particular cell they exercise:
   returns a Lean function and rejects a Python lambda.
 - For **host-owned objects**, use the installed applications at the top of
   this page. Match the object's actual position in the Lean signature to the
-  operation the downstream client calls. A closure capturing an object, a
+  operation the downstream client calls. For example, the
+  [original Python wheels](python-worker-wheels-20261124.md#which-host-object-positions-do-these-wheels-cover)
+  exercise an export argument, a callback argument, and a *different*
+  host object returned by the callback. A closure capturing an object, a
   callback receiving it, and a callback returning it are not interchangeable.
 - The [one-call restriction](native-once-callback-20261126.md) is a behavior
   exercised across all 17 profiles. It adds no new position by itself.

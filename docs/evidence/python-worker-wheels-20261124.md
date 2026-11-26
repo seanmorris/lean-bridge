@@ -25,6 +25,25 @@ and `5279bb13ff6c6a8b746c5093ffdba0d989f274f778c1bc5fab46cf31ce91546e`.
 Both consumer programs passed on both routes for both interpreters. These are
 local release and consumer checks, not hosted CI or registry publications.
 
+### Which host-object positions do these wheels cover?
+
+The [Lean relay](../../tests/fixtures/python-host-tasks/Workers.lean)
+accepts an application box and a callback from box to box. The
+[installed caller](../../tests/fixtures/python-host-tasks/consumer.py)
+passes one instance, checks that its callback receives that exact instance,
+then returns a **different** instance. Awaiting the task yields the second
+object. An invalid callback reply raises `TypeError`. The
+[peer caller](../../tests/fixtures/python-host-tasks/peers.py) also calls
+the first package from the peer's callback.
+
+This qualifies the export argument, callback argument and callback result
+for host-owned objects on ordinary and reviewed Python routes. It does not
+qualify a standalone object as an immediate export result. The binding
+definitions inside all six original wheels identify the class as
+`weak-canonical` and the callback argument and result as leases. The
+archived `consumer.py` and `peers.py` matched the linked sources on both
+Python versions; the archive audit did not rerun Python.
+
 After removing the author trees, pip installed each primary wheel locally with
 the peer. The tests moved the installation, then ran isolated Python with no
 producer tools on PATH.
