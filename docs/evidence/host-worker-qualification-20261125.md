@@ -265,6 +265,10 @@ passed in PHP 8.2 and 8.5 on both routes. The [offline Maven installs](host-call
 also passed in separate Java and Kotlin applications. This brings the
 input-field case to 15 of the 17 profiles; PHP-Wasm and WIT/WASI remain.
 
+A separate [incoming-function check](npm-incoming-functions-20261126.md)
+passes a Lean function directly into the host callback. All five ordinary
+npm consumers reject the expired borrow and keep an independent lease.
+
 ### Does a callback allow one call or many?
 
 Running a callback exactly once in an example doesn't show the binding
@@ -291,7 +295,10 @@ qualified asyncio on 3.11 and 3.12. The [relocated C11 archives](native-once-cal
 also enforced the allowance when two Lean workers raced for the same callback.
 The [C++20 clients](native-once-callback-20261126.md#c20) also distinguished a
 typed admission error from the original C++ exception and a replacement Lean error.
-The five npm clients, PHP-Wasm, Python, C and C++ give nine of 17 consumer profiles on both author routes.
+The [installed Rust clients](native-once-callback-20261126.md#rust) preserved
+the original host error even when it carried an earlier policy refusal.
+The five npm clients, PHP-Wasm, Python, C, C++ and Rust give ten of 17
+consumer profiles on both author routes.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile

@@ -45,10 +45,28 @@ the policy violation came back as `TaskIOError`. A weak pointer confirmed
 the callback held its capture while registered and released it on
 destruction. The broker had zero live leases at the end.
 
+## Rust
+
+The [ordinary crate](native-once-callback-20261126/rust/ordinary.json) and
+[reviewed crate](native-once-callback-20261126/rust/reviewed.json) both
+passed offline installs. They have different component archives and depend
+on the same runtime crate, byte for byte. Each compiled the
+[Rust client](../../tests/fixtures/native-callback-budget/client.rs) against
+the installed packages before moving the binary away from the build inputs.
+
+Each of 16 worker races admitted exactly one callback. The client matched
+a policy refusal as `Fault::CallbackAlreadyInvoked`, distinguished a typed
+startup failure carrying 73, and recovered the original application error
+by identity—even when that error wrapped a genuine earlier policy fault.
+Lean's new IO error with the same message remained a task IO error.
+Closing the registration released the captured object and left zero leases.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
 targets. To replay without rebuilding, set `LEAN_BRIDGE_NATIVE_BUDGET_REPLAY`
 to the retained directory containing `c/{ordinary,reviewed}` and
 `cpp/{ordinary,reviewed}`. These standalone packages exercise callbacks
-over integers, not callbacks transporting host objects.
+over integers, not callbacks transporting host objects. Run
+`npm run test:rust-once-callback` for Cargo, or set
+`LEAN_BRIDGE_CARGO_BUDGET_REPLAY` to the handoff directory containing `cargo/`.
