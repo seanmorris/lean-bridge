@@ -262,8 +262,10 @@ and [both C# NuGet installs](host-callback-input-records-20261126.md#c-callers-1
 also passed. The [ordinary and reviewed CPAN installs](host-callback-input-records-20261126.md#perl-callers)
 passed with prebuilt XS on all four Perl ABIs. The [native Composer installs](host-callback-input-records-20261126.md#native-php-callers)
 passed in PHP 8.2 and 8.5 on both routes. The [offline Maven installs](host-callback-input-records-20261126.md#installed-java-and-kotlin-consumers)
-also passed in separate Java and Kotlin applications. This brings the
-input-field case to 15 of the 17 profiles; PHP-Wasm and WIT/WASI remain.
+also passed in separate Java and Kotlin applications. Both
+[PHP-Wasm packages](host-callback-input-records-20261126.md#php-wasm-callers)
+passed all eight Node/Chromium installation and loading combinations. That
+qualifies input fields on **16 of 17 profiles**; WIT/WASI remains.
 
 A separate [incoming-function check](npm-incoming-functions-20261126.md)
 passes a Lean function directly into the host callback. All five consumers
