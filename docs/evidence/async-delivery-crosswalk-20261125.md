@@ -440,6 +440,41 @@ These two profiles add **12** combinations across the three async families
 and two authoring routes: **106/136 verified**, with Rust, Python, Ruby,
 WIT/WASI and PHP-Wasm still to qualify beyond synchronous iteration.
 
+## Count for CPython and Ruby
+
+Both profiles ran task settlement, cancellation and asynchronous iteration on
+**each** authoring route. Those 12 combinations bring the verified count to
+**118/136**. The remaining async profiles are Rust, WIT/WASI and PHP-Wasm.
+
+- **CPython 3.11 and 3.12:** The original Timers packages ran the
+  [task client at the recorded revision](https://github.com/seanmorris/lean-bridge/blob/db03667971f5303d56c10b07045647d91682ade3/tests/fixtures/python-lean-tasks/installed.py)
+  and the stream client. Lookups by receipt and actual wheel hash match
+  the [parked cancellation replay](#cancelling-a-pull-already-waiting-on-lean) on all four installs.
+  Separate [callback wheels](python-retained-tasks-20261122.json) checked
+  nested dispatch, exceptions and suppression after retirement. Desk and Depot
+  exercised resource-bearing streams in both package orders. Their terminal
+  and failure checks ran **before** explicit close; on early exit the caller
+  had to request close. The third lookalike wheel was verified at install,
+  not treated as a third stream producer.
+- **Ruby 3.3:** The [Pulse gems](ruby-fiber-tasks-20261122.json) ran both as
+  primary packages. The [parked reader](#interrupting-a-parked-ruby-reader)
+  distinguished a caller-raised exception from external cursor cancellation.
+  The separate [Feedback and Relay installs](ruby-retained-tasks-20261122.json)
+  checked nested calls and cleanup in both load orders. In the
+  [leased Depot streams](ruby-resource-leases-20261122.json) the cursor had
+  already finalized when the caller inspected its returned error payload;
+  later cleanup left no live identities.
+
+`node --test tests/helpers/python-ruby-async-reconciliation.mjs` checks the
+original terminal acceptance records against the recorded clients, package
+identities and replay observations. It does not rebuild any package. Set the
+following variables to the matching original captures:
+
+| Profile | Direct tasks | Retained callbacks | Leased results |
+| --- | --- | --- | --- |
+| CPython | `LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL` | `LEAN_BRIDGE_PY_ASYNC_RETAINED` (contains `cpython-311/`, `cpython-312/`) | `LEAN_BRIDGE_PY_ASYNC_LEASES` (contains `cp311/`, `cp312/`) |
+| Ruby | `LEAN_BRIDGE_RUBY_PARKED_ORIGINAL` | `LEAN_BRIDGE_RB_ASYNC_RETAINED` | `LEAN_BRIDGE_RB_ASYNC_LEASES` |
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
