@@ -62,6 +62,17 @@ The [async delivery crosswalk](async-delivery-crosswalk-20261125.md) traces
 each of the 17 consumer profiles to its installed task, stream, callback and
 shutdown records, separately from synchronous iteration.
 
+For #1222, the [synchronous npm Ledger installs](javascript-wasm-sync-io-20261123.md)
+executed direct IO, returned and thrown errors, and validation before a state
+change in Node JavaScript and a Chromium page. Their strict TypeScript client
+was typechecked, not run. The [two-package trap test](javascript-wasm-callback-io-retirement-20261123.md)
+distinguishes an application throwing a JS error from a real guest trap on
+those same two hosts. Neither result qualifies an executed TypeScript
+program, a mounted React UI, or a dedicated browser worker for the full Ledger
+contract. The [five synchronous iterator clients](javascript-immediate-iterators-20261125.md)
+exercise immediate cursor operations on those profiles; keep that evidence,
+but don't count it as a run of the scalar IO or cross-package trap cases.
+
 The [baseline contract](../type-surface.v1.json) distinguishes **17 consumer
 profiles** and two author routes. Its unit is a shape at a position on one
 profile and route, not a package ecosystem. The acceptance questions below

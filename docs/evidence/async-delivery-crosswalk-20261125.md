@@ -38,7 +38,9 @@ recognizes the generated task-phase callback error **and the original JS error
 object**, then awaits another inner task successfully before returning. In a
 fresh binding, closing the runtime with the callback parked produces one
 cancellation, zero successes and no remaining owned state after a late reply.
-React also checks that the finalizer runs on both exhaustion and failed pull.
+React also checks the finalizer's effect after natural exhaustion and after a
+failed pull followed by explicit close. The latter does not distinguish
+automatic cleanup on rejection from cleanup requested by the caller.
 See the [replay command](typescript-react-threaded-delivery-20261125.md).
 
 ## Closure boundary
