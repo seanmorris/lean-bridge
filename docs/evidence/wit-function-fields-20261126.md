@@ -43,3 +43,18 @@ and refuses a borrowed function in a different session. A
 checks the broker between calls and after closing the session.
 `npm run test:wit-incoming-interface` checks the emitted world and compiles
 the client, without claiming that either release has executed it.
+
+The ordinary compiler-stage projection also ran this client against
+Wasmtime 42.0.1. The original archive is
+`615eae3e47e909ada823f737d0ca04fcc0dd54cc443d5e1e0978ae37be315a93`;
+its component is `ac932bad4847438b03f78eaa1bcb158dfdab969a3d8bcadd3011a069aec8477a`.
+All 79 manifest members matched the archive and the package used for the
+replay. The component satisfied the packaged WIT world. The C application
+and independent observer built with the package's pkg-config flags and
+ran without author tools on PATH. The broker counted **1** at baseline and
+after each completed case, **3** with the retained function still alive,
+and **0** after explicit session close, before the process exited.
+
+This run used an authenticated ordinary Lean compiler stage. It did not
+exercise a reviewed author handoff, so it does not count as a completed
+pair of installed releases.

@@ -88,9 +88,9 @@ const exercise = async (root, handoff, route, replay, incoming) => {
 		const exe=join(root,"incoming");
 		const text=await run(exe,[join(install,"lib/liblean_bridge_native.so")],root,
 			{PATH: "/no-producer-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1",LANG: "C.UTF-8"});
-		const rows=text.split("\n").map(l=>{const m=/^(\w+):(\d+)$/u.exec(l);assert.ok(m);return [m[1]==="afterShutdown"?"afterThreadExit":m[1],Number(m[2])];});
+		const rows=text.split("\n").map(l=>{const m=/^(\w+):(\d+)$/u.exec(l);assert.ok(m);return [m[1],Number(m[2])];});
 		const counts=Object.fromEntries(rows);
-		assert.equal(rows.length,Object.keys(counts).length);verifyDirectQuoteCounts(counts);
+		assert.equal(rows.length,Object.keys(counts).length);verifyDirectQuoteCounts(counts,{closed: "afterShutdown"});
 		return {route
 			, ...identity
 			, receiptSha256: result.receiptSha256

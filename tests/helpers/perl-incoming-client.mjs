@@ -22,6 +22,6 @@ export const runPerlIncoming=async(root,perl,env)=>{
 	}
 	const samples=JSON.parse(await runNativeTool(perl,["tariff-incoming-observer.pl"],root,env));
 	assert.deepEqual(samples.map(s=>s[0]),[...directQuoteLabels.slice(0,-1),"afterShutdown"]);
-	verifyDirectQuoteCounts(Object.fromEntries(samples.map(([k,n])=>[k==="afterShutdown"?"afterThreadExit":k,n])));
+	verifyDirectQuoteCounts(Object.fromEntries(samples),{closed: "afterShutdown"});
 	return {sources,samples};
 };

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {copyFile,readFile,realpath} from "node:fs/promises";
 import {join,resolve} from "node:path";
 import {sha256} from "../../src/capsule/node.mjs";
-import {directQuoteLabels,verifyDirectQuoteCounts} from "./direct-quote-counts.mjs";
+import {verifyDirectQuoteCounts} from "./direct-quote-counts.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 
 /**
@@ -30,9 +30,7 @@ export const runPhpIncoming=async(root,bins,environment)=>{
 		const flags=["-n",...ext,"-d","ffi.enable=1","-d","display_errors=stderr","tariff-incoming-observer.php"];
 		const output=await run(php,flags,root,environment);
 		const row=JSON.parse(output);assert.equal(row.php,info[0]);
-		const {afterShutdown,...live}=row.counts;
-		assert.deepEqual(Object.keys(row.counts),[...directQuoteLabels.slice(0,-1),"afterShutdown"]);
-		verifyDirectQuoteCounts({...live,afterThreadExit: afterShutdown});
+		verifyDirectQuoteCounts(row.counts,{closed: "afterShutdown"});
 		await assert.rejects(run(php,[...flags,"uncaught"],root,environment),e=>
 			e.cause?.code===255 && !e.cause.signal && /Uncaught TypeError: strlen\(\)/u.test(e.message));
 		const locked=["-n",...ext,"-d","ffi.enable=1","-d","disable_functions=ini_set","-d","zend.exception_ignore_args=0"];
