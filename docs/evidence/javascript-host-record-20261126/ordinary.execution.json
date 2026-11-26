@@ -1,0 +1,48 @@
+{
+  "browser": {
+    "page": {
+      "copy": true,
+      "originalError": true,
+      "partialResultRejected": true,
+      "peerFirst": false,
+      "peerLevel": 24
+    },
+    "react": {
+      "copy": true,
+      "originalError": true,
+      "partialResultRejected": true,
+      "peerFirst": true,
+      "peerLevel": 24
+    },
+    "worker": {
+      "copy": true,
+      "originalError": true,
+      "partialResultRejected": true,
+      "peerFirst": true,
+      "peerLevel": 24
+    }
+  },
+  "deployed": [
+    "55f02679350701bae8799dde84b3d25862075150e794d2a7dd94ec62ce5b0225",
+    "8ddea047b677d44ea404b52063397652abcbbb162a88c54f835030e8567d11cc",
+    "cc09c226fc84cc01102943ad4df99ac059661d373ac4ba875424a3bc1a4a588d",
+    "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  ],
+  "node": {
+    "copy": true,
+    "originalError": true,
+    "partialResultRejected": true,
+    "peerFirst": false,
+    "peerLevel": 24
+  },
+  "packageSetSha256": "3e67561c58c15103714b41fafd5139c0ef864ccdea931645f2eeb05283d540cb",
+  "peerReceiptSha256": "cb4d8331ede6ed783f8e241b186de272179b329a3e93a372db2502c2687801a8",
+  "route": "ordinary",
+  "sources": {
+    "calls.mjs": "7752d9b0f04bad0dcd9a7e975327fe7b3ce7f1cd56263c34b2125af31fab5348",
+    "page.mjs": "6e7d42f2ecfa4754c80f1d80329c54787a91cc5c83db62270c63018be1ae0b09",
+    "typed.mts": "24a5ccfa755630d7b3447758976f89012aa106b6d6284a90e34ead60b5a4a86b",
+    "worker.mjs": "e916d49cdd522d1f549603c1e33a738b5fd381ad95597d28df0d19cdc3ec635b"
+  },
+  "typed": "typed record reached independent peer"
+}

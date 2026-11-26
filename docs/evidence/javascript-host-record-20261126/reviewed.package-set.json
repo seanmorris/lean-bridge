@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "gauge@1.0.0",
+    "name": "gauge",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 20568,
+          "path": "@example-gauge-records-1.0.0.tgz",
+          "sha256": "0e395410b353932af246d17558ba84977574c17820da6d851d3249a61c3e7fe3"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@example/gauge-records",
+      "profile": "javascript-wasm-host-io-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-abi2.3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c",
+      "target": "npm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1676818,
+          "path": "lean-bridge-runtime-0.0.0-abi2.3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c.tgz",
+          "sha256": "1bdf0f05538372c0cf3fb30b630355082d0973e034d67a4a406f4ded8f78c5eb"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/runtime",
+      "profile": "javascript-wasm-host-io-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c",
+      "target": "npm",
+      "version": "0.0.0-abi2.3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5be03ac5328529af50658c3f370ebf3e44e0e9bd0bcb7a4bab248ed08629c5ca",
+      "id": "javascript-wasm-host-io-v1",
+      "runtimeIdentity": "3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "2fc47ec1e5dd343966f75f45cc4388c6e887b8825dcac09f32eef5f9401c1e64"
+  }
+}

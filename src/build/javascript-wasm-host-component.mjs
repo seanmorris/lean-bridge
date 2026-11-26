@@ -10,7 +10,7 @@ import { identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javasc
 
 const sources=["host-wasm-domain.c","host-wasm-domain.h","host-wasm-errors.h","host-wasm-public.h","host-wasm-wire.h"];
 const flags=["-O2","-g0","-fPIC","-fvisibility=hidden","-fwasm-exceptions","-DLEAN_EMSCRIPTEN","-ffp-contract=off","-I.","-Iinclude"];
-const link=["-O2","-g0","-fwasm-exceptions","-sSIDE_MODULE=2","-Wl,--no-entry"];
+const link=["-O2","-g0","-fwasm-exceptions","-sSIDE_MODULE=2","-Wl,--no-entry","-Wl,--import-table"];
 /**
  * Bind source and tool evidence to the exact input files, flags and generated code.
  *
@@ -21,7 +21,7 @@ export const javaScriptHostBuildIdentity = o => {
 	const keys=[...sources,"component_scalar.h",...javascriptWasmTargetHeaders.map(n=>"include/lean/"+n)];
 	if(!validJavaScriptWasmCompilerIdentity(compiler) || Object.keys(inputs).length!==keys.length
 		|| keys.some(k=>typeof inputs[k]!=="string" || !/^[a-f0-9]{64}$/u.test(inputs[k]))) throw new Error("Incomplete JavaScript host compiler inputs");
-	const skeleton=generateJavaScriptHostExports({api,hosts: ir,identity: "0".repeat(64),modules: evidence.selection.exportModules,phpWasm: evidence.selection.phpWasmSyncObjects===true});
+	const skeleton=generateJavaScriptHostExports({api,hosts: ir,identity: "0".repeat(64),modules: evidence.selection.exportModules,entries: evidence.metadata.entries,phpWasm: evidence.selection.phpWasmSyncObjects===true});
 	return sha256(canonicalJson({compiler,evidence,inputs,skeleton,flags,link,brokerSymbols}));
 };
 /**
@@ -57,7 +57,7 @@ export const compileJavaScriptHostComponent = async o => {
 	await asset("component_scalar.h",await readFile(new URL("../../poc/lean-link-spike/component_scalar.h",import.meta.url)));
 	const built=await compileHostSources({...o,ir: c.ir,run,environment: env,target: zend?"php-wasm":"npm"});
 	const {api,evidence}=built, modules=evidence.selection.exportModules;
-	const emit=identity=>generateJavaScriptHostExports({api,hosts: c.ir,identity,modules,phpWasm: zend});
+	const emit=identity=>generateJavaScriptHostExports({api,hosts: c.ir,identity,modules,entries: evidence.metadata.entries,phpWasm: zend});
 	const identity=javaScriptHostBuildIdentity({api,ir: c.ir,compiler,evidence,inputs});
 	const gen=emit(identity), iface=evidence.interfaces.findIndex(f=>f.module===c.generatedHostModule);
 	if(iface<0 || sha256(await readFile(join(app,built.objects[iface])))!==evidence.interfaces[iface].cSha256) throw new Error("Checked JavaScript host C module missing");

@@ -139,6 +139,31 @@ heap. The application supplies its classes via [`withHosts`](../javascript-types
 This profile is for synchronous, in-memory calls. It does not grant filesystem
 access or move application objects onto a Lean task thread.
 
+### Include an application object in a record
+
+Use an ordinary Lean structure as the argument or result of a synchronous
+`IO` export. For example:
+
+```lean
+structure Pair where
+  lead : Box
+  sample : ByteArray
+  sequence : Nat
+  spare : Box
+
+def flip (pair : Pair) : IO Pair := do
+  let n ← pair.lead.read
+  return ⟨pair.spare, pair.sample.push n.toUInt8, pair.sequence + 1, pair.lead⟩
+```
+
+Select `flip` by its qualified name. The compiler reads the constructor and
+field projections; do not specify offsets or a JavaScript layout. The generated
+[record constructor](../javascript-typescript.md#pass-a-record-containing-application-objects)
+retains the original application objects and copies the scalar fields. A
+reviewed interface with a different field order does not match this source.
+This path covers flat record arguments and results, not record-shaped errors
+or queued task results.
+
 ### Return a function that captures an application object
 
 Select the factory in `exports`. For example,

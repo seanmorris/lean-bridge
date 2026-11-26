@@ -1,10 +1,14 @@
 /** @file Source-bound public call shapes for synchronous JavaScript host imports. */
 import { canonicalizeJsonValue, hashBindingIr } from "../binding-ir/canonical.mjs";
+import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
 import { componentScalarTypes } from "./component-scalars.mjs";
 import { checkedWasmHostFunction } from "./wasm-host-factories.mjs";
 
 export const componentHostIOAbi = 17;
+// ABI 17 delivers exactly one leaf per successful call. Record publication
+// needs a vector of leaves and a single commit point in both the guest and host.
+export const componentHostRecordIOAbi = 19;
 export const hostCallMagic = 0x4a484331;
 export const javaScriptHostBrokerSymbols=Object.freeze(["token","wrap","admit","enter","leave","error","control"].map(s=>"lb_jsh_domain_"+s+"_v1"));
 const fail = () => { throw new TypeError("Inconsistent JavaScript host export contract"); };
@@ -26,9 +30,12 @@ const checkSite = (s,t) => {
  * @param [zend] - Require PHP-owned classes, failures and returned functions on the standalone heap.
  */
 export const javaScriptHostIOAbi = (api,hosts,identity,zend=false) => {
-	const bindingIrSha256=hashBindingIr(api),hostIrSha256=hashBindingIr(hosts),nominals=api.types.filter(t=>t.host);
+	const compound=api.schemaVersion===4;
+	if(compound && zend) fail();
+	const bindingIrSha256=compound?sha256Text(canonicalizeJsonValue(validateOwnedAggregateBindingIr(api))):hashBindingIr(api);
+	const hostIrSha256=hashBindingIr(hosts),nominals=api.types.filter(t=>t.host);
 	const target=zend?"php":"javascript",module=zend?"LeanBridge.Host.Php":"LeanBridge.Host.Javascript";
-	const functions=new Map(api.types.filter(t=>!t.host).map(t=>[t.id,t]));
+	const functions=new Map(api.types.filter(t=>!t.host && (!compound || t.kind!=="record")).map(t=>[t.id,t]));
 	if(!/^[a-f0-9]{64}$(?![\s\S])/u.test(identity) || api.capabilities.length || !hosts.types.length
 		|| nominals.length!==hosts.types.length || !api.declarations.length) fail();
 	for(const [i,t] of hosts.types.entries())
@@ -46,6 +53,39 @@ export const javaScriptHostIOAbi = (api,hosts,identity,zend=false) => {
 		return fail();
 	};
 	const names=new Set(["withHosts","dispose","then","constructor","__proto__","prototype"]);
+	const records=new Map(),used=new Set();
+	if(compound)
+	{
+		for(const t of api.types.filter(v=>!v.host && v.kind==="record"))
+		{
+			const decl=t.source.declaration;
+			if(t.id!=="lean:"+decl || t.name!==decl.split(".").at(-1) || names.has(t.name)
+				|| t.representation!=="owned" || t.mutability!=="immutable" || t.typeParameters.length
+				|| t.source.producer!=="lean" || !t.source.extensions["lean-bridge.dev/record-constructor"]?.startsWith(decl+".")
+				|| !same(t.aggregate,{ownership: "lease",disposal: "required",fallback: "none",cycles: "reject"})
+				|| !t.fields.length || t.fields.length>64) fail();
+			const fieldNames=new Set(["dispose","then","constructor","__proto__","prototype"]);
+			const fields=t.fields.map(f=>{
+				if(fieldNames.has(f.name) || !/^[a-z][a-z0-9_]*$/u.test(f.name) || f.mutability!=="immutable") fail();
+				fieldNames.add(f.name);
+				const type=shape(f.type);
+				if(Array.isArray(type)) fail();
+				return {name: f.name,type};
+			});
+			if(!fields.some(f=>typeof f.type==="number")) fail();
+			names.add(t.name);records.set(t.id,{type: "record:"+t.id,name: t.name,fields});
+		}
+		if(!records.size) fail();
+	}
+	const at=(site,input,effect)=>{
+		const record=site.type.kind==="named" && records.get(site.type.id);
+		if(record)
+		{
+			if(effect!=="IO" || site.ownership!==(input?"borrow":"lease") || !same(site.lifetime,{scope: input?"call":"explicit",anchor: null})) fail();
+			used.add(site.type.id);return record.type;
+		}
+		const t=shape(site.type);checkSite(site,t);return t;
+	};
 	const methods=api.declarations.map(d=>{
 		const x=d.source.extensions,effect=x["lean-lang.org/effect"],decl=d.source.declaration;
 		if(!["IO","EIO","BaseIO","pure"].includes(effect) || x["lean-bridge.dev/host-imports-sha256"]!==hostIrSha256
@@ -54,10 +94,11 @@ export const javaScriptHostIOAbi = (api,hosts,identity,zend=false) => {
 			|| d.effects.includes("async") || Object.hasOwn(x,"lean-lang.org/delivery") || Object.hasOwn(x,"lean-bridge.dev/native-effects-v1")
 			|| !/^[a-z][a-z0-9_]*$/u.test(d.name) || names.has(d.name)) fail();
 		names.add(d.name);
-		const args=d.parameters.map(p=>{const t=shape(p.type); if(Array.isArray(t) || p.optional || p.default!==null) fail(); checkSite(p,t);return t;});
+		const args=d.parameters.map(p=>{const t=at(p,true,effect); if(Array.isArray(t) || p.optional || p.default!==null) fail();return t;});
+		if(d.parameters.reduce((n,p)=>n+(records.get(p.type.id)?.fields.length??1),0)>64) fail();
 		const fn=d.result.type.kind==="named" && functions.get(d.result.type.id);
-		const result=fn?checkedWasmHostFunction(api,hosts,hostIrSha256,d,fn,shape,zend):shape(d.result.type);
-		if(fn) functions.delete(fn.id);else checkSite(d.result,result);
+		const result=fn?checkedWasmHostFunction(api,hosts,hostIrSha256,d,fn,shape,zend):at(d.result,false,effect);
+		if(fn) functions.delete(fn.id);
 		const errorId=effect==="EIO"?"error:EIO."+decl:effect==="IO"?"error:IO.Error":null;
 		const expected=errorId?[errorId]:[];
 		if(effect==="IO" && x["lean-bridge.dev/host-members"].length) expected.push(zend?"error:PhpHostException":"error:JavaScriptHostException");
@@ -69,9 +110,9 @@ export const javaScriptHostIOAbi = (api,hosts,identity,zend=false) => {
 		else if(site!==undefined) fail();
 		return {id: d.id,name: d.name,declaration: decl,args,result,effect,errorId,error};
 	});
-	if(functions.size) fail();
-	const key=sha256Text((zend?"php-wasm-zend-host-io-v1":"javascript-wasm-host-io-v1")+":"+identity+":"+bindingIrSha256+":"+hostIrSha256);
-	return {version: componentHostIOAbi,...zend?{owner: "php-wasm-zend"}:{},componentIdentity: identity,bindingIrSha256,hostIrSha256,controlSymbol: "lbjs_component_"+key.slice(0,20)+"_control",methods};
+	if(functions.size || used.size!==records.size) fail();
+	const key=sha256Text((zend?"php-wasm-zend-host-io-v1":compound?"javascript-wasm-host-record-io-v1":"javascript-wasm-host-io-v1")+":"+identity+":"+bindingIrSha256+":"+hostIrSha256);
+	return {version: compound?componentHostRecordIOAbi:componentHostIOAbi,...compound?{records: [...records.values()]}:{},...zend?{owner: "php-wasm-zend"}:{},componentIdentity: identity,bindingIrSha256,hostIrSha256,controlSymbol: "lbjs_component_"+key.slice(0,20)+"_control",methods};
 };
 
 /**
@@ -84,16 +125,16 @@ export const javaScriptHostIOAbi = (api,hosts,identity,zend=false) => {
  * @param abi - Descriptor independently rederived from the two IR documents.
  */
 export const validateJavaScriptHostModules = async (binary,broker,abi) => {
-	if(abi.version!==componentHostIOAbi || !/^lbjs_component_[a-f0-9]{20}_control$(?![\s\S])/u.test(abi.controlSymbol)
+	if(![componentHostIOAbi,componentHostRecordIOAbi].includes(abi.version) || !/^lbjs_component_[a-f0-9]{20}_control$(?![\s\S])/u.test(abi.controlSymbol)
 		|| !/^[a-f0-9]{64}$(?![\s\S])/u.test(abi.componentIdentity)) fail();
 	const check=async(bytes,required,allowed,imports)=>{
 		const module=await WebAssembly.compile(bytes), rows=WebAssembly.Module.imports(module);
 		const heap=rows.filter(r=>r.kind==="memory" || r.kind==="table").map(r=>r.kind+":"+r.module+":"+r.name).sort();
 		const exports=WebAssembly.Module.exports(module).map(r=>r.kind+":"+r.name);
-		if(!same(heap,["memory:env:memory","table:env:__indirect_function_table"])
-			|| required.some(name=>!exports.includes(name)) || exports.some(name=>!allowed.has(name))
-			|| imports.some(name=>!rows.some(r=>r.kind==="function" && r.module==="env" && r.name===name)))
-			throw Object.assign(new Error("Unexpected JavaScript host Wasm interface"),{details: {heap,exports,imports: rows.filter(r=>r.name.startsWith("lb_jsh_domain_")).map(r=>r.name)}});
+		const missing=required.filter(name=>!exports.includes(name)),extra=exports.filter(name=>!allowed.has(name));
+		const missingImports=imports.filter(name=>!rows.some(r=>r.kind==="function" && r.module==="env" && r.name===name));
+		if(!same(heap,["memory:env:memory","table:env:__indirect_function_table"]) || missing.length || extra.length || missingImports.length)
+			throw Object.assign(new Error("Unexpected JavaScript host Wasm interface: "+JSON.stringify({heap,missing,extra,missingImports})),{details: {heap,exports,imports: rows.filter(r=>r.name.startsWith("lb_jsh_domain_")).map(r=>r.name)}});
 	};
 	const std=["function:__wasm_call_ctors","function:__wasm_apply_data_relocs"];
 	const prefix="global:__em_js__lb_jsh_"+abi.componentIdentity+"_";

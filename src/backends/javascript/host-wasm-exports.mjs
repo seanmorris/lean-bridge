@@ -3,6 +3,7 @@ import {readFileSync} from "node:fs";
 import { componentScalarTypes } from "../../abi/component-scalars.mjs";
 import { hostCallMagic, javaScriptHostIOAbi } from "../../abi/component-host-io.mjs";
 import { generateJavaScriptHostExterns, javaScriptHostCarrier } from "./host-wasm-externs.mjs";
+import {lowerWordHostRecord} from "../native/word-host-records.mjs";
 
 const qual=/^(?:[A-Za-z][A-Za-z0-9_]*\.)*[A-Za-z][A-Za-z0-9_]*$(?![\s\S])/u;
 const scalar={unit: "Unit",bool: "Bool",char: "Char",bytes: "ByteArray"
@@ -33,21 +34,47 @@ export const generateJavaScriptHostExports = options => {
 		const i=nodes.length; nodes.push(row);byShape.set(key,i);return i;
 	};
 	const stringNode=index("string"), leans=[], headers=[], wires=[], cases=[];
+	const records=new Map(abi.records?.map((r,i)=>[r.type,{...r,index: i}]));
+	const publicTypes=new Map(api.types.map(t=>[t.id,t]));
+	const fieldName=s=>s.replace(/([A-Z]+)([A-Z][a-z])/gu,"$1_$2").replace(/([a-z0-9])([A-Z])/gu,"$1_$2").toLowerCase();
+	const matchesRecord=(site,wire)=>{
+		const record=records.get(wire);
+		if(!record) return site?.kind!=="host-record";
+		const def=publicTypes.get("lean:"+site?.declaration);
+		return site?.kind==="host-record" && wire==="record:"+def?.id
+			&& site.constructor===def.source.extensions["lean-bridge.dev/record-constructor"]
+			&& site.fields.length===record.fields.length
+			&& site.fields.every((f,i)=>fieldName(f.name)===record.fields[i].name);
+	};
+	const carrier=t=>{
+		if(t.kind==="primitive" && componentScalarTypes.includes(t.name)) return t.name;
+		const k=hosts.types.findIndex(v=>v.id===t.id);
+		if(t.kind!=="named" || k<0) throw new Error("Unknown compiled JavaScript record field");
+		return k;
+	};
 	const total=abi.methods.length, functions=abi.methods.some(m=>closure(m.result));
 	for(const [i,m] of abi.methods.entries())
 	{
 		const factory=closure(m.result);
-		const sym=prefix+"export_"+i, c=m.args.map(javaScriptHostCarrier), vars=m.args.map((_,j)=>"v"+j);
-		const call="(_root_."+m.declaration+(vars.length?" "+vars.join(" "):"")+")";
-		const ret=m.effect==="EIO"?"(_root_.Except "+type(m.error)+" "+type(m.result)+")":type(m.result);
-		leans.push("@[export "+sym+"] def invoke"+i+" "+m.args.map((t,j)=>"(v"+j+" : "+type(t)+")").join(" ")
+		const record=records.get(m.result), hasRecord=record || m.args.some(t=>records.has(t));
+		const entry=hasRecord && options.entries?.find(e=>e.declaration===m.declaration);
+		const lowered=entry && lowerWordHostRecord(entry,"javascript",t=>type(carrier(t)));
+		const args=lowered?lowered.flat.map(carrier):m.args;
+		if(hasRecord && (!lowered || entry.parameters.length!==m.args.length || !matchesRecord(entry.result,m.result)
+			|| entry.parameters.some((p,j)=>!matchesRecord(p.type,m.args[j]))
+			|| JSON.stringify(args)!==JSON.stringify(m.args.flatMap(t=>records.get(t)?.fields.map(f=>f.type)??[t]))
+			|| JSON.stringify(lowered.fields?.map(carrier))!==JSON.stringify(record?.fields.map(f=>f.type)))) throw new Error("Compiled JavaScript record does not match the public fields");
+		const sym=prefix+"export_"+i, c=args.map(javaScriptHostCarrier), vars=args.map((_,j)=>"v"+j);
+		const call=lowered?lowered.call:"(_root_."+m.declaration+(vars.length?" "+vars.join(" "):"")+")";
+		const ret=record?lowered.tuple:m.effect==="EIO"?"(_root_.Except "+type(m.error)+" "+type(m.result)+")":type(m.result);
+		leans.push("@[export "+sym+"] def invoke"+i+" "+args.map((t,j)=>"(v"+j+" : "+type(t)+")").join(" ")
 			+" : _root_.IO "+ret+" := "+({IO: "",EIO: "EIO.toIO' ",BaseIO: "liftM ",pure: "pure "})[m.effect]+call);
 		headers.push("extern lean_object *"+sym+"("+(c.map(([ctype])=>ctype).join(",") || "void")+");");
 		const unbox=c.map(([,box],j)=>box?box.replace("lean_box","lean_unbox")+"(v["+j+"])":"v["+j+"]");
 		wires.push("static lean_object *invoke_"+i+"(lean_object **v,lean_object *fn) { (void)fn; "
 			+c.flatMap(([,box],j)=>box?[]:["lean_inc(v["+j+"]);"]).join(" ")+" return "+sym+"("+unbox.join(",")+"); }");
-		cases.push("case "+i+": { static const uint8_t tags[]={"+(m.args.map(leaf).join(",") || 0)+"}; return pub_call(f,"
-			+[m.args.length,"tags",factory?-1:index(m.result),m.effect==="EIO"?index(m.error):-1,"invoke_"+i,factory?i:-1,-1].join(",")+"); }");
+		cases.push("case "+i+": { static const uint8_t tags[]={"+(args.map(leaf).join(",") || 0)+"}; return pub_call(f,"
+			+[args.length,"tags",record?-2-record.index:factory?-1:index(m.result),m.effect==="EIO"?index(m.error):-1,"invoke_"+i,factory?i:-1,-1].join(",")+"); }");
 		if(factory)
 		{
 			const {argument,reply}=m.result,[ctype,box]=javaScriptHostCarrier(argument),apply=sym+"_apply";
@@ -79,6 +106,8 @@ export const generateJavaScriptHostExports = options => {
 		, "#define PUB_STRING "+stringNode
 		, "#define PUB_MAGIC "+hostCallMagic+"u"
 		, "static const int32_t pub_nodes[][3]={"+nodes.map(n=>"{"+n.join(",")+"}").join(",")+"};"
+		, ...records.size?["#define PUB_RECORDS 1"
+			, "static const uint8_t pub_records[][65]={"+[...records.values()].map(r=>"{"+[r.fields.length,...r.fields.map(f=>leaf(f.type))].join(",")+"}").join(",")+"};"]:[]
 		, ...functions?["#include <string.h>","#define DN_HOST_FIXED_WASM_ALLOCATOR 1","#define PUB_FUNCTIONS 1","typedef void lb_dnd_session;",readFileSync(new URL("../native/word-host-closures.h",import.meta.url),"utf8")]:[]
 		, '#include "host-wasm-public.h"', ...wires
 		, '__attribute__((visibility("default"))) uint32_t '+abi.controlSymbol+'(uint32_t *f) {'

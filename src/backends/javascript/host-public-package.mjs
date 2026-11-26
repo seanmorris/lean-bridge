@@ -26,10 +26,23 @@ export const generateJavaScriptHostPackage = (api,ir,identity,options={}) => {
 	const js=['import {runtime} from "./internal/runtime.mjs";'],dts=[],names=new Set(["withHosts"]);
 	const ids=kinds.map((_,i)=>"_I"+i),args="<"+ids.join(", ")+">",bases=kinds.map((_,i)=>ids[i]+" extends _Host"+i+args);
 	const errors=[];
+	const publicRecords=new Map(abi.records?.map(r=>[r.type,r]));
 	const render=t=>Array.isArray(t)?"(Readonly<{ok: "+render(t[0])+"}> | Readonly<{error: "+render(t[1])+"}>)"
-		: t!==null && typeof t==="object"?"{ (value: "+render(t.argument)+"): "+render(t.reply)+"; dispose(): boolean }"
-			: typeof t==="string" && t.startsWith("host:")?"_I"+abi.hostKinds.find(k=>k.type===t).index
-				: typeof t==="string" && t.startsWith("lease:")?abi.leases.find(k=>k.type===t).name:ts(t);
+		: publicRecords.has(t)?publicRecords.get(t).name+args
+			: t!==null && typeof t==="object"?"{ (value: "+render(t.argument)+"): "+render(t.reply)+"; dispose(): boolean }"
+				: typeof t==="string" && t.startsWith("host:")?"_I"+abi.hostKinds.find(k=>k.type===t).index
+					: typeof t==="string" && t.startsWith("lease:")?abi.leases.find(k=>k.type===t).name:ts(t);
+	for(const r of publicRecords.values())
+	{
+		if(!/^[A-Z][A-Za-z0-9_]*$/u.test(r.name) || names.has(r.name)) throw new Error("Conflicting or invalid public JS host record "+r.name);
+		names.add(r.name);
+		js.push("export const "+r.name+" = runtime.recordClass("+q(r.type)+");");
+		dts.push("export declare class "+r.name+"<"+ids.map(id=>id+" extends object").join(", ")+"> {"
+			, "  private readonly __lbRecord: ["+ids.join(", ")+"];"
+			, "  constructor("+params(r.fields.map(f=>f.type),r.fields.map(f=>f.name))+");"
+			, ...r.fields.map(f=>"  readonly "+q(f.name)+": "+ts(f.type)+";")
+			, "  dispose(): boolean;","}");
+	}
 	for(const r of abi.leases??[])
 	{
 		if(names.has(r.name) || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(r.name)) throw new Error("Conflicting task resource "+r.name);

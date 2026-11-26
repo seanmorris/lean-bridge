@@ -3,6 +3,7 @@ import { hostCallMagic } from "../abi/component-host-io.mjs";
 import { scalarCopyLimit } from "../abi/component-scalars.mjs";
 import { readComponentScalarSlot, writeComponentScalarSlot } from "../release/component-scalar-codec.mjs";
 import { bindWasmHostFunctions } from "./wasm-host-functions.mjs";
+import { wasmHostRecordTypes } from "./wasm-host-records.mjs";
 
 const malformed=()=>new Error("Malformed compiled JavaScript host export reply");
 const declared=(id,payload)=>Object.assign(new Error(id==="error:IO.Error"?payload:"Lean raised "+id),{
@@ -17,6 +18,7 @@ const declared=(id,payload)=>Object.assign(new Error(id==="error:IO.Error"?paylo
  */
 export const bindJavaScriptHostExports = o => {
 	const {wasm,domain,abi,model,operation,assertOpen,poison}=o;
+	const records=abi.records && wasmHostRecordTypes(abi.records);
 	const view=()=>new DataView(wasm.HEAP8.buffer);
 	const span=(p,n)=>Number.isInteger(p) && p>0 && p+n<=wasm.HEAP8.length;
 	const bind=(supplied,makeError=declared,memberBridge)=>{
@@ -24,7 +26,21 @@ export const bindJavaScriptHostExports = o => {
 		const invoke=(m,index,values,owner=0,ticket=0n)=>{
 			assertOpen();
 			if(values.length!==m.args.length) throw new TypeError(m.name+" expects "+m.args.length+" arguments");
-			const bytes=32+16*m.args.length, pins=[], allocations=[];
+			let slots=m.args,args=values;
+			if(records && m.args.some(t=>records.has(t)))
+			{
+				slots=[];args=[];
+				for(const [i,t] of m.args.entries())
+				{
+					const r=records.get(t);
+					if(!r)
+					{slots.push(t);args.push(values[i]);continue;}
+					const fs=r.read(values[i]);
+					for(const [j,f] of r.fields.entries())
+					{slots.push(f.type); args.push(fs[j]);}
+				}
+			}
+			const bytes=32+16*slots.length, pins=[], allocations=[];
 			let frame=0,budget=scalarCopyLimit,reply,unsafe=false;
 			const charge=n=>{if(n>budget) throw new RangeError("JavaScript host export copy budget exceeded");budget-=n;};
 			const broken=()=>{unsafe=true;poison();throw malformed();};
@@ -41,7 +57,25 @@ export const bindJavaScriptHostExports = o => {
 				allocations.push(p);return p;
 			};
 			const deliver=(p,ch,tags,n,slot)=>{
-				if(reply || p!==frame || slot%8 || !span(slot,16) || n>32 || (n && !span(tags,n))
+				if(ch===3)
+				{
+					const record=records?.get(m.result);
+					if(reply || !record || p!==frame || tags!==0 || n!==record.fields.length || slot%8 || !span(slot,n*16))
+					{ reply={corrupt: true};return 5; }
+					try
+					{
+						const fields=record.fields.map((f,i)=>{
+							const at=slot+16*i;
+							if(typeof f.type!=="number") return readComponentScalarSlot(wasm,at,f.type,charge);
+							const d=view(),token=d.getUint32(at+8,true);
+							if(d.getUint32(at,true)!==64+f.type || d.getUint32(at+4,true) || !token || d.getUint32(at+12,true)) throw malformed();
+							return s.resolve(f.type,token);
+						});
+						reply={ch: 0,result: record.adopt(fields)};return 0;
+					} catch(error)
+					{ reply={conversion: error};return 6; }
+				}
+				if(reply || p!==frame || slot%8 || !span(slot,16) || n>32 || (n && !span(tags,n)) || (ch===0 && records?.has(m.result))
 					|| ![0,1,2].includes(ch) || (ch===1 && m.effect!=="EIO")) { reply={corrupt: true};return 5; }
 				try
 				{
@@ -73,14 +107,18 @@ export const bindJavaScriptHostExports = o => {
 					view().setUint32(frame,hostCallMagic,true);view().setUint32(frame+4,bytes,true);
 					view().setUint32(frame+12,index,true);
 					view().setUint32(frame+20,owner,true);view().setBigUint64(frame+24,ticket,true);
-					for(const [i,t] of m.args.entries())
+					for(const [i,t] of slots.entries())
 					{
 						const p=frame+32+16*i;
 						if(typeof t==="number")
 						{
-							const token=s.pin(t,values[i]);pins.push(token);
+							const token=s.pin(t,args[i]);pins.push(token);
 							view().setUint32(p,64+t,true);view().setUint32(p+8,token,true);
-						} else writeComponentScalarSlot(wasm,p,t,values[i],n=>{charge(n);return allocate(n);});
+						} else
+{
+							if(records) charge(16); // Matches bridge_copied_validate before it reads the payload.
+							writeComponentScalarSlot(wasm,p,t,args[i],n=>{charge(n);return allocate(n);});
+}
 					}
 					assertOpen();
 					const status=native(()=>operation(frame));
@@ -92,6 +130,7 @@ export const bindJavaScriptHostExports = o => {
 					if(factory && !status && !token && !reply && returned) return {ch: 0,result: returned};
 					if(factory && (status===11 || status===12) && !token && !reply) throw new RangeError("Lean function capacity exceeded");
 					if(ticket && status===16 && !token && !reply) throw new TypeError("Closed Lean function");
+					if(records?.has(m.result) && !token && !reply && status===12) throw new RangeError("Lean record result exceeds copy budget");
 					if(status===6 && !token && reply && Object.hasOwn(reply,"conversion")) throw reply.conversion;
 					if(status!==0 || Boolean(token)===Boolean(reply) || reply?.corrupt) broken();
 					if(token)
@@ -152,5 +191,8 @@ export const bindJavaScriptHostExports = o => {
 		}
 		, zendRetains: (type,mirror)=>kinds.has(type) && !domain.abandoned() && domain.retains(kinds.get(type),mirror)});
 	}
-	return Object.freeze({withHosts: bind});
+	return Object.freeze({withHosts: bind,...records?{recordClass: type=>{
+		if(!records.has(type)) throw new TypeError("Unknown host record");
+		return records.get(type).ctor;
+	}}:{}});
 };

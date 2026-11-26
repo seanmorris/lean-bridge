@@ -120,11 +120,13 @@ ownership control block and uses weak pointers to observe the same two lifetimes
 The [Rust client](rust-host-record-fields-20261126.md) passes a getter result
 to an independent Cargo package after dropping the record and closing its
 binding. The peer increments the original meter and keeps the last owner alive.
-That is **9 of 17 profiles** with an installed caller-constructed application-object
-record on both routes. The eight still to verify for this case are Perl,
-WIT/WASI, PHP-Wasm, Node JavaScript, Node TypeScript, browser JavaScript,
-mounted React, and a dedicated browser worker. A shared package does not
-substitute for executing each client. This count is not a percentage of #1221.
+The [five npm programs](javascript-host-record-fields-20261126.md) exercise
+the independent peer in Node JavaScript, executed strict TypeScript, a
+Chromium page, mounted React and a dedicated browser worker.
+That is **14 of 17 profiles** with an installed caller-constructed
+application-object record on both routes. The three still to verify for this
+case are Perl, WIT/WASI and PHP-Wasm. The surrounding JavaScript is not an
+installed Zend interpreter test. This count is not a percentage of #1221.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

@@ -20,6 +20,45 @@ static uint32_t pub_drop(uint32_t *f,unsigned site) {
 static int pub_branch(b_lean_obj_arg v) {
     return !lean_is_scalar(v) && lean_is_ctor(v) && lean_ctor_num_objs(v)==1 && lean_obj_tag(v)<=1;
 }
+/* A single exported method can otherwise be entirely devirtualized, allowing
+   the optimizer to erase the shared table import required by this ABI.
+   Use it to initialize this side module once, not to dispatch each call. */
+static lean_object *(* volatile pub_initialize)(uint8_t)=PUB_INIT;
+#ifdef PUB_RECORDS
+/* The generated Lean wrapper builds a nested Prod ending in Unit. Each field
+   is boxed, even when the source structure uses Lean's packed scalar layout.
+   No partial JS result or strong canonical owner escapes a failed conversion. */
+static uint32_t pub_record_out(uint32_t *f,unsigned index,b_lean_obj_arg row,uint32_t *budget) {
+    if(index>=sizeof(pub_records)/sizeof(*pub_records)) return 5;
+    const uint8_t *tags=pub_records[index]+1;
+    unsigned count=pub_records[index][0];
+    if(!count || count>64) return 5;
+    bridge_scalar_slot slots[64]={0};
+    b_lean_obj_arg objects[64]={0};
+    uint32_t status=0;
+    for(unsigned i=0;i<count;i++) {
+        if(lean_is_scalar(row) || !lean_is_ctor(row) || lean_obj_tag(row)!=0 || lean_ctor_num_objs(row)!=2) { status=5; break; }
+        b_lean_obj_arg v=lean_ctor_get(row,0);
+        row=lean_ctor_get(row,1);
+        if(tags[i]>=64) {
+            uint32_t token=lb_jsh_domain_token_v1(PUB_KIND(tags[i]-64),v);
+            if(!token) { status=5; break; }
+            slots[i].kind=tags[i]; slots[i].bits=token; objects[i]=v;
+        } else {
+            lean_inc(v); /* encode consumes this reference even on failure */
+            uint32_t rc=bridge_copied_encode(&slots[i],tags[i],0,v,budget);
+            if(rc) { status=rc==4?12:5; break; }
+        }
+    }
+    if(!status && row!=lean_box(0)) status=5;
+    if(!status) status=PUB_DELIVER(f,3,NULL,count,slots);
+    if(!status) for(unsigned i=0;i<count;i++) {
+        if(objects[i] && !lb_jsh_domain_admit_v1(PUB_KIND(tags[i]-64),objects[i])) { status=5; break; }
+    }
+    for(unsigned i=0;i<count;i++) if(slots[i].flags&2) free((void *)(uintptr_t)(uint32_t)slots[i].bits);
+    return status;
+}
+#endif
 static uint32_t pub_out(uint32_t *f,unsigned channel,int node,b_lean_obj_arg v,uint32_t *budget) {
     uint8_t path[32]; unsigned depth=0;
     while (pub_nodes[node][0]<0) {
@@ -56,7 +95,7 @@ static uint32_t pub_call(uint32_t *f,unsigned n,const uint8_t *tags,int result,i
     }
     static int ready;
     if (!ready) {
-        lean_object *r=PUB_INIT(1); ready=lean_io_result_is_ok(r); lean_dec(r);
+        lean_object *r=pub_initialize(1); ready=lean_io_result_is_ok(r); lean_dec(r);
         if (!ready) return 5;
     }
     for (unsigned i=0;i<n;i++) {
@@ -89,6 +128,9 @@ static uint32_t pub_call(uint32_t *f,unsigned n,const uint8_t *tags,int result,i
         status=dn_closure_save((void *)(uintptr_t)f[5],save,val,&ticket);
         if(!status) { f[6]=(uint32_t)ticket; f[7]=(uint32_t)(ticket>>32); }
     }
+#endif
+#ifdef PUB_RECORDS
+    else if(result<=-2) status=pub_record_out(f,(unsigned)(-2-result),val,&budget);
 #endif
     else status=pub_out(f,0,result,val,&budget);
     lean_dec(r);

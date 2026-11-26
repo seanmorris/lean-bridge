@@ -310,6 +310,18 @@ jobs:
           test -s build/lean-link-spike/lazy/main.wasm
           test -s build/lean-link-spike/startup/main.wasm
           test -s build/lean-link-spike/final-static/main.wasm
+      - name: Exercise application-owned record fields in five installed npm clients
+        shell: bash
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          source scripts/lean-runtime-config.sh
+          export LEAN_BRIDGE_LEAN_PREFIX="$(lean --print-prefix)"
+          export LEAN_BRIDGE_JS_EMSDK="$LEAN_WASM_EMSDK"
+          export LEAN_BRIDGE_JS_TARGET_RUNTIME="$PWD/build/lean-runtime/$LEAN_WASM_RUNTIME_BUILD_ID"
+          export LEAN_BRIDGE_RUNTIME_ROOT="$PWD/build/lean-link-spike/lazy"
+          npm run test:javascript-host-records
       - name: Execute owned JavaScript values and generated public APIs
         shell: bash
         run: |
@@ -463,6 +475,7 @@ jobs:
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
+            build/javascript-host-record/
             build/owned-subtype-javascript-packaging/
             build/owned-checked-record-javascript-packaging/
             build/owned-javascript-wasm/transfers.log

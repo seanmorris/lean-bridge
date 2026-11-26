@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 import test from "node:test";
 import {bindWasmHostFunctions} from "../src/runtime/wasm-host-functions.mjs";
+import {wasmHostRecordTypes} from "../src/runtime/wasm-host-records.mjs";
 import {createWasmTaskFunctions} from "../src/runtime/wasm-task-functions.mjs";
 import {nativeHostSelection,reconcileHostExports} from "../src/analyze/host-export-model.mjs";
 import {javaScriptHostMembers} from "../src/backends/javascript/host-members.mjs";
@@ -11,6 +12,18 @@ import {generateCTaskExports} from "../src/backends/c/task-exports.mjs";
 import {generateSyncWire} from "../src/backends/c/sync-wire.mjs";
 import {javaScriptTaskAbi} from "../src/abi/javascript-wasm-tasks.mjs";
 import {wasmWorkerMethods,wasmWorkerLeases} from "../src/abi/wasm-host-factories.mjs";
+
+test("host record getters copy buffers, not application objects, and disposal is per owner",()=>{
+	const schema={type: "record:lean:Gauge.Pair",name: "Pair",fields: [{name: "meter",type: 0},{name: "bytes",type: "bytes"}]};
+	const a=wasmHostRecordTypes([schema]).get(schema.type), b=wasmHostRecordTypes([schema]).get(schema.type);
+	const meter={},input=Buffer.from([3,2,1]), row=new a.ctor(meter,input);
+	input[0]=4;assert.equal(row.bytes[0],3);row.bytes[0]=8;assert.equal(row.bytes[0],3);
+	assert.equal(row.meter,meter);
+	const copied=a.adopt([meter,new Uint8Array([9])]);
+	assert.throws(()=>b.read(row),/wrong Pair/u);assert.throws(()=>a.read(Object.create(a.ctor.prototype)),/wrong Pair/u);
+	assert.equal(row.dispose(),true);assert.equal(row.dispose(),false);assert.throws(()=>row.bytes,/Closed/u);
+	assert.equal(copied.meter,meter);assert.equal(copied.dispose(),true);
+});
 
 const fixture=()=>{
 	const methods=[{name: "remember",result: {argument: 0,reply: 0},args: [0]}],rows=new Map();

@@ -21,7 +21,7 @@ import { assertJavaScriptIOAbi, componentImmediateIOAbi, componentSyncIOAbi } fr
 import { abandonImmediateCursors } from "./component-immediate-cursors.mjs";
 import { validateJavaScriptWasmControl } from "../abi/component-wasm-control.mjs";
 import { bindJavaScriptIO } from "./component-sync-io-runtime.mjs";
-import { componentHostIOAbi, javaScriptHostIOAbi, validateJavaScriptHostModules } from "../abi/component-host-io.mjs";
+import { componentHostIOAbi, componentHostRecordIOAbi, javaScriptHostIOAbi, validateJavaScriptHostModules } from "../abi/component-host-io.mjs";
 import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { javaScriptHostMembers } from "../backends/javascript/host-members.mjs";
 import { installWasmHostDomain } from "../runtime/wasm-host-loader.mjs";
@@ -188,7 +188,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 	const loadComponent = descriptor => {
 		assertOpen();
 		descriptor = { ...descriptor, sideModule: new URL(descriptor.sideModule.href), privateAbi: structuredClone(descriptor.privateAbi), bindingIr: structuredClone(descriptor.bindingIr) };
-		const host = descriptor.privateAbi.version === componentHostIOAbi;
+		const host = [componentHostIOAbi, componentHostRecordIOAbi].includes(descriptor.privateAbi.version);
 		if(host)
 		{
 			const {url,integrity} = descriptor.broker;

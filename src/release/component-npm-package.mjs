@@ -169,6 +169,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, "runtime/wasm-host-domain"
 		, "runtime/wasm-host-exports"
 		, "runtime/wasm-host-functions"
+		, "runtime/wasm-host-records"
 		, "runtime/wasm-host-loader"
 		, "runtime/wasm-host-members"
 		, "runtime/wasm-host-wire"])

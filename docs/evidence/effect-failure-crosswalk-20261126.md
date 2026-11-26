@@ -96,6 +96,12 @@ pointer expires when the application drops its own meter. In a separate call,
 a member returning `Err` reaches the caller as the original error allocation.
 These are recoverable failures, not thrown EIO payloads or fatal faults.
 
+The [five npm clients](javascript-host-record-fields-20261126.md) also
+distinguish the original JavaScript exception from a copy-budget failure
+partway through a compiled record result. Both authoring routes leave the
+binding usable. Disposal and strict object identity are observable here;
+the Rust weak-pointer observation is not a JavaScript GC guarantee.
+
 The [capabilities index](host-worker-qualification-20261125.md#which-installed-profiles-exercised-os-access)
 records which profiles permit real OS effects and which refuse to package
 them. Do not infer a filesystem grant from an in-memory test. Likewise, a

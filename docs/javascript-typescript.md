@@ -243,6 +243,39 @@ dispose the binding without calling any exports. A host member's original thrown
 and a retained callback failure are different: the callback rejects with
 `JavaScriptCallbackError` and exposes the original value as `cause`.
 
+### Pass a record containing application objects
+
+When a synchronous npm package exports a record constructor, use that constructor
+on the same JavaScript agent as the binding. For example, Gauge's `Pair` holds
+two application meters, bytes, and a natural number:
+
+```js
+import { Pair, withHosts } from "@example/gauge-records";
+
+const gauge = withHosts({ Box: Meter });
+const left = new Meter(7), right = new Meter(4);
+const input = new Pair(left, new Uint8Array([1]), 42n, right);
+try {
+  const flipped = gauge.flip(input);
+  try {
+    console.log(flipped.lead === right); // true: the original instance
+    console.log(flipped.sequence);       // 43n
+  } finally {
+    flipped.dispose();
+  }
+} finally {
+  input.dispose();
+  gauge.dispose();
+}
+```
+
+The record owns a copy of its bytes. Each byte getter returns a fresh
+`Uint8Array`; changing it cannot change the record. An object getter returns
+the original JavaScript instance instead. Disposing the record releases its
+references and makes its getters unusable; it does not invalidate a meter
+you already retrieved. The returned record can also outlive its binding.
+TypeScript infers `Pair<Meter>` from the constructor arguments.
+
 ### Answer a callback from a Lean task
 
 A threaded npm package can ask your application for a value while its Lean
