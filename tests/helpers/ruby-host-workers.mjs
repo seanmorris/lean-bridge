@@ -75,7 +75,7 @@ test("compiled gems preserve Ruby classes and failures across workers, cursors a
 	await rm(project,{recursive: true}); await rm(peerProject,{recursive: true});
 	for(const [name,g] of [["ordinary",first],["reviewed",reviewed]])
 	{
-		const scripts=["consumer.rb","private-tokens.rb","error-policy.rb"];
+		const scripts=["consumer.rb","private-tokens.rb","error-policy.rb","identity-positions.rb"];
 		const result=await exerciseRubyWorkerGems({root,ruby,primary: g.out,peer: peer.out,scripts});
 		if(keep)
 		{

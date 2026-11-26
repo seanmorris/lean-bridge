@@ -1492,6 +1492,7 @@
     "test:wit-canonical-future-cancel": "LEAN_BRIDGE_CANONICAL_CANCEL_KIND=future node --test --test-concurrency=1 tests/helpers/wit-canonical-cancel.mjs",
     "test:ruby-host-imports": "node --test --test-concurrency=1 tests/helpers/ruby-host-imports.mjs",
     "test:ruby-host-workers": "node --test --test-concurrency=1 tests/helpers/ruby-host-workers.mjs",
+    "test:ruby-host-object-positions": "node --test tests/helpers/ruby-host-object-positions.mjs",
     "test:ruby-host-records": "LEAN_BRIDGE_RUBY_HOST_RECORD_TEST=1 node --test --test-concurrency=1 tests/helpers/ruby-host-record-installed.mjs",
     "test:ruby-host-closures": "node --test --test-concurrency=1 tests/helpers/ruby-host-closures-installed.mjs",
     "test:c-host-closures": "node --test --test-concurrency=1 tests/helpers/c-host-closures-installed.mjs",

@@ -1,0 +1,41 @@
+{
+  "fixtureSha256": "97097225dadeedecd06328df3ffce333ab3bd35a96a8f7233b5c7fc59bfaa7e2",
+  "observations": [
+    "Ruby worker: export argument/result, callback argument/distinct result, peer mutation, invalid reply, zero host roots"
+  ],
+  "peer": {
+    "archive": {
+      "bytes": 50116096,
+      "path": "archives/workshop-peer-1.0.0-x86_64-linux.gem",
+      "sha256": "bf94f588dd51a2815d07b221e393d68e447fa713a5da67037e534cae1b75b131"
+    },
+    "bindingIr": "be71b59db9443e17c314cecfde4e2eeff73b02ba830fceafc804127e482464ec",
+    "name": "workshop-peer",
+    "publicIr": "e97cf8a8af2e8ec57ce603bc95ef153cb977799ff7c9bc5fdb2d6649ccf6b71d",
+    "receiptSha256": "2c5b24b89cfb5f15521f64d49b2f7376991f2f51465f53a13c88119c2decabbc",
+    "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+    "source": "d82767dae9b7e29b70058824f3fbd4c9569c56ab321e5e55938a2ce39bf1dcbc",
+    "version": "1.0.0"
+  },
+  "positions": [
+    "parameter",
+    "result",
+    "callback-parameter",
+    "callback-result"
+  ],
+  "primary": {
+    "archive": {
+      "bytes": 50116096,
+      "path": "archives/workshop-1.0.0-x86_64-linux.gem",
+      "sha256": "b23b47e78713c826f5979dd02fc508da257597e139decc01ee7cde0761a75271"
+    },
+    "bindingIr": "0675052369dba49cf6913dbe46e1da9f523f0ed83351e0dd7d0f39e707f6faaa",
+    "name": "workshop",
+    "publicIr": "e0484120bb78c8385ac6358f9a6bbe3136e93ed5a1a9789c60325ccce75abe13",
+    "receiptSha256": "b7586878a56a0e4ba6f026acfa56d30803133a294b2c50e73ea88e4c6b428498",
+    "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+    "source": "df72f912d3730191338256e60f9e0cd181432260295016004ca0a40af29972f9",
+    "version": "1.0.0"
+  },
+  "route": "reviewed"
+}

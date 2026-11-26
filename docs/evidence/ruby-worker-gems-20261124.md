@@ -25,6 +25,30 @@ Run `npm run test:ruby-host-workers` with the pinned Lean toolchain, native
 runtime and MRI 3.3 configured for the producer. These are local installed-gem
 results, not a hosted CI run or a registry publication.
 
+## Direct host-object arguments and results
+
+The [position test](../../tests/fixtures/ruby-host-workers/identity-positions.rb)
+uses two Ruby objects with the same initial value. `plain` returns each
+object unchanged. The callback to `relay` receives one object and returns
+the other; a separately installed peer mutates the returned object. Swapping
+their roles proves neither the input nor a fixed object stands in for the
+callback's reply. A reply of the wrong class fails, the binding remains
+usable, and both packages have zero host roots after unbinding.
+
+The [ordinary](ruby-host-object-positions-20261126/ordinary.json) and
+[reviewed](ruby-host-object-positions-20261126/reviewed.json) runs qualify
+an export parameter, an immediate export result, a callback parameter and
+a callback result. The callback result is observed on task completion;
+the immediate export result is verified separately by `plain`. For objects
+inside a record, use the [Ruby field evidence](ruby-host-record-fields-20261126.md).
+
+To replay without building Lean, set `LEAN_BRIDGE_RUBY_HOST_TASK_REPLAY`
+to the retained directory containing `ordinary/`, `reviewed/` and `peer/`
+from `test:ruby-host-workers`. Run `npm run test:ruby-host-object-positions`
+with the matching MRI interpreter. The test verifies the original receipts,
+installs and relocates each gem pair, and checks the binding definition
+inside each installed gem before running the consumer.
+
 ## File effects and early iterator exit
 
 Two relocated MRI 3.3.12 installs ran the [same Ruby application](../../tests/fixtures/ruby-host-workers/effects.rb) from ordinary and reviewed packages. Inside its host binding, Ruby observed the environment captured during initialization and a synchronous file read. The worker returned a real `Task`; its `await` read the file. The first cursor pull saw the original contents; after Ruby edited the file, the next iteration saw the change. Breaking out of `each` wrote the Lean finalizer's marker. A later `next` raised `StopIteration`, and calling `close` again left the application's replacement marker untouched. Removing the filesystem grant named the worker, pull and close roots and produced no package.
