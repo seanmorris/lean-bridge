@@ -6,6 +6,7 @@
 import { generateOwnedPerlConversions } from "./owned-conversions.mjs";
 import { ownedPerlAnchoredCall, ownedPerlBorrowXs } from "./owned-borrows.mjs";
 import { ownedPerlCallbackArguments } from "./owned-callback-arguments.mjs";
+import { perlInputArgument, perlInputRecord } from "./owned-host-records.mjs";
 
 const callbackRuntime = prefix => `
 typedef struct {
@@ -174,6 +175,7 @@ ${invoker}(...)
     XSRETURN_EMPTY;
 `);
 	}
+	for(const node of model.types.filter(n => n.hostInput)) declarations.push(perlInputRecord(node,nodes));
 	const render = (name, fn) => {
 		if(model.wholeOwners) return ownedPerlAnchoredCall(name, fn, model);
 		const inputs = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
@@ -196,9 +198,7 @@ ${name}(...)
     lpo_frame *frame = lpo_begin_frame(aTHX_ scope);
     lpo_owner *owner = lpo_begin_owner(aTHX_ 0);
     ${inputs.map((_, index) => `SV *argument${index} = lpg_pin(aTHX_ ST(${index}));`).join("\n    ")}
-    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + (model.c.hostArgument?.(fn, index)
-		? `${node.cName}_host input${index} = lpo_host${node.index}(aTHX_ frame, argument${index});`
-		: `${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`)).join("\n    ")}
+    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + perlInputArgument(model,fn,node,index)).join("\n    ")}
     lpo_context(aTHX);
     if (lpo_state.closed) croak("Lean ownership session is closed");
     ${result.cName} returned = {0};

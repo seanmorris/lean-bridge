@@ -4,6 +4,7 @@
  * @file
  */
 import { perlStringLiteral as q } from "./naming.mjs";
+import { perlInputArgument } from "./owned-host-records.mjs";
 
 export const ownedPerlBorrowRuntime = `
 static void *lpo_leaf_borrow(pTHX_ SV *value, size_t type) {
@@ -185,9 +186,7 @@ ${inputs.map((node, index) => [
 	...wraps(index) ? [`    lpo_owner *input_owner${index} = NULL;`
 		, `    argument${index} = lpo_value_input(aTHX_ argument${index}, ${node.index}, &input_owner${index});`] : []
 	, ...moving.includes(index) ? [`    lpo_add_input(aTHX_ moves, ${moving.indexOf(index)}, input_owner${index});`] : []
-	, model.c.hostArgument?.(fn, index)
-		? `    ${node.cName}_host input${index} = lpo_host${node.index}(aTHX_ frame, argument${index});`
-		: `    ${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`
+	, "    " + perlInputArgument(model,fn,node,index)
 ].join("\n")).join("\n")}
     lpo_context(aTHX);
     if (lpo_state.closed) lpo_status(aTHX_ 4);

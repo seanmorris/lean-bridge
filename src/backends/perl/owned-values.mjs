@@ -113,6 +113,21 @@ export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = fa
 		};
 	});
 	const table = new Map(types.map(node => [node.id, node]));
+	const alternate = [], methodNames = new Set(functions.map(fn => fn.publicName));
+	for(const call of c.hostFieldCalls)
+	{
+		for(const slot of call.hostRecordSlots)
+		{
+			const node = table.get(slot.node.id);
+			if(node.hostInput) continue;
+			let name = node.name + "Input";
+			while(occupied.has(name)) name += "Input";
+			node.hostInput = { publicType: claim(name), inputType: slot.inputType, fields: slot.fields.map(f => f.name) };
+		}
+		let publicName = functions.find(fn => fn.id === call.id).publicName + "_with_host_fields";
+		while(methodNames.has(publicName)) publicName += "_input";
+		methodNames.add(publicName); alternate.push({ ...call, publicName });
+	}
 	const aliases = c.native.aliases.map(alias => ({
 		...alias, name: definitions.get(alias.id).name
 		, contractType: contract(definitions.get(alias.id).target)
@@ -128,6 +143,8 @@ sub CLONE_SKIP { 1 }
 sub STORABLE_freeze { CORE::die "Lean identities cannot be serialized\\n" }
 sub STORABLE_thaw { CORE::die "Lean identities cannot be deserialized\\n" }
 `;
+		if(node.hostInput) return valueClass(node.publicType, node.fields) + "\n" + valueClass(node.hostInput.publicType,
+			node.fields.map(f => node.hostInput.fields.includes(f.name) ? { ...f, contractType: f.contractType + " (code reference or Lean function)" } : f));
 		return node.kind === "record" ? valueClass(node.publicType, node.fields)
 			: `package ${node.publicType};
 sub new { CORE::die "select a named variant constructor\\n" }
@@ -154,10 +171,12 @@ ${anchored ? ownedPerlBorrowClasses(moduleName, types, functions, ir) : ""}\
 ${receivers ? ownedPerlReceiverClasses(moduleName, types, functions) : ""}\
 1;
 `;
-	return { c, moduleName, types, functions, aliases, source
+	return { c, moduleName, types, aliases, source
+		, functions: [...functions, ...alternate]
 		, wholeOwners: anchored, receiverExports: receivers, hostCallbacks
 		, publicTypes: [...anchored ? [`${moduleName}::Value`] : []
 			, ...types.filter(node => node.ownerType).map(node => node.ownerType)
 			, ...wrappers.map(name => `${moduleName}::${name}`)
+			, ...types.filter(n => n.hostInput).map(n => n.hostInput.publicType)
 			, ...nominal.flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])] };
 };

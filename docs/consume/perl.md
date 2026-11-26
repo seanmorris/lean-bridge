@@ -480,6 +480,22 @@ options, results, products, records, variants and aliases as ordinary calls.
 Pass a host function as a CODE reference. A returned Lean closure provides
 `call`, `close` and `closed`.
 
+A package can also accept a code reference *inside* a record. For example,
+the Tariff API generates a separate input class:
+
+```perl
+use LeanBridge::TariffQuotes;
+my $fee = 40;
+my $rule = LeanBridge::TariffQuotes::TariffInput->new(quote => sub { $_[0] + $fee });
+my $price = LeanBridge::TariffQuotes::apply_tariff_with_host_fields($rule, 2); # 42
+```
+
+You can pass `$rule` again. Each call borrows its code reference anew;
+returning the record from Lean does not extend that borrow. If the
+returned function must remain callable later, pass a leased Lean function
+in the input instead. The [Perl field checks](../evidence/host-callback-input-records-20261126.md#perl-callers)
+exercise both cases.
+
 For the package in the [author example](../publish/cpan.md#export-structured-callbacks),
 save `structured-example.pl`:
 

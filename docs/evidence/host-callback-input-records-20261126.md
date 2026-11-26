@@ -174,3 +174,20 @@ exited there were zero. This is a runtime check, not a fresh NuGet install.
 Run `npm run test:dotnet-function-fields` for both NuGet authoring routes.
 The earlier [leased-field receipts](dotnet-function-fields-20261126.md)
 predate these input views and do not qualify delegate inputs.
+
+## Perl callers
+
+The [XS compiler check](../../tests/helpers/perl-function-fields-compiler.mjs)
+compiles two record parameters containing two functions, a string and an
+integer. It checks the native offsets against C's `offsetof`. The
+[Perl consumer](../../tests/fixtures/structured-types/tariff-host-fields.pl)
+uses code references and real leased Lean functions in the public input
+class. Threaded and unthreaded Perl 5.36.3 and 5.38.2 each ran the
+generated XS against the compiled Lean component. All four reported
+one identity at baseline, four with live leases, one after each of six
+scenarios, and zero after shutdown. Returning a borrowed coderef did not
+let Lean invoke it later; an exception retained its Perl object identity.
+
+These are adapter checks. The [earlier CPAN receipts](perl-function-fields-20261126.md)
+only cover leased fields. Run `npm run test:perl-function-fields` with all
+four interpreters to qualify the new ordinary and reviewed packages.
