@@ -237,6 +237,13 @@ and the [installed .NET results](../evidence/dotnet-tasks-20261122.json).
 
 ### Let a Lean task call C#
 
+Some standalone task parameters permit one call per registration. If Lean
+tries again and propagates the refusal, `await` throws the generated
+`CallbackAlreadyInvokedException`; its `Declaration` identifies the Lean
+operation. The second attempt never
+enters your delegate, even if the first invocation threw. Passing the same
+delegate to another parameter or task gives it a new allowance.
+
 Pass a synchronous delegate to a task that requests a callback. The worker
 waits for its reply; your delegate runs on the same main thread as the rest
 of the Lean application. The Feedback package, for example, can call back

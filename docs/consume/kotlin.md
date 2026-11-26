@@ -255,6 +255,12 @@ from your own callback is still yours.
 
 ### Pass a callback to a Lean task
 
+When a package marks a parameter single-use, a second invocation fails
+before it enters your lambda. If Lean propagates the refusal, catch the package's
+`CallbackAlreadyInvokedException` around the suspend call;
+`e.declaration()` gives the Lean operation. The first call spends that
+registration even if it throws. Reusing your lambda in a new task is fine.
+
 Pass a Kotlin function to the suspend API. The callback itself is synchronous; this call returns `42`:
 
 ```kotlin

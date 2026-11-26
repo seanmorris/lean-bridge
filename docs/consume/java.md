@@ -313,6 +313,12 @@ results that never reach the future or subscriber.
 
 ### Pass a callback to a Lean task
 
+If the package declares a callback parameter single-use, a second call
+never enters your lambda. If Lean propagates that refusal, the future completes
+exceptionally with the package's `CallbackAlreadyInvokedException`. With `join()`, inspect the
+`CompletionException` cause; its `declaration()` identifies the Lean
+operation. You can pass the same lambda to a separate task or parameter.
+
 Pass a lambda directly, or use a registration when you need to revoke future calls. This example uses the prepared `com.acme:feedback` package:
 
 ```java

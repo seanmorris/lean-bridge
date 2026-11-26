@@ -77,6 +77,19 @@ returns the same object, not a new policy refusal. A weak reference
 confirmed that closing the reusable callback released its capture. The
 loaded broker reported one initialization and zero live leases.
 
+## .NET
+
+The [ordinary NuGet release](native-once-callback-20261126/dotnet/ordinary.json)
+passed an offline restore and a second run on an SDK-free .NET 8 runtime
+after removing the feed, build project and package cache. The
+[C# client](../../tests/fixtures/native-callback-budget/Client.cs) awaited the
+generated API directly. Across 16 races only one worker invoked the
+delegate per registration. Original exception identity survived rethrow;
+the factory IO error, typed startup error and terminal IO error stayed
+distinct. Closing the registration released its capture and the native
+broker finished with zero live leases. This report covers the ordinary
+package only.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
@@ -89,3 +102,6 @@ over integers, not callbacks transporting host objects. Run
 For MRI, run `npm run test:ruby-once-callback`; set
 `LEAN_BRIDGE_RUBY_BUDGET_REPLAY` to the directory containing `rubygems/`
 to reuse the sealed gems.
+For .NET, run `npm run test:dotnet-once-callback` or set
+`LEAN_BRIDGE_DOTNET_BUDGET_REPLAY` to the handoff directory containing
+`ordinary/` and `reviewed/`.

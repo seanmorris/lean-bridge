@@ -181,6 +181,20 @@ and the [ordinary, reviewed and stream-only package receipts](../evidence/dotnet
 
 ### Export a callback-taking task
 
+The task name does not limit how many times Lean may call a delegate.
+For a standalone task, add this field to the export configuration to enforce
+one call to that parameter per task:
+
+```json
+{
+  "taskCallbackPolicies": [{"declaration": "Feedback.once", "parameter": "f", "invocation": "once"}]
+}
+```
+
+Omitted parameters allow repeated calls. A thrown delegate exception still spends
+the allowance. Both authoring routes check the Lean parameter name and
+policy; packages with CLR host imports do not accept this option.
+
 A selected task can accept one or more unary functions of type `α → IO β`
 over copied scalars. Select the real factory in `taskExports`. Select it in
 `taskIOErrors` too if `Except IO.Error` should fault the task. For example,

@@ -266,6 +266,21 @@ examples and [package evidence](../evidence/jvm-lease-tasks-20261123.json).
 
 ### Export a retained task callback
 
+By default, Lean may call a registered parameter more than once. To enforce
+one invocation for `f` on the standalone task below, add this field to
+`lean-bridge.exports.json` (shown in isolation):
+
+```json
+{
+  "taskCallbackPolicies": [{"declaration": "Feedback.once", "parameter": "f", "invocation": "once"}]
+}
+```
+
+Use the Lean parameter name. The first call spends the allowance before
+Java or Kotlin runs, even if the callback throws. Other tasks and parameters
+get independent registrations. Both authoring routes check this policy;
+the option does not apply to packages with JVM host imports.
+
 In `Feedback.lean`, write an ordinary Lean function:
 
 ```lean
