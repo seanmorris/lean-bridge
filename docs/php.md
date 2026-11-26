@@ -270,6 +270,12 @@ operation. Passing one only to `$future->await($token)` cancels that wait;
 other callers can still await the same future. An already-running Lean task
 must cooperate to stop its computation. Late results never replace cancellation.
 
+To stop an entire stream, cancel the token you passed to its factory, or
+call `$cursor->close()`. If a `foreach` is already waiting on a pull, the
+token delivers its original `Amp\CancelledException`; an explicit close
+interrupts that read with a package `LeanBridgeError`. Neither waits for an
+uncooperative worker to finish. See the [two-package cancellation example](evidence/async-delivery-crosswalk-20261125.md#stopping-a-parked-native-php-reader).
+
 A failure to *start* (for example, an `EIO` refusal) throws from the function
 unless the factory takes a [retained PHP callback](#pass-a-callback-to-a-lean-worker).
 A selected terminal IO failure throws `TaskIOError` from `await()`. A typed

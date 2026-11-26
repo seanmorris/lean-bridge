@@ -211,6 +211,35 @@ the [original acceptance record and three handoffs](ruby-fiber-tasks-20261122.js
 and `LEAN_BRIDGE_RUBY` to the matching interpreter. Run
 `node --test tests/helpers/ruby-parked-pull-installed.mjs`.
 
+### Stopping a parked native PHP reader
+
+The [Amp client](../../tests/fixtures/php-tasks/parked.php) starts a real
+`foreach` against a [gated Lean pull](../../tests/fixtures/c-lean-tasks/Pulse.lean).
+It waits until the worker has entered the gate, then attempts a second read:
+PHP refuses it and the Lean pull count stays at one.
+
+Cancelling the operation token wakes the reader with the token's original
+`CancelledException`, including the application's cause. Closing the cursor
+instead wakes it with the package’s closed-during-pull error. Both paths
+increment the Lean finalizer counter once *before* releasing the worker.
+An [independently compiled package](../../tests/fixtures/php-tasks/Signals.lean)
+returns 42 while that worker is still waiting. Releasing it does not deliver an
+item or replace the original failure. Re-reading and repeated close add no
+pulls or finalizers. Native owners and descriptor counts return to baseline.
+
+The [ordinary](php-parked-pull-20261126/ordinary.json) and
+[independently reviewed](php-parked-pull-20261126/reviewed.json) packages ran
+on PHP 8.2.35 and 8.5.10 with Amp 3.1.3 and Revolt 1.1.0. Each PHP version
+ran in both package load orders: eight relocated applications and sixteen
+blocked-read interruptions. These are native Composer installs, not PHP-Wasm.
+
+Run `npm run test:php-parked-pull` with the native PHP publisher inputs
+and the [pinned Amp and Revolt cache](php-host-task-packages-20261124.md#reproduce).
+Use `LEAN_BRIDGE_TEST_PHPS` for a JSON array of PHP CLI executable paths.
+Set `LEAN_BRIDGE_PHP_PARKED_HANDOFFS` to retain the archives. To repeat just
+the offline install and client, unset that variable and point
+`LEAN_BRIDGE_PHP_PARKED_REPLAY` at the reported handoff directory.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
