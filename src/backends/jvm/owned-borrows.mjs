@@ -173,10 +173,10 @@ export const ownedJvmAnchoredCall = (context, fn, index, kotlin) => {
 	const copy = calls.find(call => call.wholeCopy && call.id === result.id);
 	if(whole && !copy) throw new TypeError(`Missing JVM whole-value copy for ${result.id}`);
 	const borrowed = fn.anchor !== undefined;
-	const write = (node, i, scope, check) => fn.handle && i === 0
+	const write = (node, i, scope, check) => context.recordWrite(fn,i,kotlin,scope,check) ?? (fn.handle && i === 0
 		? `MemorySegment.ofAddress(${scope}.root(arg${i}))`
 		: c.hostArgument?.(fn, i) ? `host${family}${node.index}(arg${i}, ${scope}, ${check ? "null" : "frame"})`
-			: `_OwnedConvert.write(${catalog}, ${node.index}, ${wraps(i) ? `${scope}.whole(arg${i})` : `arg${i}`}, ${scope})`;
+			: `_OwnedConvert.write(${catalog}, ${node.index}, ${wraps(i) ? `${scope}.whole(arg${i})` : `arg${i}`}, ${scope})`);
 	const arguments_ = ["session"
 		, ...parameters.flatMap((node, i) => [
 			fn.handle && i === 0 || c.hostArgument?.(fn, i) || node.aggregate ? `input${i}` : `input${i}.get(${node.valueLayout}, 0)`

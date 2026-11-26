@@ -491,6 +491,19 @@ original handle. The [installed Kotlin Tariff client](../evidence/jvm-function-f
 closes `tariff.quote` inside that block and still calls `kept.invoke(2)`.
 A borrowed Kotlin lambda is not a retained Lean function.
 
+When the package manifest lists `hostInputRecords`, pass a lambda in the
+generated input class:
+
+```kotlin
+val row = TariffInput(quote = { units -> units + 40 })
+val price = Api.applyTariffWithHostFields(row, 2)  // 42L
+```
+
+Use `TariffInput.fromLeased(tariff)` for an existing record, or
+`TariffInput.builder().quote(kept).build()` for a particular Lean lease.
+Returning a record does not extend a Kotlin lambda’s lifetime beyond the
+original call.
+
 Use the companion `.kotlin` API and its copied value types for structured
 callbacks. Arrays, Lists, options, results, binary products, records, variants
 and aliases can carry acyclic copied payloads. Lambdas retain their parameter

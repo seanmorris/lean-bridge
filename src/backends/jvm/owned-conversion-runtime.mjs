@@ -12,8 +12,9 @@ import { ownedJvmWholeScope } from "./owned-borrows.mjs";
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Track consuming inputs during conversion.
  * @param options.anchoredResults - Pin whole owners, including empty values.
+ * @param options.hostRecords - Include the containing input record in the depth budget.
  */
-export const ownedJvmConversionSupport = ({ transferredInputs = false, anchoredResults = false } = {}) => `final class _OwnedConvert {
+export const ownedJvmConversionSupport = ({ transferredInputs = false, anchoredResults = false, hostRecords = false } = {}) => `final class _OwnedConvert {
     private _OwnedConvert() { }
     static void checkpoint() { _OwnedRuntime.checkpoint(); }
     static final class InvalidNative extends RuntimeException {
@@ -33,7 +34,7 @@ export const ownedJvmConversionSupport = ({ transferredInputs = false, anchoredR
     }
     static final class Scope implements AutoCloseable {
         final _OwnedRuntime.State state;
-        final boolean checkOnly;
+        final boolean checkOnly;${hostRecords ? "\n        int inputDepth;" : ""}
         final java.lang.foreign.Arena arena;
         final Budget budget;
         private final Factory factories;
@@ -68,7 +69,7 @@ export const ownedJvmConversionSupport = ({ transferredInputs = false, anchoredR
         void nativeBytes(long count, long width) { budget.nativeRemaining = charge(budget.nativeRemaining, count, width); }
         void storage(long count, long width) { budget.storageRemaining = charge(budget.storageRemaining, count, width); }
         void visit(int depth, _OwnedTypes.Node type, boolean storage) {
-            if (depth > ${componentRecursiveLimits.valueDepth} || budget.nodes == 0)
+            if (depth${hostRecords ? " + inputDepth" : ""} > ${componentRecursiveLimits.valueDepth} || budget.nodes == 0)
                 throw new Limit("Ownership value depth or node limit exceeded");
             budget.nodes--; if (storage) nativeBytes(type.size(), 1);
             storage(96, 1);

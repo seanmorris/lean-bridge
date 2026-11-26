@@ -556,6 +556,19 @@ closing the original if you need an independent lifetime. In the
 Use try-with-resources for `kept`. A plain Java lambda borrowed by a call
 does not gain that lifetime when Lean puts it in a record.
 
+If the package manifest lists `hostInputRecords`, its input type also
+accepts Java lambdas. For the native Tariff example:
+
+```java
+var row = new TariffInput(units -> units + 40);
+long price = Api.applyTariffWithHostFields(row, 2);  // 42
+```
+
+To use an existing Lean function instead, pass the original record to
+`TariffInput.fromLeased(tariff)`, or set individual fields with
+`TariffInput.builder().quote(kept).build()`. A returned Lean lease owns
+its reference; an escaped Java lambda is refused before dispatch.
+
 Callbacks and returned closures accept arrays, Lists, options, results, nested
 binary products, copied records, variants and aliases with acyclic copied
 payloads. They use the same Java types as direct calls. Nested mutable storage

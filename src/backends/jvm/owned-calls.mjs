@@ -9,6 +9,7 @@ import { ownedJvmTransfers } from "./owned-transfers.mjs";
 import { ownedJvmAnchoredCall, ownedJvmOriginalTransfers } from "./owned-borrows.mjs";
 import { ownedJvmOwnerName, ownedJvmReceiverOwner, ownedJvmReceiverMembers, ownedKotlinReceiverMembers } from "./owned-receivers.mjs";
 import { ownedJvmCallbackArguments } from "./owned-callback-arguments.mjs";
+import { jvmHostRecords, jvmHostRecordSources } from "./owned-host-records.mjs";
 
 const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" };
 const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
@@ -37,6 +38,13 @@ export const generateOwnedJvmCalls = (ir, options = {}) => {
 						: `${namespace}.${{ option: "Option", result: "Result", tuple: "Pair" }[node.kind]}<${node.fields.map(field => boxes[type(field.type, k)] ?? type(field.type, k)).join(", ")}>`;
 		cache.set(key, value); return value;
 	};
+	const records = jvmHostRecords(model);
+	const hostExports = records.functions.flatMap((fn,index)=>ownedJvmCallbackArguments(c,fn).map((variant,overload)=>({
+		...variant, originalIndex: model.functions.findIndex(f=>f.id===fn.id)
+		, overload
+		, operation: "export"
+		, method: "field"+index+(overload?"Native"+overload:"")
+	})));
 	const exportCalls = [];
 	for(const [index, fn] of model.functions.entries())
 		for(const [overload, variant] of ownedJvmCallbackArguments(c, fn).entries())
@@ -58,15 +66,23 @@ export const generateOwnedJvmCalls = (ir, options = {}) => {
 			, ...[...c.retains, ...(c.copies ?? [])].filter(fn => nodes.get(fn.id).representation !== "copied")
 				.map(fn => ({ ...fn, method: `copyWhole${nodes.get(fn.id).index}`, operation: "copy", wholeCopy: true }))
 		] : []
+		, ...hostExports
 	];
+	exportCalls.push(...hostExports);
 	const name = (fn, family) => fn.method.replace(/^([A-Za-z]+)(\d+)/u, `$1${family}$2`);
-	const parameterType = (fn, i, k) => fn.handle && i === 0 ? "_OwnedRuntime.Handle"
-		: c.hostArgument?.(fn, i) && !fn.nativeCallbacks?.includes(i) ? `${model.namespace}${k ? ".kotlin" : ""}.${nodes.get(fn.parameters[i]).delegateType}`
-			: anchored && (fn.anchor === i || fn.transfers?.includes(i)) ? `${model.namespace}.Value<${type(fn.parameters[i], k)}>` : type(fn.parameters[i], k);
+	const parameterType = (fn, i, k) => records.slot(fn,i) ? (k?model.kotlin.namespace:model.namespace)+"."+records.slot(fn,i).publicName
+		: fn.handle && i === 0 ? "_OwnedRuntime.Handle"
+			: c.hostArgument?.(fn, i) && !fn.nativeCallbacks?.includes(i) ? `${model.namespace}${k ? ".kotlin" : ""}.${nodes.get(fn.parameters[i]).delegateType}`
+				: anchored && (fn.anchor === i || fn.transfers?.includes(i)) ? `${model.namespace}.Value<${type(fn.parameters[i], k)}>` : type(fn.parameters[i], k);
 	const returnType = (fn, k) => anchored && !fn.rawResult && nodes.get(fn.result).representation !== "copied"
 		? nodes.get(fn.result).ownerType ? `${model.namespace}.${ownedJvmOwnerName(nodes.get(fn.result), k)}`
 			: `${model.namespace}.Value<${type(fn.result, k)}>` : type(fn.result, k);
-	const callbacks = ownedJvmCallables(model, calls, type), methods = [];
+	const recordSources = jvmHostRecordSources(model,records,type);
+	const callbacks = ownedJvmCallables(model, calls, type), methods = [...recordSources.methods];
+	const recordWrite = (fn,i,k,scope,check) => {
+		const slot = records.slot(fn,i);
+		return slot ? `record${k?"Kotlin":"Java"}${slot.node.index}(arg${i}, ${scope}, ${check?"null":"frame"})` : null;
+	};
 	const signatures = calls.map(fn => {
 		const arguments_ = fn.parameters.flatMap((id, i) => {
 			const node = nodes.get(id);
@@ -80,17 +96,17 @@ export const generateOwnedJvmCalls = (ir, options = {}) => {
 	{
 		if(anchored)
 		{
-			methods.push(ownedJvmAnchoredCall({ model, nodes, calls, type, parameterType, returnType, name }, fn, index, k));
+			methods.push(ownedJvmAnchoredCall({ model, nodes, calls, type, parameterType, returnType, name, recordWrite }, fn, index, k));
 			continue;
 		}
 		const family = k ? "Kotlin" : "Java", catalog = k ? "_KotlinOwnedTypes.CATALOG" : "_OwnedTypes.CATALOG";
 		const factory = k ? "kotlinFactory()" : "javaFactory";
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const moving = fn.transfers ?? [];
-		const write = (node, i, scope, check) => fn.handle && i === 0
+		const write = (node, i, scope, check) => recordWrite(fn,i,k,scope,check) ?? (fn.handle && i === 0
 			? `MemorySegment.ofAddress(${scope}.root(arg${i}))`
 			: c.hostArgument?.(fn, i) ? `host${family}${node.index}(arg${i}, ${scope}, ${check ? "null" : "frame"})`
-				: `_OwnedConvert.write(${catalog}, ${node.index}, arg${i}, ${scope})`;
+				: `_OwnedConvert.write(${catalog}, ${node.index}, arg${i}, ${scope})`);
 		const inputs = parameters.flatMap((node, i) => [
 			...moving.length ? [`            inputs.moveGroup = ${moving.indexOf(i)};`] : []
 			, `            var input${i} = ${write(node, i, "inputs", false)};`
@@ -225,10 +241,11 @@ ${identities.map(node => {
 		if(Object.hasOwn(files, path)) throw new TypeError("Duplicate owned JVM source " + path);
 		files[path] = source; (public_ ? publicFiles : internalFiles).push(path);
 	};
+	for(const f of recordSources.files) add((f.path.endsWith(".kt")?kt:java)+"/"+f.path,f.source,f.pub);
 	for(const node of model.types.filter(node => node.ownerType)) for(const k of [false, true])
 	{
 		const owner = ownedJvmOwnerName(node, k);
-		add(`${java}/${owner}.java`, ownedJvmReceiverOwner({ ...model, exportCalls, methodName: name, type, parameterType, returnType }, node, k), true);
+		add(`${java}/${owner}.java`, ownedJvmReceiverOwner({ ...model, exportCalls, methodName: name, type, parameterType, returnType, hostRecords: records }, node, k), true);
 		if(k) add(`${kt}/kotlin/${node.ownerType}.kt`, `package ${quoted(kotlin.namespace)}\n\ntypealias ${node.ownerType} = ${quoted(model.namespace)}.${owner}\n`, true);
 	}
 	for(const node of identities.filter(node => node.ownerType)) for(const k of [false, true])
@@ -236,7 +253,7 @@ ${identities.map(node => {
 		const path = k ? `${kt}/_OwnedKotlin${node.publicType}.kt` : `${java}/${node.publicType}.java`;
 		const marker = "    /* CHECKED RECEIVER MEMBERS */\n";
 		if(files[path].split(marker).length !== 2) throw new TypeError("Missing JVM raw receiver member insertion point");
-		const receiverModel = { ...model, exportCalls, methodName: name, type, parameterType, returnType };
+		const receiverModel = { ...model, exportCalls, methodName: name, type, parameterType, returnType, hostRecords: records };
 		files[path] = files[path].replace(marker, () => k ? ownedKotlinReceiverMembers(receiverModel, node)
 			: ownedJvmReceiverMembers(receiverModel, node, false, true));
 	}
@@ -263,7 +280,7 @@ ${identities.map(node => {
 	const wholeCopies = [];
 	if(anchored)
 	{
-		const claimed = new Set(model.functions.map(fn => fn.publicName));
+		const claimed = new Set([...model.functions,...records.functions].map(fn => fn.publicName));
 		const add = (publicName, id, overload = false) => {
 			if(!overload && claimed.has(publicName)) throw new TypeError(`JVM whole-value copy name collides: ${publicName}`);
 			claimed.add(publicName);
@@ -281,5 +298,5 @@ ${identities.map(node => {
 		if(claimed.has("copyValue")) throw new TypeError("JVM whole-value copy name collides: copyValue");
 		for(const fn of typed) if(typed.filter(other => erased(other) === erased(fn)).length === 1) add("copyValue", fn.id, true);
 	}
-	return { ...model, files, publicFiles, internalFiles, calls, exportCalls, type, methodName: name, parameterType, returnType, wholeCopies };
+	return { ...model, files, publicFiles, internalFiles, calls, exportCalls, type, methodName: name, parameterType, returnType, wholeCopies, hostRecords: records };
 };

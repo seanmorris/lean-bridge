@@ -40,11 +40,13 @@ extern "C" size_t probe_exit_errors(void) { return exit_errors.load(); }
  * @param options.receiverExports - Lower compiler-authorized receiver sites.
  * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Enable callback transport independently.
+ * @param options.valueCopies - Match the generated JVM package's typed copy helpers.
  */
-export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true, valueCopies = false } = {}) => {
 	const input = { metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks
+		, ...valueCopies ? {valueCopies: true} : {}
 		, ...receiverExports ? { receiverExports: true } : {}
 		, ...transferredInputs ? { transferredInputs: true } : {}
 		, ...anchoredResults ? { anchoredResults: true } : {}

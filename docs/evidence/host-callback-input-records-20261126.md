@@ -227,5 +227,20 @@ measures a record containing two callbacks, a string and a 32-bit integer.
 The borrowed input is 88 bytes, with fields at offsets 0, 32, 64 and 80.
 The returned Lean record is 40 bytes, with fields at 0, 8, 16 and 32.
 Both require 8-byte alignment. The C compiler and JDK 22 agreed on every
-measurement. This covers the native layout shared by Java and Kotlin; it
-does not yet qualify either language's public record-input API.
+measurement.
+
+The [Java](../../tests/fixtures/jvm-tariff/JavaInput.java) and
+[Kotlin](../../tests/fixtures/jvm-tariff/KotlinInput.kt) consumers compiled
+and ran separately against fresh managed and native adapters and the Lean
+component from the [ordinary Maven archive](jvm-function-fields-20261126/ordinary.json).
+Both exercised capture, reentry, two ways to return an expired borrow, the
+original exception and a successful retry, independent leased results, and
+rejection of invalid inputs. Each reported one live identity at every settled
+checkpoint, four in the held-lease control, and zero after owner-thread exit.
+A [separate compiled Lean call](../../tests/helpers/jvm-function-fields-mixed.mjs)
+took two records, each containing two functions, UTF-8 text and an integer.
+Java and Kotlin each returned 78 and invoked each of the four functions
+once. Neither dispatched a callback when the second record was invalid.
+Both native allocations and live identities reached zero at shutdown.
+These direct adapter checks are separate from fresh Maven installation;
+`npm run test:jvm-function-fields` builds and relocates both authoring routes.

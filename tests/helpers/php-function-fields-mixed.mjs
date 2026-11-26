@@ -1,6 +1,6 @@
 /** @file Exercise two mixed callback records through generated PHP and compiled Lean. */
 import assert from "node:assert/strict";
-import {mkdtemp, readFile, realpath, rm} from "node:fs/promises";
+import {mkdtemp, realpath, rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {basename, join} from "node:path";
 import test from "node:test";
@@ -9,7 +9,7 @@ import {generateOwnedPhpCalls} from "../../src/backends/php/owned-calls.mjs";
 import {generateOwnedPhpPackage} from "../../src/backends/php/owned-package.mjs";
 import {ownedPhpAdapterSources} from "../../src/build/owned-php-artifacts.mjs";
 import {saveLakeFile} from "./lake-workspace.mjs";
-import {compileOwnedAggregateFixture} from "./owned-aggregate-native.mjs";
+import {compileMixedQuote} from "./mixed-quote-project.mjs";
 import {mixedFunctionFieldsIr} from "./owned-aggregate-fixture.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 
@@ -43,25 +43,7 @@ throw new RuntimeException('expected the loader on good input');
 test("PHP passes two independently borrowed mixed records to compiled Lean", {
 	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1200000
 }, async t => {
-	const fixture = "leased-closure-fields";
-	const configuration = JSON.parse(await readFile(new URL("../fixtures/onboarding/leased-closure-fields/lean-bridge.exports.json",import.meta.url)));
-	configuration.exports.push("Owned.compareCards");
-	configuration.ownedAggregates.closureFields.push("Owned.PriceCard.quote","Owned.PriceCard.rebate");
-	const sourceSuffix = `
-namespace Owned
-structure PriceCard where
-  quote : UInt32 → UInt32
-  rebate : UInt32 → UInt32
-  label : String
-  base : UInt32
-def compareCards (left right : PriceCard) : UInt32 :=
-  left.quote (right.rebate left.base) + right.quote (left.rebate right.base) +
-    10 * left.label.utf8ByteSize.toUInt32 + right.label.utf8ByteSize.toUInt32
-end Owned
-`;
-	const bin = await compileOwnedAggregateFixture(t,{fixture,configuration
-		, sourceSuffix,witness: "import Owned\n",hostCallbacks: true
-		, stepTimeoutMs: 600000,evidenceName: "php-mixed-record-inputs.json"});
+	const bin = await compileMixedQuote(t,"php-mixed-record-inputs.json");
 	const options = {hostCallbacks: true}, args = {metadata: bin.metadata,sourceIdentity: bin.sourceIdentity,component: bin.model.component};
 	const php = generateOwnedPhpCalls(bin.model.bindingIr, options);
 	const c = generateOwnedCPackage({...args,...options,valueCopies: Boolean(php.c.copies?.length)});

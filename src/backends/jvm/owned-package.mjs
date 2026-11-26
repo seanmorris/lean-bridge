@@ -52,6 +52,10 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 	const cleanup = ownedJvmThreadExit(prefix);
 	const schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;
 	const contract = { schemaVersion
+		, ...model.hostRecords.views.size ? {hostInputRecords: [...model.hostRecords.views.values()].map(v=>({
+			type: v.id,input: v.publicName,lifetime: "call"
+			, fields: v.fields.filter(f=>f.descriptor).map(f=>f.publicName)
+		}))} : {}
 		, backend: callbackAnchors.length ? "owned-jvm-v5" : receivers.length ? "owned-jvm-v4" : anchors ? "owned-jvm-v3" : transfers ? "owned-jvm-v2" : "owned-jvm-v1"
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
 			, values: "checked-whole-result", anchor: "original-argument-owner"
@@ -103,7 +107,7 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 	};
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const unit = id => nodes.get(id).name === "unit";
-	const javaType = (fn, id, i) => wholeOwners ? model.parameterType(fn, i, false) : model.c.hostArgument?.(fn, i)
+	const javaType = (fn, id, i) => wholeOwners || model.hostRecords.slot(fn,i) ? model.parameterType(fn, i, false) : model.c.hostArgument?.(fn, i)
 		? nodes.get(id).delegateType : model.type(id, false);
 	const kotlinType = (fn, id, i) => ownedJvmKotlinParameterType(model, fn, i);
 	const kotlinResult = fn => ownedJvmKotlinReturnType(model, fn);
