@@ -7,10 +7,22 @@ Lean runs, an exception from application code, or a terminal fault. The
 task scheduler. A program can recover from a declared error without making
 a broken runtime safe to reuse.
 
-**Current installed coverage: 78 of 102** — all 34 immediate IO combinations,
-22 typed EIO and 22 named errors. Each combination is one profile on one
-authoring route. Rust, CPython, Ruby, Perl, Java and Kotlin still need both
+**Current installed coverage: 82 of 102** — all 34 immediate IO combinations,
+24 typed EIO and 24 named errors. Each combination is one profile on one
+authoring route. CPython, Ruby, Perl, Java and Kotlin still need both
 typed contracts verified on both routes.
+
+**Rust:** The [ordinary](rust-host-error-policy-20261126/ordinary.json)
+and [reviewed](rust-host-error-policy-20261126/reviewed.json) checks match
+the [original Cargo releases](rust-host-packages-20261125.md). Each installed
+pair ran in both load orders. The peer updated an application meter from
+23 to 42 using only the declared error payload; dropping the last owner
+ran its destructor exactly once. The [same client](../../tests/fixtures/rust-host-members/archives.rs)
+distinguished an original application error from a mapped Lean error.
+A nested host-member panic retired the shared runtime: catching it and
+returning a number did not let the outer call succeed or either peer
+dispatch again. This is the host-member policy, not the behavior of every
+Rust callable adapter.
 
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
