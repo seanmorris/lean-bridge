@@ -1,0 +1,106 @@
+{
+  "component": {
+    "artifacts": [
+      {
+        "bytes": 51433253,
+        "path": "archives/timers-1.0.0.jar",
+        "sha256": "bfe875642d0d93cc6e5dfc1b6f4b3b9b42c34bd2a54dbe2c0b2ac3c75a071c2c"
+      },
+      {
+        "bytes": 751,
+        "path": "archives/timers-1.0.0.pom",
+        "sha256": "de7bdd227369041a1bb06cfe026044dfce8365ffeae009cfc8bcf1bcac795b24"
+      }
+    ],
+    "detail": {
+      "bindingIrSha256": "8fbcfe35299d009be8a6803ca44ace746ca49574630759a551d1fe1e96974515",
+      "componentIdentity": "58a4deaece6ba8591bde764c5f3bd19671bce3c175812c94df21ed78a56e6876",
+      "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "java": "javac 22.0.2",
+      "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+      "libraries": {
+        "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+        "liblbc_jvm_2889d6de58e0bb170efe193a50d55bb2f401e7c8cc37bb8e7a5b33d9e48b105d.so": "cec67a10d6f68ec2c2049616885002b496c7d90b90040d74d2a5bffdc7fa35ff",
+        "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "owner": {
+        "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+        "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+      },
+      "payloads": 69,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "name": "com.acme:timers",
+    "receiptSha256": "31441c5c8fd487023aed218312fee451eba7fcca84727c9107e69dde20879a90",
+    "reviewedSourceSha256": "e8a2b4e543a7989700838157384be8b398aa5bd1fc7375b1d4f15f69c68e9bad",
+    "route": "reviewed",
+    "sourceTreeSha256": "ec90b4db506e2d79c7b9da8ac3a697f1966ef5b251333ef96bfd315eea9aa2cd"
+  },
+  "observerSha256": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+  "peer": {
+    "artifacts": [
+      {
+        "bytes": 51387917,
+        "path": "archives/alarm-1.0.0.jar",
+        "sha256": "ed4d5fc4f14b0ddf888dfb324ca64008b8cd88841b0c61e717ef54d62dfaba5c"
+      },
+      {
+        "bytes": 750,
+        "path": "archives/alarm-1.0.0.pom",
+        "sha256": "6d8cb4ddf0d070d920ece0955c707a746dea8e8fe70c83b5c86f4a45728ad3dd"
+      }
+    ],
+    "detail": {
+      "bindingIrSha256": "4d4597cdfcdb98173c21abc88d47f01ace9ed56e73434ccebd7a413dce13d881",
+      "componentIdentity": "8e499fb779131fdc8bbac2dddc155de43fb67b671a57925381383e4572d3baa3",
+      "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "java": "javac 22.0.2",
+      "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+      "libraries": {
+        "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+        "liblbc_jvm_46a2cf77191a9e1fb011db63db191da2b80399f9a328ae4cde502f30e16d2b3e.so": "dffddd22435310d52abd220412dd00094502d9623ec0227ef81c174c4c178f88",
+        "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "owner": {
+        "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+        "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+      },
+      "payloads": 53,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "name": "com.acme:alarm",
+    "receiptSha256": "1746969e68e1706b8b873e8a9c36895eabb8360c16d24fd997982096dbd57bf7",
+    "reviewedSourceSha256": null,
+    "route": "peer",
+    "sourceTreeSha256": "d51c475b688538ad2d7cea7ad48f569137f1d0c8216c9aca8d4fc8b0a0f77250"
+  },
+  "results": [
+    {
+      "consumerSha256": "0f0f67aef03c4c3b6f827df8bf3f4f5c8fb5c883259ee6439898e62ea5663aeb",
+      "language": "Java",
+      "order": "timers-first",
+      "output": "Java timers-first: blocked cancel silent, invalid demand signals once, close before late worker, zero live owners and descriptor delta"
+    },
+    {
+      "consumerSha256": "0f0f67aef03c4c3b6f827df8bf3f4f5c8fb5c883259ee6439898e62ea5663aeb",
+      "language": "Java",
+      "order": "peer-first",
+      "output": "Java peer-first: blocked cancel silent, invalid demand signals once, close before late worker, zero live owners and descriptor delta"
+    },
+    {
+      "consumerSha256": "2941f86af3f6895e87667f77c01e5e0cb9220c781affa4bcd0f5949431864bf1",
+      "language": "Kotlin",
+      "order": "timers-first",
+      "output": "Kotlin timers-first: collecting job cancelled once, close before late worker, no emissions, zero live owners and descriptor delta"
+    },
+    {
+      "consumerSha256": "2941f86af3f6895e87667f77c01e5e0cb9220c781affa4bcd0f5949431864bf1",
+      "language": "Kotlin",
+      "order": "peer-first",
+      "output": "Kotlin peer-first: collecting job cancelled once, close before late worker, no emissions, zero live owners and descriptor delta"
+    }
+  ],
+  "route": "reviewed"
+}

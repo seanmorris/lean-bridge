@@ -152,6 +152,14 @@ test("installed task JARs deliver actual Lean workers through Java futures/Flow 
 	}
 	const packages = new Map();
 	for(const r of ["ordinary", "peer", "reviewed"]) packages.set(r, await inspect(root, r, work));
+	const parked = Boolean(capture) || env.LEAN_BRIDGE_JVM_PARKED_PULL === "1";
+	const pin = replay && parked ? await json(env.LEAN_BRIDGE_JVM_TASK_EXPECTED) : null;
+	if(pin)
+	{
+		assert.equal(sha256(await readFile(join(root, "acceptance.json"))), pin.acceptanceSha256);
+		assert.deepEqual(clients, pin.installed.clients);
+		assert.deepEqual([...packages.values()].map(p => p.proof), pin.installed.packages);
+	}
 	const java = env.LEAN_BRIDGE_JAVA ?? "java", javac = env.LEAN_BRIDGE_JAVAC ?? "javac", sdk = env.LEAN_BRIDGE_KOTLIN_HOME;
 	const peer = packages.get("peer"), rows = [];
 	for(const route of ["ordinary", "reviewed"])
@@ -159,14 +167,17 @@ test("installed task JARs deliver actual Lean workers through Java futures/Flow 
 		const component = packages.get(route), proj = join(work, route), classes = join(proj, "classes");
 		assert.deepEqual(component.proof.detail.owner, peer.proof.detail.owner);
 		const { resolved, classpath } = await install(proj, work, [component, peer]); await mkdir(classes);
-		await run(javac, ["--release", "22", "-proc:none", "-encoding", "UTF-8", "-cp", classpath, "-d", classes, ...files.filter(f => f.endsWith(".java")).map(f => join(work, f))], proj, env);
+		if(pin) assert.deepEqual(resolved, pin.installed.rows.find(r => r.route === route).classpath);
+		const javaSources = files.filter(f => f.endsWith(".java")).map(f => join(work, f));
+		if(parked) javaSources.push(join(fixture, "Parked.java"));
+		await run(javac, ["--release", "22", "-proc:none", "-encoding", "UTF-8", "-cp", classpath, "-d", classes, ...javaSources], proj, env);
 		const cp = classes + delimiter + classpath;
 		const compiler = ["-XX:ActiveProcessorCount=1", "-Xmx512m", "-cp"
 			, join(sdk, "lib/*"), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler"
 			, "-kotlin-home", sdk, "-jdk-home", env.JAVA_HOME, "-no-stdlib"
 			, "-no-reflect", "-Werror", "-jvm-target", "22", "-classpath", cp
 			, "-d", classes];
-		await run(java, [...compiler, join(work, "Installed.kt"), join(work, "Example.kt")], proj, env);
+		await run(java, [...compiler, join(work, "Installed.kt"), join(work, "Example.kt"), ...parked ? [join(fixture, "ParkedFlow.kt")] : []], proj, env);
 		await assert.rejects(run(java, [...compiler, join(work, "Bad.kt")], proj, env), e => {
 			assert.match(e.message, /Bad\.kt:5:\d+: error:.*suspend/iu); assert.match(e.message, /Bad\.kt:6:\d+: error:.*mismatch/iu); return true;
 		});
@@ -187,6 +198,22 @@ test("installed task JARs deliver actual Lean workers through Java futures/Flow 
 			observed[main + "/" + order] = { line, stats };
 		}
 		observed.exit = await run(java, [...launch, "ExitPending"], proj, isolated, 45_000);
+		if(parked)
+		{
+			const results = [];
+			for(const [main, file, language, outcome] of [
+				["Parked", "Parked.java", "Java", "blocked cancel silent, invalid demand signals once, close before late worker, zero live owners and descriptor delta"]
+				, ["ParkedFlowKt", "ParkedFlow.kt", "Kotlin", "collecting job cancelled once, close before late worker, no emissions, zero live owners and descriptor delta"]
+			]) for(const order of ["timers-first", "peer-first"])
+			{
+				const output = await run(java, [...launch, main, order], proj, isolated, 150_000);
+				assert.equal(output, language + " " + order + ": " + outcome);
+				results.push({language, order, output, consumerSha256: sha256(await readFile(join(fixture, file)))});
+			}
+			const out = resolve(env.LEAN_BRIDGE_JVM_PARKED_PULL_OUTPUT ?? "build/jvm-parked-pull");
+			await mkdir(out, {recursive: true});
+			await writeFile(join(out, route + ".json"), canonicalJson({route, results, observerSha256: clients["Observe.java"], component: component.proof, peer: peer.proof}));
+		}
 		assert.equal(observed.exit, "normal JVM exit with a non-cooperative pending Lean task");
 		rows.push({ route, classpath: resolved, observed });
 		t.diagnostic(route + ": offline package graph, both compilers, documentation and both load orders executed");

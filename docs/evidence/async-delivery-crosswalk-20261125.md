@@ -142,6 +142,32 @@ Run `node --test --test-name-pattern='both exact task packages' tests/helpers/do
 The replay verifies the original installed package and assembly identities, builds the
 second client separately, and runs it without the feed, project, package cache or build tools.
 
+### The same blocked pull in Java and Kotlin
+
+The [Java subscriber](../../tests/fixtures/jvm-tasks/Parked.java) waits until
+Lean starts a pull that ignores cancellation. Cancelling its subscription
+from another thread closes the Lean cursor exactly once and sends the
+subscriber **no** notification. On a second cursor, requesting zero instead
+closes it and signals **one** `IllegalArgumentException`. A peer package can
+still run while the worker is waiting. Releasing the worker, requesting more
+items, or cancelling again produces no further signal.
+
+The [Kotlin collector](../../tests/fixtures/jvm-tasks/ParkedFlow.kt) cancels a
+coroutine that is already collecting. It observes the application's cancellation
+message, not normal flow completion. Its cursor closes once in both the
+cooperative and noncooperative cases; the latter worker finishes only when
+released. Neither emits a late item. Each Java and Kotlin process measured
+zero live native owners and returned to its initial event-descriptor count.
+
+Both clients ran in separate JVMs in both package load orders against the
+[ordinary](jvm-parked-pull-20261126/ordinary.json) and
+[reviewed](jvm-parked-pull-20261126/reviewed.json) Timers and peer Alarm JARs.
+To replay, use the JDK, Kotlin compiler, offline Maven seed, and original
+handoffs in the [Maven acceptance instructions](jvm-tasks-20261123.json).
+Set `LEAN_BRIDGE_JVM_TASK_REPLAY` to that capture, `LEAN_BRIDGE_JVM_TASK_EXPECTED`
+to `docs/evidence/jvm-tasks-20261123.json`, and `LEAN_BRIDGE_JVM_PARKED_PULL=1`.
+Run `node --test --test-name-pattern='installed task JARs deliver' tests/helpers/jvm-tasks-acceptance.mjs`.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

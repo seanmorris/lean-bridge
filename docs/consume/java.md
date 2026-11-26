@@ -279,6 +279,11 @@ Use `CompletionException.getCause()` when `join()` reports a Lean failure.
 A subscriber receives the original error in `onError`. A returned
 `Result.Err` is an ordinary value in either API.
 
+If a pull is already waiting, `cancel()` closes the Lean cursor without
+sending `onComplete` or `onError`. Requesting zero instead signals one
+`IllegalArgumentException`. Neither path delivers the worker's late item.
+See the [installed subscriber check](../evidence/async-delivery-crosswalk-20261125.md#the-same-blocked-pull-in-java-and-kotlin).
+
 The [JDK subscription contract](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/concurrent/Flow.Subscription.html) defines demand and cancellation. See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
 
 ### Receive resources from tasks and streams

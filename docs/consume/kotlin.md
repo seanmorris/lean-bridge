@@ -221,6 +221,10 @@ Cancelling the awaiting coroutine also cancels its underlying Lean task. A non-c
 Catch a declared exception around the suspend call or around collection.
 A returned `Result.Err` is data, not an exception.
 
+Cancelling a collector while it is waiting closes the Lean cursor and resumes
+the coroutine with cancellation, not normal completion. Even a worker that
+ignores cancellation cannot emit its late item. See the [installed collector check](../evidence/async-delivery-crosswalk-20261125.md#the-same-blocked-pull-in-java-and-kotlin).
+
 The suspend wrapper uses Kotlin’s [cancellable await](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.future/await.html). See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
 
 ### Receive resources from tasks and streams
