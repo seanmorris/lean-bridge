@@ -7,10 +7,23 @@ Lean runs, an exception from application code, or a terminal fault. The
 task scheduler. A program can recover from a declared error without making
 a broken runtime safe to reuse.
 
-**Current installed coverage: 94 of 102** — all 34 immediate IO combinations,
-30 typed EIO and 30 named errors. Each combination is one profile on one
-authoring route. Only Java and Kotlin still need the two typed contracts
-on both authoring routes.
+**Current installed coverage: 102 of 102** — 34 immediate IO, 34 typed
+EIO and 34 named-error combinations. Each is one of 17 profiles on one of
+two authoring routes. VO #1222 still depends on the ownership gate (#1221).
+
+**Java and Kotlin:** The [ordinary](jvm-host-error-policy-20261126/ordinary.json)
+and [reviewed](jvm-host-error-policy-20261126/reviewed.json) reports pin
+both independent Maven packages, the shared runtime, and six client sources.
+After offline installation and relocation, each language ran in both package
+orders. With the thrown error as last owner, the peer read its object at 23
+and updated it to 42; after the error was dropped the weak reference cleared.
+The [Java](../../tests/fixtures/jvm-host-meter/Consumer.java) and
+[Kotlin](../../tests/fixtures/jvm-host-meter/KotlinErrorOwner.kt) clients
+also distinguished the original application exception from a named mapped
+error. Catching an injected `LinkageError` inside a setter did not allow
+the enclosing call to return or the next getter to run. Both bindings
+refused subsequent work. A nested error value returned as data did not
+retire the runtime.
 
 **Perl:** The [ordinary](perl-worker-error-policy-20261126/ordinary.json)
 and [reviewed CPAN installs](perl-worker-error-policy-20261126/reviewed.json)
@@ -410,6 +423,6 @@ For native profiles, check each runtime's fatal policy against the actual
 injector: a direct request to retire does not show what initiates retirement.
 For non-scalar failures, match the installed payload's owner, lifetime and
 error channel to #1221; returning copied bytes is not a test of a live
-resource surviving a thrown error. Resolve uncovered combinations and the
-#1221 ownership dependency before closing #1222. The exact-release gate
+resource surviving a thrown error. Reconcile the #1221 ownership dependency
+before closing #1222. The exact-release gate
 belongs to #1224.
