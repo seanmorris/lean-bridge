@@ -52,3 +52,26 @@ packages and runs the downstream application after removing the author tree.
 Set `LEAN_BRIDGE_C_TARIFF_REPLAY` to a retained directory containing
 `ordinary/` and `reviewed/` to verify and install those archives instead of
 rebuilding them. Set `LEAN_BRIDGE_CMAKE` if CMake is not at `/usr/bin/cmake`.
+
+## C++ callers
+
+```cpp
+namespace api = lean_bridge::tariff_quotes;
+auto row = api::TariffInput{[rate = std::make_unique<uint32_t>(40)](uint32_t n) {
+    return *rate + n;
+}};
+assert(api::apply_tariff(row, 2) == 42);
+```
+
+`TariffInput` stores the application callable itself; the call does not
+copy it or require `std::function`. The result of `echo_tariff` is still
+a `Tariff` with a checked lease. Echoing an input with a borrowed function
+does not make the application function live longer. Echoing a genuine
+Lean function can return a usable lease.
+
+The [C++ client](../../tests/fixtures/structured-types/tariff-host-fields.cpp)
+passed six cases against the real C adapter from the ordinary C archive,
+including nested calls, expired borrows, and the original exception followed
+by a healthy retry. Its independent observer saw only the session between
+cases and zero after thread exit. This is a check of freshly generated C++
+headers, not yet an installed C++ archive on either source route.

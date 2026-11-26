@@ -5,11 +5,13 @@ import {tmpdir} from "node:os";
 import {join, resolve} from "node:path";
 import test from "node:test";
 import {buildCanonicalProject} from "../src/build/canonical-build.mjs";
+import {generateOwnedCppPackage} from "../src/backends/cpp/owned-package.mjs";
 import {canonicalJson, sha256} from "../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../src/release/package-set-receipt.mjs";
 import {copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied} from "./helpers/copied-fixture-install.mjs";
 import {saveLakeFile} from "./helpers/lake-workspace.mjs";
 import {prepareStagedQuoteProject} from "./helpers/staged-quote-project.mjs";
+import {leasedClosureFieldReviewedIr} from "./helpers/owned-aggregate-fixture.mjs";
 import {copyPackageSetHandoff, retainPackageSetEvidence} from "./helpers/package-set.mjs";
 
 const fixture = resolve("tests/fixtures/structured-types");
@@ -25,6 +27,20 @@ const parseResult = stdout => {
 	return {checks: scenarios.length, scenarios};
 };
 const environment = nativeFixtureEnvironment(["cpp"]), replay = process.env.LEAN_BRIDGE_CPP_TARIFF_REPLAY;
+
+test("C++ selects only borrowed callback fields and accepts mixed input/leased records", () => {
+	const ir = leasedClosureFieldReviewedIr({exchange: true});
+	const record = ir.types.find(t => t.name === "Tariff");
+	const apply = ir.declarations.find(d => d.name === "applyTariff");
+	record.fields.push({...record.fields[0], name: "base", type: {kind: "primitive", name: "uint32"}});
+	apply.parameters[1] = {...apply.parameters[0], name: "other"};
+	const surface = generateOwnedCppPackage(ir);
+	assert.deepEqual(surface.contract.hostInputRecords, [{type: record.id, input: "TariffInput", fields: ["quote"], lifetime: "call"}]);
+	assert.ok(surface.valuesHeader.includes("struct TariffInput {\n  F0 quote;\n  uint32_t base{};"));
+	assert.match(surface.header, /!std::same_as<std::remove_cvref_t<F0>, Tariff> \|\| !std::same_as<std::remove_cvref_t<F1>, Tariff>/u);
+	assert.match(surface.header, /OwnedRecordView\d+<std::remove_reference_t<F1>>::check\(a1, call\)/u);
+	assert.equal(generateOwnedCppPackage(ir, {hostCallbacks: false}).contract.hostInputRecords, undefined);
+});
 
 const buildHandoff = async (dir, route, handoff, t) => {
 	const project = join(dir, "source"), output = join(dir, "producer");
@@ -69,6 +85,14 @@ for(const route of ["ordinary", "reviewed"]) test("installed C++ direct function
 	await saveLakeFile(root, "observer.cpp", probe);
 	const fieldSource = await readFile(join(fixture, "tariff-fields.cpp"));
 	await saveLakeFile(root, "fields.cpp", fieldSource);
+	const adapter = JSON.parse(await readFile(join(installed, "share/lean-bridge/native-c-adapter.json")));
+	const hostFields = !replay || process.env.LEAN_BRIDGE_CPP_TARIFF_REQUIRE_HOST_FIELDS === "1" || Boolean(adapter.cppValues.hostInputRecords);
+	const hostSource = await readFile(join(fixture, "tariff-host-fields.cpp"));
+	if(hostFields)
+	{
+		assert.deepEqual(adapter.cppValues.hostInputRecords, [{type: "lean:Owned.Tariff", input: "TariffInput", fields: ["quote"], lifetime: "call"}]);
+		await saveLakeFile(root, "host-fields.cpp", hostSource);
+	}
 	await saveLakeFile(root, "CMakeLists.txt", `cmake_minimum_required(VERSION 3.16)
 project(staged LANGUAGES CXX)
 find_package(${manifest.cmakePackage} CONFIG REQUIRED)
@@ -81,6 +105,11 @@ add_executable(fields fields.cpp observer.cpp)
 target_link_libraries(fields PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
 target_compile_features(fields PRIVATE cxx_std_20)
 target_compile_options(fields PRIVATE -Wall -Wextra -Werror -UNDEBUG)
+${hostFields ? `add_executable(host-fields host-fields.cpp observer.cpp)
+target_link_libraries(host-fields PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
+target_compile_features(host-fields PRIVATE cxx_std_20)
+target_compile_options(host-fields PRIVATE -Wall -Wextra -Werror -UNDEBUG)
+target_compile_definitions(host-fields PRIVATE TARIFF_TEST_OBSERVER=1)` : ""}
 `);
 	const env = {...copiedCleanEnvironment, PATH: join(root, "tools")};
 	const cmake = process.env.LEAN_BRIDGE_CMAKE ?? "/usr/bin/cmake";
@@ -119,5 +148,21 @@ target_compile_options(fields PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 		, packageSetSha256: result.receiptSha256, clientSha256: sha256(fieldSource)
 		, probeSha256: sha256(probe), relocatedCMake: fieldCases
 		, identities: [1, 1, 1, 1, 1, 1, 0]}));
+	if(hostFields)
+	{
+		const run = await runCopied(join(root, "build/host-fields"), [], root);
+		assert.equal(run.stderr, "");
+		const scenarios = run.stdout.trimEnd().split("\n");
+		assert.equal(scenarios.pop(), "identities:1,1,1,1,1,1,0");
+		assert.deepEqual(scenarios, ["move-only caller function in record"
+			, "nested record callbacks"
+			, "escaped record and function reject without host entry"
+			, "original exception and healthy retry", "closed leased field rejected"
+			, "genuine Lean lease survives source destruction"]);
+		await saveLakeFile(dest, route + ".host-fields.json", canonicalJson({route
+			, packageSetSha256: result.receiptSha256, clientSha256: sha256(hostSource)
+			, probeSha256: sha256(probe), relocatedCMake: scenarios
+			, identities: [1, 1, 1, 1, 1, 1, 0]}));
+	}
 	t.diagnostic("pkg-config and relocated CMake passed: " + result.receiptSha256);
 });

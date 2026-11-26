@@ -18,7 +18,8 @@ import { copyPackageSetHandoff, retainPackageSetEvidence } from "./helpers/packa
 
 const replay = process.env.LEAN_BRIDGE_C_TARIFF_REPLAY;
 for(const route of ["ordinary", "reviewed"]) test(`installed ${route} C11 archive owns its function fields`, {
-	skip: !replay && process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1_200_000
+	skip: !replay && process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1"
+	, timeout: 1_200_000
 }, async t => {
 	const dir = await mkdtemp(join(tmpdir(), "lean-bridge-c-closure-field-"));
 	t.after(() => rm(dir, { recursive: true, force: true }));
