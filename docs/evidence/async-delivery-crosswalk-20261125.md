@@ -107,6 +107,15 @@ gated *task* exports; those exports are not the iterator step. These runs
 do not establish when cancellation settles a reader, runs the finalizer
 or frees a native owner if the **iterator's own worker** is still parked.
 
+The separate [Reader fixture](../../tests/fixtures/javascript-parked-reader/Reader.lean)
+uses an entry signal and a gate. After entry its [Lean-side check](../../tests/fixtures/javascript-parked-reader/Check.lean)
+observed that neither the pending pull nor its completion signal was ready.
+Releasing the gate with 71 produced the item 73 (the cursor adds 2), and
+closing the cursor ran one finalizer. To run the producer check, use
+`lake build Reader` then `lake env lean --run Check.lean` in the fixture
+directory. This establishes that the worker genuinely waits; the installed
+JavaScript scheduler must be tested separately.
+
 On CPython, the [Timers client](../../tests/fixtures/python-lean-tasks/cancel_pull.py)
 waited until Lean had entered the pull, the reader was pending and two native
 leases were live. Cancelling the reader preserved its cancellation message.
