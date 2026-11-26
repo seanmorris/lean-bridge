@@ -217,3 +217,13 @@ coerce a number to the text field or a numeric string to the integer field.
 These are direct adapter results. The earlier Composer receipts cover leased
 fields only. Run `npm run test:php-function-fields` to build both source routes
 and exercise the callback inputs after offline installation and relocation.
+
+## JVM record layout
+
+The [C and Java FFM comparison](../../tests/owned-jvm-layout.test.mjs)
+measures a record containing two callbacks, a string and a 32-bit integer.
+The borrowed input is 88 bytes, with fields at offsets 0, 32, 64 and 80.
+The returned Lean record is 40 bytes, with fields at 0, 8, 16 and 32.
+Both require 8-byte alignment. The C compiler and JDK 22 agreed on every
+measurement. This covers the native layout shared by Java and Kotlin; it
+does not yet qualify either language's public record-input API.
