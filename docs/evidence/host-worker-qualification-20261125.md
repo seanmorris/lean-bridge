@@ -146,6 +146,30 @@ The remaining review has two parts: attach the installed evidence on each
 specific route, then identify the places that actually need a new package or
 application case. Do not subtract 74 from 680 to estimate the tests left.
 
+### Host-owned objects: which installs cover each position?
+
+An immediate export argument or result is the object itself. Passing a
+record that contains it, or awaiting a task that later delivers it, doesn't
+establish that position. The callback checks below deliberately distinguish
+the object supplied to the callback from the object it returns.
+
+| Consumer profiles | Object in a record field, both author routes | Export and callback arguments and results |
+| --- | --- | --- |
+| Python | [Rack](python-host-record-fields-20261126.md) | [Workers](python-worker-wheels-20261124.md#which-host-object-positions-do-these-wheels-cover) and Rack's immediate `select_primary` result cover all four. |
+| Ruby | [Panel](ruby-host-record-fields-20261126.md) | [Four positions](ruby-worker-gems-20261124.md#direct-host-object-arguments-and-results), both gem routes. |
+| .NET | [Pair](dotnet-host-record-fields-20261126.md) | [Four positions](dotnet-worker-packages-20261124.md#host-objects-as-arguments-and-results), both NuGet routes and load orders. |
+| Perl | [Record and independent peer](perl-host-record-fields-20261126.md) | [Four positions](perl-worker-packages-20261124.md#which-calls-preserve-the-original-perl-reference), from the synchronous and worker CPAN installs. |
+| JavaScript (Node, strict TypeScript, browser, React, worker) | [Five installed clients](javascript-host-record-fields-20261126.md) | [Each client exchanged two distinct meters](javascript-host-imports-20261124.md#host-object-arguments-and-results-in-five-installed-clients) in all four positions on the original ordinary and reviewed releases. |
+| C and C++ | [C](c-host-record-fields-20261126.md) · [C++](cpp-host-record-fields-20261126.md) | Review each public API separately; a C client does not qualify C++. |
+| Rust | [Record and independent peer](rust-host-record-fields-20261126.md) | Distinguish the primary release from calls made only through the peer. |
+| Java and Kotlin | [Both Maven clients](jvm-host-record-fields-20261126.md) | A test in Java does not establish a Kotlin call, even when the JAR is identical. |
+| Native PHP and PHP-Wasm | [Composer/FFI](php-host-record-fields-20261126.md) · [Zend](php-wasm-host-record-fields-20261126.md) | Inspect the installed PHP applications on each runtime. |
+| WIT/WASI | [Guest-owned boxes](wit-host-record-fields-20261126.md) | Match the WIT resource handed to or returned by the guest; a scalar handle in a C observer is not an application call. |
+
+Rows marked for review do not assert that a package fails or needs
+rebuilding. This table addresses only the host-object family, not all 680
+identity positions.
+
 For **resource fields**, start with the [hosted owned-record acceptance](owned-checked-record-promotion-20261026-aligned.md),
 not another build of the same fixture. The [actual Lean record](../../tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean)
 has `Claim.holder : Ticket`. Across 17 profiles the full ordinary and reviewed

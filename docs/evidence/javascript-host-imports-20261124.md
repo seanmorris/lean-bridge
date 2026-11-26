@@ -278,3 +278,26 @@ The [compatibility replay on `9431fd5`](javascript-threaded-host-regression-9431
 rebuilt the original task/cursor fixture on the same runtime. Both source routes
 again passed all 36 checks per execution, including early iterator exit and
 typed error payloads.
+
+### Host-object arguments and results in five installed clients
+
+The [ordinary](javascript-host-object-positions-20261126/ordinary.json) and
+[reviewed](javascript-host-object-positions-20261126/reviewed.json) reports
+use the original Workshop and runtime npm archives identified above. Node
+JavaScript, an executed strict TypeScript program, a Chromium page, a mounted
+React component and a module worker each created two application meters with
+the same reading. On both calls, `identity(input)` returned the original
+meter immediately. The callback received that exact meter and returned the
+*other* one; the caller mutated the returned object and checked both readings.
+React rendered `8:8`. Every client closed its binding and checked the
+runtime's cleanup counters. The [record-field clients](javascript-host-record-fields-20261126.md)
+exercise the fifth position separately.
+
+This replay initializes the runtime before the identity calls; it does not
+replace the cold-binding regression above. To repeat it, set
+`LEAN_BRIDGE_JS_OBJECT_HANDOFFS` to the directory containing
+`ordinary/packages/npm` and `reviewed/packages/npm`, then run
+`npm run test:javascript-host-object-positions`. Set
+`LEAN_BRIDGE_JS_OBJECT_OUTPUT` to retain the reports. Each names the
+original receipt, the installed binding IR, the two deployed Wasm binaries
+and the exact downstream source files.
