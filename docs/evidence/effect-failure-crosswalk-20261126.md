@@ -34,6 +34,9 @@ hardware/process fault are not interchangeable. Retain the documented
 per-profile policy when inspecting failure branches.
 
 The table identifies installed witnesses, not a release-wide pass count.
+The [direct Rust callback clients](rust-staged-callback-results-20261126.md)
+separately distinguish a returned host error from a resumed unwind after a
+nested allocation. Neither is a reason to retire those installed bindings.
 The next missing npm fault witnesses are an **executed strict TypeScript**
 client and a **mounted React** client for the cross-package trap scenario.
 The existing worker trap need not be run again to fill either gap.

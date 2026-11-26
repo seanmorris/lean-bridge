@@ -4398,6 +4398,11 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs
           test -s build/owned-rust-packaging/ordinary.json
           test -s build/owned-rust-packaging/reviewed.json
+          npm run test:rust-staged-callbacks
+          test -s build/staged-rust-callback/ordinary.package-set.json
+          test -s build/staged-rust-callback/ordinary.execution.json
+          test -s build/staged-rust-callback/reviewed.package-set.json
+          test -s build/staged-rust-callback/reviewed.execution.json
           npm run test:owned-rust-transfers
           test -s build/owned-rust-transfers/ordinary.json
           test -s build/owned-rust-transfers/reviewed.json
@@ -4529,6 +4534,7 @@ jobs:
             build/owned-rust-receivers.log
             build/owned-rust-packaging/ordinary.json
             build/owned-rust-packaging/reviewed.json
+            build/staged-rust-callback/
             build/compounds/rust.json
             build/lists/rust.json
             build/aliases/rust.json

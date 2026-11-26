@@ -168,6 +168,10 @@ exercise the same direct reply through the Python API. A retained Lean
 function remains usable; a Python lambda is not a valid function result.
 An exception raised by the host callback survives as the original Python
 object. Both installs reached zero live identities at session close.
+The [offline Rust clients](rust-staged-callback-results-20261126.md) also
+exercise a direct function reply rather than a record containing one. They
+distinguish a recoverable Rust error from a panic and check the original
+allocation or payload in the caller.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)

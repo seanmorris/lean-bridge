@@ -1,6 +1,6 @@
 /** @file Build and exercise both installed C++ routes for direct function replies. */
 import assert from "node:assert/strict";
-import {cp, mkdtemp, readFile, rename, rm} from "node:fs/promises";
+import {mkdtemp, readFile, rename, rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join, resolve} from "node:path";
 import test from "node:test";
@@ -9,7 +9,7 @@ import {canonicalJson, sha256} from "../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../src/release/package-set-receipt.mjs";
 import {copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied} from "./helpers/copied-fixture-install.mjs";
 import {saveLakeFile} from "./helpers/lake-workspace.mjs";
-import {leasedClosureFieldReviewedIr} from "./helpers/owned-aggregate-fixture.mjs";
+import {prepareStagedQuoteProject} from "./helpers/staged-quote-project.mjs";
 import {copyPackageSetHandoff, retainPackageSetEvidence} from "./helpers/package-set.mjs";
 
 const fixture = resolve("tests/fixtures/structured-types");
@@ -28,16 +28,7 @@ const environment = nativeFixtureEnvironment(["cpp"]), replay = process.env.LEAN
 
 const buildHandoff = async (dir, route, handoff, t) => {
 	const project = join(dir, "source"), output = join(dir, "producer");
-	await cp(resolve("tests/fixtures/onboarding/leased-closure-fields"), project, {recursive: true});
-	const config = route === "ordinary" ? JSON.parse(await readFile(join(project, "lean-bridge.exports.json"))) : {schemaVersion: 1, modules: ["Owned"]};
-	config.targets = {cpp: {name: "tariff-quotes", version: "1.0.0"}};
-	if(route === "ordinary")
-	{
-		config.exports.push("Owned.flatQuote", "Owned.stagedQuote");
-		config.contracts = {"Owned.stagedQuote": JSON.parse(await readFile(join(fixture, "tariff-staged-contract.json")))};
-	}
-	else await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({staged: true})));
-	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(config));
+	await prepareStagedQuoteProject(project, route, "cpp");
 	try
 	{
 		await buildCanonicalProject({projectRoot: project, outputRoot: output

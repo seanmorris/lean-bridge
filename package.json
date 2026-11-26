@@ -1324,6 +1324,7 @@
     "test:leased-closure-fields": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-install.test.mjs",
     "test:c-leased-closure-fields": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-c-install.test.mjs",
     "test:cpp-staged-callbacks": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-cpp-install.test.mjs",
+    "test:rust-staged-callbacks": "LEAN_BRIDGE_OWNED_RUST_STAGED_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-rust-install.test.mjs",
     "test:owned-python-transfers": "LEAN_BRIDGE_OWNED_PYTHON_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-python-transfers.test.mjs tests/owned-python-transfer-packaging.test.mjs",
     "test:owned-python-borrows": "LEAN_BRIDGE_OWNED_PYTHON_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-python-borrows.test.mjs tests/owned-python-borrow-packaging.test.mjs",
     "test:owned-python-receivers": "LEAN_BRIDGE_OWNED_PYTHON_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/owned-python-receivers.test.mjs tests/owned-python-receiver-packaging.test.mjs tests/owned-python-receiver-plain.test.mjs",
