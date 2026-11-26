@@ -99,7 +99,7 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	{
 		const result=await run(process.execPath,["trap.mjs",...components],moved,{PATH: "/no-producer-tools"});
 		assert.equal(result.stderr,"");t.diagnostic(result.stdout.trim());
-		if(zend) return;
+		if(zend) return {...executions,trap: result.stdout.trim()};
 		const corrupt=await run(process.execPath,["malformed.mjs",name],moved,{PATH: "/no-producer-tools"});
 		assert.equal(corrupt.stderr,"");t.diagnostic(corrupt.stdout.trim());
 	}

@@ -95,6 +95,16 @@ test("installed PHP-Wasm packages bind PHP classes on both author routes",async 
 	for(const [route,{out}] of [["ordinary",ordinary],["reviewed",reviewed]])
 	{
 		const executions=await exercisePhpTaskRelease(out,t,peer,false,true,true,immediate,records);
+		if(!immediate && process.env.LEAN_BRIDGE_PHP_ZEND_OBJECT_OUTPUT)
+		{
+			const output=resolve(process.env.LEAN_BRIDGE_PHP_ZEND_OBJECT_OUTPUT);
+			for(const mode of ["embedded","composer","chromium"]) assert.match(executions[mode],/zero live owners/u);
+			await mkdir(output,{recursive: true});
+			const sources={};
+			for(const f of ["zend-installed.php","zend-functions.php","installed.mjs","installed-realms.mjs"]) sources[f]=sha256(await readFile(join("tests/fixtures/php-wasm-task-owner",f)));
+			const packages=reports.filter(p=>p.route===route || p.route==="peer");
+			await writeFile(join(output,route+".json"),canonicalJson({route,sources,executions,packages}));
+		}
 		if(records)
 		{
 			for(const mode of ["embedded","composer","chromium"]) assert.match(executions[mode],/Zend record and EIO ownership passed$/u);

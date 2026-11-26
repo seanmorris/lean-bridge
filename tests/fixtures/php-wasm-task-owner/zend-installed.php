@@ -33,12 +33,17 @@ $reentrant=$api->project($a,function($v) use($api,$max) {
 });
 check($reentrant->await()->isEqualTo($max),'reject self-close without poisoning the binding');$reentrant->awaitCleanup();
 check($a::class===AppBox::class && $b instanceof ChildBox,'PHP constructors');
+check($a!==$b && $api->same_box($a)===$a && $api->same_box($b)===$b,'immediate results are the original Zend objects');
 check($peer->same_box($a)===$a && $api->read($a)->isEqualTo($max),'original cross-package instance');
 $peer->set_level($a,BigInteger::of(19));check($api->get_level($a)->isEqualTo(19),'cross-package property');
-$job=$api->relay($a,function($a) use($peer,$b,$max) {
-    check($peer->project($a,fn($w)=>$w===$a?$max:null)->await()->isEqualTo($max),'nested peer task');
+$job=$api->relay($a,function($input) use($peer,$a,$b,$max) {
+    check($input===$a && $input!==$b,'first callback received the original input');
+    check($peer->project($input,fn($w)=>$w===$a?$max:null)->await()->isEqualTo($max),'nested peer task');
     return $peer->select($max,fn($n)=>$n->isEqualTo($max)?$b:null)->await();
-},fn($v)=>$v);
+},function($reply) use($a,$b) {
+    check($reply===$b && $reply!==$a,'second callback received the object returned by the first');
+    return $reply;
+});
 check($job->await()===$b && $job->await()===$b,'two bindings retain subclass identity');$job->awaitCleanup();
 $e=new UnexpectedValueException('original PHP exception');$thrower=new HookBox(fn()=>throw $e);
 check(problem(UnexpectedValueException::class,fn()=>$api->read(new HookBox(fn()=>$peer->read($thrower))))===$e,'nested member throwable');
