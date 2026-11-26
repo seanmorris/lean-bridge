@@ -521,6 +521,23 @@ cleanup afterward. Set `LEAN_BRIDGE_ZEND_READER_KEEP` to an existing directory
 to retain the handoffs; set `LEAN_BRIDGE_ZEND_READER_REPLAY` to the directory
 containing both handoffs to rerun the consumer checks.
 
+The [ordinary](php-wasm-parked-reader-20261126/ordinary.json) and
+[reviewed](php-wasm-parked-reader-20261126/reviewed.json) releases each
+passed this test in Node (bundled PHP and Composer) and Chromium. The
+callback interrupted a `foreach` already waiting for its first item; a
+second cancellation did nothing. Before opening the gate the PHP app saw
+zero items, one Lean pull, no close, and an independent task delivered 42.
+The noncooperative pull subsequently computed 73, but the cancelled reader
+never delivered it. Cleanup closed that cursor once and left zero live owners.
+Chromium separately verified that losing the worker rejected pending and new
+PHP work; it cannot count native owners inside a destroyed Wasm heap.
+
+The same executions cover the [Jobs terminal and failure cases](php-wasm-task-packages-20261124.md);
+the [two-package callback runs](php-wasm-retained-callback-packages-20261124.md)
+cover nested host callbacks on their own identified releases. PHP-Wasm's six
+combinations bring the installed total to **130/136**. Only WIT/WASI remains
+for task delivery, cancellation and async iteration on both author routes.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

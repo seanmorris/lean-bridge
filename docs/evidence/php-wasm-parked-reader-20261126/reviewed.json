@@ -1,0 +1,33 @@
+{
+  "archives": [
+    {
+      "bytes": 15178,
+      "name": "example/lean-jobs",
+      "path": "packages/php-wasm/example-lean-jobs-1.0.0.zip",
+      "sha256": "1c38671dec0b8d42edea9fa97b8afe8d1ad7130197c6014323d5d2d73e92ad04"
+    },
+    {
+      "bytes": 85377,
+      "name": "@example/jobs-php",
+      "path": "packages/php-wasm/@example-jobs-php-1.0.0.tgz",
+      "sha256": "1943932fb11f8c72fb472ec0ad1b845d678f5a19d27b8a2e4ec0ac857a488789"
+    },
+    {
+      "bytes": 800011,
+      "name": "@lean-bridge/runtime",
+      "path": "packages/php-wasm/lean-bridge-runtime-0.0.0-task1.r8fbf25e3372a6371dfc51a95a16aa559682ae1fea0f844ab049c4c793551363f.tgz",
+      "sha256": "010648ae01e10ffb9d896b5fd53104ca31f1ca5706f9163eb6478ce4396a1dc4"
+    }
+  ],
+  "clientSha256": "61a903fede32e1f7d539178fa92b3caea436371d0cafec2dd7c020d4cc7ed08d",
+  "executions": {
+    "chromium": "Chromium: PHP task API: typed await, cancel, release, errors and pull cleanup passed; parked reader cancelled before gate, zero items, late 73, one finalizer; zero live owners; lost worker refused pending and new PHP work",
+    "composer": "composer: PHP task API: typed await, cancel, release, errors and pull cleanup passed; parked reader cancelled before gate, zero items, late 73, one finalizer; zero live owners",
+    "embedded": "embedded: PHP task API: typed await, cancel, release, errors and pull cleanup passed; parked reader cancelled before gate, zero items, late 73, one finalizer; zero live owners"
+  },
+  "interface": "9e39854226eb21c2c97f4a4f4025dc5c591394b8ee4a4c8ee388f95b2cc5e618",
+  "receiptSha256": "deb7e7577b23c6c713fabada5a50f565c5a149ce8d28a894e0ed78f1c6052f76",
+  "reviewedSourceSha256": "a8031229c2aa48544ba869fc047e24d0cb4d59a1a2fa1b8b919fc4f33d1a1972",
+  "route": "reviewed",
+  "source": "0eb2d40aea4e220dc51d4c212085b6f9c956f0cf74ad4f7e0b35471b15beefe6"
+}
