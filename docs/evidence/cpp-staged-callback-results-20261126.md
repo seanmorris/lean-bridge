@@ -43,3 +43,21 @@ toolchain. To retain verified handoffs use `LEAN_BRIDGE_CPP_TARIFF_KEEP`;
 to test the same archives again set `LEAN_BRIDGE_CPP_TARIFF_REPLAY` to the
 directory containing `ordinary/` and `reviewed/`. These Linux x86-64 tests
 exercise a synchronous function reply, not a long-lived host registration.
+
+## A caller builds a record with a function field
+
+The same installed C++ packages let an application construct a tariff from
+a returned Lean function. [The C++ client](../../tests/fixtures/structured-types/tariff-fields.cpp)
+copies a record, closes the original field and invokes the copy. It also
+passes a caller-built record through Lean and repacks an extracted function.
+In both cases the result remains callable after the input wrappers close.
+
+A borrowed C++ lambda behaves differently: putting it in a returned record
+does not extend its call scope. Both direct invocation and invocation through
+Lean refuse the expired callback without entering the lambda. A closed
+function field is rejected and a subsequent valid record still works.
+
+The [ordinary](cpp-staged-callback-results-20261126/ordinary.fields.json)
+and [reviewed](cpp-staged-callback-results-20261126/reviewed.fields.json)
+relocated CMake clients observed only the owner thread's session after each
+of the six cases, then zero live identities after the thread exited.

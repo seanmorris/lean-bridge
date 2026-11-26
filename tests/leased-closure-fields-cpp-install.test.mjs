@@ -67,6 +67,8 @@ for(const route of ["ordinary", "reviewed"]) test("installed C++ direct function
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), route === "reviewed");
 	const probe = await readFile(join(fixture, "tariff-cpp-probe.cpp"));
 	await saveLakeFile(root, "observer.cpp", probe);
+	const fieldSource = await readFile(join(fixture, "tariff-fields.cpp"));
+	await saveLakeFile(root, "fields.cpp", fieldSource);
 	await saveLakeFile(root, "CMakeLists.txt", `cmake_minimum_required(VERSION 3.16)
 project(staged LANGUAGES CXX)
 find_package(${manifest.cmakePackage} CONFIG REQUIRED)
@@ -75,6 +77,10 @@ target_link_libraries(staged PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
 target_compile_features(staged PRIVATE cxx_std_20)
 target_compile_options(staged PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 target_compile_definitions(staged PRIVATE TARIFF_TEST_OBSERVER=1)
+add_executable(fields fields.cpp observer.cpp)
+target_link_libraries(fields PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
+target_compile_features(fields PRIVATE cxx_std_20)
+target_compile_options(fields PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 `);
 	const env = {...copiedCleanEnvironment, PATH: join(root, "tools")};
 	const cmake = process.env.LEAN_BRIDGE_CMAKE ?? "/usr/bin/cmake";
@@ -98,5 +104,20 @@ target_compile_definitions(staged PRIVATE TARIFF_TEST_OBSERVER=1)
 		, relocatedCMake: lines
 		, identities: [1, 1, 1, 1, 1, 1, 0]};
 	await saveLakeFile(dest, route + ".execution.json", canonicalJson(evidence));
+	const checked = await runCopied(join(root, "build/fields"), [], root);
+	assert.equal(checked.stderr, "");
+	const fieldCases = checked.stdout.trimEnd().split("\n");
+	assert.equal(fieldCases.pop(), "identities:1,1,1,1,1,1,0");
+	assert.deepEqual(fieldCases, [
+		"a record copy survives explicit field close"
+		, "caller-built record returns a callable field"
+		, "repacked function outlives the original wrappers"
+		, "storing a host borrow cannot extend its call scope"
+		, "closed input field rejected", "subsequent valid record accepted"
+	]);
+	await saveLakeFile(dest, route + ".fields.json", canonicalJson({route
+		, packageSetSha256: result.receiptSha256, clientSha256: sha256(fieldSource)
+		, probeSha256: sha256(probe), relocatedCMake: fieldCases
+		, identities: [1, 1, 1, 1, 1, 1, 0]}));
 	t.diagnostic("pkg-config and relocated CMake passed: " + result.receiptSha256);
 });

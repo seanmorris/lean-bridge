@@ -163,8 +163,10 @@ For installed calls, the [Python wheels](python-leased-closure-fields-20261125.m
 exercise a scalar function field after its original wrapper closes. The
 [C11 Tariff client](c-leased-closure-fields-20261125.md) releases the original
 owner, invokes the remaining leases, and verifies that a raw alias is invalid
-after its last lease is released. Neither tests a function field containing a
-captured application object or a durable host callback.
+after its last lease is released. The [C++20 record client](cpp-staged-callback-results-20261126.md#a-caller-builds-a-record-with-a-function-field)
+distinguishes a copied or repacked Lean function from a C++ lambda whose
+borrow has expired. These tests do not exercise a function field containing
+a captured application object or a durable host callback.
 
 The [C callback exchange](c-callback-function-fields-20261125.md) separately
 exercises the function-bearing record as a callback argument and reply,
