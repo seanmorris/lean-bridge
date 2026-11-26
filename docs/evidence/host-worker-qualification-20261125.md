@@ -175,6 +175,9 @@ retain and repack a function from a record; all five observe a live Wasm
 identity while holding it and none after disposal. [Java and Kotlin](jvm-function-fields-20261126.md)
 each retain and repack function fields from an offline Maven install; both
 return to baseline after each case, then zero after owner-thread exit.
+The [RubyGems consumer](ruby-function-fields-20261126.md) also retains and
+repacks the field, returns it directly from a callback, and observes the
+native count return to its warmed baseline on both routes.
 These tests do not exercise a function field containing
 a captured application object or a durable host callback.
 

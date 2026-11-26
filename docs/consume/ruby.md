@@ -91,6 +91,21 @@ Call and close it on the creating fiber. Leaving the block closes any
 remaining functions, including ones converted to a Ruby block. Closing from
 inside a call lets that invocation finish but rejects further calls.
 
+If a generated record holds a Lean function, use `retain` when you need
+your own reference. In the [Tariff example](../evidence/ruby-function-fields-20261126.md),
+the retained field stays callable after the original is closed:
+
+```ruby
+quote = LeanBridge::TariffQuotes.make_tariff(40).quote
+mine = quote.retain
+begin
+  quote.close
+  puts mine.call(2)  # 42
+ensure
+  mine.close
+end
+```
+
 A synchronous export may return your object in an `Ok` or `Err`, or raise
 `api::DeclaredError` with the object in `payload`. Read the active arm of a
 nested result through `value`. These are ordinary Ruby references: they still

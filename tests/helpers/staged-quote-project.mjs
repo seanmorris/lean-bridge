@@ -16,11 +16,11 @@ import {leasedClosureFieldReviewedIr} from "./owned-aggregate-fixture.mjs";
  * @param target - Downstream package ecosystem.
  */
 export const prepareStagedQuoteProject = async (project, route, target) => {
-	if(!["ordinary", "reviewed"].includes(route) || !["cpp", "cargo", "nuget", "npm", "maven"].includes(target)) throw new Error("Unexpected staged quote configuration");
+	if(!["ordinary", "reviewed"].includes(route) || !["cpp", "cargo", "nuget", "npm", "maven", "rubygems", "php-native"].includes(target)) throw new Error("Unexpected staged quote configuration");
 	await cp(new URL("../fixtures/onboarding/leased-closure-fields/", import.meta.url), project, {recursive: true});
 	const cfg = join(project, "lean-bridge.exports.json");
 	const config = route === "ordinary" ? JSON.parse(await readFile(cfg)) : {schemaVersion: 1, modules: ["Owned"]};
-	const name = {npm: "@example/tariff-quotes", maven: "org.leanbridge:tariff-quotes"}[target] ?? "tariff-quotes";
+	const name = {npm: "@example/tariff-quotes", maven: "org.leanbridge:tariff-quotes", "php-native": "example/tariff-quotes"}[target] ?? "tariff-quotes";
 	config.targets = {[target]: {name, version: "1.0.0"}};
 	if(route === "ordinary")
 	{

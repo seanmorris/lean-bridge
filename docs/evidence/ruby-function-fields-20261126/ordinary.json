@@ -1,0 +1,25 @@
+{
+  "archives": [
+    {
+      "bytes": 52631552,
+      "path": "archives/tariff-quotes-1.0.0-x86_64-linux.gem",
+      "sha256": "c600c7307a8e9e14f123456eeb7cbd93326f74c652f0b506e01646833ee0e7cb"
+    }
+  ],
+  "bindingIrSha256": "f12ee0860cded2f36268ed39388e1d7b9a63fc353063976a702dbe92b6c70be4",
+  "clientSha256": "ece3f5082b6cce650586dc8cc5e6854b839e9192a632896698611672a185013b",
+  "observed": {
+    "after": 1,
+    "baseline": 1,
+    "held": 9,
+    "kept": 42,
+    "recovered": 42,
+    "stageCalls": 1,
+    "staged": 44,
+    "staleVisits": 0
+  },
+  "receiptSha256": "3c0198ac41ce34d2bd350a3f1d474c6c6ca0a5b556c09cb84d75f66e6b0ada5e",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+}
