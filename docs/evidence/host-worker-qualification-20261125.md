@@ -252,9 +252,9 @@ An [installed npm input-record test](npm-function-fields-20261126.md#passing-a-j
 passes a caller-created JS function through a field on both author routes.
 It can reenter Lean during the call but not after the returned borrow expires.
 This covers input fields in all five npm profiles, not durable registrations.
-The [ordinary C11 install](host-callback-input-records-20261126.md)
-now demonstrates the same input-field lifetime through pkg-config and CMake.
-This is one of C's two authoring routes.
+The [ordinary and reviewed C11 installs](host-callback-input-records-20261126.md)
+demonstrate the same input-field lifetime through pkg-config and CMake.
+Six of the 17 profiles now qualify this case on both authoring routes.
 
 ### Does a callback allow one call or many?
 

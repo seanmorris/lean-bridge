@@ -40,11 +40,12 @@ Lean component: direct and reentrant calls, expired callback after echo,
 recoverable callback failure, invalid descriptor, and a leased function
 used in the wrong session. The separate [observer](../../tests/fixtures/structured-types/tariff-exchange-probe.c)
 saw one live identity (the session) after each case and zero after close.
-The same client now passes against the [ordinary C archive](c-host-input-records-20261126/ordinary.package-set.json)
-after removing the producer. The [installed observations](c-host-input-records-20261126/ordinary.host-fields.json)
-record both pkg-config and relocated CMake executions, plus the observer's
-counts. This establishes the ordinary C route; the reviewed route needs
-its own archive and execution.
+The same client passes against the [ordinary C archive](c-host-input-records-20261126/ordinary.package-set.json)
+and the [reviewed C archive](c-host-input-records-20261126/reviewed.package-set.json)
+after removing each producer. The [ordinary observations](c-host-input-records-20261126/ordinary.host-fields.json)
+and [reviewed observations](c-host-input-records-20261126/reviewed.host-fields.json)
+match their respective package receipts. Each records both pkg-config and
+relocated CMake executions, plus the independent observer's counts.
 
 The release checks are `npm run test:c-leased-closure-fields` and
 `npm run test:leased-closure-fields`; each builds ordinary and reviewed
