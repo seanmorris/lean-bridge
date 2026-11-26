@@ -170,3 +170,48 @@ for first, peer in ((a, b), (b, a)):
     assert all(mark() is None for mark in marks), "released values or exceptions leaked host objects"
 
 print("returned and raised leases survive unbind; discarded payloads release objects")
+
+
+def last_error_owner(throwing, surviving):
+    drops = []
+
+    class Counter(Token):
+        def __init__(self):
+            self.next = 23
+
+        def read(self):
+            before = self.next
+            self.next += 19
+            return before
+
+        def __del__(self):
+            drops.append(1)
+
+    def issue():
+        with throwing.bind_hosts(Box=Box, Token=Counter):
+            original = Counter()
+            mark = ref(original)
+            failure = refused(throwing.LeanEIOError, throwing.mixed_fault, Box(0), original, 2)
+            assert failure.declaration == "Workshop.mixedFault"
+            assert isinstance(failure.payload, throwing.Ok)
+            assert isinstance(failure.payload.value, throwing.Ok)
+            assert failure.payload.value.value is original
+            # The traceback includes a frame with the original input. Keeping
+            # it would let this test pass even if the error lost its payload.
+            failure.__traceback__ = None
+            return failure, mark
+
+    with surviving.bind_hosts(Box=Box, Token=Counter):
+        failure, mark = issue()
+        gc.collect()
+        assert mark() is not None and not drops
+        assert surviving.token_read(failure.payload.value.value) == 23
+        assert surviving.token_read(failure.payload.value.value) == 42
+        del failure
+        gc.collect()
+        assert mark() is None and drops == [1], "payload survived its last owner"
+
+
+for throwing, surviving in ((a, b), (b, a)):
+    last_error_owner(throwing, surviving)
+print("nested typed error alone owns the counter: peer reads 23 then 42, one finalization")

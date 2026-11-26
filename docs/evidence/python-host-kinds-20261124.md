@@ -42,6 +42,14 @@ Run `npm run test:python-host-kinds` once per interpreter. This check covers
 the synchronous CPython host provider, not dispatch of Python methods from
 Lean worker threads.
 
+For a new run, set `LEAN_BRIDGE_PYTHON_HOST_KINDS_EVIDENCE` to a fresh
+directory. The installer keeps the original wheels, compiler records, and
+executed client bytes there. The client now also closes the throwing
+binding with a nested typed exception as a counter's only owner. It clears
+the traceback, reads the counter twice through the peer, and checks its
+finalizer before the peer closes. This is a new check; the older wheel
+results below did not run it.
+
 ## Returned objects and typed exception payloads
 
 The installed wheel pairs built from `0ffe23b` preserved the original Python

@@ -19,6 +19,7 @@ import { executableHostFixture, hostMember, hostParameter, primitiveRef as p } f
 
 const exec = promisify(execFile), enabled = process.env.LEAN_BRIDGE_HOST_OBJECT_TEST === "1";
 const kinds = process.env.LEAN_BRIDGE_PYTHON_HOST_KINDS === "1";
+const kindsEvidence = kinds && process.env.LEAN_BRIDGE_PYTHON_HOST_KINDS_EVIDENCE;
 const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 const python = resolve(process.env.LEAN_BRIDGE_HOST_PYTHON ?? ".toolchains/python311/bin/python3");
 const fixture = resolve("tests/fixtures/host-object");
@@ -66,13 +67,14 @@ const contract = source => {
 };
 
 test(kinds ? "installed CPython wheels stage strong and weak nominal arguments across independent components"
-	: "offline wheels let ordinary Python classes implement compiled Lean host imports across components", { skip: !enabled && !kinds, timeout: 480_000 }, async t => {
+	: "offline wheels let ordinary Python classes implement compiled Lean host imports across components", { skip: !enabled && !kinds, timeout: kindsEvidence ? 7_200_000 : 480_000 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-host-wheel-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const workRoot = join(root, "producer"), output = join(root, "wheelhouse");
 	await mkdir(workRoot); await mkdir(output);
 	const corpus = contract(await readFile(join(fixture, "Workshop.lean"), "utf8"));
-	const evidence = kinds ? undefined : process.env.LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR, reports = [], artifacts = new Map();
+	const evidence = kinds ? kindsEvidence : process.env.LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR;
+	const reports = [], artifacts = new Map();
 	let cli = resolve("scripts/lean-bridge.mjs");
 	if(kinds)
 	{
@@ -218,6 +220,7 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 	{
 		assert.match(stdout, /strong and weak nominal kinds: both binding orders, no retained objects/u);
 		assert.match(stdout, /returned and raised leases survive unbind; discarded payloads release objects/u);
+		assert.match(stdout, /nested typed error alone owns the counter: peer reads 23 then 42, one finalization/u);
 	}
 	else
 	{
@@ -234,9 +237,11 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 	if(evidence)
 	{
 		const dir = resolve(evidence, tag);
-		for(const file of ["installed.py", "host_app.py"])
+		for(const file of [client, "host_app.py"])
 			await copyFile(join(fixture, file), join(dir, file), constants.COPYFILE_EXCL);
-		await writeFile(join(dir, "acceptance.json"), canonicalJson({ stdout, sources: reports.map(r => r.name), archives: [...artifacts.values()] }), { flag: "wx" });
+		const observation = {stdout, sources: reports.map(r => r.name), archives: [...artifacts.values()]};
+		if(kinds) observation.consumerSha256 = sha256(await readFile(join(dir, client)));
+		await writeFile(join(dir, "acceptance.json"), canonicalJson(observation), { flag: "wx" });
 	}
 	t.diagnostic(`pip installed ${tag}: ordinary + reviewed components, one verified runtime`);
 	for(const [name, artifact] of artifacts) t.diagnostic(`${name} ${artifact.bytes} ${artifact.sha256}`);}
