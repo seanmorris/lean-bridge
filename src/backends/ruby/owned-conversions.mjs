@@ -6,6 +6,7 @@
 import { compileOwnedRubyLayout } from "./owned-layout.mjs";
 import { ownedRubyConversionSupport } from "./owned-conversion-runtime.mjs";
 import { ownedRubyCallBoundary } from "./owned-call-boundary.mjs";
+import { rubyCallableInput, rubyHostRecordInput } from "./owned-host-inputs.mjs";
 import { ownedRubyCallbacks } from "./owned-callables.mjs";
 import { ownedRubyTransfers } from "./owned-transfers.mjs";
 import { ownedRubyAnchoredCall, ownedRubyAnchoredTransfers, ownedRubyValueCopies } from "./owned-borrows.mjs";
@@ -182,6 +183,7 @@ export const generateOwnedRubyConversions = (ir, options = {}) => {
 				, tuple ? `[${node.fields.map(field => childOutput(field, field.offset)).join(", ")}]`
 					: `${publicName(node.publicType)}.new(${node.fields.map(field => `${field.publicName}: ${childOutput(field, field.offset)}`).join(", ")})`);
 		}
+		if(node.hostInput) methods.push(rubyHostRecordInput(node, nodes, publicName, childInput));
 		methods.push(`      def input${i}(value, scope, depth = 0)
         key = ${node.leaf ? "nil" : "IDENTIFY.bind_call(value)"}
         scope.enter(key, depth, ${node.size})
@@ -206,7 +208,7 @@ ${output.map(line => `          ${line}`).join("\n")}
 	{
 		const { parameters, result, hosts } = fn, args = parameters.map((_, i) => `arg${i}`);
 		const moving = fn.transfers ?? [];
-		const input = (node, i, checking) => hosts[i] ? `host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})` : `input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
+		const input = (node, i, checking) => rubyCallableInput(fn, i, checking) ?? `input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
 		bindings.push(`        functions[:${fn.name}] = ::Fiddle::Function.new(runtime.library[${JSON.stringify(fn.symbol)}], [${Array(parameters.length + moving.length + 3 + Number(fn.anchor !== undefined)).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)`);
 		if(wholeOwners)
 		{

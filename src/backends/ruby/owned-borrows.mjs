@@ -4,6 +4,8 @@
  * @file
  */
 
+import { rubyCallableInput } from "./owned-host-inputs.mjs";
+
 export const ownedRubyAnchoredValues = `
   class ValueGuard < Guard
     attr_reader :payload
@@ -168,9 +170,8 @@ export const ownedRubyAnchoredCall = (fn, boundary, access) => {
 	const whole = result.representation === "copied" ? "false" : helper ? "whole" : "true";
 	const copier = boundary.calls.find(item => (item.copy || item.retain) && item.id === result.id);
 	const args = parameters.map((_, i) => `arg${i}`);
-	const input = (node, i, check) => hosts[i]
-		? `host${node.index}(arg${i}, ${check ? "checked" : "scope, frame"})`
-		: `input${node.index}(${wraps(i) ? `VALUE_GET.bind_call(arg${i})` : `arg${i}`}, ${check ? "checked" : "scope"})`;
+	const input = (node, i, check) => rubyCallableInput(fn, i, check)
+		?? `input${node.index}(${wraps(i) ? `VALUE_GET.bind_call(arg${i})` : `arg${i}`}, ${check ? "checked" : "scope"})`;
 	const inputs = parameters.flatMap((node, i) => [
 		...wraps(i) ? [`            scope.pin_lease(owner${i})`] : []
 		, ...hosts[i] || node.aggregate ? [`            input${i} = ${input(node, i, false)}`]

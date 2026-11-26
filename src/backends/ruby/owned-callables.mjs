@@ -62,11 +62,12 @@ export const ownedRubyCallbacks = (model, boundary, access) => {
 		const args = parameters.map((_, j) => `arg${j}`), automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
 		const copy = boundary.calls.find(fn => (fn.retain || fn.copy) && fn.id === result.id);
 		const output = (parameter, j) => access.read(parameter, `pointer(arg${j}.to_i, ${parameter.size}, ${parameter.alignment})`);
-		lines.push(`      def host${i}(value, scope, frame = nil)
+		const field = model.types.some(t => t.hostInput?.fields.some(f => f.host && f.type === node.id));
+		lines.push(`      def host${i}(value, scope, frame = nil${field ? ", depth = 0" : ""})
 ${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) || c.callbacks.some(fn => fn.anchor !== undefined) ? "        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\n" : ""}\
-        scope.enter(nil, 0, 32)
+        scope.enter(nil, ${field ? "depth" : "0"}, 32)
         if exact?(value, ::${model.namespace}::${node.publicType})
-          handle = input${i}(value, scope)
+          handle = input${i}(value, scope${field ? ", depth" : ""})
           descriptor = scope.allocate(32)
           descriptor[16, 8] = [handle].pack("Q<") unless scope.check_only
           return descriptor
@@ -76,7 +77,7 @@ ${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) || c.call
         require_callback(function)
 ${automatic ? "" : '        raise TypeError, "This callback requires with_recovery(function, value)" unless wrapped'}
 ${borrowed ? "        recovery = VALUE_GET.bind_call(recovery) if wrapped && exact?(recovery, Owned::Value)\n" : ""}\
-        converted = input${result.index}(recovery, scope) if wrapped
+        converted = input${result.index}(recovery, scope${field ? ", depth + 1" : ""}) if wrapped
         return nil if scope.check_only
         descriptor = scope.allocate(32)
         if wrapped

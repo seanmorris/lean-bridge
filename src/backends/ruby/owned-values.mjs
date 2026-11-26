@@ -98,7 +98,18 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 			})
 		};
 	});
-	const functions = c.functions.map(fn => {
+	const table = new Map(types.map(node => [node.id, node]));
+	for(const fn of c.hostFieldCalls ?? []) for(const slot of fn.hostRecordSlots)
+	{
+		const node = table.get(slot.node.id);
+		if(node.hostInput) continue;
+		let name = node.publicType + "Input";
+		while(occupied.has(name)) name += "Input";
+		const selected = new Set(slot.fields.map(field => field.name));
+		node.hostInput = { publicType: claim(name), cName: slot.inputType
+			, fields: node.fields.map(field => ({ ...field, host: selected.has(field.name) })) };
+	}
+	const functions = [...c.functions, ...c.hostFieldCalls ?? []].map(fn => {
 		const publicName = fn.cName.slice(c.prefix.length + 1);
 		if(wholeOwners && publicName === "copy_value") throw new TypeError("Owned Ruby function name is reserved: copy_value");
 		if(reservedMembers.has(publicName) && !["next", "inspect"].includes(publicName))
@@ -109,7 +120,6 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 		return { ...fn, publicName
 			, ...fn.receiver === 0 ? { receiverKind: ir.declarations.find(item => item.id === fn.id).kind } : {} };
 	});
-	const table = new Map(types.map(node => [node.id, node]));
 	const aliases = c.native.aliases.map(alias => ({ ...alias
 		, name: definitions.get(alias.id).name
 		, contractType: contract(definitions.get(alias.id).target)
@@ -119,7 +129,7 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 	const nominal = types.filter(node => names.has(node.id));
 	const exports = ["UNIT", "LeanBridgeError", ...wrappers
 		, ...wholeOwners ? ["Value", "copy_value"] : []
-		, ...nominal.flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])
+		, ...nominal.flatMap(node => [node.publicType, ...node.hostInput ? [node.hostInput.publicType] : [], ...node.cases.map(branch => branch.publicName)])
 		, ...hostCallbacks && c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
 		, ...functions.map(fn => fn.publicName)];
 	const receiverMember = (fn, whole) => {
@@ -151,8 +161,14 @@ ${functions.filter(fn => fn.receiver === 0 && fn.parameters[0] === node.id
 	&& fn.anchor !== 0 && !fn.transfers?.includes(0)).map(fn => receiverMember(fn, false) + "\n").join("")}\
     end`;
 		}
-		return node.kind === "record" ? valueClass(node.publicType, node.fields)
-			: `    class ${node.publicType}\n      private_class_method :new\n    end\n${node.cases.map(branch => valueClass(branch.publicName, branch.fields, node.publicType)).join("\n")}`;
+		if(node.kind === "record")
+		{
+			const record = valueClass(node.publicType, node.fields);
+			if(!node.hostInput) return record;
+			const fields = node.hostInput.fields.map(f => f.host ? { ...f, contractType: f.contractType + " or synchronous callable" } : f);
+			return record + "\n" + valueClass(node.hostInput.publicType, fields);
+		}
+		return `    class ${node.publicType}\n      private_class_method :new\n    end\n${node.cases.map(branch => valueClass(branch.publicName, branch.fields, node.publicType)).join("\n")}`;
 	});
 	const methods = functions.map((fn, index) => {
 		const args = fn.parameters.map((_, i) => `arg${i}`).join(", ");

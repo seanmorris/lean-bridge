@@ -110,3 +110,29 @@ source while its input view is still in use.
 These are adapter and compiler checks, not installed Cargo receipts.
 `npm run test:rust-staged-callbacks` builds both source routes, installs each
 crate offline, and runs the relocated binaries without the build tree.
+
+## Ruby callers
+
+```ruby
+api = LeanBridge::TariffQuotes
+row = api::TariffInput.new(quote: ->(units) { units + 40 })
+api.apply_tariff_with_host_fields(row, 2) # => 42
+```
+
+An application callable is borrowed until this call returns. The same method
+accepts an existing Lean function lease. Returning that lease preserves its
+own lifetime; returning an application callable does not extend the borrow.
+The ordinary `Tariff` result class still accepts only leased functions at
+the call boundary.
+
+The [Ruby client](../../tests/fixtures/structured-types/tariff-host-fields.rb)
+ran against the compiled ordinary C archive using the generated Fiddle
+adapter. It exercised direct invocation, reentry, two ways to return an
+expired borrow, the original exception and a successful retry, input
+validation, and independent ownership of a returned Lean function. The
+broker counted one live identity at baseline, three in the held-owner
+control, and one after each of the six cases. The C compiler separately
+checked two record parameters containing two functions, a string and a scalar.
+These checks are distinct from the [earlier installed gem
+results](ruby-function-fields-20261126.md). To run the new end-to-end check,
+use `npm run test:ruby-function-fields` to build and install both gems.

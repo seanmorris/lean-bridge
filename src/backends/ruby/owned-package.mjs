@@ -52,6 +52,8 @@ end
 		, language: "ruby-3.3"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
+		, ...generated.c.hostFieldCalls.length ? { hostInputRecords: generated.types.filter(n => n.hostInput)
+			.map(n => ({type: n.id, input: n.hostInput.publicType, fields: n.hostInput.fields.filter(f => f.host).map(f => f.publicName), lifetime: "call"})) } : {}
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
 			, values: "checked-whole-result", anchor: "original-argument-owner"
 			, parameterNumbering: "callback-local"
@@ -115,6 +117,13 @@ use Ok.new(value) or Err.new(value); products remain nested two-element Arrays.
 Unit is UNIT. Nat and Int remain exact Ruby Integers; fixed-width ranges check
 before native entry. String preserves valid UTF-8 and embedded NUL; ByteArray
 uses binary String. Char contains one Unicode scalar. Float32 rounds to binary32.
+${generated.c.hostFieldCalls.length ? `
+To supply an application function in a record, call the matching
+\`*_with_host_fields\` method with an input record. Selected fields accept
+a synchronous Ruby callable or an existing Lean function lease. Returning
+the record does not extend an application function's lifetime.
+${generated.types.filter(n => n.hostInput).map(n => "- " + n.hostInput.publicType + ": " + n.hostInput.fields.filter(f => f.host).map(f => f.publicName).join(", ")).join("\n")}
+` : ""}\
 
 ${wholeOwners ? `Resource-containing results use Value, including empty containers and variants.
 get checks the whole owner and returns its Ruby value. dup and clone share that

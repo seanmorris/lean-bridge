@@ -71,5 +71,10 @@ check(fresh.call(36) == 42)
 fresh.close
 after = live.call
 check(after == baseline)
+fields = {}
+if ENV["CHECK_TARIFF_INPUT"] == "1"
+  require_relative "tariff-host-fields"
+  fields[:hostInput] = verify_tariff_inputs(API, live)
+end
 puts JSON.generate({baseline: baseline, held: held, after: after, kept: 42,
-  staged: 44, stageCalls: stage_calls, staleVisits: visits, recovered: 42})
+  staged: 44, stageCalls: stage_calls, staleVisits: visits, recovered: 42, **fields})

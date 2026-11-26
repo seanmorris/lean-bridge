@@ -23,6 +23,12 @@ export const ownedRubyAbiHeader = model => {
 		if(node.kind === "option") equal(`offsetof(${node.cName}, has_value)`, node.flagOffset);
 		if(node.kind === "result") equal(`offsetof(${node.cName}, is_ok)`, node.flagOffset);
 		for(const field of node.fields) equal(`offsetof(${node.cName}, ${field.name})`, field.offset);
+		if(node.hostInput)
+		{
+			const view = node.hostInput;
+			equal(`sizeof(${view.cName})`, view.size); equal(`_Alignof(${view.cName})`, view.alignment);
+			for(const field of view.fields) equal(`offsetof(${view.cName}, ${field.name})`, field.offset);
+		}
 		for(const branch of node.cases) for(const field of branch.fields)
 			equal(`offsetof(${node.cName}, cases.${branch.name}.${field.name})`, node.payloadOffset + field.offset);
 	}
