@@ -27,8 +27,9 @@ const observeNativeFinish = () => {
  *
  * @param options - Installed names, import order and digest of the test-only fault component.
  * @param load - Optional bundler-resolved lazy imports for a dedicated browser worker.
+ * @param invokeFault - Caller that enters the trapping callback through the installed API.
  */
-export const exercise = async (options, load = name => import(name)) => {
+export const exercise = async (options, load = name => import(name), invokeFault = (api, callback) => api.viaNat(callback, 7n)) => {
 	const {ioName, ownedName, order, integrity, propagate} = options;
 	const modules = new Map();
 	const finishes = observeNativeFinish();
@@ -80,7 +81,7 @@ export const exercise = async (options, load = name => import(name)) => {
 	let guest;
 	// Catch the trap inside the callback and even return a valid value: the
 	// outer call must still fail, and no sibling may resume the damaged heap.
-	const outer = caught(() => via(n => { guest = caught(() => fault.call(id, [])); if(propagate) throw guest; return n; }));
+	const outer = caught(() => invokeFault(owned, n => { guest = caught(() => fault.call(id, [])); if(propagate) throw guest; return n; }));
 	check(guest instanceof WebAssembly.RuntimeError && /unreachable/iu.test(guest.message), "not a real guest unreachable: " + guest);
 	check(finishes.count() === before, "compiled callback resumed its native finish hook after the trap");
 	const retired = e => e instanceof Error && /retired|poisoned/iu.test(e.message);

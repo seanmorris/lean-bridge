@@ -21,7 +21,7 @@ evidence, sometimes from a different package or execution mode.
 | `perl` | [CPAN](perl-sync-io-20261123.json): prebuilt XS, relocated application calls, checked conversion and copied scalar/error values across four interpreter configurations. | [Retained workers](perl-retained-workers-20261123.json) and the [closure retirement check](perl-host-closures-20261125.md) exercise pending and stale callables; explicit broker retirement is not a native crash. |
 | `php-native` | [Local Composer packages](php-sync-io-20261123.json): synchronous Journal, both import orders, retirement and modified library refusal under PHP 8.2 and 8.5. | [Retained tasks](php-retained-tasks-20261123.json) and [returned PHP callables](php-host-closures-20261125.md) test application exceptions and disposal independently of the IO suite. |
 | `php-wasm` | [Zend IO installs](php-wasm-installed-sync-io-20261123.md) execute the PHP API in the interpreter, not just the surrounding JavaScript ABI. | [Nested callback failures](php-wasm-io-callback-failures-20261123.md) preserve the original PHP and declared error. Malformed replies retire the runtime; the report identifies where each fault was injected. |
-| `node-javascript`, `node-typescript`, `browser-javascript`, `browser-react`, `browser-worker` | [Five independent Ledger clients](npm-synchronous-io-delivery-20261126.md) execute the common 45 checks. The TypeScript catch, mounted click handler and module worker actually run. | [Compiled guest trap](javascript-wasm-callback-io-retirement-20261123.md): plain Node and Chromium, a Node worker, and a dedicated browser worker. The parent survives a worker trap. No mounted React or executed TypeScript trap result is claimed by either report. |
+| `node-javascript`, `node-typescript`, `browser-javascript`, `browser-react`, `browser-worker` | [Five independent Ledger clients](npm-synchronous-io-delivery-20261126.md) execute the common 45 checks. The TypeScript catch, mounted click handler and module worker actually run. | [Compiled guest trap](javascript-wasm-callback-io-retirement-20261123.md): plain Node and Chromium, a Node worker, and a dedicated browser worker. The parent survives a worker trap. [Typed Node and mounted React](npm-callback-trap-delivery-20261126.md) separately ran both import orders with a caught or rethrown guest trap. |
 | `wit-wasi` | [Relocated Wasmtime packages](wit-sync-io-packages-20261123.md) run synchronous Journal on both routes and reject a missing filesystem grant. | A separate world-conforming component traps **after** mutating state: the caller-owned store must be discarded and a peer cannot reuse the runtime. A trap is not transactional rollback. |
 
 ## What still requires a decision or a test?
@@ -37,10 +37,8 @@ The table identifies installed witnesses, not a release-wide pass count.
 The [direct Rust callback clients](rust-staged-callback-results-20261126.md)
 separately distinguish a returned host error from a resumed unwind after a
 nested allocation. Neither is a reason to retire those installed bindings.
-The next missing npm fault witnesses are an **executed strict TypeScript**
-client and a **mounted React** client for the cross-package trap scenario.
-The existing worker trap need not be run again to fill either gap.
-Likewise, check each native runtime's fatal policy against the actual
+The five npm profiles now each have an installed cross-package trap witness.
+For native profiles, check each runtime's fatal policy against the actual
 injector: a direct request to retire does not show what initiates retirement.
 For non-scalar failures, match the installed payload's owner, lifetime and
 error channel to #1221; returning copied bytes is not a test of a live

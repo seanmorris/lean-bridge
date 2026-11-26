@@ -4,6 +4,7 @@ import { execFile } from "node:child_process";
 import { cp, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { promisify } from "node:util";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -12,9 +13,13 @@ import { buildOwnedJavaScriptNpmPackages } from "../../src/release/owned-javascr
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runInstalledChromium } from "./javascript-wasm-installed-browser.mjs";
 import { checkCallbackWorker } from "./javascript-wasm-callback-io-browser-worker.mjs";
+import { checkCallbackDelivery } from "./javascript-callback-io-delivery.mjs";
+import { ledgerFrameworkArchives } from "./javascript-ledger-delivery.mjs";
+import { retainPackageSetEvidence } from "./package-set.mjs";
+import { saveLakeFile } from "./lake-workspace.mjs";
 
 const run = promisify(execFile);
-const fixture = path => resolve("tests/fixtures", path);
+const fixture = path => fileURLToPath(new URL("../fixtures/" + path, import.meta.url));
 const ownedRelease = async (root, sdk, headers) => {
 	const source = join(root, "owned-source"), compiled = join(root, "compiled"), out = join(root, "owned");
 	await cp(fixture("onboarding/owned-dotnet-callables"), source, {recursive: true});
@@ -34,10 +39,13 @@ const ioRelease = async root => {
 	return join(out, "packages/npm");
 };
 const handoff = async dir => {
-	const {receipt} = await readVerifiedPackageSetReceipt({receiptPath: join(dir, "package-set-receipt.json")});
+	const {receipt, result} = await readVerifiedPackageSetReceipt({receiptPath: join(dir, "package-set-receipt.json")});
 	const component = receipt.packages.find(p => p.role === "component"), runtime = receipt.packages.find(p => p.role === "runtime");
 	assert.equal(component.requires[0].version, runtime.version);
-	return {name: component.name, archive: join(dir, component.artifacts[0].path), runtime: join(dir, runtime.artifacts[0].path)};
+	return {name: component.name
+		, archive: join(dir, component.artifacts[0].path)
+		, runtime: join(dir, runtime.artifacts[0].path)
+		, sourceTree: receipt.source.treeSha256, receiptSha256: result.receiptSha256};
 };
 
 test("installed callbacks preserve host and IO exceptions; a swallowed guest trap retires every package", {
@@ -48,10 +56,13 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 	const sdk = resolve(process.env.LEAN_BRIDGE_JS_EMSDK ?? ".toolchains/emsdk");
 	const headers = resolve(process.env.LEAN_BRIDGE_JS_TARGET_RUNTIME);
 	const io = await handoff(process.env.LEAN_BRIDGE_JS_IO_RELEASE ?? await ioRelease(root));
-	const owned = await handoff(process.env.LEAN_BRIDGE_JS_CALLBACK_RELEASE ?? await ownedRelease(root, sdk, headers));
+	const callbackDir = process.env.LEAN_BRIDGE_JS_CALLBACK_RELEASE ?? await ownedRelease(root, sdk, headers);
+	const owned = await handoff(callbackDir);
+	if(process.env.LEAN_BRIDGE_JS_CALLBACK_KEEP) await retainPackageSetEvidence(callbackDir, process.env.LEAN_BRIDGE_JS_CALLBACK_KEEP);
 	assert.deepEqual(await readFile(io.runtime), await readFile(owned.runtime), "both packages must ship the identical runtime archive");
 	await writeFile(join(consumer, "package.json"), '{"private":true,"type":"module"}');
-	await run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(root, "cache"), io.runtime, io.archive, owned.archive], {cwd: consumer});
+	const frameworks = await ledgerFrameworkArchives(root);
+	await run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(root, "cache"), io.runtime, io.archive, owned.archive, ...frameworks], {cwd: consumer});
 	const lock = JSON.parse(await readFile(join(consumer, "package-lock.json")));
 	assert.deepEqual(Object.keys(lock.packages).filter(k => k.endsWith("node_modules/@lean-bridge/runtime")), ["node_modules/@lean-bridge/runtime"]);
 	const binary = join(consumer, "fault.wasm");
@@ -66,10 +77,13 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 	await copyFile(new URL("./javascript-wasm-callback-io-calls.mjs", import.meta.url), join(consumer, "calls.mjs"));
 	await copyFile(new URL("./javascript-wasm-callback-io-worker.mjs", import.meta.url), join(consumer, "worker.mjs"));
 	await writeFile(join(consumer, "consume.mjs"), 'import {exercise} from "./calls.mjs"; console.log(JSON.stringify(await exercise(JSON.parse(process.argv[2]))));\n');
-	const cases = [];
+	const cases = [], requests = [];
+	const deliveryOnly = process.env.LEAN_BRIDGE_JS_CALLBACK_IO_DELIVERY_ONLY === "1";
 	for(const order of ["io-first", "owned-first"]) for(const propagate of [false, true])
 	{
 		const options = {ioName: io.name, ownedName: owned.name, order, integrity, propagate};
+		requests.push(options);
+		if(deliveryOnly) continue;
 		const node = JSON.parse((await run(process.execPath, ["consume.mjs", JSON.stringify(options)], {cwd: consumer})).stdout);
 		const browser = await runInstalledChromium({root, consumer
 			, names: [io.name, owned.name], argument: options
@@ -84,6 +98,13 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 			t.diagnostic("An independent Node worker retired its own heap; the live parent retained its ticket and advanced its counter to 21.");
 		}
 	}
-	const dedicated = await checkCallbackWorker({root, consumer, names: [io.name, owned.name], cases});
-	t.diagnostic(JSON.stringify({chromiumWorkers: dedicated.workers.length, parentCounter: dedicated.parentCounter}));
+	if(!deliveryOnly)
+	{
+		const dedicated = await checkCallbackWorker({root, consumer, names: [io.name, owned.name], cases});
+		t.diagnostic(JSON.stringify({chromiumWorkers: dedicated.workers.length, parentCounter: dedicated.parentCounter}));
+	}
+	const report = await checkCallbackDelivery({root, consumer, io, owned, requests});
+	if(process.env.LEAN_BRIDGE_JS_CALLBACK_DELIVERY_EVIDENCE)
+		await saveLakeFile(process.env.LEAN_BRIDGE_JS_CALLBACK_DELIVERY_EVIDENCE, report.route + ".json", JSON.stringify(report, null, 2) + "\n");
+	t.diagnostic(report.route + ": four typed callback traps and four React runtime-retirement/retry sequences passed.");
 });

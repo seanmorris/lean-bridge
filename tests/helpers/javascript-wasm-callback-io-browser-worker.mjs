@@ -4,6 +4,7 @@ import { writeFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 import { build } from "vite";
 import { runInstalledChromium } from "./javascript-wasm-installed-browser.mjs";
+import { writeCallbackLoaders } from "./javascript-callback-io-delivery.mjs";
 
 /**
  * Build an ordinary browser consumer with lazy package imports, then serve
@@ -13,8 +14,7 @@ import { runInstalledChromium } from "./javascript-wasm-installed-browser.mjs";
  */
 export const checkCallbackWorker = async options => {
 	const {root, consumer, names, cases} = options;
-	const loaders = [...names, "@lean-bridge/runtime"].map(n => "[" + JSON.stringify(n) + ",()=>import(" + JSON.stringify(n) + ")]");
-	await writeFile(join(consumer, "loaders.mjs"), "const packages=new Map([" + loaders.join(",") + "]);export const load=n=>packages.get(n)();");
+	await writeCallbackLoaders(consumer, names);
 	await writeFile(join(consumer, "retire-worker.mjs"), `import {exercise} from "./calls.mjs";
 import {load} from "./loaders.mjs";
 self.onmessage=async event=>{try{self.postMessage({value:await exercise(event.data,load)});}
