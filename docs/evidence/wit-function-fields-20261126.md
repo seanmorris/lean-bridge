@@ -24,3 +24,12 @@ Run `npm run test:wit-function-fields` with the [WIT author prerequisites](wit-s
 Set `LEAN_BRIDGE_WIT_TARIFF_KEEP` to an existing scratch directory to keep
 both handoffs, or use `LEAN_BRIDGE_WIT_TARIFF_REPLAY` to run the checks
 against the retained archives without rebuilding Lean.
+
+The two linked receipts cover Lean-produced function fields. They predate
+the input record that accepts a caller's C function. Fresh packages must
+also build and run a [second Wasmtime client](../../tests/fixtures/structured-types/tariff-wasmtime-inputs.c).
+It passes two records with four distinct callbacks through the installed
+session and checks the result, each argument, and the live owner count.
+It also checks that an invalid callback in the second record prevents
+dispatch of the first. Compiling that client against the generated header
+checks its C API, but does not count as an installed-package run.
