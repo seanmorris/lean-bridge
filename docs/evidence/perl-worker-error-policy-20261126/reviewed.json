@@ -1,0 +1,492 @@
+{
+  "archives": {
+    "Peer": "a9c53e313a0e6b083e4f1071e0373334a8c8c43497bd139170d90e279518a071",
+    "Workshop": "9c9820944776a96aa229027b3eb431308c87d5c1fbe565ffb4c58b5952d0adb9",
+    "runtime": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+  },
+  "installed": [
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "36",
+        "archname": "x86_64-linux-thread-multi",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "define",
+        "uselongdouble": "",
+        "usemultiplicity": "define",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "prebuilt-only",
+      "installedXsDigests": {
+        "Peer": "0a73e5e9ba66ff652c9c838da942500fbd3a79b53e213fe0d3eb538524139d47",
+        "Runtime": "85ccbb92aa56bcf79a3c1ba268e219e66eb13acbc601c5e554dd3b7aa04f22f0",
+        "Workshop": "3c540d578621f26fb5a6d82c26b3b0067209ccc11aeeed004d6f08540fc51027"
+      },
+      "perlVersion": "5.36.3",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "36",
+        "archname": "x86_64-linux-thread-multi",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "define",
+        "uselongdouble": "",
+        "usemultiplicity": "define",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "build-xs",
+      "installedXsDigests": {
+        "Peer": "46b0c39f8e883d900dc8acb15663d8225512609df43f45abaee0a5dd5f4d329d",
+        "Runtime": "85ccbb92aa56bcf79a3c1ba268e219e66eb13acbc601c5e554dd3b7aa04f22f0",
+        "Workshop": "f90de4ff06ed6cc3a95611466bb78b3a9fc0e4474ee7e5c0a9d2a280292466a0"
+      },
+      "perlVersion": "5.36.3",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "36",
+        "archname": "x86_64-linux",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "",
+        "uselongdouble": "",
+        "usemultiplicity": "",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "prebuilt-only",
+      "installedXsDigests": {
+        "Peer": "858feb525837c8467664f53cbdce5cbcb2495a52cec0da65619e9dcb49171094",
+        "Runtime": "30bcb000ce32ca8badc87710d2d40181dd1ca8166546c3eb4a6c71856a976324",
+        "Workshop": "f9d34948d848f5caa26c78aae9f3e2d057924016adcc6fc2686459ded5bde6ef"
+      },
+      "perlVersion": "5.36.3",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "36",
+        "archname": "x86_64-linux",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "",
+        "uselongdouble": "",
+        "usemultiplicity": "",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "build-xs",
+      "installedXsDigests": {
+        "Peer": "5e769e6a4a00f6401ef95103b7987976f8da2e576a432c4f31b34065124fd204",
+        "Runtime": "30bcb000ce32ca8badc87710d2d40181dd1ca8166546c3eb4a6c71856a976324",
+        "Workshop": "a7ef1beb33a8532b952fce6dd621385c81f94be4925cdbf16a9fa511b7f3d7ec"
+      },
+      "perlVersion": "5.36.3",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "38",
+        "archname": "x86_64-linux-thread-multi",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "define",
+        "uselongdouble": "",
+        "usemultiplicity": "define",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "prebuilt-only",
+      "installedXsDigests": {
+        "Peer": "c6fa4af2c90642973440394024c5a8acbe09458d054d69c4e914a61bbc375e0e",
+        "Runtime": "670dd22696597d29db5b8f0df72786e960d9623212eb576da6b38f68e484a7a4",
+        "Workshop": "d830519b2545e518461ff12ddebb82be435a38886b5159204756573edf31b2f9"
+      },
+      "perlVersion": "5.38.2",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "38",
+        "archname": "x86_64-linux-thread-multi",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "define",
+        "uselongdouble": "",
+        "usemultiplicity": "define",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "build-xs",
+      "installedXsDigests": {
+        "Peer": "db250953836a30fc654c32d6185bf3278bdfb860218ea64153bcfaf0a334b019",
+        "Runtime": "670dd22696597d29db5b8f0df72786e960d9623212eb576da6b38f68e484a7a4",
+        "Workshop": "f95e461bbdc9015b50534f52f467943305ebc89a5f5b7d47899b6733116e3924"
+      },
+      "perlVersion": "5.38.2",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "38",
+        "archname": "x86_64-linux",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "",
+        "uselongdouble": "",
+        "usemultiplicity": "",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "prebuilt-only",
+      "installedXsDigests": {
+        "Peer": "d54913cf015b4cf44de8dc744495e9b5c298ee7688f19d563cfb08125f3335b2",
+        "Runtime": "89321f836fab00c33c95178d61832e89eab4559b1468ff4440de094d8f57f157",
+        "Workshop": "f6ae3c4709ac4d6a4fea7e7ce3e1013e166b287cc938ae1a15fa7e900613b2a0"
+      },
+      "perlVersion": "5.38.2",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    },
+    {
+      "abi": {
+        "api_revision": "5",
+        "api_subversion": "0",
+        "api_version": "38",
+        "archname": "x86_64-linux",
+        "binary_options": [],
+        "byteorder": "12345678",
+        "ivsize": "8",
+        "longsize": "8",
+        "nvsize": "8",
+        "nvtype": "double",
+        "ptrsize": "8",
+        "quadkind": "2",
+        "use64bitall": "define",
+        "use64bitint": "define",
+        "useithreads": "",
+        "uselongdouble": "",
+        "usemultiplicity": "",
+        "useperlio": "define",
+        "usequadmath": "",
+        "uvsize": "8"
+      },
+      "clientSha256": "1907070c2fda616994a86f06b04b1852e1606539649b9163028771ba8264d548",
+      "componentMode": "build-xs",
+      "installedXsDigests": {
+        "Peer": "2b3e068c1f4b41c65238b134a9e9f166f4c3ad6a9b9d321c287bd9d4538e6d0d",
+        "Runtime": "89321f836fab00c33c95178d61832e89eab4559b1468ff4440de094d8f57f157",
+        "Workshop": "4e9481a2ba2a7836fcb51998896821f1d5bc0d02855dcabd1c1aa8ec212d5b5f"
+      },
+      "perlVersion": "5.38.2",
+      "workerPolicies": [
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Workshop",
+          "reads": 1,
+          "worker": "Peer",
+          "workerCalls": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "caught": 1,
+          "destructions": 1,
+          "injectedFailureId": 2,
+          "liveIdentities": 0,
+          "nativeFailureId": 1,
+          "outer": "Peer",
+          "reads": 1,
+          "worker": "Workshop",
+          "workerCalls": 1
+        }
+      ]
+    }
+  ],
+  "peerReceiptSha256": "e0594ade6c5127b0ef609a756ed3940cc9a8a49d984f3a7680a6955a0184f023",
+  "receiptSha256": "4746e5c4fa2712fe472620750b44d1d449ab7ba9b800d826d02cb56895375181",
+  "route": "reviewed"
+}
