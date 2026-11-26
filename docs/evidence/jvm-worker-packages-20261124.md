@@ -80,6 +80,26 @@ Java executable, `JAVA_HOME` and `LEAN_BRIDGE_KOTLIN_HOME` to the JDK and Kotlin
 plugin/dependency cache (without the Workshop artifact). Run
 `npm run test:jvm-worker-effects`.
 
+## Passing and returning application objects
+
+The [ordinary](jvm-host-object-positions-20261126/ordinary.json) and
+[reviewed](jvm-host-object-positions-20261126/reviewed.json) Maven installs
+each ran a Java client and a Kotlin client in both package load orders.
+The Java client checked that the immediate result of `identity(x)` was
+`x`, then passed `x` to a callback that returned a different box through
+the independent peer. The Kotlin client used two equal boxes with distinct
+identities. Each took a turn as the argument and as the reply: Kotlin
+checked both with `===`. Returning the incoming box would fail the test.
+Both installs also rejected a modified ledger and a modified JNI library.
+The [record-field clients](jvm-host-record-fields-20261126.md) cover the
+fifth position.
+
+To repeat the installed checks without compiling Lean, point
+`LEAN_BRIDGE_JVM_WORKER_REPLAY` at the handoff directory containing
+`ordinary/`, `reviewed/` and `peer/`. Use the offline Maven seed
+with Kotlin coroutines described above, then run `npm run test:jvm-worker-packages`.
+Set `LEAN_BRIDGE_JVM_WORKER_OBJECT_OUTPUT` to retain both reports.
+
 | Build | Verified package-set receipt (SHA-256) |
 | --- | --- |
 | Ordinary | `80116ff0607ec3621b157eed0f9e3e11d115c59c12cd1664de79e01a1c8678d0` |

@@ -1,0 +1,56 @@
+{
+  "consumers": [
+    "ordinary-first: Java: installed class workers, backpressure, exceptions and shutdown",
+    "peer-first: Java: installed class workers, backpressure, exceptions and shutdown",
+    "ordinary-first: Kotlin: installed suspend, Flow and cancellation across bindings",
+    "peer-first: Kotlin: installed suspend, Flow and cancellation across bindings",
+    "Modified worker ledger refused",
+    "Modified worker jni refused"
+  ],
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51490536,
+          "path": "archives/workshop-1.0.0.jar",
+          "sha256": "0d2eb456c621856721cbbae20f3e5d6da6989b7e1c33bf42630af70729058fcf"
+        },
+        {
+          "bytes": 759,
+          "path": "archives/workshop-1.0.0.pom",
+          "sha256": "53451c7ffb8256bdbabdab011c9c8cedd845329201454ea349baed63a16f7a3f"
+        }
+      ],
+      "name": "workshop",
+      "receipt": "26de80fa6a203a6b635f9c4a20c504758ef806474abe30aaca3d0de55f1a9a7e"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51491749,
+          "path": "archives/workshop-peer-1.0.0.jar",
+          "sha256": "d36a2128d3e08fcecc0966c21792b8b4458aa93ee54dc834d4cb87b717e71a29"
+        },
+        {
+          "bytes": 764,
+          "path": "archives/workshop-peer-1.0.0.pom",
+          "sha256": "2f177a5648a913fe9bdfb0e8707213d05948ba6c92a2efaed5a5a7626974fe0a"
+        }
+      ],
+      "name": "workshop-peer",
+      "receipt": "dd8204ee573620cee774fea12d717e7c9a03c351589737deb5600ebfed7c88ef"
+    }
+  ],
+  "positions": [
+    "parameter",
+    "result",
+    "callback-parameter",
+    "callback-result"
+  ],
+  "publicIr": "f70443c3e441061b598d3f5c41b1c202621298c31bf5eee347f1044151bcc9c9",
+  "route": "ordinary",
+  "sources": {
+    "Installed.java": "216e1dd1f8f327db2ce45ddccf46f293a9fc8b5654330a562686f462f366c99f",
+    "InstalledKtClient.kt": "55b3064ca530b908d297e8052a10139ed079e4fca325655d2f27a65f92fe6b6e"
+  }
+}

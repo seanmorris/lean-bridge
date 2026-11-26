@@ -17,6 +17,19 @@ fun main(args: Array<String>) = runBlocking {
             check(Api.scalar(3)==4L && Peer.scalar(3)==40L)
             val x: Installed.Box=a.make(21)
             check(b.echo(x)===x && a.relay(x){v->b.identity(v)}===x)
+            val other = Installed.Box(x.level)
+            check(x !== other && x == other)
+            var visits = 0
+            for ((input, reply) in listOf(x to other, other to x)) {
+                check(a.identity(input) === input)
+                val result = a.relay(input) { arg ->
+                    check(arg === input && arg !== reply)
+                    ++visits
+                    reply
+                }
+                check(result === reply && result !== input)
+            }
+            check(visits == 2)
             val outcome=a.outcome(x)
             check(outcome is Result.Err<*,*> && outcome.error()===x)
             try { a.refuse(x); error("missing EIO") }

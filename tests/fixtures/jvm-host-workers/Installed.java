@@ -36,6 +36,7 @@ public final class Installed {
             check(get(Api.scalar(10))==11 && get(org.leanbridge.workshop_peer.Api.scalar(10))==47);
             var x=a.make(27); var y=b.make(53);
             check(x!=y && x.equals(y) && get(a.echo(x))==x && get(a.echo(y))==y);
+            check(a.identity(x)==x && a.identity(y)==y);
             check(a.update(x,28)==28 && b.read(x)==28 && get(b.echo(x))==x);
             check(get(a.relay(x,v->{check(v==x && Thread.currentThread().isVirtual()); return b.echo(y).join();}))==y);
             check(get(a.outcome(x)) instanceof Result.Err<?,?> err && err.error()==x);
