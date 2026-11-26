@@ -64,6 +64,23 @@ Set `LEAN_BRIDGE_DOTNET_WORKER_HANDOFFS` to an existing private directory to
 keep the package receipts and archives without keeping compilers or NuGet
 caches. `LEAN_BRIDGE_DOTNET_WORKER_REPLAYS=2` exercises each load order twice.
 
+## Host objects as arguments and results
+
+The [C# client](../../tests/fixtures/dotnet-host-workers/Installed.cs)
+passes an application object to `IdentityNow` and checks the immediate
+return with `ReferenceEquals`. It then passes each of two different
+objects of equal initial value to `Relay`, returning the *other* object
+from the callback. Awaiting each result must give back that other instance.
+The distinct-result check cannot pass by echoing the input.
+
+The original [ordinary](dotnet-host-object-positions-20261126/ordinary.json)
+and [reviewed](dotnet-host-object-positions-20261126/reviewed.json)
+NuGet releases both ran this client with the independent peer, in both
+load orders. All four runs drained the native count to zero. These cover
+the export argument and result and the callback argument and result.
+The [NuGet record packages](dotnet-host-record-fields-20261126.md) separately
+exercise application objects in fields.
+
 ## File effects through Task and IAsyncEnumerable
 
 Run `npm run test:dotnet-worker-effects` to build and restore a NuGet package

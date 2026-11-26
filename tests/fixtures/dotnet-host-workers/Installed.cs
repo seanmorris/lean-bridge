@@ -54,7 +54,20 @@ internal static class InstalledWorkers
         {
             var x = a.Make(17);
             Check(ReferenceEquals(await a.Echo(x), x) && ReferenceEquals(await b.Echo(x), x));
-            Check(ReferenceEquals(a.IdentityNow(x), b.IdentityBase(x)));
+            Check(ReferenceEquals(a.IdentityNow(x), x) && ReferenceEquals(b.IdentityBase(x), x));
+            var other = new Box(x.Level);
+            Check(!ReferenceEquals(x, other) && ReferenceEquals(a.IdentityNow(other), other));
+            int distinctCalls = 0;
+            foreach (var (input, expected) in new[] { (x, other), (other, x) })
+            {
+                var actual = await a.Relay(input, arg => {
+                    ++distinctCalls;
+                    Check(ReferenceEquals(arg, input) && !ReferenceEquals(arg, expected));
+                    return expected;
+                });
+                Check(ReferenceEquals(actual, expected) && !ReferenceEquals(actual, input));
+            }
+            Check(distinctCalls == 2);
             var result = await a.Outcome(x);
             Check(ReferenceEquals(result.Error, x));
             var eio = await Fails<B.DeclaredError<Box>>(() => b.Reject(x));
