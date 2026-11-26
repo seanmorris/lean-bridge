@@ -34,3 +34,23 @@ package handoffs, point `LEAN_BRIDGE_DOTNET_TARIFF_KEEP` at an existing
 directory. To repeat just the offline install and relocated client, unset
 that variable and point `LEAN_BRIDGE_DOTNET_TARIFF_REPLAY` at the reported
 directory containing `ordinary/` and `reviewed/`.
+
+### A function passed directly into a callback
+
+The [C# application](../../tests/fixtures/structured-types/tariff-incoming.cs)
+also exercises a different signature: Lean passes a function to a synchronous
+callback. Against the compiled ordinary Lean component (`f47f1c5c…`), it
+verified success and failure with and without a retained lease, nested
+failure without expiring the outer borrow, and a new capture on the next
+call. A lease compared equal to its live borrow; comparing or invoking
+the expired borrow threw even while the lease still worked. The caller
+received its original exception object. The independent broker observer
+counted one session, three identities with the test leases held, one
+after each case, and zero after the owning thread exited.
+
+That run used the generated .NET facade and native adapter; it was not
+another NuGet install. To run this signature through the full NuGet test,
+set `LEAN_BRIDGE_DOTNET_TARIFF_REQUIRE_INCOMING=1` and run
+`npm run test:dotnet-function-fields`. The test builds and installs both
+author routes, removes the feed and build tree, and reruns each application
+with a runtime-only .NET host. Older Tariff archives lack this export.

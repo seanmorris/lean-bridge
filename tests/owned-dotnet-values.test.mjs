@@ -10,10 +10,23 @@ import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedDotnetValues } from "../src/backends/dotnet/owned-values.mjs";
+import { generateOwnedDotnetPackage } from "../src/backends/dotnet/owned-package.mjs";
 import { ownedDotnetRuntime } from "../src/backends/dotnet/owned-runtime.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
+import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+
+test("C# callback views compare native identity without adding whole-result owners", () => {
+	const pkg=generateOwnedDotnetPackage(leasedClosureFieldReviewedIr({staged: true,incoming: true}));
+	assert.ok(pkg.c.callbackArgumentViews && pkg.canonicalEquality);
+	assert.equal(pkg.wholeOwners,false);assert.equal(pkg.contract.resultAnchors,undefined);
+	const features=JSON.parse(pkg.files["binding-manifest.json"]).supportedFeatures;
+	assert.ok(features.includes("canonical-resource-equality") && !features.includes("original-owner-results"));
+	assert.match(pkg.files["src/"+pkg.assembly+"/Values.cs"],/bool SameIdentity\(PackQuoteArgument0Closure other\)/u);
+	assert.match(pkg.files["src/"+pkg.assembly+"/Calls.cs"],/equal\(state.Require\(\), a, b, &result\)/u);
+	assert.doesNotMatch(pkg.files["README.md"],/compare wrapper identity/u);
+});
 
 test("owned C# consumer types stay safe, closed and typed across assembly boundaries", {
 	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 300000

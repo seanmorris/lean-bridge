@@ -835,6 +835,15 @@ calling your delegate. Pass a leased Lean function instead when the returned
 record needs a callable that outlives the call. Passing a `Tariff` to the
 same method preserves that lease; the new input wrapper does not own it.
 
+When Lean passes a function directly to your callback, the function is
+borrowed until your callback returns or throws. Call `Retain()` **inside**
+the callback if you need to invoke it later. In the Tariff example,
+`quote.SameIdentity(lease)` compares the underlying Lean function while
+both wrappers are live. Keeping the lease does not extend the borrow:
+after return, invoking or comparing the borrowed wrapper throws, while
+the lease still works until you dispose it. See the
+[C# client](../../tests/fixtures/structured-types/tariff-incoming.cs).
+
 ### Structured callback values
 
 The prepared `Lean.Structured` NuGet package uses typed `Func` delegates for

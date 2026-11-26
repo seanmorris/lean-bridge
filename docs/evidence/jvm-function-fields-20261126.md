@@ -51,3 +51,9 @@ on the original borrow must fail while the retained copy still works. A nested
 failure must expire the inner borrow without invalidating the outer one.
 The earlier function-field archives do not contain this export and cannot
 qualify it.
+
+Both clients ran against the ordinary compiled Lean component (`f47f1c5c…`)
+through the generated Java and Kotlin APIs. In separate JVMs, the broker saw
+one owner at baseline, three while the leases were held, one again after each
+of six scenarios, and zero after thread exit. This is adapter execution with
+real application clients, not an installed Maven release.

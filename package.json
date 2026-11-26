@@ -1541,6 +1541,7 @@
     "test:c-incoming-function": "node --test --test-concurrency=1 tests/helpers/c-incoming-installed.mjs",
     "test:cpp-incoming-function": "LEAN_BRIDGE_CPP_TARIFF_REQUIRE_INCOMING=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-cpp-install.test.mjs",
     "test:callback-frame-facades": "node --test --test-concurrency=1 tests/helpers/callback-frame-facades.mjs",
+    "test:managed-callback-frame-facades": "node --test --test-concurrency=1 tests/helpers/managed-frame-facades.mjs",
     "test:native-incoming-function": "node --test --test-concurrency=1 tests/helpers/native-incoming-installed.mjs",
     "test:rust-lease-shapes": "node --test tests/helpers/rust-lease-shapes.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",
