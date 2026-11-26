@@ -44,12 +44,44 @@ Maven packages in a new replay. These checks do not establish the
 same ownership for an application-created object, a fatal runtime fault, or
 another consumer merely because it uses the same backend.
 
+A [second C++ and Rust replay](native-error-owners-20261126.md) on the pinned
+native packages closed the original while the declared error was still live,
+used its payload in the independent task package, then measured zero identities
+after releasing the payload. The earlier read through a cloned lease alone did
+not establish that the error held the final reference.
+The complementary packages also passed: [ordinary Rust](native-error-complement-20261126/cargo.json)
+and [reviewed C++](native-error-complement-20261126/cpp.json). Taken together,
+these four installed pairs cover both author routes for both clients.
+
 For the C11 row, the [producer and installer](../../tests/helpers/c-resource-error-installed.mjs) independently
 built Desk and Counter, checked both package-set receipts and compiled the same consumer against their
 installed headers using `pkg-config`. Both author routes ran both initialization orders from relocated
 libraries with the source, original archives and compiler search path removed. The success result and
 declared error used distinct output slots. The result is for a Lean-owned ticket with a file descriptor,
 not a test of ownership of an application-created C object. Reproduce with `npm run test:c-resource-error-owner`.
+
+## Which native failures actually retire a runtime?
+
+The trigger matters. A host method returning an invalid object is not the
+same as an application callback returning an error. Two bindings of one
+component are not two independently built packages, either.
+
+| Installed public call | Trigger and observed behavior |
+| --- | --- |
+| [C11 host member](c-host-closures-20261125.md) | The [member](../../tests/fixtures/c-host-closures/consumer.c) reported success without returning the required object. Calls through a sibling binding then failed. Both captures reached their respective destructors once. An ordinary application error code did not retire the binding. |
+| [C++20 host member](cpp-host-closures-20261125.md) | The [member](../../tests/fixtures/cpp-host-closures/consumer.cpp) returned a null shared pointer. Both its closure and a sibling reported `Unavailable`. Weak pointers expired as each binding released its capture. A thrown application exception instead preserved its original identity and the binding remained usable. |
+| [Rust host member](rust-host-closures-20261125.md) | A real [member panic](../../tests/fixtures/rust-host-closures/consumer.rs) produced `CallbackPanic`; a sibling call then returned `Unavailable`. Closing the owners ran both destructors once. A returned application error preserved its original `Rc` without retirement. The [staged callback API](rust-staged-callback-results-20261126.md) has a different contract: it resumes the original unwind after cleaning up. |
+| [Native PHP callback task](php-retained-tasks-20261123.json) | With one PHP callback suspended, another [threw a PHP `Error`](../../tests/fixtures/php-retained-tasks/installed.php). The caller caught the identical object, the waiting task failed, and a fresh call failed too. After the late resume, live owners and descriptor delta both returned to zero. This was not a direct retirement request through FFI. |
+| [MRI callback task](ruby-retained-tasks-20261122.json) | The [Ruby client](../../tests/fixtures/ruby-retained-tasks/consumer.rb) raised an `Exception` outside `StandardError`, directly or during error formatting. Repeated awaits preserved the fatal object; the next call reported unavailability. Recoverable application exceptions have separate checks. |
+
+For [CPython](python-recursive-packages-20260923.md#installed-checks) and
+[Perl](perl-recursive-packages-20260923.md#cleanup-and-shared-runtime),
+recursive-value package tests separately inject malformed **native output**:
+later calls reject and previously copied application values remain usable.
+The Perl probe compiles instrumented XS from the exact archive and uses the
+installed runtime; it does not modify the installed library. These results
+do not show that a user exception in a Python or Perl callback poisons its
+runtime, or that an application can recover from an arbitrary process crash.
 
 ## What still requires a decision or a test?
 

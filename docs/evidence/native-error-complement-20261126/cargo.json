@@ -1,0 +1,57 @@
+{
+  "consumerSha256": "b7680da025d2fe0cff882f60a97cf7fedf006a22cd5ed0320c2b4dbdc1c9c05f",
+  "nominal": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+  "owner": {
+    "consumerSha256": "d9f109c01c27c61b885f623dcae2103225b02db044690763a1531010aba8946c",
+    "observed": "typed synchronous failure owned the badge through the peer task; zero identities after payload release"
+  },
+  "route": "ordinary",
+  "runtimeFeatures": [
+    "async",
+    "default"
+  ],
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sync": {
+    "archives": [
+      {
+        "bytes": 51322379,
+        "path": "archives/lean-bridge-task-runtime-1.0.0-r572a3a9ef7c1da11a328cb5676f0a3bc22c9b188e5eab0cda17337ef5dc9a4e1.crate",
+        "sha256": "fc7a1f2702aac6ce00f6fe90ec11bcaf3bb123bbd455bb653321e82bb7ce8cda"
+      },
+      {
+        "bytes": 24647,
+        "path": "archives/lease-sync-1.0.0.crate",
+        "sha256": "d770dd990f12d79ce8a26061d6478ab07ad586ac5c6bd8e5f8f1ebd495faae20"
+      }
+    ],
+    "bindingIrSha256": "0dde9c75f9f50d9d7d22bb9b4df2d1c6e001a1706a4466658794bcef186d5c42",
+    "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "extractorSha256": "ece3b1c6fe337b5f80cfb2757cefc9b762204c761cff91728d0c69cb0d69408d",
+    "profile": "native-rust-io-v1",
+    "receiptSha256": "cebf33697d6a30bb23ed2d70982eafb9103c1965493baef057352092efab652d",
+    "reviewedSourceSha256": null,
+    "sourceTreeSha256": "09f1d8c92d642e8a29cc67d2500f2fc80c1681c9a4418ba87f85d93f19fda6a4"
+  },
+  "target": "cargo",
+  "task": {
+    "archives": [
+      {
+        "bytes": 51322379,
+        "path": "archives/lean-bridge-task-runtime-1.0.0-r572a3a9ef7c1da11a328cb5676f0a3bc22c9b188e5eab0cda17337ef5dc9a4e1.crate",
+        "sha256": "fc7a1f2702aac6ce00f6fe90ec11bcaf3bb123bbd455bb653321e82bb7ce8cda"
+      },
+      {
+        "bytes": 26246,
+        "path": "archives/lease-task-1.0.0.crate",
+        "sha256": "aadddc299bf327ae0efcac55e16d7471e57db18daa3e88b5d8937d9fcd78e516"
+      }
+    ],
+    "bindingIrSha256": "b2227b4b0a97a9b1132028f48a366a211911955736d5cbacf7e89887157a5843",
+    "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "extractorSha256": "ece3b1c6fe337b5f80cfb2757cefc9b762204c761cff91728d0c69cb0d69408d",
+    "profile": "native-rust-task-v1",
+    "receiptSha256": "cb1c1b9101b7697f9bb217fe1659a99e617aa5731939020e0c9817eebb89bc11",
+    "reviewedSourceSha256": null,
+    "sourceTreeSha256": "0ac049269e4ba758503319d07e0e2d3c5f2e21f57037354624ec87abb159b102"
+  }
+}
