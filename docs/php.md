@@ -1533,6 +1533,30 @@ Call the function while its binding is open. Closing it during one of its own
 calls lets that call finish and rejects later calls. Closing the binding also
 releases its functions. See the [installed Zend checks](evidence/zend-host-closures-20261125.md).
 
+For a standalone package that exports a Lean structure holding PHP objects,
+construct its generated record in PHP. In the example below, `$left` and
+`$right` are instances of the `AppBox` class bound above:
+
+```php
+$pair = new LeanWorkshop\Pair($left, LeanWorkshop\Bytes::fromString('ab'),
+    BigInteger::of(7), $right);
+try {
+    $flipped = $api->flip($pair);
+    try {
+        var_dump($flipped->lead === $right); // true
+    } finally {
+        $flipped->close();
+    }
+} finally {
+    $pair->close();
+}
+```
+
+The call borrows the input. The returned record owns references to the
+original PHP objects, not copies of them. A field read before closing the
+record remains an ordinary PHP reference; another package in the same
+interpreter can use it. Reading a field after closing the record fails.
+
 #### Share a Lean object between PHP-Wasm packages
 
 When two packages use the same Lean heap and the same resource type, you can pass the PHP object directly between them. In this example, both packages import `Shared.Ticket`. A second handle sees the same mutation, even after the original handle closes.

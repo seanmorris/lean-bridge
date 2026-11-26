@@ -3,6 +3,7 @@ import {readFile} from "node:fs/promises";
 import {javaScriptTaskAbi} from "../../abi/javascript-wasm-tasks.mjs";
 import {javaScriptHostIOAbi} from "../../abi/component-host-io.mjs";
 import {phpWasmHostMembers} from "./host-members.mjs";
+import {phpHostRecords} from "./host-records.mjs";
 import {bundledBrickMath} from "./brick-math.mjs";
 import {validateOrdinaryPhpSettings} from "./copied-model.mjs";
 import {phpClassName,phpFieldName,reservedPhpNames} from "./copied-names.mjs";
@@ -28,7 +29,8 @@ const syncSurface=(api,imports,model,identity)=>{
 			, error: m.effect==="IO"?"string":shape(m.error),startId: m.errorId
 			, hostPhases: {call},delivery: null,terminal: null,terminalId: null};
 	});
-	return {methods,hostKinds};
+	const records=checked.records?.map(r=>({...r,fields: r.fields.map(f=>({...f,type: shape(f.type)}))}));
+	return {methods,hostKinds,...records?{records}:{}};
 };
 /**
  * Derive all method and failure shapes from the same authenticated IR as the worker.
@@ -66,6 +68,19 @@ export const generatePhpWasmTaskFiles=async(api,componentIdentity,composer,worke
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || reservedPhpNames.has(name.toLowerCase()) || classes.has(name.toLowerCase())) fail("Invalid or colliding resource class: "+name);
 		classes.add(name.toLowerCase());
 	}
+	const rows=new Map((abi.records??[]).map(r=>[r.type,r]));
+	if(rows.size)
+	{
+		if(!immediate || !zend) fail("records require the standalone Zend owner");
+		const site=t=>t.kind==="named"?imports.types.findIndex(n=>n.id===t.id):t.name;
+		const generated=phpHostRecords(api,site,t=>typeof t==="number"?"object":phpType(t),classes,fail);
+		for(const [type,row] of rows)
+		{
+			const record=generated.get(type.slice("record:lean:".length));
+			if(!record || record.fields.length!==row.fields.length || record.fields.some((f,i)=>f.name!==row.fields[i].name)) fail("inconsistent Zend record fields");
+			publicTypes.set(type,record.name);defs.push(record.php);
+		}
+	}
 	const branches=abi.methods.some(m=>[m.result,m.error,m.terminal].some(Array.isArray))?["Ok","Err"]:[];
 	const funcs=abi.methods.map((m,i)=>{
 		const name=phpClassName(m.name);
@@ -89,9 +104,11 @@ export const generatePhpWasmTaskFiles=async(api,componentIdentity,composer,worke
 		const callbackSpec="["+(m.callbacks??[]).map(([i,input,output])=>"["+i+","+q(input)+","+q(output)+"]").join(",")+"]";
 		if(zend && name.startsWith("__")) fail("Reserved PHP binding method: "+name);
 		const submit=zend?"$this->entry("+i+")":q(key+"_"+i);
+		const flatArgs=args.flatMap((arg,j)=>rows.get(m.args[j])?.fields.map(f=>arg+"->"+f.name)??[arg]);
+		const flatKinds=m.args.flatMap(t=>rows.get(t)?.fields.map(f=>f.type)??[t]);
 		const parameters=[submit
-			, "["+args.join(",")+"]"
-			, "["+m.args.map(q).join(",")+"]"
+			, "["+flatArgs.join(",")+"]"
+			, "["+flatKinds.map(q).join(",")+"]"
 			, m.delivery?q(m.delivery):"null"
 			, cls?cls+"::class":"null"
 			, q(m.declaration),shape(m.result),start,terminal,callbackSpec];
@@ -110,6 +127,16 @@ export const generatePhpWasmTaskFiles=async(api,componentIdentity,composer,worke
 		, "src/Internal.php": "<?php\ndeclare(strict_types=1);\nnamespace "+ns+"\\Internal;\nrequire_once __DIR__.'/Wire.php';\nrequire_once __DIR__.'/Port.php';\n"+phpConversionBudget+"\n"+phpScalarCodec+"\n"+phpValueSemantics({namespace: ns,branches,surface: {copies: []}})+"\n",
 		...bundledBrickMath()};
 	for(const [path,file] of [...immediate?[]:[["src/Delivery.php","php-wasm-task-delivery.php"]],["src/Port.php","php-wasm-task-port.php"],["src/Wire.php","php-wasm-io-codec.php"],["src/Pump.php","php-wasm-task-pump.php"]]) php[path]=(await read(file)).replaceAll("__LB_PUBLIC__",ns);
+	if(rows.size)
+	{
+		const table=[...rows].map(([type,row])=>q(type)+"=>["+q(ns+"\\"+publicTypes.get(type))+",["+row.fields.map(f=>q(f.type)).join(",")+"]]");
+		php["src/RecordResult.php"]=(await read("php-wasm-zend-record-port.php")).replaceAll("__LB_PUBLIC__",ns)
+			.replace("/*__LB_RECORDS__*/[]","["+table.join(",")+"]");
+		const hook="        if ($objects!==null && is_array($expected)) {";
+		if(php["src/Port.php"].split(hook).length!==2) fail("missing scoped result decoder");
+		php["src/Port.php"]=php["src/Port.php"].replace(hook,"        if ($objects!==null && is_string($expected) && RecordResult::has($expected)) return RecordResult::read($expected,$packet,$objects);\n"+hook);
+		php["src/Api.php"]+="require_once __DIR__.'/RecordResult.php';\n";
+	}
 	if(leases.length)
 	{
 		const canonical=r=>"LeanBridge\\WasmHeapV1\\H"+r.hash;
@@ -137,11 +164,11 @@ export const generatePhpWasmTaskFiles=async(api,componentIdentity,composer,worke
 	const loader=immediate?"loadComponent":"loadTaskComponent";
 	const exportHost="import {"+descriptor+"} from './bridge/backends/php/"+bridge+".mjs';\nimport {"+loader+"} from '@lean-bridge/runtime';\n"
 		+(zend?"import {runtime as bindings} from './internal/runtime.mjs';\n":"import bindings from './component.mjs';\n")
-		+"const owner="+descriptor+"("+JSON.stringify({namespace: ns,key,methods: abi.methods,leases,...zend?{model}:{}})+",bindings,["+urls.join(",")+"],"+loader+");\n"
+		+"const owner="+descriptor+"("+JSON.stringify({namespace: ns,key,methods: abi.methods,leases,...zend?{model}:{},...rows.size?{records: abi.records}:{}})+",bindings,["+urls.join(",")+"],"+loader+");\n"
 		+"export const autoload="+JSON.stringify(root+"bootstrap.php")+";\nconst extensions=Object.freeze({getLibs:()=>[],getFiles:php=>{owner.getFiles(php);return [];}});\nexport default Object.freeze({...owner,extensions,autoload});\n";
 	for(const [p,v] of Object.entries(php)) files["php/"+p]=v;
 	for(const path of ["abi/component-scalars.mjs","backends/php/php-wasm-task-owner.mjs","backends/php/php-wasm-task-mailbox.mjs","backends/php/php-wasm-task-wire.mjs","backends/php/php-wasm-task-leases.mjs"]) files["bridge/"+path]=await read("../../"+path);
-	if(zend) for(const name of ["php-wasm-zend-descriptor","php-wasm-member-owner","php-wasm-task-objects"])
+	if(zend) for(const name of ["php-wasm-zend-descriptor","php-wasm-member-owner","php-wasm-task-objects","php-wasm-zend-records"])
 		files["bridge/backends/php/"+name+".mjs"]=await read(name+".mjs");
 	files["index.mjs"]=exportHost;return {files,php,namespace: ns,autoload: root+"bootstrap.php"};
 };

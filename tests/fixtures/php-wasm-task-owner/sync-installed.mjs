@@ -23,6 +23,6 @@ if(mode==="composer")await mount("vendor");
 await php.writeFile("/test.php",await readFile("installed.php"));
 const bootstrap=mode==="composer"?["/vendor/autoload.php"]:descriptors.map(d=>d.autoload);
 const code=await php.run("<?php "+[...bootstrap,"/test.php"].map(p=>"require '"+p+"';").join(" "));
-assert.equal(code,0,err||out);assert.equal(err,"");assert.equal(out,"Standalone Zend: synchronous identity, failures, reentry and cleanup passed");
+assert.equal(code,0,err||out);assert.equal(err,"");assert.equal(out,"Standalone Zend: synchronous identity, failures, reentry and cleanup passed"+(process.env.CHECK_ZEND_RECORDS==="1"?"; Zend record and EIO ownership passed":""));
 if(mode==="embedded") await exerciseRealms(descriptors[0],false);
 console.log(mode+": "+out);

@@ -58,6 +58,13 @@ test("native PHP records require the native owner and cannot enter Zend or sched
 		assert.throws(() => hostRecordTypes([site(record)], {...php, ...change}, [box]), /not a synchronous host-bound export/u);
 });
 
+test("only standalone Zend with no OS grant can share the object-field lowering", () => {
+	const owner = {...selection, hostModule: "LeanBridge.Host.Php", phpWasmSyncObjects: true};
+	assert.equal(hostRecordTypes([site(record)], owner, [box])[0].fields[0].type.id, box.id);
+	for(const change of [{phpNativeFunctions: true}, {phpWasmTaskObjects: true}, {phpNativeTaskObjects: true}, {nativeEffects: ["fs-read"]}])
+		assert.throws(() => hostRecordTypes([site(record)], {...owner, ...change}, [box]), /not a synchronous host-bound export/u);
+});
+
 test("Perl host records reserve error classes and public methods before generating XS", () => {
 	const row = (name, keys) => {
 		const declaration = "Workshop." + name;

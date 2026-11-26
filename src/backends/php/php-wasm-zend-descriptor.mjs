@@ -2,6 +2,7 @@
 import {createPhpCallbackHub} from "./php-wasm-task-mailbox.mjs";
 import {phpWasmObjectDomain} from "./php-wasm-task-objects.mjs";
 import {phpWasmMemberOwner} from "./php-wasm-member-owner.mjs";
+import {phpZendRecords} from "./php-wasm-zend-records.mjs";
 import {phpTaskFunctions,phpTaskLeases} from "./php-wasm-task-leases.mjs";
 import {phpZendTaskOperation,translateZendWorkerFailure} from "./php-wasm-task-owner.mjs";
 
@@ -155,6 +156,7 @@ export const createPhpZendSyncDescriptor=(def,compiled,files,ownerRuntime)=>{
 			const binding=compiled.withZendOwner(classes,translateZendWorkerFailure,members.send);
 			try
 			{
+				const records=def.records && phpZendRecords(def.records,compiled,objects);
 				let depth=0,closed=false;
 				const op=(m,fn)=>phpZendTaskOperation(m,(...args)=>{
 					++depth;
@@ -163,11 +165,14 @@ export const createPhpZendSyncDescriptor=(def,compiled,files,ownerRuntime)=>{
 					{--depth;}
 				},null,objects,members,leases);
 				const functions=phpTaskFunctions(def.methods,(m,fn)=>op({...m,args: [m.returnedFunction.argument],result: m.returnedFunction.reply},fn));
-				const leases={has: t=>functions.has(t) || objects.has(t)
+				const leases={has: t=>functions.has(t) || objects.has(t) || records?.has(t)
 					, borrow: objects.borrow
-					, packet: (p,t,v)=>functions.has(t)?functions.packet(p,t,v):objects.packet(p,t,v)
+					, packet: (p,t,v)=>records?.has(t)?records.packet(p,t,v):functions.has(t)?functions.packet(p,t,v):objects.packet(p,t,v)
 					, tagged: objects.tagged};
-				const methods=def.methods.map(m=>op(m,binding[m.name]));
+				const methods=def.methods.map(m=>{
+					const {method,invoke}=records?records.flatten(m,binding[m.name]):{method: m,invoke: binding[m.name]};
+					return op(method,invoke);
+				});
 				const close=()=>{
 					if(depth) throw new Error("Cannot close an active Zend binding");
 					if(closed)return;closed=true;

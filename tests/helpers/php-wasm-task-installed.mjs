@@ -20,8 +20,9 @@ import {exercisePhpTaskBrowser} from "./php-wasm-task-browser.mjs";
  * @param zend - Exercise the generated application class bindings.
  * @param functions - Also require authenticated, object-capturing returned functions.
  * @param [immediate] - Test a standalone component, without importing the worker runtime.
+ * @param [records] - Require the installed Zend record and EIO last-owner program in both PHP environments.
  */
-export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false,functions=false,immediate=false)=>{
+export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false,functions=false,immediate=false,records=false)=>{
 	const host=process.env.LEAN_BRIDGE_PHP_WASM_HOST;assert.ok(host);
 	const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(release,"package-set-receipt.json")});
 	await assertJsonSchema("package-set-receipt",receipt);
@@ -53,6 +54,12 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	await run("composer",["--no-plugins","--no-scripts","--no-interaction","--no-cache","install","--prefer-dist"],app,{...env,COMPOSER_DISABLE_NETWORK: "1",COMPOSER_ALLOW_SUPERUSER: "1",COMPOSER_HOME: join(root,"composer-home")});
 	await symlink(resolve(host),join(app,"node_modules/php-wasm"),"dir");
 	await cp(resolve("tests/fixtures/php-wasm-task-owner",immediate?"zend-sync.php":zend?"zend-installed.php":leases?"leases.php":peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
+	if(records)
+	{
+		assert.ok(immediate && zend && functions && peer);
+		const sample=await readFile("tests/fixtures/php-wasm-task-owner/zend-records.php","utf8");
+		assert.ok(sample.startsWith("<?php\n"));await appendFile(join(app,"installed.php"),"\n"+sample.slice(6));
+	}
 	if(functions && !immediate)
 	{
 		assert.ok(zend && peer);
@@ -65,13 +72,15 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	if(zend && !immediate) for(const [file,dest] of [["zend-trap.php","trap.php"],["trap.mjs","trap.mjs"]])
 		await cp(resolve("tests/fixtures/php-wasm-task-owner",file),join(app,dest));
 	await rename(app,moved);await rm(feed,{recursive: true});
+	const executions={};
 	for(const mode of ["embedded","composer"])
 	{
-		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools",CHECK_RETURNED_FUNCTIONS: functions?"1":"0"});
+		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools",CHECK_RETURNED_FUNCTIONS: functions?"1":"0",CHECK_ZEND_RECORDS: records?"1":"0"});
 		assert.equal(result.stderr,"");assert.match(result.stdout,immediate?/synchronous identity, failures, reentry and cleanup passed/u:/zero live owners/u);t.diagnostic(result.stdout.trim());
+		executions[mode]=result.stdout.trim();
 	}
-	t.diagnostic(await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend,immediate}));
-	if(immediate)return;
+	executions.chromium=await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend,immediate,records});t.diagnostic(executions.chromium);
+	if(immediate)return executions;
 	if(peer && !leases)
 	{
 		const result=await run(process.execPath,["trap.mjs",...components],moved,{PATH: "/no-producer-tools"});

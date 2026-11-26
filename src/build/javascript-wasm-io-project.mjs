@@ -81,7 +81,7 @@ export const buildJavaScriptIOProject = async options => {
 			, backend: compiler.backend
 			, component
 			, configurationSha256: record.sha256
-			, bindingIrSha256: phpWasm ? hashBindingIr(compilation.api) : compilation.abi.bindingIrSha256
+			, bindingIrSha256: phpWasm && threaded ? hashBindingIr(compilation.api) : compilation.abi.bindingIrSha256
 			, componentIdentity: compilation.abi.componentIdentity
 			, runtimeIdentity: receipt.profiles[0].runtimeIdentity
 			, source: receipt.source

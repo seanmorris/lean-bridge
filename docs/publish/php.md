@@ -245,6 +245,15 @@ runtime, and Composer API. This route needs the ordinary Wasm author toolchain,
 not the pthread SDK. Applications can use the package on pages without
 cross-origin isolation. See the [installed standalone example](../evidence/zend-host-closures-20261125.md#standalone-php-wasm).
 
+To export a record of application objects on this route, put the imported PHP
+class directly in a Lean structure alongside its scalar fields. Select the
+immediate `IO` functions that take or return the structure. The authoring
+tool checks its constructor and field order against the actual Lean
+declaration on both source routes; swapping two fields of the same class
+changes the interface. PHP callers use [generated classes and field
+accessors](../php.md#let-lean-call-methods-on-your-php-objects). This does
+not enable records in pthread task or stream signatures.
+
 ### Share a resource between worker packages
 
 For a task that passes a Lean object between packages, list its qualified Lean type in `resources` in each package’s `lean-bridge.exports.json`. Compile both against the same pinned compiler and the same source for the declaring module and its imports. The packages can have different entry points: the compiled identity of the resource, not its PHP alias, determines whether they can exchange it. The generated Composer API supplies the class and lifecycle methods. See [the cross-package consumer example](../php.md#share-a-lean-object-between-php-wasm-packages).

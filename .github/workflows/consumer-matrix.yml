@@ -317,7 +317,8 @@ jobs:
           set -euo pipefail
           source scripts/env.sh
           source scripts/lean-runtime-config.sh
-          export LEAN_BRIDGE_LEAN_PREFIX="$(lean --print-prefix)"
+          LEAN_BRIDGE_LEAN_PREFIX="$(lean --print-prefix)"
+          export LEAN_BRIDGE_LEAN_PREFIX
           export LEAN_BRIDGE_JS_EMSDK="$LEAN_WASM_EMSDK"
           export LEAN_BRIDGE_JS_TARGET_RUNTIME="$PWD/build/lean-runtime/$LEAN_WASM_RUNTIME_BUILD_ID"
           export LEAN_BRIDGE_RUNTIME_ROOT="$PWD/build/lean-link-spike/lazy"

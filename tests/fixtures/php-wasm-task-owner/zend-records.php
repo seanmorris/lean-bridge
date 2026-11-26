@@ -1,0 +1,56 @@
+<?php
+// Runs after zend-sync.php defines the application's Box, check and problem.
+$primary=LeanWorkshop\withHosts(['Box'=>Box::class]);
+$peer=LeanSidekick\withHosts(['Box'=>Box::class]);
+$left=new Box(\Brick\Math\BigInteger::of(23));
+$right=new Box(\Brick\Math\BigInteger::of(19));
+$lw=WeakReference::create($left);$rw=WeakReference::create($right);
+$large=\Brick\Math\BigInteger::of('1361129467683753853853498429727072845829');
+$bytes=LeanWorkshop\Bytes::fromString("\x09\x08");
+$input=new LeanWorkshop\Pair($left,$bytes,$large,$right);
+$built=$primary->create_pair($left);
+check($built->lead===$left && $built->sequence->isZero(),'compiled Lean constructor lost the Zend object');
+check($primary->sum_read($built,$input)->isEqualTo(42),'wrong fields passed into compiled Lean');
+$calls=0;$first=new Box($large,function() use (&$calls) {++$calls;return \Brick\Math\BigInteger::one();});
+$probe=new LeanWorkshop\Pair($first,$bytes,$large,$right);
+$bad=new LeanWorkshop\Pair($first,$bytes,$large,new stdClass());
+problem(TypeError::class,fn()=>$primary->sum_read($probe,$bad));
+check($calls===0,'invalid second record entered the first host method');
+$bad->close();$probe->close();unset($first,$probe,$bad);
+$closing=null;
+$reentrant=new Box($large,function() use (&$closing) {$closing->close();return \Brick\Math\BigInteger::of(23);});
+$closing=new LeanWorkshop\Pair($reentrant,$bytes,$large,$right);
+check($primary->sum_read($closing,$closing)->isEqualTo(42),'mid-call disposal lost the remaining PHP fields');
+problem(LogicException::class,fn()=>$closing->lead);unset($closing,$reentrant);
+$thrown=new UnexpectedValueException('PHP application member failed');
+$bad=new LeanWorkshop\Pair(new Box($large,fn()=>throw $thrown),$bytes,$large,$right);
+check(problem(UnexpectedValueException::class,fn()=>$primary->flip($bad))===$thrown,'record member replaced its original PHP exception');
+$bad->close();unset($bad,$thrown);
+$result=$primary->flip($input);$fn=$primary->choose($input);
+$input->close();$built->close();unset($input,$built);
+check($fn(true)===$left && $fn(false)===$right,'captured input did not survive record disposal');
+check($result->lead===$right && $result->spare===$left,'returned record copied application objects');
+check($result->sequence->isEqualTo($large->plus(1)) && $result->sample->toString()==="\x09\x08\x17",'compiled record scalar projections differ');
+$temp=new Box($large);$weak=WeakReference::create($temp);
+problem(LeanWorkshop\LeanBridgeError::class,fn()=>$primary->duplicate_sample($temp,LeanWorkshop\Bytes::fromString(str_repeat('x',6*1024*1024))));
+unset($temp);gc_collect_cycles();check($weak->get()===null && $fn(true)===$left,'failed partial result retained or retired its owner');
+$fn->close();$primary->close();unset($left,$right);
+check($lw->get()!==null && $rw->get()!==null,'binding outlived or revoked an independently owned record');
+$kept=$result->spare;$result->close();$result->close();gc_collect_cycles();
+check($rw->get()===null && $kept===$lw->get(),'disposing the result released the wrong field');
+$peer->set_level($kept,\Brick\Math\BigInteger::of(24));
+check($kept->level->isEqualTo(24),'peer mutated a copy');
+unset($kept);$peer->close();gc_collect_cycles();check($lw->get()===null,'getter result leaked after its final owner disappeared');
+
+// Exclude PHP's optional exception backtrace arguments from the ownership test.
+ini_set('zend.exception_ignore_args','1');
+$primary=LeanWorkshop\withHosts(['Box'=>Box::class]);$peer=LeanSidekick\withHosts(['Box'=>Box::class]);
+$origin=new Box(\Brick\Math\BigInteger::of(31));$watch=WeakReference::create($origin);
+$error=problem(LeanWorkshop\CheckedError::class,fn()=>$primary->checked($origin));
+check($error->payload===$origin,'declared EIO failure did not carry the application object');
+$primary->close();unset($origin);gc_collect_cycles();
+check($watch->get()!==null,'declared payload did not own its object');
+$peer->set_level($error->payload,\Brick\Math\BigInteger::of(42));$peer->close();
+check($watch->get()->level->isEqualTo(42),'peer could not use the last EIO owner');
+unset($error);gc_collect_cycles();check($watch->get()===null,'dropping the error did not release its last object');
+echo '; Zend record and EIO ownership passed';

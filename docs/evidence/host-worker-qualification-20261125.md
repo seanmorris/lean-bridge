@@ -125,10 +125,11 @@ the independent peer in Node JavaScript, executed strict TypeScript, a
 Chromium page, mounted React and a dedicated browser worker.
 The [installed Perl clients](perl-host-record-fields-20261126.md) pass a meter
 from the returned record to an independent CPAN package and observe its final release.
-That is **15 of 17 profiles** with an installed caller-constructed
-application-object record on both routes. The two still to verify for this
-case are WIT/WASI and PHP-Wasm. The surrounding JavaScript is not an
-installed Zend interpreter test. This count is not a percentage of #1221.
+The [Zend client](php-wasm-host-record-fields-20261126.md) held two real PHP
+objects in a compiled record and used a getter result in a second package,
+under both Node and Chromium. That is **16 of 17 profiles** with an installed
+caller-constructed application-object record on both routes. WIT/WASI is
+the remaining profile for this case. This count is not a percentage of #1221.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

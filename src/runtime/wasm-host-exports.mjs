@@ -182,6 +182,10 @@ export const bindJavaScriptHostExports = o => {
 		for(const [i,m] of abi.methods.entries()) api[m.name]=(...args)=>invoke(m,i,args);
 		api.dispose=()=>{assertOpen();return s.close();};return Object.freeze(api);
 	};
+	const constructors=records?{recordClass: type=>{
+		if(!records.has(type)) throw new TypeError("Unknown host record");
+		return records.get(type).ctor;
+	}}:{};
 	if(model.zend)
 	{
 		const kinds=new Map(model.kinds.map(k=>["host:"+k.key,k.key]));
@@ -189,10 +193,8 @@ export const bindJavaScriptHostExports = o => {
 			if(typeof bridge!=="function" || typeof translate!=="function") throw new TypeError("Missing Zend member or failure owner");
 			return bind(classes,(id,payload)=>translate(declared(id,payload)),bridge);
 		}
+		, ...constructors
 		, zendRetains: (type,mirror)=>kinds.has(type) && !domain.abandoned() && domain.retains(kinds.get(type),mirror)});
 	}
-	return Object.freeze({withHosts: bind,...records?{recordClass: type=>{
-		if(!records.has(type)) throw new TypeError("Unknown host record");
-		return records.get(type).ctor;
-	}}:{}});
+	return Object.freeze({withHosts: bind,...constructors});
 };

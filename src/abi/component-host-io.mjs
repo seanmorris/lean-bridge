@@ -31,7 +31,6 @@ const checkSite = (s,t) => {
  */
 export const javaScriptHostIOAbi = (api,hosts,identity,zend=false) => {
 	const compound=api.schemaVersion===4;
-	if(compound && zend) fail();
 	const bindingIrSha256=compound?sha256Text(canonicalizeJsonValue(validateOwnedAggregateBindingIr(api))):hashBindingIr(api);
 	const hostIrSha256=hashBindingIr(hosts),nominals=api.types.filter(t=>t.host);
 	const target=zend?"php":"javascript",module=zend?"LeanBridge.Host.Php":"LeanBridge.Host.Javascript";

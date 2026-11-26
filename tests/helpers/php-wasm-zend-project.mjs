@@ -11,8 +11,9 @@ import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
  * @param component - Distinct Lake and package identity for an installed peer.
  * @param functions - Include ordinary Lean factories in the installed worker fixture.
  * @param [immediate] - Publish only immediate operations without any Lean tasks or streams.
+ * @param [records] - Include the actual Lean structures used by the standalone record client.
  */
-export const prepareZendAuthorProject=async(root,component="workshop",functions=false,immediate=false)=>{
+export const prepareZendAuthorProject=async(root,component="workshop",functions=false,immediate=false,records=false)=>{
 	const project=join(root,"source"),configPath=join(project,"lean-bridge.exports.json"),main=join(project,"Workshop.lean");
 	await prepareNativeHostFixture(project,"php");
 	const fixture=resolve("tests/fixtures/php-host-tasks"),source="prelude\n"+await readFile(join(fixture,"Workshop.lean"),"utf8");
@@ -49,6 +50,15 @@ export const prepareZendAuthorProject=async(root,component="workshop",functions=
 			+"def checked (b : Box) : EIO Box UInt32 := throw b\nend Workshop\n";
 	}
 	await writeFile(join(project,"ZendMembers.lean"),declarations);
+	if(records)
+	{
+		if(!immediate || component!=="workshop") throw new Error("Record fixture requires the standalone Workshop");
+		const gauge=await readFile("tests/fixtures/dotnet-host-record/Workshop.lean","utf8");
+		await writeFile(join(project,"Gauge.lean"),"prelude\n"+gauge.replaceAll("LeanBridge.Host.Dotnet","LeanBridge.Host.Php"));
+		await writeFile(lake,(await readFile(lake,"utf8"))+'\n[[lean_lib]]\nname = "Gauge"\n');
+		cfg.modules.push("Gauge");
+		cfg.exports.push(...["createPair","flip","sumRead","choose","duplicateSample"].map(n=>"Gauge."+n));
+	}
 	cfg.targets={"php-wasm": {npm: {name: "@example/php-"+component,version: "1.0.0"},composer: {name: "example/php-"+component,version: "1.0.0"}}};
 	await writeFile(main,immediate?"import ZendMembers\n":source);await writeFile(configPath,canonicalJson(cfg));
 	return {project,configPath,main,source,cfg};

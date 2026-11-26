@@ -1,0 +1,54 @@
+{
+  "baseClientSha256": "f50231f1a6b6b7cae15194cb03b1a3fba930d36a585d8fdaa413acf1d5b3a440",
+  "clientSha256": "8f2566e65953015af7fd0d02d30c7c651f45b90265b0276ea8f607bcd4968b1c",
+  "executions": {
+    "chromium": "Chromium (no cross-origin isolation): Standalone Zend: synchronous identity, failures, reentry and cleanup passed; Zend record and EIO ownership passed",
+    "composer": "composer: Standalone Zend: synchronous identity, failures, reentry and cleanup passed; Zend record and EIO ownership passed",
+    "embedded": "embedded: Standalone Zend: synchronous identity, failures, reentry and cleanup passed; Zend record and EIO ownership passed"
+  },
+  "packages": [
+    {
+      "packages": [
+        {
+          "name": "example/php-sidekick",
+          "role": "api",
+          "sha256": "ca36eec8adc088da5704d9398c658f46a687dbe2ca8a46d7e1c104cd900f7db5"
+        },
+        {
+          "name": "@example/php-sidekick",
+          "role": "component",
+          "sha256": "55fdca0956d79fbd0fdced823c6d719be9ba5897d2b97be8ffc0ea9c0f2b7830"
+        },
+        {
+          "name": "@lean-bridge/runtime",
+          "role": "runtime",
+          "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+        }
+      ],
+      "receipt": "fd31bdff2232ece23a5907dfa5e1c459656c4a7edd84797e442c2f22b51f99ab",
+      "route": "peer"
+    },
+    {
+      "packages": [
+        {
+          "name": "example/php-workshop",
+          "role": "api",
+          "sha256": "f1d471a3cf75465380bb7a2081d246ab680537248ed1002d7ed0704b1f849a57"
+        },
+        {
+          "name": "@example/php-workshop",
+          "role": "component",
+          "sha256": "abf4e6bb94b59adc1145dd4b01fcaf66d42909e2915aadbf3c53889bfe0a5cb6"
+        },
+        {
+          "name": "@lean-bridge/runtime",
+          "role": "runtime",
+          "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+        }
+      ],
+      "receipt": "815efb1ad16252f683d7a6d4a3fe5b370364eb272408a442da2c5bd35b842811",
+      "route": "ordinary"
+    }
+  ],
+  "route": "ordinary"
+}

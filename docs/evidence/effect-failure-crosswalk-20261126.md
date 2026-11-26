@@ -78,6 +78,22 @@ test](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-read
 observed the defining guest's error destructor run once after a callback and
 a future. Neither test places an application object in a record field.
 
+Perl has an independent last-owner check. The [installed CPAN client](../../tests/fixtures/perl-host-meter/installed-pair.pl)
+gets the original meter back from `rejectObject : Box → EIO (Except String (Except Box String)) Unit`.
+The error outlives the inner binding and its local meter and successful result.
+The weak reference is still live then, and clears immediately on `undef $error`,
+while the outer binding is still open. The [original CPAN installs](perl-host-imports-20261124.md#cpan-host-packages)
+ran Workshop and Peer in both orders on four Perl ABIs: prebuilt component
+XS on ordinary source and locally built XS on reviewed source. They mutated
+the meter across packages **before** the error; unlike the WIT case, this
+client does not call the peer through the error after dropping the original.
+
+The [standalone PHP-Wasm client](php-wasm-host-record-fields-20261126.md)
+closed Workshop and unset its original box after catching the declared error.
+Sidekick then mutated the error payload to 42. A PHP weak reference cleared
+when the exception was dropped. Both source routes ran with embedded and
+Composer autoloaders in Node and in a real Chromium interpreter.
+
 ## Which native failures actually retire a runtime?
 
 The trigger matters. A host method returning an invalid object is not the

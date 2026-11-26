@@ -49,8 +49,11 @@ export const hostRecordTypes = (rows, selection, imports) => {
 		const supported = ["Python", "Ruby", "Dotnet", "Jvm", "C", "Cpp", "Rust"].some(owner => selection.hostModule === "LeanBridge.Host." + owner)
 			|| selection.hostModule === "LeanBridge.Host.Javascript" && selection.javascriptThreadedHostMembers === undefined && !selection.nativeEffects?.length
 			|| selection.hostModule === "LeanBridge.Host.Perl" && selection.perlTaskObjects === undefined
-			|| selection.hostModule === "LeanBridge.Host.Php" && selection.phpNativeFunctions === true
-				&& selection.phpWasmSyncObjects === undefined && selection.phpWasmTaskObjects === undefined;
+			|| selection.hostModule === "LeanBridge.Host.Php" && selection.phpWasmTaskObjects === undefined && (
+				selection.phpNativeFunctions === true && selection.phpWasmSyncObjects === undefined
+				|| selection.phpWasmSyncObjects === true && selection.phpNativeFunctions === undefined
+					&& selection.phpNativeTaskObjects === undefined && !selection.nativeEffects?.length
+			);
 		if(!supported || selection.nativeEffectPolicy !== "native-host-io-v1"
 			|| !selection.exportModules.includes(e.module) || !selection.exportModules.includes(t.module) || e.effect !== "IO" || e.delivery
 			|| selection.taskExports?.length || selection.iterators?.length || selection.asyncIterators?.length)

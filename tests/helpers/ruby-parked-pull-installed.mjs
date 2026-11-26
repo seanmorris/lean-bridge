@@ -37,8 +37,12 @@ test("interrupting a parked Ruby fiber finalizes the Lean cursor before worker r
 		const home = join(work, "install-" + route), moved = join(work, route);
 		const env = {PATH: "/no-author-tools", GEM_HOME: home, GEM_PATH: home, GEMRC: "/dev/null", TMPDIR: work};
 		const archive = join(handoff, entry.archive.path);
-		await run(ruby, ["--disable-gems", "-rrubygems/gem_runner", "-e", "Gem::GemRunner.new.run(ARGV)", "--",
-			"install", "--local", "--no-document", "--ignore-dependencies", archive], work, env);
+		const args = [
+			"--disable-gems", "-rrubygems/gem_runner", "-e"
+			, "Gem::GemRunner.new.run(ARGV)", "--", "install", "--local"
+			, "--no-document", "--ignore-dependencies", archive
+		];
+		await run(ruby, args, work, env);
 		await rename(home, moved);
 		const installed = join(moved, "gems", basename(archive, ".gem"));
 		const inner = await json(join(installed, "lean-bridge/package-receipt.json"));
@@ -72,7 +76,8 @@ test("interrupting a parked Ruby fiber finalizes the Lean cursor before worker r
 			route, interpreter, clientSha256, schedulerSha256, checks
 			, packageSetSha256: entry.receiptSha256, gemSha256: entry.archive.sha256
 			, peerPackageSetSha256: peer.entry.receiptSha256
-			, peerGemSha256: peer.entry.archive.sha256, runtimeIdentity: entry.runtimeIdentity
+			, peerGemSha256: peer.entry.archive.sha256
+			, runtimeIdentity: entry.runtimeIdentity
 		}));
 	}
 });
