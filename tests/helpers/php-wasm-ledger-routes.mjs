@@ -63,6 +63,10 @@ export const exercisePhpWasmLedgerRoutes = async (t, exercise) => {
 		for(const mode of ["embedded", "composer"])
 		for(const loading of ["startup", "lazy"]) expected.push({host, mode, loading, result: "php-api:30"});
 		assert.deepEqual(record.observations, expected);
+		if(process.env.LEAN_BRIDGE_PHP_WASM_IO_CALLBACK_PEER) {
+			assert.deepEqual(record.faults.observations,["Node","Chromium"].flatMap(host=>["pending","sum","padding"].map(fault=>
+				({host,fault,result:"callbacks:"+fault+":retired:0"}))));
+		}
 		records.push(record);
 		t.diagnostic(route + ": " + record.receiptSha256 + " (eight installed calls of the 30-assertion program)");
 	}
@@ -73,6 +77,7 @@ export const exercisePhpWasmLedgerRoutes = async (t, exercise) => {
 	assert.deepEqual(ordinary.clientSha256, reviewed.clientSha256);
 	assert.notEqual(ordinary.sourceTreeSha256, reviewed.sourceTreeSha256);
 	assert.notEqual(ordinary.receiptSha256, reviewed.receiptSha256);
+	if(ordinary.faults || reviewed.faults) assert.deepEqual(ordinary.faults,reviewed.faults);
 	if(results)
 	{
 		await mkdir(results, {recursive: true});

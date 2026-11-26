@@ -49,14 +49,17 @@ const installed = async (t, release, immediate = false, route = null) => {
 	assert.equal(npm.length,2); assert.equal(composer.name,"lean-bridge/ledger");
 	const peer = process.env.LEAN_BRIDGE_PHP_WASM_IO_PURE_PEER;
 	const callbacks = process.env.LEAN_BRIDGE_PHP_WASM_IO_CALLBACK_PEER;
+	let faultRecord;
 	for(const [root,name] of [[peer,"@example/willow-php-wasm"],[callbacks,"php-wasm-switchboard"]])
 	{
 		if(!root) continue;
-		const other = (await readVerifiedPackageSetReceipt({receiptPath: join(root,"package-set-receipt.json")})).receipt;
+		const {receipt:other,result:peerVerification} = await readVerifiedPackageSetReceipt({receiptPath: join(root,"package-set-receipt.json")});
 		assert.deepEqual(other.profiles.map(p=>p.id),["php-wasm-copied-v1"]);
 		const runtime = set => set.packages.find(p=>p.role === "runtime").artifacts[0].sha256;
 		assert.equal(runtime(receipt),runtime(other));
 		const adapter = other.packages.find(p=>p.name === name), item = adapter.artifacts[0];
+		if(root === callbacks) faultRecord = {packageSetSha256:peerVerification.receiptSha256, archiveSha256:item.sha256,
+			runtimeSha256:runtime(other), sources:{}, observations:[]};
 		const path = join(feed,item.path.split("/").pop());
 		await cp(join(root,item.path),path); npm.push(path);
 	}
@@ -101,6 +104,13 @@ const installed = async (t, release, immediate = false, route = null) => {
 			await buildPhpWasmBrokerSnapshot({runtimeRoot,runtimeLibrary: manifest.library,phpSource,emsdkRoot,output});
 		}
 		const api = JSON.parse(await readFile(join(app,"node_modules/php-wasm-ledger/compiled/io/binding-ir.json")));
+		const choose = api.declarations.find(d=>d.source.declaration==="Ledger.choose");
+		assert.equal(choose.source.extensions["lean-lang.org/effect"],"EIO");
+		assert.deepEqual(choose.failure,{mode:"declared",errors:["error:EIO.Ledger.choose"],unexpected:"poison-runtime"});
+		assert.equal(choose.result.type.constructor,"result");
+		assert.equal(api.errors.find(e=>e.id==="error:EIO.Ledger.choose").payload.constructor,"result");
+		for(const file of ["callback-host.mjs","callback-node.mjs","callbacks.php","snapshot.so"])
+			faultRecord.sources[file] = sha256(await readFile(join(app,file)));
 		await writeFile(join(app,"slots.json"),canonicalJson(Object.fromEntries(api.declarations.map((d,i)=>[d.source.declaration,i]))));
 	}
 	await rename(app,moved); await rename(feed,join(work,"disabled-feed"));
@@ -141,6 +151,7 @@ const installed = async (t, release, immediate = false, route = null) => {
 	{
 		const r = await run(process.execPath,["callback-node.mjs",fault],moved,{PATH: "/no-build-tools"});
 		assert.equal(r.stderr,""); assert.equal(r.stdout.trim(),"callbacks:"+fault+":retired:0"); t.diagnostic("Node/"+r.stdout.trim());
+		faultRecord.observations.push({host:"Node",fault,result:r.stdout.trim()});
 	}
 	for(const mode of ["embedded","composer"])
 	for(const loading of ["startup","lazy"])
@@ -151,14 +162,14 @@ const installed = async (t, release, immediate = false, route = null) => {
 		t.diagnostic(mode+"/"+loading+": "+result.stdout.trim());
 	}
 	if(route || process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1")
-		observations.push(...await exerciseInstalledIOBrowser({app: moved,host,t,callbacks,immediate}));
+		observations.push(...await exerciseInstalledIOBrowser({app: moved,host,t,callbacks,immediate,recordFault:r=>faultRecord.observations.push(r)}));
 	if(peer) for(const order of ["io-first","pure-first"])
 	{
 		const result = await run(process.execPath,["installed-peer.mjs",order],moved,{PATH: "/no-build-tools"});
 		assert.equal(result.stderr,""); assert.equal(result.stdout.trim(),"17:7; one runtime, two components");
 		t.diagnostic(order+": "+result.stdout.trim());
 	}
-	if(route) return {...identity,observations};
+	if(route) return {...identity,observations,...faultRecord ? {faults:faultRecord} : {}};
 };
 test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems", {skip: !release,timeout: 300_000}, t => installed(t,release));
 

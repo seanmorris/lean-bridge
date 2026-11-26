@@ -1,0 +1,113 @@
+{
+  "archives": {
+    "@lean-bridge/php-wasm-copied-runtime": "6d2ed5a1b38b056bff932f85d6ba1cb3c93b32147b58baa5a8fa301df81e5a7a",
+    "lean-bridge/ledger": "274f1c3aaa35cb3d199cf335636431ceba6fda614b9f135f985122cddd4da1c7",
+    "php-wasm-ledger": "05ca055c413a22ec3eacb8b5a9b8031a39b2bd99ab1dba7ce994280e4643397f"
+  },
+  "bindingIrSha256": "131e44b4b481919473b8c86be08a9de1fdcb2686c10737df21f5590feb56e2da",
+  "clientSha256": {
+    "consumer.php": "fb14e3dad916f6c19a0e9651e300ad1e49d41660972ee52370aca95e2a867650",
+    "installed-node.mjs": "53e707c60e849803a4edfdebed16befaebdf7cf24365dc874dafb1d86940c1e6",
+    "installed.mjs": "fab21cac97b30544ee1435b2e9c42a507b3dcc32e17fbeee3b2ee8680a2a9bdf"
+  },
+  "faults": {
+    "archiveSha256": "cc305c047d29bcf2c8f534c3bee5a9c27723b36e26a7e5f8df3ec40b2d912581",
+    "observations": [
+      {
+        "fault": "pending",
+        "host": "Node",
+        "result": "callbacks:pending:retired:0"
+      },
+      {
+        "fault": "sum",
+        "host": "Node",
+        "result": "callbacks:sum:retired:0"
+      },
+      {
+        "fault": "padding",
+        "host": "Node",
+        "result": "callbacks:padding:retired:0"
+      },
+      {
+        "fault": "pending",
+        "host": "Chromium",
+        "result": "callbacks:pending:retired:0"
+      },
+      {
+        "fault": "sum",
+        "host": "Chromium",
+        "result": "callbacks:sum:retired:0"
+      },
+      {
+        "fault": "padding",
+        "host": "Chromium",
+        "result": "callbacks:padding:retired:0"
+      }
+    ],
+    "packageSetSha256": "9534a6fe2582f6d6bd0c5676364fcb9e0e4dc8071bbd43e0569be641841c7c0c",
+    "runtimeSha256": "6d2ed5a1b38b056bff932f85d6ba1cb3c93b32147b58baa5a8fa301df81e5a7a",
+    "sources": {
+      "callback-host.mjs": "80e9eeedae121fe40536e04b062ed346e3d718d4499c53bd233ab3f057e07d48",
+      "callback-node.mjs": "264604c22c1b2d4870406ad7e92c8fd903b6ceae0391ae86b86bf91a590f379d",
+      "callbacks.php": "762f3f71b17313cf3a2a9efefe2cd452e81a1887681e21dca45937f8ea0c6039",
+      "snapshot.so": "521dfe2a4795585fa95121b40c303f75d425c509d09b2dc4ddaecd4637677c9b"
+    }
+  },
+  "ledgerSha256": "0a2211c53b6963ea373a6d2b9e0c27f0f58836e039e6e7fc9dcc1efbee1dec62",
+  "observations": [
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": "php-api:30"
+    }
+  ],
+  "phpWasmVersion": "0.1.0",
+  "receiptSha256": "adac088c874890a95a0d7a47a0dd66c66340ad4320ecc4a53ef6af2b4314c0b1",
+  "reviewSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "sourceTreeSha256": "a1761a35c2bbd26ec535a3d1c0b1bee06d0ddbc0dc0e430ff5035b0b1f42e947"
+}

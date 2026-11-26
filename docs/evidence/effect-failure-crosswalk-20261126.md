@@ -82,6 +82,31 @@ copied bytes does not establish that an error can be the sole owner of a
 live application object. That obligation is tracked below, separately
 from the hosted release gate.
 
+### PHP-Wasm: the same Ledger packages on both sides of a fault
+
+The [ordinary](php-wasm-matched-errors-20261126/ordinary.json) and
+[reviewed](php-wasm-matched-errors-20261126/reviewed.json) records match
+the earlier Ledger scalar runs exactly: the same receipts, runtime,
+interface, client sources and eight installed observations on each route.
+The [PHP program](../../tests/fixtures/php-wasm-sync-io-probe/callbacks.php)
+also used the separately installed Switchboard package. It checked nested
+callback ordering, the original exception object, and a declared EIO
+exception with its NUL-containing payload across two callback frames.
+
+Three fresh sessions per host then supplied malformed result bytes to
+the installed decoder: a pending tag for immediate IO, an invalid sum arm,
+and nonzero padding. These were **injected decoder inputs, not guest
+machine traps**. In both Node and Chromium, each decoder failure retired
+the runtime. The other component and an existing closure refused further
+calls, copied error data stayed readable and the live owner count ended at
+zero. This does not show that a copied error payload owns an application object.
+
+To rerun, set `LEAN_BRIDGE_PHP_WASM_IO_CALLBACK_PEER` to the Switchboard
+handoff with its observer, then run `npm run test:php-wasm-ledger-routes`
+with the [Ledger handoffs](php-wasm-installed-sync-io-20261123.md#both-author-routes-installed).
+These four additional EIO/named-error combinations bring #1222 to **62/102**:
+34 direct IO, 14 typed EIO and 14 named errors.
+
 ## Which immediate errors keep a live resource?
 
 These checks use a Lean-owned resource as the payload of a synchronous
