@@ -42,6 +42,19 @@ three Chromium clients run after the npm install tree is removed. Run
 Emscripten, Lean and Chromium configured, or set `LEAN_BRIDGE_NPM_INCOMING_REPLAY`
 to the directory containing the two sealed author-route handoffs.
 
+## Installed C11 clients
+
+Both the [ordinary](c-incoming-functions-20261126/ordinary.json) and
+[reviewed](c-incoming-functions-20261126/reviewed.json) releases passed the same six
+checks through pkg-config and a separately compiled, relocated CMake client.
+On success and failure the callback borrow expired; an explicitly retained
+lease still ran. An inner failure left the outer borrow usable, and a foreign
+session rejected the live borrow. Only the deliberate session remained after
+each case; the broker had zero live identities after shutdown. The two
+packages have [distinct ordinary](c-incoming-functions-20261126/ordinary.package-set.json)
+and [reviewed receipts](c-incoming-functions-20261126/reviewed.package-set.json)
+and the same embedded runtime identity.
+
 To exercise the same lifetime rule with a captured scalar function in C11,
 run `npm run test:c-incoming-function` with the pinned Lean compiler. The
 [Lean export](../../tests/fixtures/structured-types/visit-quote.lean) passes

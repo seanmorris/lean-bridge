@@ -275,6 +275,10 @@ rejected the expired borrow and kept an independent lease on each of the
 Both used the same runtime archive. An older ordinary release passed the
 same checks with a different runtime.
 
+The [installed C11 clients](npm-incoming-functions-20261126.md#installed-c11-clients)
+passed on both author routes through pkg-config and relocated CMake, bringing
+the direct incoming-function check to **6 of 17 profiles**.
+
 The [managed runtime clients](dotnet-function-fields-20261126.md#a-function-passed-directly-into-a-callback)
 also tested nested failure, comparison of live and expired views, and zero
 owners after thread exit. Those .NET, Java and Kotlin runs exercised real
