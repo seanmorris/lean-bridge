@@ -259,7 +259,9 @@ The [CPython wheels](host-callback-input-records-20261126.md) and
 qualify it as well. Both [offline Cargo installs](host-callback-input-records-20261126.md#rust-callers)
 passed all seven scenarios. The [two RubyGems installs](host-callback-input-records-20261126.md#ruby-callers)
 and [both C# NuGet installs](host-callback-input-records-20261126.md#c-callers-1)
-also passed, bringing this input-field case to eleven of the 17 profiles.
+also passed. The [ordinary and reviewed CPAN installs](host-callback-input-records-20261126.md#perl-callers)
+passed with prebuilt XS on all four Perl ABIs. This brings the input-field
+case to twelve of the 17 profiles.
 
 ### Does a callback allow one call or many?
 

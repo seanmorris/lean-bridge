@@ -194,9 +194,13 @@ one identity at baseline, four with live leases, one after each of six
 scenarios, and zero after shutdown. Returning a borrowed coderef did not
 let Lean invoke it later; an exception retained its Perl object identity.
 
-These are adapter checks. The [earlier CPAN receipts](perl-function-fields-20261126.md)
-only cover leased fields. Run `npm run test:perl-function-fields` with all
-four interpreters to qualify the new ordinary and reviewed packages.
+The [ordinary CPAN package](perl-host-input-records-20261126/ordinary.json)
+and [reviewed CPAN package](perl-host-input-records-20261126/reviewed.json)
+also passed all six cases after offline installation and relocation. Each
+of the eight clients used its matching prebuilt XS, with no author tools
+on its search path. Both routes used the same runtime and different
+component archives. Run `npm run test:perl-function-fields` with the four
+interpreters to reproduce the installs.
 
 ## Native PHP callers
 
