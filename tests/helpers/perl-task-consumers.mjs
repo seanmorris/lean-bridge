@@ -61,6 +61,7 @@ test("installed CPAN futures and demand-driven cursors execute compiled Lean on 
 	}
 	const checked=prior?JSON.parse(prior):null;
 	const affinity=!replay || Boolean(checked.sources["affinity.t"]);
+	const parked=!smoke && (!replay || Object.hasOwn(checked.sources,"parked.pl"));
 	const packages=[], files=new Map(), rows=[], sources={}, collected=new Map(), fallback=[];
 	const recordTap=async (name,tap)=>{
 		assert.doesNotMatch(tap,/^not ok\b/mu);
@@ -72,7 +73,7 @@ test("installed CPAN futures and demand-driven cursors execute compiled Lean on 
 		return {tests,tapSha256: sha256(original)};
 	};
 	const clients=["installed.t",...affinity?["affinity.t"]:[]];
-	for(const name of smoke?clients:[...clients,"peer.t","retired.t","example.pl","Observe.xs","build-observer.pl","verify.py"])
+	for(const name of smoke?clients:[...clients,...parked?["parked.pl"]:[],"peer.t","retired.t","example.pl","Observe.xs","build-observer.pl","verify.py"])
 	{
 		const fixture=["Observe.xs","build-observer.pl","verify.py"].includes(name)?"perl-sync-io":"perl-tasks";
 		const b=await readFile(replay?join(observationsRoot,name):resolve("tests/fixtures",fixture,name)); sources[name]=sha256(b);
@@ -144,7 +145,13 @@ test("installed CPAN futures and demand-driven cursors execute compiled Lean on 
 				observations[label]=await recordTap(name,tap);
 			}
 			if(!smoke) assert.equal(await run(perl,[join(stage,"example.pl")],pwd,child),"42\nfirst\n73");
-			rows.push({route,...abi,installedXsSha256: installed.outputSha256,observations});
+			const parkedPull={};
+			if(parked) for(const order of ["peer-first","pulse-first"])
+			{
+				parkedPull[order]=await run(perl,[join(stage,"parked.pl"),order],pwd,child,120_000);
+				assert.equal(parkedPull[order],"blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta");
+			}
+			rows.push({route,...abi,installedXsSha256: installed.outputSha256,observations,...parked?{parkedPull}:{}});
 			t.diagnostic(route+" "+abi.version+" "+(abi.threaded?"threaded":"unthreaded")+": installed task and cursor checks passed");
 		}
 		if(!smoke&&i===0)

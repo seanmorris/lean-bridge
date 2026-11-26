@@ -168,6 +168,31 @@ Set `LEAN_BRIDGE_JVM_TASK_REPLAY` to that capture, `LEAN_BRIDGE_JVM_TASK_EXPECTE
 to `docs/evidence/jvm-tasks-20261123.json`, and `LEAN_BRIDGE_JVM_PARKED_PULL=1`.
 Run `node --test --test-name-pattern='installed task JARs deliver' tests/helpers/jvm-tasks-acceptance.mjs`.
 
+### Cancelling the pending Perl Future
+
+The [installed Perl client](../../tests/fixtures/perl-tasks/parked.pl) waits until
+Lean is inside the pull. A second request fails without advancing the stream.
+Cancelling the first `Future` runs the Lean cursor finalizer **before** the
+application closes the cursor or releases the worker. Closing the cursor first
+also cancels the reader. Each path produced one cancellation and one settlement,
+no value or failure, and no second finalization after the worker completed.
+The independently installed Signals package delivered an item while Pulse was
+still blocked; both live native owners and the descriptor delta returned to zero.
+
+Both the [ordinary](perl-parked-pull-20261126/ordinary.json) and
+[reviewed](perl-parked-pull-20261126/reviewed.json) packages ran on threaded
+and unthreaded Perl 5.36.3 and 5.38.2, with both package load orders: 16
+processes, each testing both ways of stopping. This uses prebuilt XS; it is
+not a test of locally compiled XS.
+
+To replay, set `LEAN_BRIDGE_PERL_PARKED_ORIGINAL` to the directory with the
+[original pinned handoffs and acceptance record](perl-tasks-20261123.json),
+`LEAN_BRIDGE_PERL_TASK_DEPS` to the installed Future and IO::Async library
+directory, and `LEAN_BRIDGE_PERLS` to a JSON array of the four interpreter
+paths. Run `node --test tests/helpers/perl-parked-pull-installed.mjs`.
+Fresh full CPAN task captures run the same client; historical captures replay
+only the clients they originally recorded.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
