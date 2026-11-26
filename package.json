@@ -1420,6 +1420,7 @@
     "test:c-host-registry": "node --test tests/helpers/c-host-registry.mjs",
     "test:c-host-components": "node --test tests/helpers/c-host-components.mjs",
     "test:c-host-packages": "node --test tests/helpers/c-host-packages.mjs",
+    "test:c-resource-error-owner": "LEAN_BRIDGE_C_ERROR_OWNER_TEST=1 node --test --test-concurrency=1 tests/helpers/c-resource-error-installed.mjs",
     "test:c-host-worker-packages": "LEAN_BRIDGE_C_HOST_WORKERS=1 node --test tests/helpers/c-host-packages.mjs",
     "test:cpp-host-anchors": "node --test tests/helpers/cpp-host-anchors.mjs",
     "test:cpp-host-packages": "LEAN_BRIDGE_CPP_HOST_TEST=1 node --test tests/helpers/c-host-packages.mjs",

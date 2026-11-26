@@ -1,0 +1,45 @@
+{
+  "calls": [
+    {
+      "order": "desk-first",
+      "result": "typed error retained the last ticket; peer wrote 42, stale read refused, zero owners and descriptor delta"
+    },
+    {
+      "order": "peer-first",
+      "result": "typed error retained the last ticket; peer wrote 42, stale read refused, zero owners and descriptor delta"
+    }
+  ],
+  "consumerSha256": "d3e82a89b0e16a34271c7fe9f4293f03792987802e40116a5a30560137f3daa2",
+  "observerSha256": "8e46b02c7045f73a8609794ca3b0d57089af7eb5389cf7f1fd265005be903d60",
+  "packages": [
+    {
+      "archive": {
+        "bytes": 51318520,
+        "path": "archives/lease-desk-1.0.0-c.tar.gz",
+        "sha256": "287bd73bfa673a8221fb87567e824bf4c94dd67c2273d03572b6d8bbd17ebd6a"
+      },
+      "bindingIrSha256": "5d0d31231b005b90abb29217e7b5b109ce2682773be1773b8746c5a75ed432ea",
+      "name": "lease-desk",
+      "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+      "receiptSha256": "aeb3338b604e9ad552159f13d0ae6c66d8e0fc7c23451f04565e0de4e5f1d3af",
+      "reviewedSourceSha256": null,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "0c4972a3f9112f3c5d343769c7626a52f5174ff4ae39e05dd1b8ccaff3f28491"
+    },
+    {
+      "archive": {
+        "bytes": 51327259,
+        "path": "archives/lease-counter-1.0.0-c.tar.gz",
+        "sha256": "f94bc41d74c7b02760bd07c1a05a454d26b78bd1e76d1f6198df29ac9d7b1dd0"
+      },
+      "bindingIrSha256": "f13cd8336ab24af194604c583df3f73d08c432898ab79738366bb81378a71c5b",
+      "name": "lease-counter",
+      "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+      "receiptSha256": "36f0d81714b385a513b90a15af3df625c7c0155e4a3504c5d42279af9b537440",
+      "reviewedSourceSha256": null,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "444676e07dbf42574e59ca4df6383c283b3334f10a58dfa83892f5058f3bf894"
+    }
+  ],
+  "route": "ordinary"
+}

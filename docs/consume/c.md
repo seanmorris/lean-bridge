@@ -135,6 +135,13 @@ owned results with the functions named in the installed header. There is no
 task handle to wait on. The [installed C example](../../tests/fixtures/native-sync-io-clients/consumer.c)
 exercises each outcome and makes another call after both kinds of Lean failure.
 
+If a declared error carries a resource, the error output owns a lease. You may
+release the original input and pass the error payload to a separately installed
+component that shares the resource type. Release that payload when you are done.
+Copying the C struct does **not** retain it: a copy of an already released lease
+is stale. The [two-package C11 client](../../tests/fixtures/native-sync-resource/last-owner.c)
+shows the success, declared-error and stale-input branches side by side.
+
 ### Read a synchronous iterator
 
 The [Dials client](../../tests/fixtures/native-immediate-cursor/consumer.c)

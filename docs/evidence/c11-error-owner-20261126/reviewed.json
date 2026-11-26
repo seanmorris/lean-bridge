@@ -1,0 +1,45 @@
+{
+  "calls": [
+    {
+      "order": "desk-first",
+      "result": "typed error retained the last ticket; peer wrote 42, stale read refused, zero owners and descriptor delta"
+    },
+    {
+      "order": "peer-first",
+      "result": "typed error retained the last ticket; peer wrote 42, stale read refused, zero owners and descriptor delta"
+    }
+  ],
+  "consumerSha256": "d3e82a89b0e16a34271c7fe9f4293f03792987802e40116a5a30560137f3daa2",
+  "observerSha256": "8e46b02c7045f73a8609794ca3b0d57089af7eb5389cf7f1fd265005be903d60",
+  "packages": [
+    {
+      "archive": {
+        "bytes": 51318530,
+        "path": "archives/lease-desk-1.0.0-c.tar.gz",
+        "sha256": "fa82aa05bde24b0b31a7a3222555893db1db86b2f51cca1c4527e0ee9e0354ac"
+      },
+      "bindingIrSha256": "5d0d31231b005b90abb29217e7b5b109ce2682773be1773b8746c5a75ed432ea",
+      "name": "lease-desk",
+      "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+      "receiptSha256": "811648ffe69ac3e153cc927c3d4f56a47338cc87137ffe551553a6026765f382",
+      "reviewedSourceSha256": "1535239ded86dc32fe3547c453186d5e259ff54b80ad71bfb4b2d4e07b2d7ea1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "6d03ec1392fd48aadccb7e28cc733501181e364004cfb66c1dcdee97b8609b58"
+    },
+    {
+      "archive": {
+        "bytes": 51327359,
+        "path": "archives/lease-counter-1.0.0-c.tar.gz",
+        "sha256": "5c1ede478c9b9973a31576944725fe6ff4f2cedb4da703ada683f684e8f18269"
+      },
+      "bindingIrSha256": "f13cd8336ab24af194604c583df3f73d08c432898ab79738366bb81378a71c5b",
+      "name": "lease-counter",
+      "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+      "receiptSha256": "ab934c45b47fda060fef8b6d45008e3099a8bb62eab2f6a213b3535df065eda4",
+      "reviewedSourceSha256": "89c9344d1f42f79bed4fc97135c0bf40f17c6df4f974eebcee77351d85ea983b",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "9313a85299ed537f8bb03309b3a568abccf545a93a29ca7acf175386e7c60cab"
+    }
+  ],
+  "route": "reviewed"
+}

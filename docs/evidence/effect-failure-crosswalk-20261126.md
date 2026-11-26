@@ -33,15 +33,23 @@ The consumer source hashes match the linked installation records.
 
 | Installed consumer | What happens after the caller catches the error |
 | --- | --- |
-| [C++ and Rust](native-sync-cpp-rust-20261122.json) | The [C++](../../tests/fixtures/native-sync-resource/consumer.cpp) and [Rust](../../tests/fixtures/native-sync-resource/consumer.rs) clients check identity, mutate the payload, clone its lease, close the original input, and read 44 through the retained lease. Reading the closed input fails. |
+| [C11 ordinary](c11-error-owner-20261126/ordinary.json) and [reviewed](c11-error-owner-20261126/reviewed.json) | The [C client](../../tests/fixtures/native-sync-resource/last-owner.c) received `TYPED_ERROR` from an immediate call, closed the original and rejected a stale copy without changing the caller's output. A second installed package incremented the error's still-live ticket to 42. Releasing that payload restored both the live-identity and descriptor counts, and a new call succeeded. |
+| [C++ and Rust](native-sync-cpp-rust-20261122.json) | The [C++](../../tests/fixtures/native-sync-resource/consumer.cpp) and [Rust](../../tests/fixtures/native-sync-resource/consumer.rs) clients check identity, mutate the payload, clone its lease, close the original input, and read 44 through the retained lease. Reading the closed input fails. The mixed-package runs here used ordinary C++ and reviewed Rust, not both routes per language. |
 | [Python](python-resource-leases-20261123.json), [Ruby](ruby-resource-leases-20261122.json), [.NET](dotnet-resource-leases-20261122.json) | Each client issues a fresh resource containing 13, catches a declared error carrying that resource, and closes the original. A second installed component reads 13 from the error payload. See [Python](../../tests/fixtures/python-task-resources/installed.py), [Ruby](../../tests/fixtures/ruby-task-resources/consumer.rb), and [C#](../../tests/fixtures/dotnet-task-resources/Program.cs). |
 | [Native PHP](php-heap-lease-20261123.json) | The [Composer client](../../tests/fixtures/php-io-resources/installed.php) mutates a successful result and reads 11 through the error payload. After other owners close, the observer sees one live identity and one file descriptor above baseline. Dropping the error payload restores both counts. |
 | [Java and Kotlin](jvm-error-owner-20261126.md) | Each closed the original, rejected a stale read, mutated the ticket through an independent package and read 42. Closing the error payload released the last identity and descriptor. Separate clients ran in both package load orders on both routes. |
 
-The first three rows use existing results; the JVM clients ran on the original
+The C++, Rust, Python, Ruby, .NET and native PHP rows use existing results; the JVM clients ran on the original
 Maven packages in a new replay. These checks do not establish the
 same ownership for an application-created object, a fatal runtime fault, or
 another consumer merely because it uses the same backend.
+
+For the C11 row, the [producer and installer](../../tests/helpers/c-resource-error-installed.mjs) independently
+built Desk and Counter, checked both package-set receipts and compiled the same consumer against their
+installed headers using `pkg-config`. Both author routes ran both initialization orders from relocated
+libraries with the source, original archives and compiler search path removed. The success result and
+declared error used distinct output slots. The result is for a Lean-owned ticket with a file descriptor,
+not a test of ownership of an application-created C object. Reproduce with `npm run test:c-resource-error-owner`.
 
 ## What still requires a decision or a test?
 
