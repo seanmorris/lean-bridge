@@ -297,8 +297,10 @@ The [C++20 clients](native-once-callback-20261126.md#c20) also distinguished a
 typed admission error from the original C++ exception and a replacement Lean error.
 The [installed Rust clients](native-once-callback-20261126.md#rust) preserved
 the original host error even when it carried an earlier policy refusal.
-The five npm clients, PHP-Wasm, Python, C, C++ and Rust give ten of 17
-consumer profiles on both author routes.
+The [MRI gems](native-once-callback-20261126.md#ruby) distinguished admission,
+factory IO, terminal IO, typed errors and original Ruby exceptions.
+The five npm clients, PHP-Wasm, Python, C, C++, Rust and Ruby give eleven
+of 17 consumer profiles on both author routes.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile

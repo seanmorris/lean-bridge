@@ -61,6 +61,22 @@ by identity—even when that error wrapped a genuine earlier policy fault.
 Lean's new IO error with the same message remained a task IO error.
 Closing the registration released the captured object and left zero leases.
 
+## Ruby
+
+The [ordinary gem](native-once-callback-20261126/ruby/ordinary.json) and
+[reviewed gem](native-once-callback-20261126/ruby/reviewed.json) ran on MRI
+3.3.12 from separate, relocated local installations. The [Ruby client](../../tests/fixtures/native-callback-budget/client.rb)
+uses the generated methods and `RetainedCallback`. In each of 16 races
+one worker entered the block. The other received the component's
+`CallbackAlreadyInvoked` exception naming the Lean declaration.
+
+The client distinguishes that refusal from a failed task factory, an error
+inside the task with the same message, and a typed error carrying 73.
+Throwing a previous policy exception *as a Ruby application exception*
+returns the same object, not a new policy refusal. A weak reference
+confirmed that closing the reusable callback released its capture. The
+loaded broker reported one initialization and zero live leases.
+
 ## Reproduce the installs
 
 Run `npm run test:native-once-callback` to build and install both native
@@ -70,3 +86,6 @@ to the retained directory containing `c/{ordinary,reviewed}` and
 over integers, not callbacks transporting host objects. Run
 `npm run test:rust-once-callback` for Cargo, or set
 `LEAN_BRIDGE_CARGO_BUDGET_REPLAY` to the handoff directory containing `cargo/`.
+For MRI, run `npm run test:ruby-once-callback`; set
+`LEAN_BRIDGE_RUBY_BUDGET_REPLAY` to the directory containing `rubygems/`
+to reuse the sealed gems.
