@@ -63,3 +63,15 @@ npm run test:php-host-peer
 
 This checks synchronous native PHP CLI on Linux x86-64. It does not test
 PHP-Wasm or PHP member dispatch from a worker.
+
+The peer suite also has a [reference-token exhaustion probe](../../tests/fixtures/php-host-members/registry-limit.php).
+It raises the private registry counter to its ceiling just before the host
+publishes a newly constructed object. The callback catches the resulting
+overflow and the test restores the counter. Both packages must still refuse
+new calls. This exercises a terminal registry failure without allocating
+billions of objects or telling the runtime to retire. Ordinary exceptions,
+mapped Lean failures and invalid arguments have separate, recoverable cases.
+
+`error-policy.json` in each route's output records those observations alongside
+the [last-owner check](../../tests/fixtures/php-host-members/error-owner.php)
+and the digests of both clients and both installed packages.

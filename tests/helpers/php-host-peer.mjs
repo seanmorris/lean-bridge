@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { prepareNativeHostFixture } from "./native-host-import-check.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { installPhpIOComponents } from "./php-io-install.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 
 const preparePeer=async project=>{
 	const lake=join(project,"lakefile.toml"),config=join(project,"lean-bridge.exports.json");
@@ -40,8 +41,26 @@ const exercisePeer=async (stage,first,handoff,env)=>{
 	await copyFile("tests/fixtures/php-host-members/lifecycle.php",join(local,"lifecycle.php"));
 	const ownerSource=await readFile("tests/fixtures/php-host-members/error-owner.php");
 	await writeFile(join(local,"error-owner.php"),ownerSource);
+	const limitSource=await readFile("tests/fixtures/php-host-members/registry-limit.php");
+	await writeFile(join(local,"registry-limit.php"),limitSource);
 	const {vendor,components}=await installPhpIOComponents(stage,local,deploy,[first,handoff]);
-	const report=[],lastOwners=[];
+	const installed=join(vendor,components[1].pkg.name,"lean-bridge");
+	const json=async path=>JSON.parse(await readFile(path));
+	const api=await json(join(installed,"binding-ir.json")), compiler=await json(join(installed,"elaboration.json"));
+	const receipt=await json(join(handoff,"package-set-receipt.json"));
+	assert.equal(receipt.profiles[0].bindingIrSha256,hashBindingIr(api));
+	assert.equal(receipt.source.treeSha256,compiler.sourceTreeSha256);
+	const author=await json(join(handoff,"host-export-evidence.json"));
+	assert.equal(compiler.reviewedSourceSha256,author.reviewedSourceSha256);
+	for(const name of ["Workshop.failWith","Peer.mappedTransient"])
+	{
+		const decl=api.declarations.find(d=>d.source.declaration===name);
+		assert.equal(decl.source.extensions["lean-lang.org/effect"],"EIO");
+		assert.deepEqual(decl.failure,{mode: "declared",errors: ["error:EIO."+name],unexpected: "poison-runtime"});
+		if(name==="Workshop.failWith")
+			assert.equal(decl.source.extensions["lean-bridge.dev/error-payload-site"].ownership,"lease");
+	}
+	const report=[],lastOwners=[],faults=[];
 	for(const php of (env.LEAN_BRIDGE_PHP_HOST_INTERPRETERS ?? "/usr/bin/php").split(","))
 	{
 		const isolated={PATH: "/no-publisher-tools",LANG: "C.UTF-8",LEAN_NUM_THREADS: "1"};
@@ -55,11 +74,22 @@ const exercisePeer=async (stage,first,handoff,env)=>{
 			report.push({php,order,result,lifecycle});
 			const owner=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","-d","zend.exception_ignore_args=1","error-owner.php",join(vendor,"autoload.php"),order],deploy,isolated));
 			assert.deepEqual(owner,{php: lifecycle.php,order,returned: 17,updated: 42,drops: 1,finalTokens: 0});lastOwners.push(owner);
+			const limit=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","-d","zend.exception_ignore_args=1","registry-limit.php",join(vendor,"autoload.php"),order],deploy,isolated));
+			assert.deepEqual(limit,{php: lifecycle.php,order,original: true,mapped: true
+				, replacementIO: true,trigger: "reference-token exhaustion"
+				, afterReset: "both unavailable",reads: 1,constructs: 1,finalTokens: 0});
+			faults.push(limit);
 		}
 	}
 	await writeFile(join(stage,"consumer.json"),canonicalJson({report,archives: components.map(r=>r.pkg.artifacts[0]),receipts: components.map(r=>r.receiptSha256)}));
 	const packages=components.map(c=>({name: c.pkg.name,receiptSha256: c.receiptSha256,archive: c.pkg.artifacts[0]}));
 	await writeFile(join(stage,"error-owner.json"),canonicalJson({clientSha256: sha256(ownerSource),packages,results: lastOwners}));
+	await writeFile(join(stage,"error-policy.json"),canonicalJson({packages
+		, interface: hashBindingIr(api)
+		, reviewedSourceSha256: compiler.reviewedSourceSha256
+		, ownerClientSha256: sha256(ownerSource)
+		, faultClientSha256: sha256(limitSource)
+		, lastOwners, faults}));
 	await rm(deploy,{recursive: true});
 };
 
