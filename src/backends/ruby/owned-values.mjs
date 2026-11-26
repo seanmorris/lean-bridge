@@ -152,8 +152,14 @@ ${whole ? `        receiver = get
 			const args = callback?.parameters.slice(1).map((_, i) => `arg${i}`) ?? [];
 			return `    class ${node.publicType} < Owned::Resource
       def retain; Native.retain${node.index}(self); end
-${anchored ? `      def same_identity?(other); Native.same${node.index}(self, other); end
-      def ==(other); same_identity?(other); end
+${anchored || c.callbackArgumentViews ? `      def same_identity?(other); Native.same${node.index}(self, other); end
+      ${anchored ? "def ==(other); same_identity?(other); end" : `def ==(other)
+        return true if super
+        return false unless other.instance_of?(self.class) && !closed? && !other.closed?
+        same_identity?(other)
+      rescue Owned::Error
+        false
+      end`}
       alias eql? ==
 ` : ""}\
 ${callback ? `      def call(${args.join(", ")}); Native.invoke${node.index}(${["self", ...args].join(", ")}); end\n` : ""}\

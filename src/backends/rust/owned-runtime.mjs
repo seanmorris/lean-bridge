@@ -15,9 +15,10 @@ import { ownedRustAnchoredTransferRuntime } from "./owned-borrows.mjs";
  * @param options.dynamic - Resolve the authenticated embedded library table.
  * @param options.transferredInputs - Observe input consumption during callbacks.
  * @param options.anchoredResults - Validate whole-value result owners.
+ * @param options.callbackArgumentViews - Compare scope-distinct handles by their underlying identity.
  * @param options.receiverExports - Preserve whole owners for method receivers.
  */
-export const ownedRustRuntime = (prefix, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+export const ownedRustRuntime = (prefix, { dynamic = false, transferredInputs = false, anchoredResults = false, callbackArgumentViews = false, receiverExports = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Rust prefix");
 	const wholeOwners = anchoredResults || receiverExports;
 	return `
@@ -205,14 +206,14 @@ ${transferredInputs ? wholeOwners ? ownedRustAnchoredTransferRuntime : ownedRust
 
 pub struct Resource<Kind> {
     lease: Option<std::rc::Rc<owned_runtime::Lease>>,
-    handle: *mut std::ffi::c_void,
+    handle: *mut std::ffi::c_void,${callbackArgumentViews ? "\n    equal: Option<fn(&Self, &Self) -> Result<bool, Error>>," : ""}
     kind: std::marker::PhantomData<fn() -> Kind>,
 }
 impl<Kind> Resource<Kind> {
-    pub(crate) fn from_owned(lease: std::rc::Rc<owned_runtime::Lease>, handle: *mut std::ffi::c_void) -> Result<Self, Error> {
+    pub(crate) fn from_owned(lease: std::rc::Rc<owned_runtime::Lease>, handle: *mut std::ffi::c_void${callbackArgumentViews ? ", equal: fn(&Self, &Self) -> Result<bool, Error>" : ""}) -> Result<Self, Error> {
         lease.require()?;
         if handle.is_null() { return Err(Error::InvalidArgument); }
-        Ok(Self { lease: Some(lease), handle, kind: std::marker::PhantomData })
+        Ok(Self { lease: Some(lease), handle,${callbackArgumentViews ? " equal: Some(equal)," : ""} kind: std::marker::PhantomData })
     }
     pub(crate) fn raw(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<*mut std::ffi::c_void, Error> {
         let lease = self.lease.as_ref().ok_or(Error::Closed)?;
@@ -231,14 +232,18 @@ ${transferredInputs && !wholeOwners ? `    pub(crate) fn transfer_lease(&self, s
     }
 }
 impl<Kind> Default for Resource<Kind> {
-    fn default() -> Self { Self { lease: None, handle: std::ptr::null_mut(), kind: std::marker::PhantomData } }
+    fn default() -> Self { Self { lease: None, handle: std::ptr::null_mut(),${callbackArgumentViews ? " equal: None," : ""} kind: std::marker::PhantomData } }
 }
 impl<Kind> Clone for Resource<Kind> {
-    fn clone(&self) -> Self { Self { lease: self.lease.clone(), handle: self.handle, kind: std::marker::PhantomData } }
+    fn clone(&self) -> Self { Self { lease: self.lease.clone(), handle: self.handle,${callbackArgumentViews ? " equal: self.equal," : ""} kind: std::marker::PhantomData } }
 }
 ${anchoredResults ? "" : `impl<Kind> PartialEq for Resource<Kind> {
     fn eq(&self, other: &Self) -> bool {
-        self.handle == other.handle && match (&self.lease, &other.lease) {
+        ${callbackArgumentViews ? `if self.handle != other.handle {
+            if self.is_closed() || other.is_closed() { return false; }
+            return self.equal.is_some_and(|equal| equal(self, other).unwrap_or(false));
+        }
+        match` : "self.handle == other.handle && match"} (&self.lease, &other.lease) {
             (None, None) => true,
             (Some(a), Some(b)) => std::rc::Rc::ptr_eq(&a.state, &b.state),
             _ => false,

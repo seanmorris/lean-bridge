@@ -11,10 +11,22 @@ import { assertNativeOwnedGate } from "./helpers/native-owned-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCValues } from "../src/backends/c/owned-values.mjs";
 import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { leasedClosureFieldReviewedIr, ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+
+test("C callback argument views follow incoming identities, not scalar arguments or returned closures", () => {
+	for(const [options, incoming] of [[{ staged: true }, false], [{ exchange: true }, true], [{ incoming: true }, true]])
+	{
+		const ir = leasedClosureFieldReviewedIr(options);
+		const projected = generateOwnedCValues(ir, { hostCallbacks: true });
+		assert.equal(Boolean(projected.callbackArgumentViews), incoming);
+		assert.equal(/\w+_equal\(/u.test(projected.header), incoming);
+		assert.doesNotMatch(projected.header, /_result_validate\(/u);
+		assert.equal(Boolean(generateOwnedCValues(ir).callbackArgumentViews), false);
+	}
+});
 
 const prepare = async (t, options = {}) => {
 	const compiled = await compileOwnedAggregateFixture(t, options);

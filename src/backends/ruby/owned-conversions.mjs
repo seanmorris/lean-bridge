@@ -280,7 +280,7 @@ ${moving.length ? "            end\n" : ""}\
       end`);
 	}
 	if(wholeOwners) methods.push(ownedRubyValueCopies(model, boundary));
-	if(anchored)
+	if(anchored || model.c.callbackArgumentViews)
 	{
 		for(const node of model.types.filter(item => item.identity))
 		{

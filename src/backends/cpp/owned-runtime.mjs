@@ -14,9 +14,10 @@ import { ownedCppTransferSignal } from "./owned-transfers.mjs";
  * @param options - Explicit input-consumption support for this projection.
  * @param options.transferredInputs - Watch the C handoff before callback reentry.
  * @param options.anchoredResults - Validate original-owner result lifetimes.
+ * @param options.callbackArgumentViews - Different live frame views may denote one identity.
  * @param options.receiverMembers - Checked nominal method definitions.
  */
-export const ownedCppRuntime = (prefix, { transferredInputs = false, anchoredResults = false, receiverMembers = "" } = {}) => {
+export const ownedCppRuntime = (prefix, { transferredInputs = false, anchoredResults = false, callbackArgumentViews = false, receiverMembers = "" } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned C++ prefix");
 	const p = prefix, m = prefix.toUpperCase();
 	const wholeOwners = anchoredResults || Boolean(receiverMembers);
@@ -228,7 +229,17 @@ public:
     return detail::ResourceOps<Kind>::call(*this, std::forward<Args>(args)...);
   }
   friend bool operator==(const Resource& a, const Resource& b)${anchoredResults ? "" : " noexcept"} {
-    ${anchoredResults ? "return detail::ResourceOps<Kind>::equal(a, b);" : `return a.handle_ == b.handle_ && ((!a.lease_ && !b.lease_)
+    ${anchoredResults ? "return detail::ResourceOps<Kind>::equal(a, b);" : callbackArgumentViews ? `if (!a.lease_ || !b.lease_) return !a.lease_ && !b.lease_ && a.handle_ == b.handle_;
+    if (a.lease_->state() != b.lease_->state()) return false;
+    if (a.handle_ == b.handle_) return true;
+    if (a.is_closed() || b.is_closed()) return false;
+    if constexpr (requires { typename Kind::Native; Kind::equal; }) {
+      try {
+        a.lease_->require(); b.lease_->require(); bool same = false;
+        return Kind::equal(a.lease_->state()->require(), reinterpret_cast<typename Kind::Native>(a.handle_),
+                           reinterpret_cast<typename Kind::Native>(b.handle_), &same) == ${m}_OK && same;
+      } catch (...) { return false; }
+    } else { return false; }` : `return a.handle_ == b.handle_ && ((!a.lease_ && !b.lease_)
       || (a.lease_ && b.lease_ && a.lease_->state() == b.lease_->state()));`}
   }
 };

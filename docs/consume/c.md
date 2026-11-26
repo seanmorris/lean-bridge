@@ -662,7 +662,11 @@ The bridge releases a supplied reply owner on success **and on failure**.
 Do not release it a second time. If your application needs the incoming
 function after returning from the callback, use its generated `_retain`
 operation while the borrow is live. Keep that separate owner until you have
-finished using the function. The [complete callback client](../../tests/fixtures/structured-types/tariff-exchange.c)
+finished using the function. After return, call the **retained handle**: the
+original callback argument has expired, even if the retained owner is still
+alive. To compare the two while both are live, use the type's generated
+`_equal` function. C pointer equality compares handles, not Lean identities.
+The [complete callback client](../../tests/fixtures/structured-types/tariff-exchange.c)
 also shows reentry, invalid replies, and recovery from a nested callback failure.
 
 ### Return a Lean function directly from a callback

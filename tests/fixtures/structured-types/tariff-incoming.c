@@ -39,6 +39,8 @@ static status inspect(void *context, session *s, quote f, uint32_t units, uint32
     if(v->action==keep || v->action==fail_and_keep) {
         assert(tariff_quotes_pack_quote_argument0_t_retain(s,f,&v->retained,&v->lease)==TARIFF_QUOTES_OK);
         assert(v->lease && invoke(s,v->retained,1)==v->base+1);
+        bool same=false;
+        assert(tariff_quotes_pack_quote_argument0_t_equal(s,f,v->retained,&same)==TARIFF_QUOTES_OK && same);
     }
     if(v->action==nested) {
         visit inner={.base=71,.action=fail};
@@ -63,6 +65,8 @@ int tariff_incoming_consumer(session *s, void (*checkpoint)(void)) {
     for(unsigned i=0;i<2;i++) {
         visit held={.base=50+i,.action=i?fail_and_keep:keep}; enter(s,&held);
         rejected(s,held.borrowed); assert(invoke(s,held.retained,4)==held.base+4);
+        bool same=false;
+        assert(tariff_quotes_pack_quote_argument0_t_equal(s,held.borrowed,held.retained,&same)==TARIFF_QUOTES_INVALID_ARGUMENT && !same);
         dispose(&held.lease); rejected(s,held.retained); checkpoint();
         puts(i?"lease survives failed callback":"lease survives successful callback");
     }

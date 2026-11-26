@@ -51,11 +51,12 @@ export const generateOwnedCPackage = (options, backend = null) => {
 		, identityEquality: options.identityEquality
 	});
 	const p = values.prefix;
+	const hasViews = hasAnchors || values.callbackArgumentViews === true;
 	const transport = backend?.render({ generated, values });
 	const nodes = new Map(values.nodes.map(node => [node.id, node]));
 	const walker = node => `oc_v${node.index}`;
 	const source = [`#include "${p}.h"`, generated.source, ...transport ? [transport.source] : [], ownedCRuntime(values, generated.carriers, transport?.session)];
-	if(hasAnchors) source.push(ownedCBorrowRuntime(values));
+	if(hasViews) source.push(ownedCBorrowRuntime(values));
 	if(hasTransfers) source.push(ownedCInputTransfers(values));
 	for(const node of nodes.values()) source.push(
 		`static inline int ${walker(node)}_to(${node.cName} const *, ${node.nativeName} *, size_t, oc_arena *);`
@@ -82,7 +83,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			if(node.identity)
 			{
 				lines.push(`if (!${into ? "*value" : "value->token"}) return ${invalid};`);
-				if(hasAnchors) lines.push("uint64_t token = 0;"
+				if(hasViews) lines.push("uint64_t token = 0;"
 					, `status = oc_identity_${direction}(arena, ${JSON.stringify(node.identityKind)}, ${into ? "(uint64_t)(uintptr_t)*value" : "value->token"}, &token);`
 					, "if (status) return status;"
 					, into ? "out->token = token;" : `*out = (${node.cName})(uintptr_t)token;`);
@@ -152,12 +153,12 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, ...body(false).map(line => `  ${line}`), "}");
 	}
 	if(options.hostCallbacks) source.push(ownedCCallbacks(values, generated.carriers));
-	if(hasAnchors || options.identityEquality) for(const node of values.nodes.filter(node => node.identity)) source.push(
+	if(hasViews || options.identityEquality) for(const node of values.nodes.filter(node => node.identity)) source.push(
 		`${p}_status ${node.cName}_equal(${p}_session *session, ${node.cName} left, ${node.cName} right, bool *out) {`
 		, `  if (!ov_pointer(out, sizeof(*out), _Alignof(bool))) return (${p}_status)LB_OWNED_INVALID;`
 		, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
 		, `  if (status) return (${p}_status)status;`
-		, ...hasAnchors ? ["  oc_arena arena = { .session = active }; uint64_t a = 0, b = 0;"
+		, ...hasViews ? ["  oc_arena arena = { .session = active }; uint64_t a = 0, b = 0;"
 			, `  status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)left, &a);`
 			, `  if (!status) status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)right, &b);`]
 			: ["  uint64_t a = (uint64_t)(uintptr_t)left, b = (uint64_t)(uintptr_t)right;"
@@ -192,7 +193,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, `  if (!oc_outputs(out, sizeof(*out), _Alignof(${result.cName}), owner) || *owner) return (${p}_status)LB_OWNED_INVALID;`
 			, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
 			, `  if (status) return (${p}_status)status;`
-			, `  ov_budget budget = oc_budget(); oc_arena input = { .budget = &budget${hasAnchors ? ", .session = active" : ""} }, output = { .budget = &budget${hasAnchors ? ", .session = active" : ""} };`
+			, `  ov_budget budget = oc_budget(); oc_arena input = { .budget = &budget${hasViews ? ", .session = active" : ""} }, output = { .budget = &budget${hasViews ? ", .session = active" : ""} };`
 			, "  oc_result *result_owner = NULL; status = oc_result_begin(active, &budget, &result_owner);"
 			, `  if (status) return (${p}_status)status;`
 			, ...item.anchor !== undefined ? ["  ov_input_anchor anchor = {0};"] : []

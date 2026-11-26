@@ -194,10 +194,14 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 						, "    def __exit__(self, *args: object) -> None: ..."] : []
 					, `    def retain(self) -> ${node.publicType}:`
 					, stub ? "        ..." : forward(`_native._retain${node.index}(self)`, ["self"], 8));
-				if(anchors) lines.push(`    def same_identity(self, other: ${node.publicType}) -> bool:`
+				if(anchors || c.callbackArgumentViews) lines.push(`    def same_identity(self, other: ${node.publicType}) -> bool:`
 					, stub ? "        ..." : forward(`_native._equal${node.index}(self, other)`, ["self", "other"], 8)
 					, "    def __eq__(self, other: object) -> bool:"
-					, stub ? "        ..." : `        if type(other) is not type(self): return NotImplemented\n        return self.same_identity(other)`);
+					, stub ? "        ..." : anchors ? `        if type(other) is not type(self): return NotImplemented\n        return self.same_identity(other)` : `        if type(other) is not type(self): return NotImplemented
+        if super().__eq__(other): return True
+        if self.is_closed or other.is_closed or self._lease.state is not other._lease.state: return False
+        try: return self.same_identity(other)
+        except LeanBridgeError: return False`);
 				if(node.kind === "callback")
 				{
 					const fn = c.callbacks.find(fn => fn.id === node.id), parameters = fn.parameters.slice(1).map(id => table.get(id));

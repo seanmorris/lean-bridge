@@ -95,7 +95,7 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 		return [node.id, { fields: members(node.id, node.fields), cases }];
 	}));
 	const bigint = c.nodes.some(node => node.integer);
-	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors, receiverExports: receivers })
+	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors, callbackArgumentViews: c.callbackArgumentViews, receiverExports: receivers })
 		, ...wholeOwners ? [ownedRustAnchoredValues({ inputOwners: anchors || c.functions.some(item => item.transfers?.length) })] : []
 		, ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
 	const fieldType = field => field.boxed ? `Box<${type(field.type)}>` : type(field.type);

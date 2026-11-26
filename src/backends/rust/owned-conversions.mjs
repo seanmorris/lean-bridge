@@ -186,7 +186,7 @@ export const generateOwnedRustConversions = (ir, options = {}) => {
 		else if(node.identity)
 		{
 			check.push("value.raw(state)?;"); to.push("value.raw(state)");
-			from.push("if value.is_null() { return Err(Error::MalformedResult); }", "Resource::from_owned(output.hold()?, *value)");
+			from.push("if value.is_null() { return Err(Error::MalformedResult); }", `Resource::from_owned(output.hold()?, *value${c.callbackArgumentViews ? `, owned_equal${node.index}` : ""})`);
 		}
 		else if(node.kind === "primitive")
 		{

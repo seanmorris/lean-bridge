@@ -101,7 +101,7 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 		, ...bigint ? ["#ifndef BOOST_MP_STANDALONE", "#define BOOST_MP_STANDALONE", "#endif", "#include <boost/multiprecision/cpp_int.hpp>"] : []
 		, `namespace lean_bridge::${c.prefix} {`
 		, ownedCppRuntime(c.prefix, { transferredInputs: transfers
-			, anchoredResults: anchors
+			, anchoredResults: anchors, callbackArgumentViews: c.callbackArgumentViews
 			, ...receivers ? { receiverMembers: ownedCppReceiverMembers(c) } : {} })
 		, cppValueBox
 		, ...wholeOwners ? [ownedCppAnchoredValues(c.prefix, { receiverExports: receivers })] : []
@@ -111,8 +111,13 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 		, ...bigint ? ["using Nat = boost::multiprecision::cpp_int;", "using Int = boost::multiprecision::cpp_int;"] : []];
 	for(const node of nodes.values())
 	{
-		if(node.identity) lines.push(`namespace detail { struct ${identities.get(node.id)}; }`
-			, `using ${names.get(node.id)} = Resource<detail::${identities.get(node.id)}>;`);
+		if(node.identity)
+		{
+			const tag = identities.get(node.id);
+			const definition = c.callbackArgumentViews ? ` { using Native = ${node.cName}; static constexpr auto equal = &${node.cName}_equal; }` : "";
+			lines.push(`namespace detail { struct ${tag}${definition}; }`
+				, `using ${names.get(node.id)} = Resource<detail::${tag}>;`);
+		}
 		else if(names.has(node.id)) lines.push(`struct ${names.get(node.id)};`);
 	}
 	for(const [id, branches] of alternatives)

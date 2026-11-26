@@ -217,7 +217,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 				, `        owned_values::owned_invoke${index}(self${sig.arguments ? `, ${sig.arguments}` : ""})`, "    }");
 		}
 		publicCalls.push("}");
-		if(anchors)
+		if(anchors || c.callbackArgumentViews)
 		{
 			const parameters = `session: *mut c_void, left: *mut c_void, right: *mut c_void, out: *mut bool`;
 			nativeEntries.push({ field: `equal${node.index}`, symbol: `${node.cName}_equal`, type: 'unsafe extern "C" fn(*mut c_void, *mut c_void, *mut c_void, *mut bool) -> u32' });
@@ -229,8 +229,8 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 				, `    checked(unsafe { owned_equal_native${node.index}(state.require()?, left.raw(&state)?, right.raw(&state)?, &mut equal) })?;`
 				, "    Ok(equal)", "}");
 			publicCalls.push(`impl Resource<${node.identityTag}> {`
-				, `    pub fn same_identity(&self, other: &Self) -> Result<bool, Error> { owned_values::owned_equal${node.index}(self, other) }`, "}"
-				, `impl PartialEq for Resource<${node.identityTag}> {`
+				, `    pub fn same_identity(&self, other: &Self) -> Result<bool, Error> { owned_values::owned_equal${node.index}(self, other) }`, "}");
+			if(anchors) publicCalls.push(`impl PartialEq for Resource<${node.identityTag}> {`
 				, "    fn eq(&self, other: &Self) -> bool { self.same_identity(other).unwrap_or(false) }", "}");
 		}
 		if(wholeOwners && index !== -1)

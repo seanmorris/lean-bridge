@@ -410,7 +410,7 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 	const callbacks = ownedPythonCallbacks(c, nodes, models);
 	const records=ownedPythonHostRecords(values.hostRecords,nodes);
 	const equalityNames = [];
-	if(anchors) for(const node of nodes.values()) if(node.identity)
+	if(anchors || c.callbackArgumentViews) for(const node of nodes.values()) if(node.identity)
 	{
 		const native = `_equal_native${node.index}`; equalityNames.push(native);
 		bindings.push(`    ${native} = runtime.library["${node.cName}_equal"]`

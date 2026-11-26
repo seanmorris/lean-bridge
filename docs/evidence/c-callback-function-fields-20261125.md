@@ -35,6 +35,32 @@ reads one live identity after **each** scenario, while the client session is
 still open, and zero after session close. Each execution record binds the
 public client and observer hashes to the actual installed archive's receipt.
 
+The [client used for the original overlap scenario](https://github.com/seanmorris/lean-bridge/blob/1e58182/tests/fixtures/structured-types/tariff-exchange.c)
+only checked that the saved borrow was stale **after** disposing the separate
+lease. A later C archive (`45f7d4eb…`) still returned 35 through that borrow
+while the lease was live. The current client checks this interval explicitly:
+the borrow must fail while the retained handle still works. The older receipts
+do not establish that stronger property.
+
+With the corrected adapters, C++, Python, Rust, and Ruby passed the overlap
+scenario against the original Lean components from both the
+[ordinary archive](c-host-input-records-20261126/ordinary.package-set.json)
+and the [reviewed archive](c-host-input-records-20261126/reviewed.package-set.json).
+In all eight executions the lease still returned 35 after the borrow expired.
+
+To replay the overlap through C++, Python, Rust, and Ruby, set
+`LEAN_BRIDGE_FRAME_C_HANDOFF` to the directory containing both C exchange
+handoffs and `LEAN_BRIDGE_LEAN_PREFIX` to the matching Lean installation.
+Run `npm run test:callback-frame-facades` with a C/C++ compiler, CPython,
+Rust and MRI Ruby 3.3. Set `LEAN_BRIDGE_FRAME_PYTHON`, `LEAN_BRIDGE_RUSTC`
+or `LEAN_BRIDGE_RUBY` to select an interpreter or compiler.
+The test verifies each archive and recompiles the current adapters against
+its original compiled Lean component; it does not recompile the Lean code.
+Each client compares the borrowed function with its independently retained
+copy and with a different function, then calls both saved handles after
+the callback returns. Only the retained call may succeed. This is adapter
+evidence, not an installation of four separate downstream packages.
+
 Both packages ran locally on Linux x86-64 with Lean 4.32.2 and glibc 2.36.
 The ordinary exchange checks ran on a fresh offline install of the exact
 verified ordinary archive. The reviewed route ran end to end from a separately

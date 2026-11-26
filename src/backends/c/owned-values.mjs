@@ -52,7 +52,28 @@ export const ownedCProjectionRequiresValueCopies = values => {
 export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {
 	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const hasAnchors = [...native.functions, ...native.callbacks].some(item => item.anchor !== undefined);
-	const hasEquality = hasAnchors || identityEquality;
+	// Returned owners may share a canonical token. That token is not itself
+	// a call-scoped borrow. Only generate frame views if a callback can receive
+	// an identity, directly or through a record, sequence or variant.
+	const types = new Map(native.nodes.map(node => [node.id, node]));
+	const pending = hostCallbacks ? native.callbacks.flatMap(item => item.parameters.slice(1)) : [];
+	const visited = new Set();
+	let callbackViews = false;
+	while(pending.length && !callbackViews)
+	{
+		const id = pending.pop();
+		if(visited.has(id)) continue;
+		visited.add(id);
+		const node = types.get(id);
+		if(node.kind === "resource" || node.kind === "callback") callbackViews = true;
+		else
+		{
+			if(node.element) pending.push(node.element);
+			for(const field of node.fields) pending.push(field.type);
+			for(const branch of node.cases) for(const field of branch.fields) pending.push(field.type);
+		}
+	}
+	const hasEquality = hasAnchors || callbackViews || identityEquality;
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
 	const names = new Map();
@@ -221,6 +242,10 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = 
 			, "   Callback arguments expire on return. Replies may borrow those arguments"
 			, "   or context storage, or transfer an owning result (also released on error)."
 			, "   Use a generated copy function to snapshot callback-local storage."
+			, ...callbackViews && !hasAnchors ? [
+				"   A retained identity survives the callback; its original borrow does not."
+				, "   Compare live identities with the typed _equal function, not pointer equality."
+			] : []
 			, "   Do not let C++ exceptions or longjmp cross a callback boundary. */");
 		for(const node of nodes.filter(node => node.kind === "callback"))
 		{
@@ -272,6 +297,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = 
 	return {
 		native, prefix: p, nodes, functions, callbacks, retains, hostFieldCalls
 		, ...hasAnchors ? { anchoredResults: true } : {}
+		, ...callbackViews && !hasAnchors ? { callbackArgumentViews: true } : {}
 		, ...(hostCallbacks ? { copies, hostArgument } : valueCopies ? { copies } : {})
 		, aliases: [...aliases].map(([name, id]) => ({ name, id }))
 		, signature, header: header.join("\n") };

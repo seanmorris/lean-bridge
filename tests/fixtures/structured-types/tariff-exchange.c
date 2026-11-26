@@ -43,8 +43,11 @@ static status revise(void *context, session *s, const tariff *in, tariff *out, o
         *out = *in; /* The bridge must consume the reply before retiring the input borrow. */
         return TARIFF_QUOTES_OK;
     }
-    if (r->mode == keep)
+    if (r->mode == keep) {
         assert(tariff_quotes_pack_quote_argument0_t_retain(s, in->quote, &r->held, &r->lease) == TARIFF_QUOTES_OK);
+        bool same = false;
+        assert(tariff_quotes_pack_quote_argument0_t_equal(s, in->quote, r->held, &same) == TARIFF_QUOTES_OK && same);
+    }
     if (r->mode == nested) {
         struct request inner = {.mode = host_error, .base = 7};
         exchange(s, &inner, TARIFF_QUOTES_CALLBACK_FAILED, 0);
@@ -54,6 +57,10 @@ static status revise(void *context, session *s, const tariff *in, tariff *out, o
     session *defining = r->mode == foreign ? r->peer : s;
     assert(tariff_quotes_make_tariff(defining, quoted + 100, out, reply_owner) == TARIFF_QUOTES_OK);
     r->sent = out->quote;
+    if (r->mode == keep) {
+        bool same = true;
+        assert(tariff_quotes_pack_quote_argument0_t_equal(s, in->quote, r->sent, &same) == TARIFF_QUOTES_OK && !same);
+    }
     /* Even an unsuccessful callback transfers its supplied result owner for cleanup. */
     return r->mode == host_error ? TARIFF_QUOTES_INVALID_ARGUMENT : TARIFF_QUOTES_OK;
 }
@@ -86,6 +93,7 @@ int tariff_exchange_consumer(session *s, void (*checkpoint)(void)) {
     struct request kept = {.mode = keep, .base = 30};
     exchange(s, &kept, TARIFF_QUOTES_OK, 134);
     assert(read_price(s, kept.held, 5) == 35); expired(s, kept.sent);
+    expired(s, kept.seen); /* Check while the independent lease is still live. */
     assert(tariff_quotes_result_release(&kept.lease) == TARIFF_QUOTES_OK && !kept.lease);
     expired(s, kept.held); expired(s, kept.seen); checkpoint(); puts("explicit retain");
 
