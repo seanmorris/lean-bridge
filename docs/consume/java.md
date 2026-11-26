@@ -213,6 +213,8 @@ Each result is an independently closeable lease. Passing `ticket` borrows it;
 `bump` does not take it away. Use `sameResource` to compare Lean object identity
 and `retain()` when a second owner needs its own lifetime. A declared exception
 whose `payload()` is a resource also gives the catcher a lease to close.
+That lease [remains usable after the input closes](../evidence/jvm-error-owner-20261126.md);
+use try-with-resources on the payload even if no other handle is open.
 Packages built against different definitions of `Ticket` expose different
 Java types. The [Maven configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results)
 shows how authors select the shared type.

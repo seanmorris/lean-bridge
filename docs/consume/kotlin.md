@@ -172,7 +172,9 @@ fun main() {
 
 Passing a ticket borrows it for that call. Use `retain()` to keep an independent
 lease, `sameResource` to compare the underlying objects, and `use` on a resource
-received as an exception's `payload()`. A ticket of the same name from different
+received as an exception's `payload()`. That payload can be the
+[last owner of the ticket](../evidence/jvm-error-owner-20261126.md), even
+after the original handle closes. A ticket of the same name from different
 Lean source is a different Kotlin type. See the
 [Maven author configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results).
 

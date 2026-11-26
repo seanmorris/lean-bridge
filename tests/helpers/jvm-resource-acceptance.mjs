@@ -14,6 +14,7 @@ import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { installJvmTasks } from "./jvm-tasks-acceptance.mjs";
+import {exerciseJvmErrorOwner} from "./jvm-error-owner-probe.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { verifyLeaseModel } from "./native-lease-project.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
@@ -22,6 +23,7 @@ const env = { ...process.env, LEAN_NUM_THREADS: "1" }, capture = env.LEAN_BRIDGE
 const json = async f => JSON.parse(await readFile(f, "utf8"));
 const digest = async f => { const h = createHash("sha256"); for await(const b of createReadStream(f)) h.update(b); return h.digest("hex"); };
 const fixture = resolve("tests/fixtures/jvm-sync-resources");
+const errorOwner = env.LEAN_BRIDGE_JVM_ERROR_OWNER_ORIGINAL;
 const paths = { "Observe.java": resolve("tests/fixtures/jvm-tasks/Observe.java")
 	, "settings.xml": resolve("tests/fixtures/jvm-sync-io/settings.xml") };
 const clients = ["Installed.java", "Installed.kt", "Bad.java", "Bad.kt", "Example.java", "Example.kt", "RejectLedger.java", "verify.py", ...Object.keys(paths)];
@@ -68,6 +70,30 @@ export const inspectJvmResource = async (root, route, work, tasks = false) => {
 		, reviewedSourceSha256: evidence.reviewedSourceSha256 };
 	return { paths, proof };
 };
+test("installed Java and Kotlin declared errors can be the last owner of a resource", {skip: !errorOwner, timeout: 1_800_000}, async t => {
+	const root = resolve(errorOwner), work = await mkdtemp(join(tmpdir(), "jvm-error-owner-"));
+	t.after(() => rm(work, {recursive: true, force: true}));
+	const out = resolve(env.LEAN_BRIDGE_JVM_ERROR_OWNER_OUTPUT ?? "build/jvm-error-owner");
+	await copyFile(join(fixture, "verify.py"), join(work, "verify.py"));
+	await copyFile(paths["settings.xml"], join(work, "settings.xml"));
+	const pin = await json(resolve("docs/evidence/jvm-sync-resources-20261123.json"));
+	const packages = new Map();
+	for(const name of ["ordinary", "reviewed", "peer"])
+	{
+		const pkg = await inspectJvmResource(root, name, work);
+		assert.deepEqual(pkg.proof, pin.installed.packages.find(p => p.route === name));
+		packages.set(name, pkg);
+	}
+	await mkdir(out, {recursive: true});
+	for(const route of ["ordinary", "reviewed"])
+	{
+		const source = packages.get(route), peer = packages.get("peer"), proj = join(work, route);
+		const {classpath} = await installJvmTasks(proj, work, [source, peer], false);
+		const result = await exerciseJvmErrorOwner({proj, classpath, env});
+		await writeFile(join(out, route + ".json"), canonicalJson({result, source: source.proof, peer: peer.proof}));
+	}
+});
+
 test("replay cross-package resource ownership through real offline-installed Java and Kotlin APIs", { skip: !capture && !replay, timeout: 3_600_000 }, async t => {
 	assert.ok(!(capture && replay)); const root = resolve(capture ?? replay), work = await mkdtemp(join(tmpdir(), "installed-jvm-resource-"));
 	t.after(() => rm(work, { recursive: true, force: true }));
@@ -92,6 +118,11 @@ test("replay cross-package resource ownership through real offline-installed Jav
 			for(const lib of [d.ledger.library, d.owner.library, "libleanshared.so", "liblean_bridge_native.so"]) assert.equal(d.libraries[lib], o.libraries[lib]);
 		}
 		const { resolved, classpath } = await installJvmTasks(proj, work, [component, peer, foreign], false);
+		if(capture)
+		{
+			const result = await exerciseJvmErrorOwner({proj, classpath, env});
+			await writeFile(join(root, route + ".error-owner.json"), canonicalJson({result, source: component.proof, peer: peer.proof}), {flag: "wx"});
+		}
 		await mkdir(classes);
 		const j = ["-J-XX:ActiveProcessorCount=1", "--release", "22", "-proc:none", "-encoding", "UTF-8", "-cp", classpath, "-d", classes];
 		await run(javac, [...j, ...clients.filter(f => f.endsWith(".java") && f !== "Bad.java").map(f => join(work, f))], proj, env);

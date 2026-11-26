@@ -36,8 +36,10 @@ The consumer source hashes match the linked installation records.
 | [C++ and Rust](native-sync-cpp-rust-20261122.json) | The [C++](../../tests/fixtures/native-sync-resource/consumer.cpp) and [Rust](../../tests/fixtures/native-sync-resource/consumer.rs) clients check identity, mutate the payload, clone its lease, close the original input, and read 44 through the retained lease. Reading the closed input fails. |
 | [Python](python-resource-leases-20261123.json), [Ruby](ruby-resource-leases-20261122.json), [.NET](dotnet-resource-leases-20261122.json) | Each client issues a fresh resource containing 13, catches a declared error carrying that resource, and closes the original. A second installed component reads 13 from the error payload. See [Python](../../tests/fixtures/python-task-resources/installed.py), [Ruby](../../tests/fixtures/ruby-task-resources/consumer.rb), and [C#](../../tests/fixtures/dotnet-task-resources/Program.cs). |
 | [Native PHP](php-heap-lease-20261123.json) | The [Composer client](../../tests/fixtures/php-io-resources/installed.php) mutates a successful result and reads 11 through the error payload. After other owners close, the observer sees one live identity and one file descriptor above baseline. Dropping the error payload restores both counts. |
+| [Java and Kotlin](jvm-error-owner-20261126.md) | Each closed the original, rejected a stale read, mutated the ticket through an independent package and read 42. Closing the error payload released the last identity and descriptor. Separate clients ran in both package load orders on both routes. |
 
-These are existing package results, not new runs. They do not establish the
+The first three rows use existing results; the JVM clients ran on the original
+Maven packages in a new replay. These checks do not establish the
 same ownership for an application-created object, a fatal runtime fault, or
 another consumer merely because it uses the same backend.
 
