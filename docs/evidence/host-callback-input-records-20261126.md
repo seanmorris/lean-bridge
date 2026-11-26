@@ -81,11 +81,15 @@ does not make the application function live longer. Echoing a genuine
 Lean function can return a usable lease.
 
 The [C++ client](../../tests/fixtures/structured-types/tariff-host-fields.cpp)
-passed six cases against the real C adapter from the ordinary C archive,
-including nested calls, expired borrows, and the original exception followed
-by a healthy retry. Its independent observer saw only the session between
-cases and zero after thread exit. This is a check of freshly generated C++
-headers, not yet an installed C++ archive on either source route.
+passed all six cases through relocated CMake consumers of the fresh
+[ordinary](cpp-host-input-records-20261126/ordinary.package-set.json) and
+[reviewed](cpp-host-input-records-20261126/reviewed.package-set.json) C++ releases.
+Both [ordinary](cpp-host-input-records-20261126/ordinary.host-fields.json)
+and [reviewed observations](cpp-host-input-records-20261126/reviewed.host-fields.json)
+cover a move-only callable, reentry, expired borrows, preservation of the
+original exception followed by a healthy retry, a closed input, and an
+independently owned returned Lean function. The observer counted one live
+identity between cases and zero after thread exit.
 
 ## Rust callers
 
