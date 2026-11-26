@@ -61,6 +61,8 @@ directory and its manifest digest, then run `npm run test:wasm-worker-effect-ref
 The [async delivery crosswalk](async-delivery-crosswalk-20261125.md) traces
 each of the 17 consumer profiles to its installed task, stream, callback and
 shutdown records, separately from synchronous iteration.
+The [IO and failure crosswalk](effect-failure-crosswalk-20261126.md) maps
+immediate errors, callback exceptions and terminal faults separately.
 
 For #1222, the [synchronous npm Ledger installs](javascript-wasm-sync-io-20261123.md)
 executed direct IO, returned and thrown errors, and validation before a state
@@ -71,10 +73,11 @@ Node, a Chromium page, a Node worker and a dedicated Chromium module worker.
 On each Ledger route, four browser workers trapped while the parent retained
 its ticket and advanced its own counter to 24. This is installed
 worker evidence for cross-package retirement, not for the separate 45-check
-scalar IO suite. Neither report ran a strict TypeScript program or mounted
-React UI for the full Ledger contract. The [five synchronous iterator clients](javascript-immediate-iterators-20261125.md)
-exercise immediate cursor operations on those profiles; keep that evidence,
-but don't count it as a run of the scalar IO or cross-package trap cases.
+scalar IO suite. The [five-client Ledger qualification](npm-synchronous-io-delivery-20261126.md)
+subsequently ran the same 45 scalar IO checks in strict TypeScript, mounted
+React and a dedicated worker as well as plain Node and Chromium on both
+author routes. Keep the [synchronous iterator clients](javascript-immediate-iterators-20261125.md)
+separate: cursor cleanup is neither scalar IO nor a cross-package trap.
 
 The [baseline contract](../type-surface.v1.json) distinguishes **17 consumer
 profiles** and two author routes. Its unit is a shape at a position on one

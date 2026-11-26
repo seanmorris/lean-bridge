@@ -56,3 +56,8 @@ Use `LEAN_BRIDGE_CHROMIUM` for a system Chromium executable if needed.
 This run covers the synchronous, in-memory npm profile on Node and Chromium.
 It does not establish worker, React, or asynchronous scheduler coverage.
 Nothing was uploaded to a registry.
+
+The [later five-client run](npm-synchronous-io-delivery-20261126.md) uses its
+own ordinary and reviewed package receipts. It executes the same assertions
+in strict TypeScript, mounted React, and a dedicated worker as well as in
+Node JavaScript and a browser page.

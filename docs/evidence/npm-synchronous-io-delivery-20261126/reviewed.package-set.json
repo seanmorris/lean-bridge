@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "ledger@1.0.0",
+    "name": "ledger",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 24306,
+          "path": "@example-ledger-io-1.0.2.tgz",
+          "sha256": "cd2c8f926b113b3b5b12584410736732cb97ac7caf9b5d4989c8c961ed2bb76a"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@example/ledger-io",
+      "profile": "javascript-wasm-sync-io-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-abi2.fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf",
+      "target": "npm",
+      "version": "1.0.2"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1673980,
+          "path": "lean-bridge-runtime-0.0.0-abi2.fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf.tgz",
+          "sha256": "b9bd12fd2a4b5e6f8994502b80a46237b98fefdc617464d53c08031686a7d645"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/runtime",
+      "profile": "javascript-wasm-sync-io-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf",
+      "target": "npm",
+      "version": "0.0.0-abi2.fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "413943efe1f57a2b3ba26f9982515ef25abc9af2b6f7dc6760555e977742a7f9",
+      "id": "javascript-wasm-sync-io-v1",
+      "runtimeIdentity": "fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "c6e8c68c1ff101ad1643006263c5de93a6d27dbf6a23826ed741ced9877ad0e1"
+  }
+}

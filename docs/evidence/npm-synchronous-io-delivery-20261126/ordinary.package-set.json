@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "ledger@1.0.0",
+    "name": "ledger",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 22072,
+          "path": "@example-ledger-io-1.0.2.tgz",
+          "sha256": "4fae295e31b60a372f45d2538b4989bfc2c9fb45b56bbaf018291bca74a6ed05"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@example/ledger-io",
+      "profile": "javascript-wasm-sync-io-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-abi2.fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf",
+      "target": "npm",
+      "version": "1.0.2"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1673980,
+          "path": "lean-bridge-runtime-0.0.0-abi2.fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf.tgz",
+          "sha256": "b9bd12fd2a4b5e6f8994502b80a46237b98fefdc617464d53c08031686a7d645"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/runtime",
+      "profile": "javascript-wasm-sync-io-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf",
+      "target": "npm",
+      "version": "0.0.0-abi2.fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "53bfbe6b5651598ace824a7801502850822f9536c8286cfb2f066d088c5500a2",
+      "id": "javascript-wasm-sync-io-v1",
+      "runtimeIdentity": "fc8edd62912b230125266f7f681c4a18e6349b8faad1afca83803de4e5b77edf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "b20b424d34ba1e9b5aa4ef7f6a56cdbfc4a926b38f474c5befa318168e9a1f2d"
+  }
+}

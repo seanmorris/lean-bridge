@@ -19,16 +19,19 @@ test("compile, reproduce, install and check ordinary and reviewed JS IO releases
 	const call = (bin, args, extra) => run(process.execPath, [bin, ...args], extra);
 	const src = join(root, "source"), config = join(src, "lean-bridge.exports.json");
 	const build = (bin, project, out, extra) => call(bin, ["build", "--project", project, "--target", "npm", "--output", out, "--json", "--progress", "none"], extra);
-	const check = async release => {
+	const check = async (release, expectedRoute) => {
 		await call(cli, ["verify", "--receipt", join(release, "package-set-receipt.json")]);
 		const apiRoot = join(release, "packages/npm");
 		const {receipt, result} = await readVerifiedPackageSetReceipt({receiptPath: join(apiRoot, "package-set-receipt.json")});
 		const report = await run(process.execPath, ["--test", resolve("tests/helpers/javascript-wasm-io-installed.mjs")], {LEAN_BRIDGE_JS_IO_RELEASE: apiRoot});
 		const summary = report.stdout.split("\n").find(line => line.startsWith("# {\"node\":"));
 		assert.ok(summary, "installed consumer must report both hosts rather than skipping");
-		const {node, chromium} = JSON.parse(summary.slice(2));
+		const {node, chromium, ui, typescript, packageSetSha256, route} = JSON.parse(summary.slice(2));
+		assert.equal(route, expectedRoute);
+		assert.equal(packageSetSha256, result.receiptSha256);
+		assert.deepEqual(ui.worker, node); assert.deepEqual(ui.react, node); assert.deepEqual(typescript.common, node);
 		assert.deepEqual(node, chromium); assert.equal(node.scalarKinds, 19); assert.equal(node.counter, 3);
-		t.diagnostic(receipt.component.id + " " + result.receiptSha256 + ": " + node.checks + " checks per host");
+		t.diagnostic(receipt.component.id + " " + result.receiptSha256 + ": " + node.checks + " shared checks in all five installed hosts");
 		return join(apiRoot, receipt.packages.find(p => p.role === "component").artifacts[0].path);
 	};
 	try
@@ -49,14 +52,14 @@ test("compile, reproduce, install and check ordinary and reviewed JS IO releases
 		const result = out => readVerifiedPackageSetReceipt({receiptPath: join(out, "package-set-receipt.json")});
 		assert.deepEqual((await result(ordinary)).receipt, (await result(rebuilt)).receipt);
 		t.diagnostic("The offline-installed author CLI reproduced both ordinary archives from a new source directory.");
-		const archive = await check(rebuilt);
+		const archive = await check(rebuilt, "ordinary");
 		const member = (tar, file) => run("tar", ["-xzOf", tar, "package/metadata/" + file]).then(x => x.stdout);
 		const ir = JSON.parse(await member(archive, "binding-ir.json"));
 		ir.documentation.summary = "Independently reviewed synchronous Ledger.";
 		const review = JSON.stringify(ir, null, 4) + "\n", path = join(src, "ledger.binding-ir.json");
 		await writeFile(path, review, {flag: "wx"}); delete cfg.exports; await writeFile(config, canonicalJson(cfg));
 		const reviewed = join(root, "reviewed");
-		await build(cli, src, reviewed); assert.equal(await member(await check(reviewed), "review.binding-ir.json"), review);
+		await build(cli, src, reviewed); assert.equal(await member(await check(reviewed, "reviewed"), "review.binding-ir.json"), review);
 		const refuse = (label, rx, settings) => t.test(label, async () => {
 			const no = join(root, "refused-" + label);
 			await assert.rejects(build(cli, src, no, settings), error => {
