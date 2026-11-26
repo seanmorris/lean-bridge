@@ -199,11 +199,17 @@ and [reviewed CPAN package](perl-host-input-records-20261126/reviewed.json)
 also passed all six cases after offline installation and relocation. Each
 of the eight clients used its matching prebuilt XS, with no author tools
 on its search path. Both routes used the same runtime and different
-component archives. A [separate replay](perl-host-input-records-20261126/reviewed-xs-536-threaded.json)
-installed the reviewed archive both ways on threaded Perl 5.36.3. The
-prebuilt and locally compiled XS binaries had different hashes; both passed
-the same six cases and loaded the unchanged native payload. This replay
-covers one interpreter and one route, not all eight. Run
+component archives.
+
+The [ordinary generated-XS replay](perl-host-input-records-20261126/ordinary.generated-xs.json)
+and [reviewed generated-XS replay](perl-host-input-records-20261126/reviewed.generated-xs.json)
+installed those same archives on all four interpreter builds, compiling just
+the XS adapter at install time. All eight matched their prebuilt counterparts:
+the original callback exception survived, re-entry succeeded, and the live
+identity count returned to one after each case and zero at shutdown.
+Each report pins the XS source, generated C, installed binary and install
+receipt. This qualifies both installation modes for callback fields; it does
+not test a retained callback's one-call limit. Run
 `npm run test:perl-function-fields` with the four interpreters for both routes.
 
 ## Native PHP callers
