@@ -2216,6 +2216,21 @@ registered for one call does not gain a longer lifetime by being returned
 inside a record. The [installed Node and Chromium example](evidence/php-wasm-function-fields-20261126.md)
 exercises both cases.
 
+For a PHP-Wasm component whose manifest lists `hostInputRecords`, use the
+generated input class to pass a PHP closure for the duration of one call:
+
+```php
+use Brick\Math\BigInteger;
+use LeanTariffQuotes\TariffInput;
+use function LeanTariffQuotes\apply_tariff_with_host_fields;
+
+$row = new TariffInput(quote: fn(BigInteger $units): BigInteger => $units->plus(40));
+echo apply_tariff_with_host_fields($row, BigInteger::of(2)); // 42
+```
+
+The same field can take a leased Lean function. A PHP closure expires when
+the call returns, even if Lean sends it back to PHP inside another record.
+
 PHP-Wasm exposes the same copied `Payload`, binary `Bytes`, canonical `Box` identity, PHP callbacks, and invokable Lean closures as [native PHP](#native-php-ownership-and-errors). Alpha changes the record's Boolean and count; the callback and returned callable each produce `42` in this example.
 
 The `finally` blocks close the returned callable and the box even when a call fails. Closing a resource twice is allowed; using a closed wrapper raises `LeanAlpha\DisposedResource`. Keep each resource in the PHP-Wasm instance that created it. A second instance owns a separate Lean heap and identity domain.

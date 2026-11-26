@@ -99,8 +99,9 @@ typedef struct { lb_scope scope; size_t visits; lg_frame frames[129]; } lg_walk;
  * The lg_nodes table is emitted immediately before this walker.
  *
  * @param nativeOutputPreflight - Validate output spans before conversion limits.
+ * @param recordInputs - Enter a borrowed input's child at its original nesting depth.
  */
-const graphZendWalkSource = nativeOutputPreflight => String.raw`
+const graphZendWalkSource = (nativeOutputPreflight, recordInputs = false) => String.raw`
 static int lg_list(zval *value, size_t count, bool exact, lb_scope *s) {
   ZVAL_DEREF(value);
   if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value))
@@ -159,12 +160,12 @@ static int lg_input_enter(lg_walk *walk, lg_frame *frame, const lg_node *node) {
   frame->fields = node->branches[branch].fields; frame->count = node->branches[branch].count;
   return lg_children(walk, frame->count);
 }
-static int lg_to(lg_walk *walk, unsigned type, zval *value, void *out) {
+static int ${recordInputs ? "lg_to_at" : "lg_to"}(lg_walk *walk, unsigned type, zval *value, void *out${recordInputs ? ", size_t parent_depth" : ""}) {
   size_t depth = 0; walk->frames[0] = (lg_frame){ .type = type, .wire = value, .native = out };
   while (true) {
     lg_frame *frame = &walk->frames[depth]; const lg_node *node = &lg_nodes[frame->type];
     if (!frame->entered) {
-      if (!lg_step(walk, depth)) return 0;
+      if (!lg_step(walk, depth${recordInputs ? " + parent_depth" : ""})) return 0;
       if (!node->inhabited) return lb_fail(&walk->scope, "The declared copied type has no finite value", 0);
       frame->entered = true;
       if (node->kind == LG_SCALAR) { if (!node->input(frame->wire, frame->native, &walk->scope)) return 0; }
@@ -179,7 +180,7 @@ static int lg_to(lg_walk *walk, unsigned type, zval *value, void *out) {
       }
     }
     if (frame->index == frame->count) { if (!depth) return 1; depth--; continue; }
-    if (depth == 128) return lg_step(walk, 129);
+    if (depth${recordInputs ? " + parent_depth" : ""} == 128) return lg_step(walk, 129);
     size_t index = frame->index++; const lg_field *field = node->kind == LG_SEQUENCE ? NULL : &frame->fields[index];
     unsigned child_type = field ? field->type : node->element; const lg_node *child = &lg_nodes[child_type];
     unsigned char *at = field ? frame->native + field->offset : frame->data + index * child->size;
@@ -191,7 +192,10 @@ static int lg_to(lg_walk *walk, unsigned type, zval *value, void *out) {
     if (!input) return lb_fail(&walk->scope, "Missing copied wire field", 1);
     walk->frames[++depth] = (lg_frame){ .type = child_type, .wire = input, .native = at };
   }
-}
+}${recordInputs ? `
+static int lg_to(lg_walk *walk, unsigned type, zval *value, void *out) {
+  return lg_to_at(walk, type, value, out, 0);
+}` : ""}
 static zval *lg_slot(zval *owner) {
   zval empty; ZVAL_NULL(&empty);
   // Insert before constructing the child. Any Zend bailout leaves every
@@ -266,3 +270,6 @@ export const graphZendWalk = graphZendWalkSource(false);
 
 /** Invalid callback output spans must retire even if their counts exceed limits. */
 export const graphZendCheckedWalk = graphZendWalkSource(true);
+
+/** Input-record children share the enclosing graph's nesting and allocation limits. */
+export const graphZendRecordWalk = graphZendWalkSource(true, true);

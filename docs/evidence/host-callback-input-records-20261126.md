@@ -244,3 +244,26 @@ once. Neither dispatched a callback when the second record was invalid.
 Both native allocations and live identities reached zero at shutdown.
 These direct adapter checks are separate from fresh Maven installation;
 `npm run test:jvm-function-fields` builds and relocates both authoring routes.
+
+## PHP-Wasm callers
+
+The Zend generator emits a separate input class for selected callback fields;
+it uses the normal wasm32 PHP callback broker and call-scoped cleanup.
+The old ordinary Tariff component reconstructed every generated file
+byte-for-byte without the new capability. For a new component, the pinned
+wasm32 compiler accepted the extension with two callbacks, a string and a
+32-bit integer in the same record. In a real PHP 8.4 wasm32 guest, an invalid
+callback in the second record failed before dispatch; the first record's
+callback count stayed at zero.
+
+The PHP-Wasm producer independently accepted the ordinary Lean source and
+the reviewed contract. Their Binding IR digests begin with `6cfc1d0f` and
+`5278498c`; the reviewed source digest begins with `758794f3`. Both
+authenticated the two input record types. This check stops before packaging.
+
+The [installed consumer](../../tests/fixtures/structured-types/tariff-zend.php)
+also checks capture, reentry, expired callbacks, exception identity, retained
+leases, and the four distinct callback arguments of the mixed-record call.
+Run `npm run test:php-wasm-function-fields` for the ordinary and reviewed
+packages in Node and Chromium. The [earlier receipts](php-wasm-function-fields-20261126.md)
+predate this input class and do not count for it.

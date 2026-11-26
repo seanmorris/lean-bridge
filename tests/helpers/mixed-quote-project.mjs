@@ -13,18 +13,7 @@ export const compileMixedQuote = async (t,evidenceName) => {
 	const configuration = JSON.parse(await readFile(source));
 	configuration.exports.push("Owned.compareCards");
 	configuration.ownedAggregates.closureFields.push("Owned.PriceCard.quote","Owned.PriceCard.rebate");
-	const sourceSuffix = `
-namespace Owned
-structure PriceCard where
-  quote : UInt32 → UInt32
-  rebate : UInt32 → UInt32
-  label : String
-  base : UInt32
-def compareCards (left right : PriceCard) : UInt32 :=
-  left.quote (right.rebate left.base) + right.quote (left.rebate right.base) +
-    10 * left.label.utf8ByteSize.toUInt32 + right.label.utf8ByteSize.toUInt32
-end Owned
-`;
+	const sourceSuffix = "\n"+await readFile(new URL("../fixtures/structured-types/price-card.lean",import.meta.url),"utf8");
 	return compileOwnedAggregateFixture(t,{fixture: "leased-closure-fields"
 		, configuration,sourceSuffix,witness: "import Owned\n",hostCallbacks: true
 		, stepTimeoutMs: 600000,evidenceName});

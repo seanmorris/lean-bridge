@@ -114,6 +114,7 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 		, component: model.component, sourceIdentity: receipt.sourceIdentity
 		, ...model.ownedGraph ? {
 			hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
+			, hostInputRecords: model.ownedGraph.hostInputRecords !== undefined
 			, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 			, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 			, receiverExports: Boolean(model.ownedGraph.receiverExports)

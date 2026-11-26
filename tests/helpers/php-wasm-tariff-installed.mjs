@@ -18,68 +18,104 @@ import {prepareStagedQuoteProject,checkStagedQuoteIdentities} from "./staged-quo
 const component = "@example/tariff-quotes", routes = ["ordinary","reviewed"];
 const digest = async path => sha256(await readFile(path));
 const parse = async path => JSON.parse(await readFile(path));
-const checkResult = text => {
-	const {baseline,held,after,refreshed,...values} = JSON.parse(text);
+const checkResult = (text,inputs) => {
+	const {baseline,held,after,refreshed,hostInputs,...values} = JSON.parse(text);
 	assert.ok(Number.isInteger(baseline) && baseline >= 0 && Number.isInteger(held) && held > baseline);
 	assert.equal(after,baseline); assert.deepEqual(refreshed,["42",baseline]);
-	assert.deepEqual(values,{visits:0,stageCalls:1,result:"42"});
+	assert.deepEqual(values,{visits: 0,stageCalls: 1,result: "42"});
+	if(!inputs)
+	{ assert.equal(hostInputs,undefined); return; }
+	assert.ok(hostInputs.held > baseline);
+	assert.equal(hostInputs.calls,3); assert.equal(hostInputs.inner,1);
+	assert.equal(hostInputs.mixed,"78");
+	assert.deepEqual(hostInputs.seen,[["9"],["5"],["6"],["2"]]);
+	assert.deepEqual(hostInputs.settled,Object.fromEntries(["capture","reentry","expired","error","lease","validation","mixed"].map(point=>[point,baseline])));
 };
 
-test("both installed PHP-Wasm packages round-trip callable fields and directly return a leased callable", {timeout:7_200_000}, async t => {
+test("both installed PHP-Wasm packages round-trip callable fields and directly return a leased callable", {timeout: 7_200_000}, async t => {
 	const work = await mkdtemp(join(tmpdir(),"zend-tariff-"));
-	t.after(()=>rm(work,{recursive:true,force:true}));
+	t.after(()=>rm(work,{recursive: true,force: true}));
 	const env = process.env, keep = env.LEAN_BRIDGE_ZEND_TARIFF_KEEP, replay = env.LEAN_BRIDGE_ZEND_TARIFF_REPLAY;
 	assert.ok(!(keep && replay));
 	const sets = replay ? resolve(replay) : await mkdtemp(join(keep ?? work,"handoffs-"));
 	const kit = resolve(env.LEAN_BRIDGE_PHP_INPUTS), host = resolve(env.LEAN_BRIDGE_PHP_WASM_HOST);
-	const observer = await buildOwnedPhpWasmObserver({directory:join(work,"observer"),runtimeRoot:join(kit,"runtime"),
-		phpSource:join(kit,"php"),emsdkRoot:resolve(env.LEAN_BRIDGE_PHP_EMSDK)});
-	if(!replay) for(const route of routes) {
-		const project = join(work,route+"-source");
-		await prepareStagedQuoteProject(project,route,"php-wasm");
-		try { await buildCanonicalProject({projectRoot:project,outputRoot:join(sets,route),targets:["php-wasm"]}); }
-		catch(error) { throw new Error(route+": "+error.message+" "+JSON.stringify(error.details),{cause:error}); }
-		await rm(project,{recursive:true});
-	}
+	const observer = await buildOwnedPhpWasmObserver({
+		directory: join(work,"observer"), runtimeRoot: join(kit,"runtime")
+		, phpSource: join(kit,"php"), emsdkRoot: resolve(env.LEAN_BRIDGE_PHP_EMSDK)
+	});
 	const output=resolve(env.LEAN_BRIDGE_ZEND_TARIFF_OUTPUT??"build/zend-function-fields");
-	await mkdir(output,{recursive:true});
-	for(const route of routes) {
+	await mkdir(output,{recursive: true});
+	for(const route of routes)
+	{
 		const root = join(work,route+"-install"), release = join(sets,route), source = join(release,"packages/php-wasm");
+		if(!replay)
+		{
+			const project = join(work,route+"-source");
+			await prepareStagedQuoteProject(project,route,"php-wasm",{mixed: true});
+			try
+			{ await buildCanonicalProject({projectRoot: project,outputRoot: release,targets: ["php-wasm"]}); }
+			catch(error)
+			{ throw new Error(route+": "+error.message+" "+JSON.stringify(error.details),{cause: error}); }
+			await rm(project,{recursive: true});
+		}
 		await mkdir(root);
 		const verified = await readVerifiedPhpWasmCopiedPackageSet(source);
 		const handoff = join(root,"handoff");
 		await copyPackageSetHandoff(release,handoff);
-		const {receipt,result} = await readVerifiedPackageSetReceipt({receiptPath:join(handoff,"package-set-receipt.json")});
+		const {receipt,result} = await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
 		assert.deepEqual(receipt.profiles.map(p=>p.id),["php-wasm-copied-v1"]);
 		assert.equal(verified.report.runtimeIdentity,observer.identity.runtimeIdentity);
 		const archiveRoot = await bindPhpWasmReceiptArchives(handoff,verified.report);
-		const installed = await installPhpWasmGraphPackages({root,release:{...verified,output:source,archiveRoot},
-			host,diagnostic:message=>t.diagnostic(message)});
-		await rm(handoff,{recursive:true});
+		const installed = await installPhpWasmGraphPackages({root, host
+			, release: {...verified,output: source,archiveRoot}
+			, diagnostic: message=>t.diagnostic(message)
+		});
+		await rm(handoff,{recursive: true});
 		const app = installed.deployment, compiled = join(app,"node_modules",component,"compiled");
-		const identity = checkStagedQuoteIdentities(await parse(join(compiled,"model.json")),await parse(join(compiled,"binding-ir.json")),receipt.profiles[0],route);
-		const files = {"installed-node.mjs":"php-wasm-sync-io-probe/installed-node.mjs",
-			"installed.mjs":"structured-types/tariff-zend-host.mjs","consumer.php":"structured-types/tariff-zend.php"};
+		const model=await parse(join(compiled,"model.json")), inputs=model.ownedGraph.hostInputRecords;
+		const identity = checkStagedQuoteIdentities(model,await parse(join(compiled,"binding-ir.json")),receipt.profiles[0],route,{mixed: inputs !== undefined});
+		if(replay && inputs === undefined)
+		{
+			const original=new URL("../../docs/evidence/php-wasm-function-fields-20261126/"+route+".json",import.meta.url);
+			assert.equal(result.receiptSha256,(await parse(original)).receiptSha256);
+		} else
+		{
+			const contract=(name,fields)=>({type: "lean:Owned."+name,input: name+"Input",lifetime: "call",fields});
+			const expected=[contract("PriceCard",["quote","rebate"]),contract("Tariff",["quote"])];
+			assert.deepEqual([...inputs].sort((a,b)=>a.type.localeCompare(b.type)),expected);
+		}
+		const files = {
+			"installed-node.mjs": "php-wasm-sync-io-probe/installed-node.mjs"
+			, "installed.mjs": "structured-types/tariff-zend-host.mjs"
+			, "consumer.php": "structured-types/tariff-zend.php"
+		};
 		const sources = {};
-		for(const [dest,from] of Object.entries(files)) {
+		for(const [dest,from] of Object.entries(files))
+		{
 			await copyFile(join("tests/fixtures",from),join(app,dest)); sources[from]=await digest(join(app,dest));
 		}
 		await writeFile(join(app,"observer.so"),observer.bytes);
 		const observations=[];
-		for(const mode of ["embedded","composer"]) for(const loading of ["startup","lazy"]) {
-			const text = await run(process.execPath,["installed-node.mjs",mode,loading],app,{PATH:"/no-author-tools",LANG:"C.UTF-8",TMPDIR:work},120000);
-			checkResult(text); observations.push({host:"Node",mode,loading,result:JSON.parse(text)});
+		for(const mode of ["embedded","composer"]) for(const loading of ["startup","lazy"])
+		{
+			const text = await run(process.execPath,["installed-node.mjs",mode,loading],app,{PATH: "/no-author-tools",LANG: "C.UTF-8",TMPDIR: work},120000);
+			checkResult(text,inputs); observations.push({host: "Node",mode,loading,result: JSON.parse(text)});
 		}
-		const browser=await exerciseInstalledIOBrowser({app,host:join(app,"node_modules/php-wasm"),t,component,observer:true,checkResult});
-		for(const obs of browser) observations.push({...obs,result:JSON.parse(obs.result)});
+		const browser=await exerciseInstalledIOBrowser({app,host: join(app,"node_modules/php-wasm"),t,component,observer: true,checkResult: text=>checkResult(text,inputs)});
+		for(const obs of browser) observations.push({...obs,result: JSON.parse(obs.result)});
 		assert.equal(observations.length,8);
-		await writeFile(join(output,route+".json"),canonicalJson({route,receiptSha256:result.receiptSha256,...identity,
-			runtime:verified.report.runtimeIdentity,observer:observer.identity,archives:installed.archives,
-			installed:{component:sha256(canonicalJson(installed.installed["node_modules/"+component])),
-				composer:sha256(canonicalJson(installed.installed["vendor/example/tariff-quotes"])),host:installed.host.archiveSha256},
-			sources,observations}));
+		const installedHash=path=>sha256(canonicalJson(installed.installed[path]));
+		await writeFile(join(output,route+".json"),canonicalJson({route
+			, receiptSha256: result.receiptSha256
+			, ...identity
+			, runtime: verified.report.runtimeIdentity, observer: observer.identity
+			, archives: installed.archives
+			, installed: {component: installedHash("node_modules/"+component)
+				, composer: installedHash("vendor/example/tariff-quotes")
+				, host: installed.host.archiveSha256}
+			, sources,observations}));
 		t.diagnostic(route+": "+result.receiptSha256);
-		await rm(root,{recursive:true});
+		await rm(root,{recursive: true});
 	}
 	t.diagnostic("Handoffs: "+sets);
 });
