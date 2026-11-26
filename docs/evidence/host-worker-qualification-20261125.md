@@ -113,6 +113,11 @@ export, not for a callback receiving another host function.
 
 Match the newer reports against the particular cell they exercise:
 
+- A **Lean resource as an export argument or result** is now verified on both
+  routes in all 17 profiles. [Direct Ticket calls](resource-ticket-positions-20261126.md)
+  identify the executed client and both original installed releases in each
+  profile. The constructor returned a Ticket; the reader accepted a Ticket
+  directly. This does not count as a callback accepting or returning a Ticket.
 - For the four **field** cells, start separately with
   [Lean resources in Claim](owned-checked-record-promotion-20261026-aligned.md),
   [application functions in TariffInput](host-callback-input-records-20261126.md),
