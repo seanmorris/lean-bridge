@@ -72,6 +72,29 @@ and [CLR](../../tests/fixtures/dotnet-task-resources/Program.cs) resource
 clients checked their final count **after** leaving a context manager or
 calling `DisposeAsync()`; don't infer the same ordering from those checks.
 
+Separate installed replays now distinguish terminal cleanup from caller cleanup on both runtimes:
+
+| Consumer | Before the caller disposed the cursor | Evidence |
+| --- | --- | --- |
+| .NET 8 | Natural exhaustion, typed `Depot.next` failure and a cancellation token set between pulls each incremented the Lean close counter **once**. The cancellation exception carried the original token. The next pull returned false. | [Client](../../tests/fixtures/dotnet-task-resources/Terminal.cs), [ordinary NuGet](dotnet-stream-terminal-20261126/ordinary.json), [reviewed NuGet](dotnet-stream-terminal-20261126/reviewed.json). |
+| CPython 3.11 and 3.12 | Natural exhaustion and typed pull failure each incremented the counter **once**; another `anext` saw `StopAsyncIteration`. In the early-exit control, the counter did not move until the application called `aclose`. Python names the exported cursor factory, `Depot.tickets`, on the step exception. | [Client](../../tests/fixtures/python-task-resources/terminal.py), [3.11 wheels](python-stream-terminal-20261126/cpython-311.json), [3.12 wheels](python-stream-terminal-20261126/cpython-312.json). |
+
+Each client kept the cursor and first item in scope and closed the original ticket. After a typed
+failure, the delivered item still worked. Closing that item left the error payload usable by the peer;
+the peer incremented the ticket to 42. Closing the payload restored the native identity and descriptor
+counts **before** any caller-requested cursor disposal. Closing the cursor twice did not repeat the finalizer.
+
+The replay authenticated the original component archives and installed the independent Desk and Depot packages
+offline. Both authoring routes ran each package load order in separate processes: four .NET executions and
+eight Python executions. Neither result claims a cancellation race with an in-flight pull: the .NET token was
+cancelled before requesting the next item, and the new Python check tested early close, not cancellation.
+
+To repeat the checks, point `LEAN_BRIDGE_DOTNET_STREAM_TERMINAL_ORIGINAL` at the original
+[NuGet capture](dotnet-resource-leases-20261122.json) and run `node --test tests/helpers/dotnet-resource-installed.mjs`.
+For each [CPython capture](python-resource-leases-20261123.json), set `LEAN_BRIDGE_PYTHON_STREAM_TERMINAL_ORIGINAL`
+to that ABI's root and `LEAN_BRIDGE_PYTHON` to its interpreter, then run `node --test tests/helpers/python-resource-installed.mjs`.
+Fresh captures also run the new clients; historical replay still verifies the original acceptance bytes.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

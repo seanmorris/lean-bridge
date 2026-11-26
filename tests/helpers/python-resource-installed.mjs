@@ -189,10 +189,11 @@ test("type-check candidate resource stubs before rebuilding native wheels", { sk
 });
 
 const capture = env.LEAN_BRIDGE_PYTHON_LEASE_CAPTURE, replay = env.LEAN_BRIDGE_PYTHON_LEASE_REPLAY;
+const terminal = env.LEAN_BRIDGE_PYTHON_STREAM_TERMINAL_ORIGINAL;
 test("installed, relocated Python wheels share exact Lean resource types through IO, asyncio tasks and streams", {
-	skip: !capture && !replay, timeout: 3_600_000
+	skip: !capture && !replay && !terminal, timeout: 3_600_000
 }, async t => {
-	const root = resolve(replay ?? capture), python = env.LEAN_BRIDGE_PYTHON ?? "python3";
+	const root = resolve(terminal ?? replay ?? capture), python = env.LEAN_BRIDGE_PYTHON ?? "python3";
 	const tag = await run(python, ["-I", "-c", "import sys; print(sys.implementation.cache_tag)"], root, env);
 	assert.ok(["cpython-311", "cpython-312"].includes(tag));
 	const work = await mkdtemp(join(tmpdir(), "installed-python-resources-"));
@@ -200,14 +201,25 @@ test("installed, relocated Python wheels share exact Lean resource types through
 	const clients = {};
 	for(const f of fixtures)
 	{
-		const from = join(replay ? root : cases, f);
+		const from = join(replay || terminal ? root : cases, f);
 		clients[f] = sha256(await readFile(from)); await copyFile(from, join(work, f), constants.COPYFILE_EXCL);
+	}
+	const terminalFile = join(work, "terminal.py"), terminalRows = [];
+	if(!replay) await copyFile(join(cases, "terminal.py"), terminalFile, constants.COPYFILE_EXCL);
+	let prior;
+	if(terminal)
+	{
+		prior = (await json(resolve("docs/evidence/python-resource-leases-20261123.json"))).interpreters[tag];
+		const bytes = await readFile(join(root, "acceptance.json"));
+		assert.equal(sha256(bytes), prior.acceptanceSha256); assert.deepEqual(JSON.parse(bytes), prior.installed);
+		assert.deepEqual(clients, prior.installed.clients);
 	}
 	const rows = [], staticResults = [];
 	for(const route of ["ordinary", "reviewed"])
 	{
 		const pkgs = [];
 		for(const [r, role] of [[route, "desk"], [route, "depot"], ["lookalike", "desk"]]) pkgs.push(await inspect(root, r, role));
+		if(terminal) assert.deepEqual(pkgs.map(p => p.proof), prior.installed.rows.find(r => r.route === route).packages);
 		const [desk, depot, other] = pkgs.map(p => p.proof);
 		assert.equal(desk.nominal, depot.nominal); assert.notEqual(desk.nominal, other.nominal);
 		const base = join(work, route), feed = join(base, "feed"), stage = join(base, "target"), installed = join(base, "relocated");
@@ -248,7 +260,19 @@ test("installed, relocated Python wheels share exact Lean resource types through
 			assert.equal(module.resourceLedger.name, "liblb_task_resources_" + module.resourceLedger.identity + ".so");
 			assert.equal(sha256(await readFile(join(lib, module.resourceLedger.name))), module.resourceLedger.sha256);
 			if(ledger) assert.deepEqual(module.resourceLedger, ledger); else ledger = module.resourceLedger;
-			if(!replay || env.LEAN_BRIDGE_PYTHON_LEASE_COMPARE_SOURCES) await compareGenerator(pkg, lib, module);
+			if((!replay && !terminal) || env.LEAN_BRIDGE_PYTHON_LEASE_COMPARE_SOURCES) await compareGenerator(pkg, lib, module);
+		}
+		if(!replay)
+		{
+			const orders = [["lease_desk", "lease_depot"], ["lease_depot", "lease_desk"]], calls = [];
+			for(const order of orders)
+			{
+				const result = await invoke(["terminal.py", ...order]);
+				assert.equal(result, "exhaustion and typed failure finalized before aclose; early close finalized on request; last error owner usable, zero owner and descriptor delta");
+				calls.push({order, result});
+			}
+			terminalRows.push({route, packages: [desk, depot], verified, calls});
+			if(terminal) continue;
 		}
 		assert.equal(await invoke(["example.py"]), "42");
 		if(env.LEAN_BRIDGE_PYTHON_LEASE_MYPY) staticResults.push({ route, ...await staticCheck(base, installed, tag) });
@@ -262,6 +286,20 @@ test("installed, relocated Python wheels share exact Lean resource types through
 		await invoke(["-c", tamper]);
 		rows.push({ route, packages: pkgs.map(p => p.proof), verified, ledger, orders });
 		t.diagnostic(route + " installed consumers, native cleanup and ledger tamper passed");
+	}
+	const emitTerminal = async digest => {
+		const report = {schemaVersion: 1, interpreter: tag
+			, originalAcceptanceSha256: digest
+			, observerSha256: clients["observe.py"]
+			, clientSha256: sha256(await readFile(terminalFile)), rows: terminalRows};
+		return canonicalJson(report);
+	};
+	if(terminal)
+	{
+		const out = resolve(env.LEAN_BRIDGE_PYTHON_STREAM_TERMINAL_OUTPUT ?? "build/python-stream-terminal");
+		await mkdir(out, {recursive: true});
+		await writeFile(join(out, tag + ".json"), await emitTerminal(prior.acceptanceSha256));
+		return;
 	}
 	const report = { schemaVersion: 1, interpreter: tag, clients, rows };
 	if(replay)
@@ -278,7 +316,9 @@ test("installed, relocated Python wheels share exact Lean resource types through
 	else
 	{
 		for(const f of fixtures) await copyFile(join(work, f), join(root, f), constants.COPYFILE_EXCL);
-		await writeFile(join(root, "acceptance.json"), canonicalJson(report), { flag: "wx" });
+		const bytes = canonicalJson(report);
+		await writeFile(join(root, "acceptance.json"), bytes, { flag: "wx" });
+		await writeFile(join(root, "stream-terminal.json"), await emitTerminal(sha256(bytes)), {flag: "wx"});
 	}
 	if(env.LEAN_BRIDGE_PYTHON_LEASE_TYPE_RESULT)
 	{

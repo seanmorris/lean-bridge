@@ -1,0 +1,55 @@
+{
+  "consumerSha256": "5808f7adf40e1c35defd0e7a83959642e83c8e3ab531a5d317b18437237c8ce7",
+  "observations": [
+    {
+      "observed": "desk-first: end, typed failure and cancellation finalized before explicit disposal; last error owner usable, zero owner and descriptor delta",
+      "order": "desk-first"
+    },
+    {
+      "observed": "depot-first: end, typed failure and cancellation finalized before explicit disposal; last error owner usable, zero owner and descriptor delta",
+      "order": "depot-first"
+    }
+  ],
+  "observerSha256": "aa5bb1391377472075d9ba816fdbf75f65973edac8ba7df44d80da38451a74f9",
+  "packages": [
+    {
+      "archive": {
+        "bytes": 51356840,
+        "path": "archives/Acme.Desk.1.0.0.nupkg",
+        "sha256": "e539dab3a57f7d35cdc3543aa1c87b15c1b73503347fdf3354df066b8b395266"
+      },
+      "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+      "name": "Acme.Desk",
+      "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+      "producerHead": "daea587f3a70c7bb3ae0780e338c1b40572f4a8d",
+      "profile": "native-dotnet-io-v1",
+      "receiptSha256": "b1f5bf323acdc76ed660f293e6d293e7c9c68114dd1a3fa2c08d2980c7d3799f",
+      "reviewedSourceSha256": null,
+      "role": "desk",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "ab69e06017b7a77eeb5d8e241f1641629583b31a42eb2a2a861083f89101866d",
+      "version": "1.0.0"
+    },
+    {
+      "archive": {
+        "bytes": 51404150,
+        "path": "archives/Acme.Depot.1.0.0.nupkg",
+        "sha256": "6729d3dadc8028e5aa633824bfb9b0f0e71fad2e94b3f13b451fb95f027ea071"
+      },
+      "bindingIrSha256": "38317def6dd20ef9bde23b3e13485638a69cda884cfca3348dbfb63b3eba7c6a",
+      "name": "Acme.Depot",
+      "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+      "producerHead": "54433087d386843bf3d4706c0eba50a300738731",
+      "profile": "native-dotnet-task-v1",
+      "receiptSha256": "ce8c0eda811c967cd51d895d8a8b2012285e6de785b0019aee2afb7922eb0138",
+      "reviewedSourceSha256": null,
+      "role": "depot",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "d7fb131c50a52d6a2d2405a3b3f83e50404af8bbdc3345e5dce00e742c7513d4",
+      "version": "1.0.0"
+    }
+  ],
+  "route": "ordinary"
+}

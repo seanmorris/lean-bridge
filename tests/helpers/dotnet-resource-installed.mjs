@@ -69,8 +69,9 @@ test("NuGet uses source-named resource types and unambiguous private CLR accesso
 	const typed = { ...entries[0], effect: "EIO", error: entries[0].result };
 	const failureWire = generateSyncWire("lbc_lab", [typed], { resources: types });
 	const factory = "error:EIO." + typed.declaration, step = "error:AsyncStep." + typed.declaration;
-	const checked = id => ({ ...api, errors: [factory, step].map(i => ({id: i, payload: typed.error})),
-		declarations: [{ ...api.declarations[0], failure: {errors: [id]} }] });
+	const checked = id => ({ ...api
+		, errors: [factory, step].map(i => ({id: i, payload: typed.error}))
+		, declarations: [{ ...api.declarations[0], failure: {errors: [id]} }] });
 	await generateDotnetIO({api: checked(factory), wire: failureWire, evidence});
 	await assert.rejects(generateDotnetIO({api: checked(step), wire: failureWire, evidence}), /resource error stage/u);
 	const shifted = {...failureWire, methods: failureWire.methods.map(m => ({...m, terminal: m.error, error: null}))};
@@ -121,21 +122,33 @@ const inspect = async (root, route, role) => {
 const pairOutput = "Ticket, Task<Ticket> and DeclaredError<Ticket> compose across the two installed packages";
 const projectFile = (pkg, audit = false) => '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><UseAppHost>false</UseAppHost><Nullable>enable</Nullable><AllowUnsafeBlocks>' + audit + '</AllowUnsafeBlocks><NuGetAudit>false</NuGetAudit></PropertyGroup><ItemGroup>'
 	+ pkg.map(p => `<PackageReference Include="${p.proof.name}" Version="[1.0.0]" />`).join("") + "</ItemGroup></Project>";
-const pairClient = async (work, dotnet, pkg, program) => {
+const pairClient = async (work, dotnet, pkg, program, audit = null) => {
 	const base = await mkdtemp(join(work, "named-pair-")), project = join(base, "project"), feed = join(base, "feed"), cache = join(base, "cache");
 	const moved = join(base, "app"); await mkdir(feed); await mkdir(project);
 	for(const p of pkg) await copyFile(join(p.dir, p.proof.archive.path), join(feed, basename(p.proof.archive.path)), constants.COPYFILE_EXCL);
 	const isolated = { ...env, DOTNET_CLI_HOME: join(base, "cli"), NUGET_PACKAGES: cache, MSBUILDDISABLENODEREUSE: "1", DOTNET_NOLOGO: "1" };
 	const sdk = await sdkVersion(dotnet, project, isolated); await writeFile(join(project, "global.json"), canonicalJson({ sdk: { version: sdk, rollForward: "disable" } }));
-	await writeFile(join(project, "Client.csproj"), projectFile(pkg));
+	await writeFile(join(project, "Client.csproj"), projectFile(pkg, Boolean(audit)));
 	await writeFile(join(project, "NuGet.Config"), "<configuration><packageSources><clear /></packageSources></configuration>");
 	await copyFile(program, join(project, "Program.cs"));
+	if(audit) await copyFile(audit, join(project, "Audit.cs"));
 	await run(dotnet, ["restore", "Client.csproj", "--source", feed, "--configfile", "NuGet.Config", "--disable-parallel"], project, isolated);
 	const output = join(base, "out");
 	await run(dotnet, ["publish", "Client.csproj", "-c", "Release", "--no-restore", "--disable-build-servers", "-m:1", "/p:UseSharedCompilation=false", "--self-contained", "false", "-o", output], project, isolated);
 	await rename(output, moved);
 	for(const dir of [project, feed, cache]) await rm(dir, { recursive: true });
-	const answer = await run(dotnet, [join(moved, "Client.dll")], base, { PATH: "/unavailable", LANG: "C.UTF-8", DOTNET_EnableDiagnostics: "0", DOTNET_PROCESSOR_COUNT: "1", LEAN_NUM_THREADS: "1" });
+	const launch = args => run(dotnet, [join(moved, "Client.dll"), ...args], base, { PATH: "/unavailable", LANG: "C.UTF-8", DOTNET_EnableDiagnostics: "0", DOTNET_PROCESSOR_COUNT: "1", LEAN_NUM_THREADS: "1" });
+	if(audit)
+	{
+		const orders = [];
+		for(const order of ["desk-first", "depot-first"])
+		{
+			const observed = await launch([order]); assert.equal(observed, order + ": end, typed failure and cancellation finalized before explicit disposal; last error owner usable, zero owner and descriptor delta");
+			orders.push({order, observed});
+		}
+		return orders;
+	}
+	const answer = await launch([]);
 	assert.equal(answer, pairOutput); return answer;
 };
 const sdkVersion = async (dotnet, dir, vars) => {
@@ -143,6 +156,35 @@ const sdkVersion = async (dotnet, dir, vars) => {
 	assert.ok(sdk); return sdk;
 };
 const smoke = env.LEAN_BRIDGE_DOTNET_LEASE_PAIR, pair = resolve("tests/fixtures/dotnet-task-resources/Pair.cs");
+const terminalClient = resolve("tests/fixtures/dotnet-task-resources/Terminal.cs");
+const terminalAudit = resolve("tests/fixtures/dotnet-sync-io/Audit.cs");
+const terminal = env.LEAN_BRIDGE_DOTNET_STREAM_TERMINAL_ORIGINAL;
+const terminalEvidence = async (work, dotnet, packages, route) => ({
+	route, packages: packages.map(p => p.proof)
+	, consumerSha256: sha256(await readFile(terminalClient))
+	, observerSha256: sha256(await readFile(terminalAudit))
+	, observations: await pairClient(work, dotnet, packages, terminalClient, terminalAudit)
+});
+test("installed CLR stream finalizers run before the application explicitly disposes its cursor", {skip: !terminal, timeout: 1_800_000}, async t => {
+	const root = resolve(terminal), work = await mkdtemp(join(tmpdir(), "clr-stream-terminal-"));
+	t.after(() => rm(work, {recursive: true, force: true}));
+	const out = resolve(env.LEAN_BRIDGE_DOTNET_STREAM_TERMINAL_OUTPUT ?? "build/dotnet-stream-terminal");
+	const pin = await json(resolve("docs/evidence/dotnet-resource-leases-20261122.json"));
+	assert.equal(pin.installed.clients["Audit.cs"], sha256(await readFile(terminalAudit)));
+	const dotnet = await run("which", [env.LEAN_BRIDGE_DOTNET ?? "dotnet"], work, env); await mkdir(out, {recursive: true});
+	for(const route of ["ordinary", "reviewed"])
+	{
+		const packages = [await inspect(root, route, "desk"), await inspect(root, route, "depot")];
+		for(const p of packages)
+		{
+			const original = pin.installed.rows.find(r => r.route === route).packages.find(r => r.role === p.role);
+			for(const [key, value] of Object.entries(p.proof)) assert.deepEqual(value, original[key], key);
+		}
+		assert.equal(packages[0].proof.nominal, packages[1].proof.nominal);
+		const result = await terminalEvidence(work, dotnet, packages, route);
+		await writeFile(join(out, route + ".json"), canonicalJson(result));
+	}
+});
 test("two installed IO/task NuGet packages use a source-named Ticket without an alias or unsafe code", { skip: !smoke, timeout: 600_000 }, async t => {
 	const work = await mkdtemp(join(tmpdir(), "lease-pair-")); t.after(() => rm(work, { recursive: true, force: true }));
 	const root = resolve(smoke), dotnet = await run("which", [env.LEAN_BRIDGE_DOTNET ?? "dotnet"], work, env);
@@ -162,6 +204,7 @@ test("relocated .NET packages share nominal resource leases through IO, callback
 	for(const route of ["ordinary", "reviewed"])
 	{
 		const pkg = [await inspect(root, route, "desk"), await inspect(root, route, "depot"), foreign];
+		if(capture) await writeFile(join(root, route + ".stream-terminal.json"), canonicalJson(await terminalEvidence(work, dotnet, pkg.slice(0, 2), route)), {flag: "wx"});
 		assert.equal(pkg[0].proof.nominal, pkg[1].proof.nominal); assert.notEqual(pkg[0].proof.nominal, foreign.proof.nominal);
 		assert.equal(new Set(pkg.map(p => p.proof.producerHead)).size, 3);
 		const base = join(work, route), feed = join(base, "feed"), project = join(base, "project"), cache = join(base, "pkgs");
