@@ -247,10 +247,14 @@ the admitted policy is repeated calls, same-agent reentry and deferred
 self-disposal. The [threaded npm author check](../../tests/helpers/javascript-wasm-task-callback-cli.mjs)
 changes `many` to `once` in the review and expects the build to **reject**
 the mismatch. Neither a successful single invocation nor this publisher
-refusal qualifies an author-selected one-call contract. For that case, check
-an installed public registration: consume its allowance on first entry,
-refuse a second entry without calling the host (including reentry and a
-first call that threw), and keep an independent registration usable.
+refusal qualifies an author-selected one-call contract.
+
+The [Budget package](npm-once-callback-20261126.md) now exercises that
+contract for retained callbacks on the threaded npm profile. The author
+selects the allowance in the export configuration. It is per task and
+parameter: an independent registration works even while another is active.
+This does not add one-shot support to the synchronous owned-function frontend
+or the other target runtimes.
 
 ### Synchronous iterators by profile
 

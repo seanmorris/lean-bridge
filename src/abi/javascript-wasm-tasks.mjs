@@ -51,7 +51,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 			return {name: callbackHostName(hostImports.types[k.index].name),type: k.type,mutability: k.mutability};
 		throw new TypeError("Inconsistent retained JavaScript callback contract");
 	};
-	const factories=new Map();
+	const factories=new Map(), oneShotTypes=new Set();
 	for(const t of ir.types.filter(t => t.kind==="callback"))
 	{
 		if(hosts && Object.hasOwn(t.source.extensions,"lean-bridge.dev/closure-owner"))
@@ -61,12 +61,13 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 		if(t.source?.producer!=="lean" || t.source.declaration!==t.name || t.id!=="bridge:"+t.name
 			|| t.representation!=="identity" || t.mutability!=="immutable" || t.resource!==null || t.host!==null || t.target!==null || t.fields.length || t.cases.length
 			|| t.source.extensions?.["lean-bridge.dev/callback-scheduler"]!==(zend?"owner-event-loop":"javascript-owner-agent") || c?.resultMode!==(zend?"value":"promise") || c.reentry!=="same-agent"
-			|| c.selfDisposal!=="defer" || c.invocation!=="many" || c.parameters.length!==1 || t.typeParameters.length
+			|| c.selfDisposal!=="defer" || !(c.invocation==="many" || !zend && c.invocation==="once") || c.parameters.length!==1 || t.typeParameters.length
 			|| arg.optional || arg.default!==null || arg.mutability!==a.mutability
 			|| !same(c.effects,zend?["fails","host-call"]:["async","fails","host-call"]) || c.failure.mode!=="declared" || !same(c.failure.errors,[hostError]) || c.failure.unexpected!=="poison-runtime"
-			|| t.id!=="bridge:Retained_"+a.name+"_to_"+b.name)
+			|| t.id!==(c.invocation==="once" ? "bridge:OnceRetained_" : "bridge:Retained_")+a.name+"_to_"+b.name)
 			throw new TypeError("Inconsistent retained JavaScript callback contract");
 		callbackTypes.set(t.id,[a.type,b.type]);
+		if(c.invocation==="once") oneShotTypes.add(t.id);
 	}
 	const callback=t => t?.kind==="named" && callbackTypes.get(t.id);
 	if(callbackTypes.size)
@@ -114,6 +115,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 		const step = "error:AsyncStep."+declaration;
 		const terminalId = terminal ? "error:TaskIO.Error" : protocol && d.failure.errors.includes(step) ? step : null;
 		const callbacks=d.parameters.flatMap((p,i) => callback(p.type) ? [[i,...callback(p.type)]] : []);
+		const onceSlots=callbacks.filter(([i])=>oneShotTypes.has(d.parameters[i].type.id)).map(([i])=>i);
 		const memberEscapes=phases && ((effect==="IO" || terminal) && phases.call.length || stepIO && phases.pull.length);
 		if((stepIO && !terminalId) || d.failure.mode!==(d.failure.errors.length?"declared":"none")
 			|| zend && delivery && Object.values(phases).some(names=>names.length)
@@ -142,6 +144,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 			, declaration
 			, args
 			, ...callbacks.length ? {callbacks} : {}
+			, ...onceSlots.length ? {onceSlots} : {}
 			, ...zend && callbacks.length ? {callbackError: hostError} : {}
 			, ...(phases ? {hostPhases: phases} : {})
 			, ...(stepIO ? {stepIO: true} : {})

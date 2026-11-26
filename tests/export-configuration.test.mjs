@@ -29,6 +29,16 @@ const workspace = async t => {
 const configure = (directory, value) => writeFile(join(directory, exportConfigurationFile), JSON.stringify(value));
 const copySite = { ownership: "copy", lifetime: null };
 
+test("a task callback policy names one parameter of a selected task", async () => {
+	const declaration="Jobs.submit", base={schemaVersion:1,modules:["Jobs"],taskExports:[declaration]};
+	const once={declaration,parameter:"visit",invocation:"once"};
+	const valid={...base,taskCallbackPolicies:[once,{...once,parameter:"report",invocation:"many"}]};
+	assert.equal(validateExportConfiguration(valid),valid);
+	await assertJsonSchema("lean-export-configuration",valid);
+	for(const rows of [[],[once,once],[{...once,invocation:"sometimes"}],[{...once,parameter:""}],[{...once,declaration:"Jobs.other"}]])
+		assert.throws(()=>validateExportConfiguration({...base,taskCallbackPolicies:rows}),{code:"invalid-export-configuration"});
+});
+
 test("immediate and scheduled pulls require an unambiguous selected factory", async () => {
 	const direct = { open: "Counting.open", next: "Counting.next", close: "Counting.finish" };
 	const scheduled = { ...direct, open: "Counting.watch", next: "Counting.poll" };

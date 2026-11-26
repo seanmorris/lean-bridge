@@ -181,6 +181,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(options.target === "wit-wasi" && !ir && projectContract.asyncIterators?.length ? { witCursorIO: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
+		, ...(projectContract.taskCallbackPolicies ? {taskCallbackPolicies: projectContract.taskCallbackPolicies} : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
 		, ...(projectContract.iterators?.length ? {iterators: projectContract.iterators} : {})

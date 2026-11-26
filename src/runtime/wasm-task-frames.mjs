@@ -142,13 +142,16 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 			const marker=new Error("Application object no longer matches the declared class");wasmHostThrown.set(marker,{error});throw marker;
 		});
 	};
-	const request=() => {
+	const request=admit => {
 		checkedOut(); const status=callbackOp(layout.next);
 		if(status===1)
 		{ checkedOut(); return null; }
 		if(status) return retire(invalid());
 		checkedOut(4); const slot=view().getUint32(f+layout.out,true), type=slots.get(slot); blankOut();
 		if(!type) return retire(invalid());
+		// A refused registration needs no argument lift (which, for a host
+		// object, can itself run application code). The port still gets a reply.
+		if(admit && !admit(slot)) return {slot,refused:true};
 		const statusArg=callbackOp(layout.arg,slot);
 		if([11,12].includes(statusArg))
 		{ checkedOut(); throw new WasmTaskCallbackLimit("Lean callback argument exceeds task resources"); }

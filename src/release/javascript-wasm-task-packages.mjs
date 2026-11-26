@@ -106,7 +106,7 @@ export declare function taskRuntimeStats(): {
  */
 export const assertJavaScriptTaskConfiguration=configuration => {
 	assertExportConfigurationCapabilities(configuration,{target: "npm"
-		, fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors","hostImports"]
+		, fields: ["package","modules","exports","resources","nativeEffects","asyncIterators","taskExports","taskIOErrors","taskCallbackPolicies","hostImports"]
 		, targetFields: ["name","version"]});
 	if(configuration.nativeEffects?.length) throw new Error("Threaded JavaScript tasks support only in-memory effects");
 };
@@ -127,6 +127,7 @@ export const writeJavaScriptTaskPackages = async options => {
 	if(api.types.some(t=>t.kind==="callback" && !Object.hasOwn(t.source.extensions,"lean-bridge.dev/closure-owner")) && (php ? !evidence.selection.phpTaskCallbacks : !evidence.selection.javascriptTaskCallbacks))
 		throw new Error("Retained callback contract does not match the target host");
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
+		|| canonicalJson(evidence.selection.taskCallbackPolicies ?? [])!==canonicalJson(configuration.taskCallbackPolicies ?? [])
 		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null)
 		|| canonicalJson(evidence.lake)!==canonicalJson(projectContract.lake) || canonicalJson(evidence.selection.exports)!==canonicalJson(projectContract.exports)
 		|| sha256(binary)!==integrity || canonicalJson(abi)!==canonicalJson(compilation.abi))

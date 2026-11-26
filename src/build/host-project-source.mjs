@@ -58,6 +58,7 @@ const captureContracts = async (project, inventory, target) => {
 		, ...(iterators.length ? {iterators} : {})
 		, nativeEffects: config.nativeEffects?.toSorted() ?? []
 		, ...(config.taskIOErrors ? { taskIOErrors: config.taskIOErrors.toSorted() } : {})
+		, ...(config.taskCallbackPolicies ? {taskCallbackPolicies: config.taskCallbackPolicies} : {})
 		, leanResources: config.resources?.toSorted() ?? []
 		, hostImportsSourceSha256: input?.sha256 ?? null };
 };

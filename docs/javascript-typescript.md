@@ -303,6 +303,13 @@ job and discards late callback replies; it does not cancel unrelated work
 started by your JavaScript function. Browser pages using this pthread profile
 require cross-origin isolation.
 
+If the package declares a **one-shot callback**, you still pass a normal
+function. If Lean requests that registration a second time, your function
+doesn’t run again. If Lean propagates the refusal, the task rejects with
+`JavaScriptCallbackError` and `error.cause.code === "callback-already-invoked"`.
+A failed first call still counts. Passing the same function to another task
+creates a separate registration.
+
 A package can also ask for an instance of a class you supplied to `withHosts`.
 For example, the [Workshop task](../tests/fixtures/javascript-threaded-host-callbacks/Workshop.lean)
 passes its `Box` directly to your callback. The callback can return that same

@@ -103,6 +103,14 @@ test("the retained Wasm callback ABI binds the owner, slot, reply and failure co
 	const wire=generateSyncWire("lbc_job",checked,{tasks: true,wasmTasks: true,wasmCallbacks: true});
 	assert.deepEqual(abi.methods[0].callbacks,[[1,"uint32","uint32"]]);
 	assert.deepEqual(abi.methods[0].callbacks,wire.methods[0].callbacks);
+	const policy = {declaration:name, parameter:"transform", invocation:"once"};
+	const withPolicies = rows => reconcileHostExports({component,selection:{...selection,taskCallbackPolicies:rows},metadata});
+	const once = withPolicies([policy]).api;
+	assert.equal(once.types[0].callable.invocation,"once");
+	assert.deepEqual(javaScriptTaskAbi(once,config.componentIdentity).methods[0].onceSlots,[1]);
+	assert.equal(abi.methods[0].onceSlots,undefined);
+	for(const rows of [[{...policy,parameter:"n"}],[{...policy,parameter:"unknown"}],[policy,policy]])
+		assert.throws(()=>withPolicies(rows),/Invalid task callback policy/u);
 	const gen=generateCTaskExports({...config,entries: checked,wasmTasks: true,wasmCallbacks: true});
 	assert.match(gen.entryLean,/return outer\.bind id \(sync := true\)/u);
 	assert.doesNotMatch(gen.entryLean,/IO\.wait inner/u);

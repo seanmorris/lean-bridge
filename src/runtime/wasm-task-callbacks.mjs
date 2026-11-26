@@ -23,6 +23,9 @@ const follow=(value,ticket) => Promise.resolve(value).then(
  */
 export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,abort,admitted=()=>true}) => {
 	const slots=new Map(method.callbacks.map(([i]) => [i,args[i]]));
+	// Per task and per slot, never per function identity. Consume before
+	// invoking the host; rejection or an outstanding promise cannot restore it.
+	const used=method.onceSlots?.length ? new Set() : null;
 	let open=true, sub, ticket;
 	const accepts=()=>open && admitted();
 	const close=() => {
@@ -52,7 +55,7 @@ export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,ab
 		sub=null; if(!accepts()) return;
 		try
 		{
-			const req=frame.request();
+			const req=frame.request(used && (slot=>!used.has(slot)));
 			if(!req || !accepts()) return; // Completion or reentrant cancellation won.
 			const {slot,value}=req, fn=slots.get(slot);
 			const active={answer: (ok,v) => {
@@ -65,6 +68,12 @@ export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,ab
 				{ fatal(error); }
 			}};
 			ticket=active;
+			if(req.refused)
+			{
+				active.answer(false,Object.assign(new Error("A once callback cannot be invoked more than once"),{code:"callback-already-invoked"}));
+				return;
+			}
+			if(used && method.onceSlots.includes(slot)) used.add(slot);
 			let out;
 			try
 			{ out=fn(value); } catch(error)

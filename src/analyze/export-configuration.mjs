@@ -63,7 +63,7 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "iterators", "asyncIterators", "nativeEffects", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "taskCallbackPolicies", "iterators", "asyncIterators", "nativeEffects", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
 		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
@@ -80,6 +80,22 @@ export const validateExportConfiguration = configuration => {
 		const names = configuration.taskIOErrors;
 		if(!Array.isArray(names) || !names.length || new Set(names).size !== names.length || names.some(n => !configuration.taskExports?.includes(n)))
 			fail("invalid-export-configuration", "taskIOErrors must select distinct names from taskExports");
+	}
+	if(configuration.taskCallbackPolicies !== undefined)
+	{
+		const rows = configuration.taskCallbackPolicies, seen = new Set();
+		if(!Array.isArray(rows) || !rows.length || rows.length > 128)
+			fail("invalid-export-configuration", "taskCallbackPolicies requires 1–128 named callback parameters");
+		for(const row of rows)
+		{
+			closed(row, ["declaration", "parameter", "invocation"], "taskCallbackPolicies");
+			const {declaration, parameter, invocation} = row;
+			if(!configuration.taskExports?.includes(declaration) || typeof parameter !== "string"
+				|| !parameter.length || parameter.length > 256 || !["once", "many"].includes(invocation)
+				|| seen.has(declaration + ":" + parameter))
+				fail("invalid-export-configuration", "Select each task callback parameter once with invocation once or many");
+			seen.add(declaration + ":" + parameter);
+		}
 	}
 	if(configuration.nativeEffects !== undefined)
 	{

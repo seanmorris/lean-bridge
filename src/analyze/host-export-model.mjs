@@ -261,15 +261,28 @@ export const reconcileHostExports = options => {
 		if(!kind) fail("Unauthenticated retained callback carrier");
 		return {label: callbackHostName(kind.name),mutability: kind.mutability};
 	};
-	const callbackRef = t => {
+	// Bind the author's policy to the original binder from the elaborated Lean
+	// signature, not to a generated parameter name or a reviewed type label.
+	const policies = new Map();
+	for(const {declaration, parameter, invocation} of selection.taskCallbackPolicies ?? [])
+	{
+		const e = metadata.entries.find(e => e.declaration === declaration);
+		const matches = e?.parameters.filter(p => p.name === parameter);
+		const key = declaration + ":" + parameter;
+		if(!js || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
+			|| policies.has(key) || !["once", "many"].includes(invocation)) fail("Invalid task callback policy: " + key);
+		policies.set(key, invocation);
+	}
+	const callbackRef = (e, p) => {
+		const t = p.type, invocation = policies.get(e.declaration + ":" + p.name) ?? "many";
 		const arg=callbackCarrier(t.argument),reply=callbackCarrier(t.reply);
-		const name = `Retained_${arg.label}_to_${reply.label}`, id = "bridge:" + name;
+		const name = (invocation === "once" ? "OnceRetained_" : "Retained_") + arg.label + "_to_" + reply.label, id = "bridge:" + name;
 		if(!callbacks.has(id)) callbacks.set(id, {
 			id, name, kind: "callback", representation: "identity"
 			, mutability: "immutable"
 			, fields: [], cases: [], typeParameters: [], assurance: []
 			, target: null, host: null, resource: null
-			, callable: { invocation: "many", reentry: "same-agent"
+			, callable: { invocation, reentry: "same-agent"
 				, selfDisposal: "defer", resultMode: js ? "promise" : "value"
 				, parameters: [{ ...signature(t.argument), name: "value", mutability: arg.mutability, optional: false, default: null }]
 				, result: signature(t.reply)
@@ -356,7 +369,7 @@ export const reconcileHostExports = options => {
 			fail("Unverified terminal IO selection");
 		if(hasCallbacks(e) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c || ruby || dotnet || jvm || perl || php || js || wit)))
 			fail("Unverified retained-callback selection");
-		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
+		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(e, p);
 		if(e.result?.kind==="io-closure") closureRef(e);
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (!owner && async && e.hostMembers.length)
@@ -398,7 +411,7 @@ export const reconcileHostExports = options => {
 		, declarations: metadata.entries.map((e, i) => ({
 			id: `lean:${e.declaration}`, name: entries[i].name, kind: "function"
 			, owner: null, overloadKey: e.declaration, typeParameters: [], receiver: null
-			, parameters: e.parameters.map((p, j) => ({ ...site(isCallback(p.type) ? callbackRef(p.type) : p.type, true), name: entries[i].parameters[j].name
+			, parameters: e.parameters.map((p, j) => ({ ...site(isCallback(p.type) ? callbackRef(e, p) : p.type, true), name: entries[i].parameters[j].name
 				, mutability: isOwned(p.type) ? mayWrite(e) ? "write" : "read" : p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
 			, result: closures.has(e.declaration)?leased({kind: "named",id: closures.get(e.declaration).id}):site(e.result)

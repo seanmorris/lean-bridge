@@ -207,6 +207,25 @@ For a retained application callback, use a parameter of type `α → IO β` on a
 
 Set `taskIOErrors` only when the task’s `Except IO.Error` represents failure rather than data. External system effects such as filesystem access remain outside this profile.
 
+By default, a task may invoke a retained callback repeatedly. To give a
+particular registration one invocation, name its **Lean parameter** in
+`lean-bridge.exports.json`:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Budget.probe", "parameter": "f", "invocation": "once"}
+]
+```
+
+`Budget.probe` must be in `taskExports`, and `f` must be one of its
+callback parameters. Entering the JavaScript function uses up the allowance,
+even if the function throws or returns a rejected promise. A second request
+fails through the callback’s existing error channel. A different parameter
+or a fresh task invocation has its own allowance, even for the same JavaScript
+function. See the complete [author configuration](../../tests/fixtures/javascript-once-callback/lean-bridge.exports.json)
+and [Lean code](../../tests/fixtures/javascript-once-callback/Budget.lean).
+This setting applies to the threaded npm task profile.
+
 Use an author CLI containing the threaded SDK, or set `LEAN_BRIDGE_JS_TASK_INPUTS` to the prepared SDK directory. Set `LEAN_BRIDGE_LEAN_PREFIX` to Lean 4.32.2 and `LEAN_BRIDGE_JS_EMSDK` to the matching pinned Emscripten 6.0.6 installation. A separately supplied `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` pins the SDK manifest to an identity from a trusted source. A single-threaded browser runtime cannot substitute for this kit.
 
 ```sh
