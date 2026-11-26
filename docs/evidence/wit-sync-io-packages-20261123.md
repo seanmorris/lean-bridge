@@ -6,6 +6,20 @@ exports by name. The second project omitted that list and used a public
 Binding IR review with its own documentation. Its archive preserved that
 review byte-for-byte alongside the compiler evidence.
 
+### Replay the retained archives
+
+The [ordinary](wit-journal-replay-20261126/ordinary.json) and
+[reviewed](wit-journal-replay-20261126/reviewed.json) replays verified the
+original receipt and archive hashes below. Each compiled the exact recorded
+C client sources and scalar helper header against the relocated package.
+Both observed `wasmtime-io:27`, a shared counter value of two in the
+successful custom-store run, and store discard and peer refusal in the
+separate trap run. Set
+`LEAN_BRIDGE_WIT_IO_HANDOFF` to a retained release,
+`LEAN_BRIDGE_WIT_IO_EXPECT_REVIEW` to `0` or `1`, and
+`LEAN_BRIDGE_WIT_IO_RESULTS` to the destination directory. Then run
+`node --test tests/helpers/wit-sync-io-package.mjs`.
+
 | Build | Archive bytes | Archive SHA-256 | Receipt SHA-256 |
 | --- | ---: | --- | --- |
 | Ordinary | 59,183,593 | `7b49afc8df851d82889979562cf2566fba362807451a557a289f50723e72ccd4` | `8fc480b93954804a0185c48ad3543155d79b06c059b897339b8431d2b1948187` |

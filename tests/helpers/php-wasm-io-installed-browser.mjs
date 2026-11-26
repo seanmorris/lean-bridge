@@ -52,6 +52,7 @@ export const exerciseInstalledIOBrowser = async options => {
 	});
 	await new Promise((yes,no)=>{ server.once("error",no); server.listen(0,"127.0.0.1",yes); });
 	const origin = "http://127.0.0.1:"+server.address().port;
+	const observations = [];
 	let session;
 	try
 	{
@@ -89,6 +90,7 @@ export const exerciseInstalledIOBrowser = async options => {
 					return runInstalled({Host,loading,program,vendor,immediate});
 				},{loading,program,files: mode === "composer" ? vendor : null,immediate});
 				assert.equal(result,immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30"); t.diagnostic("Chromium/"+mode+"/"+loading+": "+result);
+				observations.push({host: "Chromium", mode, loading, result});
 			} finally
 			{ await page.close(); }
 		}
@@ -99,4 +101,5 @@ export const exerciseInstalledIOBrowser = async options => {
 		finally
 		{ await new Promise(yes=>{server.close(yes); server.closeAllConnections();}); }
 	}
+	return observations;
 };

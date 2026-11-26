@@ -24,13 +24,11 @@ evidence, sometimes from a different package or execution mode.
 | `node-javascript`, `node-typescript`, `browser-javascript`, `browser-react`, `browser-worker` | [Five independent Ledger clients](npm-synchronous-io-delivery-20261126.md) execute the common 45 checks. The TypeScript catch, mounted click handler and module worker actually run. | [Compiled guest trap](javascript-wasm-callback-io-retirement-20261123.md): plain Node and Chromium, a Node worker, and a dedicated browser worker. The parent survives a worker trap. [Typed Node and mounted React](npm-callback-trap-delivery-20261126.md) separately ran both import orders with a caught or rethrown guest trap. |
 | `wit-wasi` | [Relocated Wasmtime packages](wit-sync-io-packages-20261123.md) run synchronous Journal on both routes and reject a missing filesystem grant. | A separate world-conforming component traps **after** mutating state: the caller-owned store must be discarded and a peer cannot reuse the runtime. A trap is not transactional rollback. |
 
-## Which immediate errors keep a live resource?
-
-### Count for synchronous IO
+## Count for synchronous IO
 
 The [baseline](../type-surface.v1.json) names three separate signature
 contracts: `io`, `eio`, and `declared-error`. Each applies to 17 consumer
-profiles on two author routes. For **`io` alone**, 30 of those 102 total
+profiles on two author routes. For **`io` alone**, 34 of those 102 total
 profile/route/contract combinations have installed results whose client
 digests were matched to the source in this checkout:
 
@@ -40,16 +38,42 @@ digests were matched to the source in this checkout:
 | Ruby, .NET, Java, Kotlin | The [gem](ruby-sync-io-20261122.json), [NuGet](dotnet-sync-io-20261122.json) and [Maven](jvm-sync-io-20261123.json) records include the executed clients. Java and Kotlin have separate application results. A missing file produces the generated IO error rather than a promise or a successful string. |
 | Perl, native PHP | The [CPAN](perl-sync-io-20261123.json) and [Composer](php-sync-io-20261123.json) reports passed on both package orders. Additional interpreter versions, XS modes and load orders do not count as extra consumer profiles. |
 | Five npm profiles | The [Ledger results](npm-synchronous-io-delivery-20261126.md) match both receipt files and all four client source hashes. Each client observed the immediate counter transition, invalid inputs that left state unchanged, a thrown Lean IO error and successful reuse. |
+| PHP-Wasm | The installed Ledger client passed in Node and Chromium, using the Composer autoloader and npm-mounted PHP, at startup and on first call. The [two receipts](php-wasm-installed-sync-io-20261123.md#both-author-routes-installed) distinguish the actual ordinary and reviewed source. |
+| WIT/WASI | The [Journal replay](wit-sync-io-packages-20261123.md#replay-the-retained-archives) matched the original archive hashes and the exact C sources. Both relocated clients executed the 27 session checks, including real file IO. |
 
-The 30 are a **lower bound**, not an estimate of time remaining. The
-[WIT report](wit-sync-io-packages-20261123.md) separately documents both
-archives and the calls made against them. The [PHP-Wasm Ledger report](php-wasm-installed-sync-io-20261123.md)
-records the installed PHP calls and a second reviewed build, but does not
-identify a second installed Ledger run by its reviewed receipt. Neither
-report is included in the source-hash count above. This count does not
-grant credit for the other two contracts or for hosted qualification.
+### When the same package also establishes the typed-error contract
 
-### Immediate errors that own a Lean resource
+For three profiles, installed clients distinguish an `EIO` failure, the
+callable's named error payload, validation, and an unexpected runtime trap
+on the **same Ledger or Journal release**:
+
+- **Strict TypeScript and mounted React:** The [reconciliation check](../../tests/helpers/npm-effect-contract-reconciliation.mjs)
+  verifies the original Ledger archive bytes and joins the [scalar error runs](npm-synchronous-io-delivery-20261126.md)
+  to the [two-package trap runs](npm-callback-trap-delivery-20261126.md) by
+  receipt on each route. The installed Binding IR labels `Ledger.choose` and
+  `RubyIO.nested` as `EIO`, names each declared error, and specifies
+  `poison-runtime` for unexpected faults. The 45 checks exercise all
+  returned and thrown payload arms, validation, and subsequent healthy calls.
+  Four real trap cases per app and route show the different outcome: no
+  resumed native callback, and no further calls on the retired heap. To
+  repeat the check, set `LEAN_BRIDGE_LEDGER_RELEASE_PAIR` to the directory
+  containing the original ordinary and reviewed npm release trees, then run
+  `node --test tests/helpers/npm-effect-contract-reconciliation.mjs`.
+- **WIT/WASI:** The [installed Journal consumer](../../tests/fixtures/wit-sync-io/consumer.c)
+  independently varies return versus declared failure and the inner error's
+  payload arm. Validation leaves the output untouched; a real trap in the
+  [custom store](../../tests/fixtures/wit-sync-io/custom.c) instead requires
+  discarding it and prevents its peer from reusing the runtime. The same
+  two verified Journal archives supplied the bindings for both programs.
+
+The resulting lower bound for #1222 is **46/102 (45%)**: 34 immediate
+IO, six EIO, and six named-error signature combinations. These counts are
+not estimates of time remaining. In particular, a named error carrying
+copied bytes does not establish that an error can be the sole owner of a
+live application object. That obligation is tracked below, separately
+from the hosted release gate.
+
+## Which immediate errors keep a live resource?
 
 These checks use a Lean-owned resource as the payload of a synchronous
 declared error. They exercise a different contract from returning copied

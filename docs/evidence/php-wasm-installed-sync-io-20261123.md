@@ -44,6 +44,25 @@ There are no tasks, host objects or retained callbacks in this IO profile.
 The [two-package failure check](php-wasm-io-callback-failures-20261123.md)
 records the subsequent build that retires the runtime on malformed replies.
 
+## Both author routes installed
+
+The [ordinary](php-wasm-ledger-routes-20261126/ordinary.json) and
+[reviewed](php-wasm-ledger-routes-20261126/reviewed.json) installations
+each ran all eight cells in the table above. Each reports the original
+30 assertions from the relocated PHP client. Before executing that client,
+the harness checked the compiled component inside the installed npm package:
+both had the same Ledger source, public interface and runtime, and only the
+reviewed one carried the author's checked interface. Each record lists the
+archive and client hashes. This test does not inject a fatal trap.
+
+With the PHP-Wasm author toolchain, the installed `php-wasm` 0.1.0
+interpreter at `LEAN_BRIDGE_PHP_WASM_HOST`, and Chromium available,
+run `npm run test:php-wasm-ledger-routes`. Set
+`LEAN_BRIDGE_PHP_WASM_LEDGER_KEEP` to an existing directory to retain both
+handoffs; set `LEAN_BRIDGE_PHP_WASM_LEDGER_REPLAY` to the reported handoff
+directory instead to repeat the installs. `LEAN_BRIDGE_PHP_WASM_LEDGER_RESULTS`
+selects where to save the two execution records.
+
 ## Reproduce
 
 Use the [PHP-Wasm author toolchain](../publish/php.md#build-an-ordinary-php-wasm-package).

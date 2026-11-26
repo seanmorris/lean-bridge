@@ -4,7 +4,7 @@ import test from "node:test";
 import { appendFile, cp, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { canonicalJson } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
@@ -13,11 +13,13 @@ import { buildPhpWasmBrokerSnapshot } from "./php-wasm-broker-snapshot.mjs";
 import { brickMathRepository, composerFileUrl } from "./brick-math.mjs";
 import { exerciseInstalledIOBrowser } from "./php-wasm-io-installed-browser.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
+import { readPhpWasmIOProjectComponent } from "../../src/build/php-wasm-io-project.mjs";
+import { exercisePhpWasmLedgerRoutes } from "./php-wasm-ledger-routes.mjs";
 
 const release = process.env.LEAN_BRIDGE_PHP_WASM_IO_RELEASE;
-const installed = async (t, release, immediate = false) => {
+const installed = async (t, release, immediate = false, route = null) => {
 	const receiptPath = join(release,"package-set-receipt.json");
-	const {receipt} = await readVerifiedPackageSetReceipt({receiptPath});
+	const {receipt, result: verification} = await readVerifiedPackageSetReceipt({receiptPath});
 	await assertJsonSchema("package-set-receipt",receipt);
 	assert.deepEqual(receipt.profiles.map(p=>p.id),["php-wasm-sync-io-v1"]);
 	const work = await mkdtemp(join(tmpdir(),"php-wasm-installed-io-"));
@@ -102,6 +104,31 @@ const installed = async (t, release, immediate = false) => {
 		await writeFile(join(app,"slots.json"),canonicalJson(Object.fromEntries(api.declarations.map((d,i)=>[d.source.declaration,i]))));
 	}
 	await rename(app,moved); await rename(feed,join(work,"disabled-feed"));
+	let identity;
+	const observations = [];
+	if(route)
+	{
+		const [profile] = receipt.profiles;
+		const {model} = await readPhpWasmIOProjectComponent(join(moved,"node_modules/php-wasm-ledger/compiled"),profile.runtimeIdentity);
+		const {sourceIdentity} = model;
+		const review = sourceIdentity.reviewedBindingIr;
+		assert.equal(model.bindingIrSha256, profile.bindingIrSha256);
+		assert.equal(Boolean(review), route === "reviewed");
+		if(review) assert.equal(review.semanticSha256, profile.bindingIrSha256);
+		const ledger = sourceIdentity.lakeDependencies.snapshot.rootInputs.find(input => input.path === "Ledger.lean");
+		assert.equal(ledger.sha256,sha256(await readFile("tests/fixtures/php-wasm-sync-io/Ledger.lean")));
+		const sources = {};
+		for(const file of ["consumer.php","installed.mjs","installed-node.mjs"]) sources[file] = sha256(await readFile(join(moved,file)));
+		identity = {route, receiptSha256: verification.receiptSha256, bindingIrSha256: model.bindingIrSha256,
+			runtimeIdentity: profile.runtimeIdentity, ledgerSha256: ledger.sha256, sourceTreeSha256: sourceIdentity.sourceTreeSha256,
+			reviewSha256: review?.sourceSha256 ?? null, archives: Object.fromEntries(receipt.packages.map(p=>[p.name,p.artifacts[0].sha256])),
+			clientSha256: sources, phpWasmVersion: JSON.parse(await readFile(join(host,"package.json"))).version};
+		assert.equal(identity.phpWasmVersion,"0.1.0");
+		// The author retains their handoff for replay; neither downstream client
+		// needs the local package repository or the installer's cache.
+		await rm(join(work,"disabled-feed"),{recursive: true});
+		await rm(join(work,"npm-cache"),{recursive: true,force: true});
+	}
 	if(immediate)
 	{
 		// This route owns the release it just built. Only installed packages and
@@ -120,17 +147,24 @@ const installed = async (t, release, immediate = false) => {
 	{
 		const result = await run(process.execPath,["installed-node.mjs",mode,loading,...immediate ? ["immediate"] : []],moved,{PATH: "/no-build-tools"});
 		assert.equal(result.stdout.trim(),immediate ? "pulls:12;closes:7;shutdown:1209" : "php-api:30"); assert.equal(result.stderr,"");
+		observations.push({host: "Node", mode, loading, result: result.stdout.trim()});
 		t.diagnostic(mode+"/"+loading+": "+result.stdout.trim());
 	}
-	if(process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1") await exerciseInstalledIOBrowser({app: moved,host,t,callbacks,immediate});
+	if(route || process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1")
+		observations.push(...await exerciseInstalledIOBrowser({app: moved,host,t,callbacks,immediate}));
 	if(peer) for(const order of ["io-first","pure-first"])
 	{
 		const result = await run(process.execPath,["installed-peer.mjs",order],moved,{PATH: "/no-build-tools"});
 		assert.equal(result.stderr,""); assert.equal(result.stdout.trim(),"17:7; one runtime, two components");
 		t.diagnostic(order+": "+result.stdout.trim());
 	}
+	if(route) return {...identity,observations};
 };
 test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems", {skip: !release,timeout: 300_000}, t => installed(t,release));
+
+test("both Ledger author routes execute installed synchronous IO in Zend",
+	{skip: !process.env.LEAN_BRIDGE_PHP_WASM_LEDGER_PAIR, timeout: 1_800_000},
+	t => exercisePhpWasmLedgerRoutes(t, (handoff,route) => installed(t,handoff,false,route)));
 
 test("PHP-Wasm installs real synchronous Lean iterators in Zend on both source routes",
 	{skip: !process.env.LEAN_BRIDGE_PHP_WASM_IMMEDIATE,timeout: 1_800_000}, async t => {

@@ -1261,6 +1261,7 @@
     "test:php-wasm-composition": "node scripts/check-php-wasm-composition.mjs",
     "test:php-wasm-task-owner": "node --test --test-concurrency=1 tests/helpers/php-wasm-task-owner.mjs",
     "test:php-wasm-immediate-cursor": "LEAN_BRIDGE_PHP_WASM_IMMEDIATE=1 node --test --test-concurrency=1 --test-name-pattern='PHP-Wasm installs real synchronous' tests/helpers/php-wasm-io-installed.mjs",
+    "test:php-wasm-ledger-routes": "LEAN_BRIDGE_PHP_WASM_LEDGER_PAIR=1 node --test --test-concurrency=1 --test-name-pattern='both Ledger author routes' tests/helpers/php-wasm-io-installed.mjs",
     "test:php-wasm-zend-author": "node --test --test-concurrency=1 tests/helpers/php-wasm-zend-author.mjs",
     "test:php-wasm-zend-packages": "node --test --test-concurrency=1 tests/helpers/php-wasm-zend-packages.mjs",
     "test:php-wasm-zend-sync-packages": "LEAN_BRIDGE_PHP_ZEND_STANDALONE=1 node --test --test-concurrency=1 tests/helpers/php-wasm-zend-packages.mjs",
