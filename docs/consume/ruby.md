@@ -230,6 +230,12 @@ still an `Ok` or `Err` value. The [installed client](../../tests/fixtures/ruby-t
 shows each case. The [installed task and stream receipts](../evidence/ruby-fiber-tasks-20261122.json)
 identify the exact gems and callers, including the stream-only package.
 
+If another fiber closes a stream while `each` is waiting for an item, the
+reader wakes with `Cancelled`. If you interrupt the reader with
+`reader.raise(error)`, it receives your original exception. In both cases
+the cursor closes; a worker that finishes later cannot yield another item.
+See the [installed two-gem check](../evidence/async-delivery-crosswalk-20261125.md#interrupting-a-parked-ruby-reader).
+
 ### Pass a callback to a Lean task
 
 For a task that takes a Ruby callback, pass an object with `call`. If the

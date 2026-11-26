@@ -193,6 +193,24 @@ paths. Run `node --test tests/helpers/perl-parked-pull-installed.mjs`.
 Fresh full CPAN task captures run the same client; historical captures replay
 only the clients they originally recorded.
 
+### Interrupting a parked Ruby reader
+
+In installed MRI 3.3.12, a [reader fiber](../../tests/fixtures/ruby-task-lab/parked.rb)
+was waiting inside `stream.each` while a Lean pull ignored cancellation.
+Raising the application's exception in that fiber preserved the original exception
+object. Closing a second cursor from outside its reader instead woke the reader
+with the package's `Cancelled` exception. In both cases a concurrent pull was
+refused, the Lean finalizer ran once before the worker was released, and an
+independently installed gem delivered an item while the worker was still parked.
+No late item arrived; the scheduler, live owners and event descriptors returned
+to baseline in both load orders on [ordinary](ruby-parked-pull-20261126/ordinary.json)
+and [reviewed](ruby-parked-pull-20261126/reviewed.json) packages.
+
+To replay, set `LEAN_BRIDGE_RUBY_PARKED_ORIGINAL` to the directory containing
+the [original acceptance record and three handoffs](ruby-fiber-tasks-20261122.json)
+and `LEAN_BRIDGE_RUBY` to the matching interpreter. Run
+`node --test tests/helpers/ruby-parked-pull-installed.mjs`.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
