@@ -6,6 +6,16 @@ The application never constructs a handle or implements a conversion.
 This is a different ownership case from a record containing a Lean-created
 `Ticket` or a closure that happens to capture a meter.
 
+The same runs cover a second position: an **immediate export result**.
+[`selectPrimary`](../../tests/fixtures/python-host-record/Workshop.lean)
+returns a `Box`, not a record, iterator, function or task. The
+[client](../../tests/fixtures/python-host-record/consumer.py) constructs a
+rack from two different meters and checks `api.select_primary(first) is a`.
+All four execution reports below pin that client and their respective wheel
+receipts. Together with the [worker cases](python-worker-wheels-20261124.md#which-host-object-positions-do-these-wheels-cover),
+these two package families cover all five host-object positions on both
+Python authoring routes.
+
 | Interpreter | Ordinary Lean source | Independently reviewed interface |
 | --- | --- | --- |
 | CPython 3.11 | [Execution](python-host-record-fields-20261126/cp311/ordinary.execution.json) · [wheel receipt](python-host-record-fields-20261126/cp311/ordinary.package-set.json) | [Execution](python-host-record-fields-20261126/cp311/reviewed.execution.json) · [wheel receipt](python-host-record-fields-20261126/cp311/reviewed.package-set.json) |

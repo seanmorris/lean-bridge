@@ -38,7 +38,8 @@ the first package from the peer's callback.
 
 This qualifies the export argument, callback argument and callback result
 for host-owned objects on ordinary and reviewed Python routes. It does not
-qualify a standalone object as an immediate export result. The binding
+qualify a standalone object as an immediate export result; the separate
+[installed record wheels](python-host-record-fields-20261126.md) do. The binding
 definitions inside all six original wheels identify the class as
 `weak-canonical` and the callback argument and result as leases. The
 archived `consumer.py` and `peers.py` matched the linked sources on both
