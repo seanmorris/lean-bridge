@@ -3642,6 +3642,11 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-packaging.test.mjs
           test -s build/owned-cpp-packaging/ordinary.json
           test -s build/owned-cpp-packaging/reviewed.json
+          npm run test:cpp-staged-callbacks
+          test -s build/staged-cpp-callback/ordinary.package-set.json
+          test -s build/staged-cpp-callback/ordinary.execution.json
+          test -s build/staged-cpp-callback/reviewed.package-set.json
+          test -s build/staged-cpp-callback/reviewed.execution.json
           npm run test:owned-cpp-transfers
           npm run test:owned-cpp-borrows > build/owned-cpp-borrows.log 2>&1
           cat build/owned-cpp-borrows.log
@@ -3720,6 +3725,7 @@ jobs:
             build/owned-cpp-callables/
             build/owned-cpp-packaging/ordinary.json
             build/owned-cpp-packaging/reviewed.json
+            build/staged-cpp-callback/
             build/owned-cpp-transfers/
             build/owned-cpp-borrows/
             build/owned-cpp-borrow-packaging/

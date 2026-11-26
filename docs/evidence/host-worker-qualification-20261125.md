@@ -157,6 +157,9 @@ returns a typed Lean function on both author routes. Lean applies it to a second
 argument. The two build-system clients distinguish a fresh owned reply from
 a caller-owned function, missing recovery, a host failure and a foreign reply.
 This does not register a C function for use after the callback returns.
+The [C++20 direct-reply clients](cpp-staged-callback-results-20261126.md)
+also check compile-time recovery requirements, ownership of a freshly
+returned function, and preservation of the original C++ exception.
 The [two installed CPython wheels](python-staged-callback-results-20261125.md)
 exercise the same direct reply through the Python API. A retained Lean
 function remains usable; a Python lambda is not a valid function result.
