@@ -409,6 +409,37 @@ original package receipts and extracts the module bytes from each archive
 to compare with the deployment records where those are available. The
 Node worker control does not count as a sixth profile.
 
+## Count for C and C++
+
+The [C11 client](../../tests/fixtures/c-lean-tasks/consumer.c) and the
+[C++20 client](../../tests/fixtures/cpp-lean-tasks/consumer.cpp) each ran as
+the primary consumer of the ordinary package and, separately, the reviewed
+package. Each release was installed two ways: pkg-config and CMake. Their
+[C](c-task-streams-20261122.json) and [C++](cpp-task-streams-20261122.json)
+records distinguish an error returned as an item from a terminal step
+failure, check demand and exhaustion, and exercise disposal during a pull.
+C verified that closing a pending stream invalidated its borrowed descriptor
+and closed the cursor once. C++ destroyed the stream on another thread;
+the outstanding read reported cancellation before Lean's late completion.
+
+The [retained C](c-retained-tasks-20261122.json) and [retained C++](cpp-retained-tasks-20261122.json)
+clients also drove a second component in a callback. Their isolated processes
+covered retirement and cancellation during callback dispatch. These paired
+tests exercised both packages together; they did not swap roles for every
+fault. The callback suite and the plain task/stream suite used different releases.
+
+`node --test tests/helpers/native-async-reconciliation.mjs` matches the
+actual clients and the installed examples. To check all eight original
+archives and their receipts, set `LEAN_BRIDGE_C_TASK_REPLAY_DIR` and
+`LEAN_BRIDGE_CPP_TASK_REPLAY_DIR` to the plain release directories, and
+`LEAN_BRIDGE_C_CALLBACK_RELEASES` and `LEAN_BRIDGE_CPP_CALLBACK_RELEASES`
+to the retained-callback release directories. It reads the original
+installation results and hashes the archives; it does not rerun the executables.
+
+These two profiles add **12** combinations across the three async families
+and two authoring routes: **106/136 verified**, with Rust, Python, Ruby,
+WIT/WASI and PHP-Wasm still to qualify beyond synchronous iteration.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
