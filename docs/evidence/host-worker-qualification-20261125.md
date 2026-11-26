@@ -113,6 +113,8 @@ The [NuGet record consumer](dotnet-host-record-fields-20261126.md) additionally 
 and the original CLR objects survive closure capture but are released on disposal.
 The [separate Java and Kotlin Maven clients](jvm-host-record-fields-20261126.md)
 check their own static types and evaluate the getters on the original JVM objects.
+The [C11 client](c-host-record-fields-20261126.md) separately counts each meter's
+destruction. A returned row survives binding closure; a getter can outlive that row.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

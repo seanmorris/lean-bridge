@@ -220,6 +220,33 @@ value. The [complete C application](../../tests/fixtures/c-host-members/consumer
 registers both member tables, uses the same object from two packages, and
 releases the final owner after closing the bindings.
 
+### Keep application objects in a Lean record
+
+When a record contains one of your objects, the generated header gives the
+record a typed owner. In the Gauge example, `workshop_pair_make` borrows
+the two meters, retains a lease on each and copies the byte and integer
+fields. `workshop_flip` takes the record by value without consuming it:
+
+```c
+workshop_pair input = {0}, output = {0};
+workshop_box lead = {0};
+workshop_diagnostic diagnostic = {0};
+assert(workshop_pair_make(left, sample, sequence, right, &input) == workshop_OK);
+assert(workshop_flip(binding, input, &output, &diagnostic) == workshop_OK);
+assert(workshop_pair_drop(&input) == workshop_OK);
+assert(workshop_pair_get_lead(output, &lead) == workshop_OK);
+assert(workshop_pair_drop(&output) == workshop_OK);
+/* lead still refers to the original right-hand meter. */
+assert(workshop_box_drop(&lead) == workshop_OK);
+```
+
+A struct assignment aliases the same owner. Use `workshop_pair_clone` if
+both variables need to outlive each other. Getters for byte buffers and
+wide integers return independent copies; use the header's clear function
+when done. The [complete C client](../../tests/fixtures/c-host-record/consumer.c)
+also handles an application error and checks that a stale record cannot
+trigger a meter read. See the [installed C11 record results](../evidence/c-host-record-fields-20261126.md).
+
 ### Use an application object in a task or stream
 
 When a package exports workers on its host binding, pass the same object handle

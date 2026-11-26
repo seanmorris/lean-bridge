@@ -2,6 +2,7 @@
 import {cIdentifier} from "./generate.mjs";
 import {hostDeclarationName} from "../../abi/host-member-names.mjs";
 import {cHostCodecs} from "./host-codecs.mjs";
+import {cHostRecords} from "./host-records.mjs";
 import {cHostWorkers} from "./host-worker-api.mjs";
 
 /**
@@ -45,6 +46,8 @@ export const cHostFacade=o=>{
 		add(label+"_drop",p+"status",type+" *ref",`if(!ref) return ${p}INVALID; lb_cr_ref r=${v.raw("*ref")}; int c=LB_CR(drop)(${check},&r); if(!c) *ref=(${type}){0}; return lb_status(c);`);
 		add(label+"_same",p+"status",type+" a, "+type+" b, bool *equal",`if(!equal) return ${p}INVALID; int eq=0,c=LB_CR(same)(${check},${v.raw("a")},${v.raw("b")},&eq); if(!c) *equal=eq!=0; return lb_status(c);`);
 	});
+	const records=cHostRecords({entries,p,byRef,defs,code,reserve,add});
+	const site=(t,n)=>records.get(t.declaration)??byRef(t,n);
 	const fields=[],cases=[],labels=new Set();
 	for(const [i,m] of model.members.entries())
 	{
@@ -106,26 +109,31 @@ done_${i}:
 	for(const {i,e,apply} of calls)
 	{
 		const name=cIdentifier(e.name)+(apply?"_call":""),factory=!apply && e.result.kind==="io-closure";
-		const a=apply?[byRef(e.result.argument,name+"_arg")]:e.parameters.map(t=>byRef(t.type,name+"_arg"));
-		const r=factory?ticketResult(e):byRef(apply?e.result.reply:e.result,name+"_value"),err=e.effect==="EIO" && byRef(e.error,name+"_failure");
+		const a=apply?[byRef(e.result.argument,name+"_arg")]:e.parameters.map(t=>site(t.type,name+"_arg"));
+		const r=factory?ticketResult(e):site(apply?e.result.reply:e.result,name+"_value"),err=e.effect==="EIO" && byRef(e.error,name+"_failure");
 		if(e.result.kind==="apply") add(name+"_value_clear","void",r.type+" *v","if(v) { "+r.clear("*v")+" *v=("+r.type+"){0}; }");
 		if(err && e.error.kind==="apply") add(name+"_failure_clear","void",err.type+" *v","if(v) { "+err.clear("*v")+" *v=("+err.type+"){0}; }");
 		const params=[apply?"const "+ticketType(e)+" *fn":binding+" binding",...a.map((v,j)=>v.arg+" a"+j),r.type+" *value",...err?[err.type+" *failure"]:[],p+"diagnostic *diag"];
 		const bad=c=>"return lb_status("+c+");",retired=()=>"lean_bridge_native_runtime_retire(); status="+p+"UNAVAILABLE; goto exit;";
+		let count=Number(!!apply);
+		const pack=a.map((v,j)=>{
+			const off=count; count+=v.count??1;
+			return v.record?v.packAt("a"+j,off,bad):v.pack("a"+j,"w+"+3*off,bad);
+		}).join("\n    ");
 		add(name,p+"status",params.join(", "),`if(!value || !${r.empty("*value")} || ${o.workerWire?"!lw_empty(diag)":"!diag || diag->message.data || diag->message.len"}${err?" || !failure || !"+err.empty("*failure"):""}) return ${p}INVALID;
     ${apply?"if(!fn || !fn->_private[2]) return "+p+"STALE;\n    ":""}lb_cr_ref binding_ref=${br(apply?"*fn":"binding")}; void *app=NULL; int c=LB_CR(binding_get)(lb_component_key,binding_ref,&app); if(c) return lb_status(c);
     ${o.workerWire || closures?"if(((lb_app*)app)->closing) return "+p+"BUSY;\n    ":""}if(((lb_app*)app)->depth>=64) return ${p}LIMIT;
-    size_t budget=0; uint64_t w[${Math.max(1,(a.length+Number(!!apply))*3)}]={${apply?"fn->_private[2]":"0"}},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
-    ${a.map((v,j)=>v.pack("a"+j,"w+"+3*(j+Number(!!apply)),bad)).join("\n    ")}
-    lb_scope scope={.binding=binding_ref,.app=app}; ++scope.app->depth;
-    int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,${i},w,${a.length+Number(!!apply)},out,tags,&fault);
+    size_t budget=0; uint64_t w[${Math.max(1,count*3)}]={${apply?"fn->_private[2]":"0"}},out[4]={0}; uint8_t tags[65]={0}; uint32_t fault=0;
+    ${pack}
+    ${r.record?"uint64_t exports[64]; ":""}lb_scope scope={.binding=binding_ref,.app=app${r.record?",.exports=exports":""}}; ++scope.app->depth;
+    int rc=${prefix}_call((uintptr_t)&scope,lb_dispatch,${i},w,${count},out,tags,&fault);
     ${p}status status=lb_native(rc); (void)budget;
-    if(!rc) { ${r.unpack("*value","out",retired)} out[3]=0; }
+    if(!rc) { ${r.unpack("*value","out",retired)} ${r.record?"":"out[3]=0;"} }
     ${err?"else if(rc==3) { "+err.unpack("*failure","out",retired)+" out[3]=0; }":""}
     else if(rc==4) { diag->message=(${p}buffer){(uint8_t *)(uintptr_t)out[0],out[1]}; out[3]=0; }
     else if(rc==13) diag->host_code=fault;
     goto exit;
-exit: ${prefix}_clear(out); lb_reset(&scope); --scope.app->depth; return status;`);
+exit: ${prefix}_clear(out); ${r.record?"if(lb_record_exports_drop(&scope)){ (void)"+r.type+"_drop(value); lean_bridge_native_runtime_retire(); status="+p+"UNAVAILABLE; } ":""}lb_reset(&scope); --scope.app->depth; return status;`);
 	}
 	for(const {e,i} of factories)
 	{
@@ -161,15 +169,29 @@ exit: ${prefix}_clear(out); lb_reset(&scope); --scope.app->depth; return status;
 static const char lb_component_key[]="${identity}";
 static const char *const lb_keys[]={${model.kinds.map(k=>JSON.stringify(k.key)).join(",")}};
 typedef struct { ${p}hosts methods; void *context; unsigned depth; ${o.workerWire?"struct lw_job *jobs; bool closing;":closures?"bool closing;":""}} lb_app;
-typedef struct { lb_cr_ref binding,temp; lb_app *app; const char *key; void *buffer; } lb_scope;
+typedef struct { lb_cr_ref binding,temp; lb_app *app; const char *key; void *buffer;${records.size?" uint64_t *exports; size_t nexports;":""} } lb_scope;
 static void lb_reset(lb_scope *s) { free(s->buffer); s->buffer=NULL; if(s->temp.ticket) LB_CR(drop)(s->key,&s->temp); }
-static void lb_dispose(lb_cr_fn fn,void *ptr) { ((void (*)(void *))fn)(ptr); }
+${records.size?`/* A native record can fail after exporting an earlier object. Hold each
+   temporary export ticket until the public row has cloned its own fields. */
+static int lb_record_exports_drop(lb_scope *s) {
+    int failed=0;
+    while(s->nexports){ uint64_t a[2]={s->exports[--s->nexports],0},out[3]={0};
+        if(LB_CR(refop)(s->binding.ticket,lb_keys,${model.kinds.length},-8,a,2,out)) failed=1; }
+    return failed;
+}
+`:""}static void lb_dispose(lb_cr_fn fn,void *ptr) { ((void (*)(void *))fn)(ptr); }
 static ${p}status lb_status(int c) { switch(c) {case CR_OK:return ${p}OK;case CR_STALE:return ${p}STALE;case CR_LIMIT:return ${p}LIMIT;case CR_INVALID:return ${p}INVALID;default:return ${p}UNAVAILABLE;} }
 static ${p}status lb_native(int c) { switch(c) {case 0:return ${p}OK;case 3:return ${p}DECLARED_ERROR;case 4:return ${p}IO_ERROR;case 5:return ${p}INVALID;case 11:case 12:return ${p}LIMIT;case 13:return ${p}HOST_ERROR;case 14:return ${p}BUSY;${closures?"case 16:return "+p+"STALE;":""}default:return ${p}UNAVAILABLE;} }
 #include "host-copied.h"
 static int lb_dispatch(uint64_t id,int32_t op,const uint64_t *w,size_t n,uint64_t *out,uint32_t *fault) {
     lb_scope *scope=(lb_scope *)(uintptr_t)id; lb_app *s=scope->app;
-    if(op<0) return LB_CR(refop)(scope->binding.ticket,lb_keys,${model.kinds.length},op,w,n,out);
+    ${records.size?`if(op==-9 && scope->exports) {
+        if(scope->nexports>=64) return 2;
+        int rc=LB_CR(refop)(scope->binding.ticket,lb_keys,${model.kinds.length},op,w,n,out);
+        if(!rc) scope->exports[scope->nexports++]=out[0];
+        return rc;
+    }
+    `:""}if(op<0) return LB_CR(refop)(scope->binding.ticket,lb_keys,${model.kinds.length},op,w,n,out);
     lb_reset(scope);
     switch(op) { ${cases.join("\n")} default: return 2; }
 }

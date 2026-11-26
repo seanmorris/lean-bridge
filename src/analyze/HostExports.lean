@@ -161,6 +161,7 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
 def hostRecord? (r : Request) (e : Expr) : MetaM (Option Json) := do
   unless (r.hostModule == some "LeanBridge.Host.Python" || r.hostModule == some "LeanBridge.Host.Ruby" ||
       r.hostModule == some "LeanBridge.Host.Dotnet" || r.hostModule == some "LeanBridge.Host.Jvm" ||
+      r.hostModule == some "LeanBridge.Host.C" ||
       (r.hostModule == some "LeanBridge.Host.Php" && r.phpNativeFunctions == some true))
       && r.nativeEffectPolicy == some "native-host-io-v1"
       && !r.resources.isEmpty && r.taskExports.isEmpty && r.asyncIterators.isEmpty && r.iterators.isEmpty do

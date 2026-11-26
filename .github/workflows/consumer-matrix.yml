@@ -3892,11 +3892,13 @@ jobs:
           LEAN_BRIDGE_TASK_RESOURCE_TEST: "1"
           LEAN_BRIDGE_TASK_RESOURCE_EVIDENCE: build/consumer-ci/task-resources
           LEAN_BRIDGE_C_ERROR_OWNER_OUTPUT: build/consumer-ci/task-resources/c11-sync-error
+          LEAN_BRIDGE_C_HOST_RECORD_OUTPUT: build/consumer-ci/task-resources/c11-host-record
           LEAN_NUM_THREADS: "1"
         run: |
           source scripts/env.sh
           node --test --test-concurrency=1 tests/helpers/resource-task-installed.mjs
           npm run test:c-resource-error-owner
+          npm run test:c-host-records
       - name: Preserve installed task resource releases
         if: ${{ !cancelled() && steps.task_resources.outcome == 'success' }}
         uses: actions/upload-artifact@v7

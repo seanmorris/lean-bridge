@@ -3,7 +3,7 @@ import {mkdtemp,readFile,rm,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {cIdentifier} from "../backends/c/generate.mjs";
 import {boostSources} from "../backends/cpp/boost.mjs";
-import {hashBindingIr} from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import {compileCHostComponent} from "../build/c-host-component.mjs";
 import {readVerifiedNativeRuntime,validateNativeElf} from "../build/native-artifacts.mjs";
 import {processBuildRunner} from "../build/process-runner.mjs";
@@ -84,7 +84,7 @@ export const buildCHostPackage=async o=>{
 		else files.set("README.md","# "+name+" "+version+"\n\nInclude "+p+".h and link using pkg-config "+name+" or CMake target "+cmakeTarget+" (Linux x86-64, glibc "+floor+"+). The runtime is included.\n\nRegister a table of C members with "+p+"_with_hosts on the main thread. A member returns zero on success or an application error code. Close the binding before freeing its context. Zero-initialize bindings, owners, aggregate outputs, and diagnostics; clear them with the matching public function before reuse. Adopt a payload with a destructor or NULL. Assignment aliases an owner; clone it for an independent lease. Members borrow receivers for the call. Return a clone for a leased result, not the borrowed receiver. Copied member outputs with a nonempty buffer transfer malloc-compatible storage. Returned Except is data; a thrown EIO and a host callback failure have distinct statuses.\n"+(b.workerWire?"\nStart object tasks and cursors on their binding. Poll on the process main thread; wait for readability on the borrowed descriptor without reading or closing it. Pull one stream item at a time. Close early to cancel. Retained callbacks run during poll; clone a borrowed object to return it. Callback drop releases your handle; close revokes the callback. A callback error may transfer a malloc-owned message and a payload with its destructor into a diagnostic. Clear the diagnostic after use.\n":""));
 		const records=[...files].map(([path,v])=>({path,bytes: Buffer.isBuffer(v)?v:Buffer.from(v),mode: 0o644}));
 		const inventory=Object.fromEntries(records.map(f=>[f.path,{bytes: f.bytes.length,sha256: sha256(f.bytes)}]));
-		const bindingIrSha256=hashBindingIr(b.api),component=contract.component;
+		const bindingIrSha256=hostPublicHash(b.api),component=contract.component;
 		const pkg={
 			schemaVersion: 1
 			, kind: "lean-bridge-native-c-package"
@@ -94,9 +94,9 @@ export const buildCHostPackage=async o=>{
 			, runtimeIdentity, bindingIrSha256
 			, hostImportsSourceSha256: b.evidence.hostImportsSourceSha256
 			, hostDomain: b.domain
-			, ...b.workerLedger?{workerLedger:b.workerLedger}:{}
+			, ...b.workerLedger?{workerLedger: b.workerLedger}:{}
 			, library: b.component
-			, ...cpp?{cppHostAbi: b.abi,cppStandard: 20,...b.workerWire?{cppTaskSupportAbi:2}:{}}:{}
+			, ...cpp?{cppHostAbi: b.abi,cppStandard: 20,...b.workerWire?{cppTaskSupportAbi: 2}:{}}:{}
 			, glibcMinimumVersion: floor
 			, cmakePackage, cmakeTarget
 			, pkgConfig: name

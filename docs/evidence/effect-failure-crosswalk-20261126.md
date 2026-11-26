@@ -85,6 +85,11 @@ runtime, or that an application can recover from an arbitrary process crash.
 
 ## What still requires a decision or a test?
 
+The [C11 record client](c-host-record-fields-20261126.md) exercises a recoverable
+result-conversion failure: after an object is exported, a later buffer exceeds
+the byte budget. No record is published, the temporary lease is released, and a
+subsequent call succeeds. This is neither a thrown EIO payload nor a fatal fault.
+
 The [capabilities index](host-worker-qualification-20261125.md#which-installed-profiles-exercised-os-access)
 records which profiles permit real OS effects and which refuse to package
 them. Do not infer a filesystem grant from an in-memory test. Likewise, a

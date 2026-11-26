@@ -100,6 +100,13 @@ end Workshop
 
 Build with `lean-bridge build --project . --target c --output release-c`.
 The `native-c-host-v1` receipt identifies the application-owned host profile.
+An immediate `IO` export can take or return a public Lean structure containing
+imported application objects and copied scalar fields. Select the declaration
+the same way as a scalar export. The compiler checks the structure's actual
+constructor and projections, and the CLI emits a typed record owner, getters,
+clone and drop functions in the installed header. See the [C consumer example](../consume/c.md#keep-application-objects-in-a-lean-record).
+This binding supports up to 64 flattened argument fields per call; it does
+not turn the record into a task or a retained host callback.
 Distribute the verified archive: it contains the generated public header,
 native component, shared reference registry, and Lean runtime. Downstream
 users [register their C implementations](../consume/c.md#supply-c-objects-to-lean);

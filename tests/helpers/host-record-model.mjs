@@ -5,6 +5,9 @@ import {hostRecordTypes} from "../../src/analyze/host-records.mjs";
 import {pythonHostRecords} from "../../src/backends/python/host-records.mjs";
 import {dotnetHostRecords} from "../../src/backends/dotnet/host-records.mjs";
 import {jvmHostRecords} from "../../src/backends/jvm/host-records.mjs";
+import {cHostCodecs} from "../../src/backends/c/host-codecs.mjs";
+import {cHostRecords} from "../../src/backends/c/host-records.mjs";
+import {lowerWordHostRecord} from "../../src/backends/native/word-host-records.mjs";
 
 const box = {id: "host:meter.Box", name: "Box"};
 const selection = {hostModule: "LeanBridge.Host.Python", exportModules: ["Workshop"], nativeEffectPolicy: "native-host-io-v1"};
@@ -89,4 +92,24 @@ test("JVM record properties keep their source identities without colliding with 
 	for(const name of ["T0", "Api", "String", "Fields"]) assert.throws(() => emit(name, ["meter"]), /Invalid JVM record name/u);
 	for(const names of [["class"], ["source_meter", "source_Meter"]]) assert.throws(() => emit("Pair", names), /Colliding JVM record getter/u);
 	assert.equal(emit("Pair", ["source_meter"]).get("Gauge.Pair").fields[0].getter, "getSourceMeter");
+});
+
+test("C11 record helpers use nominal tickets and do not collide with existing public names", () => {
+	const emit = (fields, initial = []) => {
+		const defs = [], code = [], names = new Set(initial), p = "app_";
+		const {byRef} = cHostCodecs({types: [box]}, [{name: "Box", key: "a".repeat(64)}], p, defs);
+		const reserve = n => {
+			if(names.has(n)) throw new TypeError("collision: " + n);
+			names.add(n); return n;
+		};
+		const add = (label, ret, args, body) => { reserve(label); code.push(body); };
+		const row = {...record, fields}, entries = [site(row)];
+		return cHostRecords({entries, p, byRef, defs, code, reserve, add});
+	};
+	const owner = emit(record.fields).get("Workshop.Rack");
+	assert.equal(owner.type, "app_rack"); assert.equal(owner.count, 1);
+	assert.throws(() => emit(record.fields, ["rack_make"]), /collision/u);
+	assert.throws(() => emit([...record.fields, {...record.fields[0], name: "primary_meter"}]), /collision/u);
+	const wide = {...record, fields: Array.from({length: 33}, (_, i) => ({...record.fields[0], name: "f" + i, projection: "Workshop.Rack.f" + i}))};
+	assert.throws(() => lowerWordHostRecord({...site(record), parameters: [{type: wide}, {type: wide}]}, "c", () => "Box"), /64 flattened/u);
 });
