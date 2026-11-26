@@ -475,6 +475,28 @@ following variables to the matching original captures:
 | CPython | `LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL` | `LEAN_BRIDGE_PY_ASYNC_RETAINED` (contains `cpython-311/`, `cpython-312/`) | `LEAN_BRIDGE_PY_ASYNC_LEASES` (contains `cp311/`, `cp312/`) |
 | Ruby | `LEAN_BRIDGE_RUBY_PARKED_ORIGINAL` | `LEAN_BRIDGE_RB_ASYNC_RETAINED` | `LEAN_BRIDGE_RB_ASYNC_LEASES` |
 
+### Interrupting a parked reader in wasm32 PHP
+
+The PHP-Wasm cursor now separates requesting cancellation from waiting for
+cleanup. A PHP callback can call `$cursor->cancel()` without waiting for the
+Lean worker. `$cursor->close()` still waits; call it outside the pending
+read and after releasing any gate your application controls.
+
+The [Zend state-machine control](../../tests/fixtures/php-wasm-task-owner/cursor-cancel-state.php)
+checks that a cancelled reader does not deliver a buffered value, discards
+an unclaimed leased value once and does not mask an existing terminal fault.
+That control uses PHP fibers as the transport; it is not an installed Wasm run.
+
+For the installed test, run `npm run test:php-wasm-parked-reader` with the
+[threaded PHP-Wasm prerequisites](php-wasm-task-packages-20261124.md#reproduce),
+including `LEAN_BRIDGE_JS_TASK_INPUTS` pointing to the verified pthread SDK.
+The [PHP application](../../tests/fixtures/php-wasm-task-owner/parked.php)
+receives a callback only after the Lean reader signals entry. It checks a
+sibling task before releasing the gate and checks both late computation and
+cleanup afterward. Set `LEAN_BRIDGE_ZEND_READER_KEEP` to an existing directory
+to retain the handoffs; set `LEAN_BRIDGE_ZEND_READER_REPLAY` to the directory
+containing both handoffs to rerun the consumer checks.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

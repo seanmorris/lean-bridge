@@ -72,19 +72,29 @@ abstract class Awaitable {
 final class PullStream implements \IteratorAggregate {
     private bool $started=false;
     private bool $pulling=false;
+    private ?object $draining=null;
     private function __construct(private ?object $owner, private readonly \Closure $decode,
             private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null,private ?object $binding=null) {}
     private function __clone() {}
     public function __serialize(): array { throw new \LogicException('Cannot serialize a Lean cursor'); }
     public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean cursor'); }
+    /** Stop delivery without waiting for a noncooperative Lean worker. */
+    public function cancel(): bool {
+        if ($this->owner===null) return false;
+        $this->draining=$this->owner->drain();
+        $this->owner=null;
+        return true;
+    }
+    /** Wait for native worker cleanup after cancellation, or close an open cursor. */
     public function close(): void {
-        if ($this->owner===null) return;
+        if ($this->owner===null && $this->draining===null) return;
         if ($this->pulling) throw new \LogicException('Cannot close a cursor during its own pull');
         MemberStack::assertCanWait();
-        $owner=$this->owner; $this->owner=null;
+        $this->cancel();
+        $drain=$this->draining; $this->draining=null;
         $failed=true;
         try {
-            if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($owner->drain())!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
+            if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($drain)!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
             $failed=false;
         } finally { try {$this->objects?->close($failed);} finally {$this->binding=null;} }
     }
@@ -104,12 +114,23 @@ final class PullStream implements \IteratorAggregate {
                 try {$packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner->pull());}
                 finally {$this->pulling=false;}
                 if ($packet==='["end"]') break;
+                if ($this->owner===null) {
+                    // A terminal error keeps its original type. A value already
+                    // buffered during callback dispatch is released, never yielded.
+                    if (is_object($packet) && $packet->form()==='value') $packet->discard();
+                    else ($this->decode)($packet);
+                    throw new TaskCancelled('Lean cursor was cancelled');
+                }
                 yield ($this->decode)($packet);
             }
         } finally {
             // A suspended generator may be resumed or destroyed by a PHP
             // member. Leave the already-owned native close to the scheduler.
-            if (MemberStack::active()) $this->abandon(); else $this->close();
+            // An explicit cancellation already started the drain. Waiting on it
+            // here could deadlock the caller that still has to release the worker.
+            if ($this->owner!==null) {
+                if (MemberStack::active()) $this->abandon(); else $this->close();
+            }
         }
     }
 }

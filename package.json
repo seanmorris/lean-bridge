@@ -1349,6 +1349,7 @@
     "test:php-function-fields": "node --test tests/helpers/php-function-fields-installed.mjs",
     "test:perl-function-fields": "node --test tests/helpers/perl-function-fields-installed.mjs",
     "test:php-wasm-function-fields": "node --test tests/helpers/php-wasm-tariff-installed.mjs",
+    "test:php-wasm-parked-reader": "node --test tests/helpers/php-wasm-parked-reader-installed.mjs",
     "test:wit-function-fields": "node --test tests/helpers/wit-function-fields-installed.mjs",
     "test:npm-function-fields": "node --test tests/helpers/npm-function-fields-installed.mjs",
     "test:rust-staged-callbacks": "LEAN_BRIDGE_OWNED_RUST_STAGED_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-rust-install.test.mjs",

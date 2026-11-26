@@ -21,8 +21,9 @@ import {exercisePhpTaskBrowser} from "./php-wasm-task-browser.mjs";
  * @param functions - Also require authenticated, object-capturing returned functions.
  * @param [immediate] - Test a standalone component, without importing the worker runtime.
  * @param [records] - Require the installed Zend record and EIO last-owner program in both PHP environments.
+ * @param [options] - Optional installed application scenarios.
  */
-export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false,functions=false,immediate=false,records=false)=>{
+export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false,functions=false,immediate=false,records=false,options={})=>{
 	const host=process.env.LEAN_BRIDGE_PHP_WASM_HOST;assert.ok(host);
 	const {receipt}=await readVerifiedPackageSetReceipt({receiptPath: join(release,"package-set-receipt.json")});
 	await assertJsonSchema("package-set-receipt",receipt);
@@ -54,6 +55,12 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	await run("composer",["--no-plugins","--no-scripts","--no-interaction","--no-cache","install","--prefer-dist"],app,{...env,COMPOSER_DISABLE_NETWORK: "1",COMPOSER_ALLOW_SUPERUSER: "1",COMPOSER_HOME: join(root,"composer-home")});
 	await symlink(resolve(host),join(app,"node_modules/php-wasm"),"dir");
 	await cp(resolve("tests/fixtures/php-wasm-task-owner",immediate?"zend-sync.php":zend?"zend-installed.php":leases?"leases.php":peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
+	if(options.parked) {
+		assert.ok(!peer && !immediate && !leases && !zend);
+		const sample=await readFile("tests/fixtures/php-wasm-task-owner/parked.php","utf8");
+		assert.ok(sample.startsWith("<?php\n"));
+		await appendFile(join(app,"installed.php"),"\n"+sample.slice(6));
+	}
 	if(records)
 	{
 		assert.ok(immediate && zend && functions && peer);
@@ -75,11 +82,12 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	const executions={};
 	for(const mode of ["embedded","composer"])
 	{
-		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools",CHECK_RETURNED_FUNCTIONS: functions?"1":"0",CHECK_ZEND_RECORDS: records?"1":"0"});
+		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools",CHECK_RETURNED_FUNCTIONS: functions?"1":"0",CHECK_ZEND_RECORDS: records?"1":"0",CHECK_PARKED_READER: options.parked?"1":"0"});
 		assert.equal(result.stderr,"");assert.match(result.stdout,immediate?/synchronous identity, failures, reentry and cleanup passed/u:/zero live owners/u);t.diagnostic(result.stdout.trim());
 		executions[mode]=result.stdout.trim();
 	}
-	executions.chromium=await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend,immediate,records});t.diagnostic(executions.chromium);
+	executions.chromium=await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend,immediate,records,parked:options.parked});t.diagnostic(executions.chromium);
+	if(options.parked) return executions;
 	if(immediate)return executions;
 	if(peer && !leases)
 	{
