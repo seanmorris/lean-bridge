@@ -16,9 +16,10 @@ import {leasedClosureFieldReviewedIr} from "./owned-aggregate-fixture.mjs";
  * @param target - Downstream package ecosystem.
  * @param options - Optional mixed-record contract.
  * @param options.mixed - Include the PriceCard workload on both routes.
+ * @param options.incoming - Include a callback borrowing a Lean closure directly.
  */
-export const prepareStagedQuoteProject = async (project, route, target, {mixed = false} = {}) => {
-	if(!["ordinary", "reviewed"].includes(route) || !["cpp", "cargo", "nuget", "npm", "maven", "rubygems", "php-native", "cpan", "wit-wasi", "php-wasm"].includes(target)) throw new Error("Unexpected staged quote configuration");
+export const prepareStagedQuoteProject = async (project, route, target, {mixed = false, incoming = false} = {}) => {
+	if(!["ordinary", "reviewed"].includes(route) || !["c", "cpp", "cargo", "nuget", "npm", "maven", "rubygems", "php-native", "cpan", "wit-wasi", "php-wasm"].includes(target)) throw new Error("Unexpected staged quote configuration");
 	await cp(new URL("../fixtures/onboarding/leased-closure-fields/", import.meta.url), project, {recursive: true});
 	const cfg = join(project, "lean-bridge.exports.json");
 	const config = route === "ordinary" ? JSON.parse(await readFile(cfg)) : {schemaVersion: 1, modules: ["Owned"]};
@@ -31,6 +32,7 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
 	if(route === "ordinary")
 	{
 		config.exports.push("Owned.flatQuote", "Owned.stagedQuote");
+		if(incoming) config.exports.push("Owned.visitQuote");
 		const contract = new URL("../fixtures/structured-types/tariff-staged-contract.json", import.meta.url);
 		config.contracts = {"Owned.stagedQuote": JSON.parse(await readFile(contract))};
 		if(mixed)
@@ -39,13 +41,18 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
 			config.ownedAggregates.closureFields.push("Owned.PriceCard.quote","Owned.PriceCard.rebate");
 		}
 	}
-	else await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({staged: true,mixed})));
+	else await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({staged: true,mixed,incoming})));
 	if(mixed)
 	{
 		const suffix=await readFile(new URL("../fixtures/structured-types/price-card.lean",import.meta.url),"utf8");
 		await saveLakeFile(project,"Owned.lean",await readFile(join(project,"Owned.lean"),"utf8")+"\n"+suffix);
 	}
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(config));
+	if(incoming)
+	{
+		const suffix=await readFile(new URL("../fixtures/structured-types/visit-quote.lean",import.meta.url),"utf8");
+		await saveLakeFile(project,"Owned.lean",await readFile(join(project,"Owned.lean"),"utf8")+"\n"+suffix);
+	}
 };
 
 /**
@@ -57,8 +64,9 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
  * @param route - Ordinary or reviewed authoring route.
  * @param options - Selected fixture variants.
  * @param options.mixed - Expect the independent PriceCard contract as well.
+ * @param options.incoming - Expect the direct incoming closure contract as well.
  */
-export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = false} = {}) => {
+export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = false, incoming = false} = {}) => {
 	assert.ok(["ordinary","reviewed"].includes(route));
 	assert.equal(ir.schemaVersion,4);
 	const bindingIrSha256 = sha256(canonicalizeJsonValue(ir));
@@ -69,7 +77,7 @@ export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = f
 	assert.equal(Boolean(reviewed), route === "reviewed");
 	if(reviewed)
 	{
-		const original = leasedClosureFieldReviewedIr({staged: true,mixed});
+		const original = leasedClosureFieldReviewedIr({staged: true,mixed,incoming});
 		assert.equal(reviewed.path, "api.binding-ir.json");
 		assert.deepEqual(JSON.parse(reviewed.source), original);
 		assert.equal(reviewed.sourceSha256, sha256(canonicalJson(original)));

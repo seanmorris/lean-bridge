@@ -41,3 +41,12 @@ three Chromium clients run after the npm install tree is removed. Run
 `npm run test:npm-incoming-function` with the JavaScript target runtime,
 Emscripten, Lean and Chromium configured, or set `LEAN_BRIDGE_NPM_INCOMING_REPLAY`
 to the directory containing the two sealed author-route handoffs.
+
+To exercise the same lifetime rule with a captured scalar function in C11,
+run `npm run test:c-incoming-function` with the pinned Lean compiler. The
+[Lean export](../../tests/fixtures/structured-types/visit-quote.lean) passes
+the function directly to the [C callback](../../tests/fixtures/structured-types/tariff-incoming.c).
+The test builds ordinary and reviewed C archives, then compiles a pkg-config
+client and a relocated CMake client. Use `LEAN_BRIDGE_C_INCOMING_KEEP` to
+retain the handoffs or `LEAN_BRIDGE_C_INCOMING_REPLAY` to replay them.
+The npm receipts above do not qualify this C interface.

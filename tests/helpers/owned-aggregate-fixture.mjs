@@ -119,8 +119,9 @@ export const ownedAggregateReviewedIr = () => {
  * @param options.exchange - Include the callback that exchanges function-bearing records.
  * @param options.staged - Include two equal Lean types with different callback call boundaries.
  * @param options.mixed - Include a mixed record and a two-record export.
+ * @param options.incoming - Pass a captured Lean function directly into the host callback.
  */
-export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false, mixed = false } = {}) => {
+export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false, mixed = false, incoming = false } = {}) => {
 	const ir = ownedAggregateReviewedIr();
 	ir.component = { id: "tariff-quotes@1.0.0", name: "tariff-quotes", version: "1.0.0" };
 	ir.aggregatePolicy = { ...policy(), closureFields: ["Owned.Tariff.quote"] };
@@ -161,15 +162,17 @@ export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false,
 		ir.aggregatePolicy.closureFields.push("Owned.PriceCard.quote","Owned.PriceCard.rebate");
 	}
 	const choose = staged && signature([scalar], callback), flat = staged && signature([scalar, scalar], scalar);
+	const visit = incoming && signature([callback, scalar], scalar);
 	ir.declarations = [
 		["newTicket", [scalar], ticket], ["makeTariff", [scalar], tariff]
 		, ["applyTariff", [tariff, scalar], scalar], ["echoTariff", [tariff], tariff]
 		, ["unpackQuote", [tariff], callback], ["packQuote", [callback], tariff]
 		, ...exchange ? [["exchangeTariff", [transform, scalar, scalar], scalar]] : []
 		, ...mixed ? [["compareCards", [card, card], scalar]] : []
+		, ...incoming ? [["visitQuote", [scalar, visit, scalar], scalar]] : []
 		, ...staged ? [["stagedQuote", [choose, scalar, scalar], scalar], ["flatQuote", [flat, scalar, scalar], scalar]] : []
 	].map(([name, inputs, output]) => {
-		const canInvoke = inputs.some(input => [tariff, callback, transform, choose, flat, card].includes(input));
+		const canInvoke = inputs.some(input => [tariff, callback, transform, choose, flat, card, visit].includes(input));
 		return { ...template, name, id: `lean:Owned.${name}`
 			, overloadKey: `Owned.${name}`, source: source(`Owned.${name}`)
 			, parameters: inputs.map(parameter), result: site(output, true)

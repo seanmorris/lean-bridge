@@ -88,6 +88,20 @@ test("a callback exchanging function-bearing records borrows its input and lease
 	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "aggregate-ownership" });
 });
 
+test("a closure passed directly to a host callback is borrowed, not a leased callback result", () => {
+	const document = leasedClosureFieldReviewedIr({ staged: true, incoming: true });
+	validateReviewedOwnedSource(capture(document));
+	const typeOf = site => document.types.find(type => type.id === site.type.id);
+	const decl = name => document.declarations.find(item => item.name === name);
+	const site = typeOf(decl("visitQuote").parameters[1]).callable.parameters[0];
+	const returned = typeOf(decl("stagedQuote").parameters[0]).callable.result;
+	assert.deepEqual(site.type, returned.type);
+	assert.equal(site.ownership, "borrow"); assert.equal(returned.ownership, "lease");
+	assert.deepEqual(site.lifetime, { scope: "call", anchor: null });
+	site.ownership = returned.ownership; site.lifetime = returned.lifetime;
+	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "reviewed-ir-build-unsupported" });
+});
+
 test("reviewed higher-order results preserve their call boundary without splitting flat siblings", async () => {
 	const document = leasedClosureFieldReviewedIr({ exchange: true, staged: true });
 	const expected = JSON.parse(await readFile("tests/fixtures/structured-types/tariff-staged-contract.json"));
