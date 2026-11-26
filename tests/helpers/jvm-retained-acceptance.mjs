@@ -13,6 +13,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { inspectJvmTask, installJvmTasks } from "./jvm-tasks-acceptance.mjs";
+import {exerciseKotlinFault} from "./kotlin-callback-fault.mjs";
 
 const env = { ...process.env, LEAN_NUM_THREADS: "1" };
 const capture = env.LEAN_BRIDGE_JVM_CALLBACK_CAPTURE, replay = env.LEAN_BRIDGE_JVM_CALLBACK_REPLAY;
@@ -74,6 +75,11 @@ test("replays real retained Lean callbacks through offline installed Java and Ko
 		const component = packages.get(route), peer = packages.get("peer"), proj = join(work, route), classes = join(proj, "classes");
 		assert.deepEqual(component.proof.detail.owner, peer.proof.detail.owner);
 		const { classpath, resolved } = await installJvmTasks(proj, work, [component, peer]); await mkdir(classes);
+		if(capture)
+		{
+			const kotlin = await exerciseKotlinFault({proj, classpath, env});
+			await writeFile(join(root, route + ".kotlin-fault.json"), canonicalJson({kotlin, source: component.proof, peer: peer.proof}), {flag: "wx"});
+		}
 		await run(javac, ["--release", "22", "-proc:none", "-encoding", "UTF-8", "-cp", classpath, "-d", classes, ...files.filter(f => f.endsWith(".java")).map(f => join(work, f))], proj, env);
 		const cp = classes + delimiter + classpath;
 		const cc = ["-XX:ActiveProcessorCount=1", "-Xmx512m", "-cp"

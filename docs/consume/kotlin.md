@@ -100,6 +100,10 @@ synchronous call returns. The meter remains yours.
 Ordinary exceptions can be handled in Lean or propagated back to Kotlin.
 A terminal JVM error, such as `OutOfMemoryError` or `LinkageError`, retires
 the shared Lean runtime even if a nested Kotlin method catches it.
+Cancellation settles the waiting coroutine; it does not suppress a fatal
+failure from an application callback that was already running. The
+[installed Kotlin example](../evidence/kotlin-callback-fault-20261126.md)
+shows when another component can still be called and when it must refuse.
 
 A returned `Except` is a `Result`. An `EIO` failure throws a separate
 generated error class. If the error carries your application object, pass
