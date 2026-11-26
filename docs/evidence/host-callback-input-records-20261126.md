@@ -40,7 +40,15 @@ Lean component: direct and reentrant calls, expired callback after echo,
 recoverable callback failure, invalid descriptor, and a leased function
 used in the wrong session. The separate [observer](../../tests/fixtures/structured-types/tariff-exchange-probe.c)
 saw one live identity (the session) after each case and zero after close.
-This was a build-tree run, not a relocated package install. The release
-checks are `npm run test:c-leased-closure-fields` and
+The same client now passes against the [ordinary C archive](c-host-input-records-20261126/ordinary.package-set.json)
+after removing the producer. The [installed observations](c-host-input-records-20261126/ordinary.host-fields.json)
+record both pkg-config and relocated CMake executions, plus the observer's
+counts. This establishes the ordinary C route; the reviewed route needs
+its own archive and execution.
+
+The release checks are `npm run test:c-leased-closure-fields` and
 `npm run test:leased-closure-fields`; each builds ordinary and reviewed
 packages and runs the downstream application after removing the author tree.
+Set `LEAN_BRIDGE_C_TARIFF_REPLAY` to a retained directory containing
+`ordinary/` and `reviewed/` to verify and install those archives instead of
+rebuilding them. Set `LEAN_BRIDGE_CMAKE` if CMake is not at `/usr/bin/cmake`.
