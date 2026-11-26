@@ -7,6 +7,11 @@ Lean runs, an exception from application code, or a terminal fault. The
 task scheduler. A program can recover from a declared error without making
 a broken runtime safe to reuse.
 
+**Current installed coverage: 78 of 102** — all 34 immediate IO combinations,
+22 typed EIO and 22 named errors. Each combination is one profile on one
+authoring route. Rust, CPython, Ruby, Perl, Java and Kotlin still need both
+typed contracts verified on both routes.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.
@@ -155,6 +160,34 @@ member again. Each process ended with zero reference tokens.
 This qualifies native PHP separately from PHP-Wasm. The installed count is
 **70/102**: 34 direct IO, 18 typed EIO and 18 named errors. The eight remaining
 profiles are C11, C++, Rust, CPython, Ruby, Perl, Java and Kotlin.
+
+### C and C++: the error outlives the throwing binding
+
+The [C client](../../tests/fixtures/c-host-members/consumer.c) received the
+application meter in the typed error slot; the success output stayed
+unchanged. The [C++ client](../../tests/fixtures/c-host-members/consumer.cpp)
+retained the thrown exception itself. Each dropped the original meter and
+closed Workshop. The independent Peer still read 23 and updated the meter
+to 42 through the error. Releasing it ran the destructor once, before Peer
+closed. Returning `Except.error 17` was a successful call in both languages.
+
+Both clients distinguish a propagated nested host failure from its Lean
+replacement. In a separate terminal case, a member reported success without
+returning its required object. The calling host caught that failure and
+tried to return a valid number. The outer call still failed, and neither
+component could make another host call after the defective member was
+restored. Validation and ordinary callback failures left both usable.
+
+The [ordinary C](c-host-error-policy-20261126/ordinary.json),
+[reviewed C](c-host-error-policy-20261126/reviewed.json),
+[ordinary C++](cpp-host-error-policy-20261126/ordinary.json) and
+[reviewed C++](cpp-host-error-policy-20261126/reviewed.json) records pin the
+original releases, their interfaces and the actual application sources.
+Each ran via pkg-config and CMake in both link orders. To reproduce without
+a Lean build, run `npm run test:c-host-packages` or
+`npm run test:cpp-host-packages` with the corresponding
+`LEAN_BRIDGE_C_HOST_REPLAY` or `LEAN_BRIDGE_CPP_HOST_REPLAY` release directory.
+Set the matching `*_HOST_ERROR_OUTPUT` to retain the two JSON records.
 
 ## Which immediate errors keep a live resource?
 

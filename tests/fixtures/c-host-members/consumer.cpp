@@ -51,6 +51,13 @@ int main() {
         }
     };
     assert(a.read(x)==41);
+    x->nested=[&]{(void)b.read(other);};
+    try {(void)a.read(x); assert(false);} catch(const Refused& e) {
+        assert(e.reason==91 && std::current_exception()==other->error);
+    }
+    try {(void)a.mapped(x); assert(false);} catch(const sv::DeclaredError<std::string>& e) {
+        assert(e.payload=="host read failed" && e.declaration=="Workshop.mapped");
+    }
     x->nested={}; x->error=std::make_exception_ptr(Refused{37});
     try {(void)a.read(x); assert(false);} catch(const Refused& e) {
         assert(e.reason==37 && std::current_exception()==x->error);
@@ -81,9 +88,35 @@ int main() {
     auto final=std::make_unique<A>(); auto probe=std::make_shared<M>(77);
     probe->nested=[&]{final.reset();}; assert(final->read(probe)==77 && !final);
     probe->nested={};
-    A first; B second; probe->invalid=true;
-    try {(void)first.identity(probe); assert(false);} catch(const sv::Unavailable&) {}
+    A throwing; B second;
+    std::exception_ptr failure;
+    std::weak_ptr<M> only;
+    {
+        auto input=throwing.make(23); only=input;
+        try {(void)throwing.fail_with(input); assert(false);}
+        catch(const sv::DeclaredError<std::shared_ptr<M>>& e) {
+            assert(e.payload==input && e.declaration=="Workshop.failWith");
+            failure=std::current_exception();
+        }
+        throwing.close();
+    }
+    assert(!only.expired() && M::destroyed==2);
+    try {std::rethrow_exception(failure);}
+    catch(const sv::DeclaredError<std::shared_ptr<M>>& e) {
+        assert(second.read(e.payload)==23 && second.update(e.payload,42)==42);
+    }
+    failure={}; assert(only.expired() && M::destroyed==3);
+    A first; probe->invalid=true; unsigned nested=0;
+    probe->nested=[&]{
+        ++nested;
+        try {(void)second.identity(probe); assert(false);} catch(const sv::Unavailable&) {}
+    };
+    try {(void)first.read(probe); assert(false);} catch(const sv::Unavailable&) {}
+    probe->invalid=false;
+    try {(void)first.read(probe); assert(false);} catch(const sv::Unavailable&) {}
     try {(void)second.read(probe); assert(false);} catch(const sv::Unavailable&) {}
-    first.close(); second.close(); probe.reset(); assert(M::destroyed==3);
+    assert(nested==1);
+    first.close(); second.close(); probe.reset(); assert(M::destroyed==4);
+    std::printf("error policy: sole owner 23->42; nested calls %u; destructions %d\n",nested,M::destroyed);
     std::puts("C++ shared identity and original exception, cleanup after retirement");
 }

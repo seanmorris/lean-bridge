@@ -10,11 +10,14 @@ import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-recei
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {prepareNativeHostFixture} from "./native-host-import-check.mjs";
 import {addStaticWorkerJobs} from "./static-worker-project.mjs";
+import {checkHostErrorInterface} from "./check-host-error-interface.mjs";
 
 const cpp=process.env.LEAN_BRIDGE_CPP_HOST_TEST==="1",target=cpp?"cpp":"c",label=cpp?"C++":"C";
 const workers=process.env.LEAN_BRIDGE_C_HOST_WORKERS==="1";
 const variable="LEAN_BRIDGE_"+target.toUpperCase()+"_HOST_"+(workers?"WORKER_":""),replay=process.env[variable+"REPLAY"];
 const success=workers?(cpp?/installed C\+\+ bound futures and streams/u:/installed C workers: identity, callbacks, errors and cleanup/u):cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u;
+const errorOutput=process.env[variable+"ERROR_OUTPUT"];
+const policyLine=cpp?"error policy: sole owner 23->42; nested calls 1; destructions 4":"error policy: sole owner 23->42; nested calls 1,1; destructions 3";
 test(label+(replay?" retained host archives replay without Lean":" offline CLI publishes ordinary and reviewed packages sharing one owner"),{timeout: 3600000},async t=>{
 	const env=process.env,root=await mkdtemp(join(tmpdir(),"c-host-publisher-"));
 	t.after(()=>rm(root,{recursive: true,force: true}));
@@ -47,7 +50,7 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 				cfg.taskExports.push(...tasks);cfg.taskIOErrors.push("Jobs.handoff","Jobs.twice","Jobs.lateIO","Jobs.checkedRelay");
 				cfg.exports.push(...tasks,"Jobs.finite","Jobs.broken");
 				for(const [open,next,close] of [["finite","nextFinite","closeFinite"],["broken","nextBroken","closeBroken"]])
-					cfg.asyncIterators.push({open:"Jobs."+open,next:"Jobs."+next,close:"Jobs."+close});
+					cfg.asyncIterators.push({open: "Jobs."+open,next: "Jobs."+next,close: "Jobs."+close});
 				await save();
 			}
 			const cfg=join(src,"lean-bridge.exports.json"),config=JSON.parse(await readFile(cfg,"utf8"));
@@ -94,13 +97,21 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 			assert.match(stdout,cpp?/\blb_cpp_detail_[a-f0-9]+_relay_start\b/u:/\b(?:workshop|peer)_relay_start\b/u);assert.doesNotMatch(stdout,/\b(?:lbwire_|lbc_|lb_(?:c|cpp)_host_)/u);
 			assert.ok(manifest.files["lib/"+manifest.workerLedger]);
 			assert.ok(manifest.files["share/lean-bridge/generated-workers.lean"]);
-			if(cpp){assert.equal(manifest.cppTaskSupportAbi,2);assert.ok(manifest.files["include/lean_bridge/host_async_v1/host-async.hpp"]);}
+			if(cpp)
+			{
+				assert.equal(manifest.cppTaskSupportAbi,2);
+				assert.ok(manifest.files["include/lean_bridge/host_async_v1/host-async.hpp"]);
+			}
 		}
 		for(const [path,expected] of Object.entries(manifest.files))
 		{
 			const bytes=await readFile(join(dest,path)); assert.equal(bytes.length,expected.bytes); assert.equal(sha256(bytes),expected.sha256);
 		}
-		manifests[route]=manifest;prefixes[route]=dest;reports.push({route,receipt: result.receiptSha256,archive: pkg.artifacts[0].sha256});
+		if(!workers) checkHostErrorInterface(JSON.parse(ir));
+		manifests[route]=manifest; prefixes[route]=dest;
+		reports.push({route,receipt: result.receiptSha256
+			, archive: pkg.artifacts[0].sha256, interface: manifest.bindingIrSha256
+			, reviewedSourceSha256: ev.reviewedSourceSha256});
 	}
 	if(!replay) await rm(tools,{recursive: true});
 	const client=join(root,"consumer"); await mkdir(client);
@@ -113,6 +124,7 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 	}
 	for(const route of ["ordinary","reviewed"])
 	{
+		const executions=[];
 		for(const [first,second] of [["workshop","peer"],["peer","workshop"]])
 		{
 			const dirs=[prefixes[route],prefixes.peer],bin=join(client,"via-pkg-config");
@@ -134,13 +146,30 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 				assert.deepEqual(names.sort(),[m.library,peer.library,m.hostDomain,...workers?[m.workerLedger]:[],"liblean_bridge_native.so","libleanshared.so"].sort());
 			};
 			await loaded(bin);
-			assert.match(await run(bin,[],client,isolated),success);
+			const observe=async (file,linker)=>{
+				const stdout=await run(file,[],client,isolated);assert.match(stdout,success);
+				if(!workers)
+				{
+					const rows=stdout.split("\n").filter(row=>row.startsWith("error policy:"));
+					assert.deepEqual(rows,[policyLine]);
+					executions.push({linker,linkOrder: [first,second],observation: rows[0]});
+				}
+			};
+			await observe(bin,"pkg-config");
 			const cmake=env.LEAN_BRIDGE_CMAKE??"cmake",build=await mkdtemp(join(root,"cmake-"));
 			await writeFile(join(client,"CMakeLists.txt"),["cmake_minimum_required(VERSION 3.16)","project(check "+(cpp?"CXX":"C")+")","find_package(LeanBridgeWorkshop CONFIG REQUIRED)","find_package(LeanBridgePeer CONFIG REQUIRED)","add_executable(client "+main+")",...cpp?["target_compile_definitions(client PRIVATE CHECK_COPIED_MEMBERS=1)"]:[],"target_link_libraries(client PRIVATE LeanBridge::"+first+" LeanBridge::"+second+")",""].join("\n"));
 			await run(cmake,["-S",client,"-B",build,"-DCMAKE_PREFIX_PATH="+dirs.join(";")],client,env);
 			await run(cmake,["--build",build,"-j1"],client,env);
 			await loaded(join(build,"client"));
-			assert.match(await run(join(build,"client"),[],client,isolated),success);
+			await observe(join(build,"client"),"CMake");
+		}
+		if(!workers && errorOutput)
+		{
+			assert.equal(executions.length,4);
+			await mkdir(errorOutput,{recursive: true});
+			await writeFile(join(errorOutput,route+".json"),canonicalJson({route
+				, releases: reports.filter(r=>r.route===route || r.route==="peer")
+				, consumerSha256: sha256(await readFile(join(client,main))),executions}));
 		}
 	}
 	t.diagnostic(JSON.stringify(reports)); if(out!==root) t.diagnostic("Retained handoffs: "+out);

@@ -7,7 +7,7 @@
 #include <string.h>
 
 typedef struct { uint32_t level; } meter;
-typedef struct { unsigned calls; uint32_t fault; workshop_binding *busy; peer_binding *nested; bool corrupt; } state;
+typedef struct { unsigned calls; uint32_t fault; workshop_binding *busy; peer_binding *nested; bool corrupt, catch_terminal, propagate; } state;
 static unsigned destroyed;
 static void dispose(void *p) { ++destroyed; free(p); }
 static meter *payload(workshop_box b) {
@@ -18,9 +18,17 @@ static uint32_t read_meter(void *ctx,workshop_box b,uint32_t *out) {
     if(s->busy) assert(workshop_close(s->busy)==workshop_BUSY);
     if(s->nested) {
         peer_diagnostic d={0}; uint32_t inner=101;
+        if(s->catch_terminal) {
+            peer_box missing={0};
+            assert(peer_identity(*s->nested,b,&missing,&d)==peer_UNAVAILABLE);
+            peer_box empty={0}; assert(!memcmp(&empty,&missing,sizeof empty));
+            peer_diagnostic_clear(&d);
+            *out=101; return 0; /* A host success must not undo the caught fatal fault. */
+        }
         assert(peer_read(*s->nested,b,&inner,&d)==peer_HOST_ERROR);
         assert(d.host_code==91 && inner==101);
-        peer_diagnostic_clear(&d);
+        uint32_t code=d.host_code; peer_diagnostic_clear(&d);
+        if(s->propagate) return code;
     }
     if(s->fault) return s->fault;
     *out=payload(b)->level; return 0;
@@ -52,6 +60,13 @@ int main(void) {
     first.busy=&a; first.nested=&b; second.fault=91;
     assert(workshop_read(a,x,&n,&d)==workshop_OK && n==47);
     assert(d.host_code==0 && !d.message.data);
+    n=87; first.propagate=true;
+    assert(workshop_read(a,x,&n,&d)==workshop_HOST_ERROR && d.host_code==91 && n==87);
+    workshop_diagnostic_clear(&d);
+    workshop_buffer mapped={0};
+    assert(workshop_mapped(a,x,&n,&mapped,&d)==workshop_DECLARED_ERROR && n==87);
+    assert(!d.host_code && mapped.len==16 && !memcmp(mapped.data,"host read failed",16));
+    workshop_buffer_clear(&mapped); first.propagate=false;
     first.busy=NULL; first.nested=NULL; second.fault=0;
     assert(peer_identity(b,x,&aliased,&e)==peer_OK);
     bool equal=false;
@@ -92,13 +107,27 @@ int main(void) {
     peer_hosts observer={.box_read=read_meter,.box_create=create_meter,.box_get_level=read_meter,.box_set_level=set_meter,.box_identity=identity};
     assert(workshop_with_hosts(&bad,&first,&a)==workshop_OK);
     assert(peer_with_hosts(&observer,&second,&b)==peer_OK);
+    /* Use the release under review as the throwing component, not the fixed peer. */
+    workshop_box only={0};
+    assert(workshop_make(a,23,&x,&d)==workshop_OK);
+    n=71; assert(workshop_fail_with(a,x,&n,&only,&d)==workshop_DECLARED_ERROR && n==71);
+    assert(workshop_box_drop(&x)==workshop_OK && workshop_close(&a)==workshop_OK && destroyed==1);
+    assert(peer_read(b,only,&n,&e)==peer_OK && n==23);
+    assert(peer_update(b,only,42,&n,&e)==peer_OK && n==42);
+    assert(workshop_box_drop(&only)==workshop_OK && destroyed==2);
+    assert(workshop_with_hosts(&bad,&first,&a)==workshop_OK);
     assert(workshop_make(a,72,&x,&d)==workshop_OK);
-    first.corrupt=true;
-    assert(workshop_identity(a,x,&returned,&d)==workshop_UNAVAILABLE);
-    unsigned previous=second.calls;
-    assert(peer_read(b,x,&n,&e)==peer_UNAVAILABLE && second.calls==previous);
+    first.nested=&b; first.catch_terminal=true; second.corrupt=true;
+    unsigned outer=first.calls, inner=second.calls;
+    n=93; assert(workshop_read(a,x,&n,&d)==workshop_UNAVAILABLE && n==93);
+    second.corrupt=false; first.nested=NULL;
+    assert(workshop_read(a,x,&n,&d)==workshop_UNAVAILABLE && n==93);
+    assert(peer_read(b,x,&n,&e)==peer_UNAVAILABLE && n==93);
+    assert(first.calls==outer+1 && second.calls==inner+1);
     assert(peer_close(&b)==peer_OK && workshop_close(&a)==workshop_OK);
-    assert(workshop_box_drop(&x)==workshop_OK && destroyed==2);
+    assert(workshop_box_drop(&x)==workshop_OK && destroyed==3);
+    printf("error policy: sole owner 23->42; nested calls %u,%u; destructions %u\n",
+           first.calls-outer,second.calls-inner,destroyed);
     puts("public C owners: exactly one destruction per payload, including after runtime retirement");
     return 0;
 }
