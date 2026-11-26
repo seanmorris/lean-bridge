@@ -24,6 +24,23 @@ evidence, sometimes from a different package or execution mode.
 | `node-javascript`, `node-typescript`, `browser-javascript`, `browser-react`, `browser-worker` | [Five independent Ledger clients](npm-synchronous-io-delivery-20261126.md) execute the common 45 checks. The TypeScript catch, mounted click handler and module worker actually run. | [Compiled guest trap](javascript-wasm-callback-io-retirement-20261123.md): plain Node and Chromium, a Node worker, and a dedicated browser worker. The parent survives a worker trap. [Typed Node and mounted React](npm-callback-trap-delivery-20261126.md) separately ran both import orders with a caught or rethrown guest trap. |
 | `wit-wasi` | [Relocated Wasmtime packages](wit-sync-io-packages-20261123.md) run synchronous Journal on both routes and reject a missing filesystem grant. | A separate world-conforming component traps **after** mutating state: the caller-owned store must be discarded and a peer cannot reuse the runtime. A trap is not transactional rollback. |
 
+## Which immediate errors keep a live resource?
+
+These checks use a Lean-owned resource as the payload of a synchronous
+declared error. They exercise a different contract from returning copied
+bytes, throwing an application exception, or cancelling a pending task.
+The consumer source hashes match the linked installation records.
+
+| Installed consumer | What happens after the caller catches the error |
+| --- | --- |
+| [C++ and Rust](native-sync-cpp-rust-20261122.json) | The [C++](../../tests/fixtures/native-sync-resource/consumer.cpp) and [Rust](../../tests/fixtures/native-sync-resource/consumer.rs) clients check identity, mutate the payload, clone its lease, close the original input, and read 44 through the retained lease. Reading the closed input fails. |
+| [Python](python-resource-leases-20261123.json), [Ruby](ruby-resource-leases-20261122.json), [.NET](dotnet-resource-leases-20261122.json) | Each client issues a fresh resource containing 13, catches a declared error carrying that resource, and closes the original. A second installed component reads 13 from the error payload. See [Python](../../tests/fixtures/python-task-resources/installed.py), [Ruby](../../tests/fixtures/ruby-task-resources/consumer.rb), and [C#](../../tests/fixtures/dotnet-task-resources/Program.cs). |
+| [Native PHP](php-heap-lease-20261123.json) | The [Composer client](../../tests/fixtures/php-io-resources/installed.php) mutates a successful result and reads 11 through the error payload. After other owners close, the observer sees one live identity and one file descriptor above baseline. Dropping the error payload restores both counts. |
+
+These are existing package results, not new runs. They do not establish the
+same ownership for an application-created object, a fatal runtime fault, or
+another consumer merely because it uses the same backend.
+
 ## What still requires a decision or a test?
 
 The [capabilities index](host-worker-qualification-20261125.md#which-installed-profiles-exercised-os-access)
