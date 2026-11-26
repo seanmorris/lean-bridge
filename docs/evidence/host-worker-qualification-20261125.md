@@ -118,6 +118,14 @@ Match the newer reports against the particular cell they exercise:
   identify the executed client and both original installed releases in each
   profile. The constructor returned a Ticket; the reader accepted a Ticket
   directly. This does not count as a callback accepting or returning a Ticket.
+- A **Lean-created function as an export argument** is verified on both routes
+  in all 17 profiles. The [installed-client audit](../../tests/helpers/lean-function-export-argument-audit.mjs)
+  traces each callable to a Lean-created tariff, the direct call to
+  `packQuote(quote)`, and use of the function from the returned record. It
+  checks the caller source digest, route-specific execution, and the browser
+  entry points that invoked the common client. This is not the test for a
+  plain host lambda escaping its registration. Run
+  `npm run test:lean-function-export-argument` to reproduce the audit.
 - For the four **field** cells, start separately with
   [Lean resources in Claim](owned-checked-record-promotion-20261026-aligned.md),
   [application functions in TariffInput](host-callback-input-records-20261126.md),
@@ -151,6 +159,27 @@ Match the newer reports against the particular cell they exercise:
 The remaining review has two parts: attach the installed evidence on each
 specific route, then identify the places that actually need a new package or
 application case. Do not subtract 74 from 680 to estimate the tests left.
+
+### Installed coverage after the November 26 replays
+
+This table counts **profiles with both ordinary and reviewed results**, out
+of 17, not individual test assertions. It combines the original contract's
+passes with the linked client results. A dash means no paired result has
+been credited here, not that the feature has been tested and failed.
+
+| What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Lean resource | 17 | 17 | 17 | ≥5 | ≥6 |
+| Host-provided function | 17 | — | 17 | — | — |
+| Host-owned object | 16 | 16 | 17 | 16 | 16 |
+| Lean-created function | 17 | 17 | 17 | 10 | 17 |
+
+That accounts for **at least 510 of 680** profile/route/position combinations.
+The resource callback counts include the two original PHP-Wasm routes, plus
+the [separately checked callers](resource-ticket-positions-20261126.md#direct-callbacks-are-separate).
+The difference is not a count of missing implementations: some installations
+still need review or a more discriminating client. These counts also do not
+measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
 ### Host-owned objects: which installs cover each position?
 
