@@ -15,6 +15,7 @@ const fixtures = resolve("tests/fixtures/structured-types");
 const cases = ["copy and project", "repack and retain", "foreign session", "last lease", "wrong kind", "expired borrow and recovery"];
 const exchanges = ["borrowed reply", "owned replacement", "explicit retain", "error with owned reply", "foreign reply", "nested failure recovered"];
 const staged = ["flat scalar reply", "returned function invoked", "caller retains independent function", "missing function recovery", "host failure releases function reply", "foreign function reply"];
+const hostFields = ["caller function in record","reentrant record callbacks","escaped host field no longer calls C","host failure and recovery","invalid descriptor does not invoke","leased field keeps its session"];
 const parse = stdout => {
 	const scenarios = stdout.trimEnd().split("\n");
 	assert.deepEqual(scenarios, cases);
@@ -63,15 +64,17 @@ export const checkCFieldHandoff = async ({ dir, route, t }) => {
 	assert.equal(stage.result.ownership, "lease"); assert.equal(flat.result.type.name, "uint32");
 	assert.deepEqual(stage.result.type, model.bindingIr.types.find(type => type.name === "Tariff").fields[0].type);
 	await cp(join(fixtures, "leased-closure-field-leases.c"), join(root, "leases.c"));
-	for(const file of ["tariff-exchange.c", "tariff-exchange-probe.c", "tariff-staged.c"]) await cp(join(fixtures, file), join(root, file));
+	for(const file of ["tariff-exchange.c", "tariff-exchange-probe.c", "tariff-staged.c","tariff-host-fields.c"]) await cp(join(fixtures, file), join(root, file));
 	await saveLakeFile(root, "CMakeLists.txt", `cmake_minimum_required(VERSION 3.20)
 project(TariffConsumer C)
 find_package(${manifest.cmakePackage} 1.0.0 EXACT CONFIG REQUIRED)
 add_executable(consumer consumer.c leases.c)
 add_executable(exchange tariff-exchange.c tariff-exchange-probe.c)
 add_executable(staged tariff-staged.c tariff-exchange-probe.c)
+add_executable(host-fields tariff-host-fields.c tariff-exchange-probe.c)
+target_compile_definitions(host-fields PRIVATE TARIFF_PROBE_CLIENT=tariff_host_fields_consumer)
 target_compile_definitions(staged PRIVATE TARIFF_PROBE_CLIENT=tariff_staged_consumer)
-foreach(client consumer exchange staged)
+foreach(client consumer exchange staged host-fields)
   target_link_libraries(\${client} PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
   target_compile_features(\${client} PRIVATE c_std_11)
   target_compile_definitions(\${client} PRIVATE TARIFF_LIFETIME_PROBE)
@@ -94,7 +97,7 @@ endforeach()
 	const identities = countsLine.slice("identities:".length).split(",").map(Number);
 	assert.deepEqual(identities, [0, 1, 2, 1, 0]);
 	const cmakeResult = parse(lines.join("\n")), evidence = resolve("build/leased-closure-fields-c");
-	for(const [client, expected] of [["exchange", exchanges], ["staged", staged]])
+	for(const [client, expected] of [["exchange", exchanges], ["staged", staged],["host-fields",hostFields]])
 	{
 		const filename = `tariff-${client}.c`, pcBinary = `${client}-pkg-config`;
 		const compile = ["-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG"

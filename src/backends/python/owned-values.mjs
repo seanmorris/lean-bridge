@@ -70,6 +70,15 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 			, fields: members(branch.fields, true) }))
 	}));
 	const table = new Map(types.map(node => [node.id, node])), containers = [], visiting = new Set(), visited = new Set();
+	const hostRecords=new Map();
+	for(const call of c.hostFieldCalls)for(const slot of call.hostRecordSlots)
+	{
+		const id=slot.node.id;
+		if(hostRecords.has(id))continue;
+		let name=table.get(id).publicType+"Input";
+		while(occupied.has(name))name+="Input";
+		hostRecords.set(id,{name: claim(name),fields: slot.fields.map(f=>f.name),cType: slot.inputType});
+	}
 	const visit = node => {
 		if(visited.has(node.id) || node.name) return;
 		if(visiting.has(node.id)) throw new TypeError("Owned Python container recursion requires a nominal boundary");
@@ -84,11 +93,13 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 		, ...c.native.aliases.map(alias => names.get(alias.id)), "LeanBridgeError"
 		, ...wholeOwners ? ["Value", "copy_value"] : []
 		, ...hostCallbacks && c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
+		, ...Array.from(hostRecords.values(),r=>r.name)
 		, ...functions.map(fn => fn.publicName)];
 	const parameterType = (fn, i) => c.hostArgument?.(fn, i)
-		? `_CallbackInput${table.get(fn.parameters[i]).index}` : wholeOwners && (fn.anchor === i || fn.transfers?.includes(i))
-			? `Value[${table.get(fn.parameters[i]).publicType}]` : callbackAnchors && table.get(fn.parameters[i]).kind === "callback"
-				? `${table.get(fn.parameters[i]).publicType} | Value[${table.get(fn.parameters[i]).publicType}]` : table.get(fn.parameters[i]).inputType;
+		? `_CallbackInput${table.get(fn.parameters[i]).index}` : c.hostFieldCalls.some(f=>f.id===fn.id && f.hostRecordSlots.some(s=>s.index===i))
+			? table.get(fn.parameters[i]).publicType+" | "+hostRecords.get(fn.parameters[i]).name : wholeOwners && (fn.anchor === i || fn.transfers?.includes(i))
+				? `Value[${table.get(fn.parameters[i]).publicType}]` : callbackAnchors && table.get(fn.parameters[i]).kind === "callback"
+					? `${table.get(fn.parameters[i]).publicType} | Value[${table.get(fn.parameters[i]).publicType}]` : table.get(fn.parameters[i]).inputType;
 	const resultType = fn => wholeOwners && table.get(fn.result).representation !== "copied"
 		? `Value[${table.get(fn.result).publicType}]` : table.get(fn.result).publicType;
 	const forward = (expression, arguments_, indentation) => {
@@ -203,6 +214,11 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 				lines.push("@_dataclass(frozen=True, slots=True)", `class ${branch.publicName}:`
 					, `    kind: _ClassVar[_Literal[${JSON.stringify(branch.sourceName)}]] = ${JSON.stringify(branch.sourceName)}`
 					, ...fields(node, branch), "");
+			const record=hostRecords.get(node.id);
+			if(record)lines.push("@_dataclass(frozen=True, slots=True)",`class ${record.name}:`,
+				'    """Input view. Caller-supplied functions are borrowed for this call."""',
+				...node.fields.map((f,i)=>record.fields.includes(f.name)
+					?`    ${f.publicName}: _CallbackInput${table.get(f.type).index}`:fields(node)[i]),"");
 		}
 		for(const node of types.filter(node => node.kind === "variant"))
 			lines.push(`${node.publicType}: _TypeAlias = ${node.cases.map(branch => branch.publicName).join(" | ") || "_Never"}`);
@@ -234,6 +250,7 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 			, stub ? "    ..." : forward(`_native._call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")})`, fn.parameters.map((_, i) => `arg${i}`), 4));
 		return lines.join("\n") + "\n";
 	};
-	return { c, types, functions, exports, packageDir: `lean_${c.prefix}`
+	return {
+		c, types, functions, exports, hostRecords, packageDir: `lean_${c.prefix}`
 		, source: render(false), stub: render(true) };
 };

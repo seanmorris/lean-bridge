@@ -1,6 +1,6 @@
 """Consumer of an installed Tariff package. No runtime setup or ABI calls."""
 from lean_tariff_quotes import (
-    Tariff, LeanBridgeError, apply_tariff, echo_tariff, make_tariff,
+    Tariff, TariffInput, LeanBridgeError, apply_tariff, echo_tariff, make_tariff,
     new_ticket, pack_quote, unpack_quote,
 )
 
@@ -34,6 +34,44 @@ assert copy.is_closed and projected.is_closed
 refuses(TypeError, lambda: echo_tariff(Tariff(lambda n: n)))
 with new_ticket(1) as wrong_kind:
     refuses(TypeError, lambda: echo_tariff(Tariff(wrong_kind)))
+    refuses(TypeError, lambda: echo_tariff(TariffInput(wrong_kind)))
+
+
+def host_field_cases(checkpoint):
+    calls = []
+    host = TariffInput(lambda units: calls.append(units) or units + 40)
+    assert apply_tariff(host, 2) == 42 and calls == [2]
+    checkpoint("caller function in input record")
+
+    def reenter(units):
+        return apply_tariff(host, units) + 1
+
+    assert apply_tariff(TariffInput(reenter), 2) == 43 and calls == [2, 2]
+    checkpoint("nested caller functions")
+    with echo_tariff(host).quote as late:
+        for _ in range(2):
+            refuses(LeanBridgeError, lambda: late(3), 10)
+    assert calls == [2, 2]
+    checkpoint("returned host field expired")
+    sentinel = ValueError("host field")
+
+    def fail(_):
+        raise sentinel
+
+    try:
+        apply_tariff(TariffInput(fail), 1)
+    except ValueError as error:
+        assert error is sentinel
+    else:
+        raise AssertionError("missing original exception")
+    refuses(ValueError, lambda: apply_tariff(host, -1))
+    assert calls == [2, 2]
+    assert apply_tariff(host, 4) == 44
+    checkpoint("field failure identity and preflight")
+    with make_tariff(39).quote as from_lean:
+        assert apply_tariff(TariffInput(from_lean), 3) == 42
+    refuses(LeanBridgeError, lambda: apply_tariff(TariffInput(from_lean), 3))
+    checkpoint("closed field refuses without callback dispatch")
 
 # A host callback borrowed through a normal function parameter still expires
 # on return, even when Lean saves its trampoline in a record.

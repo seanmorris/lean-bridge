@@ -13,6 +13,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { ownedPythonEvidence } from "../src/build/owned-python-artifacts.mjs";
 import { generateOwnedPythonValues } from "../src/backends/python/owned-values.mjs";
+import { ownedHostRecordInputs, stageHostRecordInputs } from "../src/backends/c/owned-host-records.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -30,6 +31,41 @@ test("a record-only API generates the field's callable without a dummy callback 
 	assert.equal(surface.c.callbacks.length, 1);
 	assert.ok(surface.stub.includes(`quote: ${fn.publicType}`));
 	assert.ok(surface.stub.includes("def __call__(self, arg0: int) -> int:"));
+});
+
+test("borrowed callback record parameters expose a separate input type, never a result or callback reply", () => {
+	const ir=leasedClosureFieldReviewedIr({exchange: true});
+	const {stub,c}=generateOwnedPythonValues(ir,{hostCallbacks: true});
+	assert.match(stub,/class TariffInput:\n[\s\S]*?quote: _CallbackInput\d+/u);
+	assert.match(stub,/def echo_tariff\(arg0: Tariff \| TariffInput\) -> Tariff:/u);
+	assert.match(stub,/def make_tariff\(arg0: int\) -> Tariff:/u);
+	assert.deepEqual(c.hostFieldCalls.map(f=>f.name).sort(),["applyTariff","echoTariff","unpackQuote"]);
+});
+
+test("scoped descriptors never replace original owners or reverse closure-only refinements", () => {
+	const ir=leasedClosureFieldReviewedIr(), {c}=generateOwnedPythonValues(ir);
+	const fn=c.functions.find(f=>f.name==="applyTariff"), table=new Map(c.nodes.map(n=>[n.id,n]));
+	const input=functions=>ownedHostRecordInputs({ir,functions,table,names: new Map(),header: []});
+	assert.equal(input([fn]).length,1);
+	assert.deepEqual(input([{...fn,anchor: 0},{...fn,receiver: 0},{...fn,transfers: [0]}]),[]);
+	const record=table.get(fn.parameters[0]), callback=ir.types.find(t=>t.id===record.fields[0].type);
+	// Transport selection only: the compiler validates the refinement itself.
+	callback.source.extensions["lean-lang.org/refinements"]={};
+	assert.deepEqual(input([fn]),[]);
+});
+
+test("wide borrowed record staging uses bounded, cleared arena storage", () => {
+	const ir=leasedClosureFieldReviewedIr(), type=ir.types.find(t=>t.name==="Tariff");
+	type.fields=Array.from({length: 6},(_,i)=>({...type.fields[0],name: "quote"+i}));
+	ir.aggregatePolicy.closureFields=type.fields.map(f=>"Owned.Tariff."+f.name);
+	const {c}=generateOwnedPythonValues(ir), table=new Map(c.nodes.map(n=>[n.id,n]));
+	const call=c.hostFieldCalls.find(f=>f.name==="applyTariff");
+	const stage=stageHostRecordInputs(call.hostRecordSlots,table);
+	assert.match(stage.prepare[0],/oc_allocate\(&input/u);
+	assert.match(stage.prepare[1],/memset\(host_stage/u);
+	assert.equal(stage.staged(0),"host_stage->staged0");
+	assert.equal(stage.release.length,6);
+	assert.ok(stage.release.every(line=>line.includes("if (host_stage)")));
 });
 
 for(const route of ["ordinary", "reviewed"]) test(`installed ${route} wheel retains callable fields without promoting host borrows`, {
@@ -94,8 +130,13 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} wheel reta
 			"flat scalar reply", "returned and independently owned functions"
 			, "recovery checked before invocation", "original callback exception"
 			, "invalid replies and later success"
+			, "caller function in input record"
+			, "nested caller functions"
+			, "returned host field expired"
+			, "field failure identity and preflight"
+			, "closed field refuses without callback dispatch"
 		]);
-		assert.deepEqual(observations.identities, [1, 1, 1, 1, 1, 0]);
+		assert.deepEqual(observations.identities, [...observations.cases.map(()=>1),0]);
 		const evidence = resolve("build/leased-closure-fields-python");
 		await saveLakeFile(evidence, `${route}.package-set.json`, canonicalJson(receipt));
 		await saveLakeFile(evidence, `${route}.staged.json`, canonicalJson({

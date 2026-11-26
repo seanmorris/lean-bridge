@@ -10,6 +10,7 @@ import { ownedAggregateTransferLeaseSource, ownedAggregateTransferRuntime } from
 import { generateOwnedCValues } from "./owned-values.mjs";
 import { ownedCRuntime, ownedCBorrowRuntime } from "./owned-runtime.mjs";
 import { ownedCCallbacks } from "./owned-callbacks.mjs";
+import { stageHostRecordInputs } from "./owned-host-records.mjs";
 import { ownedCInputTransfers } from "./owned-transfers.mjs";
 
 /**
@@ -177,7 +178,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, "  if (status) return ov_abort(&transaction, status);"
 			, "  return ov_commit(&transaction, owner);", "}");
 	}
-	for(const item of [...values.functions, ...values.callbacks, ...values.retains, ...values.copies ?? []])
+	for(const item of [...values.functions, ...values.callbacks, ...values.retains, ...values.copies ?? [], ...values.hostFieldCalls])
 	{
 		const result = nodes.get(item.result), params = item.parameters.map(id => nodes.get(id));
 		const transfers = item.transfers ?? [];
@@ -186,6 +187,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 		if(!symbol) throw new TypeError(`Missing owned transport function: ${item.id}`);
 		const context = !local && transport ? "active->transport" : "&active->native";
 		const borrows = options.hostCallbacks ? params.flatMap((node, i) => values.hostArgument(item, i) ? [{ node, index: i }] : []) : [];
+		const fields=stageHostRecordInputs(item.hostRecordSlots??[],nodes);
 		source.push(values.signature(item) + " {"
 			, `  if (!oc_outputs(out, sizeof(*out), _Alignof(${result.cName}), owner) || *owner) return (${p}_status)LB_OWNED_INVALID;`
 			, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
@@ -202,17 +204,22 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			] : []
 			, ...params.map((node, i) => `  ${node.nativeName} raw${i} = {0};`)
 			, ...borrows.map(({ node, index }) => `  oc_host_v${node.index} borrow${index} = {0};`)
+			, ...fields.declarations
 			, `  ${result.nativeName} returned = {0};`, `  ${result.cName} converted = {0};`
 			, "  status = ov_charge(&budget, 1, sizeof(converted));"
 			, ...item.anchor !== undefined ? [`  if (!status) status = oc_anchor_prepare(active, a${item.anchor}_owner, &anchor);`] : []
 			, ...transfers.length ? [
 				`  if (!status) status = oc_transfer_prepare(active, &transfer_frame, transfer_owners, out, sizeof(*out), _Alignof(${result.cName}), owner);`
 			] : []
-			, ...params.map((node, i) => borrows.some(borrow => borrow.index === i)
-				? `  if (!status) status = oc_host_v${node.index}_begin(&borrow${i}, a${i}, active, &budget, &raw${i});`
-				: `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
+			, ...fields.prepare
+			, ...params.map((node, i) => item.hostRecordSlots?.some(s=>s.index===i)
+				? `  if (!status) status = ${walker(node)}_to(&${fields.staged(i)}, &raw${i}, 0, &input);`
+				: borrows.some(borrow => borrow.index === i)
+					? `  if (!status) status = oc_host_v${node.index}_begin(&borrow${i}, a${i}, active, &budget, &raw${i});`
+					: `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
 			, `  if (!status) status = ${symbol}(${context}, ${[...params.map((_, i) => `&raw${i}`), ...transfers.length ? ["&transfer"] : [], ...item.anchor !== undefined ? ["&anchor"] : [], "&returned", "&result_owner->native"].join(", ")});`
 			, ...borrows.map(({ node, index }) => `  { int cleanup = oc_host_v${node.index}_end(&borrow${index}); if (!status) status = cleanup; }`)
+			, ...fields.release
 			, "  if (!status) {"
 			, ...hasAnchors ? [
 				"    output.views = &result_owner->views;"

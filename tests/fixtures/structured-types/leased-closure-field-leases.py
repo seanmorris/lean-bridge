@@ -44,6 +44,7 @@ def checkpoint(name):
 
 
 runpy.run_path("staged_consumer.py")["check_cases"](checkpoint)
+client["host_field_cases"](checkpoint)
 state.close()
 assert live() == 0, live()
 print(json.dumps({"cases": cases, "identities": counts + [live()]}))
