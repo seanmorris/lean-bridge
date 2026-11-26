@@ -2,9 +2,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import {createRoot} from "react-dom/client";
 import {flushSync} from "react-dom";
-import {AsyncStep_Workshop_openCursor, withHosts} from "@lean-bridge/workshop-host-example";
+import {withHosts} from "@lean-bridge/workshop-host-example";
 import {closeTaskRuntime, taskRuntimeStats, waitTaskRuntimeIdle} from "@lean-bridge/runtime";
-import {nestedDelivery, terminalDelivery} from "./terminal-delivery.mjs";
+import {failedPullCleanup, nestedDelivery, terminalDelivery} from "./terminal-delivery.mjs";
 
 /** Application instance whose level is reset by the Lean iterator finalizer. */
 class Meter
@@ -58,18 +58,8 @@ export const exerciseDelivery = async () => {
 						++count;
 					}
 					const exhausted = (await cursor.next()).done;
-					const invalid = new Meter(99), failed = api.open_cursor(invalid);
-					let phase;
-					try
-					{ await failed.next(); throw new Error("Expected a typed pull failure"); }
-					catch(error)
-					{
-						if(!(error instanceof AsyncStep_Workshop_openCursor)) throw error;
-						phase = error.phase;
-					}
-					finally
-					{ await failed.return(); }
-					stream = {idleReads, count, exhausted, reads: sample.reads, final: sample.level, phase, failedFinal: invalid.level};
+					const cleanup = await failedPullCleanup(new Meter(99), box => api.open_cursor(box));
+					stream = {idleReads, count, exhausted, reads: sample.reads, final: sample.level, cleanup};
 					flushSync(() => setLabel(n + ":" + seen + ":" + meter.level));
 					done.resolve();
 				} else

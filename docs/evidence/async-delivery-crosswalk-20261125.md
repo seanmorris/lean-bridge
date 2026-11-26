@@ -43,6 +43,16 @@ failed pull followed by explicit close. The latter does not distinguish
 automatic cleanup on rejection from cleanup requested by the caller.
 See the [replay command](typescript-react-threaded-delivery-20261125.md).
 
+A later [ordinary](threaded-pull-cleanup-20261126/ordinary.json) and
+[reviewed](threaded-pull-cleanup-20261126/reviewed.json) replay separates
+those events. The TypeScript application and mounted React click handler
+watch writes to their own meter. Neither program calls `return()` before
+inspecting the failed pull. When the typed step error reaches the caller,
+Lean has read the meter once and its finalizer has written zero exactly
+once. A further pull reports exhaustion; two explicit closes produce no
+further read or write. These observations use the same installed Workshop
+archives as the earlier replay, with new consumer source hashes.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

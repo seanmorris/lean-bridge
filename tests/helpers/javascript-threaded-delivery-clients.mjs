@@ -66,7 +66,9 @@ export const checkThreadedDeliveryClients = async (handoff, route) => {
 		const typescript = JSON.parse(await run(process.execPath, ["installed-delivery.mjs"], app, env, 90000));
 		const nested = ["outer", "inner-error", "caught-original", "inner-success", "resumed"];
 		const terminal = {reason: "operation-cancelled", visits: 1, successes: 0, failures: 1, state: "closed", drained: true};
-		assert.deepEqual(typescript, {value: 7, yielded: 1, readsAtExhaustion: 1, canceled: true, drained: true, nested, terminal});
+		const finalized = {level: 0, writes: 1, reads: 1};
+		const cleanup = {phase: "step", beforeReturn: finalized, exhausted: true, afterReturns: finalized};
+		assert.deepEqual(typescript, {value: 7, yielded: 1, readsAtExhaustion: 1, canceled: true, drained: true, nested, terminal, cleanup});
 
 		await saveLakeFile(app, "index.html", `<div id="component"></div>
 <script>globalThis.deliveryReady = Promise.withResolvers();</script>
@@ -107,7 +109,7 @@ import("./react-delivery.mjs").then(m => deliveryReady.resolve(m.exerciseDeliver
 		assert.deepEqual(react, {text: "8:1:0", won: true
 			, canceled: "operation-cancelled"
 			, lateCommits: 0, next: 3, empty: true, drained: true, nested, terminal
-			, stream: {idleReads: 0, count: 1, exhausted: true, reads: 1, final: 0, phase: "step", failedFinal: 0}});
+			, stream: {idleReads: 0, count: 1, exhausted: true, reads: 1, final: 0, cleanup}});
 		return {packageSetSha256: copy.receiptSha256
 			, typescript, react, deployed, browser
 			, node: process.version, reviewedSourceSha256: metadata.reviewedSourceSha256

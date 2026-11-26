@@ -1,9 +1,36 @@
 /** @file Observe nested callbacks and terminal shutdown on the installed runtime. */
-import {JavaScriptCallbackError} from "@lean-bridge/workshop-host-example";
+import {AsyncStep_Workshop_openCursor, JavaScriptCallbackError} from "@lean-bridge/workshop-host-example";
 import {closeTaskRuntime, taskRuntimeStats} from "@lean-bridge/runtime";
 
 /** Starts a callback-taking task on the consumer's installed binding. */
 type Start = (callback: (n: number) => number | Promise<number>) => Promise<number>;
+
+/**
+ * Count actual Lean finalizer writes when the *pull itself* rejects. A manual
+ * close before the first observation would mask a missing automatic close.
+ *
+ * @param meter - The ordinary application object whose reading triggers a step error.
+ * @param open - Open the installed cursor for this object without requesting an item.
+ */
+export const failedPullCleanup = async <T extends {level: number; reads: number}>(meter: T, open: (item: T) => AsyncIterableIterator<T> & {return(): Promise<IteratorResult<T>>}) => {
+	let value = meter.level, writes = 0;
+	Object.defineProperty(meter, "level", {
+		get: () => value
+		, set: (n: number) => { value = n; ++writes; }
+	});
+	const cursor = open(meter);
+	if(writes !== 0 || meter.reads !== 0 || value !== 99) throw new Error("Cursor consumed or closed before demand");
+	try
+	{ await cursor.next(); throw new Error("Expected a typed pull failure"); }
+	catch(error)
+	{
+		if(!(error instanceof AsyncStep_Workshop_openCursor) || error.phase !== "step") throw error;
+	}
+	const beforeReturn = {level: meter.level, writes, reads: meter.reads};
+	const exhausted = (await cursor.next()).done === true;
+	await cursor.return(); await cursor.return();
+	return {phase: "step", beforeReturn, exhausted, afterReturns: {level: meter.level, writes, reads: meter.reads}};
+};
 
 /**
  * Await a second callback-taking Lean task from inside the first callback.

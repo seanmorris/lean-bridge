@@ -1,7 +1,7 @@
 /** @file Compile and execute the cancelable task and iterator contract in Node. */
-import {AsyncStep_Workshop_openCursor, withHosts} from "@lean-bridge/workshop-host-example";
+import {withHosts} from "@lean-bridge/workshop-host-example";
 import {closeTaskRuntime, taskRuntimeStats, waitTaskRuntimeIdle} from "@lean-bridge/runtime";
-import {nestedDelivery, terminalDelivery} from "./terminal-delivery.mjs";
+import {failedPullCleanup, nestedDelivery, terminalDelivery} from "./terminal-delivery.mjs";
 
 /** Consumer-owned object whose reads and finalizer writes are observable. */
 class Meter
@@ -53,13 +53,7 @@ try
 	check(!first.done && first.value === drain && drain.level === 13, "first demand closed cursor");
 	check((await exhausted.next()).done === true && drain.level === 0, "end did not close cursor");
 	check((await exhausted.next()).done === true && drain.reads === 1, "exhausted cursor issued another read");
-	const bad = api.open_cursor(new Meter(99));
-	try
-	{ await bad.next(); throw new Error("step unexpectedly succeeded"); }
-	catch(e)
-	{ if(!(e instanceof AsyncStep_Workshop_openCursor) || e.phase !== "step") throw e; }
-	finally
-	{ await bad.return(); }
+	const cleanup = await failedPullCleanup(new Meter(99), meter => api.open_cursor(meter));
 	const entered = Promise.withResolvers<void>(), reply = Promise.withResolvers<number>();
 	const pending = api.work(item, () => { entered.resolve(); return reply.promise; });
 	const canceled: Promise<boolean> = pending.then(() => false, (e: unknown) =>
@@ -82,6 +76,6 @@ try
 	check([s.pending, s.nativeOwners, s.hostPins, s.frames, s.notifications, s.hostErrors, s.allocations].every(n => n === 0), "not drained");
 	const retiring = withHosts({Box: Meter});
 	const terminal = await terminalDelivery(cb => retiring.work(item, cb));
-	console.log(JSON.stringify({value, yielded, readsAtExhaustion: drain.reads, canceled: true, drained: true, nested: nested.trace, terminal}));
+	console.log(JSON.stringify({value, yielded, readsAtExhaustion: drain.reads, canceled: true, drained: true, nested: nested.trace, terminal, cleanup}));
 } finally
 { await api.dispose(); await closeTaskRuntime(); }
