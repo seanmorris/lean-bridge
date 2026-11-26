@@ -58,6 +58,7 @@ export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs
 			, fields: v.fields.filter(f => f.host).map(f => f.publicName)
 		}))} : {}
 		, language: "php-8.2-nts-cli"
+		, ...model.c.callbackArgumentViews ? { callbackArgumentIdentity: "canonical-while-live" } : {}
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
@@ -156,7 +157,7 @@ same generated validation without scalar coercion.
 ${hostCallbacks ? "Resource and returned Lean closure wrappers" : "Resource wrappers"} support close() and retain(). Close
 them in a finally block. Destruction provides fallback cleanup. Calls from
 Fibers reject; cleanup deferred by Fiber destruction runs in the main context.
-Resource identities cannot be cloned or serialized.
+Resource identities cannot be cloned or serialized.${model.c.callbackArgumentViews ? " A callback may receive a borrowed Lean function. Use sameIdentity() while both functions are live. After the callback returns or throws, the borrow refuses calls and comparisons even if a separately retained lease stays live." : ""}
 
 ${receivers.length ? `Methods use camelCase names; properties use read-only PHP property syntax.
 Resources and named aggregates have nominal owners such as TicketValue and

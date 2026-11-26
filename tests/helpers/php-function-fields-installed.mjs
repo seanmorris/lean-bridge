@@ -9,6 +9,7 @@ import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {installOwnedPhpArchive} from "./owned-php-installed.mjs";
+import {runPhpIncoming} from "./php-incoming-client.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
 import {prepareStagedQuoteProject,checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
 
@@ -20,13 +21,14 @@ test("relocated Composer clients retain, repack and return callable fields",{tim
 	const sets=replay?resolve(replay):keep?await mkdtemp(join(resolve(keep),"tariff-")):join(work,"sets");
 	const output=resolve(env.LEAN_BRIDGE_PHP_TARIFF_OUTPUT??"build/php-function-fields"),routes=["ordinary","reviewed"];
 	const bins=(env.LEAN_BRIDGE_PHP_HOST_INTERPRETERS??"/usr/bin/php").split(",");
+	const incoming=env.LEAN_BRIDGE_PHP_TARIFF_REQUIRE_INCOMING==="1";
 	await mkdir(output,{recursive: true});
 	for(const route of routes)
 	{
 		if(!replay)
 		{
 			const project=join(work,route+"-project"),out=join(work,route+"-out");
-			await prepareStagedQuoteProject(project,route,"php-native");
+			await prepareStagedQuoteProject(project,route,"php-native",{incoming});
 			try
 			{
 				await buildCanonicalProject({projectRoot: project,outputRoot: out
@@ -51,8 +53,24 @@ test("relocated Composer clients retain, repack and return callable fields",{tim
 			, pkg: expected,environment: env});
 		await rm(handoff,{recursive: true});
 		const meta=async f=>JSON.parse(await readFile(join(deployment,"vendor",pkg.name,"lean-bridge/component",f+".json")));
-		const identity=checkStagedQuoteIdentities(await meta("model"),await meta("binding-ir"),receipt.profiles.find(p=>p.id===pkg.profile),route);
+		const ir=await meta("binding-ir");
+		const identity=checkStagedQuoteIdentities(await meta("model"),ir,receipt.profiles.find(p=>p.id===pkg.profile),route,{incoming});
 		const manifest=JSON.parse(await readFile(join(deployment,"vendor",pkg.name,"binding-manifest.json")));
+		if(incoming)
+		{
+			const fn=ir.declarations.find(d=>d.source.declaration==="Owned.visitQuote");
+			const arg=ir.types.find(t=>t.id===fn.parameters[1].type.id).callable.parameters[0];
+			assert.equal(arg.ownership,"borrow");assert.equal(arg.lifetime.scope,"call");
+			assert.equal(ir.types.find(t=>t.id===arg.type.id).kind,"callback");
+			assert.equal(manifest.contract.callbackArgumentIdentity,"canonical-while-live");
+			assert.equal(manifest.contract.resultAnchors,undefined);
+			const direct=await runPhpIncoming(deployment,bins,environment);
+			const report={...identity,route,receiptSha256: result.receiptSha256
+				, archives: pkg.artifacts,composerVersion: evidence.composerVersion
+				, lockSha256: evidence.lockSha256,...direct};
+			await writeFile(join(output,route+".json"),canonicalJson(report));
+			continue;
+		}
 		const hostFields=manifest.contract.hostInputRecords;
 		if(replay && hostFields===undefined)
 		{

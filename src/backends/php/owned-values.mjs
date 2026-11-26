@@ -30,11 +30,12 @@ const bigint = "\\Brick\\Math\\BigInteger";
  * @param options.wordBits - Lean machine-word width.
  * @param options.transferredInputs - Admit explicitly consuming arguments.
  * @param options.anchoredResults - Admit original-owner borrowed results.
+ * @param options.callbackViewEquality - The selected transport supplies a live identity comparator for callback inputs.
  * @param options.receiverExports - Admit checked methods and properties.
  * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Admit synchronous host callbacks and copied returns.
  */
-export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true, callbackViewEquality = false } = {}) => {
 	if(![32, 64].includes(integerBits) || ![32, 64].includes(wordBits)) throw new TypeError("PHP and Lean integer widths must be 32 or 64");
 	const identityEquality = receiverExports && ir.declarations.some(item => item.receiver);
 	const options = { hostCallbacks, transferredInputs, anchoredResults
@@ -47,6 +48,7 @@ export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = intege
 	anchoredResults = c.anchoredResults;
 	receiverExports = c.functions.some(fn => fn.receiver === 0);
 	const wholeOwners = Boolean(anchoredResults || receiverExports);
+	const canonicalEquality = wholeOwners || (callbackViewEquality && c.callbackArgumentViews === true);
 	const fail = message => { throw new TypeError(`Invalid owned PHP values: ${message}`); };
 	const occupied = new Set([...reservedPhpNames, "some", "ok", "err", "withrecovery"]), names = new Map();
 	if(wholeOwners) occupied.add("value");
@@ -184,7 +186,7 @@ ${phpValueMethods}
 ${resources}
 `;
 	const files = { "src/Api.php": source
-		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults: wholeOwners, hostRecords: wordBits === 64 && c.hostFieldCalls.length > 0 })}`
+		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults: canonicalEquality, hostRecords: wordBits === 64 && c.hostFieldCalls.length > 0 })}`
 		, "src/Internal/GraphTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class GraphTypes\n{\n    public const NODES = ${literal(catalog)};\n    public const CLASSES = ${literal(classes)};\n    public const IDENTITIES = ${literal(identities)};\n}\n` };
 	if(wholeOwners)
 	{
@@ -204,7 +206,7 @@ ${resources}
 		files["src/Api.php"] += owners.value;
 		files["src/Internal/Values.php"] += owners.access;
 	}
-	if(wholeOwners)
+	if(canonicalEquality)
 	{
 		files["src/Internal/Values.php"] = files["src/Internal/Values.php"].replace(
 			"    final public function close(): void { $this->binding->close(); }"
@@ -217,5 +219,5 @@ ${resources}
     }`);
 	}
 	if(Object.values(files).reduce((sum, contents) => sum + Buffer.byteLength(contents), 0) > 4 * 1024 * 1024) fail("PHP declarations exceed 4 MiB");
-	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, wholeOwners, receiverExports, hostCallbacks, callbackResultAnchors, publicFiles: ["src/Api.php"] };
+	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, wholeOwners, canonicalEquality, receiverExports, hostCallbacks, callbackResultAnchors, publicFiles: ["src/Api.php"] };
 };

@@ -12,11 +12,31 @@ import { phpRecordSites } from "./owned-host-records.mjs";
  * @param options.transferredInputs - Prepare and finish consuming input groups.
  * @param options.anchoredResults - Carry whole roots and original native slots.
  * @param options.wholeOwners - Carry receiver owners independently of borrowed results.
+ * @param options.canonicalEquality - Compare live native resources, including call-scoped views.
  * @param options.callbackResultAnchors - Authenticate whole callback identities and replies.
  * @param options.hostRecords - Accept borrowed caller-created functions in typed record inputs.
+ * @param options.hostCallbacks - Prevent exceptions from retaining transient FFI arguments.
  */
-export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults, callbackResultAnchors = false, hostRecords = false } = {}) => {
+export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults, canonicalEquality = wholeOwners, callbackResultAnchors = false, hostRecords = false, hostCallbacks = true } = {}) => {
 	const transferredInputs = requestedTransfers && !wholeOwners;
+	const dispatch = ["$status = $ffi->{$fn['symbol']}($state->requireOpen(), ...[...$inputs, $ffi->cast($node['pointerType'], $output), \\FFI::addr($owner->value())]);"];
+	if(transferredInputs || wholeOwners) dispatch.unshift("OwnedInputGroup::armAll($moves);");
+	const nativeCall=dispatch.map(line=>"            "+line).join("\n");
+	const guardedCall=!hostCallbacks?nativeCall:String.raw`            // FFI callback arguments are valid only during native dispatch. A PHP
+            // exception created here must still be printable after those frames expire.
+            $tracePolicy = null;
+            if ($frame->ids !== []) {
+                $configured = \ini_get('zend.exception_ignore_args');
+                if (!\in_array(\strtolower((string)$configured), ['1', 'on', 'true', 'yes'], true)) {
+                    if (!\function_exists('ini_set') || ($tracePolicy = \ini_set('zend.exception_ignore_args', '1')) === false)
+                        throw new \RuntimeException('Native PHP callbacks require zend.exception_ignore_args=1 or a writable setting');
+                }
+            }
+            try {
+${dispatch.map(line=>"                "+line).join("\n")}
+            } finally {
+                if ($tracePolicy !== null) \ini_set('zend.exception_ignore_args', $tracePolicy);
+            }`;
 	return String.raw`
 final class OwnedCallFrame
 {
@@ -104,7 +124,7 @@ ${hostRecords ? `                if ($depth) { $records[] = [$depth, 0]; $depths
         return ResourceAccess::wrap($class, new NativeBinding($lease, $handle,
             fn(NativeBinding $binding) => ResourceAccess::binding($this->execute(OwnedCallTypes::RETAINS[$type], [ResourceAccess::wrap($class, $binding)])),
             isset(OwnedCallTypes::CLOSURES[$type])
-                ? fn(NativeBinding $binding, array $arguments) => $this->execute(OwnedCallTypes::CLOSURES[$type], [ResourceAccess::wrap($class, $binding), ...$arguments]) : null${wholeOwners ? ", fn(NativeBinding $left, NativeBinding $right) => $this->equal($type, $left, $right)" : ""}));
+                ? fn(NativeBinding $binding, array $arguments) => $this->execute(OwnedCallTypes::CLOSURES[$type], [ResourceAccess::wrap($class, $binding), ...$arguments]) : null${canonicalEquality ? ", fn(NativeBinding $left, NativeBinding $right) => $this->equal($type, $left, $right)" : ""}));
     }
     private function decode(int $type, \FFI\CData $pointer, OwnedConversionScope $scope, \Closure $identity): mixed {
         try {
@@ -174,14 +194,14 @@ ${hostRecords ? `                if ($depth) { $records[] = [$depth, 0]; $depths
         $index = OwnedCallTypes::FUNCTIONS[$name] ?? throw new \TypeError('Unknown owned PHP export');
         return $this->execute($index, $arguments);
     }
-${wholeOwners ? String.raw`    private function equal(int $type, NativeBinding $left, NativeBinding $right): bool {
+${canonicalEquality ? String.raw`    private function equal(int $type, NativeBinding $left, NativeBinding $right): bool {
         $state = $this->load()->current(); $pins = [];
         try {
-            $pins[] = new OwnedPin($left->pin($state)); $pins[] = new OwnedPin($right->pin($state));
+            ${wholeOwners ? "$pins[] = new OwnedPin($left->pin($state)); $pins[] = new OwnedPin($right->pin($state));" : "$pins = [$left->pin($state), $right->pin($state)];"}
             $ffi = $state->runtime->ffi; $result = $ffi->new('bool');
             OwnedRuntime::checked($ffi->{OwnedCallTypes::EQUALITY[$type]}($state->requireOpen(), $left->raw($state), $right->raw($state), \FFI::addr($result)));
             return $result->cdata;
-        } finally { OwnedPin::closeAll($pins); }
+        } finally { ${wholeOwners ? "OwnedPin::closeAll($pins);" : "unset($pins);"} }
     }
 ` : ""}${wholeOwners ? String.raw`    private function copyTyped(int $type, mixed $value): @NAMESPACE@\Value {
         return $this->execute(OwnedCallTypes::COPIES[$type], [$value], true);
@@ -266,7 +286,7 @@ ${transferredInputs ? String.raw`            $scope->inputGroup = null;
             }
             $inputs = $actual;
 ` : ""}            $node = $schema->nodes[$fn['result']]; $output = $scope->allocate($node['size']); $owner = new OwnedOwner($state);
-${transferredInputs || wholeOwners ? "            OwnedInputGroup::armAll($moves);\n" : ""}            $status = $ffi->{$fn['symbol']}($state->requireOpen(), ...[...$inputs, $ffi->cast($node['pointerType'], $output), \FFI::addr($owner->value())]);
+${guardedCall}
 ${transferredInputs || wholeOwners ? "            OwnedInputGroup::finishAll($moves); $moves = [];\n" : ""}            if ($frame->failure !== null) throw $frame->failure;
             // The public C API labels nonzero host replies as callback failure.
             // Preserve native snapshot failures recorded by our typed shim.

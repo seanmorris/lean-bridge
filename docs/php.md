@@ -403,6 +403,20 @@ borrow. An existing Lean function lease can also fill the field; a returned
 lease has its own lifetime. Close it when you are done. The ordinary
 `Tariff` result class and its leased fields are unchanged.
 
+Lean can also pass a function directly to your PHP callback. To use it after
+the callback returns or throws, call `$quote->retain()` inside the callback.
+The borrowed wrapper and its lease compare equal with `sameIdentity()` while
+both are live. Keeping the lease does not extend the borrow. The
+[Tariff client](../tests/fixtures/structured-types/tariff-incoming.php)
+shows the difference, including a nested call that fails.
+
+For native FFI callbacks, exception traces keep their stack locations but
+omit argument values while Lean can call into PHP. This keeps saved exceptions
+printable after temporary native arguments expire. The bridge restores the
+previous `zend.exception_ignore_args` setting when the call ends. If your
+host disables `ini_set`, configure `zend.exception_ignore_args=1` to use
+callbacks. Calls without a PHP callback do not need that setting.
+
 ### Pass a resource to a native PHP task
 
 The caller owns its ticket; the Lean worker holds its own reference as soon

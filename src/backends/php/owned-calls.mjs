@@ -19,7 +19,7 @@ import { phpHostRecords } from "./owned-host-records.mjs";
  * @param options - Explicit transport capabilities.
  */
 export const generateOwnedPhpCalls = (ir, options = {}) => {
-	const model = generateOwnedPhpConversions(ir, options), { c, namespace, wholeOwners, hostCallbacks, callbackResultAnchors } = model;
+	const model = generateOwnedPhpConversions(ir, options), { c, namespace, wholeOwners, canonicalEquality, hostCallbacks, callbackResultAnchors } = model;
 	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
 	const anchoredResults = c.anchoredResults;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
@@ -174,6 +174,7 @@ function with_recovery(mixed $callback, mixed $value): WithRecovery {
 ` : "\n";
 	files["src/Api.php"] += "require_once __DIR__ . '/Internal/OwnedCalls.php';\n" + publicFunctions;
 	files["src/Internal/OwnedCallTypes.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class OwnedCallTypes\n{\n    public const DEFINITIONS = <<<'CDEFS'\n${definitions}CDEFS;\n    public const CALLS = ${literal(calls)};\n    public const CALLBACKS = ${literal(callbacks)};\n    public const FUNCTIONS = ${literal(functions)};\n    public const CLOSURES = ${literal(closures)};\n    public const RETAINS = ${literal(retains)};\n}\n`;
+	const equality = canonicalEquality ? `    public const EQUALITY = ${literal(Object.fromEntries(model.types.filter(n => n.identity).map(n => [n.index,n.cName + "_equal"])))};\n` : "";
 	if(wholeOwners)
 	{
 		files["src/Api.php"] += `
@@ -184,7 +185,6 @@ function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = n
     return Internal\\Native::copyValue($value, $resultOf, $parameterOf);
 }
 `;
-		const equality = `    public const EQUALITY = ${literal(Object.fromEntries(model.types.filter(node => node.identity).map(node => [node.index, node.cName + "_equal"])))};\n`;
 		files["src/Internal/OwnedCallTypes.php"] = files["src/Internal/OwnedCallTypes.php"].replace("    public const CALLS =", `    public const COPIES = ${literal(copies)};\n    public const NOMINALS = ${literal(nominals)};\n    public const RESULTS = ${literal(results)};\n    public const PARAMETERS = ${literal(parameters)};\n${equality}    public const CALLS =`);
 	}
 	if(callbackResultAnchors)
@@ -195,8 +195,10 @@ function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = n
 		files["src/Internal/OwnedCallTypes.php"] = files["src/Internal/OwnedCallTypes.php"].replace(
 			"    public const CALLS =", `    public const CALLBACK_TYPES = ${literal(callbackTypes)};\n    public const CALLS =`);
 	}
-	files["src/Internal/OwnedRuntime.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n${ownedPhpRuntime(c.prefix, { transferredInputs, anchoredResults, wholeOwners })}`;
-	files["src/Internal/OwnedCalls.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/OwnedRuntime.php';\nrequire_once __DIR__ . '/OwnedConversions.php';\nrequire_once __DIR__ . '/OwnedCallTypes.php';\n${ownedPhpCallRuntime({ transferredInputs, anchoredResults, wholeOwners, callbackResultAnchors, hostRecords: records.views.size > 0 }).replaceAll("@NAMESPACE@", `\\${namespace}`)}`;
+	if(canonicalEquality && !wholeOwners)
+		files["src/Internal/OwnedCallTypes.php"] = files["src/Internal/OwnedCallTypes.php"].replace("    public const CALLS =", equality + "    public const CALLS =");
+	files["src/Internal/OwnedRuntime.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n${ownedPhpRuntime(c.prefix, { transferredInputs, anchoredResults, wholeOwners, canonicalEquality })}`;
+	files["src/Internal/OwnedCalls.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/OwnedRuntime.php';\nrequire_once __DIR__ . '/OwnedConversions.php';\nrequire_once __DIR__ . '/OwnedCallTypes.php';\n${ownedPhpCallRuntime({ transferredInputs, anchoredResults, wholeOwners, canonicalEquality, callbackResultAnchors, hostCallbacks, hostRecords: records.views.size > 0 }).replaceAll("@NAMESPACE@", `\\${namespace}`)}`;
 	if(Object.values(files).reduce((sum, text) => sum + Buffer.byteLength(text), 0) > 16 * 1024 * 1024)
 		throw new TypeError("Owned PHP call sources exceed 16 MiB");
 	return { ...model, files, definitions, callbacks, calls, hostRecords: records, functionIndices: functions, closures, retains, nativeSource: source.join("\n") + "\n" };

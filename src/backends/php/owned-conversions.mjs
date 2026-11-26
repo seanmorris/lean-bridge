@@ -23,7 +23,7 @@ const literal = value => value === null ? "null" : typeof value === "boolean" ||
  * @param options - Explicit transport capabilities.
  */
 export const generateOwnedPhpConversions = (ir, options = {}) => {
-	const model = generateOwnedPhpValues(ir, { ...options, integerBits: 64, wordBits: 64 });
+	const model = generateOwnedPhpValues(ir, { ...options, integerBits: 64, wordBits: 64, callbackViewEquality: true });
 	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
 	const { wholeOwners } = model;
 	const { c, namespace } = model, nodes = new Map(model.types.map(node => [node.id, node]));
