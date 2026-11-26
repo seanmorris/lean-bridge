@@ -7,9 +7,9 @@ Lean runs, an exception from application code, or a terminal fault. The
 task scheduler. A program can recover from a declared error without making
 a broken runtime safe to reuse.
 
-**Current installed coverage: 82 of 102** — all 34 immediate IO combinations,
-24 typed EIO and 24 named errors. Each combination is one profile on one
-authoring route. CPython, Ruby, Perl, Java and Kotlin still need both
+**Current installed coverage: 86 of 102** — all 34 immediate IO combinations,
+26 typed EIO and 26 named errors. Each combination is one profile on one
+authoring route. CPython, Perl, Java and Kotlin still need both
 typed contracts verified on both routes.
 
 **Rust:** The [ordinary](rust-host-error-policy-20261126/ordinary.json)
@@ -24,16 +24,16 @@ returning a number did not let the outer call succeed or either peer
 dispatch again. This is the host-member policy, not the behavior of every
 Rust callable adapter.
 
-**Ruby regression under test:** In an earlier installed Workshop/Peer gem
-pair, a synchronous `read_leaf` call returned `97` after its Ruby member
-caught an exception from a nested `fallback` worker. The worker trap had
-already retired their shared runtime. The outer call should report that
-the runtime is unavailable, not deliver the number. If the Ruby member
-doesn't catch the fatal exception, the caller should receive that original
-exception after Lean unwinds. The [regression client](../../tests/fixtures/ruby-host-workers/error-policy.rb)
-exercises both cases in both load orders. Run `npm run test:ruby-host-workers`
-for fresh ordinary and reviewed gem installs. This regression is not
-counted above until both release routes pass.
+**Ruby:** An older Workshop/Peer gem pair returned `97` from a synchronous
+call after its host caught a terminal worker exception. In the [ordinary](ruby-host-error-policy-20261126/ordinary.error-policy.json)
+and [reviewed](ruby-host-error-policy-20261126/reviewed.error-policy.json)
+installs, catching that exception now makes the outer call report retirement.
+Letting the exception propagate preserves the original Ruby object. The
+[installed client](../../tests/fixtures/ruby-host-workers/error-policy.rb)
+checked both behaviors in both load orders, distinguished original and mapped
+errors, and mutated the declared error's sole payload from 23 to 42 through
+the peer. The payload was collected after release; neither component leaked
+a host identity. Run `npm run test:ruby-host-workers` to repeat the checks.
 
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate

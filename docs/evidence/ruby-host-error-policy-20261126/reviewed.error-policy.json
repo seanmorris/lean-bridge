@@ -1,0 +1,30 @@
+{
+  "clientSha256": "baeffdb759e3bf701ffaf0d30b60b9cd4fcd1c7b60d1e0dd0efb1507003edf31",
+  "policy": [
+    "Ruby worker: forward catch, sole owner 23->42 then collected, nested fatal, dispatch 1/1, live=0",
+    "Ruby worker: forward propagate, sole owner 23->42 then collected, nested fatal, dispatch 1/1, live=0",
+    "Ruby worker: reverse catch, sole owner 23->42 then collected, nested fatal, dispatch 1/1, live=0",
+    "Ruby worker: reverse propagate, sole owner 23->42 then collected, nested fatal, dispatch 1/1, live=0"
+  ],
+  "releases": [
+    {
+      "archive": "2da1f5a83293f9b4966c09e74c8cfcc9f9a8de9bfeb52f1e3f4b9ef7eb9c9a71",
+      "bindingIr": "0675052369dba49cf6913dbe46e1da9f523f0ed83351e0dd7d0f39e707f6faaa",
+      "name": "workshop",
+      "receipt": "148d84888e051b68d7b55693ea5caf7de2b050d8354fff579f8ee7777bfce50d",
+      "reviewed": "e0484120bb78c8385ac6358f9a6bbe3136e93ed5a1a9789c60325ccce75abe13",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "source": "df72f912d3730191338256e60f9e0cd181432260295016004ca0a40af29972f9"
+    },
+    {
+      "archive": "7b69c98837772dbd5c8491b26263cbc102574cda7ab26fbccffba6ca1429f552",
+      "bindingIr": "be71b59db9443e17c314cecfde4e2eeff73b02ba830fceafc804127e482464ec",
+      "name": "workshop-peer",
+      "receipt": "c7ce4ee2fcb21e622b0d85cd0af2a39ccb1916b5992332dbb682c22a8ecb6251",
+      "reviewed": null,
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "source": "d82767dae9b7e29b70058824f3fbd4c9569c56ab321e5e55938a2ce39bf1dcbc"
+    }
+  ],
+  "route": "reviewed"
+}
