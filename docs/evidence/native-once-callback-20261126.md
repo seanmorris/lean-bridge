@@ -80,15 +80,16 @@ loaded broker reported one initialization and zero live leases.
 ## .NET
 
 The [ordinary NuGet release](native-once-callback-20261126/dotnet/ordinary.json)
-passed an offline restore and a second run on an SDK-free .NET 8 runtime
+and the [reviewed release](native-once-callback-20261126/dotnet/reviewed.json)
+each passed an offline restore and a second run on an SDK-free .NET 8 runtime
 after removing the feed, build project and package cache. The
 [C# client](../../tests/fixtures/native-callback-budget/Client.cs) awaited the
-generated API directly. Across 16 races only one worker invoked the
+generated API directly. Across 16 races per release only one worker invoked the
 delegate per registration. Original exception identity survived rethrow;
 the factory IO error, typed startup error and terminal IO error stayed
 distinct. Closing the registration released its capture and the native
-broker finished with zero live leases. This report covers the ordinary
-package only.
+broker finished with zero live leases. The two NuGet archives are distinct;
+both contain the same native runtime libraries.
 
 ## Reproduce the installs
 

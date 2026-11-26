@@ -300,8 +300,10 @@ The [installed Rust clients](native-once-callback-20261126.md#rust) preserved
 the original host error even when it carried an earlier policy refusal.
 The [MRI gems](native-once-callback-20261126.md#ruby) distinguished admission,
 factory IO, terminal IO, typed errors and original Ruby exceptions.
-The five npm clients, PHP-Wasm, Python, C, C++, Rust and Ruby give eleven
-of 17 consumer profiles on both author routes.
+The [two .NET 8 installs](native-once-callback-20261126.md#net) also preserved
+the original CLR exception and released the retained delegate's capture.
+That gives **12 of 17** consumer profiles on both author routes. Java,
+Kotlin, native PHP, Perl and WIT/WASI remain for this rule.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile
