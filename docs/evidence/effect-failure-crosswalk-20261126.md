@@ -26,6 +26,31 @@ evidence, sometimes from a different package or execution mode.
 
 ## Which immediate errors keep a live resource?
 
+### Count for synchronous IO
+
+The [baseline](../type-surface.v1.json) names three separate signature
+contracts: `io`, `eio`, and `declared-error`. Each applies to 17 consumer
+profiles on two author routes. For **`io` alone**, 30 of those 102 total
+profile/route/contract combinations have installed results whose client
+digests were matched to the source in this checkout:
+
+| Profiles | Both-route records and what the installed clients observed |
+| --- | --- |
+| C, C++, Rust, Python | All eight [Journal rows](native-sync-cpp-rust-20261122.json) identify their [client sources](../../tests/fixtures/native-sync-io-clients). The callers write and read in order, distinguish a failed file read from a returned value, then make another call. |
+| Ruby, .NET, Java, Kotlin | The [gem](ruby-sync-io-20261122.json), [NuGet](dotnet-sync-io-20261122.json) and [Maven](jvm-sync-io-20261123.json) records include the executed clients. Java and Kotlin have separate application results. A missing file produces the generated IO error rather than a promise or a successful string. |
+| Perl, native PHP | The [CPAN](perl-sync-io-20261123.json) and [Composer](php-sync-io-20261123.json) reports passed on both package orders. Additional interpreter versions, XS modes and load orders do not count as extra consumer profiles. |
+| Five npm profiles | The [Ledger results](npm-synchronous-io-delivery-20261126.md) match both receipt files and all four client source hashes. Each client observed the immediate counter transition, invalid inputs that left state unchanged, a thrown Lean IO error and successful reuse. |
+
+The 30 are a **lower bound**, not an estimate of time remaining. The
+[WIT report](wit-sync-io-packages-20261123.md) separately documents both
+archives and the calls made against them. The [PHP-Wasm Ledger report](php-wasm-installed-sync-io-20261123.md)
+records the installed PHP calls and a second reviewed build, but does not
+identify a second installed Ledger run by its reviewed receipt. Neither
+report is included in the source-hash count above. This count does not
+grant credit for the other two contracts or for hosted qualification.
+
+### Immediate errors that own a Lean resource
+
 These checks use a Lean-owned resource as the payload of a synchronous
 declared error. They exercise a different contract from returning copied
 bytes, throwing an application exception, or cancelling a pending task.
