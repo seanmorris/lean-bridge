@@ -78,6 +78,7 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 	await copyFile(new URL("./javascript-wasm-callback-io-worker.mjs", import.meta.url), join(consumer, "worker.mjs"));
 	await writeFile(join(consumer, "consume.mjs"), 'import {exercise} from "./calls.mjs"; console.log(JSON.stringify(await exercise(JSON.parse(process.argv[2]))));\n');
 	const cases = [], requests = [];
+	const realms = {node: [], chromium: []};
 	const deliveryOnly = process.env.LEAN_BRIDGE_JS_CALLBACK_IO_DELIVERY_ONLY === "1";
 	for(const order of ["io-first", "owned-first"]) for(const propagate of [false, true])
 	{
@@ -89,21 +90,33 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 			, names: [io.name, owned.name], argument: options
 			, evaluate: async opts => (await import("/calls.mjs")).exercise(opts)});
 		assert.deepEqual(browser, node); assert.equal(node.order, order); assert.ok(node.checks >= 23);
+		realms.node.push(node); realms.chromium.push(browser);
 		cases.push({options, node});
 		t.diagnostic(JSON.stringify({node, chromium: browser, diagnosticWasm: integrity}));
 		if(order === "owned-first" && propagate)
 		{
 			const isolated = JSON.parse((await run(process.execPath, ["worker.mjs", JSON.stringify(options)], {cwd: consumer})).stdout);
 			assert.deepEqual(isolated.worker, node); assert.equal(isolated.parentCounter, 21);
+			realms.nodeWorker = isolated;
 			t.diagnostic("An independent Node worker retired its own heap; the live parent retained its ticket and advanced its counter to 21.");
 		}
 	}
 	if(!deliveryOnly)
 	{
 		const dedicated = await checkCallbackWorker({root, consumer, names: [io.name, owned.name], cases});
+		realms.chromiumWorkers = dedicated;
 		t.diagnostic(JSON.stringify({chromiumWorkers: dedicated.workers.length, parentCounter: dedicated.parentCounter}));
 	}
 	const report = await checkCallbackDelivery({root, consumer, io, owned, requests});
+	if(!deliveryOnly)
+	{
+		const source = async name => sha256(await readFile(new URL(name,import.meta.url)));
+		report.otherRealms = {...realms, drivers: {
+			nodeWorkerSha256: await source("./javascript-wasm-callback-io-worker.mjs"),
+			chromiumWorkerSha256: await source("./javascript-wasm-callback-io-browser-worker.mjs"),
+			diagnosticSourceSha256: await source("../fixtures/javascript-wasm-callback-io/fault.c")
+		}};
+	}
 	if(process.env.LEAN_BRIDGE_JS_CALLBACK_DELIVERY_EVIDENCE)
 		await saveLakeFile(process.env.LEAN_BRIDGE_JS_CALLBACK_DELIVERY_EVIDENCE, report.route + ".json", JSON.stringify(report, null, 2) + "\n");
 	t.diagnostic(report.route + ": four typed callback traps and four React runtime-retirement/retry sequences passed.");

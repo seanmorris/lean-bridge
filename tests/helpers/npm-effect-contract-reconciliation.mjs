@@ -11,10 +11,41 @@ import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-recei
 
 const ledger = "docs/evidence/npm-synchronous-io-delivery-20261126";
 const traps = "docs/evidence/npm-callback-trap-delivery-20261126";
+const realms = "docs/evidence/npm-matched-realm-errors-20261126";
 const json = async path => JSON.parse(await readFile(path));
 const digest = async path => sha256(await readFile(path));
 const run = promisify(execFile);
 const root = process.env.LEAN_BRIDGE_LEDGER_RELEASE_PAIR;
+
+test("all three JavaScript realms match the scalar installation and the independently checked typed-client traps", async () => {
+	for(const route of ["ordinary","reviewed"])
+	{
+		const scalar = await json(join(ledger, route + ".json"));
+		const original = await json(join(traps, route + ".json"));
+		const {otherRealms, ...delivery} = await json(join(realms, route + ".json"));
+		assert.deepEqual(delivery, original);
+		assert.equal(delivery.io, scalar.packageSetSha256);
+		assert.equal(delivery.io, await digest(join(ledger, route + ".package-set.json")));
+		assert.equal(delivery.callbacks, await digest(join(traps, "package-set-receipt.json")));
+		assert.equal(delivery.reviewedSourceSha256, scalar.reviewedSourceSha256);
+		assert.equal(Boolean(delivery.reviewedSourceSha256), route === "reviewed");
+		assert.deepEqual(otherRealms.drivers, {
+			nodeWorkerSha256: await digest("tests/helpers/javascript-wasm-callback-io-worker.mjs"),
+			chromiumWorkerSha256: await digest("tests/helpers/javascript-wasm-callback-io-browser-worker.mjs"),
+			diagnosticSourceSha256: await digest("tests/fixtures/javascript-wasm-callback-io/fault.c")
+		});
+		const expected = ["io-first","owned-first"].flatMap(order => [false,true].map(propagate =>
+			({order, propagate, checks: 23, counterBeforeTrap: 4, healthyFinishes: 8, finishesAfterTrap: 0})));
+		for(const [calls, faults] of [[scalar.node, otherRealms.node], [scalar.chromium, otherRealms.chromium],
+			[scalar.ui.worker, otherRealms.chromiumWorkers.workers]])
+		{
+			assert.deepEqual(calls, {checks: 45, scalarKinds: 19, counter: 3});
+			assert.deepEqual(faults, expected);
+		}
+		assert.deepEqual(otherRealms.nodeWorker, {worker: expected[3], parentCounter: 21});
+		assert.equal(otherRealms.chromiumWorkers.parentCounter, 24);
+	}
+});
 
 const verifySources = async (observed, fixture, common) => {
 	for(const [name,hash] of Object.entries(observed))

@@ -43,7 +43,7 @@ digests were matched to the source in this checkout:
 
 ### When the same package also establishes the typed-error contract
 
-For three profiles, installed clients distinguish an `EIO` failure, the
+For six profiles, installed clients distinguish an `EIO` failure, the
 callable's named error payload, validation, and an unexpected runtime trap
 on the **same Ledger or Journal release**:
 
@@ -59,6 +59,15 @@ on the **same Ledger or Journal release**:
   repeat the check, set `LEAN_BRIDGE_LEDGER_RELEASE_PAIR` to the directory
   containing the original ordinary and reviewed npm release trees, then run
   `node --test tests/helpers/npm-effect-contract-reconciliation.mjs`.
+- **Node JavaScript, Chromium page and dedicated browser worker:** The
+  [ordinary](npm-matched-realm-errors-20261126/ordinary.json) and
+  [reviewed](npm-matched-realm-errors-20261126/reviewed.json) replays use
+  the same Ledger releases, callback component and diagnostic Wasm as the
+  typed clients above. Each realm ran the 45 scalar checks and four real
+  guest traps (both import orders; callback catches or propagates the trap).
+  Every trap prevented native callback completion and barred peer calls.
+  The worker's parent stayed usable. A Node worker separately confirmed
+  isolation; it is a control, not an additional profile.
 - **WIT/WASI:** The [installed Journal consumer](../../tests/fixtures/wit-sync-io/consumer.c)
   independently varies return versus declared failure and the inner error's
   payload arm. Validation leaves the output untouched; a real trap in the
@@ -66,8 +75,8 @@ on the **same Ledger or Journal release**:
   discarding it and prevents its peer from reusing the runtime. The same
   two verified Journal archives supplied the bindings for both programs.
 
-The resulting lower bound for #1222 is **46/102 (45%)**: 34 immediate
-IO, six EIO, and six named-error signature combinations. These counts are
+The resulting lower bound for #1222 is **58/102 (56%, rounded down)**: 34 immediate
+IO, twelve EIO, and twelve named-error signature combinations. These counts are
 not estimates of time remaining. In particular, a named error carrying
 copied bytes does not establish that an error can be the sole owner of a
 live application object. That obligation is tracked below, separately
