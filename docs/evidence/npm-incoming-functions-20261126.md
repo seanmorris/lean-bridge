@@ -90,3 +90,14 @@ Use `LEAN_BRIDGE_FRAME_DIRECT=1` and `LEAN_BRIDGE_FRAME_NATIVE_STAGE` with
 or set `LEAN_BRIDGE_FRAME_C_HANDOFF` instead to use two C package handoffs.
 The replay verifies its input and compiles the public clients; no source
 change or rebuild of the Lean component is needed.
+
+For installed Python, Ruby and Rust qualification, run
+`npm run test:native-incoming-function` with the native build toolchain and
+an offline Cargo dependency cache. The test builds one wheel, gem and crate
+per author route; it removes the producer before installing the packages.
+It checks the installed files against each package manifest, runs the
+public clients and broker observers after relocation, and writes a pair
+report only when all six installations agree. To retain or replay the
+originals, set `LEAN_BRIDGE_NATIVE_INCOMING_KEEP` (an existing parent
+directory) or `LEAN_BRIDGE_NATIVE_INCOMING_REPLAY` (the resulting
+`sets-*` directory).

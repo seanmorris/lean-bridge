@@ -13,22 +13,27 @@ import {leasedClosureFieldReviewedIr} from "./owned-aggregate-fixture.mjs";
  *
  * @param project - Destination for an isolated author project.
  * @param route - Ordinary or reviewed source.
- * @param target - Downstream package ecosystem.
+ * @param target - Downstream ecosystem or distinct ecosystems sharing this Lean compilation.
  * @param options - Optional mixed-record contract.
  * @param options.mixed - Include the PriceCard workload on both routes.
  * @param options.incoming - Include a callback borrowing a Lean closure directly.
  */
 export const prepareStagedQuoteProject = async (project, route, target, {mixed = false, incoming = false} = {}) => {
-	if(!["ordinary", "reviewed"].includes(route) || !["c", "cpp", "cargo", "nuget", "npm", "maven", "rubygems", "php-native", "cpan", "wit-wasi", "php-wasm"].includes(target)) throw new Error("Unexpected staged quote configuration");
+	const targets=Array.isArray(target)?target:[target], supported=["c","cpp","cargo","nuget","npm","maven","pypi","rubygems","php-native","cpan","wit-wasi","php-wasm"];
+	if(!["ordinary","reviewed"].includes(route) || !targets.length || new Set(targets).size!==targets.length || !targets.every(t=>supported.includes(t))) throw new Error("Unexpected staged quote configuration");
 	await cp(new URL("../fixtures/onboarding/leased-closure-fields/", import.meta.url), project, {recursive: true});
 	const cfg = join(project, "lean-bridge.exports.json");
 	const config = route === "ordinary" ? JSON.parse(await readFile(cfg)) : {schemaVersion: 1, modules: ["Owned"]};
-	const name = {npm: "@example/tariff-quotes", maven: "org.leanbridge:tariff-quotes", "php-native": "example/tariff-quotes"}[target] ?? "tariff-quotes";
-	config.targets = {[target]: target === "cpan" ? {module: "LeanBridge::TariffQuotes", version: "0.001"} : {name, version: "1.0.0"}};
-	if(target === "php-wasm") config.targets[target] = {
-		npm: {name: "@example/tariff-quotes", version: "1.0.0"}
-		, composer: {name: "example/tariff-quotes", version: "1.0.0"}
-	};
+	config.targets={};
+	for(const t of targets)
+	{
+		const name = {npm: "@example/tariff-quotes", maven: "org.leanbridge:tariff-quotes", "php-native": "example/tariff-quotes"}[t] ?? "tariff-quotes";
+		config.targets[t]=t==="cpan"?{module: "LeanBridge::TariffQuotes",version: "0.001"}:{name,version: "1.0.0"};
+		if(t==="php-wasm") config.targets[t]={
+			npm: {name: "@example/tariff-quotes", version: "1.0.0"}
+			, composer: {name: "example/tariff-quotes", version: "1.0.0"}
+		};
+	}
 	if(route === "ordinary")
 	{
 		config.exports.push("Owned.flatQuote", "Owned.stagedQuote");
@@ -79,7 +84,7 @@ export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = f
 	{
 		const original = leasedClosureFieldReviewedIr({staged: true,mixed,incoming});
 		assert.equal(reviewed.path, "api.binding-ir.json");
-		assert.deepEqual(JSON.parse(reviewed.source), original);
+		assert.equal(reviewed.source, canonicalJson(original));
 		assert.equal(reviewed.sourceSha256, sha256(canonicalJson(original)));
 		assert.equal(reviewed.semanticSha256, sha256(canonicalizeJsonValue(original)));
 	}
