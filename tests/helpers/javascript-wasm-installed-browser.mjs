@@ -72,8 +72,11 @@ export const launchInstalledChromium = async (root, executable) => {
 		await browser?.close().catch(() => {});
 		if(proc.exitCode === null && proc.signalCode === null) proc.kill("SIGTERM");
 		await exited;
-		if(shortTemp) await rm(shortTemp, {recursive: true, force: true});
-		await rm(userData,{recursive: true,force: true});
+		// The browser process has exited, but a child may still finish writing its
+		// profile. Retry transient filesystem errors only, on our private dirs.
+		const cleanup = {recursive: true, force: true, maxRetries: 6, retryDelay: 100};
+		if(shortTemp) await rm(shortTemp, cleanup);
+		await rm(userData, cleanup);
 	};
 	try
 	{
@@ -114,8 +117,12 @@ export const runInstalledChromium = async options => {
 		: await serve(consumer, names, isolated);
 	const address = site.url ?? site.origin, origin = new URL(address).origin;
 	let session;
-	try
-	{
+	const close = async () => {
+		try
+		{ await session?.close(); } finally
+		{ await site.close(); }
+	};
+	const execute = async () => {
 		session = await launchInstalledChromium(root);
 		const {browser} = session;
 		const page = await browser.contexts()[0].newPage();
@@ -144,11 +151,25 @@ export const runInstalledChromium = async options => {
 			throw error;
 		} finally
 		{ clearTimeout(timer); }
+	};
+	let value;
+	try
+	{
+		value = await execute();
 	}
-	finally
+	catch(consumerError)
 	{
 		try
-		{ await session?.close(); } finally
-		{ await site.close(); }
+		{
+			await close();
+		}
+		catch(cleanupError)
+		{
+			throw new AggregateError([consumerError,cleanupError],
+				consumerError.message + "\nChromium cleanup also failed: " + cleanupError.message, {cause: cleanupError});
+		}
+		throw consumerError;
 	}
+	await close();
+	return value;
 };
