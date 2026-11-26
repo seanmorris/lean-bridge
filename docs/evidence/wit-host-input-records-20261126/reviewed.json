@@ -1,0 +1,38 @@
+{
+  "archiveSha256": "9bf06ca0b7ecffd935a949d8f9760b0b6667a6642cd771541e3f304f90101733",
+  "bindingIrSha256": "e1a9c1b332720159399366315090b11f9c85db443eb2b105396c99ffda5bbcde",
+  "clientSha256": "3dadbcdfb7eed6c3b7e35bb9f3919bcb0a237bb5fc461e1d7512340e3a18efd8",
+  "componentSha256": "9154dbfcdde6793c806687a8689f0d6b28342aa2c31b8eae64dd56cc50f6544f",
+  "hostInputs": {
+    "clientSha256": "a4c6d26b4c91436bed8b5655fe7cbda7554bbc5b20d6142bb7e4dbbf8a136bf0",
+    "observed": {
+      "after": 1,
+      "baseline": 1,
+      "held": 4,
+      "hostCalls": 4,
+      "inputs": [
+        9,
+        5,
+        6,
+        2
+      ],
+      "mixed": 78,
+      "shutdown": 0
+    },
+    "sourceSha256": "b52354ac4bb417c8041b3b6408dccabbed37f098b7d400b7c7148e08a4839caa"
+  },
+  "observed": {
+    "after": 1,
+    "baseline": 1,
+    "entries": 2,
+    "held": 8,
+    "recovered": 42,
+    "shutdown": 0,
+    "staleVisits": 0
+  },
+  "receiptSha256": "f6a1e4452eb2077fded9b0c0a03fa9bc75a4b63ac27f199735690487a147e09a",
+  "reviewedSourceSha256": "758794f313609faff008270a5ea2a771f46a787c2759b5a337d5d36a5df9aeff",
+  "route": "reviewed",
+  "wasmtime": "42.0.1",
+  "worldSha256": "8e1819b30e65ca52270e50a3f2ae7b72ac37c60d81b6527c0142551c1bfdb145"
+}

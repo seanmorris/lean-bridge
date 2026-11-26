@@ -315,3 +315,27 @@ after capture, reentry, expiry, a callback exception, retention, validation,
 and the mixed call. Both routes used the same runtime archive, client
 sources and test observer. Their independently compiled wasm32 modules have
 different SHA-256 digests: ordinary `17d8e96e…`, reviewed `3c2b1e66…`.
+
+## WIT/WASI callers
+
+The [ordinary](wit-host-input-records-20261126/ordinary.json) and
+[reviewed](wit-host-input-records-20261126/reviewed.json) archives each
+passed in a new, relocated Wasmtime 42.0.1 install. The
+[downstream client](../../tests/fixtures/structured-types/tariff-wasmtime-inputs.c)
+linked against the installed C API and called the compiled Wasm component.
+It supplied four host functions in two price records. They received 9, 5,
+6 and 2 respectively; the calculation returned 78. An invalid callback in
+the second record was rejected before any of the four ran.
+
+A call-scoped callback did not escape through a returned record or function.
+A separately retained Lean function remained callable. The owner count went
+from one to four while holding the result, back to one after disposal, and
+to zero on shutdown. Both archives contained the same compiled component
+and WIT world, with distinct package and author-route receipts.
+
+Run `npm run test:wit-function-fields` with the pinned Lean toolchain,
+wasm-tools and Wasmtime 42 C SDK. Set `LEAN_BRIDGE_WIT_TARIFF_KEEP` to retain
+both handoffs or `LEAN_BRIDGE_WIT_TARIFF_REPLAY` to replay the saved pair.
+This completes **17/17 consumer profiles on both source routes for callbacks
+supplied in input records**. It does not qualify the separate retained
+one-call policy or direct closure-input cases.
