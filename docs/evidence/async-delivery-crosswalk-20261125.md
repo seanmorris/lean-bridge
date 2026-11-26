@@ -341,8 +341,8 @@ relocated binary. Neither has the build tree or Cargo on its path.
 On **.NET, Java and Kotlin**, the installed clients below exercise all
 three signatures on both author routes. That is 18 profile/route/signature
 combinations in addition to the 34 synchronous-iterator combinations
-already qualified across all profiles. The lower bound for #1223 is
-**52/136 (38%)**. It is a count of verified behavior, not time remaining.
+already qualified across all profiles: **52/136** before counting the
+[native scripting clients](#count-for-perl-and-native-php) below.
 
 | Consumer | What the installed application observed |
 | --- | --- |
@@ -357,6 +357,34 @@ This is a reconciliation of installed runs, not a new SDK build. The
 evidence applies to the tested CLR owner loop and JVM schedulers on
 Linux x86-64. It does not assume that results carry over to a different
 scheduler, optional package feature, or release.
+
+## Count for Perl and native PHP
+
+Both source routes now qualify for tasks, cancellation and async iterators
+in two more profiles. Four Perl ABIs and two PHP versions are **not six
+separate profiles**. These add 12 combinations: **64/136 (47%)** including
+the managed clients and synchronous iterators above.
+
+- **Perl:** The [installed public and peer tests](perl-tasks-20261123.json)
+  exercised IO::Async progress, terminal errors, one pull per demand,
+  exhaustion and closing a pending cursor. The [parked-pull replay](#cancelling-the-pending-perl-future)
+  matches those exact Pulse receipts and installed XS binaries across
+  all four ABIs. An early close or cancelled Future finalized once and
+  rejected the late item; its peer stayed usable. A [separate installed
+  callback suite](perl-retained-workers-20261123.json) tested nested waits,
+  registration and retirement. No claim here about a different event loop.
+- **Native PHP:** The [Amp task clients](php-task-delivery-20261123.json)
+  and [callback clients](php-retained-tasks-20261123.json) ran on PHP 8.2
+  and 8.5. Cancellation during a callback suppressed its reply; shutdown
+  left no owners. The [leased stream](php-task-leases-20261123.json) closed
+  on step failure while the payload remained usable. The [gated Pulse
+  build](#stopping-a-parked-native-php-reader) tested actual blocked reads
+  in both package orders with both a token and explicit close. It is a
+  separate build, not a replay of the scalar Pulse archive or a Zend result.
+
+`node --test tests/helpers/perl-php-async-reconciliation.mjs` checks the
+actual consumer source digests, original route records, runtimes, and
+observations. This does not rebuild those packages or promote a release.
 
 ## Closure boundary
 
