@@ -182,6 +182,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "wit-wasi" && !ir && projectContract.asyncIterators?.length ? { witCursorIO: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, ...(projectContract.taskCallbackPolicies ? {taskCallbackPolicies: projectContract.taskCallbackPolicies} : {})
+		, ...(options.target==="php-wasm" && projectContract.taskCallbackPolicies ? {phpWasmCallbackBudgets: true} : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
 		, ...(projectContract.iterators?.length ? {iterators: projectContract.iterators} : {})

@@ -27,7 +27,7 @@ export const assertPhpWasmSyncHostConfiguration=config=>{
  * @param configuration - Checked Lean project settings.
  */
 export const assertPhpWasmTaskConfiguration=configuration=>{
-	assertExportConfigurationCapabilities(configuration,{target: "php-wasm",fields: ["package","modules","exports","resources","nativeEffects","iterators","asyncIterators","taskExports","taskIOErrors","hostImports"],targetFields: ["npm","composer"]});
+	assertExportConfigurationCapabilities(configuration,{target: "php-wasm",fields: ["package","modules","exports","resources","nativeEffects","iterators","asyncIterators","taskExports","taskIOErrors","taskCallbackPolicies","hostImports"],targetFields: ["npm","composer"]});
 	if(configuration.iterators?.length) throw new Error("PHP-Wasm workers cannot mix immediate Zend iterators with scheduled calls; build a separate synchronous package");
 	if(configuration.nativeEffects?.length) throw new Error("PHP-Wasm workers support only in-memory effects");
 };

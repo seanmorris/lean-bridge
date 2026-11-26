@@ -128,6 +128,7 @@ export const writeJavaScriptTaskPackages = async options => {
 		throw new Error("Retained callback contract does not match the target host");
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
 		|| canonicalJson(evidence.selection.taskCallbackPolicies ?? [])!==canonicalJson(configuration.taskCallbackPolicies ?? [])
+		|| evidence.selection.phpWasmCallbackBudgets!==(php && configuration.taskCallbackPolicies ? true : undefined)
 		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null)
 		|| canonicalJson(evidence.lake)!==canonicalJson(projectContract.lake) || canonicalJson(evidence.selection.exports)!==canonicalJson(projectContract.exports)
 		|| sha256(binary)!==integrity || canonicalJson(abi)!==canonicalJson(compilation.abi))

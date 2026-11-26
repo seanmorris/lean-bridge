@@ -61,7 +61,7 @@ export const javaScriptTaskAbi = (ir,componentIdentity,hostImports=null,zend=fal
 		if(t.source?.producer!=="lean" || t.source.declaration!==t.name || t.id!=="bridge:"+t.name
 			|| t.representation!=="identity" || t.mutability!=="immutable" || t.resource!==null || t.host!==null || t.target!==null || t.fields.length || t.cases.length
 			|| t.source.extensions?.["lean-bridge.dev/callback-scheduler"]!==(zend?"owner-event-loop":"javascript-owner-agent") || c?.resultMode!==(zend?"value":"promise") || c.reentry!=="same-agent"
-			|| c.selfDisposal!=="defer" || !(c.invocation==="many" || !zend && c.invocation==="once") || c.parameters.length!==1 || t.typeParameters.length
+			|| c.selfDisposal!=="defer" || !["many","once"].includes(c.invocation) || c.parameters.length!==1 || t.typeParameters.length
 			|| arg.optional || arg.default!==null || arg.mutability!==a.mutability
 			|| !same(c.effects,zend?["fails","host-call"]:["async","fails","host-call"]) || c.failure.mode!=="declared" || !same(c.failure.errors,[hostError]) || c.failure.unexpected!=="poison-runtime"
 			|| t.id!==(c.invocation==="once" ? "bridge:OnceRetained_" : "bridge:Retained_")+a.name+"_to_"+b.name)

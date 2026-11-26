@@ -59,7 +59,8 @@ export const generatePhpWasmTaskFiles=async(api,componentIdentity,composer,worke
 	const added=new Set();
 	if(zend)
 	{classes.add("boundapi");for(const name of ["bind","entry","close","retain"]) fns.add(name);}
-	if(callbacks) for(const name of ["callbackclosed","retainedcallback"]) classes.add(name);
+	const once=abi.methods.some(m=>m.onceSlots?.length);
+	if(callbacks) for(const name of ["callbackclosed","retainedcallback",...once?["callbackalreadyinvoked"]:[]]) classes.add(name);
 	const add=(cls,body,share=false)=>{if(share && added.has(cls)) return;
 		if(classes.has(cls.toLowerCase())) fail("PHP class collision: "+cls);
 		classes.add(cls.toLowerCase());added.add(cls);defs.push(body);};
@@ -146,7 +147,12 @@ export const generatePhpWasmTaskFiles=async(api,componentIdentity,composer,worke
 	}
 	php["src/Api.php"]+="\nrequire_once __DIR__.'/Pump.php';\n";
 	if(callbacks)
-	{php["src/Callbacks.php"]=(await read("php-wasm-task-callbacks.php")).replaceAll("__LB_PUBLIC__",ns);php["src/Api.php"]+="\nrequire_once __DIR__.'/Callbacks.php';\n";}
+	{
+		const source=(await read("php-wasm-task-callbacks.php"))
+			.replace("/*__LB_ONCE_EXCEPTION__*/",once?"final class CallbackAlreadyInvoked extends \\RuntimeException {}\n\n":"")
+			.replace("/*__LB_ONCE_DECODE__*/",once?'if ($packet===\'["callback-already-invoked"]\') throw new \\__LB_PUBLIC__\\CallbackAlreadyInvoked("A once callback cannot be invoked more than once");\n        ':"");
+		php["src/Callbacks.php"]=source.replaceAll("__LB_PUBLIC__",ns);php["src/Api.php"]+="\nrequire_once __DIR__.'/Callbacks.php';\n";
+	}
 	if(zend)
 	{
 		for(const [name,asset] of [["Objects","php-wasm-task-objects"],["Members","host-members"],["ZendMembers","php-wasm-members"],["BoundApi",immediate?"php-wasm-sync-bound-api":"php-wasm-bound-api"]])

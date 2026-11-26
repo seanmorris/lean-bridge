@@ -4,6 +4,64 @@ import test from "node:test";
 import {readPhpTaskValue,writePhpTaskValue} from "../src/backends/php/php-wasm-task-wire.mjs";
 import {createPhpTaskDescriptor} from "../src/backends/php/php-wasm-task-owner.mjs";
 import {createPhpCallbackHub,createPhpCallbackMailbox} from "../src/backends/php/php-wasm-task-mailbox.mjs";
+import {exhaustedWasmCallback,isExhaustedWasmCallback} from "../src/runtime/wasm-task-frames.mjs";
+import {reconcileHostExports,taskWorkerInterface} from "../src/analyze/host-export-model.mjs";
+import {generatePhpWasmTaskFiles} from "../src/backends/php/php-wasm-task-files.mjs";
+import {javaScriptTaskAbi} from "../src/abi/javascript-wasm-tasks.mjs";
+
+test("PHP callback policy is branded; lookalike exceptions do not become budget failures",async()=>{
+	for(const id of ["error:PhpCallbackException","error:JavaScriptCallbackError"])
+	{
+		const hub=createPhpCallbackHub(),box=createPhpCallbackMailbox([[0,"uint32","uint32"]],hub,null,id);
+		const cause=exhaustedWasmCallback(),wrap=c=>({code: id,cause: c});
+		assert.equal(box.failure(wrap(cause),isExhaustedWasmCallback),'["callback-already-invoked"]');
+		const unreadable=()=>{throw new Error("inspected application cause");};
+		const fake=new Proxy({},{get: unreadable});
+		assert.equal(box.failure(wrap(fake),isExhaustedWasmCallback),null);
+		assert.equal(box.failure({code: "error:Unrelated",cause},isExhaustedWasmCallback),null);
+		const pending=box.request(0,1),[,,ticket]=JSON.parse(await box.next());
+		const replacement=Object.assign(new Error(cause.message),{code: cause.code});
+		assert.ok(box.answer(ticket,false,"",()=>replacement));
+		assert.equal(await pending.catch(e=>e),replacement);
+		assert.equal(box.failure(wrap(replacement),isExhaustedWasmCallback),JSON.stringify(["throw",ticket]));
+		box.finish('["end"]');
+	}
+});
+
+test("a PHP-Wasm author's callback allowance survives private worker projection",async()=>{
+	const primitive={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: primitive,reply: primitive};
+	const name="Budget.probe",component={name: "budget",id: "budget@1.0.0",version: "1.0.0"};
+	const parameters=[{name: "f",type: fn},{name: "g",type: fn}];
+	const entry={name: "probe",declaration: name,module: "Budget",hostMembers: []
+		, effect: "BaseIO"
+		, delivery: "task"
+		, result: primitive
+		, taskIO: true
+		, parameters};
+	const metadata={kind: "lean-bridge-host-export-metadata",schemaVersion: 1
+		, leanVersion: "4.32.2",entries: [entry]};
+	const selection={exports: [name],exportModules: ["Budget"],taskExports: [name],taskIOErrors: [name],members: [],phpTaskCallbacks: true};
+	const policy={declaration: name,parameter: "g",invocation: "once"}, identity="1".repeat(64);
+	const project=async settings=>{
+		const {api}=reconcileHostExports({component,selection: settings,metadata});
+		const worker=taskWorkerInterface(api,{selection: settings,metadata}), abi=javaScriptTaskAbi(worker,identity);
+		const generated=await generatePhpWasmTaskFiles(api,identity,{name: "example/budget",version: "1.0.0"},worker);
+		return {api,abi,source: generated.php["src/Callbacks.php"]};
+	};
+	const plain=await project(selection);
+	assert.equal(plain.abi.methods[0].onceSlots,undefined);assert.doesNotMatch(plain.source,/CallbackAlreadyInvoked|__LB_ONCE/u);
+	const checked=await project({...selection,phpWasmCallbackBudgets: true,taskCallbackPolicies: [policy]});
+	assert.equal(checked.api.types.find(t=>t.callable.invocation==="once").callable.resultMode,"value");
+	assert.deepEqual(checked.abi.methods[0].onceSlots,[1]);assert.match(checked.source,/class CallbackAlreadyInvoked/u);
+	assert.doesNotMatch(checked.source,/__LB_ONCE/u);
+	const stale=structuredClone(checked.api);
+	stale.declarations[0].parameters[1].type=stale.declarations[0].parameters[0].type;
+	assert.throws(()=>reconcileHostExports({component,metadata
+		, selection: {...selection,phpWasmCallbackBudgets: true,taskCallbackPolicies: [policy]}
+		, review: {source: JSON.stringify(stale)}}),/Reviewed API differs/u);
+	await assert.rejects(project({...selection,taskCallbackPolicies: [policy]}),/Invalid task callback policy/u);
+	await assert.rejects(project({...selection,phpWasmCallbackBudgets: true,taskCallbackPolicies: [{...policy,parameter: "wrong"}]}),/Invalid task callback policy/u);
+});
 
 test("PHP callback requests are owner-local, one-shot and revoked on completion",async()=>{
 	const hub=createPhpCallbackHub(),box=createPhpCallbackMailbox([[3,"uint32","string"]],hub);

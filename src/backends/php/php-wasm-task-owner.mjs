@@ -53,7 +53,7 @@ const operation=(m,call,hub,leases,objects,memberFailure)=>(...args)=>{
 			const abandon=()=>{abandoned=true;undelivered?.discard();const stopped=owner.cancel();if(stopped) box?.finish('["cancelled"]');};
 			if(box)
 			{
-				Promise.resolve(owner).then(val).catch(e=>box.failure(e)??failure(leases,m,e)).then(v=>{if(!box.finish(track(v))) v?.discard?.();});
+				Promise.resolve(owner).then(val).catch(e=>box.failure(e,owner.callbackExhausted)??failure(leases,m,e)).then(v=>{if(!box.finish(track(v))) v?.discard?.();});
 				const cancel=()=>{const stopped=owner.cancel();if(stopped) box.finish('["cancelled"]');return stopped;};
 				const answer=(id,ok,value)=>box.answer(id,ok,value,owner.callbackFailure,()=>owner.cancel());
 				const invalid=id=>{if(!box.stop(id)) return false;owner.cancel();return true;};

@@ -2237,6 +2237,13 @@ The `finally` blocks close the returned callable and the box even when a call fa
 
 Handle both JavaScript initialization failures and PHP failures. The host example throws on a nonzero PHP exit status or PHP error output. Explicit PHP comparisons keep the example's checks active when assertions are disabled.
 
+A worker package can restrict a callback to one invocation. For example,
+if Lean requests the same one-call registration a second time, awaiting
+the Budget task throws `LeanBudget\CallbackAlreadyInvoked`. A PHP exception
+thrown by your callback is still the original exception object. You may
+pass the same callable to a new task, which gets a fresh allowance.
+See the [complete PHP consumer](../tests/fixtures/php-wasm-task-owner/budget.php).
+
 ### PHP-Wasm troubleshooting
 
 - **The process prints nothing:** add the `output` listener and forward the captured text as above. Waiting for `php.run()` alone does not print PHP output.

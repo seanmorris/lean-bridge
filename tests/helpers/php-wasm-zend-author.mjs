@@ -62,6 +62,13 @@ test("PHP-Wasm workers keep the authored Zend contract and cannot directly call 
 		assert.deepEqual(fn("read").source.extensions["lean-bridge.dev/host-member-phases"],{call: ["LeanBridge.Host.Php.Box.read"]});
 		assert.deepEqual(fn("openCursor").source.extensions["lean-bridge.dev/host-member-phases"],{call: [],pull: [],close: []});
 		const tamper=selection=>reconcileHostExports({ir,component,metadata: evidence.metadata,selection});
+		const policy={declaration: "Workshop.relay",parameter: fn("relay").parameters[1].name,invocation: "once"};
+		const budget=tamper({...evidence.selection,phpWasmCallbackBudgets: true,taskCallbackPolicies: [policy]});
+		const layout=javaScriptTaskAbi(budget.api,"1".repeat(64),ir,true);
+		const relay=layout.methods.find(m=>m.declaration===policy.declaration);
+		assert.deepEqual(relay.onceSlots,[1]);
+		assert.equal(relay.callbackError,"error:PhpCallbackException");
+		assert.ok(relay.callbacks[0].slice(1).some(kind=>kind.startsWith("host:") || kind.startsWith("lease:")));
 		assert.throws(()=>tamper({...evidence.selection,phpNativeTaskObjects: true}),/Unauthenticated/u);
 		assert.throws(()=>tamper({...evidence.selection,nativeEffects: ["filesystem"]}),/Unauthenticated/u);
 		const reviewed=canonicalJson(api);await writeFile(join(project,"workshop.binding-ir.json"),reviewed);

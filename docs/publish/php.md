@@ -235,6 +235,20 @@ For retained callbacks, give a selected task a parameter of type `α → IO β`,
 
 To call an application PHP class, set `hostImports` to the PHP host contract for the project. Import its generated Lean module and select the immediate exports, tasks, and cursors that use it. The [example source](../../tests/fixtures/php-wasm-task-owner/ZendMembers.lean) calls a constructor, a static factory, and instance members from immediate `IO`. Workers can carry those PHP objects and exchange them through callbacks; they cannot call a PHP method directly from a pthread. Build with a task SDK containing the member dispatcher. The same three archives then expose [`withHosts()` in PHP](../php.md#let-lean-call-methods-on-your-php-objects); no JavaScript class adapter is required.
 
+To allow only one invocation of a retained callback in a PHP-Wasm worker,
+select the original Lean parameter in `lean-bridge.exports.json`:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Budget.probe", "parameter": "f", "invocation": "once"}
+]
+```
+
+`Budget.probe` must also be in `taskExports`. A second call fails before
+the PHP function runs, even if the first call threw. Other slots and fresh
+tasks have their own allowances. Unselected callbacks allow repeated calls.
+This setting does not change native PHP or synchronous callbacks.
+
 ### Publish immediate PHP-Wasm class bindings
 
 For a class-bound PHP-Wasm package that only exports immediate calls, select

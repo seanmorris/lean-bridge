@@ -282,8 +282,10 @@ The [Budget package](npm-once-callback-20261126.md) now exercises that
 contract for retained callbacks on the threaded npm profile. The author
 selects the allowance in the export configuration. It is per task and
 parameter: an independent registration works even while another is active.
-This does not add one-shot support to the synchronous owned-function frontend
-or the other target runtimes.
+The [PHP-Wasm Budget install](php-wasm-once-callback-20261126.md) enforces
+the same limit on synchronous PHP callbacks retained by a Lean task. The five
+npm clients plus PHP-Wasm give six of 17 consumer profiles on both author
+routes. This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile
 

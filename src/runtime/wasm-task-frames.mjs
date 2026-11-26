@@ -5,6 +5,19 @@ import {encodeWasmWord,decodeWasmWord} from "../release/wasm-word-codecs.mjs";
 
 const invalid = () => new Error("Malformed Lean task frame");
 const phpFailureMessages=new WeakMap();
+const exhaustedCallbacks=new WeakSet();
+/**
+ * Identify only a failure issued by the task's callback admission check.
+ *
+ * @param error - Original private failure, not the translated exception.
+ */
+export const isExhaustedWasmCallback=error=>exhaustedCallbacks.has(error);
+/** Create the policy failure before argument lifting or application dispatch. */
+export const exhaustedWasmCallback=()=>{
+	const message="A once callback cannot be invoked more than once";
+	const error=Object.assign(new Error(message),{code: "callback-already-invoked"});
+	exhaustedCallbacks.add(error);phpFailureMessages.set(error,message);return error;
+};
 // An arbitrary thrown JS value may have hostile getters (or be undefined).
 // Unwrap only at the public boundary, before inspecting ordinary error codes.
 export const wasmHostThrown=new WeakMap();
@@ -151,7 +164,7 @@ export const openWasmTaskFrame = (context,invoke,method,index,args) => {
 		if(!type) return retire(invalid());
 		// A refused registration needs no argument lift (which, for a host
 		// object, can itself run application code). The port still gets a reply.
-		if(admit && !admit(slot)) return {slot,refused:true};
+		if(admit && !admit(slot)) return {slot,refused: true};
 		const statusArg=callbackOp(layout.arg,slot);
 		if([11,12].includes(statusArg))
 		{ checkedOut(); throw new WasmTaskCallbackLimit("Lean callback argument exceeds task resources"); }

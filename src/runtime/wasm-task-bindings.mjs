@@ -1,6 +1,6 @@
 /** @file Idiomatic Promise and async-iterator delivery over a runtime-owned, notification-driven Wasm scheduler. */
 import {PendingOperationRegistry} from "./pending-operations.mjs";
-import {isWasmTaskDeclaredFailure,openWasmTaskFrame,phpTaskCallbackFailure,wasmHostThrown} from "./wasm-task-frames.mjs";
+import {isExhaustedWasmCallback,isWasmTaskDeclaredFailure,openWasmTaskFrame,phpTaskCallbackFailure,wasmHostThrown} from "./wasm-task-frames.mjs";
 import {createWasmTaskLeases} from "./wasm-task-leases.mjs";
 import {createWasmTaskCallbacks} from "./wasm-task-callbacks.mjs";
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
@@ -112,6 +112,7 @@ export const createWasmTaskSession = options => {
 		if(syncStart && row.method.callbacks?.length)
 		{
 			Object.defineProperty(p.promise,"callbackFailure",{value: phpTaskCallbackFailure});
+			if(row.method.onceSlots?.length) Object.defineProperty(p.promise,"callbackExhausted",{value: isExhaustedWasmCallback});
 			Object.defineProperty(p.promise,"hostTrap",{value: ()=>{
 				try
 				{retire(new Error("PHP callback trapped"));} catch { /* Already delivered to the whole session. */ }

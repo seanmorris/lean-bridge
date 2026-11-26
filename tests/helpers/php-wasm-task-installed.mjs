@@ -55,7 +55,13 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	await run("composer",["--no-plugins","--no-scripts","--no-interaction","--no-cache","install","--prefer-dist"],app,{...env,COMPOSER_DISABLE_NETWORK: "1",COMPOSER_ALLOW_SUPERUSER: "1",COMPOSER_HOME: join(root,"composer-home")});
 	await symlink(resolve(host),join(app,"node_modules/php-wasm"),"dir");
 	await cp(resolve("tests/fixtures/php-wasm-task-owner",immediate?"zend-sync.php":zend?"zend-installed.php":leases?"leases.php":peer?"callbacks.php":"installed.php"),join(app,"installed.php"));
-	if(options.parked) {
+	if(options.budget)
+	{
+		assert.ok(!peer && !immediate && !leases && !zend && !options.parked);
+		await cp(resolve("tests/fixtures/php-wasm-task-owner/budget.php"),join(app,"installed.php"));
+	}
+	if(options.parked)
+	{
 		assert.ok(!peer && !immediate && !leases && !zend);
 		const sample=await readFile("tests/fixtures/php-wasm-task-owner/parked.php","utf8");
 		assert.ok(sample.startsWith("<?php\n"));
@@ -82,12 +88,12 @@ export const exercisePhpTaskRelease=async(release,t,peer,leases=false,zend=false
 	const executions={};
 	for(const mode of ["embedded","composer"])
 	{
-		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools",CHECK_RETURNED_FUNCTIONS: functions?"1":"0",CHECK_ZEND_RECORDS: records?"1":"0",CHECK_PARKED_READER: options.parked?"1":"0"});
+		const result=await run(process.execPath,["installed.mjs",mode,...components],moved,{PATH: "/no-producer-tools",CHECK_RETURNED_FUNCTIONS: functions?"1":"0",CHECK_ZEND_RECORDS: records?"1":"0",CHECK_PARKED_READER: options.parked?"1":"0",CHECK_CALLBACK_BUDGET: options.budget?"1":"0"});
 		assert.equal(result.stderr,"");assert.match(result.stdout,immediate?/synchronous identity, failures, reentry and cleanup passed/u:/zero live owners/u);t.diagnostic(result.stdout.trim());
 		executions[mode]=result.stdout.trim();
 	}
-	executions.chromium=await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend,immediate,records,parked:options.parked});t.diagnostic(executions.chromium);
-	if(options.parked) return executions;
+	executions.chromium=await exercisePhpTaskBrowser({root,consumer: moved,name,other,leases,zend,immediate,records,parked: options.parked,budget: options.budget});t.diagnostic(executions.chromium);
+	if(options.parked || options.budget) return executions;
 	if(immediate)return executions;
 	if(peer && !leases)
 	{

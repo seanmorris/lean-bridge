@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace __LB_PUBLIC__;
 
-final class CallbackClosed extends \RuntimeException {}
+/*__LB_ONCE_EXCEPTION__*/final class CallbackClosed extends \RuntimeException {}
 
 /** Ordinary callables need no wrapper. Use this owner to stop future invocations explicitly. */
 final class RetainedCallback {
@@ -49,7 +49,7 @@ final class CallbackScope {
         $this->key=null; $this->owner=null; $this->live=false; $this->slots=[]; $this->errors=[];
     }
     public function decode(mixed $packet,\Closure $decode): mixed {
-        if (is_string($packet) && str_starts_with($packet,'["throw",')) {
+        /*__LB_ONCE_DECODE__*/if (is_string($packet) && str_starts_with($packet,'["throw",')) {
             [, $id]=json_decode($packet,true,flags: JSON_THROW_ON_ERROR);
             throw $this->errors[$id]??new \__LB_PUBLIC__\LeanBridgeError('Unknown PHP callback failure');
         }

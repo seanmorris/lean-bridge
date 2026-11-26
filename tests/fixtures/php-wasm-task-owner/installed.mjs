@@ -25,7 +25,8 @@ try
 	const boot=mode==="composer"?["/vendor/autoload.php"]:descriptors.map(d=>d.autoload);
 	const code=await php.run("<?php "+[...boot,"/test.php"].map(p=>"require '"+p+"';").join(" "));
 	assert.equal(code,0,stderr || stdout); assert.equal(stderr,"");
-	if(process.env.CHECK_PARKED_READER==="1") assert.equal(stdout,"PHP task API: typed await, cancel, release, errors and pull cleanup passed; parked reader cancelled before gate, zero items, late 73, one finalizer");
+	if(process.env.CHECK_CALLBACK_BUDGET==="1") assert.equal(stdout,"PHP callback budget: once 1, many 2, nested 1, distinct slots 2, fresh task 42");
+	else if(process.env.CHECK_PARKED_READER==="1") assert.equal(stdout,"PHP task API: typed await, cancel, release, errors and pull cleanup passed; parked reader cancelled before gate, zero items, late 73, one finalizer");
 	else assert.match(stdout,/^PHP (?:task API: typed await, cancel, release, errors and pull cleanup|callback API: reentry, exception identity and cancellation|lease API: cross-package identity, error ownership and disposal|Zend API: installed class bindings, typed errors, scoped cancellation and cursors) passed$/u);
 	if(mode==="embedded" && stdout.startsWith("PHP Zend API:")) await exerciseRealms(descriptors[0],true);
 	await waitTaskRuntimeIdle(); const stats=taskRuntimeStats();

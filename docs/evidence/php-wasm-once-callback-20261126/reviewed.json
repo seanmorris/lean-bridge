@@ -1,0 +1,33 @@
+{
+  "archives": [
+    {
+      "bytes": 14453,
+      "name": "example/lean-budget",
+      "path": "packages/php-wasm/example-lean-budget-1.0.0.zip",
+      "sha256": "f8e6e28d181a40a1ad011114a7daa1cc9b727cec59e670ad60eec713a028072d"
+    },
+    {
+      "bytes": 72661,
+      "name": "@example/budget-php",
+      "path": "packages/php-wasm/@example-budget-php-1.0.0.tgz",
+      "sha256": "1984edc9d0c4856a5f00dae14a0f2e931f4ea42cf02749614356cd27c0d3ea9d"
+    },
+    {
+      "bytes": 800207,
+      "name": "@lean-bridge/runtime",
+      "path": "packages/php-wasm/lean-bridge-runtime-0.0.0-task1.r383fa753eb11761cb21037d57effd03243c94a1ccf3753fa2d117fd08d5ca584.tgz",
+      "sha256": "9b308d0dbdf32ad69852877c0267667a15d461017a613ee873bd148761f7fd98"
+    }
+  ],
+  "bindingIrSha256": "d4977d1be61414501ca9be800b9a65d0bb24f58ad244a358a2cf702ef5ffcb03",
+  "clientSha256": "bf7232717bc13cc2a7641611768a9305906050ce349108f575e6c383fb93bbad",
+  "executions": {
+    "chromium": "Chromium: PHP callback budget: once 1, many 2, nested 1, distinct slots 2, fresh task 42; zero live owners",
+    "composer": "composer: PHP callback budget: once 1, many 2, nested 1, distinct slots 2, fresh task 42; zero live owners",
+    "embedded": "embedded: PHP callback budget: once 1, many 2, nested 1, distinct slots 2, fresh task 42; zero live owners"
+  },
+  "receiptSha256": "886e7445d48aee1cb5748cd92aa8cf4eb5a2e51cc31ebfd9f5d4a242e8a43489",
+  "reviewedSourceSha256": "f40bee988a9fd5927516dfab649355ca165e5104a3eacf89b92afbeccb9f4a62",
+  "route": "reviewed",
+  "sourceTreeSha256": "49c55bb467cc5b65e1213c99a7bc33e7bb0e08e85e1213daf544489f3b89dd40"
+}

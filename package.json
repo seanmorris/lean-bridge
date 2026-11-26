@@ -1278,6 +1278,7 @@
     "test:php-wasm-zend-objects": "node --test --test-concurrency=1 tests/helpers/php-wasm-zend-objects.mjs",
     "test:php-wasm-task-packages": "node --test --test-concurrency=1 tests/php-wasm-task-wire.test.mjs tests/helpers/php-wasm-task-cli.mjs",
     "test:php-wasm-task-callbacks": "LEAN_BRIDGE_PHP_WASM_TASK_CALLBACKS=1 node --test --test-concurrency=1 tests/php-wasm-task-wire.test.mjs tests/helpers/php-wasm-task-cli.mjs",
+    "test:php-wasm-once-callback": "node --test --test-concurrency=1 tests/helpers/php-wasm-budget-installed.mjs",
     "test:php-wasm-task-leases": "LEAN_BRIDGE_PHP_WASM_TASK_LEASES=1 node --test --test-concurrency=1 tests/php-wasm-task-wire.test.mjs tests/helpers/php-wasm-task-cli.mjs",
     "test:php-transport-parity": "node scripts/check-php-transport-parity.mjs",
     "test:npm-package": "node --test tests/npm-package.test.mjs",

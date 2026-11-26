@@ -1,6 +1,6 @@
 /** @file Deliver retained worker requests on the owning JavaScript event loop. */
 import {taskFrame as op} from "../abi/wasm-task-frame.mjs";
-import {WasmTaskCallbackLimit,wasmHostThrown} from "./wasm-task-frames.mjs";
+import {exhaustedWasmCallback,WasmTaskCallbackLimit,wasmHostThrown} from "./wasm-task-frames.mjs";
 
 // A never-settling application promise must not keep the task, callback or
 // Wasm heap alive after cancellation. Its reactions retain only this ticket.
@@ -70,7 +70,7 @@ export const createWasmTaskCallbacks=({method,args,frame,notifications,retire,ab
 			ticket=active;
 			if(req.refused)
 			{
-				active.answer(false,Object.assign(new Error("A once callback cannot be invoked more than once"),{code:"callback-already-invoked"}));
+				active.answer(false,exhaustedWasmCallback());
 				return;
 			}
 			if(used && method.onceSlots.includes(slot)) used.add(slot);

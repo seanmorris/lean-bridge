@@ -17,8 +17,9 @@ import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
  * @param [options.immediate] - Require the standalone runtime without cross-origin isolation.
  * @param [options.records] - Require the installed object-field and declared-error checks.
  * @param [options.parked] - Check an actual pending read cancelled from a PHP callback.
+ * @param [options.budget] - Check per-registration admission using the standalone Budget fixture.
  */
-export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false,zend=false,immediate=false,records=false,parked=false})=>{
+export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false,zend=false,immediate=false,records=false,parked=false,budget=false})=>{
 	const names=other?[name,other]:[name],callbacks=Boolean(other);
 	const imports=Object.fromEntries([...names,"@lean-bridge/runtime"].map(n=>[n,"/node_modules/"+n+"/index.mjs"]));
 	await writeFile(join(consumer,"index.html"),'<!doctype html><link rel="icon" href="data:,"><script type="importmap">'+JSON.stringify({imports})+'</script>',{flag: "wx"});
@@ -57,8 +58,8 @@ export const exercisePhpTaskBrowser=async({root,consumer,name,other,leases=false
 	const result=await runInstalledChromium({root,consumer,names: [name]
 		, isolated: true,assembledDirectory: consumer
 		, timeoutMs: 90000,argument: {names,program},evaluate});
-	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,zend?"PHP Zend API: installed class bindings, typed errors, scoped cancellation and cursors passed":leases?"PHP lease API: cross-package identity, error ownership and disposal passed":callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed"+(parked?"; parked reader cancelled before gate, zero items, late 73, one finalizer":""));assert.deepEqual(result.counts,[0,0,0,0,0]);
-	if(zend) return "Chromium: "+result.stdout+"; zero live owners";
+	assert.equal(result.rc,0,result.stderr || result.stdout);assert.equal(result.stderr,"");assert.equal(result.stdout,budget?"PHP callback budget: once 1, many 2, nested 1, distinct slots 2, fresh task 42":zend?"PHP Zend API: installed class bindings, typed errors, scoped cancellation and cursors passed":leases?"PHP lease API: cross-package identity, error ownership and disposal passed":callbacks?"PHP callback API: reentry, exception identity and cancellation passed":"PHP task API: typed await, cancel, release, errors and pull cleanup passed"+(parked?"; parked reader cancelled before gate, zero items, late 73, one finalizer":""));assert.deepEqual(result.counts,[0,0,0,0,0]);
+	if(zend || budget) return "Chromium: "+result.stdout+"; zero live owners";
 	const crash=async({name,program})=>{
 		const Native=globalThis.Worker,workers=[];
 		/** Wrap only the Lean SDK's pthreads for this disposable host. */

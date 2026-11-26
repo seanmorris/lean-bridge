@@ -82,8 +82,10 @@ export const createPhpCallbackMailbox=(slots,hub,objects,errorId="error:JavaScri
 		}
 		return true;
 	};
-	const failure=error=>{
-		const ticket=error?.code===errorId && failures.get(error.cause);
+	const failure=(error,exhausted)=>{
+		if(error?.code!==errorId) return null;
+		if(exhausted?.(error.cause)) return '["callback-already-invoked"]';
+		const ticket=failures.get(error.cause);
 		return ticket ? JSON.stringify(["throw",ticket]) : null;
 	};
 	return {key,request,answer,stop,next: ()=>hub.receive(()=>terminal),finish,failure};

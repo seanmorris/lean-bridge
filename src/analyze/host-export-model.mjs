@@ -65,6 +65,7 @@ export const taskWorkerInterface=(api,evidence)=>{
 	if(evidence.selection.phpWasmTaskObjects) return api;
 	if(!evidence.selection.phpTaskCallbacks || !api.types.some(t=>t.kind==="callback")) return api;
 	const selection={...evidence.selection,javascriptTaskCallbacks: true};delete selection.phpTaskCallbacks;
+	delete selection.phpWasmCallbackBudgets;
 	const resources=evidence.metadata.leanResources??[];
 	return reconcileHostExports({ir: null,component: api.component
 		, owned: resources.length?heapResourceIdentities({...evidence,resources}):[]
@@ -264,12 +265,15 @@ export const reconcileHostExports = options => {
 	// Bind the author's policy to the original binder from the elaborated Lean
 	// signature, not to a generated parameter name or a reviewed type label.
 	const policies = new Map();
+	const zendBudgets=selection.phpWasmCallbackBudgets===true;
+	if(selection.phpWasmCallbackBudgets!==undefined && (!zendBudgets || !php || selection.phpNativeTaskObjects || !selection.taskCallbackPolicies?.length))
+		fail("Invalid PHP-Wasm task callback policy owner");
 	for(const {declaration, parameter, invocation} of selection.taskCallbackPolicies ?? [])
 	{
 		const e = metadata.entries.find(e => e.declaration === declaration);
 		const matches = e?.parameters.filter(p => p.name === parameter);
 		const key = declaration + ":" + parameter;
-		if(!js || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
+		if(!(js || zendBudgets) || e?.delivery !== "task" || matches.length !== 1 || !isCallback(matches[0].type)
 			|| policies.has(key) || !["once", "many"].includes(invocation)) fail("Invalid task callback policy: " + key);
 		policies.set(key, invocation);
 	}
