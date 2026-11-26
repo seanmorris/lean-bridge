@@ -136,10 +136,12 @@ Match the newer reports against the particular cell they exercise:
 - For a **Lean function as a callback result**, see the direct staged-reply
   installs below (17 profiles on both routes). For a **Lean function as a
   callback parameter**, use the [incoming-function releases](npm-incoming-functions-20261126.md)
-  instead. Both routes have installed passes for **14 of 17 profiles** in
+  instead. Both routes have installed passes for **16 of 17 profiles** in
   that incoming direction: five npm profiles, C11, C++20, the
   [Python, Ruby and Rust clients](npm-incoming-functions-20261126.md#installed-python-ruby-and-rust-clients),
-  and [C#, Java, Kotlin and native PHP](npm-incoming-functions-20261126.md#installed-c-java-kotlin-and-native-php-clients). An
+  [C#, Java, Kotlin and native PHP](npm-incoming-functions-20261126.md#installed-c-java-kotlin-and-native-php-clients),
+  and [Perl and PHP-Wasm](npm-incoming-functions-20261126.md#installed-perl-and-php-wasm-clients).
+  WIT/WASI is the remaining profile for this position. An
   application supplying its own callable as the *reply* is a
   different cell. For example, the [CPython staged-reply client](python-staged-callback-results-20261125.md)
   returns a Lean function and rejects a Python lambda.
@@ -173,9 +175,9 @@ been credited here, not that the feature has been tested and failed.
 | Lean resource | 17 | 17 | 17 | ≥8 | ≥6 |
 | Host-provided function | 17 | — | 17 | — | — |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
-| Lean-created function | 17 | 17 | 17 | 14 | 17 |
+| Lean-created function | 17 | 17 | 17 | 16 | 17 |
 
-That accounts for **at least 532 of 680** profile/route/position combinations.
+That accounts for **at least 536 of 680** profile/route/position combinations.
 The resource callback counts include the two original PHP-Wasm routes, plus
 the [separately checked callers](resource-ticket-positions-20261126.md#direct-callbacks-are-separate).
 The difference is not a count of missing implementations: some installations

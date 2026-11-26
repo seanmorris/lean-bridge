@@ -175,3 +175,23 @@ The audit matches the Lean declaration and source to each package and
 reconstructs the installed C# and JVM caller digests. It checks the PHP
 source against both weak and strict Composer executions. No package rebuild
 is required.
+
+## Installed Perl and PHP-Wasm clients
+
+In [CPAN](owned-perl-integration-20260928.json), the application called
+the incoming function, retained it, checked that the borrow expired, then
+called its retained copy and read the expected Ticket serial. The public
+module passed in both prebuilt and locally compiled XS modes on four Perl
+ABIs per author route. Each installed process finished with zero live
+broker identities.
+
+The [PHP-Wasm package runs](owned-php-wasm-integration-20260928.json) checked
+the same borrow inside the Zend interpreter: the expired wrapper failed,
+but the retained function still worked. Both author routes ran embedded
+and Composer packages, on startup and on first use, with weak and strict
+PHP callers in Node and Chromium. After each run the broker had zero live
+identities. These are PHP observations, not JavaScript callback tests.
+
+Run `npm run test:perl-zend-direct-callback-positions` to match the two
+original caller sources, Lean fixture, package identities and execution
+results. Neither client establishes what happens in WIT/WASI.
