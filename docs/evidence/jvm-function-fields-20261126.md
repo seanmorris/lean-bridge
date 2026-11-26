@@ -39,3 +39,15 @@ stdlib seed](jvm-host-imports-20261124.md) at `LEAN_BRIDGE_JVM_IO_M2_SEED`.
 Set `LEAN_BRIDGE_JVM_TARIFF_KEEP` to an existing directory to retain the
 archives. Set `LEAN_BRIDGE_JVM_TARIFF_REPLAY` to the reported handoff directory
 instead to repeat both clean installations without rebuilding the packages.
+
+### A function passed into a callback
+
+Set `LEAN_BRIDGE_JVM_TARIFF_REQUIRE_INCOMING=1` to include `Owned.visitQuote`
+on both authoring routes. The [Java](../../tests/fixtures/jvm-tariff/JavaIncoming.java)
+and [Kotlin](../../tests/fixtures/jvm-tariff/KotlinIncoming.kt) clients test the
+function itself as an argument, not a record containing one. A retained copy
+compares equal to its live borrow; after callback return, calls and comparisons
+on the original borrow must fail while the retained copy still works. A nested
+failure must expire the inner borrow without invalidating the outer one.
+The earlier function-field archives do not contain this export and cannot
+qualify it.

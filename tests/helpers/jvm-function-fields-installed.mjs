@@ -13,9 +13,10 @@ import {prepareStagedQuoteProject, checkStagedQuoteIdentities} from "./staged-qu
 
 const fixture = resolve("tests/fixtures/jvm-tariff"), digest = async p => sha256(await readFile(p));
 const clients = {java: "JavaTariff", kotlin: "KotlinTariffKt"};
-const parse = (stdout,hostInput=false) => {
-	const keys = hostInput ? ["baseline","capture","reentry","expired","error","held","lease","validation","afterThreadExit"]
-		: ["baseline","held","retain","echo","repack","expired","closed","afterCallbackFailure","afterThreadExit"];
+const parse = (stdout,hostInput=false,incoming=false) => {
+	const keys = incoming ? ["baseline","success","error","held","lease","errorLease","nested","fresh","afterThreadExit"]
+		: hostInput ? ["baseline","capture","reentry","expired","error","held","lease","validation","afterThreadExit"]
+			: ["baseline","held","retain","echo","repack","expired","closed","afterCallbackFailure","afterThreadExit"];
 	const entries = stdout.split("\n").map(line => {
 		const fields = /^(\w+) (\d+)$/u.exec(line); assert.ok(fields, line);
 		return [fields[1], Number(fields[2])];
@@ -34,6 +35,7 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 	for(const file of [join(jdk,"bin/jlink"),join(kotlin,"lib/kotlin-compiler.jar"),join(seed,"org/jetbrains/kotlin/kotlin-stdlib/2.2.0")]) await access(file);
 	const work = await mkdtemp(join(tmpdir(),"jvm-tariff-")); t.after(() => rm(work, {recursive: true,force: true}));
 	const {LEAN_BRIDGE_JVM_TARIFF_KEEP: keep, LEAN_BRIDGE_JVM_TARIFF_REPLAY: replay} = env;
+	const incoming=env.LEAN_BRIDGE_JVM_TARIFF_REQUIRE_INCOMING==="1";
 	assert.ok(!(keep && replay));
 	const set = replay ? resolve(replay) : keep ? await mkdtemp(join(resolve(keep),"tariff-")) : join(work,"handoffs");
 	const routes = ["ordinary","reviewed"];
@@ -50,7 +52,7 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		if(!replay)
 		{
 			const src=join(work,route+"-src"),out=join(work,route+"-out");
-			await prepareStagedQuoteProject(src,route,"maven");
+			await prepareStagedQuoteProject(src,route,"maven",{incoming});
 			try
 			{
 				await buildCanonicalProject({projectRoot: src,outputRoot: out
@@ -85,8 +87,17 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		const component = jars.find(p=>basename(p)==="tariff-quotes-1.0.0.jar"); assert.ok(component);
 		for(const a of pkg.artifacts) assert.equal(await digest(join(dirname(component),basename(a.path))),a.sha256);
 		const metadata = async file => JSON.parse(await run("unzip",["-p",component,"META-INF/lean-bridge/component/"+file],build,env));
-		const identity = checkStagedQuoteIdentities(await metadata("model.json"),await metadata("binding-ir.json"),receipt.profiles.find(p=>p.id===pkg.profile),route);
+		const ir=await metadata("binding-ir.json");
+		const identity = checkStagedQuoteIdentities(await metadata("model.json"),ir,receipt.profiles.find(p=>p.id===pkg.profile),route,{incoming});
 		const manifest=JSON.parse(await run("unzip",["-p",component,"META-INF/lean-bridge/jvm/binding-manifest.json"],build,env));
+		if(incoming)
+		{
+			assert.ok(manifest.supportedFeatures.includes("canonical-resource-equality"));
+			const d=ir.declarations.find(f=>f.source.declaration==="Owned.visitQuote");
+			const input=ir.types.find(x=>x.id===d.parameters[1].type.id).callable.parameters[0];
+			assert.equal(input.ownership,"borrow");assert.equal(input.lifetime.scope,"call");
+			assert.equal(ir.types.find(x=>x.id===input.type.id).kind,"callback");
+		}
 		const inputs=manifest.ownedValues.hostInputRecords;
 		if(replay && inputs===undefined)
 		{
@@ -98,6 +109,7 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		const path = [classes,...jars].join(delimiter);
 		const srcs = [resolve("tests/fixtures/jvm-tasks/Observe.java"),...["Ownership.java","JavaTariff.java","KotlinTariff.kt"].map(f=>join(fixture,f))];
 		if(inputs) srcs.push(join(fixture,"JavaInput.java"),join(fixture,"KotlinInput.kt"));
+		if(incoming) srcs.push(join(fixture,"JavaIncoming.java"),join(fixture,"KotlinIncoming.kt"));
 		const sources = {};
 		for(const s of srcs)
 		{
@@ -117,12 +129,13 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		}
 		await rm(build,{recursive: true});
 		const results={}, compiled={};
-		const programs=inputs ? {...clients,javaInput: "JavaInput",kotlinInput: "KotlinInputKt"} : clients;
+		const programs={...clients,...inputs ? {javaInput: "JavaInput",kotlinInput: "KotlinInputKt"} : {}
+			, ...incoming ? {javaIncoming: "JavaIncoming",kotlinIncoming: "KotlinIncomingKt"} : {}};
 		for(const [lang,main] of Object.entries(programs))
 		{
 			const scratch=await mkdtemp(join(deployment,"runtime-"));
 			compiled[lang]=await digest(join(deployment,"classes",main+".class"));
-			results[lang]=parse(await run(java,["--enable-native-access=ALL-UNNAMED","-Xcheck:jni","-XX:ActiveProcessorCount=1","-Xmx192m","-Djava.io.tmpdir="+scratch,"-cp",["classes",...Object.keys(deployed)].join(delimiter),main],deployment,{...clean,TMPDIR: scratch}),lang.endsWith("Input"));
+			results[lang]=parse(await run(java,["--enable-native-access=ALL-UNNAMED","-Xcheck:jni","-XX:ActiveProcessorCount=1","-Xmx192m","-Djava.io.tmpdir="+scratch,"-cp",["classes",...Object.keys(deployed)].join(delimiter),main],deployment,{...clean,TMPDIR: scratch}),lang.endsWith("Input"),lang.endsWith("Incoming"));
 		}
 		await writeFile(join(output,route+".json"),canonicalJson({route,receiptSha256: result.receiptSha256,archives: pkg.artifacts,...identity,modules,sources,deployed,compiled,results}));
 		t.diagnostic(route+": "+result.receiptSha256);

@@ -555,6 +555,15 @@ Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversio
 
 ### Structured callback values
 
+When a callback receives a Lean function directly, use it for the duration of
+that callback. In the Tariff example,
+`Api.visitQuote(40, (quote, n) -> quote.invoke(n), 2)` returns 42. To keep
+the function, call `quote.retain()` before the callback returns and close the
+returned lease when finished. In packages that advertise canonical resource
+equality, `quote.sameIdentity(lease)` checks the live Lean identity. The
+original borrow cannot be called or compared after the callback returns.
+See the [Java and Kotlin checks](../evidence/jvm-function-fields-20261126.md#a-function-passed-into-a-callback).
+
 For an owned record with a leased function field, call `retain()` before
 closing the original if you need an independent lifetime. In the
 [installed Tariff client](../evidence/jvm-function-fields-20261126.md),

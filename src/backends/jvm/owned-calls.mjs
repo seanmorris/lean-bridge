@@ -25,7 +25,7 @@ export const generateOwnedJvmCalls = (ir, options = {}) => {
 	const kotlin = generateOwnedKotlinValues(ir, options), model = { ...kotlin.model, kotlin }, { c } = model;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
 	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined) || c.functions.some(fn => fn.receiver === 0);
-	const canonicalEquality = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
+	const {canonicalEquality} = model;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const cache = new Map();
 	const type = (id, k) => {

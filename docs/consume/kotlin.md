@@ -491,6 +491,14 @@ The [Java lifetime and conversion rules](java.md#callbacks-and-returned-lean-fun
 
 ### Structured callback values
 
+When Lean passes a function directly to your callback, call it inside the
+lambda: `Api.visitQuote(40, { quote, n -> quote.invoke(n) }, 2)` returns 42
+in the Tariff example. To call it later, keep the value returned by
+`quote.retain()` and close that lease when finished. In packages with
+canonical resource equality, `quote.sameIdentity(lease)` checks the live Lean
+identity; the original borrow expires even if the lease remains open.
+See the [Java and Kotlin checks](../evidence/jvm-function-fields-20261126.md#a-function-passed-into-a-callback).
+
 For an owned record with a leased function field, use
 `tariff.quote.retain().use { kept -> … }` when the function must outlive the
 original handle. The [installed Kotlin Tariff client](../evidence/jvm-function-fields-20261126.md)

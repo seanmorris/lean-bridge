@@ -39,6 +39,7 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 	const callbackReplies = Boolean(c.hostArgument) && c.callbacks.some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.some(fn => fn.receiver === 0);
 	const wholeOwners = anchors || receivers;
+	const canonicalEquality = anchors || c.callbackArgumentViews === true;
 	const fail = message => { throw new TypeError("Invalid owned JVM values: " + message); };
 	if(keywords.has(c.prefix)) fail("Java package name is a reserved word");
 	const occupied = new Set(reserved), names = new Map();
@@ -192,12 +193,12 @@ ${access(record)}${jvmGraphValueMethods}
 public final class ${name} implements AutoCloseable, _OwnedValue {
     final _OwnedRuntime.Handle handle;
 ${node.ownerType ? "    private final _OwnedBindings bindings;\n" : ""}\
-    private final java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain;${anchors ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
+    private final java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain;${canonicalEquality ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
 ${fn ? `${fn.invocations.map(invocation => `    @FunctionalInterface interface Invocation${invocation.suffix} { ${returnType} invoke(${invocation.parameters.map((type, index) => `${type} arg${index}`).join(", ")}); }\n    private final Invocation${invocation.suffix} invocation${invocation.suffix};\n`).join("")}${wholeOwners && fn.anchor === undefined ? `    @FunctionalInterface interface RawInvocation { ${fn.returnType} invoke(${fn.invocations.at(-1).parameters.map((type, index) => `${type} arg${index}`).join(", ")}); }\n    private final RawInvocation rawInvocation;\n` : ""}\
-` : ""}    ${name}(${node.ownerType ? "_OwnedBindings bindings, " : ""}_OwnedRuntime.Handle handle, java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain${fn ? fn.invocations.map(invocation => `, Invocation${invocation.suffix} invocation${invocation.suffix}`).join("") : ""}${anchors ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}${wholeOwners && fn && fn.anchor === undefined ? ", RawInvocation rawInvocation" : ""}) {
+` : ""}    ${name}(${node.ownerType ? "_OwnedBindings bindings, " : ""}_OwnedRuntime.Handle handle, java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain${fn ? fn.invocations.map(invocation => `, Invocation${invocation.suffix} invocation${invocation.suffix}`).join("") : ""}${canonicalEquality ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}${wholeOwners && fn && fn.anchor === undefined ? ", RawInvocation rawInvocation" : ""}) {
 ${node.ownerType ? "        this.bindings = java.util.Objects.requireNonNull(bindings);\n" : ""}\
         this.handle = java.util.Objects.requireNonNull(handle);
-        this.retain = java.util.Objects.requireNonNull(retain);${fn ? fn.invocations.map(invocation => `\n        this.invocation${invocation.suffix} = java.util.Objects.requireNonNull(invocation${invocation.suffix});`).join("") : ""}${anchors ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}${wholeOwners && fn && fn.anchor === undefined ? "\n        this.rawInvocation = java.util.Objects.requireNonNull(rawInvocation);" : ""}
+        this.retain = java.util.Objects.requireNonNull(retain);${fn ? fn.invocations.map(invocation => `\n        this.invocation${invocation.suffix} = java.util.Objects.requireNonNull(invocation${invocation.suffix});`).join("") : ""}${canonicalEquality ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}${wholeOwners && fn && fn.anchor === undefined ? "\n        this.rawInvocation = java.util.Objects.requireNonNull(rawInvocation);" : ""}
     }
     public boolean isClosed() { return handle.isClosed(); }
     @Override public void close() { handle.close(); }
@@ -205,7 +206,7 @@ ${node.ownerType ? "        this.bindings = java.util.Objects.requireNonNull(bin
         try { return retain.apply(handle); }
         finally { java.lang.ref.Reference.reachabilityFence(this); }
     }
-${anchors ? `    public boolean sameIdentity(${name} other) {
+${canonicalEquality ? `    public boolean sameIdentity(${name} other) {
         java.util.Objects.requireNonNull(other);
         try { return equal.test(handle, other.handle); }
         finally { java.lang.ref.Reference.reachabilityFence(this); java.lang.ref.Reference.reachabilityFence(other); }
@@ -239,11 +240,11 @@ public interface ${fn.delegateType} {
 	const publicFiles = Object.keys(files);
 	add("_OwnedValue", "interface _OwnedValue { }\n");
 	let equality = jvmGraphEquality(records, namespace).replace("if (value == null || value instanceof Unit", "if (value instanceof _OwnedValue || value == null || value instanceof Unit");
-	if(anchors) equality = equality.replace("else equal &= java.util.Objects.equals(x.value(), y.value());", "else if (x.value() instanceof _OwnedValue resource) equal &= resource.equals(y.value());\n            else equal &= java.util.Objects.equals(x.value(), y.value());");
+	if(canonicalEquality) equality = equality.replace("else equal &= java.util.Objects.equals(x.value(), y.value());", "else if (x.value() instanceof _OwnedValue resource) equal &= resource.equals(y.value());\n            else equal &= java.util.Objects.equals(x.value(), y.value());");
 	add("GraphValues", equality);
 	if(Object.values(files).reduce((sum, source) => sum + source.length, 0) > 4 * 1024 * 1024) fail("generated Java declarations exceed 4 MiB");
 	return { ...layout, types, functions, callbacks, aliases, records, files
-		, wholeOwners
+		, wholeOwners, canonicalEquality
 		, publicFiles
 		, internalFiles: [`${prefix}/GraphValues.java`, `${prefix}/_OwnedValue.java`] };
 };
