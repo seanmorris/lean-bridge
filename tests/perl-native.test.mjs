@@ -32,6 +32,42 @@ const floor = process.env.LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR ?? "2.38";
 const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
 const errorText = error => `${error.message}\n${JSON.stringify(error.details ?? {})}`;
 
+test("the CPAN trace permits only the owned loader's authenticated XS seal", async t => {
+	const packageRoot=await mkdtemp(join(tmpdir(),"owned-loader-trace-"));
+	t.after(()=>rm(packageRoot,{recursive: true,force: true}));
+	const installRoot=join(packageRoot,"installed"), trace=()=>traceCpanInstall({packageRoot,installRoot});
+	const rel="LeanBridge/Sample", loader=rel+".pm", asset=rel+"/native/sample.so";
+	const marker="__LEAN_BRIDGE_OWNED_XS_SHA256__", source="our $seal='"+marker+"';\n1;\n";
+	const xs=Buffer.from([1,3,5,0,255]), digest=sha256(xs), sealed=source.replace(marker,digest);
+	const manifest={module: "LeanBridge::Sample",ownedValues: {schemaVersion: 1}
+		, prebuilt: [{path: "prebuilt/sample.so"}]
+		, files: {["lib/"+loader]: sha256(source),["lib/"+asset]: sha256("native"),"prebuilt/sample.so": digest}
+		, runtimeIdentity: "sample"};
+	const original=s=>saveLakeFile(packageRoot,"lib/"+loader,s);
+	const install=(p,s)=>saveLakeFile(installRoot,p,s);
+	const setLoader=s=>install(loader,s);
+	const setManifest=()=>saveLakeFile(packageRoot,"lean-bridge-package.json",JSON.stringify(manifest));
+	await setManifest();await original(source);await setLoader(sealed);await install(asset,"native");
+	await install("auto/"+rel+"/Sample.so",xs);
+	await install(rel+"/install-receipt.json",JSON.stringify({operation: "prebuilt-xs",outputSha256: digest}));
+	const receipt=await trace();
+	assert.deepEqual(receipt.files[0],{path: loader,sha256: sha256(sealed),origin: "sealed-xs-loader",sourceSha256: sha256(source)});
+	for(const altered of [source,sealed+" ",source.replace(marker,"0".repeat(64))])
+	{
+		await setLoader(altered);
+		await assert.rejects(trace,/installed owned Perl loader differs/u);
+	}
+	await setLoader(sealed);await original(source+"\n");
+	await assert.rejects(trace,/untraceable packaged Perl loader/u);
+	const duplicate=source+marker;
+	await original(duplicate);manifest.files["lib/"+loader]=sha256(duplicate);await setManifest();
+	await assert.rejects(trace,/invalid owned Perl loader seal/u);
+	await original(source);manifest.files["lib/"+loader]=sha256(source);await setManifest();
+	await install(asset,"changed");await assert.rejects(trace,/untraceable installed native payload/u);
+	await install(asset,"native");await install("auto/"+rel+"/Sample.so","different");
+	await assert.rejects(trace,/installed XS differs/u);
+});
+
 const metadataProject = async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-metadata-"));
 	t.after(() => rm(working, { recursive: true, force: true }));

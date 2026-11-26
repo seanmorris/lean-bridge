@@ -199,8 +199,12 @@ and [reviewed CPAN package](perl-host-input-records-20261126/reviewed.json)
 also passed all six cases after offline installation and relocation. Each
 of the eight clients used its matching prebuilt XS, with no author tools
 on its search path. Both routes used the same runtime and different
-component archives. Run `npm run test:perl-function-fields` with the four
-interpreters to reproduce the installs.
+component archives. A [separate replay](perl-host-input-records-20261126/reviewed-xs-536-threaded.json)
+installed the reviewed archive both ways on threaded Perl 5.36.3. The
+prebuilt and locally compiled XS binaries had different hashes; both passed
+the same six cases and loaded the unchanged native payload. This replay
+covers one interpreter and one route, not all eight. Run
+`npm run test:perl-function-fields` with the four interpreters for both routes.
 
 ## Native PHP callers
 

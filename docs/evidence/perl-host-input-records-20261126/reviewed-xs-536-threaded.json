@@ -1,0 +1,73 @@
+{
+  "receiptSha256": "83bef73afa76d148fb9ad4d944669bfdb7396110ebcdd4b77745c40230e125a6",
+  "prebuilt": {
+    "after": 1,
+    "arch": "x86_64-linux-thread-multi",
+    "baseline": 1,
+    "held": 9,
+    "installReceiptSha256": "4558f0b377ddc7b898b6b34ee91916a6a5f0256b279711c4cba947e79f760473",
+    "recovered": 42,
+    "shutdown": 0,
+    "stageCalls": 1,
+    "staged": 44,
+    "staleVisits": 0,
+    "threads": "threaded",
+    "version": "5.36.3",
+    "installXs": {
+      "mode": "prebuilt-only",
+      "operation": "prebuilt-xs",
+      "outputSha256": "66710211856c536ef5c33bfd1b5e695602630ad51d433c4d2da2481a8c444c00"
+    },
+    "hostInputs": {
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 4,
+      "hostCalls": 3,
+      "reentries": 1,
+      "settled": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "built": {
+    "after": 1,
+    "arch": "x86_64-linux-thread-multi",
+    "baseline": 1,
+    "held": 9,
+    "installReceiptSha256": "3a30aa86b9d34cf70c11dcd9514dae9a768bb584066b3adf566a0d14f20229cf",
+    "recovered": 42,
+    "shutdown": 0,
+    "stageCalls": 1,
+    "staged": 44,
+    "staleVisits": 0,
+    "threads": "threaded",
+    "version": "5.36.3",
+    "installXs": {
+      "mode": "build-xs",
+      "operation": "generated-xs-only",
+      "outputSha256": "cee83e8dc1397985d202578a1c7c5e13d9d7351fbe40c9a371f68ce8e0198ba8",
+      "sourceSha256": "9c72237777e4449d615fff1d7b8a1115d6bcd75cc672663a6bc9a558d4784b54",
+      "generatedCSha256": "330fa6cd3145fa2b5084c5428c9b207fc3733ad7cfcd9d65a743a32b0dce3907"
+    },
+    "hostInputs": {
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 4,
+      "hostCalls": 3,
+      "reentries": 1,
+      "settled": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

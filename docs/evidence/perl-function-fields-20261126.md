@@ -26,3 +26,11 @@ array of the four interpreter paths. To retain the handoffs, point
 `LEAN_BRIDGE_PERL_TARIFF_KEEP` at an existing directory. To repeat just the
 consumer checks, set `LEAN_BRIDGE_PERL_TARIFF_REPLAY` to the saved directory
 containing `ordinary/` and `reviewed/` instead.
+
+New releases that accept caller-provided functions in records run each
+interpreter with prebuilt XS and with locally compiled XS. In both modes
+the consumer uses the same prepared Lean libraries. The installer traces
+those libraries and the loaded XS binary to the package manifest and the
+installation receipt. To repeat only the local compilation on a retained
+handoff, also set `LEAN_BRIDGE_PERL_TARIFF_XS_ONLY=1`; those observations
+are written to separate `*.generated-xs.json` files.
