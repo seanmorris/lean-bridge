@@ -90,6 +90,53 @@ are in addition to the installed examples above:
 | 1222 | IO, EIO and named failure contracts at the signature (102 cells). | Receiving a typed worker error does not establish how an immediate call returns an `Except`, preserves the original host exception, or retires a broken runtime. |
 | 1223 | Task, cancellation, synchronous iterator and asynchronous iterator at the signature (136 cells). | A host `foreach` or polling wrapper around an asynchronous Lean pull does not qualify a synchronous Lean iterator. |
 
+### Reading the 680 identity placements
+
+The inventory has four value kinds and five positions. Each table entry below
+counts up to **34** instances (17 profiles × ordinary and reviewed author
+routes). These numbers are the recorded `installedExecution: passed` entries
+in [contract 0.109.0](../type-surface.v1.json), **not** the total established
+by this branch's newer package reports. Zero means the inventory contains no
+passing entry for that position; it doesn't mean the implementation failed.
+
+| Value crossing the boundary | Export parameter | Export result | Record field | Callback parameter | Callback result |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Lean resource | 1 | 1 | 0 | 2 | 2 |
+| Host-provided function | 34 | 0 | 0 | 0 | 0 |
+| Host-owned object | 0 | 0 | 0 | 0 | 0 |
+| Lean-produced function | 0 | 34 | 0 | 0 | 0 |
+
+Of those **74** entries, the resource parameter/result are Perl's ordinary
+route. The resource callback argument/reply are PHP-Wasm on both routes.
+The 34 host-provided-function passes are for handing a callback to a Lean
+export, not for a callback receiving another host function.
+
+Match the newer reports against the particular cell they exercise:
+
+- For the four **field** cells, start separately with
+  [Lean resources in Claim](owned-checked-record-promotion-20261026-aligned.md),
+  [application functions in TariffInput](host-callback-input-records-20261126.md),
+  the application-object records below, and the quoted Lean functions below.
+  All four have examples on both routes across the 17 profiles. Passing a
+  record through a callback does not turn its field into a direct callback
+  parameter or reply.
+- For a **Lean function as a callback result**, see the direct staged-reply
+  installs below (17 profiles on both routes). For a **Lean function as a
+  callback parameter**, use the [incoming-function releases](npm-incoming-functions-20261126.md)
+  instead. An application supplying its own callable as the *reply* is a
+  different cell. For example, the [CPython staged-reply client](python-staged-callback-results-20261125.md)
+  returns a Lean function and rejects a Python lambda.
+- For **host-owned objects**, use the installed applications at the top of
+  this page. Match the object's actual position in the Lean signature to the
+  operation the downstream client calls. A closure capturing an object, a
+  callback receiving it, and a callback returning it are not interchangeable.
+- The [one-call restriction](native-once-callback-20261126.md) is a behavior
+  exercised across all 17 profiles. It adds no new position by itself.
+
+The remaining review has two parts: attach the installed evidence on each
+specific route, then identify the places that actually need a new package or
+application case. Do not subtract 74 from 680 to estimate the tests left.
+
 For **resource fields**, start with the [hosted owned-record acceptance](owned-checked-record-promotion-20261026-aligned.md),
 not another build of the same fixture. The [actual Lean record](../../tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean)
 has `Claim.holder : Ticket`. Across 17 profiles the full ordinary and reviewed
