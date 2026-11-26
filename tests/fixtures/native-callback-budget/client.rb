@@ -38,7 +38,7 @@ check(b.await == 42 && a.await == 4 && calls == [5, 2])
 original = RuntimeError.new("callback-already-invoked")
 failed = 0
 boom = ->(_) { failed += 1; raise original }
-denied("Budget.retry") { API.retry(1, boom).await }
+denied("Budget.retry") { API.retry_(1, boom).await }
 check(failed == 1)
 check(caught(RuntimeError) { API.single(1, boom).await }.equal?(original))
 earlier = denied("Racing.duringStart") { API.during_start(1, f).await }
