@@ -154,3 +154,19 @@ From both ordinary Lean and reviewed Binding IR, installed Java and Kotlin consu
 | ordinary | workshop-peer | `14c3485bd9b327210c62c6a50254df002019f92969b8b3e6c6d4441b6c50f2a4` | `1ffefc69aa4e6849984cb942c54dfaf0aefe4ed9f6b69119eed085c0a8d265c0` |
 | reviewed | workshop | `3d3054bbd547f7713506a720f17662e21169a67121799f6e747f23d10625281b` | `788fe7be97503fbe10e6bb86de1b13a991420d42ff57053c420b8022d98408f5` |
 | reviewed | workshop-peer | `a9bf81201aba09c13d5632cef707c98c88f6f25eb7242d50515c3ea231c796e6` | `63589ef189665e84894c62f554f2c0a88103dc112de97b6614534dedf98b3424` |
+
+To run the stricter last-owner check, use `npm run test:jvm-host-packages`
+with the offline Maven seed and JVM toolchains above. Set
+`LEAN_BRIDGE_JVM_HOST_ERROR_KEEP` to an existing empty directory to retain
+the four handoffs. To repeat just the install and consumer phases, set
+`LEAN_BRIDGE_JVM_HOST_ERROR_REPLAY` to the resulting `handoffs-*` directory
+instead. Set `LEAN_BRIDGE_JVM_HOST_ERROR_OUTPUT` for per-route JSON with the
+JAR/POM digests, binding and compiler identities, client hashes and outputs.
+
+The [Java](../../tests/fixtures/jvm-host-meter/ErrorOwner.java) and
+[Kotlin](../../tests/fixtures/jvm-host-meter/KotlinErrorOwner.kt) clients
+drop the application's meter and close the producing binding. The exception
+must then keep the meter alive on its own until another package reads and
+updates it. After dropping the exception, the weak reference must clear
+while the other binding is still usable. The earlier results above establish
+identity, not sole ownership.

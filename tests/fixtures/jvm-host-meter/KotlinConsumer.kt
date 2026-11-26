@@ -23,5 +23,8 @@ fun main(args: Array<String>) {
         api.update(meter, 34)
         check(api.identity(meter) === meter && meter.level == 34L)
     }
-    println("Kotlin: typed binding, independent peers, scoped use")
+    Api.bindHosts(Consumer.Box::class).use { a ->
+        Peer.bindHosts(Consumer.Box::class).use { b -> verifyKotlinErrors(a, b) }
+    }
+    println("Kotlin: last-owner error updated to 42 and collected; validation, original and mapped errors, retirement")
 }

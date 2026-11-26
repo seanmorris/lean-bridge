@@ -55,8 +55,8 @@ export const runJvmHostConsumers = async (root, packs, workers = false) => {
 		}
 		const classes = join(proj, "classes"); await mkdir(classes);
 		const workerFixture=resolve("tests/fixtures/jvm-host-workers");
-		const javaFiles=workers?[join(workerFixture,"Installed.java"),join(workerFixture,"WorkerTamper.java")]:[join(fixture, "Consumer.java"), join(fixture, "LeasePayloads.java")];
-		const kotlinFiles=workers?[join(workerFixture,"InstalledKtClient.kt")]:[join(fixture, "KotlinConsumer.kt"), join(fixture, "KotlinLeasePayloads.kt")];
+		const javaFiles=workers?[join(workerFixture,"Installed.java"),join(workerFixture,"WorkerTamper.java")]:["Consumer.java","LeasePayloads.java","ErrorOwner.java"].map(f=>join(fixture,f));
+		const kotlinFiles=workers?[join(workerFixture,"InstalledKtClient.kt")]:["KotlinConsumer.kt","KotlinLeasePayloads.kt","KotlinErrorOwner.kt"].map(f=>join(fixture,f));
 		await run(javac, ["--release", "22", "-proc:none", "-cp", paths, "-d", classes, ...javaFiles], proj, env);
 		const cpArg = classes + delimiter + paths;
 		await run(java, ["-XX:ActiveProcessorCount=1", "-Xmx384m", "-cp", join(sdk, "lib/*"), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-kotlin-home", sdk, "-jdk-home", env.JAVA_HOME, "-no-stdlib", "-no-reflect", "-Werror", "-jvm-target", "22", "-classpath", cpArg, "-d", classes, ...kotlinFiles], proj, env);
@@ -69,7 +69,9 @@ export const runJvmHostConsumers = async (root, packs, workers = false) => {
 				const launch=workers?runWorkerJava:run;
 				const line = await launch(java, ["-XX:ActiveProcessorCount=1", "-Xmx128m", "-Xcheck:jni", "--enable-native-access=ALL-UNNAMED", "-Djava.io.tmpdir=" + isolated, "-cp", cpArg, main, ...args], isolated, { LANG: "C.UTF-8", PATH: "/no-author-tools", LEAN_NUM_THREADS: "1" }, 180000);
 				if(workers) assert.equal(line,main==="Installed"?"Java: installed class workers, backpressure, exceptions and shutdown":"Kotlin: installed suspend, Flow and cancellation across bindings");
-				else assert.match(line, main === "Consumer" ? /^Java: .*retirement$/u : /^Kotlin: .*scoped use$/u);
+				else assert.equal(line, main === "Consumer"
+					? "Java: last-owner nested error updated to 42 and collected; independent peers, repeated classloader, virtual-thread reentry, original and mapped errors, retirement"
+					: "Kotlin: last-owner error updated to 42 and collected; validation, original and mapped errors, retirement");
 				answers.push(order + ": " + line);
 			} finally
 			{ await rm(isolated, { recursive: true, force: true }); }

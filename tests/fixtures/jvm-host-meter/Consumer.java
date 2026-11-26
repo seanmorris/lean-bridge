@@ -33,6 +33,7 @@ public final class Consumer {
         var b = org.leanbridge.workshop_peer.Api.bindHosts(Box.class);
         final var api = a == null ? Api.bindHosts(Box.class) : a;
         try (api; b) {
+            ErrorOwner.verify(b);
             Box x = api.make(21), y = b.make(22);
             check(x != y && x.equals(y) && b.identity(x) == x && api.identity(y) == y);
             api.keep(x); check(b.identity(api.held()) == x);
@@ -49,12 +50,16 @@ public final class Consumer {
             };
             check(api.read(x) == 12);
             var original = new Exception("host read");
-            x.hook = () -> { throw original; };
-            try { b.read(x); throw new AssertionError(); } catch (Exception seen) { check(seen == original); }
-            try { api.mapped(x); throw new AssertionError(); }
+            int[] nestedReads = {0};
+            x.hook = () -> { ++nestedReads[0]; throw original; };
+            var indirect = api.make(5);
+            indirect.hook = () -> b.read(x);
+            try { api.read(indirect); throw new AssertionError(); } catch (Exception seen) { check(seen == original); }
+            try { api.mapped(indirect); throw new AssertionError(); }
             catch (org.leanbridge.workshop.MappedError seen) { check(seen.payload().equals("host read failed")); }
-            try { api.replaced(x); throw new AssertionError(); }
+            try { api.replaced(indirect); throw new AssertionError(); }
             catch (org.leanbridge.workshop.LeanIOException seen) { check(seen.getCause().getMessage().contains("replacement")); }
+            check(nestedReads[0] == 3);
             x.hook = null;
             check(api.verdict(true).equals(new Result.Ok<>(42L)));
             check(api.verdict(false).equals(new Result.Err<>("ordinary refusal")));
@@ -100,19 +105,20 @@ public final class Consumer {
         try (var left = Api.bindHosts(Box.class); var right = org.leanbridge.workshop_peer.Api.bindHosts(Box.class)) {
             Box inner = right.make(1), outer = left.make(2);
             LinkageError fatal = new LinkageError("injected peer fatal");
+            LinkageError[] caught = {null};
             int[] reads = {0};
             inner.hook = () -> { throw fatal; };
             outer.onSet = () -> {
                 try { right.mapped(inner); throw new AssertionError("Lean mapped a terminal JVM error"); }
-                catch (LinkageError seen) { check(seen == fatal); }
+                catch (LinkageError seen) { caught[0] = seen; check(seen == fatal); }
                 return 0;
             };
             outer.onGet = () -> ++reads[0];
             try { left.update(outer, 23); throw new AssertionError("returned after peer retirement"); }
-            catch (IllegalStateException retired) { check(reads[0] == 0); }
+            catch (IllegalStateException retired) { check(caught[0] == fatal && reads[0] == 0); }
             try { right.read(inner); throw new AssertionError("peer still usable"); }
             catch (IllegalStateException retired) { check(reads[0] == 0); }
         }
-        System.out.println("Java: independent peers, repeated classloader, virtual-thread reentry, original and mapped errors, retirement");
+        System.out.println("Java: last-owner nested error updated to 42 and collected; independent peers, repeated classloader, virtual-thread reentry, original and mapped errors, retirement");
     }
 }
