@@ -135,6 +135,27 @@ These four combinations bring #1222 to **66/102**: 34 direct IO, 16 typed
 EIO and 16 named errors. Nine profiles still need both typed contracts
 verified on both routes.
 
+### Native PHP: a caught terminal failure disables both Composer packages
+
+The [ordinary](php-native-error-policy-20261126/ordinary.json) and
+[reviewed](php-native-error-policy-20261126/reviewed.json) records match the
+original two Composer receipts for each route. Each pair ran in both load
+orders on PHP 8.2.35 and 8.5.10. The throwing package's interface declares a
+leased application meter as the error payload. After closing that binding and
+dropping the original meter, the other package updated it from 23 to 42
+through the exception. Releasing the exception ran the destructor once.
+
+In the [fault test](../../tests/fixtures/php-host-members/registry-limit.php),
+invalid input, the original nested PHP exception, a mapped Lean failure,
+and a replacement IO error were recoverable. Exhausting the reference
+counter inside a nested constructor was terminal. Even after the host caught
+the overflow and the test restored the counter, neither package could enter a
+member again. Each process ended with zero reference tokens.
+
+This qualifies native PHP separately from PHP-Wasm. The installed count is
+**70/102**: 34 direct IO, 18 typed EIO and 18 named errors. The eight remaining
+profiles are C11, C++, Rust, CPython, Ruby, Perl, Java and Kotlin.
+
 ## Which immediate errors keep a live resource?
 
 These checks use a Lean-owned resource as the payload of a synchronous
