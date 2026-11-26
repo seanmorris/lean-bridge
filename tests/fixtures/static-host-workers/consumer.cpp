@@ -42,9 +42,12 @@ int main(){
     A a;B b;auto x=a.make(42);auto weak=std::weak_ptr<Meter>(x);
     assert(use(a,b,x).get()==x);
     auto dial=std::make_shared<Dial>();unsigned calls=0;
-    auto hand=a.handoff(x,[&](Box v){assert(v==x);++calls;return dial;},
-        [&](std::shared_ptr<Dial> d){assert(d==dial);++calls;return d->read();});
+    auto same_owner=[](const auto& p,const auto& q){return p==q && !p.owner_before(q) && !q.owner_before(p);};
+    assert(same_owner(a.identity(x),x));
+    auto hand=a.handoff(x,[&](Box v){assert(same_owner(v,x));++calls;return dial;},
+        [&](std::shared_ptr<Dial> d){assert(same_owner(d,dial));++calls;return d->read();});
     assert(hand.get()==97 && calls==2);
+    puts("object positions: immediate Box identity; callback received Box and returned the original Dial");
     assert(a.signed_echo(-121).get()==-121);
     boost::multiprecision::cpp_int big=-((boost::multiprecision::cpp_int(1)<<384)+3);
     assert(std::get<sv::Ok<boost::multiprecision::cpp_int>>(a.large_result(big).get()).value==big);

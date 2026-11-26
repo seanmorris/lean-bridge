@@ -44,6 +44,10 @@ static workshop_status measure_dial(void *context,workshop_dial dial,uint32_t *o
 }
 static void worker_values(workshop_binding a,workshop_box box){
     uint32_t reading=137;workshop_diagnostic d={0};exchange x={.box=box};
+    workshop_box immediate={0};bool same=false;
+    assert(workshop_identity(a,box,&immediate,&d)==workshop_OK);
+    assert(workshop_box_same(box,immediate,&same)==workshop_OK && same && payload(box)==payload(immediate));
+    assert(workshop_box_drop(&immediate)==workshop_OK);
     assert(workshop_dial_adopt(&reading,NULL,&x.dial)==workshop_OK);
     workshop_callback_box_to_dial lookup={0};workshop_callback_dial_to_uint32 measure={0};
     assert(workshop_callback_box_to_dial_new(lookup_dial,&x,NULL,&lookup)==workshop_OK);
@@ -51,6 +55,7 @@ static void worker_values(workshop_binding a,workshop_box box){
     workshop_handoff_handle h={0};assert(workshop_handoff_start(a,box,lookup,measure,&h,&d)==workshop_OK);
     assert(workshop_callback_box_to_dial_drop(&lookup)==workshop_OK && workshop_callback_dial_to_uint32_drop(&measure)==workshop_OK);
     WAIT(workshop,handoff,h);uint32_t n=0;assert(workshop_handoff_take(&h,&n,&d)==workshop_OK && n==137 && x.visits==2);
+    puts("object positions: immediate Box identity; callback received Box and returned the original Dial");
     int16_t signed_value=0;workshop_signed_echo_handle s={0};assert(workshop_signed_echo_start(a,-32760,&s,&d)==workshop_OK);
     WAIT(workshop,signed_echo,s);assert(workshop_signed_echo_take(&s,&signed_value,&d)==workshop_OK && signed_value==-32760);
     uint64_t words[7]={33,0,0,0,0,0,1};workshop_integer_view v={.data=words,.len=7,.negative=true};

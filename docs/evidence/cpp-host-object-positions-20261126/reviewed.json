@@ -1,0 +1,54 @@
+{
+  "consumerSha256": "e5ca4cbaa37b9c1cb478a0ba31259bf161122eeb414903c79a61b4eb94bb1f90",
+  "executions": [
+    {
+      "linkOrder": [
+        "workshop",
+        "peer"
+      ],
+      "linker": "pkg-config",
+      "observation": "object positions: immediate Box identity; callback received Box and returned the original Dial"
+    },
+    {
+      "linkOrder": [
+        "workshop",
+        "peer"
+      ],
+      "linker": "CMake",
+      "observation": "object positions: immediate Box identity; callback received Box and returned the original Dial"
+    },
+    {
+      "linkOrder": [
+        "peer",
+        "workshop"
+      ],
+      "linker": "pkg-config",
+      "observation": "object positions: immediate Box identity; callback received Box and returned the original Dial"
+    },
+    {
+      "linkOrder": [
+        "peer",
+        "workshop"
+      ],
+      "linker": "CMake",
+      "observation": "object positions: immediate Box identity; callback received Box and returned the original Dial"
+    }
+  ],
+  "releases": [
+    {
+      "archive": "b5ac152f55b04ff8f8add12d15001289be7f7727a52923d566979ee225224189",
+      "interface": "2f6e64687ebcc36f28e4d2a2d7f155a2795f4cba7f822e93ff832bc9d1e72812",
+      "receipt": "8376880c22d8a316b06029ba92c5ba333f7084ee6a6d758bf8b476471ab3dce2",
+      "reviewedSourceSha256": null,
+      "route": "peer"
+    },
+    {
+      "archive": "e5c7a80e42705c7299cd1455ca3a2b21fa74a331f3ab0899c7926d276ee8ff8c",
+      "interface": "32e7476618891e5ad9c60227976f89e766ca7d8c7d0a38474d2f847ac8de0b29",
+      "receipt": "3b55da7d2945d34d3e8e7c9946a029e15dbcf5c534bae25a52dc6182e590c8f5",
+      "reviewedSourceSha256": "066d9f0e40a4c179109676f5c3f11146dd4d3a918b44a212f21f3590cacce675",
+      "route": "reviewed"
+    }
+  ],
+  "route": "reviewed"
+}

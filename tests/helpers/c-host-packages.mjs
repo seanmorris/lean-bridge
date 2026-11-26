@@ -17,6 +17,8 @@ const workers=process.env.LEAN_BRIDGE_C_HOST_WORKERS==="1";
 const variable="LEAN_BRIDGE_"+target.toUpperCase()+"_HOST_"+(workers?"WORKER_":""),replay=process.env[variable+"REPLAY"];
 const success=workers?(cpp?/installed C\+\+ bound futures and streams/u:/installed C workers: identity, callbacks, errors and cleanup/u):cpp?/C\+\+ shared identity and original exception/u:/public C owners: exactly one destruction/u;
 const errorOutput=process.env[variable+"ERROR_OUTPUT"];
+const objectOutput=workers && process.env[variable+"OBJECT_OUTPUT"];
+const objectLine="object positions: immediate Box identity; callback received Box and returned the original Dial";
 const policyLine=cpp?"error policy: sole owner 23->42; nested calls 1; destructions 4":"error policy: sole owner 23->42; nested calls 1,1; destructions 3";
 test(label+(replay?" retained host archives replay without Lean":" offline CLI publishes ordinary and reviewed packages sharing one owner"),{timeout: 3600000},async t=>{
 	const env=process.env,root=await mkdtemp(join(tmpdir(),"c-host-publisher-"));
@@ -148,7 +150,11 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 			await loaded(bin);
 			const observe=async (file,linker)=>{
 				const stdout=await run(file,[],client,isolated);assert.match(stdout,success);
-				if(!workers)
+				if(workers)
+				{
+					const rows=stdout.split("\n").filter(row=>row.startsWith("object positions:"));
+					assert.deepEqual(rows,[objectLine]);executions.push({linker,linkOrder: [first,second],observation: rows[0]});
+				} else
 				{
 					const rows=stdout.split("\n").filter(row=>row.startsWith("error policy:"));
 					assert.deepEqual(rows,[policyLine]);
@@ -163,11 +169,14 @@ test(label+(replay?" retained host archives replay without Lean":" offline CLI p
 			await loaded(join(build,"client"));
 			await observe(join(build,"client"),"CMake");
 		}
-		if(!workers && errorOutput)
+		const output=workers?objectOutput:errorOutput;
+		if(output)
 		{
 			assert.equal(executions.length,4);
-			await mkdir(errorOutput,{recursive: true});
-			await writeFile(join(errorOutput,route+".json"),canonicalJson({route
+			await mkdir(output,{recursive: true});
+			const support=workers && !cpp?{syncOwnerSha256: sha256(await readFile(join(client,"sync-owners.c")))}:{};
+			await writeFile(join(output,route+".json"),canonicalJson({route
+				, ...support
 				, releases: reports.filter(r=>r.route===route || r.route==="peer")
 				, consumerSha256: sha256(await readFile(join(client,main))),executions}));
 		}

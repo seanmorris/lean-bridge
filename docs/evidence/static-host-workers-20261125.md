@@ -45,8 +45,30 @@ The [C consumer](../../tests/fixtures/static-host-workers/consumer.c) checks the
 
 Run `npm run test:c-host-worker-packages` with a C11 compiler, CMake, pkg-config and the pinned Lean toolchain. Set `LEAN_BRIDGE_C_HOST_WORKER_HANDOFFS` to an existing directory to keep the three releases. To repeat just the consumer checks, set `LEAN_BRIDGE_C_HOST_WORKER_REPLAY` to the resulting `c-host-releases-*` directory. Consumers do not need the Lean toolchain.
 
+### C11 object arguments and replies
+
+Both the [ordinary](c-host-object-positions-20261126/ordinary.json) and
+[reviewed](c-host-object-positions-20261126/reviewed.json) Workshop archives
+returned the original Box from the immediate identity call. The client checked
+the public identity comparison **and** the application payload address. A
+callback received that Box and returned the separate Dial; a second callback
+checked the Dial's identity before reading it. Each release passed through
+pkg-config and CMake with both component link orders. Set
+`LEAN_BRIDGE_C_HOST_WORKER_OBJECT_OUTPUT` to save the route reports.
+
 ## Installed C++20 futures and streams on application objects
 
 The [C++ consumer](../../tests/fixtures/static-host-workers/consumer.cpp) awaited the same `shared_ptr` in a coroutine, passed two distinct classes through retained callbacks, and caught the original `exception_ptr` after Lean propagated a callback failure. It distinguished factory, task and pull failures from returned `Except` values. It exercised normal stream exhaustion, an overlapping pull, early close, self-revocation, cross-thread cancellation and destruction of the binding from inside a callback. A nonstandard thrown object retired the runtime and woke a coroutine already suspended on a peer's unfulfilled promise.
 
 The [package test](../../tests/helpers/c-host-packages.mjs) verified ordinary and independently reviewed releases, each linked with a separately built peer through pkg-config and CMake in both link orders. All eight installed executions passed with no producer tools on the runtime path. The [receipt and archive hashes](cpp-host-workers-20261125.json) identify the exact packages. Run `npm run test:cpp-host-worker-packages` for the full build and checks. Set `LEAN_BRIDGE_CPP_HOST_WORKER_HANDOFFS` to retain archives, or `LEAN_BRIDGE_CPP_HOST_WORKER_REPLAY` to an existing `cpp-host-releases-*` directory for a consumer-only replay.
+
+### C++20 object arguments and replies
+
+The [ordinary](cpp-host-object-positions-20261126/ordinary.json) and
+[reviewed](cpp-host-object-positions-20261126/reviewed.json) C++20 clients
+checked that the immediate result pointed to the original object and shared
+the same ownership control block. The first callback compared the received Box
+against the caller's Box and returned a separate Dial; the second compared
+both pointer and ownership to the caller's Dial. All eight executions passed
+against the original archives. Set `LEAN_BRIDGE_CPP_HOST_WORKER_OBJECT_OUTPUT`
+to save the two reports during a replay.
