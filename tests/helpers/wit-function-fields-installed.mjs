@@ -1,0 +1,94 @@
+/** @file Exercise function-bearing records through a relocated Wasmtime Component Model package. */
+import assert from "node:assert/strict";
+import {copyFile, mkdir, mkdtemp, readFile, rename, rm, writeFile} from "node:fs/promises";
+import {tmpdir} from "node:os";
+import {basename, join, resolve} from "node:path";
+import test from "node:test";
+import {buildCanonicalProject} from "../../src/build/canonical-build.mjs";
+import {nativeArtifactPaths} from "../../src/build/native-artifacts.mjs";
+import {canonicalJson, sha256} from "../../src/capsule/node.mjs";
+import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {runNativeTool as run} from "./native-effect-consumers.mjs";
+import {copyPackageSetHandoff} from "./package-set.mjs";
+import {checkStagedQuoteIdentities, prepareStagedQuoteProject} from "./staged-quote-project.mjs";
+
+const json = async path => JSON.parse(await readFile(path));
+const routes = ["ordinary", "reviewed"];
+const source = resolve("tests/fixtures/structured-types/tariff-wasmtime.c");
+
+const buildHandoffs = async (parent, work) => {
+	for(const route of routes)
+	{
+		const project = join(work, route+"-project"), output = join(work, route+"-release");
+		await prepareStagedQuoteProject(project, route, "wit-wasi");
+		try
+		{
+			await buildCanonicalProject({projectRoot: project, outputRoot: output, targets: ["wit-wasi"]});
+		} catch(error)
+		{
+			throw new Error(route+" WIT release failed: "+error.message+" "+JSON.stringify(error.details), {cause: error});
+		}
+		await copyPackageSetHandoff(output, join(parent,route));
+		await rm(project, {recursive: true}); await rm(output, {recursive: true});
+	}
+};
+
+const exercise = async (root, handoff, route) => {
+	const {receipt,result} = await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
+	assert.equal(receipt.packages.length,1);
+	const [pkg] = receipt.packages; assert.equal(pkg.target,"wit-wasi"); assert.equal(pkg.name,"tariff-quotes");
+	assert.equal(pkg.artifacts.length,1);
+	const [artifact] = pkg.artifacts, archive = join(root,basename(artifact.path));
+	await copyFile(join(handoff,artifact.path),archive);
+	const top = basename(archive,".tar.gz"), install = join(root,"relocated");
+	assert.equal(top,"tariff-quotes-1.0.0-wit-wasi");
+	const entries = (await run("tar",["-tzf",archive],root,process.env)).split("\n").filter(Boolean);
+	assert.ok(entries.length && entries.every(p=>p.startsWith(top+"/") && !p.split("/").includes("..")));
+	await run("tar",["-xzf",archive],root,process.env);
+	await rename(join(root,top),install); await rm(archive);
+	const manifest = await json(join(install,"lean-bridge-package.json"));
+	assert.equal(manifest.kind,"lean-bridge-owned-wit-package");
+	assert.equal(manifest.pkgConfig,"tariff-quotes-wit");
+	assert.deepEqual(await nativeArtifactPaths(install),["lean-bridge-package.json",...Object.keys(manifest.files)].sort());
+	for(const [name,{bytes,sha256: expected}] of Object.entries(manifest.files))
+	{
+		const value = await readFile(join(install,name)); assert.equal(value.length,bytes); assert.equal(sha256(value),expected,name);
+	}
+	const meta = name=>json(join(install,"share/lean-bridge/component",name+".json"));
+	const identity = checkStagedQuoteIdentities(await meta("model"),await meta("binding-ir"),receipt.profiles.find(p=>p.id===pkg.profile),route);
+	assert.equal(manifest.bindingIrSha256,identity.bindingIrSha256);
+	const world = join(install,"wit/tariff-quotes.wit"), wasm = join(install,"component/tariff-quotes.wasm");
+	assert.equal(sha256(await readFile(wasm)),manifest.componentSha256);
+	await run(process.env.LEAN_BRIDGE_WASM_TOOLS ?? "wasm-tools",["component","targets",world,wasm],root,process.env);
+	const flags = await run("pkg-config",["--cflags","--libs",manifest.pkgConfig],root,
+		{PATH:process.env.PATH,PKG_CONFIG_LIBDIR:join(install,"lib/pkgconfig")});
+	const tokens = flags.match(/(?:\\.|[^\s\\])+/gu).map(s=>s.replace(/\\(.)/gu,"$1"));
+	const client = join(root,"client.c"); await copyFile(source,client);
+	await run(process.env.CC ?? "cc",["-std=c11","-Wall","-Wextra","-Werror","client.c",...tokens,"-ldl","-o","client"],root,process.env);
+	const resultText = await run(join(root,"client"),[join(install,"lib/liblean_bridge_native.so")],root,
+		{PATH:"/no-producer-tools",LEAN_NUM_THREADS:"1",RAYON_NUM_THREADS:"1",LANG:"C.UTF-8"});
+	const observed = JSON.parse(resultText);
+	assert.ok(observed.held>observed.baseline); assert.equal(observed.baseline,observed.after);
+	assert.deepEqual([observed.shutdown,observed.entries,observed.staleVisits,observed.recovered],[0,2,0,42]);
+	return {route,receiptSha256:result.receiptSha256,archiveSha256:artifact.sha256,worldSha256:sha256(await readFile(world)),
+		componentSha256:manifest.componentSha256,wasmtime:manifest.wasmtime,...identity,clientSha256:sha256(await readFile(client)),observed};
+};
+
+test("installed WIT function fields and direct staged replies execute through the Wasmtime session", {timeout:7_200_000}, async t => {
+	const work = await mkdtemp(join(tmpdir(),"wasmtime-tariff-")); t.after(()=>rm(work,{recursive:true,force:true}));
+	const keep = process.env.LEAN_BRIDGE_WIT_TARIFF_KEEP, replay = process.env.LEAN_BRIDGE_WIT_TARIFF_REPLAY;
+	assert.ok(!(keep && replay));
+	const sets = replay ? resolve(replay) : await mkdtemp(join(keep ?? work,"handoffs-"));
+	if(!replay) await buildHandoffs(sets,work);
+	t.diagnostic("Handoffs: "+sets);
+	const output = resolve(process.env.LEAN_BRIDGE_WIT_TARIFF_OUTPUT ?? "build/wit-function-fields");
+	await mkdir(output,{recursive:true});
+	for(const route of routes)
+	{
+		const root = join(work,route); await mkdir(root);
+		const report = await exercise(root,join(sets,route),route);
+		await writeFile(join(output,route+".json"),canonicalJson(report));
+		t.diagnostic(route+": "+report.receiptSha256);
+		await rm(root,{recursive:true});
+	}
+});

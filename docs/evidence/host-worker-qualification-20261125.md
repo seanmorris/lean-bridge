@@ -237,6 +237,11 @@ saved functions again.
 
 ### Does a callback allow one call or many?
 
+The [installed Wasmtime client](wit-function-fields-20261126.md) also
+qualifies a leased callable field and a direct higher-order callback reply.
+Both WIT source routes rejected stale calls before host entry and restored
+their native owner count. This is separate from invocation-count policy.
+
 An [installed npm input-record test](npm-function-fields-20261126.md#passing-a-javascript-function-inside-an-input-record)
 passes a caller-created JS function through a field on both author routes.
 It can reenter Lean during the call but not after the returned borrow expires.
