@@ -62,6 +62,19 @@ not a test of ownership of an application-created C object. Reproduce with `npm 
 
 ## When the declared error owns an application object
 
+Three managed clients distinguish a returned error value from a thrown error
+containing an object created by the application:
+
+| Client | Observation through the installed package |
+| --- | --- |
+| Java | The [Java client](../../tests/fixtures/jvm-host-meter/LeasePayloads.java) saves a thrown `MixedFaultError`, closes both Maven bindings, unwraps its nested `Ok(Err(box))`, and reads 17 from the original box. Asking for an incompatible payload class throws `ClassCastException`. |
+| Kotlin | The [Kotlin client](../../tests/fixtures/jvm-host-meter/KotlinLeasePayloads.kt) separately observes `Result.Err(meter)` as data, saves a thrown `RejectBoxError`, exits the binding’s `use` block and reads 37 from the identical meter. The [JAR receipts](jvm-host-imports-20261124.md#leased-java-objects-in-returned-and-thrown-values) cover ordinary and reviewed packages in both load orders. |
+| C# | The [C# client](../../tests/fixtures/dotnet-host-meter/InstalledScalars.cs) observes the original meter in a returned sum and in a caught `DeclaredError<Meter>.Payload`, **with its binding still open**. The [NuGet installs](dotnet-host-imports-20261124.md#installed-nuget-consumer) ran both routes. |
+
+All three clients also hold a local reference to the object. They verify
+identity, not that the exception holds the last reference. Java and Kotlin
+additionally verify use after the binding closes.
+
 The [WIT client](../../tests/fixtures/static-host-workers/installed-peers.wat.in)
 receives a box from `Gauge.reject : Box → EIO Box UInt32`. The application
 guest created the box. It checks that the error payload and the original
@@ -120,6 +133,7 @@ component are not two independently built packages, either.
 | [C11 host member](c-host-closures-20261125.md) | The [member](../../tests/fixtures/c-host-closures/consumer.c) reported success without returning the required object. Calls through a sibling binding then failed. Both captures reached their respective destructors once. An ordinary application error code did not retire the binding. |
 | [C++20 host member](cpp-host-closures-20261125.md) | The [member](../../tests/fixtures/cpp-host-closures/consumer.cpp) returned a null shared pointer. Both its closure and a sibling reported `Unavailable`. Weak pointers expired as each binding released its capture. A thrown application exception instead preserved its original identity and the binding remained usable. |
 | [Rust host member](rust-host-closures-20261125.md) | A real [member panic](../../tests/fixtures/rust-host-closures/consumer.rs) produced `CallbackPanic`; a sibling call then returned `Unavailable`. Closing the owners ran both destructors once. A returned application error preserved its original `Rc` without retirement. The [staged callback API](rust-staged-callback-results-20261126.md) has a different contract: it resumes the original unwind after cleaning up. |
+| [C# synchronous host setter](dotnet-host-imports-20261124.md#installed-nuget-consumer) | The [setter](../../tests/fixtures/dotnet-host-meter/Installed.cs) catches the original, deliberately thrown `OutOfMemoryException` from a peer and returns normally. Lean's next getter never runs, the outer update reports the runtime unavailable, and the peer refuses a new call. This exercises failure ordering across two installed bindings, not actual heap exhaustion. |
 | [Native PHP callback task](php-retained-tasks-20261123.json) | With one PHP callback suspended, another [threw a PHP `Error`](../../tests/fixtures/php-retained-tasks/installed.php). The caller caught the identical object, the waiting task failed, and a fresh call failed too. After the late resume, live owners and descriptor delta both returned to zero. This was not a direct retirement request through FFI. |
 | [MRI callback task](ruby-retained-tasks-20261122.json) | The [Ruby client](../../tests/fixtures/ruby-retained-tasks/consumer.rb) raised an `Exception` outside `StandardError`, directly or during error formatting. Repeated awaits preserved the fatal object; the next call reported unavailability. Recoverable application exceptions have separate checks. |
 
