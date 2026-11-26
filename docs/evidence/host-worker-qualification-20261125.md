@@ -184,6 +184,22 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
+### Reproducing application-provided function crossings
+
+`npm run test:npm-application-function-positions` builds ordinary and reviewed
+packages from [the forwarding functions](../../tests/fixtures/structured-types/pass-application-quote.lean).
+The application supplies a stateful function. While its registration is
+live, a visitor invokes it, passes it through an immediate export result,
+and returns it to Lean as another callback's reply. Lean invokes that reply;
+a different fallback makes substitution visible. After the original call
+ends, a saved wrapper must not re-enter the application. This tests
+forwarding a **call-borrowed registration**, not creating a new long-lived
+registration by returning a bare JavaScript function.
+
+Set `LEAN_BRIDGE_APP_QUOTE_KEEP` to an existing directory to retain the
+package sets, or `LEAN_BRIDGE_APP_QUOTE_REPLAY` to the resulting `sets-*`
+directory to rerun the installed clients without rebuilding Lean.
+
 ### Host-owned objects: which installs cover each position?
 
 An immediate export argument or result is the object itself. Passing a
