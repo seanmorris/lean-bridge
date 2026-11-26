@@ -4,6 +4,7 @@ import { cIdentifier } from "../c/generate.mjs";
 import { cHostCodecs } from "../c/host-codecs.mjs";
 import { witConversionPrelude } from "./copied-conversions.mjs";
 import {witFunctionEntries} from "./application-functions.mjs";
+import {witRecordCType} from "./application-records.mjs";
 
 const witName = name => name.replaceAll("-", "_");
 /**
@@ -114,7 +115,8 @@ done:
 }`);
 	}
 	const sync=entries.flatMap(witFunctionEntries).map(e=>{
-		const n=cIdentifier(e.name),a=e.parameters.map(t=>byRef(t.type,n+"_arg")),r=byRef(e.result,n+"_value");
+		const site=(t,s)=>t.kind==="host-record"?witRecordCType(p,t):byRef(t,s);
+		const n=cIdentifier(e.name),a=e.parameters.map(t=>site(t.type,n+"_arg")),r=site(e.result,n+"_value");
 		const err=e.effect==="EIO" && byRef(e.error,n+"_failure");
 		const params=["lwit_bridge *b",...a.map((v,j)=>v.arg+" a"+j),r.type+" *value",...err?[err.type+" *failure"]:[],"lwit_owner *original",p+"diagnostic *diag"];
 		const validate=e.parameters.flatMap((param,j)=>{

@@ -245,6 +245,15 @@ shows both a private session and one attached to an application-owned store.
 
 ### Share a guest-owned object between synchronous packages
 
+If the published interface includes a structure containing guest objects, use
+its WIT resource constructor and getters. For example, `pair` borrows the two
+boxes supplied to its constructor and keeps its own leases. Its byte and
+natural-number fields are copied. A box returned by `pair.spare()` is a new
+owner of the *same* guest box: you can drop the pair and pass the box to a
+second package that imports its defining interface. Drop the box when done.
+The [installed guest example](../evidence/wit-host-record-fields-20261126.md)
+exercises this sequence against the two archives below.
+
 Extract both verified `native-wit-object-io-v1` archives. Each must contain `lib/lean-bridge-wit-peer.so`. Use the `bin/lean-bridge-wit-run` supplied by either release. For example, Workshop can return a box, Gauge can change it, and Workshop can read the new value through the same box:
 
 ```sh

@@ -25,6 +25,6 @@ export const witOperationFiles=async options=>{
 		, "api.wit": operations.publicWit
 		, "operations.wat": witOperationFacade(operations,scratch)
 		, "application-operations.h": witOperationHost({...options,operations})
-		, "operations-layout.json": canonicalJson({schemaVersion: 1,publicName,nativeName,nativeType,methods: methods.filter(m=>!m.role || m.role==="make").map(m=>({name: m.name,declaration: m.entry.declaration,effect: m.entry.effect}))})
+		, "operations-layout.json": canonicalJson({schemaVersion: 1,publicName,nativeName,nativeType,methods: methods.filter(m=>!m.recordOp && (!m.role || m.role==="make")).map(m=>({name: m.name,declaration: m.entry.declaration,effect: m.entry.effect}))})
 	};
 };

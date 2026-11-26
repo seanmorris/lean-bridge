@@ -36,6 +36,12 @@ export const witOperationFacade=(model,scratch)=>{
 		const flat=m.params.flatMap(p=>p.type.flat),many=flat.length>16,args=many?["i32"]:flat;
 		const indirect=m.output.flat.length>1,ret=indirect?"i32":m.output.flat[0];
 		imp(native,m.name,"fn"+m.index,indirect?[...args,"i32"]:args,indirect?null:ret);
+		if(m.recordOp==="drop")
+		{
+			funcs.push(`(func (export "cm32p2|${api}|${m.symbol}") (param i32)
+  (call $enter) (if (call $fn${m.index} (local.get 0)) (then unreachable)) (call $leave))`);
+			continue;
+		}
 		if(m.role==="drop")
 		{
 			const base="cm32p2|"+api+"|";
@@ -64,12 +70,12 @@ export const witOperationFacade=(model,scratch)=>{
 		// The private callback consumes same-type arguments in reverse order.
 		if(many)pass.push("(local.get 0)");
 		if(indirect)pass.push("(local.get $ret)");
-		const symbol="cm32p2|"+api+"|"+(m.role==="invoke"?"[method]"+m.resourceName+".invoke":m.name);
+		const symbol="cm32p2|"+api+"|"+(m.symbol??(m.role==="invoke"?"[method]"+m.resourceName+".invoke":m.name));
 		funcs.push(`(func (export "${symbol}") ${args.length?"(param "+args.join(" ")+")":""} (result ${ret}) ${indirect?"(local $ret i32)":""}
   (call $enter) ${stage.join("\n  ")}
   ${indirect?`(local.set $ret (call $alloc (i32.const 0) (i32.const 0) (i32.const ${m.output.align}) (i32.const ${m.output.size})))`:""}
   (call $fn${m.index} ${pass.join(" ")})
-  ${indirect?restore(m.output,0)+" (local.get $ret)":m.output.slot!==undefined?`(if (then unreachable)) (call $take${m.output.slot})`:""})
+  ${indirect?restore(m.output,0)+" (local.get $ret)":m.output.make?"call $new-"+m.output.make:m.output.slot!==undefined?`(if (then unreachable)) (call $take${m.output.slot})`:""})
 (func (export "${symbol}_post") (param ${ret}) (call $leave))`);
 	}
 	return "(module\n"+[...imports,scratch,...funcs].join("\n")+"\n)";

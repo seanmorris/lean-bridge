@@ -149,7 +149,7 @@ exit: ${prefix}_clear(out); ${r.record?"if(lb_record_exports_drop(&scope)){ (voi
 		{
 			// Only the private embedder sees these representations. The Wasm
 			// application receives a canonical, instance-specific WIT resource.
-			const n=cIdentifier(e.name),a=e.parameters.map(x=>byRef(x.type,n+"_arg")),arg=byRef(e.result.argument,n+"_input"),reply=byRef(e.result.reply,n+"_reply");
+			const n=cIdentifier(e.name),a=e.parameters.map(x=>site(x.type,n+"_arg")),arg=byRef(e.result.argument,n+"_input"),reply=byRef(e.result.reply,n+"_reply");
 			const restored=`${type} fn={{binding._private[0],binding._private[1],key}};`;
 			add("lb_wit_make_"+n,p+"status",[binding+" binding",...a.map((v,j)=>v.arg+" a"+j),"uint32_t *value",p+"diagnostic *diag"].join(", "),
 				`if(!value || *value)return ${p}INVALID;

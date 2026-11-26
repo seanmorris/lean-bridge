@@ -51,7 +51,8 @@ export const compileCHostComponent=async o=>{
 	const support={};
 	if(wit)
 	{
-		for(const file of ["application-object-store.h","application-member-types.h","application-member-runtime.h","application-exchange.h","sync-io-values.h"])
+		const hasRows=direct.some(e=>[e.result,...e.parameters.map(v=>v.type)].some(t=>t.kind==="host-record"));
+		for(const file of ["application-object-store.h","application-member-types.h","application-member-runtime.h","application-exchange.h","sync-io-values.h",...hasRows?["application-record-table.h"]:[]])
 		{
 			const bytes=await readFile(new URL("../backends/wit/"+file,import.meta.url));
 			hashes[file]=sha256(bytes);await save(file,bytes);

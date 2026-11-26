@@ -45,8 +45,10 @@ export const verifyWitFunction=(e,d,api,ir)=>{
 		if(!nominal && type.kind!=="primitive") fail();
 		return {type,ownership: nominal?"lease":"copy",lifetime: nominal?{scope: "explicit",anchor: null}:null};
 	};
-	const parameters=e.parameters.map(p=>({...site(p.type),name: p.name
-		, mutability: ir.types.find(k=>k.id===p.type.id)?.mutability??"immutable",optional: false,default: null}));
+	const parameters=e.parameters.map(p=>({...p.type.kind==="host-record"?{type: {kind: "named",id: "lean:"+p.type.declaration},ownership: "borrow",lifetime: {scope: "call",anchor: null}}:site(p.type),name: p.name
+		, mutability: ir.types.find(k=>k.id===p.type.id)?.mutability??"immutable"
+		, optional: false
+		, default: null}));
 	if(d.source.producer!=="lean" || source["lean-lang.org/effect"]!=="IO" || d.resultMode!=="value"
 		|| !same(d.parameters,parameters)
 		|| !same(d.result,{type: {kind: "named",id: "bridge:"+name},ownership: "lease",lifetime: {scope: "explicit",anchor: null}}) || source["lean-bridge.dev/host-imports-sha256"]!==imports

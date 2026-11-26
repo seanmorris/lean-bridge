@@ -127,9 +127,11 @@ The [installed Perl clients](perl-host-record-fields-20261126.md) pass a meter
 from the returned record to an independent CPAN package and observe its final release.
 The [Zend client](php-wasm-host-record-fields-20261126.md) held two real PHP
 objects in a compiled record and used a getter result in a second package,
-under both Node and Chromium. That is **16 of 17 profiles** with an installed
-caller-constructed application-object record on both routes. WIT/WASI is
-the remaining profile for this case. This count is not a percentage of #1221.
+under both Node and Chromium. The [WIT/WASI guest](wit-host-record-fields-20261126.md)
+constructed a record with two guest-owned boxes and passed the last owner
+from its getter to an independent package. That completes **17 of 17 profiles**
+for caller-constructed application-object records on both authoring routes.
+It does not qualify callable fields or either direction of a callback exchange.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

@@ -72,6 +72,13 @@ resource with `invoke` and `close` methods. Lean owns the function body; the
 object keeps its original guest identity. Do not declare the returned function
 as an imported callback or list the factory in `taskExports`.
 
+For a synchronous IO export that accepts or returns a structure containing
+guest-owned objects, include its defining Lean module in `modules`. The build
+reads the constructor and projections from Lean and emits a WIT resource with
+a constructor and one getter per field. The reviewed interface must preserve
+the original field order, even for two fields of the same box type. See the
+[Workshop and Gauge package test](../evidence/wit-host-record-fields-20261126.md).
+
 To let downstream applications [use two synchronous packages together](../consume/wit-wasi.md#share-a-guest-owned-object-between-synchronous-packages), publish each Lean project under distinct WIT package coordinates. Use the same defining host contract and compatible pinned runtime for all of them. The build includes the native adapter and peer runner in each archive. Consumers do not need to link the projects or rebuild either package.
 
 For guest-defined objects used by tasks, keep `hostImports`, include each public factory in `exports`, and select it with `taskExports` or `asyncIterators`. Set `taskIOErrors` for a selected task whose worker can fail with an IO error. This combination builds `native-wit-object-task-v1`: the application consumes canonical WIT futures and streams, while ordinary IO operations stay synchronous. You can explicitly set `targets.wit-wasi.asyncAbi` to `"canonical"`. If a registration is needed, the release also supplies the `registrations` world for the application’s callback provider. Check the selected signatures: this profile supports object-returning futures, a returned `Except` or immediate `EIO` failure carrying an object with a `UInt32` success, an object-to-object retained callback with IO failure, and cursors yielding objects with an optional object-valued step error. See [running the mixed application](../consume/wit-wasi.md#run-an-async-application-with-guest-owned-objects).

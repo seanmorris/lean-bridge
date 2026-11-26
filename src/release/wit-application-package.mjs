@@ -1,7 +1,7 @@
 /** @file Ship original guest-owned WIT objects with their compiled synchronous or canonical asynchronous Lean application. */
 import {mkdtemp,mkdir,readFile,rm,writeFile} from "node:fs/promises";
 import {join} from "node:path";
-import {hashBindingIr} from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import {canonicalJson,sha256} from "../capsule/node.mjs";
 import {compileCHostComponent} from "../build/c-host-component.mjs";
 import {readVerifiedNativeRuntime,validateNativeElf} from "../build/native-artifacts.mjs";
@@ -57,7 +57,7 @@ export const buildWitObjectPackage=async o=>{
 		for(const [lib,hash] of Object.entries(b.binaries))await addElf("lib/"+lib,join(app,lib),hash);
 		for(const [path,meta] of Object.entries(manifest.files))if(path.startsWith("lib/"))await addElf(path,join(runtimeRoot,path),meta.sha256);
 		for(const [path,value] of Object.entries(template.publicFiles))files.set("wit/"+path,value);
-		const bindingIrSha256=hashBindingIr(b.api),review=contract.review;
+		const bindingIrSha256=hostPublicHash(b.api),review=contract.review;
 		files.set(share+"/binding-ir.json",canonicalJson(b.api));files.set(share+"/elaboration.json",canonicalJson(b.evidence));
 		files.set(share+"/runtime.json",canonicalJson(manifest));files.set(share+"/host-imports.json",contract.hostImportsSource);
 		if(review)

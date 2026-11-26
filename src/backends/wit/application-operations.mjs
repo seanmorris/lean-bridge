@@ -4,6 +4,7 @@ import { canonicalJson } from "../../capsule/node.mjs";
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
 import { witVariantMember } from "./copied-variants.mjs";
 import {verifyWitFunction,witFunctionEntries} from "./application-functions.mjs";
+import {witRecordContracts,witRecordMethods,witRecordRef} from "./application-records.mjs";
 
 const reject=message=>{throw new TypeError("WIT application operations: "+message);};
 const align=(n,a)=>Math.ceil(n/a)*a;
@@ -42,6 +43,8 @@ export const witApplicationOperations = options => {
 	validateOrdinaryWasiSettings({name,version});
 	const names=new Set(),unique=base=>{let n=base;while(names.has(n))n="lb-"+n;names.add(n);return n;};
 	const labels=entries.map(e=>witVariantMember(e.name,names,reject,"operation"));
+	const rows=witRecordContracts(entries,binding,names);
+	if(rows.size && options.turn) return reject("record resources require standalone synchronous operations");
 	const privateNames=new Set(labels);
 	let signedName="signed-value";while(privateNames.has(signedName))signedName="lb-"+signedName;
 	const aliases=new Map(),local=key=>{
@@ -55,6 +58,13 @@ export const witApplicationOperations = options => {
 	const types=new Map(contract.resources.map((r,i)=>[r.id,i]));
 	let signed=false,io=null;
 	const value=(t,borrow=false)=>{
+		if(t.kind==="host-record")
+		{
+			const row=rows.get(t.declaration);
+			if(!row) return reject("unknown application record");
+			const wit=(borrow?"borrow":"own")+"<%"+row.resource+">";
+			return {row,wit,native: "u32",wat: "u32",size: 4,align: 4,flat: ["i32"],...borrow?{}:{make: row.resource}};
+		}
 		if(t.kind==="named" && types.has(t.id))return resource(types.get(t.id),borrow);
 		if(t.kind==="apply" && t.constructor==="result" && t.arguments.length===2 && !borrow)return sum(...t.arguments.map(v=>value(v)));
 		if(t.kind!=="primitive")return reject("unsupported "+(borrow?"parameter":"result")+" type "+JSON.stringify(t));
@@ -78,8 +88,8 @@ export const witApplicationOperations = options => {
 		if(!d || d.name!==e.name || d.failure.unexpected!=="poison-runtime")return reject("inconsistent source declaration: "+e.declaration);
 		const factory=e.result.kind==="io-closure";
 		if(factory) verifyWitFunction(e,d,binding,options.ir);
-		if((!factory && canonicalJson(d.result.type)!==canonicalJson(e.result))
-			|| canonicalJson(d.parameters.map(({name,type})=>({name,type})))!==canonicalJson(e.parameters)
+		if((!factory && canonicalJson(d.result.type)!==canonicalJson(witRecordRef(e.result)))
+			|| canonicalJson(d.parameters.map(({name,type})=>({name,type})))!==canonicalJson(e.parameters.map(({name,type})=>({name,type: witRecordRef(type)})))
 			|| (e.effect==="EIO" && canonicalJson(payloads.get("error:EIO."+e.declaration)??null)!==canonicalJson(e.error)))
 			return reject("value or failure payload differs from Binding IR: "+e.declaration);
 		const errors=d.failure.errors,member=errors.includes("error:WitHostError");
@@ -125,8 +135,10 @@ export const witApplicationOperations = options => {
 				, output,...role?{role,resourceName}:{}};
 		});
 	});
+	const helpers=witRecordMethods(rows,value,unique,()=>index++);
+	methods.push(...helpers.methods);
 	const nativeName="lean-bridge:"+name+"/native@"+version,publicName="lean-bridge:"+name+"/api@"+version,exchange=objects.replace("/objects@","/exchange@");
-	const signatures=side=>methods.filter(m=>side==="native" || !m.role || m.role==="make").map(m=>"  %"+m.name+": func("+m.params.map(p=>"%"+p.name+": "+p.type[side]).join(", ")+") -> "+m.output[side]+";");
+	const signatures=side=>methods.filter(m=>side==="native" || !m.recordOp && (!m.role || m.role==="make")).map(m=>"  %"+m.name+": func("+m.params.map(p=>"%"+p.name+": "+p.type[side]).join(", ")+") -> "+m.output[side]+";");
 	const nativeType=[
 		"(instance"
 		, ...signed?['(type $record (record (field "negative" bool) (field "limbs" (list u32))))',`(export "${signedName}" (type $signed (eq $record)))`]:[]
@@ -138,7 +150,11 @@ export const witApplicationOperations = options => {
 	const api=[
 		"interface api {"
 		, ...imports.length?["  use "+objects+".{"+imports.join(", ")+"};"]:[]
-		, ...variants.map(v=>v.wit),...functionDefs,...signatures("wit"),"}"
+		, ...variants.map(v=>v.wit)
+		, ...helpers.definitions
+		, ...functionDefs
+		, ...signatures("wit")
+		, "}"
 	].join("\n");
 	const wit=[
 		pkg,"interface native {"
@@ -147,5 +163,5 @@ export const witApplicationOperations = options => {
 		, `world bridge { import ${objects}; import ${exchange}; import native; export api; }`
 	].join("\n");
 	const publicWit=[pkg,api,"world consumer { import api; }"].join("\n");
-	return {methods,publicName,nativeName,exchange,objects,nativeType,wit,publicWit,contract,signedName: signed?signedName:null};
+	return {methods,records: [...rows.values()],publicName,nativeName,exchange,objects,nativeType,wit,publicWit,contract,signedName: signed?signedName:null};
 };
