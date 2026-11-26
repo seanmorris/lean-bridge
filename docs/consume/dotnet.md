@@ -800,6 +800,20 @@ Returned functions use `LeanClosure<TDelegate>`. Call `Invoke` on the thread tha
 
 The runtime shares a capacity of 4,096 closure identities. Each call has a 16 MiB conversion budget; the limit does not bound Lean's own allocations. Calls in a forked child require starting a fresh process. Recursive callable payloads, resource-containing aggregates and asynchronous delivery remain separate work. The [installed callable checks](../evidence/dotnet-callables-20260919.md) record exact values, exceptions, ownership and source-free execution.
 
+If a record contains a leased Lean function, retain the function if it must
+outlive the record's original wrapper. For example, in the
+[Tariff package](../evidence/dotnet-function-fields-20261126.md):
+
+```csharp
+var tariff = Api.MakeTariff(40);
+using var quote = tariff.Quote.Retain();
+tariff.Quote.Dispose();
+Console.WriteLine(Api.ApplyTariff(new Tariff(quote), 2)); // 42
+```
+
+Putting an ordinary C# delegate in a record does not extend its lifetime.
+Use the returned Lean function when a later call needs a durable callable.
+
 ### Structured callback values
 
 The prepared `Lean.Structured` NuGet package uses typed `Func` delegates for

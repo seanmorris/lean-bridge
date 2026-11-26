@@ -167,7 +167,10 @@ after its last lease is released. The [C++20 record client](cpp-staged-callback-
 distinguishes a copied or repacked Lean function from a C++ lambda whose
 borrow has expired. The [Rust field client](rust-staged-callback-results-20261126.md#a-rust-record-owns-its-function-field)
 checks `Clone`, `drop`, a caller-built record and rejection of an expired
-`FnMut` with no remaining native owner. These tests do not exercise a function field containing
+`FnMut` with no remaining native owner. The [C# NuGet client](dotnet-function-fields-20261126.md)
+checks `Retain`, a caller-built record and `AsCallback` repacking. A plain
+delegate that escapes its call is refused; the native broker is empty after
+the owner thread exits. These tests do not exercise a function field containing
 a captured application object or a durable host callback.
 
 The [C callback exchange](c-callback-function-fields-20261125.md) separately
@@ -210,7 +213,9 @@ object. Both installs reached zero live identities at session close.
 The [offline Rust clients](rust-staged-callback-results-20261126.md) also
 exercise a direct function reply rather than a record containing one. They
 distinguish a recoverable Rust error from a panic and check the original
-allocation or payload in the caller.
+allocation or payload in the caller. The [C# client](dotnet-function-fields-20261126.md)
+returns a native closure from a host callback with a typed recovery value;
+throwing after a nested allocation preserves the original managed exception.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
