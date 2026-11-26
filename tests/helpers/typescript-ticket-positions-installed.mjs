@@ -35,7 +35,9 @@ test("strict TypeScript executes Ticket inputs and results from the two original
 		await run("npm",["install","--offline","--ignore-scripts"
 			, "--no-audit","--no-fund","--cache",join(root,"cache")
 			, ...rc.packages.map(p=>join(h,p.artifacts[0].path))],app,process.env);
-		await copyFile(fixture,join(app,"ticket.mts"));await rename(app,moved);await rm(h,{recursive: true});
+		await copyFile(fixture,join(app,"ticket.mts"));
+		const fieldFixture=resolve("tests/fixtures/structured-types/ticket-fields.mts");
+		await copyFile(fieldFixture,join(app,"field.mts"));await rename(app,moved);await rm(h,{recursive: true});
 		const sourceSha256=sha256(await readFile(join(moved,"ticket.mts")));
 		const metadata=join(moved,"node_modules",name,"metadata/compiler/binding-ir.json");
 		const rawIr=await readFile(metadata),ir=JSON.parse(rawIr);
@@ -49,7 +51,7 @@ test("strict TypeScript executes Ticket inputs and results from the two original
 		const bindingIrSha256=sha256(canonicalizeJsonValue(ir));
 		assert.equal(bindingIrSha256,rc.profiles[0].bindingIrSha256);
 		const options={strict: true,types: [],module: "NodeNext",target: "ES2022",skipLibCheck: false};
-		await writeFile(join(moved,"tsconfig.json"),JSON.stringify({files: ["ticket.mts"],compilerOptions: options}));
+		await writeFile(join(moved,"tsconfig.json"),JSON.stringify({files: ["ticket.mts","field.mts"],compilerOptions: options}));
 		const env={PATH: "/without-producer-tools",LANG: "C"};
 		await run(process.execPath,[require.resolve("typescript/bin/tsc"),"-p","tsconfig.json"],moved,env);
 		const observed=JSON.parse(await run(process.execPath,["ticket.mjs"],moved,env));
@@ -57,10 +59,14 @@ test("strict TypeScript executes Ticket inputs and results from the two original
 		const typescript=require("typescript/package.json").version;
 		const report={route,revision: lane.revision,receipt: result.receiptSha256
 			, artifacts,bindingIrSha256,package: name,sourceSha256,typescript,observed};
+		const field=JSON.parse(await run(process.execPath,["field.mjs"],moved,env));
+		assert.deepEqual(field,{received: 41,returned: 73,rollback: true,transferred: true,calls: 1,closed: true});
+		const fieldReport={...report,sourceSha256: sha256(await readFile(join(moved,"field.mts"))),observed: field};
 		if(process.env.LEAN_BRIDGE_TS_TICKET_OUTPUT)
 		{
 			const out=resolve(process.env.LEAN_BRIDGE_TS_TICKET_OUTPUT);await mkdir(out,{recursive: true});
 			await writeFile(join(out,route+".json"),canonicalJson(report));
+			await writeFile(join(out,route+".field.json"),canonicalJson(fieldReport));
 		}
 		t.diagnostic(route+": "+result.receiptSha256);
 	}
