@@ -195,3 +195,25 @@ let Lean invoke it later; an exception retained its Perl object identity.
 These are adapter checks. The [earlier CPAN receipts](perl-function-fields-20261126.md)
 only cover leased fields. Run `npm run test:perl-function-fields` with all
 four interpreters to qualify the new ordinary and reviewed packages.
+
+## Native PHP callers
+
+The [PHP consumer](../../tests/fixtures/structured-types/tariff-host-fields.php)
+passes native PHP functions and leased Lean functions in the same typed input
+slot. PHP 8.2.35 and 8.5.10 ran the generated FFI adapter against the compiled
+Lean component from the [ordinary Composer archive](php-function-fields-20261126/ordinary.json).
+On each interpreter the live identity count rose from one to four with both
+leases held, returned to one after each of the six cases, and reached zero
+at shutdown. An expired borrowed function never reentered PHP; a throwing
+field propagated the original exception object and the next valid call worked.
+
+A [separate compiled Lean test](../../tests/helpers/php-function-fields-mixed.mjs)
+passed two different records in one call. Each carried two PHP callbacks, UTF-8
+text and an integer. Both interpreters returned 78; each of the four callbacks
+received its own expected argument. An invalid callback in the second record
+prevented all four from running. A weakly typed PHP caller cannot silently
+coerce a number to the text field or a numeric string to the integer field.
+
+These are direct adapter results. The earlier Composer receipts cover leased
+fields only. Run `npm run test:php-function-fields` to build both source routes
+and exercise the callback inputs after offline installation and relocation.

@@ -11,6 +11,7 @@ import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedPhpValues } from "../src/backends/php/owned-values.mjs";
+import "./helpers/php-function-fields-mixed.mjs";
 import { bundledBrickMath } from "../src/backends/php/brick-math.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";

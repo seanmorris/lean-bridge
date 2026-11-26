@@ -381,6 +381,22 @@ try {
 }
 ```
 
+### Pass a PHP callback inside a record
+
+In a native package whose binding manifest lists `hostInputRecords`, use
+the generated input class to pass a PHP callable instead of a Lean function:
+
+```php
+$row = new \LeanTariffQuotes\TariffInput(quote: fn(int $units): int => 40 + $units);
+echo \LeanTariffQuotes\apply_tariff_with_host_fields($row, 2); // 42
+```
+
+Lean can call this PHP function, even reentrantly, until the outer call
+returns. Returning a record containing the function does not extend that
+borrow. An existing Lean function lease can also fill the field; a returned
+lease has its own lifetime. Close it when you are done. The ordinary
+`Tariff` result class and its leased fields are unchanged.
+
 ### Pass a resource to a native PHP task
 
 The caller owns its ticket; the Lean worker holds its own reference as soon

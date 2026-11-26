@@ -11,18 +11,20 @@
  * @param namespace - Validated generated component namespace.
  * @param options - Explicit ownership comparison capability.
  * @param options.anchoredResults - Compare identities through their native API.
+ * @param options.hostRecords - Charge the enclosing input records in the common call budget.
  */
-export const ownedPhpValueWalk = (namespace, { anchoredResults = false } = {}) => String.raw`
+export const ownedPhpValueWalk = (namespace, { anchoredResults = false, hostRecords = false } = {}) => String.raw`
 final class Values
 {
     public static function check(int $type, mixed $value): void {
         foreach (self::walk($value, $type, new GraphBudget()) as $_) {}
     }
-    public static function checkMany(array $types, array $values): void {
+    public static function checkMany(array $types, array $values${hostRecords ? ", array $depths = [], array $records = []" : ""}): void {
         if (!array_is_list($types) || !array_is_list($values) || count($types) !== count($values))
             throw new \ArgumentCountError('Wrong owned validation arity');
         $budget = new GraphBudget();
-        foreach ($types as $index => $type) foreach (self::walk($values[$index], $type, $budget) as $_) {}
+${hostRecords ? `        foreach ($records as [$depth, $fieldCount]) { $budget->step($depth); $budget->children($fieldCount); }
+` : ""}        foreach ($types as $index => $type) foreach (self::walk($values[$index], $type, $budget${hostRecords ? ", $depths[$index] ?? 0" : ""}) as $_) {}
     }
     public static function checkFields(string $class, array $values): void {
         $fields = GraphTypes::CLASSES[$class]['fields'] ?? throw new \TypeError('Unknown owned constructor');

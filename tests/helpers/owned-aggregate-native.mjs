@@ -29,8 +29,9 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 	const run = (command, args, env = {}) => processBuildRunner.capture({ command
 		, args
 		, cwd: directory
-		, env: { ...process.env, ...env }, timeoutMs: 180000 })
-		.catch(error => { throw new Error(JSON.stringify(error.details ?? error.message), { cause: error }); });
+		, env: { ...process.env, ...env }
+		, timeoutMs: options.stepTimeoutMs ?? 180000 })
+		.catch(error => { throw new Error(`${error.message}\n${JSON.stringify(error.details ?? {})}`, { cause: error }); });
 	const prefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(root, ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2"));
 	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
 	const capture = args => run(lean, args, { LEAN_PATH: directory, PATH: `${join(prefix, "bin")}:${process.env.PATH}` });

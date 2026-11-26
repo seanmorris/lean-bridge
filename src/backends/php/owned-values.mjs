@@ -184,7 +184,7 @@ ${phpValueMethods}
 ${resources}
 `;
 	const files = { "src/Api.php": source
-		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults: wholeOwners })}`
+		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults: wholeOwners, hostRecords: wordBits === 64 && c.hostFieldCalls.length > 0 })}`
 		, "src/Internal/GraphTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class GraphTypes\n{\n    public const NODES = ${literal(catalog)};\n    public const CLASSES = ${literal(classes)};\n    public const IDENTITIES = ${literal(identities)};\n}\n` };
 	if(wholeOwners)
 	{

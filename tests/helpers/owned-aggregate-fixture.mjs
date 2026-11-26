@@ -166,6 +166,20 @@ export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false 
 	return ir;
 };
 
+/** Two arguments, each with two distinct callable slots plus text and a scalar. */
+export const mixedFunctionFieldsIr = () => {
+	const ir = leasedClosureFieldReviewedIr({exchange: true});
+	const row = ir.types.find(n => n.name === "Tariff");
+	const fn = ir.declarations.find(f => f.name === "applyTariff");
+	const field = (name,type) => ({...row.fields[0],name,type});
+	row.fields.push(field("rebate",row.fields[0].type)
+		, field("label",{kind: "primitive",name: "string"})
+		, field("base",{kind: "primitive",name: "uint32"}));
+	ir.aggregatePolicy.closureFields.push("Owned.Tariff.rebate");
+	fn.parameters[1] = {...fn.parameters[0],name: "other"};
+	return ir;
+};
+
 /** Add one per-use checked Subtype decision inside an owned aggregate. */
 export const ownedSubtypeReviewedIr = () => {
 	const ir = ownedAggregateReviewedIr();

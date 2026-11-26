@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { phpRecordSites } from "./owned-host-records.mjs";
 
 /**
  * Keep PHP exceptions inside the host callback frame.
@@ -12,8 +13,9 @@
  * @param options.anchoredResults - Carry whole roots and original native slots.
  * @param options.wholeOwners - Carry receiver owners independently of borrowed results.
  * @param options.callbackResultAnchors - Authenticate whole callback identities and replies.
+ * @param options.hostRecords - Accept borrowed caller-created functions in typed record inputs.
  */
-export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults, callbackResultAnchors = false } = {}) => {
+export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults, callbackResultAnchors = false, hostRecords = false } = {}) => {
 	const transferredInputs = requestedTransfers && !wholeOwners;
 	return String.raw`
 final class OwnedCallFrame
@@ -66,11 +68,13 @@ final class OwnedCalls
             throw new \ArgumentCountError('PHP callable does not accept the declared Lean callback arity');
         return $callback;
     }
-    private static function validate(array $fn, array $arguments): array {
+${hostRecords ? phpRecordSites : ""}    private static function validate(array $fn, array $arguments): array {
         if (!array_is_list($arguments) || count($arguments) !== count($fn['parameters'])) throw new \ArgumentCountError('Wrong Lean call arity');
         $types = []; $values = []; $callbacks = [];
-        foreach ($fn['parameters'] as $index => $parameter) {
-            $value = $arguments[$index]; $type = $parameter['type'];
+${hostRecords ? `        $depths = []; $records = [];
+        foreach (self::sites($fn, $arguments, $records) as [$index, $parameter, $value, $depth]) {
+            $depths[count($types)] = $depth; ` : `        foreach ($fn['parameters'] as $index => $parameter) {
+            $value = $arguments[$index]; `}$type = $parameter['type'];
             if (!$parameter['host']) { $types[] = $type; $values[] = $value; continue; }
             $signature = OwnedCallTypes::CALLBACKS[$type];
             $recovery = $value instanceof @NAMESPACE@\WithRecovery;
@@ -81,7 +85,8 @@ ${callbackResultAnchors ? String.raw`            $native = $callback;
                 if ($recovery) throw new \TypeError('A returned Lean closure does not accept a PHP recovery wrapper');
                 $types[] = $type; $values[] = ${callbackResultAnchors ? "$native" : "$callback"}; $callbacks[$index] = ['closure' => $callback];
             } else {
-                if ($signature['requiresRecovery'] && !$recovery) throw new \TypeError('This callback requires with_recovery and a value of its result type');
+${hostRecords ? `                if ($depth) { $records[] = [$depth, 0]; $depths[count($types)] = $depth + 1; }
+` : ""}                if ($signature['requiresRecovery'] && !$recovery) throw new \TypeError('This callback requires with_recovery and a value of its result type');
                 $callbacks[$index] = ['call' => self::callback($callback, count($signature['parameters'])), 'hasRecovery' => $recovery, 'recovery' => $fallback];
                 if ($recovery) {${callbackResultAnchors ? String.raw`
                     if ($signature['anchor'] !== null && $fallback instanceof @NAMESPACE@\Value)
@@ -91,7 +96,7 @@ ${callbackResultAnchors ? String.raw`            $native = $callback;
         }
         // All ordinary arguments, identity arguments and recovery values share
         // one validation budget before the loader or FFI allocation runs.
-        Values::checkMany($types, $values);
+        Values::checkMany($types, $values${hostRecords ? ", $depths, $records" : ""});
         return $callbacks;
     }
     private function wrap(int $type, \FFI\CData $handle, OwnedLease $lease): Resource {
@@ -237,7 +242,8 @@ ${wholeOwners ? String.raw`            foreach ($inputLeases as $position => $le
             }
 ` : ""}            $scope = new OwnedConversionScope($schema, $state); $frame = new OwnedCallFrame($scope); $inputs = [];
             foreach ($fn['parameters'] as $index => $parameter) {${transferredInputs ? "\n                $scope->inputGroup = isset($parameter['transfer']) ? ($moves[$index] = new OwnedInputGroup($state)) : null;" : ""}
-                if ($parameter['host']) { $inputs[] = $this->host($parameter['type'], $prepared[$index], $frame); continue; }
+${hostRecords ? `                if (isset($parameter['record'])) { $inputs[] = $this->inputRecord($parameter['record'], $arguments[$index], $index, $prepared, $frame); continue; }
+` : ""}                if ($parameter['host']) { $inputs[] = $this->host($parameter['type'], $prepared[$index], $frame); continue; }
                 $node = $schema->nodes[$parameter['type']];
                 $input = OwnedConversions::write($parameter['type'], $arguments[$index], $scope);
                 $view = $ffi->cast($node['pointerType'], $input); $inputs[] = $node['leaf'] ? $view[0] : $view;
