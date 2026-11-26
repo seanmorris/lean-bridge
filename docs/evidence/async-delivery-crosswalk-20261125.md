@@ -95,6 +95,36 @@ For each [CPython capture](python-resource-leases-20261123.json), set `LEAN_BRID
 to that ABI's root and `LEAN_BRIDGE_PYTHON` to its interpreter, then run `node --test tests/helpers/python-resource-installed.mjs`.
 Fresh captures also run the new clients; historical replay still verifies the original acceptance bytes.
 
+### Cancelling a pull already waiting on Lean
+
+On CPython, the [Timers client](../../tests/fixtures/python-lean-tasks/cancel_pull.py)
+waited until Lean had entered the pull, the reader was pending and two native
+leases were live. Cancelling the reader preserved its cancellation message.
+Before the caller used `aclose()`, the Lean finalizer had run once and the
+event-loop descriptors had returned to baseline. A cooperative worker stopped.
+A worker that ignored cancellation kept one lease until explicitly released,
+computed the late result, and then released the lease. Neither delivered an
+item or settled the reader twice. Repeated close did not repeat the finalizer.
+
+| Linux interpreter | Ordinary wheel | Reviewed wheel |
+| --- | --- | --- |
+| CPython 3.11 | [Execution record](python-parked-pull-20261126/cp311-ordinary.json) | [Execution record](python-parked-pull-20261126/cp311-reviewed.json) |
+| CPython 3.12 | [Execution record](python-parked-pull-20261126/cp312-ordinary.json) | [Execution record](python-parked-pull-20261126/cp312-reviewed.json) |
+
+To reproduce, set `LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL` to the original
+Timers capture containing `tasks/` and `wheels/`, and `LEAN_BRIDGE_PYTHON` to
+each interpreter in turn. Run `node --test tests/helpers/python-parked-pull-installed.mjs`.
+The replay checks the original archive identities and installed files before
+running the new client offline. This stream delivers copied items; the
+resource-bearing Desk/Depot checks above are separate.
+
+The [.NET Pulse client](../../tests/fixtures/dotnet-tasks/Program.cs) also
+waited for Lean to enter a pull. A second concurrent pull was rejected.
+Cancellation from another thread woke the reader with its original token;
+the noncooperative worker later finished. Disposing a different cursor with
+a parked reader also woke it. That [installed NuGet record](dotnet-tasks-20261122.json)
+checked the close count **after** disposal, not before it.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)

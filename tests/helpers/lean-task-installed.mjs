@@ -257,6 +257,8 @@ test("offline installed Lean tasks wake asyncio, forward cancellation and clean 
 	await copyFile(join(fixture, "installed.py"), join(root, "consumer.py"));
 	await copyFile(join(fixture, "audit.py"), join(root, "audit.py"));
 	await copyFile(join(fixture, "streams.py"), join(root, "streams.py"));
+	await copyFile(join(fixture, "cancel_pull.py"), join(root, "cancel_pull.py"));
+	await copyFile(resolve("tests/fixtures/python-task-resources/observe.py"), join(root, "observe.py"));
 	const guide = (await readFile("docs/consume/python.md", "utf8")).split("### Read a Lean stream\n")[1];
 	await writeFile(join(root, "stream-example.py"), guide.match(/\x60{3}python\n([\s\S]*?)\x60{3}/u)[1]);
 	for(const route of ["ordinary", "reviewed"])
@@ -270,6 +272,9 @@ test("offline installed Lean tasks wake asyncio, forward cancellation and clean 
 		assert.match(stdout, /independent pull leases: idle 0\/1\/0; pending 0\/2\/1\/0; descriptors restored/u);
 		assert.match(stdout, /retirement alone woke both pending tasks; all selector descriptors and native leases released/u);
 		assert.match(stdout, /compiled streams: demand, exhaustion, scoped break, error ordering, pending close\/cancel, late result and loop shutdown/u);
+		const parkedEnv = {PATH: "/unavailable", PYTHONPATH: path, LEAN_NUM_THREADS: "1", PYTHONNOUSERSITE: "1"};
+		const parked = await exec(python, ["-S", "-B", "-W", "error", "cancel_pull.py"], {cwd: root, timeout: 90000, env: parkedEnv});
+		assert.equal(parked.stderr, ""); assert.match(parked.stdout, /^parked cooperative and noncooperative pulls:/u);
 		const example = await exec(python, ["-S", "-B", "stream-example.py"], { cwd: root
 			, env: { PATH: "/unavailable", PYTHONPATH: path, LEAN_NUM_THREADS: "1" } });
 		assert.equal(example.stdout, "None\n"); assert.equal(example.stderr, "");

@@ -310,7 +310,11 @@ there is no prefetch. Use plain `async for` when reading to exhaustion. Use
 `break` does not close a retained Python iterator. You can also `await ticks.aclose()`
 on the owning event loop, even during a pull. It wakes the pending reader
 without emitting a late item. Cancelling the reader propagates
-`asyncio.CancelledError` and closes the stream.
+`asyncio.CancelledError` and closes the stream. If you cancel an `anext`
+already waiting on Lean, its close action runs before the reader gets that
+exception. A worker that ignores cancellation can still finish computing
+the item, but the reader won't receive it. An explicit `aclose()` afterward
+doesn't run the close action again. See the [installed cancellation check](../evidence/async-delivery-crosswalk-20261125.md#cancelling-a-pull-already-waiting-on-lean).
 
 A typed startup failure raises `LeanEIOError`. A typed failure during a pull
 raises `LeanStreamError`, with `declaration` and `payload`. An `Ok` or `Err`
