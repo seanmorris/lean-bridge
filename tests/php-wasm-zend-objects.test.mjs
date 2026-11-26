@@ -14,11 +14,16 @@ import {javaScriptTaskAbi} from "../src/abi/javascript-wasm-tasks.mjs";
 import {javaScriptHostIOAbi} from "../src/abi/component-host-io.mjs";
 import {generateJavaScriptHostExports} from "../src/backends/javascript/host-wasm-exports.mjs";
 
-test("Zend cursor cancellation returns before its native worker drains", async () => {
+test("Zend cursor cancellation returns before its native worker drains", async t => {
 	const php = process.env.LEAN_BRIDGE_PHP ?? "php";
-	const {stdout,stderr} = await promisify(execFile)(php,["tests/fixtures/php-wasm-task-owner/cursor-cancel-state.php"]);
-	assert.equal(stderr,"");
-	assert.match(stdout,/fault precedence and one drain passed/u);
+	try {
+		const {stdout,stderr} = await promisify(execFile)(php,["tests/fixtures/php-wasm-task-owner/cursor-cancel-state.php"]);
+		assert.equal(stderr,"");
+		assert.match(stdout,/fault precedence and one drain passed/u);
+	} catch (error) {
+		if(error.code==="ENOENT" && !process.env.LEAN_BRIDGE_PHP) return t.skip("PHP CLI is not installed");
+		throw error;
+	}
 });
 
 test("Zend root collection drains the old generation when a PHP destructor reenters and throws", async t => {

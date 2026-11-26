@@ -8,11 +8,17 @@ import {hashBindingIr} from "../../src/binding-ir/canonical.mjs";
 import {buildCanonicalProject} from "../../src/build/canonical-build.mjs";
 import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
 import {exercisePhpTaskRelease} from "./php-wasm-task-installed.mjs";
 
 const fx = resolve("tests/fixtures"), routes = ["ordinary","reviewed"];
 const read = async path => JSON.parse(await readFile(path));
+const archived = async (root,receipt,file) => {
+	const component = receipt.packages.find(p=>p.role==="component" && p.ecosystem==="npm");
+	assert.equal(component.name,"@example/jobs-php");
+	return JSON.parse(await run("tar",["-xOzf",join(root,component.artifacts[0].path),"package/metadata/"+file],root,process.env));
+};
 const added = ["openRead","readPulls","readCloses","releaseRead","finishedRead","readySibling","onRead"].map(n=>"Parked."+n);
 const buildSets = async (work,sets) => {
 	let ordinary;
@@ -34,10 +40,9 @@ const buildSets = async (work,sets) => {
 		await writeFile(config,canonicalJson(cfg));
 		try {await buildCanonicalProject({projectRoot:project,outputRoot:output,targets:["php-wasm"]});}
 		catch (err) {throw new Error("PHP-Wasm "+route+": "+err.message+" "+JSON.stringify(err.details),{cause:err});}
-		const api = await read(join(output,"binding-ir.json"));
+		const dest = join(sets,route), receipt = await copyPackageSetHandoff(output,dest);
+		const api = await archived(dest,receipt,"binding-ir.json");
 		if (!ordinary) ordinary=api; else assert.deepEqual(api,ordinary);
-		const dest = join(sets,route); await copyPackageSetHandoff(output,dest);
-		for (const name of ["binding-ir.json","host-export-evidence.json"]) await copyFile(join(output,name),join(dest,name));
 		await rm(project,{recursive:true}); await rm(output,{recursive:true});
 	}
 };
@@ -56,9 +61,10 @@ test("wasm32 PHP interrupts an outstanding read in a callback before the worker 
 	for(const route of routes) {
 		const handoff=join(sets,route);
 		const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath:join(handoff,"package-set-receipt.json")});
-		const api=await read(join(handoff,"binding-ir.json")),source=await read(join(handoff,"host-export-evidence.json"));
+		const api=await archived(handoff,receipt,"binding-ir.json"),source=await archived(handoff,receipt,"compiler.json");
 		assert.equal(source.sourceTreeSha256,receipt.source.treeSha256);
 		assert.equal(source.reviewedSourceSha256,route==="ordinary"?null:sha256(canonicalJson(api)));
+		if(route==="reviewed") assert.deepEqual(await archived(handoff,receipt,"review.binding-ir.json"),api);
 		assert.equal(receipt.profiles[0].bindingIrSha256,hashBindingIr(api));
 		assert.ok(!receipts.has(result.receiptSha256));receipts.add(result.receiptSha256);
 		const executions=await exercisePhpTaskRelease(handoff,t,undefined,false,false,false,false,false,{parked:true});
