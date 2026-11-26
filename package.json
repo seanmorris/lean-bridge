@@ -1547,6 +1547,7 @@
     "test:perl-once-callback": "node --test --test-concurrency=1 tests/helpers/perl-budget-installed.mjs",
     "test:wit-pollable-once-callback": "node --test --test-concurrency=1 tests/helpers/wit-budget-installed.mjs",
     "test:npm-incoming-function": "node --test --test-concurrency=1 tests/helpers/npm-incoming-installed.mjs",
+    "test:npm-ticket-callbacks": "node --test --test-concurrency=1 tests/helpers/npm-ticket-callbacks-installed.mjs",
     "test:c-incoming-function": "node --test --test-concurrency=1 tests/helpers/c-incoming-installed.mjs",
     "test:cpp-incoming-function": "LEAN_BRIDGE_CPP_TARIFF_REQUIRE_INCOMING=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/leased-closure-fields-cpp-install.test.mjs",
     "test:callback-frame-facades": "node --test --test-concurrency=1 tests/helpers/callback-frame-facades.mjs",

@@ -36,3 +36,21 @@ incoming-function check does not exercise this resource position. A factory
 whose callback returns the very same Ticket as its recovery value cannot
 distinguish the successful reply from the fallback, so these comparisons
 do not add a resource callback **result**.
+
+### Five installed npm clients exchange Tickets directly
+
+Node, executed strict TypeScript, a Chromium page, mounted React and a
+dedicated worker each ran against the same [ordinary](npm-ticket-callbacks-20261126/ordinary.json)
+and [reviewed](npm-ticket-callbacks-20261126/reviewed.json) package pair.
+The downstream callback read the actual input Ticket and returned a record
+with that Ticket as its primary member. The factory callback created a
+**different** Ticket: Node, TypeScript and the page read 42 and returned 43;
+React and the worker read 71 and returned 72. The recovery Ticket had serial
+800 and remained valid after the original callback exception propagated.
+Each client observed zero live native identities after cleanup.
+
+Run `npm run test:npm-ticket-callbacks` to build and install both releases, or
+set `LEAN_BRIDGE_NPM_TICKET_CALLBACK_REPLAY` to the directory containing their
+`ordinary/` and `reviewed/` handoffs. The [pair receipt](npm-ticket-callbacks-20261126/pair.json)
+matches the original [incoming-function packages](npm-incoming-functions-20261126/matched/pair.json).
+The two tests exercised different public calls using the same archives.
