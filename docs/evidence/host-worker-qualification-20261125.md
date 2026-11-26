@@ -165,7 +165,7 @@ the object supplied to the callback from the object it returns.
 | Java and Kotlin | [Both Maven clients](jvm-host-record-fields-20261126.md) | [Separate Java and Kotlin clients](jvm-worker-packages-20261124.md#passing-and-returning-application-objects) verify immediate identity and distinct callback replies in both load orders on each route. |
 | Native PHP | [Composer/FFI](php-host-record-fields-20261126.md) | [Native PHP clients](php-host-task-packages-20261124.md#where-php-object-identity-is-checked) exercise a cold immediate return and two callbacks exchanging distinct objects on both routes. |
 | PHP-Wasm | [Zend](php-wasm-host-record-fields-20261126.md) | Check the installed Zend applications separately from native Composer/FFI. |
-| WIT/WASI | [Guest-owned boxes](wit-host-record-fields-20261126.md) | Match the WIT resource handed to or returned by the guest; a scalar handle in a C observer is not an application call. |
+| WIT/WASI | [Guest-owned boxes](wit-host-record-fields-20261126.md) | The [installed Wasm guest](wit-host-objects-20261125.md#when-a-callback-returns-a-different-box) distinguishes two equal-valued boxes on both routes, including an echo provider that must fail. |
 
 Rows marked for review do not assert that a package fails or needs
 rebuilding. This table addresses only the host-object family, not all 680

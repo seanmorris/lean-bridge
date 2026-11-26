@@ -233,6 +233,29 @@ Three applications ran from each verified archive with the producer source and r
 
 The negative build moved an `IO.getEnv` call into `Packet.finish`, the cursor finalizer. The compiler identified the exact finalizer and missing environment capability. Adding an explicit `nativeEffects` grant also failed: the guest-object WIT profile admits no external OS capabilities. Neither build created a release directory.
 
+## When a callback returns a different box
+
+An independent [Wasm application](../../tests/fixtures/static-host-workers/object-swap-application.wat.in)
+creates two boxes with the same reading. It first passes one to Lean's
+synchronous `identity` and checks the defining guest's `same-box` result.
+It then calls `relay` with that box and a [callback](../../tests/fixtures/static-host-workers/object-swap-provider.wat.in)
+that holds independent leases on both. The callback checks its argument
+against the first box and returns the second. The application checks the
+future result against **both** boxes. Dropping the registration releases
+its two captured owners. An otherwise identical provider that returns the
+input instead traps at the caller's identity check.
+
+The [ordinary](wit-host-object-positions-20261126/ordinary.json) and
+[reviewed](wit-host-object-positions-20261126/reviewed.json) reports pin the
+original Workshop archives, installed public IR and all four guest binaries.
+The [record guest](wit-host-record-fields-20261126.md) checks the fifth
+application-object position separately. To repeat the exchange, set
+`LEAN_BRIDGE_WIT_OBJECT_HANDOFFS` to the directory containing
+`ordinary-workshop/` and `reviewed-workshop/`, then run
+`npm run test:wit-host-object-positions`. Compilation of the downstream
+guests needs wasm-tools; the installed launcher runs with no tools on its
+search path. Set `LEAN_BRIDGE_WIT_OBJECT_OUTPUT` to retain the reports.
+
 ## Two independently installed Lean packages share one guest object
 
 [Workshop and Gauge](../../tests/helpers/wit-installed-peers.mjs) are separate Lean projects with different public interfaces and native libraries. Both depend on the same guest-defined resource type. The test builds each from ordinary source and again from reviewed Binding IR, verifies the package receipts, relocates the installs and deletes the producer directories. The deployment command runs offline with no tools on its search path. The [public application world](../../tests/fixtures/static-host-workers/peer-world.wit) includes both packages.
