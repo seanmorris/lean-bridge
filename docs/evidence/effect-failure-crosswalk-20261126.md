@@ -7,10 +7,21 @@ Lean runs, an exception from application code, or a terminal fault. The
 task scheduler. A program can recover from a declared error without making
 a broken runtime safe to reuse.
 
-**Current installed coverage: 90 of 102** — all 34 immediate IO combinations,
-28 typed EIO and 28 named errors. Each combination is one profile on one
-authoring route. Perl, Java and Kotlin still need both
-typed contracts verified on both routes.
+**Current installed coverage: 92 of 102** — all 34 immediate IO combinations,
+29 typed EIO and 29 named errors. Each combination is one profile on one
+authoring route. Perl still needs the reviewed route; Java and Kotlin need
+both typed contracts on both routes.
+
+**Perl:** The [ordinary CPAN installs](perl-worker-error-policy-20261126/ordinary.json)
+ran the [worker failure client](../../tests/fixtures/perl-host-workers/error-policy.pl)
+on threaded and unthreaded Perl 5.36.3 and 5.38.2. Each used both prebuilt
+and locally compiled XS. In both package orders, the client caught a
+mismatched native error acknowledgement inside a callback. The outer call
+still failed; neither package could dispatch again. Separately, the sole
+owner of a declared error payload survived its binding, the peer changed
+its value from 23 to 42, and dropping the error destroyed it once. All 16
+checks ended with zero live identities. These runs confirm one authoring
+route, not 16 separate support claims.
 
 **CPython:** An older installed peer accepted the integer
 `2` as a true tag inside a native `Except` result. A property setter let
