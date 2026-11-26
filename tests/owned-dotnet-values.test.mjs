@@ -102,13 +102,27 @@ public record ForgedChoice : Choice
 		, ["closed variant", "class External : Choice {}", /CS8865|CS1729|CS7036/u]
 		, ["sealed resource", "class External : Ticket {}", /CS0509/u]
 	];
-	for(const [name, body, diagnostic] of rejections)
+	// Invalid bases stop Roslyn before it checks method bodies. Compile the two
+	// phases separately and require the diagnostic from each individual source.
+	await saveLakeFile(directory, "consumer/Program.cs", "internal static class Program { static void Main() {} }\n");
+	for(const baseTypes of [true,false])
 	{
-		const external = body.startsWith("class ");
-		await saveLakeFile(directory, "consumer/Program.cs", `using LeanBridge.OwnedAggregates;\ninternal static class Program { static void Main() { ${external ? "" : body} } }\n${external ? body : ""}`);
+		const batch=[];
+		for(const [i,[name,body,diagnostic]] of rejections.entries())
+		{
+			if(body.startsWith("class ")!==baseTypes) continue;
+			const id="Rejected"+i,file=id+".cs";
+			const declaration=baseTypes?body.replace("class External","class "+id):`internal static class ${id} { static void Run() { ${body} } }`;
+			await saveLakeFile(directory,"consumer/"+file,"using LeanBridge.OwnedAggregates;\n"+declaration+"\n");
+			batch.push({file,name,diagnostic});
+		}
 		await assert.rejects(build, error => {
-			assert.match(JSON.stringify(error.details ?? error.message), diagnostic, name); return true;
+			const lines=(error.details?.stdout??error.message).split("\n");
+			for(const {file,name,diagnostic} of batch)
+				assert.ok(lines.some(l=>l.includes("/"+file+"(") && diagnostic.test(l)),name+": "+lines.join("\n"));
+			return true;
 		});
+		for(const {file} of batch) await rm(join(directory,"consumer",file));
 	}
 	await saveLakeFile(resolve("build/owned-dotnet-values"), "public.json", canonicalJson({
 		checks: 16, rejectedConsumers: rejections.length, nativeLibraryLoaded: false
