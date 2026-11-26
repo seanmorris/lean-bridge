@@ -8,8 +8,9 @@ import {retainedOnceSlots} from "../src/backends/native/task-callback.mjs";
 import {generateRustTaskSources} from "../src/backends/rust/task-crate.mjs";
 import {generateSyncWire} from "../src/backends/c/sync-wire.mjs";
 import {generateRubySyncSources} from "../src/backends/ruby/sync-io.mjs";
+import {generateDotnetTasks} from "../src/backends/dotnet/sync-io.mjs";
 
-for(const target of ["c","cpp","rust","ruby"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
+for(const target of ["c","cpp","rust","ruby","dotnet"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
 	const v={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: v,reply: v};
 	const parameters=[{name: "n",type: v},{name: "f",type: fn},{name: "g",type: fn}],name="Budget.probe";
 	const entry={name: "probe",declaration: name,module: "Budget",parameters
@@ -23,7 +24,7 @@ for(const target of ["c","cpp","rust","ruby"]) test(target+" rejects a stale rev
 	const {api,entries}=reconcileHostExports({metadata,selection: checked,component});
 	const onceByDeclaration=retainedOnceSlots(api);assert.deepEqual([...onceByDeclaration],[[name,[2]]]);
 	const componentIdentity="1".repeat(64),integerMode=target==="c"?"gmp":"words";
-	const selector=target==="ruby"?"rubyDelivery":target+"Callbacks";
+	const selector=["ruby","dotnet"].includes(target)?target+"Delivery":target+"Callbacks";
 	const opts={entries,modules: ["Budget"],name: "budget"
 		, componentIdentity,[selector]: true,integerMode};
 	const plain=generateCTaskExports(opts),built=generateCTaskExports({...opts,onceByDeclaration});
@@ -33,6 +34,22 @@ for(const target of ["c","cpp","rust","ruby"]) test(target+" rejects a stale rev
 	assert.doesNotMatch(plain.header+plain.source+plain.entryLean,/CALLBACK_ALREADY_INVOKED|cbBudgetClaim/u);
 	assert.match(built.entryLean,/Budget.probe v0 \(cbInvoke port 1\) \(cbInvokeOnce port used2 denied 2\)/u);
 	assert.match(built.header,/CALLBACK_ALREADY_INVOKED/u);
+	if(target==="dotnet")
+	{
+		const wire=generateSyncWire(built.prefix,entries,{tasks: true,onceByDeclaration});
+		const prior=generateSyncWire(plain.prefix,entries,{tasks: true});
+		const unbounded=reconcileHostExports({metadata,selection,component}).api;
+		const emit=(api,wire)=>generateDotnetTasks({api,wire,evidence: null});
+		await assert.rejects(emit(unbounded,wire),/Unverified .NET callback allowance/u);
+		await assert.rejects(emit(api,prior),/Unverified .NET callback allowance/u);
+		const old=await emit(unbounded,prior),withOnce=await emit(api,wire);
+		assert.doesNotMatch(Object.values(old.files).join("\n"),/CallbackAlreadyInvokedException/u);
+		assert.match(withOnce.files["Api.cs"],/sealed class CallbackAlreadyInvokedException/u);
+		assert.match(withOnce.files["Calls.cs"],/if \(s == 16\) throw new CallbackAlreadyInvokedException\("Budget.probe"\);/u);
+		assert.match(withOnce.files["Calls.cs"],/if \(s == 14\) throw callbacks.Original/u);
+		assert.match(withOnce.files["Calls.cs"],/if \(s == 13\) throw new LeanIOException/u);
+		assert.match(wire.source,/else if \(s == lbc_budget_CALLBACK_ALREADY_INVOKED\) s = 16;/u);
+	}
 	if(target==="ruby")
 	{
 		const wire=generateSyncWire(built.prefix,entries,{tasks: true,onceByDeclaration});

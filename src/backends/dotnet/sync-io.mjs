@@ -6,6 +6,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { taskResourceTypes } from "../c/task-resources.mjs";
+import { nativeOnceWireStatus } from "../c/task-wire.mjs";
 import { copiedResultType } from "./copied-conversions.mjs";
 import { dotnetComponentAssembly } from "./copied-model.mjs";
 import { verifiedDotnetAssets } from "./verified-assets.mjs";
@@ -75,6 +76,7 @@ export { args as dotnetScalarArgument, decode as dotnetScalarResult, type as dot
  */
 const parameterTypes = (m, d, api, project, shape = ref => ref?.name) => {
 	const slots = new Map();
+	let once = false;
 	for(const [i, from, to] of m.callbacks ?? [])
 	{
 		const p = d.parameters[i], cb = api.types?.find(t => t.id === p?.type?.id)?.callable;
@@ -84,7 +86,9 @@ const parameterTypes = (m, d, api, project, shape = ref => ref?.name) => {
 			|| cb.resultMode !== "value" || cb.failure?.errors?.[0] !== "error:DotNetCallbackException")
 			throw new TypeError("Invalid retained .NET callback contract");
 		slots.set(i, to === "unit" ? `global::System.Action<${project(from)}>` : `global::System.Func<${project(from)}, ${project(to)}>`);
+		if(cb.invocation === "once") once = true;
 	}
+	if(m.once !== (once ? true : undefined)) throw new TypeError("Unverified .NET callback allowance");
 	return m.args.map((t, i) => slots.get(i) ?? project(t));
 };
 // CLR identity includes the defining assembly, so each verified Lean kind
@@ -258,7 +262,7 @@ ${cb.cases.join("\n")}
             {
                 int s = fn(h, output, tags);
                 if (s == 0) return (true, ${decode(m.result)});
-                ${cb ? `if (s == 14) throw callbacks.Original(output[0]);
+                ${cb ? `${m.once ? `if (s == ${nativeOnceWireStatus}) throw new CallbackAlreadyInvokedException(${name(m.declaration)});\n                ` : ""}if (s == 14) throw callbacks.Original(output[0]);
                 if (s == 13) throw new LeanIOException(${name(m.declaration)}, ${decode("string")});
                 if (s == 4) throw new TaskIOException(${name(m.declaration)}, ${decode("string")});${m.effect === "EIO" ? `
                 if (s == 3) throw new DeclaredError<${type(m.error)}>(${name(m.declaration)}, ${decode(m.error)});` : ""}` : ""}
@@ -348,7 +352,10 @@ public sealed class DeclaredError<T>(string declaration, T payload) : global::Sy
 }
 public sealed class LeanIOException(string declaration, string message) : global::System.IO.IOException(message)
 { public string Declaration { get; } = declaration; }
-public sealed class WrongContextException() : global::System.InvalidOperationException("Lean IO requires the original process main thread") { }
+${wire.methods.some(m => m.once) ? `/// <summary>This task parameter already admitted its one callback.</summary>
+public sealed class CallbackAlreadyInvokedException(string declaration) : global::System.InvalidOperationException("callback-already-invoked")
+{ public string Declaration { get; } = declaration; }
+` : ""}public sealed class WrongContextException() : global::System.InvalidOperationException("Lean IO requires the original process main thread") { }
 public sealed class RuntimeUnavailableException() : global::System.InvalidOperationException("The Lean runtime is unavailable") { }
 public static class Api
 {

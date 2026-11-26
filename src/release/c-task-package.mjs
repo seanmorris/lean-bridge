@@ -70,7 +70,7 @@ export const buildCTaskPackage = async options => {
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, witDelivery: canonical, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php || canonical ? "words" : "gmp" };
 		const callbackHeaders = new Map();
-		if((target==="c" || cpp || rust || ruby) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
+		if((target==="c" || cpp || rust || ruby || dotnet) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
