@@ -1,0 +1,79 @@
+{
+  "archives": [
+    {
+      "bytes": 93396,
+      "path": "@example-tariff-quotes-1.0.0.tgz",
+      "sha256": "e042a26d311d376285cce1624a53c31c04ed01d0f46a8656bd0fb99175b758e0"
+    },
+    {
+      "bytes": 1676803,
+      "path": "lean-bridge-runtime-0.0.0-abi2.ae3b114c3563244686b64caebef7e5b9deff056c12907a18fb35220e9ec1edf7.tgz",
+      "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+    }
+  ],
+  "bindingIrSha256": "93b3b4d1734c2f7462a91f7d1e9763f554e41ff6fae5ef44820bdb440f67fe66",
+  "browser": {
+    "page": {
+      "after": 0,
+      "baseline": 0,
+      "entries": 0,
+      "held": 2,
+      "keptValue": 42,
+      "nextValue": 42,
+      "stageCalls": 1,
+      "stagedValue": 44
+    },
+    "react": {
+      "after": 0,
+      "baseline": 0,
+      "entries": 0,
+      "held": 2,
+      "keptValue": 73,
+      "nextValue": 42,
+      "stageCalls": 1,
+      "stagedValue": 75
+    },
+    "worker": {
+      "after": 0,
+      "baseline": 0,
+      "entries": 0,
+      "held": 2,
+      "keptValue": 73,
+      "nextValue": 42,
+      "stageCalls": 1,
+      "stagedValue": 75
+    }
+  },
+  "installedBytes": [
+    "c46b214cec840ae99a558162cc110a9155bce001945386c94abd6bdd53497790",
+    "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  ],
+  "node": {
+    "after": 0,
+    "baseline": 0,
+    "entries": 0,
+    "held": 2,
+    "keptValue": 42,
+    "nextValue": 42,
+    "stageCalls": 1,
+    "stagedValue": 44
+  },
+  "receiptSha256": "13e4ca260ebf61d1b850e26dc4fecd1e95907efe6d90a32ae7886bf396b39607",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "sourceHashes": {
+    "calls.mjs": "0397aa197338fdb0b2c978a6b73d3d9c755e30d1eaa6be9d6f427e9d024a6e9a",
+    "observer.d.mts": "9e6c6195be14acc33e1bea4af52680abeed0fb597ac54e0ff1a80f4c97e0b78c",
+    "observer.mjs": "aa0116bad442b8d501c54c68a089e4873381b0b9309f1c2f691e4d6f464f0997",
+    "page.mjs": "6e7d42f2ecfa4754c80f1d80329c54787a91cc5c83db62270c63018be1ae0b09",
+    "typed.mts": "56cc006d52584922aa0a9c325cc8a38d5a14007dc409abe5f36d55fac9ee1840",
+    "worker.mjs": "e916d49cdd522d1f549603c1e33a738b5fd381ad95597d28df0d19cdc3ec635b"
+  },
+  "typescript": {
+    "after": 0,
+    "baseline": 0,
+    "entries": 0,
+    "held": 1,
+    "value": 42
+  }
+}

@@ -582,6 +582,25 @@ method creates an independent `LeanValue`. Compare resource identity with
 `view.equals(otherView)`, including views obtained from different owners.
 Returned functions can also borrow results from their own arguments.
 
+When a generated record exposes a **leased function field**, use `retain()`
+if you need the function after closing the original handle. For example, in
+the [Tariff package and its five clients](evidence/npm-function-fields-20261126.md):
+
+```js
+const tariff = api.makeTariff(40);
+const quote = tariff.quote.retain();
+tariff.quote.dispose();
+try {
+  console.log(quote(2)); // 42
+} finally {
+  quote.dispose();
+}
+```
+
+Passing a plain JavaScript function to a call-scoped callback parameter
+doesn't give it that lifetime. Putting it into a returned record doesn't
+extend the borrow: calling it later fails before JavaScript enters the callback.
+
 ### Borrowed callback results
 
 Pass the selected argument as a whole owner, without calling `get()` on it.

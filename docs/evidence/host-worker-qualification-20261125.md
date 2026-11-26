@@ -170,7 +170,9 @@ checks `Clone`, `drop`, a caller-built record and rejection of an expired
 `FnMut` with no remaining native owner. The [C# NuGet client](dotnet-function-fields-20261126.md)
 checks `Retain`, a caller-built record and `AsCallback` repacking. A plain
 delegate that escapes its call is refused; the native broker is empty after
-the owner thread exits. These tests do not exercise a function field containing
+the owner thread exits. The [five installed npm clients](npm-function-fields-20261126.md)
+retain and repack a function from a record; all five observe a live Wasm
+identity while holding it and none after disposal. These tests do not exercise a function field containing
 a captured application object or a durable host callback.
 
 The [C callback exchange](c-callback-function-fields-20261125.md) separately
@@ -216,6 +218,9 @@ distinguish a recoverable Rust error from a panic and check the original
 allocation or payload in the caller. The [C# client](dotnet-function-fields-20261126.md)
 returns a native closure from a host callback with a typed recovery value;
 throwing after a nested allocation preserves the original managed exception.
+The [npm clients](npm-function-fields-20261126.md) return a retained Lean
+function through a host callback. Throwing a JavaScript error in that callback
+returns the original error object and leaves the retained function callable.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)
