@@ -20,13 +20,15 @@ test("offline installed NuGet components expose CLR host objects through ordinar
 	const sets=replay ? resolve(replay) : await mkdtemp(join(keep ?? root,"handoffs-"));
 	const sources={};
 	for(const f of ["ErrorOwner.cs","Installed.cs","InstalledScalars.cs"]) sources[f]=sha256(await readFile(join("tests/fixtures/dotnet-host-meter",f)));
-	if(!replay) {
+	if(!replay)
+	{
 		const candidate = await buildCliNpmPackage({ outputRoot: join(root, "cli") }), tools = join(root, "tools"); await mkdir(tools);
 		await run("npm", ["install", "--prefix", tools, "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(root, "npm-cache"), candidate.archive], root, env);
 		await rm(candidate.output, { recursive: true }); await rm(join(root, "npm-cache"), { recursive: true });
-		for(const reviewed of [false,true]) for(const peer of [false,true]) {
+		for(const reviewed of [false,true]) for(const peer of [false,true])
+		{
 			const retain=join(sets,reviewed?"reviewed":"ordinary",peer?"Peer":"Workshop");
-			const p=await captureNativeHostHandoff({root,archives,cli:join(tools,"node_modules/.bin/lean-bridge"),peer,reviewed,backend:"dotnet",retain});
+			const p=await captureNativeHostHandoff({root,archives,cli: join(tools,"node_modules/.bin/lean-bridge"),peer,reviewed,backend: "dotnet",retain});
 			for(const file of p.files) await rm(file);
 		}
 	}
@@ -37,7 +39,7 @@ test("offline installed NuGet components expose CLR host objects through ordinar
 		for(const name of ["Workshop","Peer"])
 		{
 			const dir=join(sets,route,name), handoff=join(dir,"handoff");
-			const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath:join(handoff,"package-set-receipt.json")});
+			const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
 			const api=JSON.parse(await readFile(join(dir,"binding-ir.json"))), ev=JSON.parse(await readFile(join(dir,"host-export-evidence.json")));
 			assert.equal(ev.sourceTreeSha256,receipt.source.treeSha256);
 			assert.equal(receipt.profiles.length,1); assert.equal(receipt.profiles[0].id,"native-dotnet-io-v1");
@@ -51,12 +53,13 @@ test("offline installed NuGet components expose CLR host objects through ordinar
 			assert.equal(reject.source.extensions["lean-bridge.dev/error-payload-site"].ownership,"lease");
 			const [pkg]=receipt.packages; assert.equal(pkg.name,"Acme."+name); assert.equal(pkg.artifacts.length,1);
 			const [archive]=pkg.artifacts; await copyFile(join(handoff,archive.path),join(feed,basename(archive.path)));
-			packages.push({name:pkg.name,receiptSha256:result.receiptSha256,archive,reviewedSourceSha256:ev.reviewedSourceSha256,profile:receipt.profiles[0]});
+			packages.push({name: pkg.name,receiptSha256: result.receiptSha256,archive,reviewedSourceSha256: ev.reviewedSourceSha256,profile: receipt.profiles[0]});
 		}
 		const observations=await runDotnetHostConsumers(root,feed,false,true);
 		for(const line of observations) t.diagnostic(route + " " + line);
-		if(env.LEAN_BRIDGE_CLR_ERROR_RESULTS) {
-			await mkdir(env.LEAN_BRIDGE_CLR_ERROR_RESULTS,{recursive:true});
+		if(env.LEAN_BRIDGE_CLR_ERROR_RESULTS)
+		{
+			await mkdir(env.LEAN_BRIDGE_CLR_ERROR_RESULTS,{recursive: true});
 			await writeFile(join(env.LEAN_BRIDGE_CLR_ERROR_RESULTS,route+".json"),canonicalJson({route,packages,sources,observations}));
 		}
 	}

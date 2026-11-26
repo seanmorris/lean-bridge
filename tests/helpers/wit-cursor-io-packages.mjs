@@ -50,7 +50,7 @@ const probes=async ({prefix,archive,area,canonical,wasm,tools,env})=>{
 		await run(tools,["component","targets",world,wasm],area,env);
 		const stdout=await run(join(prefix,manifest.command),[wasm],area,runtime);
 		assert.equal(stdout,"4");
-		return {client:"application.wat",clientSha256:sha256(await readFile(join(fixture,"application.wat"))),wasmSha256:sha256(await readFile(wasm)),stdout};
+		return {client: "application.wat",clientSha256: sha256(await readFile(join(fixture,"application.wat"))),wasmSha256: sha256(await readFile(wasm)),stdout};
 	} else
 	{
 		const world=join(prefix,"wit/watch.wit");
@@ -62,7 +62,7 @@ const probes=async ({prefix,archive,area,canonical,wasm,tools,env})=>{
 		await run("cc",["-std=c11","-Wall","-Wextra","-Werror",join(fixture,"consumer.c"),...flags,"-o","consumer"],area,ccenv);
 		const stdout=await run(join(area,"consumer"),[],area,runtime);
 		assert.equal(stdout,"pollable cursor: item, end, IO error, typed error, four closes");
-		return {client:"consumer.c",clientSha256:sha256(await readFile(join(fixture,"consumer.c"))),stdout};
+		return {client: "consumer.c",clientSha256: sha256(await readFile(join(fixture,"consumer.c"))),stdout};
 	}
 };
 const guest=async (temp,env)=>{
@@ -80,9 +80,10 @@ const installed=async (out,area,options)=>{
 	await mkdir(area);
 	const prefix=join(area,"relocated watch");
 	const observation=await probes({...options,area,canonical: pkg.profile===profiles[1],prefix,archive: join(out,a.path)});
-	if(process.env.LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS) {
+	if(process.env.LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS)
+	{
 		const release=await witInstalledReceipt(prefix,{receipt,result});
-		await writeFile(join(process.env.LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS,pkg.profile+"-"+release.route+".json"),canonicalJson({release,observation}),{flag:"wx"});
+		await writeFile(join(process.env.LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS,pkg.profile+"-"+release.route+".json"),canonicalJson({release,observation}),{flag: "wx"});
 	}
 	return result.receiptSha256;
 };

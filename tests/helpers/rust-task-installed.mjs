@@ -113,7 +113,8 @@ test("offline installed Cargo releases deliver real Lean tasks, streams and nomi
 	}
 	const extra = env.LEAN_BRIDGE_RUST_TASK_PARKED_OUTPUT;
 	const ownerOutput = env.LEAN_BRIDGE_RUST_TASK_DUAL_OUTPUT;
-	const { parked, owners, ...result } = await runInstalledRustTasks({ root, kept, environment: env, swapPrimary:Boolean(ownerOutput)
+	const { parked, owners, ...result } = await runInstalledRustTasks({
+		root, kept, environment: env, swapPrimary: Boolean(ownerOutput)
 		, ...extra ? { parkedClient: join(fixture, "rust-task-lab/parked_stream.rs") } : {} });
 	if(replay) assert.deepEqual(result, JSON.parse(await readFile(join(kept, "acceptance.json"))));
 	else await writeFile(join(kept, "acceptance.json"), canonicalJson(result), { flag: "wx" });

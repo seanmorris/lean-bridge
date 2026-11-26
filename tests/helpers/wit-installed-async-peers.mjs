@@ -38,17 +38,20 @@ const prepareClient=async(root,a,b,dual,trace)=>{
 		const run=()=>exec(join(dirs[0],"bin/lean-bridge-wit-run"),[...dirs,"--",...inputs],{env,cwd: client,timeout: 30000});
 		if(!trace)return run();
 		const guests=[];
-		for(const input of inputs) {
+		for(const input of inputs)
+		{
 			const file=basename(input),path=resolve(client,input);
 			if(!Object.hasOwn(trace.guests,file))trace.guests[file]=sha256(await readFile(path));
 			guests.push(file);
 		}
 		const order=dirs.map(d=>trace.installed.get(d));
 		assert.ok(order.every(Boolean));
-		try {
-			const result=await run();trace.runs.push({order,guests,stdout:result.stdout.trimEnd()});return result;
-		} catch(error) {
-			trace.runs.push({order,guests,exitCode:error.code});throw error;
+		try
+		{
+			const result=await run();trace.runs.push({order,guests,stdout: result.stdout.trimEnd()});return result;
+		} catch(error)
+		{
+			trace.runs.push({order,guests,exitCode: error.code});throw error;
 		}
 	};
 	let checkedRegistrations=0;
@@ -124,7 +127,7 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 	// to occupy disk while the downstream executable runs.
 	const installedKeys=new Set();
 	const output=process.env.LEAN_BRIDGE_WIT_PEER_OBSERVATION;
-	const trace=output?{installed:new Map(),releases:{},guests:{},runs:[]}:null;
+	const trace=output?{installed: new Map(),releases: {},guests: {},runs: []}:null;
 	const install=async(route,name)=>{
 		const key=route+"-"+name,work=join(root,key),handoff=join(releases,key),installed=join(root,"installed "+key);
 		const verified=await verify(handoff),r=verified.receipt;
@@ -140,7 +143,8 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 		{assert.deepEqual(ir,reviews[name]);assert.equal(meta.reviewedSourceSha256,sha256(canonicalJson(ir)));}
 		assert.deepEqual(meta.inputs,name==="gauge" && !dual?["objects","application"]:["objects","callbacks","application"]);
 		for(const f of ["bin/lean-bridge-wit-run","lib/lean-bridge-wit-async-peer.so"])assert.equal(meta.files[f].sha256,sha256(await readFile(join(installed,f))));
-		if(trace) {
+		if(trace)
+		{
 			const release=await witInstalledReceipt(installed,verified);
 			assert.equal(release.route,route);
 			if(trace.releases[key])assert.deepEqual(trace.releases[key],release);
@@ -171,7 +175,7 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 		await bothOrders(dirs);
 	}
 	assert.equal(count(),dual?80:32);
-	if(trace)await writeFile(output,canonicalJson({releases:trace.releases,guests:trace.guests,runs:trace.runs}),{flag:"wx"});
+	if(trace)await writeFile(output,canonicalJson({releases: trace.releases,guests: trace.guests,runs: trace.runs}),{flag: "wx"});
 	if(dual)
 	{
 		t.diagnostic("80 cross-package cases: 64 distinct-box first-read/factory orders and 16 same-box cancellations; both defining guests balance their own acquisitions and drops");

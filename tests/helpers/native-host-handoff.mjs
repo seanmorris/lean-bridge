@@ -105,7 +105,8 @@ export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed,
 			}
 		}
 		if(reviewed) assert.deepEqual(api, await json(review)); else await writeFile(review, canonicalJson(api), { flag: "wx" });
-		if(retain) {
+		if(retain)
+		{
 			await copyPackageSetHandoff(out,join(retain,"handoff"));
 			for(const path of ["binding-ir.json","host-export-evidence.json"]) await copyFile(join(out,path),join(retain,path),constants.COPYFILE_EXCL);
 		}

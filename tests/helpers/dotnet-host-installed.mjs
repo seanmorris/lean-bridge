@@ -69,7 +69,8 @@ export const runDotnetHostConsumers = async (root, feed, workers = false, lastOw
 				assert.equal(lines.length, 1); assert.match(lines[0], /^retired native drain: [0-9]+ -> 0$/u);
 				results.push(order + ": " + lines[0]);
 			}
-			else if(lastOwner) {
+			else if(lastOwner)
+			{
 				assert.deepEqual(lines,["declared error outlived producer; peer updated last payload to 42; collected with peer still bound"]);
 				results.push(order+": "+lines[0]);
 			} else assert.deepEqual(lines, []);

@@ -5,7 +5,14 @@ import {join} from "node:path";
 import {hostPublicHash} from "../../src/analyze/host-records.mjs";
 import {sha256} from "../../src/capsule/node.mjs";
 
-/** Read the authoring route from the installed compiler and review, not the handoff directory name. */
+/**
+ * Read the authoring route from the installed compiler and review, not the handoff directory name.
+ *
+ * @param prefix - Relocated installation extracted from the verified archive.
+ * @param verified - Result of authenticating the package-set receipt and its archive.
+ * @param verified.receipt - Producer and package identities.
+ * @param verified.result - Receipt verification including the original digest.
+ */
 export const witInstalledReceipt=async(prefix,{receipt,result})=>{
 	const [pkg]=receipt.packages,[archive]=pkg.artifacts, metadata=join(prefix,"share/lean-bridge");
 	const parse=async path=>JSON.parse(await readFile(path,"utf8"));
@@ -15,12 +22,17 @@ export const witInstalledReceipt=async(prefix,{receipt,result})=>{
 	assert.deepEqual([manifest.name,manifest.profile,manifest.bindingIrSha256,manifest.runtimeIdentity],[pkg.name,pkg.profile,irHash,pkg.runtimeIdentity]);
 	assert.equal(receipt.profiles.find(p=>p.id===pkg.profile)?.bindingIrSha256,irHash);
 	assert.equal(manifest.reviewedSourceSha256??null,reviewed);
-	if(reviewed===null)await assert.rejects(access(reviewPath),{code:"ENOENT"});
-	else {
+	if(reviewed===null)await assert.rejects(access(reviewPath),{code: "ENOENT"});
+	else
+	{
 		const review=await readFile(reviewPath);
 		assert.equal(sha256(review),reviewed);
 		assert.deepEqual(JSON.parse(review),ir);
 	}
-	return {name:pkg.name,profile:pkg.profile,route:reviewed===null?"ordinary":"reviewed",
-		receiptSha256:result.receiptSha256,archiveSha256:archive.sha256,bindingIrSha256:irHash,reviewedSourceSha256:reviewed};
+	return {
+		name: pkg.name, profile: pkg.profile
+		, route: reviewed===null?"ordinary":"reviewed"
+		, receiptSha256: result.receiptSha256, archiveSha256: archive.sha256
+		, bindingIrSha256: irHash, reviewedSourceSha256: reviewed
+	};
 };
