@@ -258,6 +258,25 @@ Both native allocations and live identities reached zero at shutdown.
 These direct adapter checks are separate from fresh Maven installation;
 `npm run test:jvm-function-fields` builds and relocates both authoring routes.
 
+### Installed Java and Kotlin consumers
+
+The [ordinary Maven release](jvm-callback-input-records-20261126/ordinary.json)
+and [reviewed Maven release](jvm-callback-input-records-20261126/reviewed.json)
+passed separate offline installs. Each archive advertises a call-scoped
+`TariffInput.quote`. The clients compile independently against the package:
+Java supplies a lambda, and Kotlin supplies a function. They run after the
+Maven repository and build inputs have been removed, on a JRE containing
+only `java.base` 22.0.2.
+
+On both routes and in both languages, an application callback could capture
+state and reenter Lean. Neither a returned record nor a direct function
+result could extend the callback's lifetime. An exception came back as the
+same object, invalid input did not dispatch, and an explicitly leased Lean
+function remained usable. The broker reported one live identity at baseline,
+four while leases were held, one again after disposal, and zero after the
+owner thread exited. The receipts include separate hashes for the JAR, POM,
+source files and executed Java and Kotlin classes.
+
 ## PHP-Wasm callers
 
 The Zend generator emits a separate input class for selected callback fields;

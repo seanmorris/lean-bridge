@@ -1,0 +1,84 @@
+{
+  "archives": [
+    {
+      "bytes": 54120189,
+      "path": "archives/tariff-quotes-1.0.0.jar",
+      "sha256": "5664105aa50e44603dd494c6da27e5cb740977cff30dbbdc567221f3c72f5405"
+    },
+    {
+      "bytes": 623,
+      "path": "archives/tariff-quotes-1.0.0.pom",
+      "sha256": "2e53c4de856b3c7082abb8ba04417dc8a2344ed262377b6c62ce1939e4443826"
+    }
+  ],
+  "bindingIrSha256": "7d53bdfa6b92fc0b51f681760f1e3220ea9c634e2f4c6ffb6e6391bc58e4818c",
+  "compiled": {
+    "java": "26e6c0b22e7227ef156629e6fa3e6749c2fbb95e138c1d18e9bc70c4dcf9b9cc",
+    "javaInput": "5765fe0f3f2cf3b20d6ce28e7edc816b481d0cab227db81c4e7af741402aadee",
+    "kotlin": "4aba27dcdf23f09afa615e84319494988a71b38cd31d8c30ed7cbaea44efb0da",
+    "kotlinInput": "f2312a647e72ca93e5d22e3243647cabcbe8bb4ab4b957480dc05c7da141d3db"
+  },
+  "deployed": {
+    "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+    "kotlin-stdlib-2.2.0.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+    "tariff-quotes-1.0.0.jar": "5664105aa50e44603dd494c6da27e5cb740977cff30dbbdc567221f3c72f5405"
+  },
+  "modules": "java.base@22.0.2",
+  "receiptSha256": "36006741794d17e3df3f96719da0596151f186f1e93dc6f006e421ed870d08eb",
+  "results": {
+    "java": {
+      "afterCallbackFailure": 1,
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "closed": 1,
+      "echo": 1,
+      "expired": 1,
+      "held": 4,
+      "repack": 1,
+      "retain": 1
+    },
+    "javaInput": {
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "capture": 1,
+      "error": 1,
+      "expired": 1,
+      "held": 4,
+      "lease": 1,
+      "reentry": 1,
+      "validation": 1
+    },
+    "kotlin": {
+      "afterCallbackFailure": 1,
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "closed": 1,
+      "echo": 1,
+      "expired": 1,
+      "held": 4,
+      "repack": 1,
+      "retain": 1
+    },
+    "kotlinInput": {
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "capture": 1,
+      "error": 1,
+      "expired": 1,
+      "held": 4,
+      "lease": 1,
+      "reentry": 1,
+      "validation": 1
+    }
+  },
+  "reviewedSourceSha256": "06e3bca440b81160b0c06e47c953e2e26cd438766e1ce1b50e8273bac4226aae",
+  "route": "reviewed",
+  "sources": {
+    "JavaInput.java": "b8430828f9d507748e28e685dc494c190c3195943a881529f82ab783d3fae336",
+    "JavaTariff.java": "066b62b070d1e78600533a5b80c1c655d9a3d121c6d34e1a11d0d505c5c5aee6",
+    "KotlinInput.kt": "b8d30627a58a00ec03b3d0146b9a3b6ac86f289ad0a668da44531bc1466fad54",
+    "KotlinTariff.kt": "af699553f07cbce25b81a3cee8046c08f46c894988beed748c423e4249e47733",
+    "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+    "Ownership.java": "c0acc0469c467f2f2ab8445abddebb592fc4c9bef281e168c487369cc147f924"
+  }
+}

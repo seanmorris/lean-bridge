@@ -261,8 +261,9 @@ passed all seven scenarios. The [two RubyGems installs](host-callback-input-reco
 and [both C# NuGet installs](host-callback-input-records-20261126.md#c-callers-1)
 also passed. The [ordinary and reviewed CPAN installs](host-callback-input-records-20261126.md#perl-callers)
 passed with prebuilt XS on all four Perl ABIs. The [native Composer installs](host-callback-input-records-20261126.md#native-php-callers)
-passed in PHP 8.2 and 8.5 on both routes. This brings the input-field case
-to 13 of the 17 profiles.
+passed in PHP 8.2 and 8.5 on both routes. The [offline Maven installs](host-callback-input-records-20261126.md#installed-java-and-kotlin-consumers)
+also passed in separate Java and Kotlin applications. This brings the
+input-field case to 15 of the 17 profiles; PHP-Wasm and WIT/WASI remain.
 
 ### Does a callback allow one call or many?
 
