@@ -113,8 +113,25 @@ observed that neither the pending pull nor its completion signal was ready.
 Releasing the gate with 71 produced the item 73 (the cursor adds 2), and
 closing the cursor ran one finalizer. To run the producer check, use
 `lake build Reader` then `lake env lean --run Check.lean` in the fixture
-directory. This establishes that the worker genuinely waits; the installed
-JavaScript scheduler must be tested separately.
+directory. This checks the producer independently of the host scheduler.
+
+Five installed npm clients then [cancelled the same reader](../../tests/fixtures/javascript-parked-reader/calls.mjs):
+Node JavaScript, executed strict TypeScript, Chromium, a mounted React
+handler and a dedicated browser worker. On both the [ordinary](npm-parked-reader-20261126/ordinary.json)
+and [reviewed](npm-parked-reader-20261126/reviewed.json) packages, closing
+rejected the outstanding read once. Before release there was one pull, **no**
+finalizer and one live native owner. A sibling task completed while both
+calls to `return()` waited for cleanup. Lean eventually produced 73 but the
+client never received the item. Both closes completed, one finalizer ran,
+and all five runtime counters returned to zero. An overlapping pull had been
+refused; polling the closed iterator did not generate more demands.
+
+Run `npm run test:javascript-parked-reader` with the [threaded npm author
+inputs](threaded-task-probe.md), `LEAN_BRIDGE_TEST_TASK_INPUTS` set to the
+prepared SDK, and Playwright Chromium installed. Set
+`LEAN_BRIDGE_NPM_PARKED_READER_KEEP` to an existing directory to retain both
+handoffs, or `LEAN_BRIDGE_NPM_PARKED_READER_REPLAY` to the reported handoff
+directory to rerun the installs without rebuilding.
 
 On CPython, the [Timers client](../../tests/fixtures/python-lean-tasks/cancel_pull.py)
 waited until Lean had entered the pull, the reader was pending and two native
