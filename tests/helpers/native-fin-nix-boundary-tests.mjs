@@ -9,6 +9,26 @@ import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
+import { moduleSpecifiers } from "./module-closure.mjs";
+
+test("the Nix authoring engine includes the literal imports and file assets of its modules", async () => {
+	const probe = 'new URL("header.h", import.meta.url); new URL("../tables/x.h", import.meta.url); new URL("./generated/", import.meta.url); new URL("..", import.meta.url); new URL("./missing", other.url);';
+	assert.deepEqual(moduleSpecifiers(probe, "probe.mjs", true), ["./header.h", "../tables/x.h"]);
+	assert.deepEqual(moduleSpecifiers(probe, "probe.mjs"), []);
+	const manifest = JSON.parse(await readFile("nix/perl-engine-source-boundary.json", "utf8"));
+	const included = new Set(manifest.includedFiles), missing = [];
+	for(const file of included)
+	{
+		if(!file.endsWith(".mjs")) continue;
+		const source = await readFile(file, "utf8");
+		for(const specifier of new Set(moduleSpecifiers(source, file, true)))
+		{
+			const dependency = join(dirname(file), specifier);
+			if(!included.has(dependency)) missing.push(file + " needs " + dependency);
+		}
+	}
+	assert.deepEqual(missing.sort(), []);
+});
 
 test("the exact Nix Perl source boundary imports its engine and detects missing refinement modules", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-boundary-"));

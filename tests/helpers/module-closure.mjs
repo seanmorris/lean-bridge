@@ -15,14 +15,24 @@ import ts from "typescript";
  *
  * @param source - Module text.
  * @param path - Path used for diagnostics only.
+ * @param includeAssets - Also collect literal file URLs relative to import.meta.url.
  */
-export const moduleSpecifiers = (source, path = "module.mjs") => {
+export const moduleSpecifiers = (source, path = "module.mjs", includeAssets = false) => {
 	const file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 	const found = [];
 	const literal = node => node && ts.isStringLiteralLike(node) && !ts.isTemplateExpression(node) ? node.text : null;
 	const visit = node => {
 		if(ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) found.push(literal(node.moduleSpecifier));
 		else if(ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) found.push(literal(node.arguments[0]));
+		else if(includeAssets && ts.isNewExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "URL")
+		{
+			const [asset, base] = node.arguments ?? [];
+			const name = literal(asset);
+			if(name && !name.endsWith("/") && !/(?:^|\/)\.{1,2}$/u.test(name) && !/^[a-z][\w+.-]*:|^\/|[?#]/iu.test(name)
+				&& base && ts.isPropertyAccessExpression(base) && base.name.text === "url"
+				&& ts.isMetaProperty(base.expression) && base.expression.keywordToken === ts.SyntaxKind.ImportKeyword
+				&& base.expression.name.text === "meta") found.push(name.startsWith(".") ? name : "./" + name);
+		}
 		ts.forEachChild(node, visit);
 	};
 	visit(file);
