@@ -70,7 +70,7 @@ export const buildCTaskPackage = async options => {
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, witDelivery: canonical, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php || canonical ? "words" : "gmp" };
 		const callbackHeaders = new Map();
-		if((target==="c" || cpp || rust) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
+		if((target==="c" || cpp || rust || ruby) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
@@ -81,7 +81,7 @@ export const buildCTaskPackage = async options => {
 		if(php && !synchronous) config.phpDelivery = true;
 		if(dotnet && synchronous && entries.some(e=>e.delivery==="iterator")) config.dotnetCursorExit = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
-		const wire = (ruby || dotnet || jvm || perl || php) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
+		const wire = (ruby || dotnet || jvm || perl || php) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources, onceByDeclaration: config.onceByDeclaration });
 		const phpSurface = synchronous ? compilePhpSyncSurface : compilePhpTaskSurface;
 		const phpPort = php && generatePhpIOPort(phpSurface({ name, version, api, evidence, bindingIrSha256 }));
 		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix, wire.wait && await asset("../backends/jvm/task-reactor.c"));

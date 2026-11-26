@@ -148,6 +148,17 @@ See [the Ruby consumer flow](../consume/ruby.md#await-a-task-or-read-a-stream).
 
 ### Export a callback-taking task
 
+For a standalone task, use the Lean parameter name in `taskCallbackPolicies`:
+
+```json
+{"taskCallbackPolicies":[{"declaration":"Budget.probe","parameter":"f","invocation":"once"}]}
+```
+
+Omitted parameters allow repeated calls. Lean workers compete for one
+allowance per registration before Ruby dispatch; a failed first call still
+uses it. The ordinary and reviewed package routes check the same policy.
+Bindings with imported Ruby objects do not yet accept this option.
+
 Give the selected task a unary parameter of type `α → IO β`, where both
 types are copied primitives. No additional callback manifest is required.
 For example, `Feedback.once : UInt32 → (UInt32 → IO UInt32) → BaseIO (Task (Except IO.Error UInt32))`

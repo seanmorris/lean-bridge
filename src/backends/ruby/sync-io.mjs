@@ -4,6 +4,7 @@
  * @file
  */
 import { readFile } from "node:fs/promises";
+import {nativeOnceWireStatus} from "../c/task-wire.mjs";
 import { copiedRubyRuntime, rubyLiteral } from "./copied-assets.mjs";
 import { isReservedRubyName } from "./copied-model.mjs";
 import { verifiedRubyAssets } from "./verified-assets.mjs";
@@ -47,7 +48,7 @@ const asyncMethod = m => `      OPS${m.i} = {
         clear: CLEAR, open_wait: WAIT_OPEN, wake: WAIT_WAKE, end_wait: WAIT_CLOSE,
         decl: ${literal(m.declaration)}, step: ${literal(m.stepDeclaration)},
         args: ${literal(m.args)}, result: ${literal(m.result)}, error: ${literal(m.error)},
-        terminal: ${literal(m.terminal)},${m.scoped ? " scoped: true," : ""}${callbacks(m)} depth: ${m.tagBytes}
+        terminal: ${literal(m.terminal)},${m.once ? " once: true," : ""}${m.scoped ? " scoped: true," : ""}${callbacks(m)} depth: ${m.tagBytes}
       }.freeze
       def self.call${m.i}(${m.params})
         TaskRuntimeV1.start(OPS${m.i}, [${m.params}])
@@ -67,6 +68,9 @@ export const generateRubySyncSources = async options => {
 	if(wire.wait && reservedTasks.includes(ns))
 		throw new TypeError("Reserved Ruby task namespace");
 	const hosts = (wire.leases ?? []).filter(r => r.host), leases = (wire.leases ?? []).filter(r => !r.host);
+	const once=wire.methods.some(m=>m.once);
+	if(once && (ns==="CallbackAlreadyInvoked" || leases.some(r=>r.name==="CallbackAlreadyInvoked")))
+		throw new TypeError("Reserved Ruby one-call exception name");
 	const direct = wire.methods.some(m => m.delivery === "iterator");
 	const cursorNames = ["Cursor", "ImmediatePullV1"];
 	if(direct && (wire.wait || hosts.length || cursorNames.includes(ns) || leases.some(r => cursorNames.includes(r.name))))
@@ -100,7 +104,14 @@ module LeanBridge
     ${provider ? "" : `UNIT = ::Object.new.freeze
     Ok = ::Data.define(:value)
     Err = ::Data.define(:value)`}
-    class BoundaryError < ::StandardError; end
+    class BoundaryError < ::StandardError; end${once ? `
+    class CallbackAlreadyInvoked < BoundaryError
+      attr_reader :declaration
+      def initialize(declaration)
+        @declaration = declaration
+        super("callback-already-invoked")
+      end
+    end` : ""}
     class WrongContext < BoundaryError; end
     class Unavailable < BoundaryError; end${leases.length ? "\n    class ClosedResource < BoundaryError; end" : ""}
     ${provider ? "" : `class IOError < ::IOError
@@ -162,7 +173,9 @@ ${methods.map(m => m.delivery === "iterator" ? cursorMethod(m) : m.delivery ? as
 end
 `;
 	const helper = (await readFile(new URL("sync-wire.rb", import.meta.url), "utf8")).replace("LeanBridge::GeneratedSyncComponent", "LeanBridge::" + ns);
-	const runtime = wire.wait && (await readFile(new URL("task-runtime.rb", import.meta.url), "utf8")).replaceAll("LeanBridge::GeneratedTaskComponent", "LeanBridge::" + ns);
+	const runtime = wire.wait && (await readFile(new URL("task-runtime.rb", import.meta.url), "utf8"))
+		.replaceAll("LeanBridge::GeneratedTaskComponent", "LeanBridge::" + ns)
+		.replace(" # __LB_ONCE_DECODE__",once?`\n        when ${nativeOnceWireStatus}\n          status(code) unless ops[:once]\n          raise CallbackAlreadyInvoked.new(ops[:decl])`:"");
 	const retainedSource = retained && (await readFile(new URL("retained-task.rb", import.meta.url), "utf8")).replaceAll("LeanBridge::GeneratedTaskComponent", "LeanBridge::" + ns);
 	return { namespace: "LeanBridge::" + ns, requirePath: path
 		, files: { [`lib/${path}.rb`]: (provider?.ruby ?? "") + pub + (provider ? 'require_relative "' + slug + '/native/linux-x64/' + provider.extension + '"\n' + provider.privateMethods : "")

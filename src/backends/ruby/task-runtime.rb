@@ -175,7 +175,7 @@ module LeanBridge::GeneratedTaskComponent
           raise StepError.new(ops[:step], decode(ops[:terminal], out, tags))
         when 4 then raise TaskIOError.new(ops[:step] || ops[:decl], decode("string", out, tags))
         when 13 then raise IOError.new(ops[:decl], decode("string", out, tags))
-        when 14 then raise callbacks.original(out[0, 8].unpack1("Q<"))
+        when 14 then raise callbacks.original(out[0, 8].unpack1("Q<")) # __LB_ONCE_DECODE__
         else status(code)
         end
       end

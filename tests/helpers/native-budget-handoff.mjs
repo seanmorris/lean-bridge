@@ -21,11 +21,12 @@ export const buildNativeBudget=async options=>{
 	const cfg=JSON.parse(await readFile(join(common,"lean-bridge.exports.json")));
 	cfg.modules.push("Racing");
 	const declarations=["Racing.duringStart","Racing.race","Racing.replace"];
-	if(target==="cargo")
+	const extraModules=target==="rubygems"?["TypedBudget","FactoryFault"]:target==="cargo"?["TypedBudget"]:[];
+	for(const module of extraModules)
 	{
-		await copyFile(join(extra,"TypedBudget.lean"),join(project,"TypedBudget.lean"));
-		await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "TypedBudget"\n');
-		cfg.modules.push("TypedBudget");declarations.push("TypedBudget.checked");
+		await copyFile(join(extra,module+".lean"),join(project,module+".lean"));
+		await appendFile(join(project,"lakefile.toml"),'\n[[lean_lib]]\nname = "'+module+'"\n');
+		cfg.modules.push(module);declarations.push(module+(module==="TypedBudget"?".checked":".start"));
 	}
 	for(const n of declarations)
 	{

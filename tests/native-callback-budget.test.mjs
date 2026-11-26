@@ -6,8 +6,10 @@ import {generateCTaskExports} from "../src/backends/c/task-exports.mjs";
 import {generateCppTaskHeader} from "../src/backends/cpp/task-exports.mjs";
 import {retainedOnceSlots} from "../src/backends/native/task-callback.mjs";
 import {generateRustTaskSources} from "../src/backends/rust/task-crate.mjs";
+import {generateSyncWire} from "../src/backends/c/sync-wire.mjs";
+import {generateRubySyncSources} from "../src/backends/ruby/sync-io.mjs";
 
-for(const target of ["c","cpp","rust"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
+for(const target of ["c","cpp","rust","ruby"]) test(target+" rejects a stale reviewed callback limit and generates admission before the request",async()=>{
 	const v={kind: "primitive",name: "uint32"},fn={kind: "io-callback",argument: v,reply: v};
 	const parameters=[{name: "n",type: v},{name: "f",type: fn},{name: "g",type: fn}],name="Budget.probe";
 	const entry={name: "probe",declaration: name,module: "Budget",parameters
@@ -21,8 +23,9 @@ for(const target of ["c","cpp","rust"]) test(target+" rejects a stale reviewed c
 	const {api,entries}=reconcileHostExports({metadata,selection: checked,component});
 	const onceByDeclaration=retainedOnceSlots(api);assert.deepEqual([...onceByDeclaration],[[name,[2]]]);
 	const componentIdentity="1".repeat(64),integerMode=target==="c"?"gmp":"words";
+	const selector=target==="ruby"?"rubyDelivery":target+"Callbacks";
 	const opts={entries,modules: ["Budget"],name: "budget"
-		, componentIdentity,[target+"Callbacks"]: true,integerMode};
+		, componentIdentity,[selector]: true,integerMode};
 	const plain=generateCTaskExports(opts),built=generateCTaskExports({...opts,onceByDeclaration});
 	assert.deepEqual(generateCTaskExports({...opts,onceByDeclaration: new Map()}),plain);
 	for(const bad of [new Map([[name,[0]]]),new Map([["Other.entry",[2]]]),new Map([[name,[2,2]]])])
@@ -30,6 +33,18 @@ for(const target of ["c","cpp","rust"]) test(target+" rejects a stale reviewed c
 	assert.doesNotMatch(plain.header+plain.source+plain.entryLean,/CALLBACK_ALREADY_INVOKED|cbBudgetClaim/u);
 	assert.match(built.entryLean,/Budget.probe v0 \(cbInvoke port 1\) \(cbInvokeOnce port used2 denied 2\)/u);
 	assert.match(built.header,/CALLBACK_ALREADY_INVOKED/u);
+	if(target==="ruby")
+	{
+		const wire=generateSyncWire(built.prefix,entries,{tasks: true,onceByDeclaration});
+		const prior=generateSyncWire(plain.prefix,entries,{tasks: true});
+		assert.match(wire.source,/else if \(s == lbc_budget_CALLBACK_ALREADY_INVOKED\) s = 16;/u);
+		assert.match(wire.source,/if \(phase == 2\) s = 13;/u);
+		assert.equal(wire.methods[0].once,true);assert.equal(prior.methods[0].once,undefined);
+		const source=async w=>Object.values((await generateRubySyncSources({name: "budget",wire: w})).files).join("\n");
+		assert.doesNotMatch(await source(prior),/CallbackAlreadyInvoked|__LB_ONCE_DECODE__|when 16/u);
+		assert.match(await source(wire),/when 16\s+status\(code\) unless ops\[:once\]\s+raise CallbackAlreadyInvoked/u);
+		await assert.rejects(generateRubySyncSources({name: "callback-already-invoked",wire}),/Reserved Ruby one-call exception/u);
+	}
 	if(target==="cpp")
 	{
 		const header={entries,prefix: built.prefix};

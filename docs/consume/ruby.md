@@ -259,6 +259,12 @@ See the [installed two-gem check](../evidence/async-delivery-crosswalk-20261125.
 
 ### Pass a callback to a Lean task
 
+Some standalone task parameters permit one call per registration. If Lean
+tries again, `await` raises the component's `CallbackAlreadyInvoked` with
+the Lean `declaration` name. Your Ruby callable does not run a second time,
+even if Lean caught an exception from the first call. Passing the same
+callable to another parameter or another task gives it a separate allowance.
+
 For a task that takes a Ruby callback, pass an object with `call`. If the
 last parameter is a callback, you can pass a block instead. For example,
 the [Feedback package](../../tests/fixtures/ruby-retained-tasks/Feedback.lean) calls

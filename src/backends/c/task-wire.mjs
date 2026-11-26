@@ -4,6 +4,9 @@
  * @file
  */
 
+// Public to the host code generators, private to each compiled package's wire.
+export const nativeOnceWireStatus=16;
+
 /**
  * Build a per-declaration native handle adapter without passing structs by value.
  *
@@ -59,7 +62,8 @@ ${stream ? `int ${names.pull}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owne
 
 /**
  * Adapt the private typed callback port. Workers see Lean promises, never host objects.
- * Status 13 is a factory IO error; 14 carries the original host failure's one-based ID.
+ * Wire statuses: 13 factory IO; 14 original host exception; 15 Wasm host ticket;
+ * 16 one-call refusal. Never pass the native admission enum through verbatim.
  *
  * @param a - Compiler-authenticated declaration, word codecs and copy emitters.
  */
@@ -121,7 +125,7 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     ${p}_buffer msg = {0}; uint32_t origin = 0; uint8_t phase = 0;
     int s = ${n}_take(&o, &v, ${ec ? "&er, " : ""}&msg, &origin, &phase); ${save}
     if (s == ${p}_OK) { ${emit(result, "v", p)} }
-    ${ec ? `else if (s == ${p}_TYPED_ERROR) { ${emit(err, "er", p)} }` : ""}
+    ${a.once ? `else if (s == ${p}_CALLBACK_ALREADY_INVOKED) s = ${nativeOnceWireStatus};\n    ` : ""}${ec ? `else if (s == ${p}_TYPED_ERROR) { ${emit(err, "er", p)} }` : ""}
     else if (s == ${p}_IO_ERROR) {
         if (origin) { ${a.witCallbacks ? emit("string","msg",p)+" out[2] = origin; tags[0] = phase; " : "out[0] = origin; "+(a.wasmTasks ? "out[1] = phase; " : "")}s = 14; }
         ${a.wasmHost?"else if (msg.host_ticket) { out[0]=msg.host_ticket; out[1]=phase; s=15; }":""}
@@ -137,6 +141,7 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
 		, delivery: e.delivery
 		, ...(a.wasmTasks || a.witCallbacks) ? {terminal: e.taskIO ? "string" : null} : {}
 		, callbacks: callbacks.map(({ j, arg, reply }) => [j, arg, reply])
+		, ...a.once ? { once: true } : {}
 		, tagBytes: Math.max(1, depth(err), depth(result)) };
 	return { source, names, method };
 };

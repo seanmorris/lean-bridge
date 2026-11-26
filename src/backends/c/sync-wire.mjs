@@ -54,6 +54,7 @@ const emit = (v, expr, p, index = 0) => {
  * @param entries - Elaborated synchronous application declarations.
  * @param options - Enable native Task and pull descriptors for a task package.
  * @param options.tasks - Include task handles and scheduler wait operations.
+ * @param options.onceByDeclaration - Standalone native task registrations with a checked single-use allowance.
  * @param options.resources - Nominal resource definitions authenticated by elaboration.
  * @param options.phpWasm - Check inputs for the synchronous wasm32 Zend transport.
  * @param options.wasm32 - Check inputs for a single-threaded wasm32 synchronous transport.
@@ -69,7 +70,7 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.witCallbacks - Preserve factory versus worker failures when dispatching on a Wasmtime store owner.
  * @param options.staticHost - Verified C, C++ or Rust owner and its domain-qualified class keys.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[],rubyHostKinds=[],dotnetHostKinds=[],jvmHostKinds=[],perlHostKinds=[],wasmZendObjects=false, staticHost } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false,wasmHostKinds=[],phpHostKinds=[],rubyHostKinds=[],dotnetHostKinds=[],jvmHostKinds=[],perlHostKinds=[],wasmZendObjects=false, staticHost,onceByDeclaration } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
 	if(witCallbacks && (!tasks || checkedWasm || wasmCallbacks)) throw new TypeError("Wasmtime callbacks require a native task wire");
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
@@ -108,7 +109,9 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
 			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
-			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks, wasmHost, hostValues });
+			const once=onceByDeclaration?.has(e.declaration);
+			if(once && (checkedWasm || witCallbacks || hostValues)) throw new TypeError("One-call wire requires a standalone native task");
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks, wasmHost, hostValues, once });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		const args = e.parameters.map(a => wireShape(a.type));
