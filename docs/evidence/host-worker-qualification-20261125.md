@@ -284,9 +284,11 @@ contract for retained callbacks on the threaded npm profile. The author
 selects the allowance in the export configuration. It is per task and
 parameter: an independent registration works even while another is active.
 The [PHP-Wasm Budget install](php-wasm-once-callback-20261126.md) enforces
-the same limit on synchronous PHP callbacks retained by a Lean task. The five
-npm clients plus PHP-Wasm give six of 17 consumer profiles on both author
-routes. This does not change the separate synchronous owned-function frontend.
+the same limit on synchronous PHP callbacks retained by a Lean task.
+The [CPython wheel pairs](python-once-callback-20261126.md) independently
+qualified asyncio on 3.11 and 3.12. The five npm clients, PHP-Wasm and
+Python give seven of 17 consumer profiles on both author routes.
+This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile
 

@@ -12,6 +12,7 @@ import {openHostProjectSource} from "../../src/build/host-project-source.mjs";
 import {compileHostSources} from "../../src/build/host-elaboration.mjs";
 import {processBuildRunner} from "../../src/build/process-runner.mjs";
 import {exercisePythonWorkerWheels} from "./python-worker-installed.mjs";
+import {checkPythonWorkerBudget} from "./python-budget-contract.mjs";
 
 const diagnostic=e=>[e.message,e.details?.stderr,e.details?.stdout].filter(Boolean).join("\n");
 const json=async file=>JSON.parse(await readFile(file));
@@ -84,6 +85,7 @@ test("Python workers carry captured nominal objects but cannot dispatch Python m
 		assert.deepEqual(get("Workers.relay").failure.errors,["error:TaskIO.Error","error:PythonCallbackException"]);
 		assert.deepEqual(cb("relay").result,lease);assert.equal(cb("project").parameters[0].ownership,"lease");assert.deepEqual(cb("choose").result,lease);
 		assert.equal(cb("relay").resultMode,"value");assert.deepEqual(cb("relay").failure.errors,["error:PythonCallbackException"]);
+		checkPythonWorkerBudget({ir,component,evidence});
 		assert.equal(get("Workers.outcome").result.type.constructor,"result");assert.deepEqual(get("Workers.reject").source.extensions["lean-bridge.dev/error-payload-site"],lease);
 		assert.deepEqual(get("Workers.openCursor").source.extensions["lean-bridge.dev/step-error-payload-site"],lease);
 		assert.deepEqual(get("Workers.openCursor").source.extensions["lean-bridge.dev/host-member-phases"],{call: [],pull: [],close: []});
