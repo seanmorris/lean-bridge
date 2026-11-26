@@ -231,7 +231,7 @@ closed(value)
     RETVAL
 `, render("retain", model.c.retains.find(fn => fn.id === node.id)));
 		if(node.kind === "callback") xs.push(render("call", model.c.callbacks.find(fn => fn.id === node.id)));
-		if(model.c.anchoredResults) xs.push(`int
+		if(model.c.anchoredResults || model.c.callbackArgumentViews) xs.push(`int
 same_identity(value, other)
     SV *value
     SV *other

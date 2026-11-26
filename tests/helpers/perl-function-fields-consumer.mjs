@@ -6,6 +6,7 @@ import {sha256} from "../../src/capsule/node.mjs";
 import {installCpanArchive} from "../../src/release/cpan-install.mjs";
 import {traceCpanInstall} from "../../src/release/cpan-install-trace.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
+import {runPerlIncoming} from "./perl-incoming-client.mjs";
 
 export const fixture = resolve("tests/fixtures/structured-types/tariff-fields.pl");
 export const hostFixture = resolve("tests/fixtures/structured-types/tariff-host-fields.pl");
@@ -20,8 +21,9 @@ export const hostFixture = resolve("tests/fixtures/structured-types/tariff-host-
  * @param hostInputs - Whether this archive declares borrowed callback records.
  * @param modes - Component installation modes to exercise.
  * @param packageRoot - Original component manifest for the installed-payload trace.
+ * @param incoming - Exercise a function passed directly into the installed callback.
  */
-export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,packageRoot) => {
+export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,packageRoot,incoming=false) => {
 	const work = await mkdtemp(join(root,"cpan-")), deployment = join(work,"relocated");
 	try
 	{
@@ -71,6 +73,7 @@ export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,
 				assert.deepEqual([result.hostCalls,result.reentries,result.afterShutdown],[3,1,0]);
 				record.hostInputs=result;
 			}
+			if(incoming) record.direct=await runPerlIncoming(work,perl,child);
 			results.push(record);
 		}
 		return results;

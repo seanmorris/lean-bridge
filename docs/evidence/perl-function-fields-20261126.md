@@ -34,3 +34,21 @@ those libraries and the loaded XS binary to the package manifest and the
 installation receipt. To repeat only the local compilation on a retained
 handoff, also set `LEAN_BRIDGE_PERL_TARIFF_XS_ONLY=1`; those observations
 are written to separate `*.generated-xs.json` files.
+
+### A Lean function passed directly to a Perl callback
+
+The [application](../../tests/fixtures/structured-types/tariff-incoming.pl)
+ran against the original compiled Lean component on Perl 5.36.3 and 5.38.2,
+with and without ithreads. It compared a callback borrow to a separately
+retained lease, rejected the expired borrow after return and failure, preserved
+the original Perl exception, and kept the outer callback usable after a nested
+failure. An [independent observer](../../tests/fixtures/structured-types/tariff-incoming-observer.pl)
+saw one live identity at baseline, three while the lease was held, one after
+each of six cases, and zero after shutdown in all four processes.
+
+That checks fresh XS against the authenticated ordinary C adapter. For
+the separate installed-package check, set
+`LEAN_BRIDGE_PERL_TARIFF_REQUIRE_INCOMING=1` when running
+`npm run test:perl-function-fields`. Both author routes must ship the direct
+callback contract, and each must pass on all four ABIs with both prebuilt
+and installer-compiled XS. An older field-only archive cannot qualify.

@@ -25,6 +25,25 @@ test("Perl XS compiles two record arguments with independent function, text and 
 	const rec=model.types.find(n => n.id===row.id), view=rec.hostInput;
 	assert.equal(view.publicType,"LeanBridge::TariffQuotes::TariffInput");
 	const checks=rec.fields.map((f,i) => `_Static_assert(offsetof(${view.inputType}, ${f.name}) == ${[0,32,64,80][i]}, "offset");`);
+	await compileXs(t,model,checks);
+});
+
+test("Perl XS compares live callback argument identities without result anchors", {timeout: 300000}, async t=>{
+	const model=generateOwnedPerlXs(leasedClosureFieldReviewedIr({staged: true,incoming: true}),"LeanBridge::TariffQuotes");
+	assert.ok(model.c.callbackArgumentViews && !model.wholeOwners);
+	assert.match(model.xs,/same_identity\(value, other\)/u);
+	await compileXs(t,model,[]);
+});
+
+/**
+ * Compile the generated XS against the matching public C header.
+ *
+ * @param t - Test scratch cleanup.
+ * @param model - Generated Perl binding.
+ * @param checks - Additional C layout assertions.
+ */
+async function compileXs(t,model,checks)
+{
 	const w=await mkdtemp(join(tmpdir(),"perl-input-fields-"));t.after(()=>rm(w,{recursive: true,force: true}));
 	await saveLakeFile(w,model.c.prefix+".h",model.c.header);
 	await saveLakeFile(w,"Probe.xs",model.declarations+"\n"+checks.join("\n")+"\n"+model.xs);
@@ -35,4 +54,4 @@ test("Perl XS compiles two record arguments with independent function, text and 
 	await runCopied("/usr/bin/cc",["-std=gnu11","-Wall","-Wextra","-Werror"
 		, "-Wno-unused-function","-fsyntax-only",...cfg.flags
 		, "-I",cfg.inc,"-I",w,"Probe.c"],w,env);
-});
+}

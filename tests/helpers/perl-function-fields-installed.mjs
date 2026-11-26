@@ -16,11 +16,11 @@ import "./perl-function-fields-compiler.mjs";
 const routes = ["ordinary","reviewed"];
 const abis = ["5.36.3-threaded","5.36.3-unthreaded","5.38.2-threaded","5.38.2-unthreaded"];
 
-const buildSets = async (root,work) => {
+const buildSets = async (root,work,incoming) => {
 	for(const route of routes)
 	{
 		const project = join(work,route+"-project"), output = join(work,route+"-output");
-		await prepareStagedQuoteProject(project,route,"cpan");
+		await prepareStagedQuoteProject(project,route,"cpan",{incoming});
 		try
 		{
 			await buildCanonicalProject({projectRoot: project,outputRoot: output,targets: ["cpan"]});
@@ -41,9 +41,11 @@ test("relocated CPAN callable fields and direct higher-order replies on all four
 	const keep = env.LEAN_BRIDGE_PERL_TARIFF_KEEP, replay = env.LEAN_BRIDGE_PERL_TARIFF_REPLAY;
 	assert.ok(!(keep && replay));
 	const xsOnly=env.LEAN_BRIDGE_PERL_TARIFF_XS_ONLY==="1";
+	const incoming=env.LEAN_BRIDGE_PERL_TARIFF_REQUIRE_INCOMING==="1";
+	assert.ok(!(incoming && xsOnly),"direct-function qualification requires both XS installation modes");
 	assert.ok(!xsOnly || replay,"an XS-only replay requires exact retained releases");
 	const root = replay ? resolve(replay) : await mkdtemp(join(keep ?? work,"handoffs-"));
-	if(!replay) await buildSets(root,work);
+	if(!replay) await buildSets(root,work,incoming);
 	t.diagnostic("Handoffs: "+root);
 	const output = resolve(env.LEAN_BRIDGE_PERL_TARIFF_OUTPUT ?? "build/perl-function-fields");
 	await mkdir(output,{recursive: true});
@@ -60,8 +62,19 @@ test("relocated CPAN callable fields and direct higher-order replies on all four
 		assert.deepEqual(Object.keys(archives).sort(),["LeanBridge-Runtime","LeanBridge-TariffQuotes"]);
 		const archive = packages.component, top = basename(archive,".tar.gz");
 		const meta = async name => JSON.parse(await run("tar",["-xOzf",archive,top+"/"+name+".json"],work,env));
-		const identity = checkStagedQuoteIdentities(await meta("model"),await meta("binding-ir"),receipt.profiles[0],route);
-		const advertised=(await meta("binding-manifest")).owned.hostInputRecords;
+		const ir=await meta("binding-ir"), owned=(await meta("binding-manifest")).owned;
+		const identity = checkStagedQuoteIdentities(await meta("model"),ir,receipt.profiles[0],route,{incoming});
+		const advertised=owned.hostInputRecords;
+		if(incoming)
+		{
+			const fn=ir.declarations.find(d=>d.source.declaration==="Owned.visitQuote");
+			assert.ok(fn,"direct-function qualification requires the installed visitQuote export");
+			const arg=ir.types.find(t=>t.id===fn.parameters[1].type.id).callable.parameters[0];
+			assert.equal(arg.ownership,"borrow");assert.equal(arg.lifetime.scope,"call");
+			assert.equal(ir.types.find(t=>t.id===arg.type.id).kind,"callback");
+			assert.equal(owned.callbackArgumentIdentity,"canonical-while-live");
+			assert.equal(owned.resultAnchors,undefined);assert.ok(advertised);
+		}
 		if(replay && advertised===undefined)
 		{
 			const old=new URL("../../docs/evidence/perl-function-fields-20261126/"+route+".json",import.meta.url);
@@ -79,12 +92,13 @@ test("relocated CPAN callable fields and direct higher-order replies on all four
 		await run("tar",["-xzf",archive,"--strip-components=1","-C",packageRoot,top+"/"+loader],work,env);
 		const modes=xsOnly?["build-xs"]:advertised?["prebuilt-only","build-xs"]:["prebuilt-only"];
 		const observations = [];
-		for(const perl of perls) observations.push(...await installPerlTariff(work,packages,perl,env,Boolean(advertised),modes,packageRoot));
+		for(const perl of perls) observations.push(...await installPerlTariff(work,packages,perl,env,Boolean(advertised),modes,packageRoot,incoming));
 		for(const mode of modes)
 			assert.deepEqual(observations.filter(r=>(r.installXs?.mode??"prebuilt-only")===mode).map(r=>r.version+"-"+r.threads).sort(),abis);
 		const report={route,receiptSha256: result.receiptSha256
 			, ...identity,archives,clientSha256: sha256(await readFile(fixture))
 			, observations
+			, ...incoming ? {directFunction: true} : {}
 			, ...advertised ? {hostClientSha256: sha256(await readFile(hostFixture))} : {}};
 		await writeFile(join(output,route+(xsOnly?".generated-xs":"")+".json"),canonicalJson(report));
 		t.diagnostic(route+": "+result.receiptSha256);
