@@ -49,6 +49,12 @@ the function directly to the [C callback](../../tests/fixtures/structured-types/
 The test builds ordinary and reviewed C archives, then compiles a pkg-config
 client and a relocated CMake client. Use `LEAN_BRIDGE_C_INCOMING_KEEP` to
 retain the handoffs or `LEAN_BRIDGE_C_INCOMING_REPLAY` to replay them.
+If CMake is not at `/usr/bin/cmake`, set `LEAN_BRIDGE_CMAKE` to the absolute
+path to its executable. The runner checks it before building Lean. To recover
+an interrupted pair, set `LEAN_BRIDGE_C_INCOMING_RESUME` to the **handoff
+directory** instead of setting KEEP or REPLAY. It verifies and installs
+existing archives, and builds only a missing route. An incomplete or invalid
+existing archive fails verification; it is not overwritten.
 The npm receipts above do not qualify this C interface.
 
 For C++20, run `npm run test:cpp-incoming-function`. Its

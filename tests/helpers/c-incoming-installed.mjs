@@ -1,6 +1,6 @@
 /** @file Install and relocate a package whose callback borrows a captured Lean function. */
 import assert from "node:assert/strict";
-import {copyFile,mkdir,mkdtemp,readFile,rename,rm,writeFile} from "node:fs/promises";
+import {access,copyFile,mkdir,mkdtemp,readFile,rename,rm,writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
@@ -22,15 +22,19 @@ const parseResult=stdout=>{
 test("installed C callback borrows a captured Lean function until return",{timeout: 7200000},async t=>{
 	const env=nativeFixtureEnvironment(["c"]),work=await mkdtemp(join(tmpdir(),"c-incoming-"));
 	t.after(()=>rm(work,{recursive: true,force: true}));
+	const cmakeTool=env.LEAN_BRIDGE_CMAKE??"/usr/bin/cmake";
+	await runCopied(cmakeTool,["--version"],work,copiedCleanEnvironment);
 	const keep=env.LEAN_BRIDGE_C_INCOMING_KEEP,replay=env.LEAN_BRIDGE_C_INCOMING_REPLAY;assert.ok(!(keep && replay));
-	const sets=replay?resolve(replay):await mkdtemp(join(keep??work,"handoffs-"));
+	const resume=env.LEAN_BRIDGE_C_INCOMING_RESUME;assert.ok(!resume || (!keep && !replay));
+	const sets=resume?resolve(resume):replay?resolve(replay):await mkdtemp(join(keep??work,"handoffs-"));
 	const out=resolve(env.LEAN_BRIDGE_C_INCOMING_OUTPUT??"build/c-incoming-function");await mkdir(out,{recursive: true});
 	const fixtures=resolve("tests/fixtures/structured-types"),files=["tariff-incoming.c","tariff-exchange-probe.c"];
 	let first;
 	for(const route of ["ordinary","reviewed"])
 	{
 		const handoff=join(sets,route),stage=join(work,route);await mkdir(stage);
-		if(!replay)
+		const exists=resume && await access(handoff).then(()=>true,e=>{if(e.code!=="ENOENT") throw e;return false;});
+		if(!replay && !exists)
 		{
 			const project=join(stage,"source"),output=join(stage,"release");
 			await prepareStagedQuoteProject(project,route,"c",{incoming: true});
@@ -64,8 +68,8 @@ target_compile_options(incoming PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 target_link_libraries(incoming PRIVATE ${manifest.cmakeTarget} \${CMAKE_DL_LIBS})
 `);
 		const clean={...copiedCleanEnvironment,PATH: join(local,"tools")};
-		await runCopied("/usr/bin/cmake",["-S",".","-B","build","-G","Unix Makefiles","-DCMAKE_C_COMPILER=/usr/bin/cc","-DCMAKE_MAKE_PROGRAM=/usr/bin/make","-DCMAKE_PREFIX_PATH="+dest],local,clean);
-		await runCopied("/usr/bin/cmake",["--build","build","--parallel","1"],local,clean);
+		await runCopied(cmakeTool,["-S",".","-B","build","-G","Unix Makefiles","-DCMAKE_C_COMPILER=/usr/bin/cc","-DCMAKE_MAKE_PROGRAM=/usr/bin/make","-DCMAKE_PREFIX_PATH="+dest],local,clean);
+		await runCopied(cmakeTool,["--build","build","--parallel","1"],local,clean);
 		const executable=join(local,"build/incoming"),cmake=parseResult((await runCopied(executable,[],local,{PATH: "/no-author-tools"})).stdout);
 		assert.deepEqual(cmake,pc.result);
 		const [archive]=pkg.artifacts;
