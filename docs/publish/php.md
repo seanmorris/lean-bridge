@@ -120,6 +120,22 @@ Distribute the original ZIP through a controlled release channel or a Composer r
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
 
+### Export a record that holds PHP objects
+
+For a synchronous `php-native` package, import the application class through
+your host contract and use that imported type directly as a Lean structure
+field. Export the functions that take or return the structure. For example,
+the [Station source](../../tests/fixtures/php-host-record/Workshop.lean)
+declares `Panel.primaryMeter : Box` and `Panel.backupMeter : Box` alongside
+copied values. The bindings use the actual constructor and field order:
+the PHP application borrows a panel for a call and receives a separately
+closable panel on return. It never needs a PHP object registry of its own.
+
+The public interface uses schema 4 for these records. A reviewed interface
+may change a field description; changing the order or type must agree with
+the Lean source. This native host-import route is distinct from exporting a
+Lean-owned resource to PHP-Wasm. See the [Composer example](../php.md#let-lean-call-an-application-object).
+
 ### Export synchronous IO
 
 Use `nativeEffects` to declare the operating-system capabilities your exported

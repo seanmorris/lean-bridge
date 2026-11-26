@@ -38,6 +38,17 @@ test("a synchronous object-field admission cannot enable async or a different ho
 		assert.throws(() => hostRecordTypes([{...site(record), ...change}], selection, [box]), /not a synchronous host-bound export/u);
 });
 
+test("native PHP records require the native owner and cannot enter Zend or scheduled exports", () => {
+	const php = {...selection, hostModule: "LeanBridge.Host.Php", phpNativeFunctions: true};
+	assert.equal(hostRecordTypes([site(record)], php, [box])[0].fields[0].type.id, box.id);
+	for(const change of [
+		{phpNativeFunctions: undefined}, {phpNativeFunctions: false}
+		, {phpWasmSyncObjects: true}, {phpWasmTaskObjects: true}
+		, {asyncIterators: ["Station.open"]}
+	])
+		assert.throws(() => hostRecordTypes([site(record)], {...php, ...change}, [box]), /not a synchronous host-bound export/u);
+});
+
 test("record properties and class names cannot shadow generated Python conversions", () => {
 	const fields = ["property", "int", "count"].map((name, i) => ({
 		name

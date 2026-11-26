@@ -95,6 +95,14 @@ catches the generated exception and reads its `payload`. A returned `Except`
 is an `Ok` or `Err` value, not a thrown exception. This synchronous host-class
 profile is native PHP CLI only; it does not run PHP methods on a Lean worker.
 
+A synchronous native package can also pass your objects inside a record. In
+the [Panel example](evidence/php-host-record-fields-20261126.md), `mirror`
+returns a panel whose `primary_meter` and `backup_meter` are the same PHP
+object you passed in (`===`). Read them as properties. The panel keeps those
+objects alive, even after the binding closes. Close the panel in `finally` to
+release its references. Cloning a panel gives you a separately closable
+record; it does not clone either meter.
+
 If a PHP member suspends its Fiber while Lean is calling it, resume that
 Fiber before using or closing a binding from another Fiber. The second
 caller gets a `LogicException`; it does not cancel the first call. A

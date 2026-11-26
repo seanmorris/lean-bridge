@@ -1,5 +1,6 @@
 /** @file Emit the checked synchronous Lean exports and private native owner entry. */
 import { wordHostCarrier } from "./word-host-members.mjs";
+import {clearWordHostRecord, lowerWordHostRecord, wordHostRecordWriter} from "./word-host-records.mjs";
 import { readFileSync } from "node:fs";
 
 const qual = /^(?:[A-Za-z_][A-Za-z0-9_]*\.)*[A-Za-z_][A-Za-z0-9_]*$/u;
@@ -52,22 +53,30 @@ export const emitWordHostExports = (o, model, target) => {
 	};
 	const arrow=t=>"("+lean(t.argument)+" → _root_.IO "+lean(t.reply)+")";
 	const calls=entries.map((e,i)=>({e,i})).concat(factories.map(({e,i})=>({e,i: entries.length+i,apply: i})));
+	let hasRecordOutput=false;
 	for(const {i,e,apply} of calls)
 	{
 		if(e.parameters.some(p=>p.type?.kind==="io-closure")) throw new TypeError("Returned host closures are not callback inputs");
 		if(!qual.test(e.declaration) || e.delivery || !["pure", "BaseIO", "IO", "EIO"].includes(e.effect) || e.parameters.length > 64 || (e.effect === "pure" && !clrWorkers && !sum(e.result)))
 			throw new TypeError("Invalid synchronous native export: " + e.declaration);
 		const inside=apply!==undefined, factory=!inside && e.result.kind==="io-closure";
-		const argTypes=inside?[e.result,e.result.argument]:e.parameters.map(p=>p.type);
+		const record=inside?null:lowerWordHostRecord(e,target,lean);
+		const argTypes=record?record.flat:inside?[e.result,e.result.argument]:e.parameters.map(p=>p.type);
 		const args=argTypes.map(t=>t.kind==="io-closure"?{c: "lean_object *",ticket: true,unbox: v=>v}:wordHostCarrier(ir.types,t)),eio=e.effect==="EIO";
 		const result=inside?e.result.reply:e.result;
-		const ret=factory?arrow(result):lean(result), n = args.length, fn = "lb_dn_export_" + i;
+		const ret=record?.tuple??(factory?arrow(result):lean(result)), n = args.length, fn = "lb_dn_export_" + i;
 		const params = argTypes.map((t,j)=>"(v"+j+" : "+(t.kind==="io-closure"?arrow(t):lean(t))+")").join(" ");
 		const r = eio ? "(_root_.Except " + lean(e.error) + " " + ret + ")" : ret;
-		const call = inside?"(v0 v1)":"(_root_." + e.declaration + args.map((_, j) => " v" + j).join("") + ")";
+		const call = record?.call??(inside?"(v0 v1)":"(_root_." + e.declaration + args.map((_, j) => " v" + j).join("") + ")");
 		defs.push(`@[export ${fn}] def execute${i} ${params} : IO ${r} := ${eio ? "EIO.toIO' " : e.effect === "pure" ? "pure " : ""}${call}`);
 		header.push("extern lean_object *" + fn + "(" + (args.map(c => c.c).join(",") || "void") + ");");
-		const ok = factory?`dn_closure_save(s,${i},v,out)`:output(result), err = eio && output(e.error);
+		const label="dn_record_"+i;
+		if(record?.fields)
+		{
+			hasRecordOutput=true;
+			outputs.push(wordHostRecordWriter(record.fields,t=>wordHostCarrier(ir.types,t),label));
+		}
+		const ok = record?.fields?label+"(f,s,v,out)":factory?`dn_closure_save(s,${i},v,out)`:output(result), err = eio && output(e.error);
 		methods.push(`static int dn_call_${i}(lb_dn_frame *f,lb_dnd_session *s,const uint64_t *arg,size_t n,uint64_t *out,uint8_t *tags,uint32_t *fault) {
     if(n!=${n} || (n && !arg)) return 5;
     lean_object *a[${Math.max(1,n)}]={0}, *io=NULL; int status=5;
@@ -117,17 +126,17 @@ static const lb_dnd_spec specs[]={${model.kinds.map(k => "{" + JSON.stringify(k.
 ${clrHeader}${taskObjects?'#include "host-task-leases.h"\n':""}static void *init(uint8_t b) { return initialize_${module}(b); }
 static int available(void) { return lean_bridge_native_component_ready(component); }
 /* A public result outlives the Lean IO object; never return pointers into it. */
-static int dn_output(int kind,lean_object *v,uint64_t *out) {
-    uint64_t w[3]={0}; size_t budget=0; lb_dn_int_integer heap={0};
-    if(!dn_put(kind,v,w,&budget,&heap)) { lb_dn_int_integer_dispose(&heap); return 12; }
+static int ${hasRecordOutput?"dn_output_budget(int kind,lean_object *v,uint64_t *out,size_t *budget)":"dn_output(int kind,lean_object *v,uint64_t *out)"} {
+    uint64_t w[3]={0}; ${hasRecordOutput?"":"size_t budget=0; "}lb_dn_int_integer heap={0};
+    if(!dn_put(kind,v,w,${hasRecordOutput?"budget":"&budget"},&heap)) { lb_dn_int_integer_dispose(&heap); return 12; }
     if(kind==DN_BYTES || kind==DN_STRING) {
         void *p=w[1] ? malloc(w[1]) : NULL; if(w[1] && !p) return 11;
         if(w[1]) memcpy(p,(const void *)(uintptr_t)w[0],w[1]); w[0]=(uintptr_t)p; out[3]=1;
     } else if(kind==DN_NAT || kind==DN_INT) out[3]=2; /* transfer allocated limbs */
     memcpy(out,w,sizeof(w)); return 0;
 }
-__attribute__((visibility("default"))) void ${prefix}_clear(uint64_t *out) {
-    if(out) { if(out[3]==1 || out[3]==2) free((void *)(uintptr_t)out[0]); memset(out,0,4*sizeof(*out)); }
+${hasRecordOutput?"static int dn_output(int kind,lean_object *v,uint64_t *out) { size_t budget=0; return dn_output_budget(kind,v,out,&budget); }\n":""}__attribute__((visibility("default"))) void ${prefix}_clear(uint64_t *out) {
+    ${hasRecordOutput?clearWordHostRecord:""}if(out) { if(out[3]==1 || out[3]==2) free((void *)(uintptr_t)out[0]); memset(out,0,4*sizeof(*out)); }
 }
 ${factories.length?(target==="wit-wasi"?"#define DN_WIT_COMPONENT_REP 1\n":"")+readFileSync(new URL("./word-host-closures.h",import.meta.url),"utf8")
 	+`\nstatic int dn_closure_cleanup(int op) { switch(op) { case ${retireFunctions}: ${factories.map(({i})=>"case "+(2*entries.length+i)+":").join(" ")} return 1; default:return 0; } }\n`:""}${outputs.join("\n")}

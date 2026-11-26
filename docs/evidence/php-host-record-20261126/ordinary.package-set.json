@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51362017,
+          "path": "archives/lean-bridge-workshop-1.0.0-linux-x86_64.zip",
+          "sha256": "c3f9ffde4a2071b851ba4202fd1614a78b357e7c645aef3d179e1dbac6b28b8f"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "lean-bridge/workshop",
+      "profile": "native-php-host-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "81da6a7400a28c43edda3d79ad4b27c7bf43f9a2b96175103ada0b31215047e4",
+      "id": "native-php-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "0f2fb56702c99138fbda9a37a2cd59e910ff444e6d6ca0b2c9c33328570b4ec3"
+  }
+}

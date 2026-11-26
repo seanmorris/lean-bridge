@@ -104,6 +104,10 @@ uses two Python-created meters in a public record and checks the actual
 objects before and after another rack closes.
 The [Ruby panel consumer](ruby-host-record-fields-20261126.md) passes two
 records in one call and checks ownership through frozen and duplicated panels.
+The [native PHP consumer](php-host-record-fields-20261126.md) checks the
+same application meters across a cloned record and a returned function.
+It also exercises failure after a native result has already copied one
+field and exported a meter.
 A private cursor carrying an application object between pulls is not the
 same as an application being able to construct, inspect and pass a record.
 

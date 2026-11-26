@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { generatePhpHostFiles } from "../backends/php/host-api.mjs";
 import { generatePhpHostExports } from "../backends/php/host-exports.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import { hostPublicHash } from "../analyze/host-records.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-artifacts.mjs";
 import { compilePhpHostComponent,compilePhpHostTaskComponent } from "../build/php-host-component.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -40,13 +40,13 @@ export const buildPhpHostPackage = async o => {
 					throw new Error(n+" exceeds glibc "+floor);
 			libraries[n]=hash; files.set(path,bytes);
 		}
-		const {files: generated, namespace}=await generatePhpHostFiles(linked,o.ir,manifest);
+		const {files: generated, namespace}=await generatePhpHostFiles(linked,o.ir,manifest,o.projectContract.review);
 		const port=generatePhpHostExports({ir: o.ir,entries: linked.entries.filter(e=>!e.delivery),modules: o.projectContract.modules,identity: linked.identity,phpTaskLeases: tasks});
 		const workerSources={};
 		if(tasks) for(const f of ["BridgeCAsync.lean","task-adapter.c","host-wire.c","host-task-leases.h"])
 			workerSources[f]=await readFile(join(app,f));
 		const metadata={...o,api: linked.api,evidence: linked.evidence
-			, bindingIrSha256: hashBindingIr(linked.api)
+			, bindingIrSha256: hostPublicHash(linked.api)
 			, componentIdentity: linked.identity
 			, runtimeIdentity: identity
 			, files

@@ -5,8 +5,8 @@
  * @param o - Verified factory, synchronous entry indices and PHP carrier spellings.
  */
 export const phpReturnedMethod = o => {
-	const {name,cls,args,inputs,arg,reply,hint,i,n,declaration}=o;
-	return String.raw`    public function ${name}(${args.map(a=>"mixed "+a).join(", ")}): ${cls} {
+	const {name,cls,args,flat,signature,inputs,arg,reply,hint,i,n,declaration}=o;
+	return String.raw`    public function ${name}(${signature}): ${cls} {
         if (func_num_args()!==${args.length}) throw new \ArgumentCountError('Wrong number of arguments');
         if (!$this->open || $this->closing) throw new \LogicException('PHP host binding is closed');
         $Owner_=\WeakReference::create($this);
@@ -30,7 +30,7 @@ export const phpReturnedMethod = o => {
             }
             public function close(): void { $this->state->close(); }
         };
-        $this->_call(${i},[${args.join(",")}],${inputs},'uint64',null,${declaration},null,$State_->attach(...));
+        $this->_call(${i},[${flat.join(",")}],${inputs},'uint64',null,${declaration},null,$State_->attach(...));
         return $Result_;
     }`;
 };

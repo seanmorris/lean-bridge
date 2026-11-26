@@ -45,6 +45,7 @@ const compile = async (o,taskObjects) => {
 		, "php/copied-assets.mjs"
 		, "php/host-api.mjs", "php/io-package.mjs", "php/copied-equality.mjs"];
 	if(checked.entries.some(e=>e.result.kind==="io-closure"))assets.push("php/host-functions.php","php/host-returned.mjs");
+	if(checked.api.types.some(t=>t.kind==="record")) assets.push("php/host-records.mjs");
 	if(taskObjects) assets.push("php/host-task-api.mjs","php/host-task-objects.php","php/host-tasks.php","php/io-callbacks.php","php/io-delivery.php");
 	for(const name of assets)
 	{

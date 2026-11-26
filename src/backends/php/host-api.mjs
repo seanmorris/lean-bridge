@@ -1,6 +1,6 @@
 /** @file Emit the public binding and its private FFI declarations for a checked native PHP program. */
 import { readFile } from "node:fs/promises";
-import { canonicalJson } from "../../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
 import { copiedPhpAssets, copiedPhpLoader } from "./copied-assets.mjs";
 import { copiedPhpHelpers } from "./copied-support.mjs";
@@ -10,6 +10,7 @@ import { phpIOPublicDeclarations } from "./io-package.mjs";
 import { phpHostMembers } from "./host-members.mjs";
 import { phpHostTaskApi } from "./host-task-api.mjs";
 import { phpReturnedMethod } from "./host-returned.mjs";
+import {phpHostRecords, phpRecordReader} from "./host-records.mjs";
 
 const fail = why => { throw new TypeError("Invalid PHP native host surface: " + why); };
 const pascal = s => s.split(/[-_]/u).map(p => p[0].toUpperCase() + p.slice(1)).join("");
@@ -39,13 +40,15 @@ const hint = t => Array.isArray(t) ? "Ok|Err" : Number.isInteger(t) ? "object" :
  * @param linked - Fresh compiler evidence and native libraries from compilePhpHostComponent.
  * @param ir - Captured host import contract (not the exported API).
  * @param runtime - Verified shared runtime manifest.
+ * @param review - Original reviewed source bytes, when the author supplied an interface.
  */
-export const generatePhpHostFiles = async (linked, ir, runtime) => {
+export const generatePhpHostFiles = async (linked, ir, runtime, review) => {
 	const { prefix, identity, runtimeIdentity, component, domain, api, evidence } = linked;
 	if(!hex(identity) || !hex(runtimeIdentity) || prefix !== "lb_php_host_" + identity || component !== "lib" + prefix + ".so"
 		|| domain !== "liblb_php_host_domain_" + runtimeIdentity + ".so" || ![component,domain].every(n => hex(linked.binaries[n]))) fail("native library identity");
 	const model = phpHostMembers(ir);
-	const checked = reconcileHostExports({ ir, selection: evidence.selection, metadata: evidence.metadata, component: api.component });
+	if((review ? sha256(review.source) : null) !== evidence.reviewedSourceSha256) fail("reviewed source identity differs from compiler");
+	const checked = reconcileHostExports({ ir, selection: evidence.selection, metadata: evidence.metadata, component: api.component, review });
 	if(canonicalJson(checked.api)!==canonicalJson(api) || canonicalJson(checked.entries)!==canonicalJson(linked.entries)
 		|| canonicalJson(model.members)!==canonicalJson(linked.members)) fail("export or member table differs from compiler");
 	if(!/^[A-Za-z][A-Za-z0-9]*(?:[-_][A-Za-z0-9]+)*$/u.test(api.component.name)) fail("invalid namespace");
@@ -57,6 +60,8 @@ export const generatePhpHostFiles = async (linked, ir, runtime) => {
 		return fail("unsupported export type");
 	};
 	const names = new Set(["close"]), errorNames = new Set(["ioerror","declaredfailure","bytes","err","ok","binding","leanbridgeerror"]);
+	const records=phpHostRecords(api,site,hint,errorNames);
+	const record=t=>t.kind==="host-record"?records.get(t.declaration)??fail("missing compiler record"):null;
 	const async=Boolean(linked.task), worker=async && await phpHostTaskApi({linked,checked,ir,model,ns});
 	const methods=[],errors=[]; let syncIndex=0;
 	const returned=checked.entries.some(e=>e.result.kind==="io-closure"),bounded=async || returned;
@@ -87,21 +92,26 @@ export const generatePhpHostFiles = async (linked, ir, runtime) => {
 			}
 			methods.push(worker.method({entry: e,name,args,ex: error===null?null:ex,stepEx})); continue;
 		}
-		const inputs=e.parameters.map(p=>site(p.type)), i=syncIndex++;
+		const owners=e.parameters.map(p=>record(p.type));
+		const inputs=e.parameters.flatMap((p,j)=>owners[j]?owners[j].fields.map(f=>f.site):[site(p.type)]), i=syncIndex++;
+		const flat=args.flatMap((a,j)=>owners[j]?owners[j].fields.map(f=>a+"->"+f.name):[a]);
+		const signature=args.map((a,j)=>(owners[j]?.name??"mixed")+" "+a).join(", ");
 		if(e.result.kind==="io-closure")
 		{
 			const cls="Returned"+pascal(e.name),arg=site(e.result.argument),reply=site(e.result.reply);
 			if(errorNames.has(cls.toLowerCase()) || e.effect!=="IO")fail("invalid returned PHP function "+name);
 			errorNames.add(cls.toLowerCase());errors.push("interface "+cls+" { public function __invoke(mixed $value): "+hint(reply)+"; public function close(): void; }");
-			methods.push(phpReturnedMethod({name,cls,args,i,n,inputs: literal(inputs),arg: literal(arg),reply: literal(reply),hint: hint(reply),declaration: JSON.stringify(e.declaration)}));
+			methods.push(phpReturnedMethod({name,cls,args,flat,signature,i,n,inputs: literal(inputs),arg: literal(arg),reply: literal(reply),hint: hint(reply),declaration: JSON.stringify(e.declaration)}));
 			continue;
 		}
-		const result=site(e.result);
-		methods.push(`    /** ${params.map((p,j)=>"@param "+hint(inputs[j])+" $"+p).join(" ")} @return ${hint(result)} */
-    public function ${name}(${args.map(a=>"mixed "+a).join(", ")}): ${hint(result)} {
+		const returnedRecord=record(e.result), result=returnedRecord?null:site(e.result);
+		const resultHint=returnedRecord?.name??hint(result);
+		const descriptor=returnedRecord?"['record'=>"+returnedRecord.name+"::class,'fields'=>"+literal(returnedRecord.fields.map(f=>f.site))+"]":literal(result);
+		methods.push(`    /** ${params.map((p,j)=>"@param "+(owners[j]?.name??hint(site(e.parameters[j].type)))+" $"+p).join(" ")} @return ${resultHint} */
+    public function ${name}(${signature}): ${resultHint} {
         if (func_num_args()!==${args.length}) throw new \\ArgumentCountError('Wrong number of arguments');
         if (!$this->open${bounded?" || $this->closing":""}) throw new \\LogicException('PHP host binding is closed');
-        return $this->_call(${i},[${args.join(",")}],${literal(inputs)},${literal(result)},${literal(error)},${JSON.stringify(e.declaration)},${error===null?"null":ex+"::class"});
+        return $this->_call(${i},[${flat.join(",")}],${literal(inputs)},${descriptor},${literal(error)},${JSON.stringify(e.declaration)},${error===null?"null":ex+"::class"});
     }`);
 	}
 	const libraries = {...linked.binaries};
@@ -117,6 +127,7 @@ export const generatePhpHostFiles = async (linked, ir, runtime) => {
 	const files = {"src/Internal/Loader.php": copiedPhpLoader};
 	for(const [file,source] of Object.entries(templates))
 		files["src/Internal/"+file+".php"]=(await readFile(new URL("./"+source+".php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
+	if(records.size) files["src/Internal/HostFrame.php"]=phpRecordReader(files["src/Internal/HostFrame.php"]);
 	if(async) files["src/Internal/Delivery.php"]=files["src/Internal/Delivery.php"].replace("/*__LB_RELEASE_CALLBACKS__*/","\n                if (isset($this->ops['releaseCallbacks'])) ($this->ops['releaseCallbacks'])();");
 	files["src/Internal/Native.php"]=`<?php
 declare(strict_types=1);
@@ -138,7 +149,7 @@ namespace ${ns};
 ${Object.keys(files).map(k=>"require_once __DIR__ . '/"+k.slice(4)+"';").join("\n")}
 ${phpIOPublicDeclarations([],["Ok","Err"])}
 final class IOError extends DeclaredFailure {}
-${async?"final class TaskIOError extends DeclaredFailure {}\n":""}${errors.join("\n")}
+${async?"final class TaskIOError extends DeclaredFailure {}\n":""}${errors.concat([...records.values()].map(r=>r.php)).join("\n")}
 function withHosts(array $classes): Binding { return new Binding($classes); }
 ${returned?"function drain_host_functions(): void { Internal\\FunctionReleases::drain(); }\n":""}final class Binding {
     private bool $open=false;

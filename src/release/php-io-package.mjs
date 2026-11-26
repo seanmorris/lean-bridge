@@ -88,7 +88,9 @@ export const writePhpCompiledDistribution = async (o, distribution) => {
 	const asyncUsage=host && tasks?" Task methods return Amp futures and cursors support foreach. To stop pending work, pass an Amp cancellation token to the binding method or close the binding.":"";
 	const functions=host && api.types.some(t=>t.source.extensions["lean-bridge.dev/closure-owner"]==="php-host-binding")
 		?" A returned Lean function is invokable: $fn($value). Close the function in finally, or close its binding to revoke all its functions.":"";
-	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+namespace+". "+usage+asyncUsage+functions+" Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
+	const records=host && api.schemaVersion===4 && api.types.some(t=>t.kind==="record")
+		?" Read host record fields as properties. A returned record keeps its original PHP objects alive; close the record to release them. A clone closes independently.":"";
+	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+namespace+". "+usage+asyncUsage+functions+records+" Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
 	const glibcMinimumVersion = o.floor;
 	const bridge = { profile, namespace, platform: "linux-x86_64", glibcMinimumVersion };
 	const require = { php: ">=8.2 <9", "ext-ffi": "*", ...brickMathRequirement, ...tasks ? { "amphp/amp": "^3.1", "revolt/event-loop": "^1.0" } : {} };
