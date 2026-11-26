@@ -12,6 +12,8 @@ unthreaded Perl 5.36.3 and 5.38.2. All three pin the **same** 51,422,277-byte
 | Independent Peer | 231,941 | `a9c53e313a0e6b083e4f1071e0373334a8c8c43497bd139170d90e279518a071` | `e0594ade6c5127b0ef609a756ed3940cc9a8a49d984f3a7680a6955a0184f023` |
 | Reviewed Workshop | 234,790 | `9c9820944776a96aa229027b3eb431308c87d5c1fbe565ffb4c58b5952d0adb9` | `4746e5c4fa2712fe472620750b44d1d449ab7ba9b800d826d02cb56895375181` |
 
+The [error-policy replay](../../tests/fixtures/perl-host-workers/error-policy.pl) uses the real worker and changes one acknowledgement in the test process: native failure 1 is presented as 2. It does not invoke the retirement operation. It checks that an ordinary Perl exception is recoverable, a declared error can be the last owner of a meter, and a caught ledger mismatch cannot publish a successful outer result or dispatch new work. On November 26 the original ordinary Workshop and Peer archives passed both load orders in a relocated prebuilt install on threaded Perl 5.36.3. To repeat across the installed matrix, run `npm run test:perl-worker-replay` with the original handoff, interpreters and worker dependencies. Set `LEAN_BRIDGE_PERL_WORKER_POLICY_OUTPUT` to keep the two route reports.
+
 Ordinary and reviewed Workshop have the same semantic Binding IR digest:
 `8d5bbe440ab017aac7e538da643d198edfbe2a841926ca0d0d913fb083f358fb`.
 Removing the error-payload site from the review of `Jobs.refuse` stopped

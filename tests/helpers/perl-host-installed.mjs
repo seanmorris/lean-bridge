@@ -26,7 +26,7 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 	const work=await mkdtemp(join(scratch,"consumer-")), original=join(work,"prefix"), relocated=join(work,"relocated"), tools=join(work,"tools");
 	try
 	{
-		const perl=(await exec(interpreter,["-e","print $^X"])).stdout.trim();
+		const [perl,perlVersion]=(await exec(interpreter,["-MConfig","-e","print qq{$^X\\n$Config{version}}"])).stdout.trim().split("\n");
 		assert.ok(perl.startsWith("/"));
 		await mkdir(tools);
 		const programs=["make","tar","gzip","sh","cp","mv","rm","chmod","mkdir","touch","true"];
@@ -59,9 +59,12 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 		const receipts=paths.filter(n=>n.endsWith("/install-receipt.json"));
 		assert.equal(receipts.length,3);
 		const checked=new Set(), installedXsDigests={};
+		let installedAbi;
 		for(const path of receipts)
 		{
 			const receipt=JSON.parse(await readFile(join(lib,path)));
+			if(installedAbi) assert.deepEqual(receipt.abi,installedAbi);
+			else installedAbi=receipt.abi;
 			const name=path.split("/").at(-2), arch=receipt.abi.archname;
 			assert.equal(path,arch+"/LeanBridge/"+name+"/install-receipt.json");
 			checked.add(name);
@@ -73,17 +76,35 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 		assert.deepEqual([...checked].sort(),["Peer","Runtime","Workshop"]);
 		const client=join(work,"client.pl");await copyFile(resolve("tests/fixtures",workerDeps?"perl-host-workers":"perl-host-meter","installed-pair.pl"),client);
 		const clientEnv={...dependencies,PATH: "/unavailable",LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1",EXPECT_PERL_LIB: lib};
-		const errorClient=join(work,"error-owner.pl"), errorOwners=[];
-		if(!workerDeps) await copyFile(resolve("tests/fixtures/perl-host-meter/error-owner.pl"),errorClient);
+		const errorClient=join(work,"error-client.pl"), errorOwners=[],workerPolicies=[];
+		await copyFile(resolve("tests/fixtures",workerDeps?"perl-host-workers/error-policy.pl":"perl-host-meter/error-owner.pl"),errorClient);
 		for(const order of [["Workshop","Peer"],["Peer","Workshop"]])
 		{
 			const r=await exec(perl,["-I"+lib,client,...order],{cwd: work,env: clientEnv,timeout: 90000});
 			assert.equal(r.stderr,"");assert.match(r.stdout,workerDeps?/load order and sibling shutdown passed/u:/errors and reentry passed/u);
-			if(!workerDeps) {
-				const check=await exec(perl,["-I"+lib,errorClient,...order],{cwd:work,env:clientEnv,timeout:90000});
-				assert.equal(check.stderr,"");
-				const result=JSON.parse(check.stdout);
-				assert.deepEqual(result,{peer:order[0],thrower:order[1],before:23,after:42,weakCleared:1,destructions:1,peerAfter:37});
+			const check=await exec(perl,["-I"+lib,errorClient,...order],{cwd: work,env: clientEnv,timeout: 90000});
+			assert.equal(check.stderr,"");
+			const result=JSON.parse(check.stdout);
+			if(workerDeps)
+			{
+				assert.deepEqual(result,{
+					outer: order[0]
+					, worker: order[1]
+					, before: 23
+					, after: 42
+					, destructions: 1
+					, nativeFailureId: 1
+					, injectedFailureId: 2
+					, caught: 1
+					, reads: 1
+					, workerCalls: 1
+					, liveIdentities: 0
+				});
+				workerPolicies.push(result);
+			}
+			else
+			{
+				assert.deepEqual(result,{peer: order[0],thrower: order[1],before: 23,after: 42,weakCleared: 1,destructions: 1,peerAfter: 37});
 				errorOwners.push(result);
 			}
 		}
@@ -92,9 +113,15 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 			await copyFile(resolve("tests/fixtures/perl-host-workers/public.pl"),join(work,"public.pl"));
 			const r=await exec(perl,["-I"+lib,join(work,"public.pl")],{cwd: work,env: clientEnv,timeout: 90000});
 			assert.equal(r.stderr,""); assert.match(r.stdout,/demand, reentry and scoped cancellation/u);
+			return {perlVersion,abi: installedAbi,componentMode,installedXsDigests,clientSha256: sha256(await readFile(errorClient)),workerPolicies};
 		}
-		else return {componentMode,installedXsDigests,originalClientSha256:sha256(await readFile(client)),
-			clientSha256:sha256(await readFile(errorClient)),errorOwners};
+		return {
+			componentMode
+			, installedXsDigests
+			, originalClientSha256: sha256(await readFile(client))
+			, clientSha256: sha256(await readFile(errorClient))
+			, errorOwners
+		};
 	} finally
 	{await rm(work,{recursive: true,force: true});}
 };

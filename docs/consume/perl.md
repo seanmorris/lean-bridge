@@ -259,6 +259,8 @@ say $task->get;  # go!!
 
 The callback returns **one scalar**, including `undef` for Lean `Unit`. It may call another export or wait for a different task. Waiting for its own task throws an error. If a callback throws and Lean propagates that error, `get` throws the original Perl exception. Lean can also catch it and return an ordinary value.
 
+An ordinary exception does not disable the runtime. If the bridge cannot match a native callback failure to the Perl exception that produced it, it retires the shared runtime instead. Catching that diagnostic inside a host method does not let the enclosing call return a value. Further calls through either component require a fresh process.
+
 To stop accepting calls before a task settles, create a `LeanBridge::Retained::RetainedCallback` with `->new($code)` and pass `$registration->callback` to the task. Calling `$registration->close` revokes that code reference for every consumer, including a second component. An invocation already underway may finish. Cancelling a future revokes that task's access; it does not revoke other tasks' use of the same registration.
 
 The [installed worker-callback checks](../evidence/perl-retained-workers-20261123.json) cover both package load orders, callback failures, cancellation during a reply, and runtime shutdown with a queued request. They run on threaded and unthreaded Perl 5.36.3 and 5.38.2.
