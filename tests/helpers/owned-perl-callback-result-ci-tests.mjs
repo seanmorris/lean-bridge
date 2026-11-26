@@ -14,6 +14,16 @@ test("CI requires four-ABI Perl callback execution and reconstructed reports", a
 	assert.deepEqual(assertOwnedPerlCallbackResultCi(workflow, manifest), {
 		tests: 41, evidenceTests: 16, reports: 22, perls: 4, failurePropagated: true
 	});
+	const override = "      - name: Select one interpreter\n        run: echo 'LEAN_BRIDGE_PERLS=single' >> \"$GITHUB_ENV\"\n";
+	const beforeRun = "      - name: Verify Perl callback-result lifetimes and installed consumers\n";
+	const afterEvidence = "      - name: Preserve Perl callback-result acceptance\n";
+	assert.throws(() => assertOwnedPerlCallbackResultCi(workflow.replace(beforeRun,override+beforeRun),manifest));
+	assert.doesNotThrow(() => assertOwnedPerlCallbackResultCi(workflow.replace(afterEvidence,override+afterEvidence),manifest));
+	const job = workflow.split("  owned-perl-callback-results:\n")[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
+	const env = job.match(/^ {4}env:[^\n]*(?:\n {6,}[^\n]*)*/mu)[0];
+	const reordered = job.replace(env,"").trimEnd()+"\n"+env+"\n";
+	assert.doesNotThrow(() => assertOwnedPerlCallbackResultCi(workflow.replace(job,()=>reordered),manifest));
+	assert.throws(() => assertOwnedPerlCallbackResultCi(workflow.replace(job,()=>reordered+"      LEAN_BRIDGE_PERLS: single\n"),manifest));
 	assert.throws(() => assertOwnedPerlCallbackResultCi(workflow.replaceAll(
 		"bash scripts/install-playwright-browsers.sh chromium firefox webkit"
 		, "npx playwright install --with-deps chromium firefox webkit"), manifest));

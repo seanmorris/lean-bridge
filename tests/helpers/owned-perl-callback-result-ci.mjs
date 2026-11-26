@@ -61,7 +61,17 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest, legacy = fal
 	assert.ok(job); assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
 	assert.match(job, /^ {4}timeout-minutes: 240$/mu);
-	const environment = workflow.split(/^jobs:\n/mu)[0] + job;
+	// Later steps run in new shells and cannot narrow an already reconstructed
+	// matrix. Keep workflow/job settings and every step through the evidence check.
+	const runAt = job.indexOf("      - name: Verify Perl callback-result lifetimes and installed consumers\n");
+	const evidenceAt = job.indexOf("      - name: Reconstruct Perl callback execution evidence\n");
+	assert.ok(runAt >= 0 && evidenceAt > runAt, "reconstruct after installed consumers");
+	const nextStep = job.indexOf("\n      - ",evidenceAt + 1);
+	const later = nextStep < 0 ? "" : job.slice(nextStep);
+	const jobKey = later.search(/^ {4}[^\s#]/mu);
+	const globalEnv = workflow.match(/^env:[^\n]*(?:\n(?![^\s#])[^\n]*)*/mu)?.[0] ?? "";
+	const environment = globalEnv + job.slice(0,nextStep < 0 ? job.length : nextStep)
+		+ (jobKey < 0 ? "" : later.slice(jobKey));
 	assert.doesNotMatch(environment, /LEAN_BRIDGE_(?:CORPUS_PERL|PERLS|OWNED_PERL_CALLBACK_RESULT_\w*REPORTS)\b/u);
 	// The hash-checked archived workflow predates the bounded installer; current CI must use it.
 	const browsers = legacy ? "npx playwright install --with-deps chromium firefox webkit"
