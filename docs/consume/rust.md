@@ -133,6 +133,27 @@ the binding revokes its functions. A call already inside a member can finish,
 but a later call returns `HostCallError::Boundary(Fault::Closed)`.
 The function is not `Send` and does not keep a discarded binding alive.
 
+### Pass a record containing your Rust objects
+
+The generated record constructor takes your original objects by reference.
+For example, the Gauge package accepts two application-owned meters, a byte
+vector, and a natural number:
+
+```rust
+let pair = workshop::Pair::<App>::new(&left, vec![9, 8], 42u8.into(), &right);
+let flipped = api.flip(&pair)?;
+assert!(std::rc::Rc::ptr_eq(flipped.lead().as_rc(), &right));
+assert_eq!(flipped.sequence(), workshop::BigUint::from(43u8));
+```
+
+An object getter returns a new owner of the **same** object. Keep that handle
+to use the object after dropping the record or closing the binding. A byte
+getter instead returns an independent vector: editing it does not change the
+record. A function returned by `api.choose(&pair)` can outlive the input
+record, but closing its binding revokes the function. See the
+[complete application](../../tests/fixtures/rust-host-record/consumer.rs)
+for both lifetimes and a call through a second installed crate.
+
 ### Await a task or pull a stream
 
 An object binding can expose tasks and streams alongside ordinary methods. Pass the same `Rc<T>` or `HostRef<T>` you use for synchronous calls. For example, given the Workshop binding and meter above:

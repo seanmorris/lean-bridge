@@ -67,6 +67,17 @@ Select the Lean wrapper functions to export and build with `--target cargo`. You
 
 Distribute both archives in the receipt: the component and its exact `lean-bridge-task-runtime` dependency. Compatible components share the runtime; the `host-objects` feature does not enable async. A worker may carry an imported object, or pass it to a retained callback on the binding thread. Calling a Rust member directly from worker code is rejected at build time. The downstream application [binds its own Rust types](../consume/rust.md#let-lean-call-your-rust-objects). The [installed-package evidence](../evidence/rust-host-packages-20261125.md) records the releases and consumer checks. To expose a task or pull stream on the same binding, select its Lean declaration in `taskExports` or `asyncIterators`. The generated crate enables async delivery automatically. The [installed worker test](../evidence/static-host-workers-20261125.md#installed-rust-futures-and-streams) covers both source routes. Use `taskIOErrors` when a terminal `Except IO.Error` is a task failure rather than a returned value.
 
+### Export a record containing an imported object
+
+Use an ordinary Lean structure in the signature of a synchronous `IO` export.
+For example, a structure can have fields of types `Box`, `ByteArray`, `Nat`,
+and another `Box`. No Rust layout or field offsets belong in your Lean source.
+The build uses the elaborated constructor and projections on both author
+routes. A reviewed contract with a different field order is rejected.
+This covers flat records of imported objects and primitives as arguments and
+results; it does not enable record-shaped `EIO` failures or task results.
+See [how a Rust application constructs the record](../consume/rust.md#pass-a-record-containing-your-rust-objects).
+
 ### Export a returned function on an object binding
 
 Export a synchronous factory with a type such as

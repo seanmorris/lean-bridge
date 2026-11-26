@@ -2,6 +2,7 @@
 import { hostDeclarationName } from "../../abi/host-member-names.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 import { rustHostWorkers } from "./host-worker-api.mjs";
+import { rustHostRecords } from "./host-records.mjs";
 
 const reserved = new Set("as async await box break const continue dyn else enum extern false fn for gen if impl in let loop match mod move mut pub ref return static struct trait true type unsafe use where while yield abstract become do final macro override priv try typeof unsized virtual".split(" "));
 const ident = s => {
@@ -85,15 +86,36 @@ export const rustHostFacade = pkg => {
 		}
 		const v=track(ref(t));return {ty: subject(v,"H","HostRef"),expr: nominal(v)?port+".output::<H::Object"+v+">("+v+",o.word())?":readScalar(v,"o.word()")};
 	};
-	const names=new Set(["new","close"]),returned=[],typeNames=new Set(),sync=entries.filter(e=>!e.delivery);
+	const names=new Set(["new","close"]),returned=[],sync=entries.filter(e=>!e.delivery);
+	const typeNames=new Set([
+		"Binding", "ReturnedOwner", "Host", "HostRef", "Borrowed"
+		, "HostError", "MemberResult"
+		, "HostCallError","Rc","Scratch","Frame","Word","Fault","Kind","AsHost"
+		, "Connection","Failure","Infallible","PhantomData","BigInt","BigUint"
+		, "H","Sign","Vec","Result","String","Ok","Err","std","p","assets"
+		, "Some", "Clone", "Drop", "num_bigint"
+		, "lean_bridge_host_runtime", "lean_bridge_task_runtime"
+		, "bool", "char", "str", "usize", "isize", "u8", "u16", "u32", "u64"
+		, "i8", "i16", "i32", "i64", "f32", "f64"
+	]);
+	const {records,definitions}=rustHostRecords(sync,{ident,ref,track,subject,encode,readScalar,typeNames});
 	const parameter=v=>nominal(v)?"&impl AsHost<H::Object"+v+">":v==="string"?"&str":v==="bytes"?"&[u8]":(isBig(v)?"&":"")+primitive(v);
 	const input=(v,i,port)=>nominal(v)?port+".input("+v+",v"+i+",&mut scratch)?":encode(v,"v"+i,"scratch",false);
 	const scratch=vs=>vs.some(v=>nominal(v)||["string","bytes","int","nat"].includes(v))?"let mut scratch=Scratch::default();":"";
 	for(const [j,e] of sync.entries())
 	{
-		const n=ident(cIdentifier(e.name)),args=e.parameters.map(p=>track(ref(p.type)));
+		const n=ident(cIdentifier(e.name)),args=e.parameters.map(p=>records.get(p.type.declaration)??track(ref(p.type)));
 		if(names.has(n)) throw new TypeError("Reserved Rust host binding entry: "+n); names.add(n);
-		const ps=args.map((v,i)=>"v"+i+":"+parameter(v)),ws=args.map((v,i)=>input(v,i,"self.port"));
+		const ps=args.map((v,i)=>"v"+i+":"+(v?.ty?"&"+v.ty:parameter(v)));
+		const ws=args.flatMap((v,i)=>v?.ty?v.input("v"+i):[input(v,i,"self.port")]);
+		const prepare=args.some(v=>v?.ty)?"let mut scratch=Scratch::default();":scratch(args);
+		const record=records.get(e.result.declaration);
+		if(record)
+		{
+			exports.push("pub fn "+n+"(&self"+(ps.length?","+ps.join(","):"")+")->Result<"+record.ty+",HostCallError>{"+prepare+"let ws=["+ws.join(",")+"];"
+				+"let o=unsafe{self.port.execute_record("+j+",&ws,"+JSON.stringify(e.declaration)+")?};Ok("+record.result+")}");
+			continue;
+		}
 		if(e.result.kind==="io-closure")
 		{
 			if(e.effect!=="IO") throw new TypeError("Rust returned functions require an IO factory");
@@ -109,14 +131,14 @@ export const rustHostFacade = pkg => {
 				+"let id=self.ticket.replace(0);if id==0{return Ok(())}match unsafe{h.port.execute::<Infallible>("+(2*sync.length+j)+",&[[id,0,0]],"+decl+")}{"
 				+"Ok((_,false))|Err(HostCallError::Boundary(Fault::Closed))=>Ok(()),Err(HostCallError::Boundary(e))=>{self.ticket.set(id);Err(e)},_=>Err(Fault::Protocol)}}}"
 				+"impl<H:Host> Drop for "+cls+"<H>{fn drop(&mut self){let _=self.close();}}");
-			exports.push("pub fn "+n+"(&self"+(ps.length?","+ps.join(","):"")+")->Result<"+cls+"<H>,HostCallError>{"+scratch(args)+"let ws=["+ws.join(",")+"];"
+			exports.push("pub fn "+n+"(&self"+(ps.length?","+ps.join(","):"")+")->Result<"+cls+"<H>,HostCallError>{"+prepare+"let ws=["+ws.join(",")+"];"
 				+"let (o,failed)=unsafe{self.port.execute("+j+",&ws,"+decl+")?};let id=p::single(o.word(),u64::MAX)?;if failed || id==0{return Err(Fault::Protocol.into())}"
 				+"Ok("+cls+"{owner:Rc::downgrade(&self.owner),ticket:std::cell::Cell::new(id),_types:PhantomData})}");
 			continue;
 		}
 		const ret=decode(e.result),err=e.effect==="EIO"?decode(e.error):null;
 		exports.push("pub fn "+n+"(&self"+(ps.length?","+ps.join(","):"")+")->Result<"+ret.ty+",HostCallError<"+(err?err.ty:"Infallible")+">>{"
-			+scratch(args)+"let ws=["+ws.join(",")+"];"
+			+prepare+"let ws=["+ws.join(",")+"];"
 			+"let (o,failed)=unsafe{self.port.execute("+j+",&ws,"+JSON.stringify(e.declaration)+")?};if failed {"
 			+(err?"return Err(HostCallError::Declared{declaration:"+JSON.stringify(e.declaration)+",payload:"+err.expr+"});":"return Err(Fault::Protocol.into());")+"} Ok("+ret.expr+")}");
 	}
@@ -131,6 +153,7 @@ export const rustHostFacade = pkg => {
 			, "fn magnitude(w:Word,nat:bool)->Result<BigUint,Fault>{let limbs=unsafe{p::limbs(w,nat)?}; let digits:Vec<u32>=limbs.into_iter().flat_map(|n|[n as u32,(n>>32) as u32]).collect();Ok(BigUint::new(digits))}"
 			, "fn signed(w:Word)->Result<BigInt,Fault>{Ok(BigInt::from_biguint(if w[2]==1{Sign::Minus}else{Sign::Plus},magnitude(w,false)?))}"]:[]
 		, "#[doc(hidden)] pub trait Host:'static {"+types.join("\n")+methods.join("\n")+"}"
+		, ...definitions
 		, "#[macro_export] macro_rules! bind_objects {($vis:vis $marker:ident {"+patterns.join(",")+" $(,)?})=>{$vis struct $marker; impl $crate::Host for $marker {"+impl.join("\n")+"}};}"
 		, "unsafe fn member<H:Host>(f:&Frame,op:i32,arg:&[Word])->Result<Word,Failure>{match op{"+cases.join(",")+",_=>Err(Fault::Protocol.into())}}"
 		, pkg.embedded?[

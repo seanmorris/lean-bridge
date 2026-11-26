@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51323199,
+          "path": "archives/lean-bridge-task-runtime-1.0.0-rc5d3864db7802246b5541f726459cc9a9c16ed3b191bb85e77d727490c901f6f.crate",
+          "sha256": "28f72fedb9e1e0dcd39f8324c8242334bc0f180cbe2e960a75ff0021a92f0d64"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "lean-bridge-task-runtime",
+      "profile": "native-rust-host-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cargo",
+      "version": "1.0.0-rc5d3864db7802246b5541f726459cc9a9c16ed3b191bb85e77d727490c901f6f"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 42084,
+          "path": "archives/workshop-1.0.0.crate",
+          "sha256": "ccf02c314c7fa12ed539dc8448acf6a1b0077deb6b517eeb0154ba0debf0aac5"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "workshop",
+      "profile": "native-rust-host-v1",
+      "requires": [
+        {
+          "ecosystem": "cargo",
+          "name": "lean-bridge-task-runtime",
+          "version": "1.0.0-rc5d3864db7802246b5541f726459cc9a9c16ed3b191bb85e77d727490c901f6f"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "dc9f20662df9793392233f5fd5437825da4202d30d0fcf32f8e80c64752195e9",
+      "id": "native-rust-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "343e94b2d3d4ba782b100e6ca9108b6b96a52b714a134099b87ec8c8b73b45d7"
+  }
+}

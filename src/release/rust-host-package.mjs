@@ -1,7 +1,7 @@
 /** @file Publish two Cargo crates from captured Rust host declarations and actual Lean object code. */
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import { hostPublicHash } from "../analyze/host-records.mjs";
 import { compileCHostComponent } from "../build/c-host-component.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -35,7 +35,7 @@ export const buildRustHostPackage = async o => {
 		}
 		const gen={entryLean: await readFile(join(app,"BridgeRustExports.lean")),header: await readFile(join(app,"entry-abi.h"))};
 		if(b.workerWire) gen.workerLean=await readFile(join(app,"BridgeCAsync.lean"));
-		return await writeRustTaskRelease({...o,host: {ir: o.ir,model: b.model,domain: b.domain,domainId: b.domainId,wire: b.workerWire,ledger: b.workerLedger},prefix: b.prefix,entries: b.entries,api: b.api,evidence: b.evidence,files,floor,gen,manifest,runtimeIdentity,bindingIrSha256: hashBindingIr(b.api),componentIdentity: b.identity});
+		return await writeRustTaskRelease({...o,host: {ir: o.ir,model: b.model,domain: b.domain,domainId: b.domainId,wire: b.workerWire,ledger: b.workerLedger},prefix: b.prefix,entries: b.entries,api: b.api,evidence: b.evidence,files,floor,gen,manifest,runtimeIdentity,bindingIrSha256: hostPublicHash(b.api),componentIdentity: b.identity});
 	} finally
 	{ await rm(app,{recursive: true,force: true}); }
 };

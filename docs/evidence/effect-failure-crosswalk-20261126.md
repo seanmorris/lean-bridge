@@ -90,7 +90,11 @@ result-conversion failure: after an object is exported, a later buffer exceeds
 the byte budget. No record is published, the temporary lease is released, and a
 subsequent call succeeds. The [C++ client](cpp-host-record-fields-20261126.md)
 observes that failure as `std::length_error`, separately from a meter throwing
-its original application exception. Neither is a thrown EIO payload or a fatal fault.
+its original application exception. The [installed Rust client](rust-host-record-fields-20261126.md)
+observes `Fault::Limit` after a partial result export and checks that its weak
+pointer expires when the application drops its own meter. In a separate call,
+a member returning `Err` reaches the caller as the original error allocation.
+These are recoverable failures, not thrown EIO payloads or fatal faults.
 
 The [capabilities index](host-worker-qualification-20261125.md#which-installed-profiles-exercised-os-access)
 records which profiles permit real OS effects and which refuse to package

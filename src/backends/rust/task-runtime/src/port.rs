@@ -117,6 +117,40 @@ impl Output {
     pub fn branch(&self,i:usize)->Result<bool,Fault> {match self.tags.get(i){Some(0)=>Ok(false),Some(1)=>Ok(true),_=>Err(Fault::Protocol)}}
 }
 impl Drop for Output {fn drop(&mut self){unsafe{(self.clear)(self.raw.as_mut_ptr())}}}
+// Only a compiled record-returning entry uses this dispatch frame. An export
+// is temporarily owned even if conversion of a subsequent native field fails.
+struct RecordFrame {base:Frame,exports:RefCell<Vec<Ticket>>}
+unsafe extern "C" fn record_dispatch(id:u64,op:i32,args:*const u64,n:usize,out:*mut u64,fault:*mut u32)->i32 {
+    if id==0{return 2}
+    let f=unsafe{&*(id as *const RecordFrame)};
+    if op != -9 {return unsafe{dispatch(&f.base as *const Frame as u64,op,args,n,out,fault)}}
+    if n!=2 || args.is_null() || out.is_null() || fault.is_null(){return 2}
+    match catch_unwind(AssertUnwindSafe(||->Result<(),Fault>{
+        let mut owners=f.exports.try_borrow_mut().map_err(|_|Fault::Busy)?;
+        if owners.len()>=64{return Err(Fault::Limit)}
+        owners.try_reserve(1).map_err(|_|Fault::Allocation)?;
+        let owner=f.base.session.export_ticket(unsafe{*args})?;
+        unsafe{*out=owner.id()}; owners.push(owner);Ok(())
+    })){Ok(Ok(()))=>0,Ok(Err(_))=>2,Err(_)=>{f.base.panic.set(true);2}}
+}
+pub struct RecordOutput {value:Output,session:Rc<Session>,owners:Vec<Ticket>}
+impl RecordOutput {
+    pub fn field(&self,count:usize,index:usize,storage:u64)->Result<Word,Fault> {
+        let [address,len,reserved,tag]=self.value.raw;
+        if tag!=3 || reserved!=0 || count==0 || count>64 || len!=count as u64 || index>=count ||
+            address==0 || address%8!=0{return Err(Fault::Protocol)}
+        // The entry allocates exactly four aligned words per field. Output
+        // owns this storage until the last caller has copied its values.
+        let w=unsafe{*(address as *const [u64;4]).add(index)};
+        if storage>2 || w[3]!=storage{return Err(Fault::Protocol)}
+        Ok([w[0],w[1],w[2]])
+    }
+    pub fn object<T:'static>(&self,kind:usize,w:Word)->Result<HostRef<T>,Fault>{
+        let id=single(w,u64::MAX)?;
+        if !self.owners.iter().any(|o|o.id()==id){return Err(Fault::Protocol)}
+        Ok(self.session.get(kind,id)?)
+    }
+}
 pub struct Connection {session:RefCell<Option<Rc<Session>>>,call:Call,clear:Clear,member:Member,depth:Cell<usize>,returned:bool,closing:Cell<bool>}
 struct Active<'a>(&'a Cell<usize>);
 impl Drop for Active<'_> {fn drop(&mut self){self.0.set(self.0.get()-1)}}
@@ -173,6 +207,21 @@ impl Connection {
     pub unsafe fn execute<E>(&self,op:i32,ws:&[Word],declaration:&'static str)->Result<(Output,bool),HostCallError<E>> {
         let s=self.session()?;s.validate().map_err(Fault::from)?;
         let (f,o,rc,id)=self.invoke(s,op,ws);
+        Self::finish(f,o,rc,id,declaration)
+    }
+    /// Safety: the checked synchronous IO entry must use the flat record wire
+    /// and its matched clear function; its word buffers are borrowed for this call.
+    pub unsafe fn execute_record(&self,op:i32,ws:&[Word],declaration:&'static str)->Result<RecordOutput,HostCallError>{
+        let s=self.session()?;s.validate().map_err(Fault::from)?;
+        let frame=RecordFrame{base:Frame{session:s.clone(),member:self.member,replies:Default::default(),errors:Default::default(),panic:Cell::new(false)},exports:Default::default()};
+        let mut o=Output{raw:[0;4],tags:[0;65],clear:self.clear};let mut id=0;
+        self.depth.set(self.depth.get()+1);let _active=Active(&self.depth);
+        let rc=unsafe{(self.call)(crate::owner::instance(),&frame as *const RecordFrame as u64,record_dispatch,op,ws.as_ptr().cast(),ws.len(),o.raw.as_mut_ptr(),o.tags.as_mut_ptr(),&mut id)};
+        let (value,failed)=Self::finish(frame.base,o,rc,id,declaration)?;
+        if failed{return Err(Fault::Protocol.into())}
+        Ok(RecordOutput{value,session:s,owners:frame.exports.into_inner()})
+    }
+    fn finish<E>(f:Frame,o:Output,rc:i32,id:u32,declaration:&'static str)->Result<(Output,bool),HostCallError<E>>{
         match rc {
             0|3=>Ok((o,rc==3)),
             4=>Err(HostCallError::Io{declaration,message:String::from_utf8(unsafe{bytes(o.word())?}).map_err(|_|Fault::Protocol)?}),

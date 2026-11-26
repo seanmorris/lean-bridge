@@ -199,6 +199,11 @@ impl Session {
     pub fn take<T:'static>(&self,i:usize,id:u64)->Checked<HostRef<T>> {
         let v=self.get(i,id); release(self.domain,id)?;v
     }
+    #[doc(hidden)]
+    pub fn export_ticket(&self,source:u64)->Checked<Ticket> {
+        let id=self.refop(-9,source,0)?;
+        Ok(Ticket{domain:self.domain,id,_owner:PhantomData})
+    }
 }
 impl Drop for Session {
     fn drop(&mut self) {if context().is_ok() && self.live.replace(false) {

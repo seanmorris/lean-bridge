@@ -4359,7 +4359,7 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
           node --test tests/native-rust.test.mjs
-      - name: Install and exercise Rust tasks and pull streams offline
+      - name: Exercise installed Rust tasks, pull streams, and host-object records offline
         id: rust_tasks
         if: matrix.profile == 'rust'
         continue-on-error: true
@@ -4367,6 +4367,7 @@ jobs:
         env:
           LEAN_BRIDGE_RUST_TASK_TEST: "1"
           LEAN_BRIDGE_RUST_TASK_EVIDENCE: build/consumer-ci/rust-tasks
+          LEAN_BRIDGE_RUST_HOST_RECORD_OUTPUT: build/consumer-ci/rust-tasks/host-record
           LEAN_NUM_THREADS: "1"
           CARGO_BUILD_JOBS: "1"
         run: |
@@ -4376,6 +4377,7 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           node scripts/warm-rust-task-deps.mjs
           CARGO_NET_OFFLINE=true node --test --test-concurrency=1 tests/helpers/rust-task-installed.mjs
+          CARGO_NET_OFFLINE=true npm run test:rust-host-records
       - name: Retain the installed Rust task release and receipts
         if: ${{ !cancelled() && steps.rust_tasks.outcome == 'success' }}
         uses: actions/upload-artifact@v7

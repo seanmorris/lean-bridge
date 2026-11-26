@@ -46,7 +46,7 @@ export const hostRecordTypes = (rows, selection, imports) => {
 	for(const e of rows) for(const t of [e.result, ...e.parameters.map(p => p.type)])
 	{
 		if(t?.kind !== "host-record") continue;
-		const supported = ["LeanBridge.Host.Python", "LeanBridge.Host.Ruby", "LeanBridge.Host.Dotnet", "LeanBridge.Host.Jvm", "LeanBridge.Host.C", "LeanBridge.Host.Cpp"].includes(selection.hostModule)
+		const supported = ["Python", "Ruby", "Dotnet", "Jvm", "C", "Cpp", "Rust"].some(owner => selection.hostModule === "LeanBridge.Host." + owner)
 			|| selection.hostModule === "LeanBridge.Host.Php" && selection.phpNativeFunctions === true
 				&& selection.phpWasmSyncObjects === undefined && selection.phpWasmTaskObjects === undefined;
 		if(!supported || selection.nativeEffectPolicy !== "native-host-io-v1"

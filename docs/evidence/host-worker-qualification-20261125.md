@@ -117,8 +117,11 @@ The [C11 client](c-host-record-fields-20261126.md) separately counts each meter'
 destruction. A returned row survives binding closure; a getter can outlive that row.
 The [C++ client](cpp-host-record-fields-20261126.md) instead checks the shared
 ownership control block and uses weak pointers to observe the same two lifetimes.
-That is **8 of 17 profiles** with an installed caller-constructed application-object
-record on both routes. The nine still to verify for this case are Perl, Rust,
+The [Rust client](rust-host-record-fields-20261126.md) passes a getter result
+to an independent Cargo package after dropping the record and closing its
+binding. The peer increments the original meter and keeps the last owner alive.
+That is **9 of 17 profiles** with an installed caller-constructed application-object
+record on both routes. The eight still to verify for this case are Perl,
 WIT/WASI, PHP-Wasm, Node JavaScript, Node TypeScript, browser JavaScript,
 mounted React, and a dedicated browser worker. A shared package does not
 substitute for executing each client. This count is not a percentage of #1221.

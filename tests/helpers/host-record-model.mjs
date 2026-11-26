@@ -9,6 +9,7 @@ import {cHostCodecs} from "../../src/backends/c/host-codecs.mjs";
 import {cHostRecords} from "../../src/backends/c/host-records.mjs";
 import {cppHostRecords} from "../../src/backends/cpp/host-records.mjs";
 import {cppHostCodecs} from "../../src/backends/cpp/host-codecs.mjs";
+import {rustHostFacade} from "../../src/backends/rust/host-facade.mjs";
 import {lowerWordHostRecord} from "../../src/backends/native/word-host-records.mjs";
 
 const box = {id: "host:meter.Box", name: "Box"};
@@ -124,4 +125,22 @@ test("C++ host records reserve public and private binding names before emitting 
 	for(const fields of [["lead", "lead"], ["lb_field_0"], ["switch", "switch_"]])
 		assert.throws(() => emit(fields), /Colliding C\+\+ host record field/u);
 	assert.equal(emit(["primaryMeter"]).types.get("Workshop.Rack").type, "Rack");
+});
+
+test("Cargo host records reserve runtime and getter names and bound aggregate arity", () => {
+	const id = "b".repeat(64);
+	const emit = (name, fields) => {
+		const row = {...record, declaration: "Gauge." + name, fields: fields.map(key => ({name: key, type: {kind: "named", id: box.id}}))};
+		return rustHostFacade({
+			ir: {types: [box]}, model: {kinds: [{...box, key: id}], members: []}
+			, entries: [{...site(row), name: "pair", declaration: "Gauge.pair", parameters: [{type: row}]}]
+			, domainId: id, prefix: "lb_rust_host_" + id
+		});
+	};
+	for(const name of ["HostRef", "H", "BigUint", "Binding", "Clone", "Drop", "u64"])
+		assert.throws(() => emit(name, ["lead"]), /Reserved Rust host record/u);
+	for(const fields of [["new"], ["clone"], ["lb_field_0"], ["sourceMeter", "source_meter"]])
+		assert.throws(() => emit("Pair", fields), /Colliding Rust host record getter/u);
+	const wide = {...record, fields: Array.from({length: 33}, (_, i) => ({...record.fields[0], name: "f" + i, projection: "Workshop.Rack.f" + i}))};
+	assert.throws(() => lowerWordHostRecord({...site(record), parameters: [{type: wide}, {type: wide}]}, "rust", () => "Box"), /64 flattened/u);
 });
