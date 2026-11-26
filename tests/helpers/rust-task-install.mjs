@@ -62,13 +62,28 @@ const dependencies = lock => lock.split("[[package]]").slice(1).map(s => Object.
 	[...s.matchAll(/^(name|version|source|checksum) = "([^"\n]+)"$/gmu)].map(m => [m[1], m[2]])));
 export { install as installVerifiedRustCrate, dependencies as rustLockPackages };
 
+// Swap only the dependency aliases. In particular, do not rewrite the
+// consumer source, either crate, its public declarations, or the lock file.
+const appManifest = (primary, peer) => [
+	"[package]", 'name="rust-task-app"', 'version="1.0.0"', 'edition="2021"', "[dependencies]",
+	'task-lab={package="' + primary + '",version="=1.0.0"}',
+	'task-lab-peer={package="' + peer + '",version="=1.0.0"}',
+	'futures-core="0.3"', "[profile.dev]", "debug=0", "incremental=false", ""
+].join("\n");
+
+const ownerPackages = metadata => {
+	const root = metadata.resolve.nodes.find(n => n.id === metadata.resolve.root);
+	return Object.fromEntries(root.deps.filter(d => ["task_lab","task_lab_peer"].includes(d.name))
+		.map(d => [d.name, metadata.packages.find(p => p.id === d.pkg).name]));
+};
+
 /**
  * Collect evidence from a relocated executable built from an offline registry.
  *
  * @param options - Scratch directory, retained release set and Rust toolchain.
  */
 export const runInstalledRustTasks = async options => {
-	const { root, kept, environment, parkedClient } = options;
+	const { root, kept, environment, parkedClient, swapPrimary } = options;
 	const fx = join(kept, "client");
 	const work = await mkdtemp(join(root, "installed-")), vendor = join(work, "registry"), client = join(work, "client");
 	const cargo = environment.LEAN_BRIDGE_CARGO ?? "cargo", rustc = environment.LEAN_BRIDGE_RUSTC ?? "rustc";
@@ -167,7 +182,7 @@ export const runInstalledRustTasks = async options => {
 	const env = { ...environment, RUSTC: rustc, CARGO_BUILD_JOBS: "1", CARGO_INCREMENTAL: "0", CARGO_NET_OFFLINE: "true", CARGO_HOME: join(work, "clean-cargo"), CARGO_TARGET_DIR: join(work, "target"), LEAN_PATH: "/unavailable", LEAN_SYSROOT: "/unavailable", LD_PRELOAD: "", LD_LIBRARY_PATH: "" };
 	await mkdir(join(client, ".cargo"));
 	await writeFile(join(client, ".cargo/config.toml"), `[source.crates-io]\nreplace-with = "installed"\n[source.installed]\ndirectory = ${JSON.stringify(vendor)}\n`);
-	await writeFile(join(client, "Cargo.toml"), '[package]\nname="rust-task-app"\nversion="1.0.0"\nedition="2021"\n[dependencies]\ntask-lab="=1.0.0"\ntask-lab-peer="=1.0.0"\nfutures-core="0.3"\n[profile.dev]\ndebug=0\nincremental=false\n');
+	await writeFile(join(client, "Cargo.toml"), appManifest("task-lab","task-lab-peer"));
 	for(const [f, to] of [["consumer.rs", "main.rs"], ["pulse_checks.rs", "pulse_checks.rs"]]) await copyFile(join(fx, f), join(client, "src", to));
 	// Historical receipts replay their own original client, not today's checks.
 	const retained = (await readdir(fx)).includes("callback_checks.rs");
@@ -197,11 +212,34 @@ export const runInstalledRustTasks = async options => {
 	});
 	const bin = join(root, "relocated-consumer");
 	await copyFile(join(env.CARGO_TARGET_DIR, "debug/rust-task-app"), bin);
+	let owners;
+	const alternate = join(root, "relocated-reviewed-primary");
+	if(swapPrimary)
+	{
+		assert.ok(retained, "dual-owner replay requires a callback-capable release pair");
+		const ordinary = ownerPackages(metadata);
+		assert.deepEqual(ordinary,{task_lab:"task-lab",task_lab_peer:"task-lab-peer"});
+		const pin = await readFile(join(client,"Cargo.lock"));
+		await writeFile(join(client, "Cargo.toml"), appManifest("task-lab-peer","task-lab"));
+		const swapped = JSON.parse(await run(cargo, ["metadata","--locked","--offline","--format-version","1"], client, env));
+		const reviewed = ownerPackages(swapped);
+		assert.deepEqual(reviewed,{task_lab:"task-lab-peer",task_lab_peer:"task-lab"});
+		await run(cargo, ["build","--bin","rust-task-app","--locked","--offline","-j1"], client, env);
+		assert.deepEqual(await readFile(join(client,"Cargo.lock")), pin);
+		await copyFile(join(env.CARGO_TARGET_DIR, "debug/rust-task-app"), alternate);
+		owners = { ordinary, reviewed, lockSha256:sha256(pin) };
+	}
 	await rm(work, { recursive: true });
 	const isolated = { PATH: "/unavailable", CARGO_HOME: "/unavailable", LEAN_SYSROOT: "/unavailable", TMPDIR: root, LEAN_NUM_THREADS: "1" };
 	const output = (await run(bin, [], root, isolated)).trim();
 	assert.match(output, /cross-crate resource cleanup passed$/u);
 	if(retained) assert.match(output, /retained callback checks passed/u);
+	if(swapPrimary)
+	{
+		const reviewed = (await run(alternate, [], root, isolated)).trim();
+		assert.equal(reviewed,output,"both primary crates must pass every original consumer assertion");
+		owners.outputs = {ordinary:output,reviewed};
+	}
 	let parked;
 	if(parkedClient)
 	{
@@ -217,6 +255,7 @@ export const runInstalledRustTasks = async options => {
 		parked = { clientSha256: sha256(await readFile(parkedClient)), orders };
 	}
 	return { reports
+		, ...owners ? { owners } : {}
 		, ...parked ? { parked } : {}
 		, output
 		, consumerSha256: sha256(await readFile(join(fx, "consumer.rs")))

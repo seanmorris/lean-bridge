@@ -1,0 +1,60 @@
+{
+  "callbackChecksSha256": "fce52c7187107344a8407c94d67dfd34969834f6d0372eba62eb2c02546fb5ca",
+  "consumerSha256": "1d2619a90f34378a5a28cead3ceec5991839350141f8aee73b4913b98f093245",
+  "guideSha256": "70ec368569740a936c612cc0704ad6c716837b63ebb36f3a62951f9c90c4dfed",
+  "output": "Rust: retained callback checks passed\nRust: parked executor, waker replacement, cancellation, fused streams, typed errors, exact integers and cross-crate resource cleanup passed",
+  "owners": {
+    "lockSha256": "5da0e31fb099c4e670498acb91b46e94394e2ae6c1ae01c8979d3037bef5881c",
+    "ordinary": {
+      "task_lab": "task-lab",
+      "task_lab_peer": "task-lab-peer"
+    },
+    "outputs": {
+      "ordinary": "Rust: retained callback checks passed\nRust: parked executor, waker replacement, cancellation, fused streams, typed errors, exact integers and cross-crate resource cleanup passed",
+      "reviewed": "Rust: retained callback checks passed\nRust: parked executor, waker replacement, cancellation, fused streams, typed errors, exact integers and cross-crate resource cleanup passed"
+    },
+    "reviewed": {
+      "task_lab": "task-lab-peer",
+      "task_lab_peer": "task-lab"
+    }
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "47e65538333957b036b300713c75e35d2cecd597f47c2404944ded2d2da531e1",
+      "componentArchive": {
+        "bytes": 124677,
+        "path": "archives/task-lab-1.0.0.crate",
+        "sha256": "775c4c8d2e503aa68d8e9676b5ba95b2efc7228486e627b46ae54f890f89abbc"
+      },
+      "componentIdentity": "277c80a2281e962c6d43fd42eafc9e43acde4ac5989216ea1aa65f93579d1e6d",
+      "receiptSha256": "947ad85787041147742a00dd241a7fd549c9e98cb5e9cad4fceca2e26a602b57",
+      "route": "ordinary",
+      "runtimeArchive": {
+        "bytes": 51311303,
+        "path": "archives/lean-bridge-task-runtime-1.0.0-r75697d07265e829989aad7f96731238024eec63b534a54bd0073e99678f1f885.crate",
+        "sha256": "4c742d8e2561b0512b69bfbfa4b8c161c9f63defa5c03110ba9ed3db0bf57ccd"
+      },
+      "runtimeVersion": "1.0.0-r75697d07265e829989aad7f96731238024eec63b534a54bd0073e99678f1f885",
+      "sourceTreeSha256": "7bb9d59c92fd26803d3403aae863eff1c5762dba0502df78b1956804787db564"
+    },
+    {
+      "bindingIrSha256": "47e65538333957b036b300713c75e35d2cecd597f47c2404944ded2d2da531e1",
+      "componentArchive": {
+        "bytes": 124921,
+        "path": "archives/task-lab-peer-1.0.0.crate",
+        "sha256": "8160269717d12de53b501da86b221c8b246ed21405a51967bb241eb07fd443fa"
+      },
+      "componentIdentity": "cd6d20c0f9eab7b1dad21201efbe9d50b55f5b5f6bce5beef27a256ed420539b",
+      "receiptSha256": "8fda19e0568cf66afa75026dc894310c0486b9c5ea2be31d5c79be34400fd63c",
+      "route": "reviewed",
+      "runtimeArchive": {
+        "bytes": 51311303,
+        "path": "archives/lean-bridge-task-runtime-1.0.0-r75697d07265e829989aad7f96731238024eec63b534a54bd0073e99678f1f885.crate",
+        "sha256": "4c742d8e2561b0512b69bfbfa4b8c161c9f63defa5c03110ba9ed3db0bf57ccd"
+      },
+      "runtimeVersion": "1.0.0-r75697d07265e829989aad7f96731238024eec63b534a54bd0073e99678f1f885",
+      "sourceTreeSha256": "1eb7b76c98396f2a3aa2496f433dde17d1c417ca6caff06658512a3971dc37f2"
+    }
+  ],
+  "wakeChecksSha256": "80430f603c37ba0eca879cc1138ed411122a8c6139c5f9077ecf09f6a55bda9c"
+}

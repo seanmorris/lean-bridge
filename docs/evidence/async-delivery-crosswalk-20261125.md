@@ -475,6 +475,30 @@ following variables to the matching original captures:
 | CPython | `LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL` | `LEAN_BRIDGE_PY_ASYNC_RETAINED` (contains `cpython-311/`, `cpython-312/`) | `LEAN_BRIDGE_PY_ASYNC_LEASES` (contains `cp311/`, `cp312/`) |
 | Ruby | `LEAN_BRIDGE_RUBY_PARKED_ORIGINAL` | `LEAN_BRIDGE_RB_ASYNC_RETAINED` | `LEAN_BRIDGE_RB_ASYNC_LEASES` |
 
+### Rust: both authoring routes as the primary task owner
+
+The [installed Cargo replay](rust-async-owners-20261126/owners.json) ran the
+original downstream program twice. On the first run its `task_lab` import
+resolved to the ordinary crate; on the second it resolved to the reviewed
+crate. Cargo's locked, offline dependency graph identified both packages in
+each run. Only the dependency aliases changed; the application, its callback
+checks, the crates and the lock file did not. Each primary handled task
+settlement, cancellation, stream exhaustion and typed errors, retained
+callback invocation, and cleanup across the two crates.
+
+The [parked-reader record](rust-parked-pull-20261126.json) is a separate
+pair of releases. On each route the consumer replaced the pending reader's
+waker, closed a pending stream and dropped its owner. Every case observed one
+Lean pull and one finalizer; closing did not deliver the late item. Neither
+test substitutes a mock executor for the installed Lean producer.
+
+To repeat the dual-owner check, set `LEAN_BRIDGE_RUST_TASK_REPLAY` to the
+original callback-capable release directory and `LEAN_BRIDGE_RUST_TASK_DUAL_OUTPUT`
+to a fresh output directory, then run
+`node --test --test-concurrency=1 tests/helpers/rust-task-installed.mjs`
+with the offline [Cargo prerequisites](rust-retained-tasks-20261122.json).
+This adds six combinations, for **124/136**. WIT/WASI and PHP-Wasm remain.
+
 ### Interrupting a parked reader in wasm32 PHP
 
 The PHP-Wasm cursor now separates requesting cancellation from waiting for
