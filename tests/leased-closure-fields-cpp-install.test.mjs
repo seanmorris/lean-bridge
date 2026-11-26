@@ -28,7 +28,7 @@ const parseResult = stdout => {
 };
 const environment = nativeFixtureEnvironment(["cpp"]), replay = process.env.LEAN_BRIDGE_CPP_TARIFF_REPLAY;
 
-test("C++ selects only borrowed callback fields and accepts mixed input/leased records", () => {
+test("C++ selects only borrowed callback fields and accepts mixed input/leased records", async t => {
 	const ir = leasedClosureFieldReviewedIr({exchange: true});
 	const record = ir.types.find(t => t.name === "Tariff");
 	const apply = ir.declarations.find(d => d.name === "applyTariff");
@@ -40,6 +40,23 @@ test("C++ selects only borrowed callback fields and accepts mixed input/leased r
 	assert.match(surface.header, /!std::same_as<std::remove_cvref_t<F0>, Tariff> \|\| !std::same_as<std::remove_cvref_t<F1>, Tariff>/u);
 	assert.match(surface.header, /OwnedRecordView\d+<std::remove_reference_t<F1>>::check\(a1, call\)/u);
 	assert.equal(generateOwnedCppPackage(ir, {hostCallbacks: false}).contract.hostInputRecords, undefined);
+	const dir = await mkdtemp(join(tmpdir(), "cpp-mixed-field-inputs-"));
+	t.after(() => rm(dir, {recursive: true, force: true}));
+	await saveLakeFile(dir, "include/" + surface.c.prefix + ".h", surface.c.header);
+	for(const [path, contents] of Object.entries(surface.files)) await saveLakeFile(dir, path, contents);
+	await saveLakeFile(dir, "mixed.cpp", `#include "tariff_quotes.hpp"
+namespace api = lean_bridge::tariff_quotes;
+void use(const api::Tariff& leased) {
+  api::TariffInput row{[rate=uint32_t{40}](uint32_t n) mutable { return n + rate++; }, 1u};
+  (void)api::apply_tariff(row, leased);
+  (void)api::apply_tariff(leased, row);
+  (void)api::apply_tariff(row, row);
+  (void)api::apply_tariff(leased, leased);
+}
+`);
+	await runCopied("/usr/bin/c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror"
+		, "-pthread", "-Iinclude", "-fsyntax-only", "mixed.cpp"]
+	, dir, {PATH: "/usr/bin:/bin"});
 });
 
 const buildHandoff = async (dir, route, handoff, t) => {
