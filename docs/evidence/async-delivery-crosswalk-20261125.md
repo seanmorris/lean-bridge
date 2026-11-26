@@ -53,6 +53,25 @@ once. A further pull reports exhaustion; two explicit closes produce no
 further read or write. These observations use the same installed Workshop
 archives as the earlier replay, with new consumer source hashes.
 
+## Who closed the cursor after a failed pull?
+
+The ordering of the observations matters. A finalizer counter read *after*
+the caller disposes a cursor cannot tell us whether the failed pull already
+closed it. These earlier installed clients counted the finalizer before
+requesting another close:
+
+| Client | What happened before the caller requested close |
+| --- | --- |
+| [Native PHP](../../tests/fixtures/php-task-resources/installed.php) | Advancing the generator threw `Depot.next`. The Lean close counter was already up by one while both the delivered item and the error payload were live. The application closed the item and read 9 through the error's last lease. Only then did it close the payload and cursor and check baseline. The [installed Composer record](php-task-leases-20261123.json) pins the client source and records 59 checks per process: two PHP versions, two package load orders and both author routes. |
+| [Ruby](../../tests/fixtures/ruby-task-resources/consumer.rb) | After the typed step error the payload still referred to the expected resource. In the next assertion Ruby evaluated the Lean counter **before** `stream.close`: the counter was already up by one and close returned false. The same order was checked after natural exhaustion. The early-exit branch explicitly called close, so does not establish automatic cleanup. Both author routes and package load orders appear in the [installed gem record](ruby-resource-leases-20261122.json). |
+
+The PHP and Ruby sources above match the consumer hashes in those original
+reports. No new PHP or Ruby package run was needed for this distinction.
+The earlier [CPython](../../tests/fixtures/python-task-resources/installed.py)
+and [CLR](../../tests/fixtures/dotnet-task-resources/Program.cs) resource
+clients checked their final count **after** leaving a context manager or
+calling `DisposeAsync()`; don't infer the same ordering from those checks.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
