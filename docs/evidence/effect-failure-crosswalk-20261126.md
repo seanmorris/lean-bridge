@@ -165,6 +165,14 @@ partway through a compiled record result. Both authoring routes leave the
 binding usable. Disposal and strict object identity are observable here;
 the Rust weak-pointer observation is not a JavaScript GC guarantee.
 
+In a separate [ten-run npm qualification](npm-function-fields-20261126.md),
+the host callback was expected to return a Lean function. When it threw
+instead, each installed client caught the **same JavaScript error object**
+and could still call its retained function. An expired call-scoped callback
+instead produced status 10 without entering the host. Both paths finished
+with zero live Wasm identities. Neither is a declared Lean error or a
+terminal Wasm trap.
+
 On all four [Perl configurations](perl-host-record-fields-20261126.md), an
 invalid second argument caused no member call. A failed output conversion
 released the intermediate meter, as observed through a weak reference, and

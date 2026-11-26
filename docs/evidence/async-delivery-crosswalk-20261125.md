@@ -97,6 +97,16 @@ Fresh captures also run the new clients; historical replay still verifies the or
 
 ### Cancelling a pull already waiting on Lean
 
+The earlier npm [Jobs client](../../tests/fixtures/javascript-wasm-task-runtime/public-consumer.mjs)
+cancels an outstanding JavaScript `next()` and sees one finalizer. Its
+[Lean step](../../tests/fixtures/javascript-wasm-generated-tasks/Jobs.lean)
+returns `Task.pure`: the client is awaiting delivery, but the item has
+already been computed. The [Depot step](../../tests/fixtures/javascript-wasm-resource-tasks/Depot.lean)
+likewise returns an already-completed task. Both packages have genuinely
+gated *task* exports; those exports are not the iterator step. These runs
+do not establish when cancellation settles a reader, runs the finalizer
+or frees a native owner if the **iterator's own worker** is still parked.
+
 On CPython, the [Timers client](../../tests/fixtures/python-lean-tasks/cancel_pull.py)
 waited until Lean had entered the pull, the reader was pending and two native
 leases were live. Cancelling the reader preserved its cancellation message.
