@@ -49,6 +49,8 @@ test("offline Cargo clients distinguish a worker admission refusal from an origi
 			assert.notEqual(archive.sha256,first);assert.deepEqual(runtimeArchive,shared);
 		}
 		const app=await installRustHostApp({root: work,out,receipt,worker: true,env,source,component: component.name,preserveHandoff: true});
+		const clientSha256=sha256(await readFile(join(app.src,"src/main.rs")));
+		assert.equal(clientSha256,sha256(await readFile(source)));
 		const isolated=await app.isolate();
 		const observation=await run(app.bin,[],app.runtime,{...isolated,LEAN_NUM_THREADS: "4"});
 		assert.equal(observation,"Rust: one-call admission; 16 worker races; original and replacement errors distinguished; capture released; zero leases");
@@ -57,7 +59,7 @@ test("offline Cargo clients distinguish a worker admission refusal from an origi
 			, runtimeIdentity: runtime.runtimeIdentity
 			, sourceTreeSha256: proof.sourceTreeSha256
 			, reviewedSourceSha256: proof.reviewedSourceSha256
-			, clientSha256: sha256(await readFile(source))};
+			, clientSha256};
 		await writeFile(join(output,route+".json"),canonicalJson(row));await rm(app.temp,{recursive: true});
 	}
 });

@@ -41,7 +41,17 @@ fn main() {
             Err(Error::Callback{declaration:"Budget.single",error})=>assert!(error.same_error(&original)),
             other=>panic!("original Rust error lost: {other:?}"),
         }
-        denied(api::during_start(1,f.function()).unwrap().await,"Racing.duringStart");
+        let already=api::during_start(1,f.function()).unwrap().await.unwrap_err();
+        let boundary=match already {
+            Error::Boundary(f @ Fault::CallbackAlreadyInvoked{declaration:"Racing.duringStart"})=>f,
+            other=>panic!("expected a distinct factory admission error: {other:?}"),
+        };
+        let raised=CallbackError::new(boundary);
+        let same=raised.clone();
+        match api::single(1,move |_| Err(same.clone())).unwrap().await {
+            Err(Error::Callback{error,..})=>assert!(error.same_error(&raised)),
+            other=>panic!("an earlier budget fault returned by Rust is a host error: {other:?}"),
+        }
         let replaced=api::replace(1,f.function()).unwrap().await;
         assert!(matches!(replaced,Err(Error::Boundary(Fault::TaskIo{declaration:"Racing.replace",message})) if message.contains("callback-already-invoked")));
         let before=count.get();
