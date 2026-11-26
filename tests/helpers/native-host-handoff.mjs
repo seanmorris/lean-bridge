@@ -8,6 +8,7 @@ import { promisify } from "node:util";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { prepareNativeHostFixture } from "./native-host-import-check.mjs";
+import { copyPackageSetHandoff } from "./package-set.mjs";
 
 const exec = promisify(execFile);
 const extra = `
@@ -39,8 +40,9 @@ const clrEcho = t => "echo_" + (({ ByteArray: "bytes", Float: "float64" })[t] ??
  * @param o.reviewed - Require the ordinary build's public IR.
  * @param o.cli - Path to the author's CLI entry point.
  * @param o.backend - JVM or CLR package route for the common Lean example.
+ * @param o.retain - Optional private directory for the original release, interface and elaboration evidence.
  */
-export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed, cli, backend = "jvm" }) => {
+export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed, cli, backend = "jvm", retain }) => {
 	assert.ok(["jvm", "dotnet"].includes(backend)); const dotnet = backend === "dotnet", target = dotnet ? "nuget" : "maven";
 	assert.ok(isAbsolute(archives) && (await stat(archives)).isDirectory(), "expected an existing absolute archive directory");
 	const stage = await mkdtemp(join(root, "publisher-")), project = join(stage, "src"), out = join(stage, "out");
@@ -103,6 +105,10 @@ export const captureNativeHostHandoff = async ({ root, archives, peer, reviewed,
 			}
 		}
 		if(reviewed) assert.deepEqual(api, await json(review)); else await writeFile(review, canonicalJson(api), { flag: "wx" });
+		if(retain) {
+			await copyPackageSetHandoff(out,join(retain,"handoff"));
+			for(const path of ["binding-ir.json","host-export-evidence.json"]) await copyFile(join(out,path),join(retain,path),constants.COPYFILE_EXCL);
+		}
 		const files = [];
 		for(const a of pkg.artifacts)
 		{

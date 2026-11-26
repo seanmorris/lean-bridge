@@ -107,6 +107,34 @@ with the [Ledger handoffs](php-wasm-installed-sync-io-20261123.md#both-author-ro
 These four additional EIO/named-error combinations bring #1222 to **62/102**:
 34 direct IO, 14 typed EIO and 14 named errors.
 
+### .NET: the same NuGet install owns the error and enforces retirement
+
+The [ordinary](dotnet-error-owner-20261126/ordinary.json) and
+[reviewed](dotnet-error-owner-20261126/reviewed.json) clients ran in both
+load orders against Workshop and an independently built Peer. The installed
+interface identifies `Workshop.rejectBox` as an `EIO` with a leased error
+payload; the [C# client](../../tests/fixtures/dotnet-host-meter/ErrorOwner.cs)
+checks the exception's declaration and the identity of its meter. It disposes
+the producing binding and drops the original local reference. The peer reads
+23 and updates the meter to 42 through the exception. After the frame holding
+the exception returns, a forced collection clears the weak reference while
+the peer remains open.
+
+In the same executable, [ordinary returns and validation](../../tests/fixtures/dotnet-host-meter/InstalledScalars.cs)
+remain distinct from that failure. A [nested host exception](../../tests/fixtures/dotnet-host-meter/Installed.cs)
+retains its identity; a new IO failure does not impersonate it. A deliberately
+thrown CLR `OutOfMemoryException` in a peer is fatal even when a setter catches
+it: the outer getter does not run, and neither package can continue. This is
+fault injection, not exhaustion of the machine's memory.
+
+Run `npm run test:dotnet-host-packages` with the [NuGet toolchains](dotnet-host-imports-20261124.md).
+Set `LEAN_BRIDGE_CLR_ERROR_KEEP` to an existing directory to retain both
+release pairs, or `LEAN_BRIDGE_CLR_ERROR_REPLAY` to the retained
+`handoffs-*` directory to rerun the consumer without rebuilding Lean.
+These four combinations bring #1222 to **66/102**: 34 direct IO, 16 typed
+EIO and 16 named errors. Nine profiles still need both typed contracts
+verified on both routes.
+
 ## Which immediate errors keep a live resource?
 
 These checks use a Lean-owned resource as the payload of a synchronous
@@ -152,11 +180,11 @@ containing an object created by the application:
 | --- | --- |
 | Java | The [Java client](../../tests/fixtures/jvm-host-meter/LeasePayloads.java) saves a thrown `MixedFaultError`, closes both Maven bindings, unwraps its nested `Ok(Err(box))`, and reads 17 from the original box. Asking for an incompatible payload class throws `ClassCastException`. |
 | Kotlin | The [Kotlin client](../../tests/fixtures/jvm-host-meter/KotlinLeasePayloads.kt) separately observes `Result.Err(meter)` as data, saves a thrown `RejectBoxError`, exits the binding’s `use` block and reads 37 from the identical meter. The [JAR receipts](jvm-host-imports-20261124.md#leased-java-objects-in-returned-and-thrown-values) cover ordinary and reviewed packages in both load orders. |
-| C# | The [C# client](../../tests/fixtures/dotnet-host-meter/InstalledScalars.cs) observes the original meter in a returned sum and in a caught `DeclaredError<Meter>.Payload`, **with its binding still open**. The [NuGet installs](dotnet-host-imports-20261124.md#installed-nuget-consumer) ran both routes. |
+| C# | The [NuGet last-owner check](#net-the-same-nuget-install-owns-the-error-and-enforces-retirement) observes both the returned sum and the thrown error; the exception alone keeps the meter alive after producer disposal. |
 
-All three clients also hold a local reference to the object. They verify
-identity, not that the exception holds the last reference. Java and Kotlin
-additionally verify use after the binding closes.
+The Java and Kotlin clients above also hold a local reference. They verify
+identity and use after the binding closes, not that the exception holds the
+last reference.
 
 The [WIT client](../../tests/fixtures/static-host-workers/installed-peers.wat.in)
 receives a box from `Gauge.reject : Box → EIO Box UInt32`. The application

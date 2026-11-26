@@ -10,8 +10,10 @@ import { runNativeTool as run } from "./native-effect-consumers.mjs";
  * @param root - Isolated test staging.
  * @param feed - Offline folder containing the .nupkg handoffs.
  * @param workers - Exercise the mixed class/worker packages instead of the synchronous pair.
+ * @param lastOwner - Run the CLR last-payload client before the original direct-call and fatal-fault cases.
  */
-export const runDotnetHostConsumers = async (root, feed, workers = false) => {
+export const runDotnetHostConsumers = async (root, feed, workers = false, lastOwner = false) => {
+	assert.ok(!(workers && lastOwner));
 	const work = await mkdtemp(join(root, "client-")), proj = join(work, "src"), cache = join(work, "cache"), moved = join(work, "relocated");
 	const dotnet = process.env.LEAN_BRIDGE_DOTNET ?? "dotnet";
 	const env = { ...process.env, DOTNET_PROCESSOR_COUNT: "1"
@@ -23,6 +25,7 @@ export const runDotnetHostConsumers = async (root, feed, workers = false) => {
 	try
 	{
 		await mkdir(proj); await copyFile(resolve("tests/fixtures", workers ? "dotnet-host-workers/Installed.cs" : "dotnet-host-meter/Installed.cs"), join(proj, "Program.cs"));
+		if(lastOwner) await copyFile(resolve("tests/fixtures/dotnet-host-meter/ErrorOwner.cs"),join(proj,"ErrorOwner.cs"));
 		await copyFile(resolve("tests/fixtures", workers ? "dotnet-sync-io/Audit.cs" : "dotnet-host-meter/InstalledScalars.cs"), join(proj, "Support.cs"));
 		await writeFile(join(proj, "NuGet.Config"), "<configuration><packageSources><clear/></packageSources></configuration>");
 		await writeFile(join(proj, "Client.csproj"), '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><UseAppHost>false</UseAppHost><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup><ItemGroup><PackageReference Include="Acme.Workshop" Version="[1.0.0]"/><PackageReference Include="Acme.Peer" Version="[1.0.0]"/></ItemGroup></Project>');
@@ -47,6 +50,7 @@ export const runDotnetHostConsumers = async (root, feed, workers = false) => {
 		}
 		assert.equal(receipts[0].runtimeIdentity, receipts[1].runtimeIdentity); assert.notEqual(receipts[0].componentIdentity, receipts[1].componentIdentity);
 		await run(dotnet, ["build", "--no-restore", "-c", "Release"
+			, ...lastOwner ? ["-p:StartupObject=ErrorOwner"] : []
 			, "--disable-build-servers", "-m:1", "-p:UseSharedCompilation=false"
 			, "-p:CreateHardLinksForCopyLocalIfPossible=true"
 			, "-p:CreateHardLinksForCopyFilesToOutputDirectoryIfPossible=true"], proj, env);
@@ -65,7 +69,10 @@ export const runDotnetHostConsumers = async (root, feed, workers = false) => {
 				assert.equal(lines.length, 1); assert.match(lines[0], /^retired native drain: [0-9]+ -> 0$/u);
 				results.push(order + ": " + lines[0]);
 			}
-			else assert.deepEqual(lines, []);
+			else if(lastOwner) {
+				assert.deepEqual(lines,["declared error outlived producer; peer updated last payload to 42; collected with peer still bound"]);
+				results.push(order+": "+lines[0]);
+			} else assert.deepEqual(lines, []);
 			assert.equal(line, order + (workers ? ": worker identity, callbacks, errors, cursors, cancellation, binding isolation and shared retirement" : ": ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup")); results.push(line);
 		}
 		const path = join(native, receipts[0].hostDomain.library);

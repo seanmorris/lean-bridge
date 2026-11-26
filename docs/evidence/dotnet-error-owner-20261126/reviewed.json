@@ -1,0 +1,46 @@
+{
+  "observations": [
+    "ab: declared error outlived producer; peer updated last payload to 42; collected with peer still bound",
+    "ab: ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup",
+    "ba: declared error outlived producer; peer updated last payload to 42; collected with peer still bound",
+    "ba: ordinary C# calls; shared identity, mutable reference, original exception, nested Except, declared EIO, stale binding and cleanup"
+  ],
+  "packages": [
+    {
+      "archive": {
+        "bytes": 51382669,
+        "path": "archives/Acme.Workshop.1.0.0.nupkg",
+        "sha256": "f57057a7da33a97fd84a46a8dcdc93a211a49df5d421294f84b795e668c8d8c9"
+      },
+      "name": "Acme.Workshop",
+      "profile": {
+        "bindingIrSha256": "1ec3213831a3e42c75b45d256dcdbdc03b3b81e2d831835534604b73c3cbd306",
+        "id": "native-dotnet-io-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "receiptSha256": "29bb64924577523462ea13ac3da5e29151451d27e15608e865af40c61315f8c4",
+      "reviewedSourceSha256": "dfc0c6ee95df8d2c4d1b84e84b44469081e504caae658bd113baeae6ab966bce"
+    },
+    {
+      "archive": {
+        "bytes": 51382798,
+        "path": "archives/Acme.Peer.1.0.0.nupkg",
+        "sha256": "6d8e5147b36c121b2b24e1e0148b0b1406a79a0fd33285367026cbd6a00c5d83"
+      },
+      "name": "Acme.Peer",
+      "profile": {
+        "bindingIrSha256": "539585825309be7aaaf7fa2ada2663dbbbc8ee9bb0dc5e3b173a10b6b452ff10",
+        "id": "native-dotnet-io-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "receiptSha256": "79d3fe81a24762e1443430a5961d0d1df0b1a7d5719ce668f0ef437d15f281bc",
+      "reviewedSourceSha256": "ae0bd976f3bcba05172e495e9803e3eebf448563e5c4d6633427a6ba39d225dc"
+    }
+  ],
+  "route": "reviewed",
+  "sources": {
+    "ErrorOwner.cs": "1da6149a0bce82b71b4b06909549c94f16490f6e2ab412a6b60182e7d2908db4",
+    "Installed.cs": "65775869cc7bd78dac447defe797599f796e6e7111e9b0493ef4c49a00207205",
+    "InstalledScalars.cs": "d718db02a6f2eea323e6619bcbe8ea542f50f8e5acefcdfeadb649d5854d09a0"
+  }
+}
