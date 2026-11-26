@@ -84,9 +84,11 @@ const returned = (resources, type, codecs) => {
 	const codec = {
 		lean: `(_root_.Except ${err.lean} ${ok.lean})`
 		, toPython: v => `lb_result_${n}(${v})`, decode: v => `_lb_result_${n}(${v})`
-		, python: `def _lb_result_${n}(raw):\n    return Ok(${decode(ok, "raw[1]")}) if raw[0] else Err(${decode(err, "raw[1]")})\n`
+		, python: `def _lb_result_${n}(raw):\n    if _lb_builtins.type(raw) is not _lb_builtins.tuple or _lb_builtins.len(raw) != 2 or _lb_builtins.type(raw[0]) is not _lb_builtins.bool:\n        _native._invalid_result()\n    return Ok(${decode(ok, "raw[1]")}) if raw[0] else Err(${decode(err, "raw[1]")})\n`
 		, c: `static PyObject *lb_result_${n}(lean_object *v) {
     /* Lean Except.error is constructor 0; Except.ok is constructor 1. Both own a boxed payload. */
+    if (lean_is_scalar(v) || !lean_is_ctor(v) || lean_obj_tag(v) > 1 || lean_ctor_num_objs(v) != 1)
+        return lb_invalid_result(NULL, NULL);
     int ok = lean_obj_tag(v) == 1;
     lean_object *p = lean_ctor_get(v, 0);
     PyObject *payload = ok ? ${ok.toPython("p")} : ${err.toPython("p")};
@@ -98,7 +100,8 @@ const returned = (resources, type, codecs) => {
 	codecs.set(key, codec);
 	return codec;
 };
-const resultTypes = `from dataclasses import dataclass as _dataclass
+const resultTypes = `import builtins as _lb_builtins
+from dataclasses import dataclass as _dataclass
 from typing import Generic as _Generic, TypeVar as _TypeVar
 _T = _TypeVar("_T")
 
@@ -176,8 +179,11 @@ const emit = (resources, entry, i, codecs, synchronous, immediate, scoped, custo
 	const c = `${asyncOut?.c ?? ""}
 static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     (void)module;
-    ${synchronous ? "if (!lb_sync_owner()) return NULL;" : bound ? `if (!lb_active() || !lean_bridge_native_component_ready(LB_COMPONENT)) {
+    ${synchronous ? "if (!lb_sync_owner()) return NULL;" : bound ? `if (!lb_active()) {
         PyErr_SetString(PyExc_RuntimeError, "enter bind_hosts on this thread before calling this component"); return NULL;
+    }
+    if (!lean_bridge_native_component_ready(LB_COMPONENT)) {
+        PyErr_SetString(PyExc_RuntimeError, "Lean runtime unavailable"); return NULL;
     }` : "if (!lb_prepare()) return NULL;"}
     if (PyTuple_GET_SIZE(args) != ${args.length}) { PyErr_SetString(PyExc_TypeError, "wrong number of arguments to ${entry.name}"); return NULL; }
     ${synchronous ? `${args.length ? `if (!lb_sync_started) {
@@ -188,8 +194,10 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     ${bound ? (custom.collect?'if (lb_current->depth >= 64) { PyErr_SetString(PyExc_RecursionError,"Lean host call nesting limit"); return NULL; }\n    ':"")+"lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; "+(custom.collect?"lb_closures_collect(0); ":"")+"lb_sweep();" : ""}
     lean_object *v[${Math.max(1, args.length)}] = {0}, *io = NULL; PyObject *result = NULL;
     ${conversions.setup}
+    ${bound ? 'if (!lean_bridge_native_component_ready(LB_COMPONENT)) { PyErr_SetString(PyExc_RuntimeError,"Lean runtime retired during argument conversion"); goto done; }' : ""}
     io = ${symbol}(${values});
     ${args.flatMap((a, j) => a.unbox ? [] : [`v[${j}] = NULL;`]).join(" ")}
+    ${bound ? 'if (!lean_bridge_native_component_ready(LB_COMPONENT)) { PyErr_SetString(PyExc_RuntimeError,"Lean runtime retired during host dispatch"); goto done; }' : ""}
     if (lean_io_result_is_ok(io)) {
         result = ${out.toPython("lean_io_result_get_value(io)")};
     } else {
@@ -208,7 +216,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
             }
         }
     }
-    ${args.length ? "done: ;" : ""}
+    ${args.length || bound ? "done: ;" : ""}
     /* Sweep before restoring the exception: arbitrary Python destructors may reenter. */
     PyObject *et = NULL, *ev = NULL, *tb = NULL;
     if (!result) PyErr_Fetch(&et, &ev, &tb);
@@ -216,6 +224,9 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     ${args.map((_, j) => `if (v[${j}]) lean_dec(v[${j}]);`).join(" ")}
     ${conversions.rollback}${bound ? "lb_frame_close(&frame); lb_sweep(); lb_current->depth--;" : ""}
     if (!result) PyErr_Restore(et, ev, tb);
+    else if (!lean_bridge_native_component_ready(LB_COMPONENT)) {
+        Py_DECREF(result); PyErr_SetString(PyExc_RuntimeError,"Lean runtime retired during result cleanup"); return NULL;
+    }
     return result;
 }`;
 	const params = entry.parameters.map(p => p.name).join(", ");
@@ -348,9 +359,15 @@ ${b.hostIndex===undefined?"":`static lean_object *lb_cb_out_${id}(PyObject *v) {
 		, "extern lean_object *initialize_BridgeHostExports(uint8_t);"
 		, ...(callbacks ? [callbackPrototypes] : [])
 		, ...functions.map(f => f.declarations)].join("\n");
-	const source = `${provider.source}
+	const source = `#define PY_SSIZE_T_CLEAN
+#include <Python.h>
 #include "lean_bridge_native_runtime.h"
-#define LB_COMPONENT "pyhost:${componentIdentity}"${closures?"\n"+asset("host-closures.h"):""}
+#define LB_COMPONENT "pyhost:${componentIdentity}"
+${provider.source}${closures?"\n"+asset("host-closures.h"):""}
+${codecs.size ? `static PyObject *lb_invalid_result(PyObject *mod, PyObject *unused) {
+    (void)mod; (void)unused; lean_bridge_native_runtime_retire();
+    PyErr_SetString(PyExc_RuntimeError, "invalid native Lean result; runtime retired"); return NULL;
+}` : ""}
 ${scoped?asset("worker-binding.h"):""}
 ${entryDeclarations}${leased ? `\n#define LB_PY_LEASE_ABI "lean-bridge/python-resource/${sha256([runtimeIdentity, options.ledgerId, leaseHeader].join("\n"))}"\n${leaseHeader}` : ""}
 ${synchronous ? `#include <sys/syscall.h>
@@ -408,6 +425,7 @@ ${outcomes ? ioOutcome + "\n" : ""}${callbacks ? '#define LB_PORT_NAME LB_COMPON
 ${records.c ? records.c + "\n" : ""}${functions.map(f => f.c).join("\n")}
 ${worker?"#undef PyCapsule_New\n"+worker:""}
 static PyMethodDef lb_methods[] = {${closures?'\n    {"_close_closure", lb_closure_close, METH_O, NULL}, {"_closure_closed", lb_closure_closed, METH_O, NULL},':""}
+    ${codecs.size ? '{"_invalid_result", lb_invalid_result, METH_NOARGS, NULL},' : ""}
     ${scoped?'{"_may_unbind", lb_may_unbind, METH_NOARGS, NULL}, {"_worker_sweep", lb_worker_sweep, METH_NOARGS, NULL},':""}
     ${ir ? '{"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},' : ""}
     ${tasks ? '{"_task_ready", lb_task_ready, METH_O, NULL}, {"_task_fd", lb_task_descriptor, METH_O, NULL}, {"_task_take", lb_task_take, METH_O, NULL}, {"_task_close", lb_task_close, METH_O, NULL},' : ""}

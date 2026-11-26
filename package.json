@@ -1555,6 +1555,7 @@
     "test:jvm-host-packages": "node --test --test-concurrency=1 tests/helpers/jvm-host-packages.mjs",
     "test:ruby-host-packages": "node --test --test-concurrency=1 tests/helpers/ruby-host-packages.mjs",
     "test:python-host-kinds": "LEAN_BRIDGE_PYTHON_HOST_KINDS=1 node --test --test-concurrency=1 tests/helpers/host-object-installed.mjs",
+    "test:python-host-error-replay": "node --test --test-concurrency=1 tests/helpers/python-host-error-replay.mjs",
     "test:wit-canonical-lean-future": "LEAN_BRIDGE_CANONICAL_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-canonical-async.mjs",
     "test:wit-task-package": "LEAN_BRIDGE_WIT_TASK_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",
     "test:wit-cursor-package": "LEAN_BRIDGE_WIT_CURSOR_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",

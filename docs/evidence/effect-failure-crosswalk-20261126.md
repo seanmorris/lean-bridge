@@ -12,6 +12,15 @@ a broken runtime safe to reuse.
 authoring route. CPython, Perl, Java and Kotlin still need both
 typed contracts verified on both routes.
 
+**CPython check in progress:** An older installed peer accepted the integer
+`2` as a true tag inside a native `Except` result. A property setter let
+the call continue, and a getter returned `97`. In the [CPython 3.11 replay](python-host-error-policy-20261126/cp311-cp311-linux_x86_64.json),
+both freshly installed source routes rejected the malformed tag. Each
+direction ran the setter once, skipped the getter, and left the shared
+broker retired with zero live identities. The same releases passed the
+sole-error-owner test. The CPython 3.12 install is still outstanding;
+neither ABI is added to the profile count here.
+
 **Rust:** The [ordinary](rust-host-error-policy-20261126/ordinary.json)
 and [reviewed](rust-host-error-policy-20261126/reviewed.json) checks match
 the [original Cargo releases](rust-host-packages-20261125.md). Each installed

@@ -50,6 +50,16 @@ the traceback, reads the counter twice through the peer, and checks its
 finalizer before the peer closes. This is a new check; the older wheel
 results below did not run it.
 
+To replay the ownership and terminal-error checks without a compiler, keep
+that output directory including its `wheels/` sibling. Set
+`LEAN_BRIDGE_HOST_PYTHON` to the matching interpreter and
+`LEAN_BRIDGE_PYTHON_ERROR_REPLAY` to the ABI directory, for example
+`cp311-cp311-linux_x86_64`. Run `npm run test:python-host-error-replay`.
+It verifies both package-set receipts and archive digests, installs just
+those wheels offline, moves the prefix, and exercises each call direction
+in a fresh process. Set `LEAN_BRIDGE_PYTHON_ERROR_POLICY_OUTPUT` to retain
+the observed broker state and client and package identities.
+
 ## Returned objects and typed exception payloads
 
 The installed wheel pairs built from `0ffe23b` preserved the original Python

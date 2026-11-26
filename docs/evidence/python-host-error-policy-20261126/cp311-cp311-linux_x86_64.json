@@ -1,0 +1,47 @@
+{
+  "abi": "cp311-cp311-linux_x86_64",
+  "archives": {
+    "lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd",
+    "lean_workshop-1.0.0-cp311-cp311-linux_x86_64.whl": "7b0d52b854caba305aeaaf112162a48a184bb5e783f6991aabd5e492908ec117",
+    "lean_workshop_peer-1.0.0-cp311-cp311-linux_x86_64.whl": "d60238dab74daeb42a7770d5461db63388b8c79eed5421ca74a96568efb39ad4"
+  },
+  "owner": "strong and weak nominal kinds: both binding orders, no retained objects\nreturned and raised leases survive unbind; discarded payloads release objects\nnested typed error alone owns the counter: peer reads 23 then 42, one finalization",
+  "ownerClientSha256": "406b0d0f4d064f8ec31c26bb3dec0ac5b7551dddb965d64e5534683617baa917",
+  "releases": [
+    {
+      "name": "workshop",
+      "receipt": "b72d54d0b093d6cf78cdb63199931ed02787926d0bab538af2b0ee989a574160",
+      "review": null,
+      "source": "5b7dafcf6000cc8fcf2a731b1f0bfff4d0e9a5694ce4ea4ff984e3d2b9c22efc"
+    },
+    {
+      "name": "workshop-peer",
+      "receipt": "cb4521b6095744f3311944422deb5897d217a314ff86eebf03f2d66d92505cf2",
+      "review": "68ad7d98513712f6a2d75fd992acd1e40594f75fcda5002de30b857d4eb9d75b",
+      "source": "5de2a70c7f673f3c401b2bb2e05e1dad399e1292c8820d0e73fab3f25fd82504"
+    }
+  ],
+  "terminal": [
+    {
+      "caught": 1,
+      "live": 0,
+      "native": 1,
+      "outer": "lean_workshop",
+      "peer": "lean_workshop_peer",
+      "read": 0,
+      "retired": true,
+      "set": 1
+    },
+    {
+      "caught": 1,
+      "live": 0,
+      "native": 1,
+      "outer": "lean_workshop_peer",
+      "peer": "lean_workshop",
+      "read": 0,
+      "retired": true,
+      "set": 1
+    }
+  ],
+  "terminalClientSha256": "bbca1b8bba556332927bb349383fd32a11762d8b13e1250e7d44a945ec5091b8"
+}

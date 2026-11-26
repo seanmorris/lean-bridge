@@ -16,6 +16,7 @@ import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { packageSetReceiptName, readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { executableHostFixture, hostMember, hostParameter, primitiveRef as p } from "./host-object-contract.mjs";
+import {checkPythonHostErrors,policyClient} from "./python-host-error-client.mjs";
 
 const exec = promisify(execFile), enabled = process.env.LEAN_BRIDGE_HOST_OBJECT_TEST === "1";
 const kinds = process.env.LEAN_BRIDGE_PYTHON_HOST_KINDS === "1";
@@ -227,6 +228,7 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 		assert.match(stdout, /peers, 19 scalars, original exceptions, reentry, stale, fork, thread and zero live objects/u);
 		assert.match(stdout, /19 typed error and returned result carriers on both source routes/u);
 	}
+	const terminal = await checkPythonHostErrors(python,root,env);
 	const unverified = "import ctypes, pathlib, lean_bridge_host_runtime as r; ctypes.CDLL(str(pathlib.Path(r.__file__).parent / 'lib/libleanshared.so')); import lean_workshop";
 	await assert.rejects(exec(python, ["-S", "-B", "-c", unverified], { cwd: root, env })
 		, e => e.stderr.includes("ImportError: unverified native library already loaded"));
@@ -237,9 +239,9 @@ test(kinds ? "installed CPython wheels stage strong and weak nominal arguments a
 	if(evidence)
 	{
 		const dir = resolve(evidence, tag);
-		for(const file of [client, "host_app.py"])
+		for(const file of [client, "host_app.py", "error-policy.py"])
 			await copyFile(join(fixture, file), join(dir, file), constants.COPYFILE_EXCL);
-		const observation = {stdout, sources: reports.map(r => r.name), archives: [...artifacts.values()]};
+		const observation = {stdout, sources: reports.map(r => r.name), archives: [...artifacts.values()], terminal, terminalClientSha256: sha256(await readFile(policyClient))};
 		if(kinds) observation.consumerSha256 = sha256(await readFile(join(dir, client)));
 		await writeFile(join(dir, "acceptance.json"), canonicalJson(observation), { flag: "wx" });
 	}

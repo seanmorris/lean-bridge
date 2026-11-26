@@ -110,6 +110,12 @@ function. If Lean simply propagates an exception from your Python method in
 requires `await`. The [Workshop consumer](../../tests/fixtures/host-object/installed.py)
 exercises all three cases.
 
+An invalid tag in a synchronous `Except` or `EIO` result is different from
+a declared error. The bridge raises `RuntimeError` and retires the shared runtime.
+Catching it inside a host property does not let the enclosing call succeed
+or allow another host method to run. Start a fresh process to use the
+packages again.
+
 When a returned value or declared error contains an application-owned
 object, the active arm holds the original Python object, including inside
 nested `Ok`/`Err` values. You can inspect the value or `exc.payload` after

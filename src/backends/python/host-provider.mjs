@@ -65,22 +65,27 @@ const emitMember = (resources, owner, decl) => {
 			? `if (PyObject_SetAttrString(${obj}, ${attr}, p[1]) == 0) answer = Py_NewRef(Py_None);`
 			: `answer = PyObject_GetAttrString(${obj}, ${attr});`
 		: `callable = ${kind === "constructor" ? `Py_NewRef(${obj})` : `PyObject_GetAttrString(${obj}, ${attr})`};
-    if (callable) answer = PyObject_Vectorcall(callable, ${parameters.length ? `p + ${n}` : "NULL"}, ${parameters.length}, NULL);`;
+    if (callable && lean_bridge_native_component_ready(LB_COMPONENT)) answer = PyObject_Vectorcall(callable, ${parameters.length ? `p + ${n}` : "NULL"}, ${parameters.length}, NULL);`;
 	const drop = args.flatMap((a, i) => a.c === "lean_object *" && sites[i].ownership !== "borrow" ? [`lean_dec(a${i});`] : []).join(" ");
 	const convert = out.index === undefined ? `lb_out_${out.name}(answer)` : `lb_host_result(${out.index}, answer, ${anchor})`;
 	return `lean_object *${hostMemberSymbol("python", owner, decl)}(${args.map((a, i) => `${a.c} a${i}`).join(", ") || "void"}) {
-    if (!lb_active()) { ${drop} return lb_fail("no active Python host binding on this thread"); }
+    if (!lb_active() || !lean_bridge_native_component_ready(LB_COMPONENT)) { ${drop} return lb_fail("no active Python host binding on this thread"); }
     lb_current->depth++; lb_sweep();
     PyObject *p[${Math.max(args.length, 1)}] = {0}, *callable = NULL, *answer = NULL;
     lean_object *value = NULL, *error = NULL;
     ${args.map((a, i) => `if (!(p[${i}] = ${input(a, `a${i}`)})) goto done;`).join("\n    ")}
-    ${call}
-    if (answer) value = ${convert};
+    if (lean_bridge_native_component_ready(LB_COMPONENT)) { ${call} }
+    if (answer && lean_bridge_native_component_ready(LB_COMPONENT)) value = ${convert};
     ${args.length ? "done:" : ""}
-    if (!value) error = lb_python_error();
+    if (!value) error = lean_bridge_native_component_ready(LB_COMPONENT) ? lb_python_error() : lb_fail("Lean runtime retired during host member");
     Py_XDECREF(answer); Py_XDECREF(callable);
     ${args.map((_, i) => `Py_XDECREF(p[${i}]);`).join(" ")}
     ${drop} lb_current->depth--;
+    if (!lean_bridge_native_component_ready(LB_COMPONENT)) {
+        if (value) lean_dec(value);
+        if (error) lean_dec(error);
+        PyErr_Clear(); return lb_fail("Lean runtime retired during host member");
+    }
     return value ? lean_io_result_mk_ok(value) : error;
 }`;
 };
