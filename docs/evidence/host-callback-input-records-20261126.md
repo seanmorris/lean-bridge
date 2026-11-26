@@ -299,3 +299,11 @@ leases, and the four distinct callback arguments of the mixed-record call.
 Run `npm run test:php-wasm-function-fields` for the ordinary and reviewed
 packages in Node and Chromium. The [earlier receipts](php-wasm-function-fields-20261126.md)
 predate this input class and do not count for it.
+
+The [ordinary installed package](php-wasm-host-inputs-20261126/ordinary.json)
+passed eight runs: Node and Chromium, each loading embedded and Composer
+APIs both at startup and lazily. Each run returned 78 from the mixed
+record, observed the same four arguments, and returned to zero live owners
+after capture, reentry, expiry, a callback exception, retention, validation,
+and the mixed call. The installed wasm32 module SHA-256 begins with
+`17d8e96e`. This report covers ordinary source only.
