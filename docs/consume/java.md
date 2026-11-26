@@ -549,6 +549,13 @@ Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversio
 
 ### Structured callback values
 
+For an owned record with a leased function field, call `retain()` before
+closing the original if you need an independent lifetime. In the
+[installed Tariff client](../evidence/jvm-function-fields-20261126.md),
+`kept = tariff.quote().retain()` remains callable after `tariff.quote().close()`.
+Use try-with-resources for `kept`. A plain Java lambda borrowed by a call
+does not gain that lifetime when Lean puts it in a record.
+
 Callbacks and returned closures accept arrays, Lists, options, results, nested
 binary products, copied records, variants and aliases with acyclic copied
 payloads. They use the same Java types as direct calls. Nested mutable storage

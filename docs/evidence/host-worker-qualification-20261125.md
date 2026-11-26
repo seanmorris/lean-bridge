@@ -172,7 +172,10 @@ checks `Retain`, a caller-built record and `AsCallback` repacking. A plain
 delegate that escapes its call is refused; the native broker is empty after
 the owner thread exits. The [five installed npm clients](npm-function-fields-20261126.md)
 retain and repack a function from a record; all five observe a live Wasm
-identity while holding it and none after disposal. These tests do not exercise a function field containing
+identity while holding it and none after disposal. [Java and Kotlin](jvm-function-fields-20261126.md)
+each retain and repack function fields from an offline Maven install; both
+return to baseline after each case, then zero after owner-thread exit.
+These tests do not exercise a function field containing
 a captured application object or a durable host callback.
 
 The [C callback exchange](c-callback-function-fields-20261125.md) separately
@@ -221,6 +224,10 @@ throwing after a nested allocation preserves the original managed exception.
 The [npm clients](npm-function-fields-20261126.md) return a retained Lean
 function through a host callback. Throwing a JavaScript error in that callback
 returns the original error object and leaves the retained function callable.
+The [two Maven clients](jvm-function-fields-20261126.md) also return a bare
+leased function, then separately throw during a callback after a nested
+allocation. Both languages recover the original exception and invoke their
+saved functions again.
 
 The [source configuration](../../src/analyze/export-configuration.mjs) distinguishes
 `iterators` from `asyncIterators`. [Lean checks the pull function](../../src/analyze/HostExports.lean)

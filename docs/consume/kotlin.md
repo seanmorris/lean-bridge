@@ -485,6 +485,12 @@ The [Java lifetime and conversion rules](java.md#callbacks-and-returned-lean-fun
 
 ### Structured callback values
 
+For an owned record with a leased function field, use
+`tariff.quote.retain().use { kept -> … }` when the function must outlive the
+original handle. The [installed Kotlin Tariff client](../evidence/jvm-function-fields-20261126.md)
+closes `tariff.quote` inside that block and still calls `kept.invoke(2)`.
+A borrowed Kotlin lambda is not a retained Lean function.
+
 Use the companion `.kotlin` API and its copied value types for structured
 callbacks. Arrays, Lists, options, results, binary products, records, variants
 and aliases can carry acyclic copied payloads. Lambdas retain their parameter
