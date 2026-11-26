@@ -128,5 +128,10 @@ for(const workers of [false,true]) test("ordinary and reviewed Rust "+(workers?"
 	const out=replay?resolve(replay):await mkdtemp(join(keep??root,"cargo-host-releases-"));
 	const check=async route=>t.diagnostic(JSON.stringify(await exercise(root,out,route,env,workers)));
 	if(!replay) await publishRustHosts(root,out,env,workers,check);
-	else for(const route of ["ordinary","reviewed"]) await check(route);
+	else
+	{
+		const route=env.LEAN_BRIDGE_RUST_REPLAY_ROUTE;
+		if(route) assert.ok(["ordinary","reviewed"].includes(route),"unknown replay route");
+		for(const r of route?[route]:["ordinary","reviewed"]) await check(r);
+	}
 });
