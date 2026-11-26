@@ -9,6 +9,7 @@ import test from "node:test";
 import "./helpers/host-object-compiled.mjs";
 import "./helpers/host-object-installed.mjs";
 import "./helpers/host-object-project.mjs";
+import "./helpers/host-record-model.mjs";
 import "./helpers/lean-task-installed.mjs";
 import "./helpers/python-retained-task-installed.mjs";
 import "./helpers/lean-stream-only-installed.mjs";

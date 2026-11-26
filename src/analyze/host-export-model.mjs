@@ -4,12 +4,13 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
+import {hashBindingIr} from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { compiledHostModules, hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
 import { hasJavaScriptHostOwner, nativeEffectPolicy, resolveNativeHostEffects } from "./native-host-effects.mjs";
 import { heapResourceIdentities } from "./heap-resource-identity.mjs";
 import {callbackHostName} from "../abi/host-member-names.mjs";
+import {hostPublicHash, hostRecordPolicy, hostRecordTypes, parseHostPublic} from "./host-records.mjs";
 
 const doc = summary => ({ summary, details: "" });
 const fail = message => { throw Object.assign(new TypeError(message), { code: "host-export-contract-mismatch" }); };
@@ -220,8 +221,11 @@ export const reconcileHostExports = options => {
 	const hostRef = t => t?.kind === "named" ? types.some(kind => kind.id === t.id)
 		: t?.kind === "apply" && t.constructor === "result" && t.arguments.some(hostRef);
 	const leased = type => ({ type, ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
-	const site = (t, input = false) => isOwned(t) && input
-		? { type: t, ownership: "borrow", lifetime: { scope: "call", anchor: null } } : !input && hostRef(t) ? leased(t) : signature(t);
+	const records = hostRecordTypes(metadata.entries, selection, types);
+	const site = (t, input = false) => t?.kind === "host-record"
+		? {type: {kind: "named", id: "lean:" + t.declaration}, ownership: input ? "borrow" : "lease", lifetime: {scope: input ? "call" : "explicit", anchor: null}}
+		: isOwned(t) && input
+			? { type: t, ownership: "borrow", lifetime: { scope: "call", anchor: null } } : !input && hostRef(t) ? leased(t) : signature(t);
 	if(ownedTypes.some(r => !metadata.entries.some(e => [e.result, e.error, e.stepError, ...e.parameters.map(p => p.type)].some(t => t?.id === r.id))))
 		fail("Selected resource does not occur directly at a checked export boundary");
 	const errors = [];
@@ -424,12 +428,21 @@ export const reconcileHostExports = options => {
 		, errors, capabilities: requiredCaps, assurance: []
 		, documentation: doc(`Compiled ${ir ? "host-object" : synchronous ? "synchronous IO" : "task"} API for ${component.name}.`)
 	};
-	validateBindingIr(api);
+	if(records.length)
+	{
+		api.schemaVersion = 4;
+		api.aggregatePolicy = hostRecordPolicy;
+		api.types = [...api.types.map(t => ({...t, aggregate: null})), ...records];
+		hostPublicHash(api);
+	}
+	else validateBindingIr(api);
 	if(review)
 	{
-		const reviewed = parseBindingIr(review.source);
+		const reviewed = parseHostPublic(review.source, records.length > 0);
 		const ignoreProse = item => ({ ...item, documentation: doc("Public API.") });
-		const identity = value => hashBindingIr({ ...ignoreProse(value), types: value.types.map(ignoreProse)
+		const typeIdentity = item => records.some(r => r.id === item.id) && item.kind === "record"
+			? { ...ignoreProse(item), fields: item.fields.map(ignoreProse) } : ignoreProse(item);
+		const identity = value => hostPublicHash({ ...ignoreProse(value), types: value.types.map(typeIdentity)
 			, declarations: value.declarations.map(ignoreProse)
 			, errors: value.errors.map(ignoreProse)
 			, capabilities: value.capabilities.map(ignoreProse) });

@@ -762,6 +762,32 @@ Model call.
 
 Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews are checked against freshly compiled Lean types, including resource identity, field order, callbacks and lifetimes. Builds [reconcile reviewed APIs](existing-package.md#compile-a-reviewed-contract) before compiling adapters. Combined builds require every selected profile to admit the same API; analysis alone does not establish target or installed-package support. The [consumer support contract](../consumer-support.v1.json) records those runtime checks.
 
+### Store application-owned Python objects in a record
+
+In a synchronous PyPI component with declared Python host imports, refer to
+the imported class directly. For example, the [Workshop source](../../tests/fixtures/python-host-record/Workshop.lean)
+defines:
+
+```lean
+structure Rack where
+  primary : Box
+  offset : UInt32
+  backup : Box
+
+def shared (box : Box) : IO Rack := pure ⟨box, 0, box⟩
+```
+
+Select the public functions as usual. The compiler reads the structure's
+constructor and field projections; you do not list their offsets or write
+a conversion. The generated Python API borrows an input rack for the call
+and returns an independently closable rack. A reviewed interface can change
+the field descriptions but cannot change their order or types.
+
+This path accepts flat public structures in the selected modules, containing
+declared host objects and copied scalars, directly as `IO` arguments or
+results. It does not select nested records, asynchronous calls, or Lean
+resource fields. See [the Python consumer](../consume/python.md#pass-your-python-objects-inside-a-record).
+
 ### Store a Lean function in a record
 
 Name the projection in `ownedAggregates.closureFields` when a direct record

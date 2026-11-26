@@ -99,6 +99,9 @@ do not exercise transfers or callback inputs. These are results for the
 archived releases and this concrete resource field. A closure *receiving*
 a claim is not a closure *stored inside* a field. Neither it nor a Lean
 `Ticket` field establishes ownership of an application-hosted object field.
+For the latter, the [Python rack consumer](python-host-record-fields-20261126.md)
+uses two Python-created meters in a public record and checks the actual
+objects before and after another rack closes.
 
 For **a returned function passed back as an argument**, there is also existing
 installed evidence for pure Lean functions on resource-containing records:

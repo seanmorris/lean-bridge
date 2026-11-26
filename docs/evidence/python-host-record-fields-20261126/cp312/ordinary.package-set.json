@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "lean-bridge-host-runtime",
+      "profile": "native-python-host-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "pypi",
+      "version": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 28413,
+          "path": "archives/lean_meter-2.0.1-cp312-cp312-linux_x86_64.whl",
+          "sha256": "5dc492cfebe789679d64413e6d12c5212b6314dca144b542391588be6cc543ba"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "lean-meter",
+      "profile": "native-python-host-v1",
+      "requires": [
+        {
+          "ecosystem": "pypi",
+          "name": "lean-bridge-host-runtime",
+          "version": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "pypi",
+      "version": "2.0.1"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "0524cf12feb878b9d2e4de2f3c674e67f224f2bbcf2f4426d42d9ecdb104d889",
+      "id": "native-python-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "0a501b2c02508614799fb728152bad02cb2922147982b370fca2be4b0b259de2"
+  }
+}

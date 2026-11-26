@@ -8,6 +8,7 @@
 	],
 	"deferred": [
 		{ "path": "src/analyze/host-export-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/analyze/host-records.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/analyze/native-host-effects.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/sync-wire.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/task-callback-exports.mjs", "classification": "strict-migration-backlog" },
@@ -21,6 +22,7 @@
 		{ "path": "src/backends/native/pull-entry.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/native/task-callback.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/host-exports.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/python/host-records.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/host-provider.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/stream-exports.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/task-callback.mjs", "classification": "strict-migration-backlog" },

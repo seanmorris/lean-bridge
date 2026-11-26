@@ -116,6 +116,30 @@ nested `Ok`/`Err` values. You can inspect the value or `exc.payload` after
 `bind_hosts` exits. Holding it is an ordinary Python reference; you do not
 need to keep the binding open or call `close` on the object.
 
+### Pass your Python objects inside a record
+
+In the [Rack example](../../tests/fixtures/python-host-record/Workshop.lean),
+Lean accepts and returns a record containing two meters and a numeric offset.
+Use the component wheel that exports `Rack`. With the `Meter` class above:
+
+```python
+first, second = Meter(), Meter()
+with lean_meter.bind_hosts(Box=Meter):
+    with lean_meter.Rack(primary=first, offset=5, backup=second) as rack:
+        result = lean_meter.reorder(rack)
+    with result:
+        assert result.primary is second
+        assert result.backup is first
+        assert result.offset == 52  # 5 + first.read()
+```
+
+The fields are read-only. Lean returns the same Python objects, not copies.
+Closing a rack releases **its** references; it neither closes your meters nor
+invalidates another rack that holds them. You can also hold a returned rack
+past the binding and inspect its fields before closing it. Calling into Lean
+still requires an active binding. See the [installed consumer](../../tests/fixtures/python-host-record/consumer.py)
+for validation, exception, and lifetime examples.
+
 ### Call a Lean function that remembers your Python object
 
 A component can return a function instead of an object. In the

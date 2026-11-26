@@ -4751,9 +4751,9 @@ jobs:
             fi
           done
           exit "$status"
-      - name: Verify installed Python worker class bindings
+      - name: Verify installed Python worker bindings and host-object record fields
         if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
-        timeout-minutes: 15
+        timeout-minutes: 20
         env:
           HOST_PYTHON_311: ${{ steps.collection_python311.outputs.python-path }}
           HOST_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
@@ -4761,6 +4761,8 @@ jobs:
           status=0
           for interpreter in "$HOST_PYTHON_311" "$HOST_PYTHON_312"; do
             LEAN_BRIDGE_PYTHON="$interpreter" npm run test:python-host-workers || status=1
+            abi=$("$interpreter" -I -c 'import sys; print(sys.implementation.cache_tag)')
+            LEAN_BRIDGE_PYTHON="$interpreter" LEAN_BRIDGE_PYTHON_HOST_RECORD_EVIDENCE="build/consumer-ci/python-host-imports/record-fields/$abi" npm run test:python-host-records || status=1
           done
           exit "$status"
       - name: Retain Python host-object and task receipts with the original wheels

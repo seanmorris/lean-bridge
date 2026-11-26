@@ -2,7 +2,8 @@
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
+import {parseBindingIr} from "../binding-ir/canonical.mjs";
+import {hostPublicHash, parseHostPublic} from "../analyze/host-records.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { nativeHostSelection } from "../analyze/host-export-model.mjs";
 import { compiledHostTargets } from "../backends/lean/host-object.mjs";
@@ -34,9 +35,9 @@ const captureContracts = async (project, inventory, target) => {
 	let review, reviewedExports;
 	if(reviews.length)
 	{
-		const source = await capturedText(project, reviews[0]), api = parseBindingIr(source);
+		const source = await capturedText(project, reviews[0]), api = parseHostPublic(source, Boolean(ir && target === "pypi"));
 		if(api.declarations.some(d => d.kind !== "function" || d.owner !== null || !d.source?.declaration)) fail("Expected reviewed public application functions");
-		review = { ...reviews[0], source, semanticSha256: hashBindingIr(api) };
+		review = { ...reviews[0], source, semanticSha256: hostPublicHash(api) };
 		reviewedExports = api.declarations.map(d => d.source.declaration).sort();
 	}
 	const taskExports = config.taskExports?.toSorted() ?? [];

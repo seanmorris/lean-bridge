@@ -14,7 +14,7 @@ import { processBuildRunner } from "../build/process-runner.mjs";
 import { generatePythonHostExtension } from "../backends/python/host-exports.mjs";
 import { validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { pythonPackageMetadata } from "../analyze/package-metadata.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import { compileHostSources } from "../build/host-elaboration.mjs";
 import { compileTaskResourceLedger, taskResourceLedger } from "../build/task-resource-ledger.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -174,7 +174,7 @@ del _runtime${ledger ? '\nif not _native._matches_ledger(_lb_ledger):\n    raise
 `);
 		await save(root, "__init__.pyi", generated.stub); await save(root, "py.typed", "");
 		await save(root, "host_types.py", generated.types);
-		const bindingIrSha256 = api ? hashBindingIr(api) : generated.bindingIrSha256;
+		const bindingIrSha256 = api ? hostPublicHash(api) : generated.bindingIrSha256;
 		if(api)
 		{
 			await save(root, "binding-ir.json", canonicalJson(api));

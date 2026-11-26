@@ -156,6 +156,49 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
       return Json.mkObj [("kind", toJson "named"), ("id", toJson ("lean:" ++ name.toString))]
   throwError "unsupported host export carrier: {e}"
 
+/-- Preserve the actual constructor and ordered fields of a synchronous host
+    record. Do not infer a host lifetime from a record's layout or name. -/
+def hostRecord? (r : Request) (e : Expr) : MetaM (Option Json) := do
+  unless r.hostModule == some "LeanBridge.Host.Python" && r.nativeEffectPolicy == some "native-host-io-v1"
+      && !r.resources.isEmpty && r.taskExports.isEmpty && r.asyncIterators.isEmpty && r.iterators.isEmpty do
+    return none
+  let .const n [] := (← instantiateMVars e).consumeMData | return none
+  if r.leanResources.contains n.toString || r.resources.any (·.lean == n.toString) then return none
+  let env ← getEnv
+  let some idx := env.getModuleIdxFor? n | return none
+  let sourceModule := env.header.moduleNames[idx.toNat]!.toString
+  unless r.exportModules.contains sourceModule do return none
+  let some info := getStructureInfo? env n | return none
+  let .inductInfo ind ← getConstInfo n | return none
+  unless ind.numParams == 0 && ind.numIndices == 0 && ind.ctors.length == 1 &&
+      info.parentInfo.isEmpty && !isPrivateName n && !isProtected env n do
+    throwError "unsupported host export carrier: expected a public nondependent record: {e}"
+  let ctor := ind.ctors.head!
+  if isPrivateName ctor || isProtected env ctor then throwError "host record constructor is not public: {ctor}"
+  let fields ← forallTelescope (← getConstInfo ctor).type fun args result => do
+    unless ← isDefEq result e do throwError "invalid host record constructor: {ctor}"
+    unless args.size == info.fieldNames.size do throwError "unexpected host record arity: {ctor}"
+    let mut fields := #[]
+    let mut hasHost := false
+    for arg in args, i in [0:args.size] do
+      let field := info.fieldNames[i]!
+      let decl ← arg.fvarId!.getDecl
+      let some proj := info.getProjFn? i | throwError "missing host record projection: {field}"
+      unless decl.binderInfo == .default && !decl.type.hasFVar && !isPrivateName proj do
+        throwError "unsupported dependent or non-public host record field: {n}.{field}"
+      let .forallE _ _ ty _ := (← getConstInfo proj).type | throwError "invalid projection {proj}"
+      unless !ty.hasLooseBVars && (← isDefEq ty decl.type) do throwError "inconsistent host record field: {proj}"
+      let h := r.resources.any (fun v => decl.type.constName? == some v.lean.toName)
+      unless h || primitives.any (fun v => decl.type.isConstOf v.1) do
+        throwError "unsupported host export carrier in field {proj}: {decl.type}"
+      hasHost := hasHost || h
+      fields := fields.push <| Json.mkObj [("name", toJson field.toString),
+        ("projection", toJson proj.toString), ("type", ← carrier r decl.type)]
+    unless hasHost do throwError "unsupported host export carrier: record {n} has no declared host object field"
+    return fields
+  return some <| Json.mkObj [("kind", toJson "host-record"), ("declaration", toJson n.toString),
+    ("module", toJson sourceModule), ("constructor", toJson ctor.toString), ("fields", Json.arr fields)]
+
 /-- A returned Except is a value. Its success arm is first in Binding IR. -/
 partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases := false) : MetaM Json := do
   let e := (← instantiateMVars e).consumeMData
@@ -178,6 +221,8 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) (hostLeases :=
 /-- A function delivered by a factory is not a retained host callback.
     Only admit a host with a binding-owned invocation and revocation path. -/
 def immediateResult (r : Request) (effect : Name) (e : Expr) : MetaM Json := do
+  if effect == ``IO then
+    if let some recd ← hostRecord? r e then return recd
   let jsOwner := r.hostModule == some "LeanBridge.Host.Javascript" && (r.ownerHostMembers ||
     (r.javascriptThreadedHostMembers.isNone && r.taskExports.isEmpty && r.asyncIterators.isEmpty))
   let zendOwner := (r.phpWasmTaskObjects == some true && r.phpTaskObjects) || r.phpWasmSyncObjects == some true
@@ -524,7 +569,10 @@ def extract (r : Request) : MetaM Json := do
           if let some ty := (← instantiateMVars decl.type).consumeMData.constName? then
             if r.resources.any (·.lean == ty.toString) then
               throwError "host identities or calls cannot cross this task scheduler: {n}"
-        let t ← if r.taskExports.contains publicName then taskInput r decl.type else carrier r decl.type
+        let t ← if r.taskExports.contains publicName then taskInput r decl.type
+          else if result.consumeMData.getAppFn.constName? == some ``IO then do
+            if let some recd ← hostRecord? r decl.type then pure recd else carrier r decl.type
+          else carrier r decl.type
         params := params.push <| Json.mkObj [("name", toJson decl.userName.toString), ("type", t)]
       let result := result.consumeMData
       let some head := result.getAppFn.constName? | throwError "expected synchronous IO result: {n}"
