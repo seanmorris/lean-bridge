@@ -81,11 +81,13 @@ const exercise=async (root,out,route,env,workers=false)=>{
 		await writeFile(join(client,".cargo/config.toml"),'[source.crates-io]\nreplace-with="verified"\n[source.verified]\ndirectory='+JSON.stringify(vendor)+'\n');
 		await writeFile(join(client,"Cargo.toml"),'[package]\nname="host-consumer"\nversion="1.0.0"\nedition="2021"\n[dependencies]\nworkshop="=1.0.0"\npeer="=1.0.0"\n'+(workers?'async-io="=2.6.0"\n':"")+'[profile.dev]\ndebug=0\nincremental=false\n');
 		await copyFile("tests/fixtures/rust-host-members/archives.rs",join(client,"src/main.rs"));
+		const sources={};
 		if(workers)
 		{
 			await copyFile("tests/fixtures/rust-host-members/archives.rs",join(client,"src/synchronous.rs"));
 			await copyFile("tests/fixtures/static-host-workers/consumer.rs",join(client,"src/main.rs"));
 			await copyFile("tests/fixtures/static-host-workers/effects.rs",join(client,"src/effects.rs"));
+			for(const name of ["main.rs","synchronous.rs","effects.rs"]) sources[name]=sha256(await readFile(join(client,"src",name)));
 		}
 		const cargo=env.LEAN_BRIDGE_CARGO??"cargo",ce={...env,CARGO_HOME: join(temp,"empty-cargo"),CARGO_NET_OFFLINE: "true",CARGO_TARGET_DIR: join(temp,"target"),CARGO_BUILD_JOBS: "1",RUSTC: env.LEAN_BRIDGE_RUSTC??"rustc",RUSTFLAGS: "-Dwarnings -Ccodegen-units=1"};
 		await run(cargo,["generate-lockfile","--offline"],client,ce);
@@ -106,7 +108,17 @@ const exercise=async (root,out,route,env,workers=false)=>{
 			{
 				assert.equal(output,"error policy: sole owner 23->42; drops 1; caught nested panic; reads 1,1");
 				executions.push({mode,observation: output});
-			} else assert.match(output,workers?/worker checks passed/u:/strong cleanup|retired both archives; closed cleanly/u);
+			} else if(workers)
+			{
+				const lines=output.split("\n"),objectLine="object positions: immediate Box identity; callback received Box and returned the original Dial";
+				assert.deepEqual(lines,mode==="workers"?[objectLine,"worker checks passed: exact identity, errors, reentry, cancellation, wake and cleanup"]:["worker checks passed: panic retirement and cleanup"]);
+				executions.push({mode,observations: lines});
+			} else assert.match(output,/strong cleanup|retired both archives; closed cleanly/u);
+		}
+		if(workers && env.LEAN_BRIDGE_RUST_WORKER_OBJECT_OUTPUT)
+		{
+			const dest=resolve(env.LEAN_BRIDGE_RUST_WORKER_OBJECT_OUTPUT);await mkdir(dest,{recursive: true});
+			await writeFile(join(dest,route+".json"),canonicalJson({route,releases: reports,sources,executions}));
 		}
 		if(!workers && env.LEAN_BRIDGE_RUST_HOST_ERROR_OUTPUT)
 		{

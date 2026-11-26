@@ -7,11 +7,16 @@ fn other_effects(a: &Rc<workshop::Binding<A>>, b: &Rc<peer::Binding<B>>, x: &wor
     let provisional=Rc::new(Dial(Cell::new(7)));let weak=Rc::downgrade(&provisional);
     assert!(matches!(a.with_buffer(&provisional,&vec![0;(16<<20)+1]),Err(Error::Boundary(Fault::Limit))));
     drop(provisional);assert!(weak.upgrade().is_none(),"failed start pinned a provisional strong object");
-    let object=x.clone();
+    assert!(a.identity(x).unwrap().ptr_eq(x));
+    let object=x.clone();let original_dial=x.dial.clone();
     let result=block_on(a.handoff(x, move|v| {
         assert!(v.ptr_eq(&object)); Ok(v.dial.clone())
-    }, |d| Ok(d.read())).unwrap()).unwrap();
+    }, move|d| {
+        assert!(std::ptr::eq::<Dial>(&*d, &*original_dial));
+        Ok(d.read())
+    }).unwrap()).unwrap();
     assert_eq!(result,43);
+    println!("object positions: immediate Box identity; callback received Box and returned the original Dial");
     assert!(block_on(a.later_failure(x,false).unwrap()).unwrap().ptr_eq(x));
     assert!(matches!(block_on(a.later_failure(x,true).unwrap()),Err(Error::Boundary(Fault::TaskIo{declaration:"Jobs.laterFailure",message})) if message=="late IO"));
     assert!(matches!(a.prepare_io(x,true),Err(Error::Boundary(Fault::Io{declaration:"Jobs.prepareIO",message})) if message=="factory IO"));

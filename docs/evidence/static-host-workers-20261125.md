@@ -37,6 +37,23 @@ The [Rust application](../../tests/fixtures/static-host-workers/consumer.rs) rec
 
 Run `npm run test:rust-host-worker-packages` to build and test fresh packages. To keep the releases, set `LEAN_BRIDGE_RUST_HOST_HANDOFFS` to an existing directory. To repeat just the consumer checks, set `LEAN_BRIDGE_RUST_WORKER_REPLAY` to the resulting `cargo-host-releases-*` directory and run the same command.
 
+### Rust object arguments and replies
+
+The [ordinary](rust-host-object-positions-20261126/ordinary.json) and
+[reviewed](rust-host-object-positions-20261126/reviewed.json) Workshop installs
+returned the original Box from an immediate call. A callback received that
+same Box and handed back its separate Dial. The next callback checked the
+Dial's allocation address against the caller's original before reading 43.
+Equal values in two different Rust allocations would not pass.
+
+Each relocated executable also passed a separate worker-panic/cleanup run.
+The reports identify the installed Workshop, its independently packaged
+peer, their common runtime and all three Rust client source files. Set
+`LEAN_BRIDGE_RUST_WORKER_OBJECT_OUTPUT` to a directory when replaying the
+original crates to save both reports. Cargo needs the dependencies in its
+lockfile available offline; the relocated executables need neither Cargo
+nor Lean.
+
 ## Installed C11 workers on application objects
 
 The [package test](../../tests/helpers/c-host-packages.mjs) built ordinary and independently reviewed C packages, each tested alongside a separately built peer. A review with the declared task-failure annotation removed was rejected without a receipt. The [eight installed executions](c-host-workers-20261125.json) cover CMake and pkg-config in both link orders on both routes. The package hides the raw task wire, scoped object operations and lease manipulation; the application uses the generated C header.

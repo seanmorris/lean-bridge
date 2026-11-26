@@ -172,10 +172,10 @@ been credited here, not that the feature has been tested and failed.
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | ≥8 | ≥6 |
 | Host-provided function | 17 | — | 17 | — | — |
-| Host-owned object | 16 | 16 | 17 | 16 | 16 |
+| Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 14 | 17 |
 
-That accounts for **at least 524 of 680** profile/route/position combinations.
+That accounts for **at least 532 of 680** profile/route/position combinations.
 The resource callback counts include the two original PHP-Wasm routes, plus
 the [separately checked callers](resource-ticket-positions-20261126.md#direct-callbacks-are-separate).
 The difference is not a count of missing implementations: some installations
@@ -197,15 +197,14 @@ the object supplied to the callback from the object it returns.
 | Perl | [Record and independent peer](perl-host-record-fields-20261126.md) | [Four positions](perl-worker-packages-20261124.md#which-calls-preserve-the-original-perl-reference), from the synchronous and worker CPAN installs. |
 | JavaScript (Node, strict TypeScript, browser, React, worker) | [Five installed clients](javascript-host-record-fields-20261126.md) | [Each client exchanged two distinct meters](javascript-host-imports-20261124.md#host-object-arguments-and-results-in-five-installed-clients) in all four positions on the original ordinary and reviewed releases. |
 | C and C++ | [C](c-host-record-fields-20261126.md) · [C++](cpp-host-record-fields-20261126.md) | The [C11](static-host-workers-20261125.md#c11-object-arguments-and-replies) and [C++20](static-host-workers-20261125.md#c20-object-arguments-and-replies) clients each checked immediate identity and a distinct callback reply, on both releases and with both link orders. |
-| Rust | [Record and independent peer](rust-host-record-fields-20261126.md) | Distinguish the primary release from calls made only through the peer. |
+| Rust | [Record and independent peer](rust-host-record-fields-20261126.md) | The [Rust client](static-host-workers-20261125.md#rust-object-arguments-and-replies) verifies immediate Box identity and a distinct Dial returned by callback, on both primary releases. |
 | Java and Kotlin | [Both Maven clients](jvm-host-record-fields-20261126.md) | [Separate Java and Kotlin clients](jvm-worker-packages-20261124.md#passing-and-returning-application-objects) verify immediate identity and distinct callback replies in both load orders on each route. |
 | Native PHP | [Composer/FFI](php-host-record-fields-20261126.md) | [Native PHP clients](php-host-task-packages-20261124.md#where-php-object-identity-is-checked) exercise a cold immediate return and two callbacks exchanging distinct objects on both routes. |
 | PHP-Wasm | [Zend](php-wasm-host-record-fields-20261126.md) | The [installed Zend clients](php-wasm-zend-packages-20261124.md#checking-the-original-zend-object-in-each-position) test both immediate returns and distinct callback arguments and replies through Node and Chromium. |
 | WIT/WASI | [Guest-owned boxes](wit-host-record-fields-20261126.md) | The [installed Wasm guest](wit-host-objects-20261125.md#when-a-callback-returns-a-different-box) distinguishes two equal-valued boxes on both routes, including an echo provider that must fail. |
 
-Rows marked for review do not assert that a package fails or needs
-rebuilding. This table addresses only the host-object family, not all 680
-identity positions.
+All 17 profiles have installed evidence for all five host-object positions
+on both routes (170/170). This is one of the four identity families.
 
 For **resource fields**, start with the [hosted owned-record acceptance](owned-checked-record-promotion-20261026-aligned.md),
 not another build of the same fixture. The [actual Lean record](../../tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean)
