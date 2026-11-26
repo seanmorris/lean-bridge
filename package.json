@@ -1532,6 +1532,7 @@
     "test:perl-host-closures": "node --test --test-concurrency=1 tests/helpers/perl-host-closures-installed.mjs",
     "test:perl-host-records": "node --test --test-concurrency=1 tests/helpers/perl-host-record-installed.mjs",
     "test:perl-host-packages": "node --test --test-concurrency=1 tests/helpers/perl-host-packages.mjs",
+    "test:perl-host-error-owner": "node --test --test-concurrency=1 tests/helpers/perl-host-error-owner-replay.mjs",
     "test:perl-host-runtime-archive": "node --test --test-concurrency=1 tests/helpers/perl-host-runtime-archive.mjs",
     "test:perl-host-members": "node --test --test-concurrency=1 tests/helpers/perl-host-members.mjs",
     "test:dotnet-host-members": "node --test --test-concurrency=1 tests/helpers/dotnet-host-members.mjs",

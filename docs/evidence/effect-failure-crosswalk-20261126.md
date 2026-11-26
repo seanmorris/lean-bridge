@@ -101,6 +101,11 @@ XS on ordinary source and locally built XS on reviewed source. They mutated
 the meter across packages **before** the error; unlike the WIT case, this
 client does not call the peer through the error after dropping the original.
 
+A [second Perl client](perl-error-owner-20261126.md) installed the same
+archives and made that missing call. With the exception as last owner, the
+peer read 23 and updated the meter to 42. Dropping the exception cleared the
+weak reference and ran one destructor in all 16 route/ABI/order combinations.
+
 The [standalone PHP-Wasm client](php-wasm-host-record-fields-20261126.md)
 closed Workshop and unset its original box after catching the declared error.
 Sidekick then mutated the error payload to 42. A PHP weak reference cleared

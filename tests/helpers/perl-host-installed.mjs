@@ -58,7 +58,7 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 		const lib=join(relocated,"lib/perl5"), paths=await nativeArtifactPaths(lib);
 		const receipts=paths.filter(n=>n.endsWith("/install-receipt.json"));
 		assert.equal(receipts.length,3);
-		const checked=new Set();
+		const checked=new Set(), installedXsDigests={};
 		for(const path of receipts)
 		{
 			const receipt=JSON.parse(await readFile(join(lib,path)));
@@ -68,14 +68,24 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 			assert.equal(receipt.operation,componentMode==="build-xs" && name!=="Runtime"?"generated-xs-only":"prebuilt-xs");
 			const installedXs=join(lib,arch,"auto/LeanBridge",name,name+".so");
 			assert.equal(sha256(await readFile(installedXs)),receipt.outputSha256);
+			installedXsDigests[name]=receipt.outputSha256;
 		}
 		assert.deepEqual([...checked].sort(),["Peer","Runtime","Workshop"]);
 		const client=join(work,"client.pl");await copyFile(resolve("tests/fixtures",workerDeps?"perl-host-workers":"perl-host-meter","installed-pair.pl"),client);
 		const clientEnv={...dependencies,PATH: "/unavailable",LD_BIND_NOW: "1",LEAN_NUM_THREADS: "1",EXPECT_PERL_LIB: lib};
+		const errorClient=join(work,"error-owner.pl"), errorOwners=[];
+		if(!workerDeps) await copyFile(resolve("tests/fixtures/perl-host-meter/error-owner.pl"),errorClient);
 		for(const order of [["Workshop","Peer"],["Peer","Workshop"]])
 		{
 			const r=await exec(perl,["-I"+lib,client,...order],{cwd: work,env: clientEnv,timeout: 90000});
 			assert.equal(r.stderr,"");assert.match(r.stdout,workerDeps?/load order and sibling shutdown passed/u:/errors and reentry passed/u);
+			if(!workerDeps) {
+				const check=await exec(perl,["-I"+lib,errorClient,...order],{cwd:work,env:clientEnv,timeout:90000});
+				assert.equal(check.stderr,"");
+				const result=JSON.parse(check.stdout);
+				assert.deepEqual(result,{peer:order[0],thrower:order[1],before:23,after:42,weakCleared:1,destructions:1,peerAfter:37});
+				errorOwners.push(result);
+			}
 		}
 		if(workerDeps)
 		{
@@ -83,6 +93,8 @@ export const checkInstalledPerlHostPair = async ({scratch,set,route,interpreter,
 			const r=await exec(perl,["-I"+lib,join(work,"public.pl")],{cwd: work,env: clientEnv,timeout: 90000});
 			assert.equal(r.stderr,""); assert.match(r.stdout,/demand, reentry and scoped cancellation/u);
 		}
+		else return {componentMode,installedXsDigests,originalClientSha256:sha256(await readFile(client)),
+			clientSha256:sha256(await readFile(errorClient)),errorOwners};
 	} finally
 	{await rm(work,{recursive: true,force: true});}
 };

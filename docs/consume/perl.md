@@ -94,6 +94,11 @@ Run `perl journal.pl`. It prints `42`, `37`, and `out of stock`. A function retu
 
 The package loads the shared runtime. Use it from the process and interpreter thread that loaded it. Invalid inputs fail before the Lean function runs. The [installed acceptance checks](../evidence/perl-sync-io-20261123.json) exercise both threaded and unthreaded Perl.
 
+If the declared error carries your Perl object, its payload refers to the original
+object, not a copy. Save `$@` before another `eval` overwrites it. The
+[two-package example](../evidence/perl-error-owner-20261126.md) shows a second
+binding updating that object after the binding that threw has closed.
+
 ### Supply a Perl class to Lean
 
 If the package declares a host object, bind the requested name to a class for the duration of a block. This [meter.pl example](../../tests/fixtures/perl-host-meter/meter.pl) uses the [host-import Workshop package](../publish/cpan.md#call-a-perl-object-from-lean):
