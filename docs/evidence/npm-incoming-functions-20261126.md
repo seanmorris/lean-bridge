@@ -157,3 +157,21 @@ report only when all six installations agree. To retain or replay the
 originals, set `LEAN_BRIDGE_NATIVE_INCOMING_KEEP` (an existing parent
 directory) or `LEAN_BRIDGE_NATIVE_INCOMING_REPLAY` (the resulting
 `sets-*` directory).
+
+## Installed C#, Java, Kotlin and native PHP clients
+
+The compiled `Owned.withFunction` calls its visitor with Lean's `id`. The
+application never supplies that function. On both author routes the
+[NuGet](owned-dotnet-execution-20260927.json), [Maven](owned-jvm-execution-20260927.json)
+and [native Composer](owned-php-integration-20260928.json) clients invoked it on
+a record containing a Ticket. The borrow expired on return; a separately
+retained function still returned the expected Ticket. The JVM report records
+Java and Kotlin as separate installed programs, with 104 and 67 checks.
+This establishes the incoming function position, not capture of a host
+object or an independently registered host callback.
+
+Run `npm run test:managed-direct-callback-positions` to audit those results.
+The audit matches the Lean declaration and source to each package and
+reconstructs the installed C# and JVM caller digests. It checks the PHP
+source against both weak and strict Composer executions. No package rebuild
+is required.

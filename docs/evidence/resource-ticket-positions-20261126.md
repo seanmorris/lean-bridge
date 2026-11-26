@@ -27,3 +27,12 @@ Run `npm run test:resource-callback-positions` to verify these joins. This
 reads the original installation results; it does not reinstall those historical
 packages. The Ruby client in this generation uses a fallback identical to its
 callback reply and ignores its input, so it does not add either position here.
+
+The [managed-client audit](../../tests/helpers/managed-direct-callback-positions.mjs)
+also qualifies the **argument** on both routes for C#, Java and native PHP.
+Their `construct` callbacks built a record from the Ticket passed by Lean,
+then checked the record's primary Ticket through the installed API. Kotlin's
+incoming-function check does not exercise this resource position. A factory
+whose callback returns the very same Ticket as its recovery value cannot
+distinguish the successful reply from the fallback, so these comparisons
+do not add a resource callback **result**.
