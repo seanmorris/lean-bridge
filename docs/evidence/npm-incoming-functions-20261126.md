@@ -70,7 +70,19 @@ existing archives, and builds only a missing route. An incomplete or invalid
 existing archive fails verification; it is not overwritten.
 The npm receipts above do not qualify this C interface.
 
-For C++20, run `npm run test:cpp-incoming-function`. Its
+## Installed C++20 clients
+
+Both the [ordinary](cpp-incoming-functions-20261126/ordinary.incoming.json)
+and [reviewed](cpp-incoming-functions-20261126/reviewed.incoming.json)
+releases passed the pkg-config and relocated CMake clients. The
+[ordinary receipt](cpp-incoming-functions-20261126/ordinary.package-set.json)
+and [reviewed receipt](cpp-incoming-functions-20261126/reviewed.package-set.json)
+identify distinct archives with the same runtime. After each of six cases
+the observer counted one live identity; after thread exit it counted zero.
+The first reviewed build timed out in downstream CMake. The passing replay
+installed the original sealed archive without rebuilding Lean.
+
+To reproduce, run `npm run test:cpp-incoming-function`. Its
 [consumer](../../tests/fixtures/structured-types/tariff-incoming.cpp) takes
 the Lean closure directly as a lambda argument. It keeps the borrow and an
 explicit lease across success and failure, checks the identity of the thrown
