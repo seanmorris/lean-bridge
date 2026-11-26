@@ -121,9 +121,14 @@ every cleanup checkpoint. A separate compiler test mixes two input records,
 two function fields, borrowed text and a scalar; Rust rejects dropping the
 source while its input view is still in use.
 
-These are adapter and compiler checks, not installed Cargo receipts.
-`npm run test:rust-staged-callbacks` builds both source routes, installs each
-crate offline, and runs the relocated binaries without the build tree.
+The [ordinary](rust-host-input-records-20261126/ordinary.host-fields.json)
+and [reviewed](rust-host-input-records-20261126/reviewed.host-fields.json)
+Cargo releases also passed all seven cases. Both offline installations
+rejected a callback with the wrong reply type at compile time. The
+relocated observer saw three live identities while the client deliberately
+held them, then zero at all eight cleanup checkpoints on each route.
+Run `npm run test:rust-staged-callbacks` to build the packages and repeat
+the installed checks without the producer tree.
 
 ## Ruby callers
 

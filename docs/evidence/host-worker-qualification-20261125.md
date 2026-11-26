@@ -256,7 +256,8 @@ The [ordinary and reviewed C11 installs](host-callback-input-records-20261126.md
 demonstrate the same input-field lifetime through pkg-config and CMake.
 The [CPython wheels](host-callback-input-records-20261126.md) and
 [relocated C++ releases](host-callback-input-records-20261126.md#c-callers)
-qualify it as well. Eight of the 17 profiles have both installed routes.
+qualify it as well. Both [offline Cargo installs](host-callback-input-records-20261126.md#rust-callers)
+passed all seven scenarios, bringing this input-field case to nine of the 17 profiles.
 
 ### Does a callback allow one call or many?
 

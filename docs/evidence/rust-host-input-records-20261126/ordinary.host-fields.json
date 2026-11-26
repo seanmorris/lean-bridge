@@ -1,0 +1,29 @@
+{
+  "clientSha256": "84aff14da7486f11aa20a5457b2ea60ed5fca30594b316a2fa65ef7abb149dd0",
+  "compileRejected": "wrong_field_reply",
+  "dependenciesSha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd",
+  "held": 3,
+  "identities": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "lockSha256": "b583ebe2075055f282ff2706f1636a552cacccb3d4350839cc74ab50c2582a0e",
+  "packageSetSha256": "17a4d3c582ec8a26daf109967dc76759431acd4e753f937cc804704c2e14e38c",
+  "probeSha256": "e8bbcebe1eb5606fc4b5e25232928e953fe56b0d2502471c1c5192e257ddb82a",
+  "relocated": [
+    "FnMut capture survives two calls",
+    "nested callbacks borrow local state",
+    "returned record and function reject expired callback",
+    "original returned error and healthy retry",
+    "original panic resumes after the call",
+    "closed field rejected before dispatch",
+    "genuine Lean lease outlives its source"
+  ],
+  "route": "ordinary"
+}
