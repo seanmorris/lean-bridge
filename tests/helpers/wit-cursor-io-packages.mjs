@@ -8,6 +8,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
+import { witInstalledReceipt } from "./wit-async-installed-receipt.mjs";
 
 const fixture=resolve("tests/fixtures/wit-cursor-io");
 const json=async p=>JSON.parse(await readFile(p,"utf8"));
@@ -47,7 +48,9 @@ const probes=async ({prefix,archive,area,canonical,wasm,tools,env})=>{
 		const manifest=await json(join(prefix,"lean-bridge-package.json")), world=join(prefix,manifest.world);
 		assert.match(await readFile(world,"utf8"),/stream<result<result<u32, string>, string>>/u);
 		await run(tools,["component","targets",world,wasm],area,env);
-		assert.equal(await run(join(prefix,manifest.command),[wasm],area,runtime),"4");
+		const stdout=await run(join(prefix,manifest.command),[wasm],area,runtime);
+		assert.equal(stdout,"4");
+		return {client:"application.wat",clientSha256:sha256(await readFile(join(fixture,"application.wat"))),wasmSha256:sha256(await readFile(wasm)),stdout};
 	} else
 	{
 		const world=join(prefix,"wit/watch.wit");
@@ -57,7 +60,9 @@ const probes=async ({prefix,archive,area,canonical,wasm,tools,env})=>{
 		const args=await run("pkg-config",["--cflags","--libs","watch-wit"],area,ccenv);
 		const flags=args.match(/(?:\\.|[^\s\\])+/gu).map(s=>s.replace(/\\(.)/gu,"$1"));
 		await run("cc",["-std=c11","-Wall","-Wextra","-Werror",join(fixture,"consumer.c"),...flags,"-o","consumer"],area,ccenv);
-		assert.equal(await run(join(area,"consumer"),[],area,runtime),"pollable cursor: item, end, IO error, typed error, four closes");
+		const stdout=await run(join(area,"consumer"),[],area,runtime);
+		assert.equal(stdout,"pollable cursor: item, end, IO error, typed error, four closes");
+		return {client:"consumer.c",clientSha256:sha256(await readFile(join(fixture,"consumer.c"))),stdout};
 	}
 };
 const guest=async (temp,env)=>{
@@ -73,7 +78,12 @@ const installed=async (out,area,options)=>{
 	assert.deepEqual([pkg.target,pkg.role,pkg.runtimeDelivery,pkg.artifacts.length],["wit-wasi","component","embedded",1]);
 	const [a]=pkg.artifacts;
 	await mkdir(area);
-	await probes({...options,area,canonical: pkg.profile===profiles[1],prefix: join(area,"relocated watch"),archive: join(out,a.path)});
+	const prefix=join(area,"relocated watch");
+	const observation=await probes({...options,area,canonical: pkg.profile===profiles[1],prefix,archive: join(out,a.path)});
+	if(process.env.LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS) {
+		const release=await witInstalledReceipt(prefix,{receipt,result});
+		await writeFile(join(process.env.LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS,pkg.profile+"-"+release.route+".json"),canonicalJson({release,observation}),{flag:"wx"});
+	}
 	return result.receiptSha256;
 };
 if(replay) test("replay the installed WIT cursor consumer against one original receipt",async t=>{

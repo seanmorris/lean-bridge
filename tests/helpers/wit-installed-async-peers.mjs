@@ -14,6 +14,7 @@ import {extendWitApplication,extendWitFunctions} from "./wit-application-project
 import {buildInstalledWitGuests} from "./wit-application-command-client.mjs";
 import {prepareGaugeWorker,buildAsyncPeerApplication,checkAsyncPeerWorld,buildAsyncPeerFailure} from "./wit-async-peer-project.mjs";
 import {buildRegistrationCancellation,checkRegistrationCounts} from "./wit-peer-registration-cancel.mjs";
+import {witInstalledReceipt} from "./wit-async-installed-receipt.mjs";
 
 const exec=promisify(execFile),json=async p=>JSON.parse(await readFile(p,"utf8")),receipt="package-set-receipt.json";
 const verify=dir=>readVerifiedPackageSetReceipt({receiptPath: join(dir,receipt)});
@@ -23,7 +24,7 @@ const preserve=async(src,dest)=>{
 	catch(e)
 	{if(e.code!=="EXDEV")throw e;await copyFile(src,dest);}
 };
-const prepareClient=async(root,a,b,dual)=>{
+const prepareClient=async(root,a,b,dual,trace)=>{
 	const client=join(root,"independently authored application"),wasm=process.env.LEAN_BRIDGE_WASM_TOOLS??"wasm-tools";
 	const run=(cmd,args,cwd)=>exec(cmd,args,{cwd,maxBuffer: 4194304});
 	const tool=(...args)=>run(wasm,args,client);
@@ -33,7 +34,23 @@ const prepareClient=async(root,a,b,dual)=>{
 	await buildRegistrationCancellation(client,tool,dual,functions);
 	const provider=join(client,"peer-provider.wasm");
 	const env={PATH: "/no-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1"};
-	const invoke=(dirs,inputs)=>exec(join(dirs[0],"bin/lean-bridge-wit-run"),[...dirs,"--",...inputs],{env,cwd: client,timeout: 30000});
+	const invoke=async(dirs,inputs)=>{
+		const run=()=>exec(join(dirs[0],"bin/lean-bridge-wit-run"),[...dirs,"--",...inputs],{env,cwd: client,timeout: 30000});
+		if(!trace)return run();
+		const guests=[];
+		for(const input of inputs) {
+			const file=basename(input),path=resolve(client,input);
+			if(!Object.hasOwn(trace.guests,file))trace.guests[file]=sha256(await readFile(path));
+			guests.push(file);
+		}
+		const order=dirs.map(d=>trace.installed.get(d));
+		assert.ok(order.every(Boolean));
+		try {
+			const result=await run();trace.runs.push({order,guests,stdout:result.stdout.trimEnd()});return result;
+		} catch(error) {
+			trace.runs.push({order,guests,exitCode:error.code});throw error;
+		}
+	};
 	let checkedRegistrations=0;
 	const bothOrders=async dirs=>{
 		for(const order of [dirs,dirs.toReversed()])
@@ -106,9 +123,11 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 	// Every package is independently extracted. Only the active pair needs
 	// to occupy disk while the downstream executable runs.
 	const installedKeys=new Set();
+	const output=process.env.LEAN_BRIDGE_WIT_PEER_OBSERVATION;
+	const trace=output?{installed:new Map(),releases:{},guests:{},runs:[]}:null;
 	const install=async(route,name)=>{
 		const key=route+"-"+name,work=join(root,key),handoff=join(releases,key),installed=join(root,"installed "+key);
-		const {receipt: r}=await verify(handoff);
+		const verified=await verify(handoff),r=verified.receipt;
 		assert.equal(r.packages.length,1);const [pkg]=r.packages,[a]=pkg.artifacts;
 		assert.equal(pkg.profile,"native-wit-object-task-v1");assert.equal(pkg.name,name);
 		await exec("tar",["-xzf",join(handoff,a.path),"-C",work,"--no-same-owner","--no-same-permissions"]);
@@ -121,12 +140,18 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 		{assert.deepEqual(ir,reviews[name]);assert.equal(meta.reviewedSourceSha256,sha256(canonicalJson(ir)));}
 		assert.deepEqual(meta.inputs,name==="gauge" && !dual?["objects","application"]:["objects","callbacks","application"]);
 		for(const f of ["bin/lean-bridge-wit-run","lib/lean-bridge-wit-async-peer.so"])assert.equal(meta.files[f].sha256,sha256(await readFile(join(installed,f))));
+		if(trace) {
+			const release=await witInstalledReceipt(installed,verified);
+			assert.equal(release.route,route);
+			if(trace.releases[key])assert.deepEqual(trace.releases[key],release);
+			trace.releases[key]=release;trace.installed.set(installed,key);
+		}
 		if(!installedKeys.has(key))t.diagnostic(key+" "+a.bytes+" "+a.sha256);
 		installedKeys.add(key);return {installed,meta};
 	};
 	const pair=[await install("ordinary","workshop"),await install("ordinary","gauge")],dirs=pair.map(p=>p.installed);
 	assert.notEqual(pair[0].meta.library,pair[1].meta.library);assert.equal(pair[0].meta.hostDomain,pair[1].meta.hostDomain);
-	const {owner,provider,invoke,bothOrders,count}=await prepareClient(root,pair[0],pair[1],dual);
+	const {owner,provider,invoke,bothOrders,count}=await prepareClient(root,pair[0],pair[1],dual,trace);
 	if(dual)
 	{
 		const consumer="cancel-registration-gauge-00.wasm";
@@ -146,6 +171,7 @@ test(dual?"separately published WIT callback owners cancel only their own regist
 		await bothOrders(dirs);
 	}
 	assert.equal(count(),dual?80:32);
+	if(trace)await writeFile(output,canonicalJson({releases:trace.releases,guests:trace.guests,runs:trace.runs}),{flag:"wx"});
 	if(dual)
 	{
 		t.diagnostic("80 cross-package cases: 64 distinct-box first-read/factory orders and 16 same-box cancellations; both defining guests balance their own acquisitions and drops");

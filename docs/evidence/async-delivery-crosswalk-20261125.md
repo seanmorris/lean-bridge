@@ -538,6 +538,45 @@ cover nested host callbacks on their own identified releases. PHP-Wasm's six
 combinations bring the installed total to **130/136**. Only WIT/WASI remains
 for task delivery, cancellation and async iteration on both author routes.
 
+### WIT/WASI: both delivery interfaces and independently built peers
+
+Four offline installs re-ran the same throwing Lean cursor: the pollable
+resource ([ordinary](wit-async-installed-20261126/native-wit-task-v1-ordinary.json),
+[reviewed](wit-async-installed-20261126/native-wit-task-v1-reviewed.json))
+and the canonical stream ([ordinary](wit-async-installed-20261126/native-wit-canonical-task-v1-ordinary.json),
+[reviewed](wit-async-installed-20261126/native-wit-canonical-task-v1-reviewed.json)).
+Each consumer distinguished returned error data, an IO step failure, a
+declared step failure and exhaustion. Dropping early was the fourth close:
+each of four opened cursors finalized once. The records identify the actual
+client, release archive and interface. The route comes from the compiler
+metadata and reviewed interface inside the installed archive.
+
+The [peer replay](wit-async-installed-20261126/peers.json) ran the ordinary
+and reviewed Workshop and Gauge packages in all four pairings and both load
+orders. With a real Gauge read parked, the guest cancelled that reader;
+Workshop's pending callback future still returned the original box updated
+to 73. The eight error runs observed one guest error issued and one destroyed.
+Another 32 runs changed factory and read order: the surviving registration
+was invoked once, the cancelled one never ran, and both released all their
+acquisitions. The four negative controls rejected a trap, a private scheduler
+import, a missing provider and a duplicate interface. The record contains
+package order, guest digests and actual output or exit code for all 52 launches.
+
+Retirement is a different observation: the [original Depot/Peer installs](wit-task-retained-callbacks-20261123.md#retire-the-shared-runtime-with-two-packages-installed)
+refused further work both before observation and inside an executing callback
+on each author route. Those are not the Workshop and Gauge archives.
+To repeat the new replays, set `LEAN_BRIDGE_WIT_CURSOR_REPLAY` to each
+original Watch handoff and `LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS` to a fresh
+output directory for `npm run test:wit-cursor-io`. For the pair, set
+`LEAN_BRIDGE_WIT_ASYNC_PEER_REPLAY` to the [original four handoffs](wit-host-objects-20261125.md#two-installed-worker-packages-cancel-one-reader)
+and `LEAN_BRIDGE_WIT_PEER_OBSERVATION` to a new JSON filename before running
+`npm run test:wit-async-peer-packages`.
+
+The six WIT combinations complete the installed signature count:
+**136/136** (four families × 17 profiles × two authoring routes). That
+does not complete the upstream ownership and error work or certify a
+particular hosted release.
+
 ## Closure boundary
 
 All 17 profiles have [separate installed synchronous iterator evidence](host-worker-qualification-20261125.md#checks-before-closing-the-nodes)
