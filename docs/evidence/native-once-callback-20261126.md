@@ -167,6 +167,13 @@ application counted actual callback calls, checked the results of 16
 two-worker races and distinguished a one-call refusal from guest, factory,
 worker and typed failures. Guest registrations returned to zero.
 
+In a second [application](../../tests/fixtures/native-callback-budget/canonical-siblings.wat),
+three tasks borrowed the same guest registration before any callback ran.
+The guest released its own reference and dropped the middle reader. The other
+readers returned 21 and 41; exactly two calls reached the provider, and its
+live count returned to zero. Both routes passed with the command linked to
+a separate native component using the package's exported-symbol list.
+
 To reproduce, use the two release inputs for `test:wit-canonical-callback-link`
 above, set `LEAN_BRIDGE_LEAN_PREFIX` to the matching toolchain and
 `LEAN_BRIDGE_WIT_CALLBACK_NATIVE_RUNTIME` to the matching runtime directory

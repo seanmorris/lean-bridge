@@ -14,7 +14,7 @@ import {runNativeTool as run} from "./native-effect-consumers.mjs";
  * @param o - Release staging directory, original evidence, adapter, runtime and both guest modules.
  */
 export const executeCanonicalBudgetNative=async o=>{
-	const {dir,evidence,gen,wire,previous,clients,sdk}=o;
+	const {dir,evidence,gen,wire,previous,clients,sdk,siblings}=o;
 	const runtime=resolve(process.env.LEAN_BRIDGE_WIT_CALLBACK_NATIVE_RUNTIME),p=resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX);
 	const lean=join(p,"bin/lean"),save=(f,b)=>writeFile(join(dir,f),b),cc=process.env.CC??"cc";
 	const env={...process.env,LEAN_SYSROOT: p,LEAN_PATH: dir,LEAN_SRC_PATH: dir,LEAN_NUM_THREADS: "1"};
@@ -40,14 +40,23 @@ export const executeCanonicalBudgetNative=async o=>{
 	for(const [d,n] of [["native","task-notification.h"],["c","task-callback-port.h"],["native","task-callback-queue.h"]])
 		await save(n,await readFile(new URL("../../src/backends/"+d+"/"+n,import.meta.url)));
 	const runtimeLib=join(runtime,"lib"),sdkLib=join(resolve(sdk),"lib");
-	await run(cc,["-std=gnu11","-O0","-g0",...modules
-		, "checked-entry.c","adapter.c","wire.c","canonical-command.c"
-		, "-I"+join(runtime,"include"),"-I"+join(resolve(sdk),"include")
-		, "-L"+runtimeLib,"-L"+sdkLib,"-Wl,-rpath,"+runtimeLib+":"+sdkLib
-		, "-llean_bridge_native","-lleanshared","-lwasmtime"
-		, "-pthread","-lm","-ldl","-o","budget-run"],dir,env);
-	await save("guest-provider.wasm",clients[0]);await save("guest-app.wasm",clients[1]);
-	const result=await run(join(dir,"budget-run"),["guest-provider.wasm","guest-app.wasm"],dir,
-		{PATH: "/no-producer-tools",LEAN_NUM_THREADS: "2",RAYON_NUM_THREADS: "1"},120000);
-	assert.equal(result,"27");
+	await save("exports.map","{ global: "+[...gen.symbols,...wire.symbols].join("; ")+"; local: *; };\n");
+	await run(cc,["-std=gnu11","-O0","-g0","-shared","-fPIC",...modules
+		, "checked-entry.c","adapter.c","wire.c","-I"+join(runtime,"include")
+		, "-L"+runtimeLib,"-Wl,-rpath,"+runtimeLib
+		, "-llean_bridge_native","-lleanshared","-pthread","-lm"
+		, "-Wl,-z,defs,-z,nodelete","-Wl,--version-script=exports.map"
+		, "-o","libbudget.so"],dir,env);
+	await run(cc,["-std=c11","-Wall","-Wextra","-Werror","canonical-command.c"
+		, "-I"+join(resolve(sdk),"include"),"-L.","-lbudget","-L"+sdkLib,"-lwasmtime"
+		, "-Wl,-rpath,$ORIGIN:"+sdkLib,"-Wl,-rpath-link,"+runtimeLib
+		, "-o","budget-run"],dir,env);
+	await save("guest-provider.wasm",clients[0]);
+	for(const [app,expected] of [[clients[1],"27"],[siblings,"62"]])
+	{
+		await save("guest-app.wasm",app);
+		const value=await run(join(dir,"budget-run"),["guest-provider.wasm","guest-app.wasm"],dir,
+			{PATH: "/no-producer-tools",LEAN_NUM_THREADS: "2",RAYON_NUM_THREADS: "1"},120000);
+		assert.equal(value,expected);
+	}
 };

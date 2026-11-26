@@ -146,9 +146,26 @@ Use the normal native Lean author toolchain and wasm-tools 1.245.1. Set `LEAN_BR
 
 The canonical profile accepts `pure`, `BaseIO`, `IO` and `EIO` task factories and synchronous companion functions. Use `Bool`, `Char`, `String`, `ByteArray`, fixed-width integers and floats for inputs. Results and typed errors may also contain nested `Except` values. Use `ByteArray` for binary input, future results, stream items or typed errors: the WIT type is `list<u8>`, with no UTF-8 conversion. String and byte arguments share a 16 MiB limit per call.
 
-Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. This profile does not accept resources, external capabilities or retained callbacks. Distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application).
+Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. For copied values, distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application). Tasks that take retained callbacks use a separate pair of guest worlds.
 
 When a guest drops a future reader, the launcher requests cancellation of any pending Lean task. Check `IO.checkCanceled` inside the worker at a point where it can safely stop. Withdrawing only a read keeps the task available for a later read. The [Watch task](../../tests/fixtures/wit-canonical-cancel/Watch.lean) demonstrates both outcomes.
+
+### Publish tasks that call back into a Wasm guest
+
+For a standalone set of callback-bearing tasks, select `asyncAbi: "canonical"`.
+Put each task declaration in `taskExports`. For example, [Budget.single](../../tests/fixtures/javascript-once-callback/Budget.lean)
+takes a `UInt32 → IO UInt32`. To allow at most one call to its `f` parameter per
+task, add `{"declaration":"Budget.single","parameter":"f","invocation":"once"}`
+to `taskCallbackPolicies`. The first attempt spends that allowance even when
+the guest returns an error. An unlisted parameter can be invoked repeatedly.
+
+The archive's `wit/application.wit` defines both `callback-provider` and
+`application`. Its methods return a future whose error variant distinguishes
+factory, worker, guest and invocation-policy failures as applicable. Even a
+factory failure arrives through the future on this route. Do not mix unrelated
+exports, cursors or synchronous companion functions into this standalone
+callback package: the builder rejects a package it cannot represent in full.
+See [how to run both guest components](../consume/wit-wasi.md#use-a-guest-owned-callback-with-a-canonical-future).
 
 ### Publish a canonical stream
 
@@ -191,7 +208,7 @@ For a worker returning `Task (Except IO.Error α)`, also list the declaration in
 
 A task can also take a retained host function, such as the `UInt32 → IO UInt32` parameter in [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean). Select the task in `taskExports` and, for this example, `taskIOErrors`. The generated start returns an owner immediately; factory errors arrive when the consumer observes that task. The checked WIT world gives each callback parameter its own request type. The installed C API dispatches those requests as [typed store-thread callbacks](../consume/wit-wasi.md#give-a-task-a-host-callback).
 
-For a **pollable** task, add an entry to `taskCallbackPolicies` to admit at
+For a pollable task, add an entry to `taskCallbackPolicies` to admit at
 most one invocation of a named parameter:
 
 ```json

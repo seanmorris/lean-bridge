@@ -318,6 +318,10 @@ The WIT interface exposes nominal task resources with typed start, poll and canc
 
 If the release receipt says `native-wit-canonical-task-v1`, use the WIT world and launcher in the archive. This profile is for a Wasm guest; `native-wit-task-v1` above is for a host using the typed task-resource API.
 
+Check the worlds in `wit/application.wit`. If it declares a `callback-provider`
+world, follow the [two-component callback instructions](#use-a-guest-owned-callback-with-a-canonical-future).
+For a package that takes copied values, use one application component:
+
 1. Extract the whole archive. Use `wit/application.wit` as your guest’s world. Implement its `run: async func() -> s64` export and compile your application to a Component Model binary.
 2. Call the imported Lean functions by their WIT names. An infallible factory returns `future<T>`. An `IO` or `EIO` factory returns `result<future<T>, E>`: handle the error or await the future. Other tasks can complete while it is pending.
 3. Run the included executable. For the `latches` package:
@@ -361,6 +365,30 @@ stops. A worker that ignores cancellation can finish a side effect, but
 its late item is not delivered. The [worker-side observations](../evidence/wit-canonical-async-20261124.md#observe-cancellation-inside-the-lean-worker)
 show both outcomes. Unlike a standalone future, a stream also runs the
 cursor's close operation when the reader is dropped.
+
+### Use a guest-owned callback with a canonical future
+
+If the extracted archive's `wit/application.wit` has both a
+`callback-provider` world and an `application` world, build two guest
+components. The provider owns the captured application state and implements
+the generated retain and invoke operations. The application gives a task a
+borrow of that callback and reads the returned future. Run them in this order:
+
+```sh
+./bin/budget-run provider.wasm application.wasm
+```
+
+You can drop your own callback reference as soon as the task starts. Starting
+two tasks with the same callback gives each its own allowance. Dropping one
+reader does not revoke the callback for the other task. When the result is an
+error, match the generated variant: `callback-already-invoked` has no payload;
+a guest or Lean error with that same message is a different case. The launcher
+handles dispatch on the Wasmtime store owner; the application does not poll a
+native descriptor or supply a scheduler.
+
+The [example provider](../../tests/fixtures/native-callback-budget/canonical-provider.wat)
+exports a constructor for its own captures; the [sibling-task application](../../tests/fixtures/native-callback-budget/canonical-siblings.wat)
+uses one registration for three tasks and drops the middle reader.
 
 ### Give a task a host callback
 

@@ -5,6 +5,7 @@ import {tmpdir} from "node:os";
 import {basename,join,resolve} from "node:path";
 import test from "node:test";
 import {hashBindingIr} from "../../src/binding-ir/canonical.mjs";
+import {nativeArtifactPaths} from "../../src/build/native-artifacts.mjs";
 import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {buildNativeBudget,nativeBudgetReview} from "./native-budget-handoff.mjs";
@@ -20,13 +21,14 @@ test("canonical Budget futures preserve per-slot allowances, failure origin, rea
 	const output=resolve(env.LEAN_BRIDGE_WIT_CANONICAL_BUDGET_OUTPUT??"build/wit-canonical-budget");
 	await mkdir(output,{recursive: true});t.diagnostic("Handoffs: "+sets);
 	const provider=await readFile(new URL("../fixtures/native-callback-budget/canonical-provider.wat",import.meta.url));
+	const siblings=await readFile(new URL("../fixtures/native-callback-budget/canonical-siblings.wat",import.meta.url));
 	const app=canonicalBudgetGuest();
-	for(const [n,wat] of [["provider",provider],["application",app]])
+	for(const [n,wat] of [["provider",provider],["application",app],["siblings",siblings]])
 	{
 		await writeFile(join(root,n+".wat"),wat);await run(tools,["parse",n+".wat","-o",n+".wasm"],root,env);
 		await run(tools,["validate","--features","cm-async,cm-async-builtins",n+".wasm"],root,env);
 	}
-	let ordinary,first;
+	let ordinary,first,originalRuntime;
 	for(const route of ["ordinary","reviewed"])
 	{
 		const set=join(sets,route);
@@ -41,22 +43,33 @@ test("canonical Budget futures preserve per-slot allowances, failure origin, rea
 		const manifest=await json("lean-bridge-package.json"),ir=await json("share/lean-bridge/binding-ir.json");
 		assert.equal(manifest.bindingIrSha256,hashBindingIr(ir));assert.equal(manifest.bindingIrSha256,profile.bindingIrSha256);
 		assert.equal(manifest.wasmtime.version,"51.0.0");assert.equal(manifest.runtimeIdentity,profile.runtimeIdentity);
+		assert.deepEqual(await nativeArtifactPaths(installed),["lean-bridge-package.json",...Object.keys(manifest.files)].sort());
 		for(const [name,pin] of Object.entries(manifest.files))
 {
 			const bytes=await read(name);assert.deepEqual({bytes: bytes.length,sha256: sha256(bytes)},pin);
 }
+		const runtimeLibraries=Object.fromEntries(["lib/libleanshared.so","lib/liblean_bridge_native.so","lib/libwasmtime.so"]
+			.map(n=>[n,manifest.files[n].sha256]));
+		const runtime={identity: manifest.runtimeIdentity,libraries: runtimeLibraries};
 		if(route==="ordinary")
-{ordinary=ir;first=archive.sha256;assert.equal(manifest.reviewedSourceSha256,undefined);}
+		{
+			ordinary=ir;first=archive.sha256;originalRuntime=runtime;assert.equal(manifest.reviewedSourceSha256,undefined);
+		}
 		else
-{
+		{
 			assert.deepEqual(ir,{...ordinary,documentation: {...ordinary.documentation,summary: nativeBudgetReview}});
-			assert.equal(manifest.reviewedSourceSha256,sha256(canonicalJson(ir)));assert.notEqual(archive.sha256,first);
-}
+			const reviewed=await read("share/lean-bridge/reviewed.binding-ir.json");
+			assert.equal(reviewed.toString(),canonicalJson(ir));assert.equal(manifest.reviewedSourceSha256,sha256(reviewed));
+			assert.notEqual(archive.sha256,first);assert.deepEqual(runtime,originalRuntime);
+		}
 		const cmd=join(installed,manifest.command);
-		const value=await run(cmd,[join(root,"provider.wasm"),join(root,"application.wasm")],area,
+		const launch=n=>run(cmd,[join(root,"provider.wasm"),join(root,n+".wasm")],area,
 			{PATH: "/no-author-tools",LEAN_NUM_THREADS: "2",RAYON_NUM_THREADS: "1",LANG: "C.UTF-8"});
+		const value=await launch("application"),siblingResult=await launch("siblings");
 		assert.equal(value,"27","independent guest checked all branches and sixteen two-worker races");
-		const report={route,archive,value,wasmtime: manifest.wasmtime
+		assert.equal(siblingResult,"62","siblings returned 21 and 41 from the same captured callback");
+		const report={route,archive,value,siblingResult,runtimeLibraries
+			, wasmtime: manifest.wasmtime
 			, receiptSha256: result.receiptSha256
 			, bindingIrSha256: manifest.bindingIrSha256
 			, runtimeIdentity: manifest.runtimeIdentity
@@ -65,6 +78,7 @@ test("canonical Budget futures preserve per-slot allowances, failure origin, rea
 			, commandSha256: sha256(await read(manifest.command))
 			, worldSha256: sha256(await read(manifest.world))
 			, providerSha256: sha256(await readFile(join(root,"provider.wasm")))
+			, siblingApplicationSha256: sha256(await readFile(join(root,"siblings.wasm")))
 			, applicationSha256: sha256(await readFile(join(root,"application.wasm")))};
 		await writeFile(join(output,route+".json"),canonicalJson(report));
 		t.diagnostic(route+" "+archive.sha256+" — 27 checked futures, abandoned reader, no live native tasks or guest owners");

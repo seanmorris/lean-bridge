@@ -82,8 +82,11 @@ for(const route of ["ordinary","reviewed"]) test(route+" compiled task world sup
 	exec(process.env.CC??"cc",["-std=c11","-Wall","-Wextra","-Werror","-I"+resolve(sdk,"include"),"-fsyntax-only","canonical-command.c"],dir);
 	if(process.env.LEAN_BRIDGE_WIT_CALLBACK_NATIVE_RUNTIME)
 	{
-		await executeCanonicalBudgetNative({dir,evidence,gen,wire: m.wire,previous,clients: guestBinaries,sdk});
-		t.diagnostic("real Lean and Wasmtime: 27 canonical futures checked by downstream application");
+		const siblingWat=await readFile(new URL("../fixtures/native-callback-budget/canonical-siblings.wat",import.meta.url));
+		const siblings=exec(tools,["parse","-"],dir,siblingWat);
+		exec(tools,["validate","--features","cm-async,cm-async-builtins","-"],dir,siblings);
+		await executeCanonicalBudgetNative({dir,evidence,gen,wire: m.wire,previous,clients: guestBinaries,sdk,siblings});
+		t.diagnostic("27 canonical future results; one shared registration, one abandoned reader, sibling results 21 and 41");
 	}
 	t.diagnostic(previous.componentSha256+": nine methods, eleven sites, ten one-call binders, one guest signature");
 });
