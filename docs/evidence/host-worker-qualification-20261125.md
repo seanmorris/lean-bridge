@@ -288,7 +288,9 @@ the same limit on synchronous PHP callbacks retained by a Lean task.
 The [CPython wheel pairs](python-once-callback-20261126.md) independently
 qualified asyncio on 3.11 and 3.12. The [relocated C11 archives](native-once-callback-20261126.md#c11)
 also enforced the allowance when two Lean workers raced for the same callback.
-The five npm clients, PHP-Wasm, Python and C give eight of 17 consumer profiles on both author routes.
+The [C++20 clients](native-once-callback-20261126.md#c20) also distinguished a
+typed admission error from the original C++ exception and a replacement Lean error.
+The five npm clients, PHP-Wasm, Python, C and C++ give nine of 17 consumer profiles on both author routes.
 This does not change the separate synchronous owned-function frontend.
 
 ### Synchronous iterators by profile

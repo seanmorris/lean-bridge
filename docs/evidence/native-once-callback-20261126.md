@@ -29,6 +29,24 @@ On both installs:
 - Both C context destructors ran exactly once. The already-loaded broker
   reported zero live leases.
 
+## C++20
+
+The [ordinary archive](native-once-callback-20261126/cpp/ordinary.json) and
+[reviewed archive](native-once-callback-20261126/cpp/reviewed.json) each
+passed a separate relocated install. The [C++ client](../../tests/fixtures/native-callback-budget/client.cpp)
+used only the installed public header and pkg-config flags. Both packages
+had the same runtime identity as the C11 releases.
+
+In each of 16 races per package, one worker entered the host closure and
+the other was denied. The future threw the component's typed
+`CallbackAlreadyInvoked`. A host exception with identical text came back
+as the original `std::exception_ptr`; an error Lean created after catching
+the policy violation came back as `TaskIOError`. A weak pointer confirmed
+the callback held its capture while registered and released it on
+destruction. The broker had zero live leases at the end.
+
+## Reproduce the installs
+
 Run `npm run test:native-once-callback` to build and install both native
 targets. To replay without rebuilding, set `LEAN_BRIDGE_NATIVE_BUDGET_REPLAY`
 to the retained directory containing `c/{ordinary,reviewed}` and
