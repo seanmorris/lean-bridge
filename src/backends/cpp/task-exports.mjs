@@ -81,7 +81,7 @@ export const generateCppTaskHeader = options => {
 		if(e.taskIO && e.delivery !== "task") throw new TypeError("Terminal IO errors require a real Task");
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
-			const result = cppRetainedEntry({ e, name, c, p, codec: value, slot, guards: inputGuards });
+			const result = cppRetainedEntry({ e, name, c, p, codec: value, slot, guards: inputGuards, once: options.onceByDeclaration?.has(e.declaration) });
 			retained = true; bigint ||= result.bigint; return result.source;
 		}
 		const args = e.parameters.map(v => value(v.type)), item = value(e.result);
@@ -161,7 +161,7 @@ using ${lifecycle}::Closed; using ${lifecycle}::Busy; using ${lifecycle}::WrongC
 using async_v2::Ok; using async_v2::Err; using async_v2::Result;
 using async_v2::StartError; using async_v2::StepError; using async_v2::IOError;
 using async_v2::TaskIOError;${retained ? "\nusing async_v2::RetainedCallback; using async_v2::CallbackTrap; using async_v2::CallbackClosed;" : ""}
-using async_v2::Cancelled; using async_v2::Closed; using async_v2::Busy;
+${options.onceByDeclaration?.size?'struct CallbackAlreadyInvoked : std::runtime_error { CallbackAlreadyInvoked() : std::runtime_error("callback-already-invoked") {} };\n':""}using async_v2::Cancelled; using async_v2::Closed; using async_v2::Busy;
 using async_v2::Unavailable; using async_v2::WrongContext; using async_v2::run_one; using async_v2::shutdown;`}
 ${cursors ? "template<class T> using Cursor = sync_v1::Cursor<T, WrongContext>;\n" : ""}namespace detail {${bigint ? `
 inline void charge(std::size_t &available, std::size_t bytes) {

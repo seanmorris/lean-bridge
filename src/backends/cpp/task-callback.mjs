@@ -73,7 +73,7 @@ export const cppRetainedEntry = options => {
             detail::Slot<${p}_buffer> message{&${p}_buffer_dispose}; std::uint32_t origin = 0; std::uint8_t phase = 0;
             auto s = ${c}_take(&owner->handle, &out.value${err ? ", &err.value" : ""}, &message.value, &origin, &phase);
             ${err ? `if (s == ${p}_TYPED_ERROR) throw StartError<${err.type}>{${decl}, ${err.read("err.value")}};` : ""}
-            if (s == ${p}_IO_ERROR) {
+            ${options.once?"if (s == "+p+"_CALLBACK_ALREADY_INVOKED) throw CallbackAlreadyInvoked{};\n            ":""}if (s == ${p}_IO_ERROR) {
                 if (origin) faults->raise(origin);
                 if (phase == 2) throw IOError{${decl}, detail::text(message.value)};
                 if (phase == 3) throw TaskIOError{${decl}, detail::text(message.value)};

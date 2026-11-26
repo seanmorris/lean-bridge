@@ -287,6 +287,11 @@ twice. The call starts the task; `.get()` or `co_await` lets its callbacks run
 on the process main thread, even if Lean needs an answer before its factory
 returns. No worker calls your C++ code.
 
+In a standalone task package, a parameter declared `once` runs at most
+once per registration. If Lean retries that slot and propagates the
+failure, awaiting the future throws the component's `CallbackAlreadyInvoked`.
+Your own exception with the same message is still your original exception.
+
 If your application drives the dispatcher with `run_one()`, the callbacks
 also run before anyone awaits the future. On completion the dispatcher
 releases the callable and saves the result or exception for the first waiter.

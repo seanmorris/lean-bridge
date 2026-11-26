@@ -331,6 +331,12 @@ On the process main thread, `_poll` and `_take` service waiting callbacks. A
 single borrowed descriptor becomes readable for callback work, completion,
 or runtime retirement. Wait for readability; do not read or close it.
 
+For a standalone task package that marks a callback parameter `once`, a
+second invocation does not enter your C function. If the failure escapes
+Lean, the task's `_take` returns the component's `CALLBACK_ALREADY_INVOKED`
+status, not `CALLBACK_ERROR`. Passing the same handle to another slot or
+starting a new task gives it a separate allowance.
+
 ```c
 #include <lbc_c_retained.h>
 #include <errno.h>

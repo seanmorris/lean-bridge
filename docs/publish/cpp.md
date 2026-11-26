@@ -145,6 +145,13 @@ how to repeat the checks from those archives without rebuilding Lean.
 
 ### Export a callback-taking task
 
+A standalone C++ task package accepts the same per-parameter
+[`taskCallbackPolicies` setting as C](c.md#export-a-callback-taking-task).
+The worker checks the allowance before it queues a host call. A propagated
+denial becomes `CallbackAlreadyInvoked` on the future; a new registration of
+the same C++ callable has its own allowance. Host-import packages do not
+accept this setting.
+
 Select the factory in `taskExports`. A parameter of type `α → IO β` becomes
 a synchronous C++ callable retained by the task. Both `α` and `β` must be
 copied primitives. `Unit` maps to an empty argument list or a `void` reply;

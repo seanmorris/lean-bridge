@@ -199,6 +199,20 @@ records the package receipts and the dependency digests for both C and C++.
 
 ### Export a callback-taking task
 
+Standalone task packages allow repeated callbacks by default. To limit a
+parameter to one call, set `taskCallbackPolicies` in `lean-bridge.exports.json`:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Budget.probe", "parameter": "f", "invocation": "once"}
+]
+```
+
+Use the original Lean binder name. The allowance belongs to that parameter
+on one task start and applies even when worker tasks race or Lean catches
+the first failure. Leave the same policy in the configuration when building
+a reviewed interface. This setting does not apply to C host-import packages.
+
 Select a declaration returning a real Lean `Task` in `taskExports`. A
 parameter of type `α → IO β` becomes a retained C callback when both
 types are copied primitives. For example, the

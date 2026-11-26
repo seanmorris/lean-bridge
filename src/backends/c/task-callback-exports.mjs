@@ -42,7 +42,12 @@ export const emitRetainedTask = options => {
 		throw new TypeError("Retained callbacks require copied scalars or checked host objects");
 	const args = ps.filter(x => x.c), callbacks = ps.filter(x => !x.c);
 	const value = values.codec(e.result), error = e.effect === "EIO" && values.codec(e.error);
-	const entry = (options.entryPrefix ?? "lb_c") + "_invoke_" + i, call = `(_root_.${e.declaration} ${ps.map(x => x.c ? "v" + x.j : "(cbInvoke port " + x.j + ")").join(" ")})`;
+	const once=options.onceSlots??[], budget=once.length>0;
+	if(budget && (options.wasm || once.some(j=>!callbacks.some(x=>x.j===j)))) throw new TypeError("Invalid native one-call callback slot");
+	const entry = (options.entryPrefix ?? "lb_c") + "_invoke_" + i;
+	const arg=x=>x.c?"v"+x.j:once.includes(x.j)?"(cbInvokeOnce port used"+x.j+" denied "+x.j+")":"(cbInvoke port "+x.j+")";
+	const call = `(_root_.${e.declaration} ${ps.map(arg).join(" ")})`;
+	const tagged=(tag,variable)=>budget?"(if cbBudgetMatches "+variable+" denied then .callbackDenied "+variable+" else ."+tag+" "+variable+")":"."+tag+" "+variable;
 	const factory = error ? "_root_.EIO.toIO' " + call : e.effect === "pure" ? "pure " + call : e.effect === "BaseIO" ? "liftM " + call : call;
 	const payload = e.taskIO ? `(_root_.Except _root_.IO.Error ${value.lean})` : value.lean;
 	const task = `(_root_.Task ${payload})`, start = error ? `(_root_.Except ${error.lean} ${task})` : task;
@@ -62,14 +67,14 @@ export const emitRetainedTask = options => {
     ${error ? "| .ok (.error e) => return Task.pure (.startError e)\n    | .ok (.ok inner) => finish inner" : "| .ok inner => finish inner"}
   cbTrackFactory port outer
   return outer.bind id (sync := true)`);
-	else lean.push(`${head} BaseIO.asTask do
+	else lean.push(`${head} BaseIO.asTask do${budget?"\n  let denied ← cbBudgetError port"+once.map(j=>"\n  let used"+j+" ← IO.mkRef false").join(""):""}
   let factory : IO ${start} := ${factory}
   let finish (inner : ${task}) : BaseIO (Outcome ${error?.lean || "Unit"} ${value.lean}) := do
     cbTrack port inner
     let result ← IO.wait inner
-    ${e.taskIO ? "match result with\n    | .ok v => return .value v\n    | .error e => return .taskIO e" : "return .value result"}
+    ${e.taskIO ? "match result with\n    | .ok v => return .value v\n    | .error e => return "+tagged("taskIO","e") : "return .value result"}
   match ← factory.toBaseIO with
-  | .error e => return .startIO e
+  | .error e => return ${tagged("startIO","e")}
   ${error ? "| .ok (.error e) => return .startError e\n  | .ok (.ok inner) => finish inner" : "| .ok inner => finish inner"}`);
 	declarations.push(`extern lean_object *${entry}(lean_object *${args.map(x => ", " + x.c.abi).join("")});`);
 	types.push(`typedef struct { uint64_t id, domain; } ${h};`);
@@ -135,7 +140,7 @@ export const emitRetainedTask = options => {
         *phase = lean_obj_tag(v); *origin = lb_retained_origin(&e->retained, x);
         ${options.wasmHost?"s = *origin ? LB(IO_ERROR) : lb_host_io_error(x,msg);":(options.witCallbacks ? "" : "if (*origin) s = LB(IO_ERROR);\n        else ")+"{ lean_inc(x); lean_object *text = lb_c_error_text(x); s = lb_string(msg, text); lean_dec(text); if (s == LB(OK)) s = LB(IO_ERROR); }"}
         break;
-    default: s = LB(UNAVAILABLE);
+    ${budget?"case 4: s = LB(CALLBACK_ALREADY_INVOKED); break;\n    ":""}default: s = LB(UNAVAILABLE);
     }
     h->id = 0; lb_drop(e); return s;`);
 };

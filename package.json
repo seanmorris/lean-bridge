@@ -1522,6 +1522,7 @@
     "test:python-host-records": "LEAN_BRIDGE_PYTHON_HOST_RECORD_TEST=1 node --test --test-concurrency=1 tests/helpers/python-host-record-installed.mjs",
     "test:python-host-task-imports": "node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",
     "test:python-once-callback": "node --test --test-concurrency=1 tests/helpers/python-budget-installed.mjs",
+    "test:native-once-callback": "node --test --test-concurrency=1 tests/helpers/native-budget-installed.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",
     "test:native-immediate-cursor": "node --test --test-concurrency=1 tests/helpers/native-immediate-cursor.mjs",
     "test:python-host-workers": "LEAN_BRIDGE_HOST_OBJECT_TEST=1 node --test --test-concurrency=1 tests/helpers/python-host-task-project.mjs",

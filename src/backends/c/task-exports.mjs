@@ -6,6 +6,7 @@
 import { iteratorEntryLean, nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
 import { cTaskValues } from "./task-values.mjs";
 import { emitRetainedTask, retainedLean, retainedPrototypes, retainedTask, wasmRetainedLean } from "./task-callback-exports.mjs";
+import {nativeOnceC,nativeOnceLean,nativeOncePrototypes} from "../native/task-callback.mjs";
 import { cResourceApi, cResourceSupport, taskResourceTypes } from "./task-resources.mjs";
 import { cHostCallbacks } from "./task-host-callback.mjs";
 
@@ -91,7 +92,17 @@ export const generateCTaskExports = options => {
 				: options.jvmDelivery ? "The JVM task ABI requires word carriers; select exactly one host"
 					: options.dotnetDelivery ? "The .NET task ABI requires word carriers; select exactly one host"
 						: "The task callback ABI requires Rust, C++ or Ruby word carriers, or the public C profile with GMP; select exactly one host");
-	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : []];
+	const budgets=options.onceByDeclaration, hasBudget=Boolean(budgets?.size);
+	if(hasBudget && (wasm || !(publicC || options.cppCallbacks) || !retained))
+		throw new TypeError("Unsupported native callback budget host");
+	for(const [name,slots] of budgets??[])
+	{
+		const entry=entries.find(e=>e.declaration===name);
+		if(entry?.delivery!=="task" || !Array.isArray(slots) || !slots.length || new Set(slots).size!==slots.length
+			|| slots.some(i=>!Number.isSafeInteger(i) || i<0 || entry.parameters[i]?.type.kind!=="io-callback"))
+			throw new TypeError("Invalid native one-call callback slot");
+	}
+	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : [], ...hasBudget?["CALLBACK_ALREADY_INVOKED"]:[]];
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
 	const module = wasm ? "BridgeTask" + componentIdentity : "BridgeCAsync";
@@ -101,6 +112,7 @@ export const generateCTaskExports = options => {
 		`extern lean_object *initialize_${module}(uint8_t);`
 		, `extern lean_object *${entryPrefix}_error_text(lean_object *);`
 		, ...retained ? retainedPrototypes.map(x => wasm ? x.replaceAll("lb_c_cb",entryPrefix+"_cb") : x) : []
+		, ...hasBudget ? nativeOncePrototypes : []
 		, ...wasm && retained ? [`extern lean_object *${entryPrefix}_cb_factory(lean_object *,lean_object *);`] : []];
 	const lean = [...wasm ? ["prelude", "import Init.System.Promise"] : []
 		, ...modules.map(m => `import ${m}`)
@@ -112,6 +124,7 @@ export const generateCTaskExports = options => {
 		, ...synchronous ? [] : [streamEntryLean]
 		, ...directCursors ? [iteratorEntryLean] : []
 		, ...retained ? [wasm ? wasmRetainedLean(entryPrefix+"_cb") : retainedLean] : []
+		, ...hasBudget ? ["  | callbackDenied (error : IO.Error)\n"+nativeOnceLean] : []
 		, ...wasm && retained ? [`@[extern "${entryPrefix}_cb_factory"] opaque cbTrackFactory {α : Type} (port : @& CallbackPort) (task : @& Task α) : BaseIO Unit`] : []];
 	const fn = (name, args, body) => {
 		const signature = `${p}_status ${name}(${args.join(", ") || "void"})`;
@@ -132,7 +145,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: Boolean(hostKinds.length), witCallbacks: options.witCallbacks, wordAliases: Boolean(selected) || wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, onceSlots: budgets?.get(e.declaration), values, types, fn, lean, declarations, wasm, entryPrefix, wasmHost, hostValues: Boolean(hostKinds.length), witCallbacks: options.witCallbacks, wordAliases: Boolean(selected) || wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
@@ -277,7 +290,7 @@ ${wasm && retained ? "#include <pthread.h>\n#define LB_WASM_CALLBACK_PORT 1\n#de
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
 ${wasmHost?"#define LB_WASM_HOST_ERRORS 1\n":""}#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
-${clrExit ? clrCursorExit : ""}${values.bodies.join("\n")}
+${hasBudget ? nativeOnceC : ""}${clrExit ? clrCursorExit : ""}${values.bodies.join("\n")}
 ${host ? '#include "task-host-callback.h"\n' + host.helpers.join("\n") : ""}
 ${functions.join("\n")}
 `;

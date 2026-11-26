@@ -16,6 +16,7 @@ import { generatePhpIOPort } from "../backends/php/io-port.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { writePhpIORelease } from "./php-io-package.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
+import {retainedOnceSlots} from "../backends/native/task-callback.mjs";
 import { retainedTask } from "../backends/c/task-callback-exports.mjs";
 import { generateCppTaskHeader } from "../backends/cpp/task-exports.mjs";
 import { boostSources } from "../backends/cpp/boost.mjs";
@@ -69,6 +70,7 @@ export const buildCTaskPackage = async options => {
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, witDelivery: canonical, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php || canonical ? "words" : "gmp" };
 		const callbackHeaders = new Map();
+		if((target==="c" || cpp) && evidence.selection.taskCallbackPolicies?.length) config.onceByDeclaration=retainedOnceSlots(api);
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
@@ -173,7 +175,7 @@ export const buildCTaskPackage = async options => {
 		files.set(`include/${p}.h`, gen.header);
 		if(cpp)
 		{
-			const hpp = generateCppTaskHeader({ prefix: p, entries, resources, synchronousIO: synchronous });
+			const hpp = generateCppTaskHeader({ prefix: p, entries, resources, synchronousIO: synchronous, onceByDeclaration: config.onceByDeclaration });
 			if(boost) for(const [path, value] of Object.entries(boost))
 			{
 				files.set(path, value);

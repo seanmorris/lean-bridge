@@ -69,8 +69,9 @@ export const buildHostProject = async options => {
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
+	const budgets = target === "pypi" || (!config.hostImports && ["c","cpp"].includes(target));
 	assertExportConfigurationCapabilities(config, { target
-		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "iterators", "nativeEffects", "package", "resources", ...target === "pypi" ? ["taskCallbackPolicies"] : []]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "iterators", "nativeEffects", "package", "resources", ...budgets ? ["taskCallbackPolicies"] : []]
 		, targetFields: target === "cpan" ? ["module", "version"] : canonical ? ["name", "version", "asyncAbi"] : ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");
