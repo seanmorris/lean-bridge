@@ -152,9 +152,12 @@ validation, and independent ownership of a returned Lean function. The
 broker counted one live identity at baseline, three in the held-owner
 control, and one after each of the six cases. The C compiler separately
 checked two record parameters containing two functions, a string and a scalar.
-These checks are distinct from the [earlier installed gem
-results](ruby-function-fields-20261126.md). To run the new end-to-end check,
-use `npm run test:ruby-function-fields` to build and install both gems.
+The freshly built [ordinary-source gem](ruby-host-input-records-20261126/ordinary.json)
+also passed the six cases after offline installation and relocation. The
+live count rose from one to nine in the held-owner control and returned
+to one after each case. The [older installed gem results](ruby-function-fields-20261126.md)
+only cover leased fields. Use `npm run test:ruby-function-fields` to build
+and install both packages.
 
 ## C# callers
 
