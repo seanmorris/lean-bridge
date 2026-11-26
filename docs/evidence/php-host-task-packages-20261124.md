@@ -50,6 +50,25 @@ client also exercised fork rejection where the PHP installation provided
 includes archive and worker hashes, the shared registry and lease library,
 and per-interpreter results.
 
+### Where PHP object identity is checked
+
+The first call in the [synchronous Composer client at qualification](https://github.com/seanmorris/lean-bridge/blob/cb279b9/tests/fixtures/php-host-members/compiled.php)
+passes an application-created meter to `identity` and compares the immediate
+result to that same PHP object with `===`. The original
+[ordinary](php-host-object-positions-20261126/ordinary.sync.json) and
+[reviewed](php-host-object-positions-20261126/reviewed.sync.json) client
+reports each record 22 checks per interpreter. The package identities match
+the [native import receipt table](php-host-imports-20261124.md#installed-composer-checks).
+
+The [worker client at qualification](https://github.com/seanmorris/lean-bridge/blob/54f1a93/tests/fixtures/php-host-tasks/installed.php)
+checks a different contract. The first `relay` callback receives `$a` and
+returns `$b`; the second receives that exact `$b` and returns `$a`.
+The future delivers the original `$a` after both visits. Both source routes
+passed on PHP 8.2.35 and 8.5.10 with zero live PHP references. Combined with
+the separate [record-field client](php-host-record-fields-20261126.md), these
+checks cover all five application-object positions for native PHP. PHP-Wasm
+uses a different runtime and is not counted here.
+
 ## Filesystem access during a task and cursor
 
 The [effects client](../../tests/fixtures/php-host-tasks/effects.php) ran on

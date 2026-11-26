@@ -163,7 +163,8 @@ the object supplied to the callback from the object it returns.
 | C and C++ | [C](c-host-record-fields-20261126.md) · [C++](cpp-host-record-fields-20261126.md) | Review each public API separately; a C client does not qualify C++. |
 | Rust | [Record and independent peer](rust-host-record-fields-20261126.md) | Distinguish the primary release from calls made only through the peer. |
 | Java and Kotlin | [Both Maven clients](jvm-host-record-fields-20261126.md) | A test in Java does not establish a Kotlin call, even when the JAR is identical. |
-| Native PHP and PHP-Wasm | [Composer/FFI](php-host-record-fields-20261126.md) · [Zend](php-wasm-host-record-fields-20261126.md) | Inspect the installed PHP applications on each runtime. |
+| Native PHP | [Composer/FFI](php-host-record-fields-20261126.md) | [Native PHP clients](php-host-task-packages-20261124.md#where-php-object-identity-is-checked) exercise a cold immediate return and two callbacks exchanging distinct objects on both routes. |
+| PHP-Wasm | [Zend](php-wasm-host-record-fields-20261126.md) | Check the installed Zend applications separately from native Composer/FFI. |
 | WIT/WASI | [Guest-owned boxes](wit-host-record-fields-20261126.md) | Match the WIT resource handed to or returned by the guest; a scalar handle in a C observer is not an application call. |
 
 Rows marked for review do not assert that a package fails or needs
