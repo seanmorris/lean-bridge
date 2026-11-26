@@ -61,8 +61,12 @@ test("Ruby immediate iterators expose no scheduler entrypoints", async () => {
 	assert.ok(!files["lib/lean_bridge/dials/task_runtime.rb"]);
 	assert.doesNotMatch(files["lib/lean_bridge/dials.rb"], /Fiddle|lbwire_|TaskRuntime/u);
 	await assert.rejects(generateRubySyncSources({name: "cursor", wire}), /distinct public names/u);
-	for(const options of [{tasks: true}, {wasm32: true}])
-		assert.throws(() => generateSyncWire("lbc_dials", [entry], options), /authenticated synchronous/u);
+	assert.throws(() => generateSyncWire("lbc_dials", [entry], {tasks: true}), /authenticated synchronous/u);
+	// The shared wire also serves browser iterators. Wasm32 changes the
+	// scalar representation, not the iterator into a scheduler endpoint.
+	const browser = generateSyncWire("lbc_dials", [entry], {wasm32: true});
+	assert.deepEqual(Object.keys(browser.methods[0].names).sort(), ["close", "next", "open"]);
+	assert.doesNotMatch(browser.source, /_poll\(|_take\(|_wait_open\(/u);
 });
 test("Ruby IO packages include their runtime in the CLI and keep native details private", async () => {
 	for(const manifest of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
