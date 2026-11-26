@@ -159,7 +159,8 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
 /-- Preserve the actual constructor and ordered fields of a synchronous host
     record. Do not infer a host lifetime from a record's layout or name. -/
 def hostRecord? (r : Request) (e : Expr) : MetaM (Option Json) := do
-  unless r.hostModule == some "LeanBridge.Host.Python" && r.nativeEffectPolicy == some "native-host-io-v1"
+  unless (r.hostModule == some "LeanBridge.Host.Python" || r.hostModule == some "LeanBridge.Host.Ruby")
+      && r.nativeEffectPolicy == some "native-host-io-v1"
       && !r.resources.isEmpty && r.taskExports.isEmpty && r.asyncIterators.isEmpty && r.iterators.isEmpty do
     return none
   let .const n [] := (← instantiateMVars e).consumeMData | return none

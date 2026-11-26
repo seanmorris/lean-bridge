@@ -2,7 +2,7 @@
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import {hostPublicHash} from "../analyze/host-records.mjs";
 import { compileHostSources } from "../build/host-elaboration.mjs";
 import { rubyHostTaskKernel, stageRubyHostTasks } from "../build/ruby-host-task-kernel.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
@@ -33,7 +33,7 @@ export const buildRubyHostPackage = async o => {
 		const checked = await compileHostSources({ ...o, target: "rubygems", app, run });
 		const { api, entries, objects, evidence, env } = checked;
 		const kernel = entries.some(e => e.delivery) && await rubyHostTaskKernel({checked,ir,runtimeIdentity,modules: projectContract.modules,name});
-		const bindingIrSha256 = hashBindingIr(api), ruby = environment.LEAN_BRIDGE_RUBY ?? "ruby";
+		const bindingIrSha256 = hostPublicHash(api), ruby = environment.LEAN_BRIDGE_RUBY ?? "ruby";
 		const rb = JSON.parse((await run(ruby, ["--disable-gems", "-rrbconfig", "-rjson", "-e", 'abort "MRI Ruby 3.3 x86_64 Linux required" unless RUBY_ENGINE=="ruby" && RUBY_VERSION.start_with?("3.3.") && RUBY_PLATFORM.include?("x86_64-linux"); puts JSON.generate(RbConfig::CONFIG.values_at("rubyhdrdir","rubyarchhdrdir"))'])).stdout);
 		const hdr = await asset("host-domain.h"), c = await asset("host-domain.c"), scalars = await asset("host-scalars.h");
 		const options = { ir, entries: entries.filter(e => !e.delivery), workerObjects: Boolean(kernel), modules: projectContract.modules, namespace: ns, extension: "liblb_rh_" + slug };

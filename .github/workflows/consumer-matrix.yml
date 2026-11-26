@@ -5342,15 +5342,18 @@ jobs:
           export LEAN_BRIDGE_GEM
           source scripts/env.sh
           node --test tests/native-ruby.test.mjs
-      - name: Verify installed Ruby worker class bindings
+      - name: Verify installed Ruby worker bindings and host-object record fields
         if: ${{ !cancelled() && matrix.profile == 'ruby' && steps.ordinary_ruby.outcome == 'success' }}
-        timeout-minutes: 20
+        timeout-minutes: 25
         run: |
           LEAN_BRIDGE_RUBY="$(command -v ruby)"
           LEAN_BRIDGE_GEM="$(command -v gem)"
           export LEAN_BRIDGE_RUBY LEAN_BRIDGE_GEM
           source scripts/env.sh
-          npm run test:ruby-host-workers
+          status=0
+          npm run test:ruby-host-workers || status=1
+          npm run test:ruby-host-records || status=1
+          exit "$status"
       - name: Install dependencies for type_corpus_ruby
         timeout-minutes: 20
         if: matrix.profile == 'ruby'
@@ -5503,6 +5506,7 @@ jobs:
           name: type-corpus-ruby-${{ github.sha }}
           path: |
             build/type-corpus/ruby.json
+            build/ruby-host-record/*.json
             build/type-corpus/reviewed-native-ruby.json
             build/char-native/ruby.json
             build/word-native/ruby.json

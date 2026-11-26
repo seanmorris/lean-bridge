@@ -46,7 +46,7 @@ export const hostRecordTypes = (rows, selection, imports) => {
 	for(const e of rows) for(const t of [e.result, ...e.parameters.map(p => p.type)])
 	{
 		if(t?.kind !== "host-record") continue;
-		if(selection.hostModule !== "LeanBridge.Host.Python" || selection.nativeEffectPolicy !== "native-host-io-v1"
+		if(!["LeanBridge.Host.Python", "LeanBridge.Host.Ruby"].includes(selection.hostModule) || selection.nativeEffectPolicy !== "native-host-io-v1"
 			|| !selection.exportModules.includes(e.module) || !selection.exportModules.includes(t.module) || e.effect !== "IO" || e.delivery
 			|| selection.taskExports?.length || selection.iterators?.length || selection.asyncIterators?.length)
 			invalid("not a synchronous host-bound export");

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50078720,
+          "path": "archives/workshop-1.0.0-x86_64-linux.gem",
+          "sha256": "8876f2e2b5d940e1e260eb67704f4d426dd58b3f910900cb7cdd9a301991388a"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "workshop",
+      "profile": "native-ruby-host-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "035ae3b71dbcfa8b49ab5751d1ac52d473fcd2431c9f9a6f106174278fa9b6e6",
+      "id": "native-ruby-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "26d9ad6cba65f826950f451c429be2283156b69f460f80ab1e1dda9e09ca2fd8"
+  }
+}

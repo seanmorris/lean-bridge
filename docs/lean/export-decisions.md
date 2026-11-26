@@ -762,7 +762,7 @@ Model call.
 
 Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews are checked against freshly compiled Lean types, including resource identity, field order, callbacks and lifetimes. Builds [reconcile reviewed APIs](existing-package.md#compile-a-reviewed-contract) before compiling adapters. Combined builds require every selected profile to admit the same API; analysis alone does not establish target or installed-package support. The [consumer support contract](../consumer-support.v1.json) records those runtime checks.
 
-### Store application-owned Python objects in a record
+### Store application-owned objects in a record
 
 In a synchronous PyPI component with declared Python host imports, refer to
 the imported class directly. For example, the [Workshop source](../../tests/fixtures/python-host-record/Workshop.lean)
@@ -787,6 +787,13 @@ This path accepts flat public structures in the selected modules, containing
 declared host objects and copied scalars, directly as `IO` arguments or
 results. It does not select nested records, asynchronous calls, or Lean
 resource fields. See [the Python consumer](../consume/python.md#pass-your-python-objects-inside-a-record).
+
+The synchronous RubyGems host package accepts the same record shape with
+`LeanBridge.Host.Ruby` imports. The [station project](../../tests/fixtures/ruby-host-record/Workshop.lean)
+names its type `Station.Panel` and passes two panels to one function. The
+[Ruby consumer](../../tests/fixtures/ruby-host-record/consumer.rb) reads its
+original application instances via `active_meter` and `spare_meter` and uses
+`with` or `close` to release the panel's references.
 
 ### Store a Lean function in a record
 

@@ -97,6 +97,28 @@ nested result through `value`. These are ordinary Ruby references: they still
 refer to the same object after the binding block ends. Closing the binding
 prevents further calls through it; it does not invalidate a saved error.
 
+In the [station example](../../tests/fixtures/ruby-host-record/Workshop.lean),
+a panel carries two such objects and a threshold. With the gem that exports
+`Panel` and the `Box` class above:
+
+```ruby
+api = LeanBridge::Workshop
+first, spare = Box.new(11), Box.new(7)
+api.bind_hosts(box: Box) do
+  api::Panel.new(first, 3, spare).with do |panel|
+    api.switch_meters(panel).with do |updated|
+      raise unless updated.active_meter.equal?(spare)
+      raise unless updated.spare_meter.equal?(first) && updated.threshold == 14
+    end
+  end
+end
+```
+
+`with` closes the panel on block exit, including after an exception. The fields
+are read-only. Closing a panel releases its references, not the meters or
+other panels that hold them. A returned panel's fields stay readable after
+the binding ends, until that panel is closed.
+
 The package declares how long it keeps each kind of Ruby object. A
 `weak-canonical` import does not keep an object alive once Lean releases
 its last reference. A `strong-canonical` import keeps the same Ruby instance

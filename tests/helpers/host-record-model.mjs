@@ -32,7 +32,7 @@ test("public host records use the compiler's projections and declared host ident
 });
 
 test("a synchronous object-field admission cannot enable async or a different host", () => {
-	for(const change of [{hostModule: "LeanBridge.Host.Ruby"}, {nativeEffectPolicy: null}, {taskExports: ["Workshop.read"]}])
+	for(const change of [{hostModule: "LeanBridge.Host.Jvm"}, {nativeEffectPolicy: null}, {taskExports: ["Workshop.read"]}])
 		assert.throws(() => hostRecordTypes([site(record)], {...selection, ...change}, [box]), /not a synchronous host-bound export/u);
 	for(const change of [{module: "Other"}, {effect: "EIO"}, {delivery: "iterator"}])
 		assert.throws(() => hostRecordTypes([{...site(record), ...change}], selection, [box]), /not a synchronous host-bound export/u);

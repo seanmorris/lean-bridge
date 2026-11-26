@@ -2,6 +2,7 @@
 import { hostMemberSymbol } from "../lean/host-object.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { isReservedRubyName } from "./copied-model.mjs";
+import {rubyHostRecords} from "./host-records.mjs";
 import { readFileSync } from "node:fs";
 
 const fail = m => { throw new TypeError("Ruby host provider: " + m); };
@@ -188,8 +189,13 @@ export const generateRubyHostProvider = ({ ir, entries, modules, namespace, exte
 	}
 	const closures=entries.some(e=>e.result?.kind==="io-closure");
 	if(closures && resources.some(r=>r.name==="LeanClosure")) fail("reserved Ruby LeanClosure type");
-	const members = ir.declarations.map((d, i) => member(resources, resources.find(r => r.id === d.owner), d, i)), exports = entries.map((e, i) => (e.result?.kind==="io-closure"?closureEntry:entry)(resources,e,i,workerObjects));
-	const arity = Math.max(closures?2:1, ...ir.declarations.map(d => d.parameters.length + Number(d.receiver !== null)), ...entries.map(e => e.parameters.length));
+	const records = rubyHostRecords(entries, t => project(resources, t), resources.map(r => r.name));
+	const members = ir.declarations.map((d, i) => member(resources, resources.find(r => r.id === d.owner), d, i));
+	const layouts = entries.map((e, i) => records.lower(e, i));
+	if(workerObjects && layouts.some(Boolean)) fail("synchronous host records cannot cross the Ruby scheduler");
+	const exports = entries.map((e, i) => e.result?.kind === "io-closure" ? closureEntry(resources, e, i, workerObjects)
+		: entry(resources, e, i, workerObjects, layouts[i] ?? {}));
+	const arity = Math.max(closures?2:1, ...ir.declarations.map(d => d.parameters.length + Number(d.receiver !== null)), ...entries.map((e, i) => layouts[i]?.args.length ?? e.parameters.length));
 	if(arity > 64) fail("too many arguments");
 	return {
 		entryLean: [...modules.map(m => "import " + m)
@@ -218,7 +224,7 @@ static VALUE rb_structured(VALUE klass,VALUE value) { return rb_funcallv_public(
 static const lb_rh_spec specs[]={${resources.map(r => "{" + text(domainKey(ir, r)) + "," + Number(r.host.identity === "strong-canonical") + "}").join(",")}};
 typedef struct { VALUE *args; lean_object *values[${arity}], *io, *msg; } lb_call;
 #include "host-scalars.h"${closures?"\n"+readFileSync(new URL("./host-closures.h",import.meta.url),"utf8"):""}
-static void *init_component(uint8_t b) { return initialize_BridgeRubyExports(b); }
+${records.c}static void *init_component(uint8_t b) { return initialize_BridgeRubyExports(b); }
 static VALUE bind(int argc,VALUE *argv,VALUE mod) {
     (void)mod; lb_rh_owner();
     if(!lean_bridge_native_process_valid() || !lean_bridge_native_component_initialize("rubyhost:${identity}",init_component)) rb_raise(rb_eRuntimeError,"Lean runtime unavailable");
@@ -246,7 +252,7 @@ __attribute__((visibility("default"))) void Init_${extension}(void) {
     err_value=rb_const_get_at(mod,rb_intern("Err")); rb_global_variable(&err_value);
     rb_define_singleton_method(mod,"__bind",bind,-1); rb_define_singleton_method(mod,"__unbind",unbind,0);
     rb_define_singleton_method(mod,"__live",count,0);${closures?" init_tickets(mod);":""}${workerObjects ? "\n    binding_fiber=Qnil; rb_global_variable(&binding_fiber); lb_rh_worker_methods(mod);" : ""}
-    ${exports.map(e => e.method).join("\n    ")}
+    ${records.init ? records.init + "\n    " : ""}${exports.map(e => e.method).join("\n    ")}
 }
 `
 		, ruby: `module LeanBridge
@@ -272,7 +278,7 @@ __attribute__((visibility("default"))) void Init_${extension}(void) {
         super("Lean EIO failed in #{declaration}")
       end
     end
-    def self.bind_hosts(${resources.map(r => snake(r.name) + ":").join(", ")})
+${records.ruby}    def self.bind_hosts(${resources.map(r => snake(r.name) + ":").join(", ")})
       raise ArgumentError, "bind_hosts requires a block" unless block_given?
       ::Thread.handle_interrupt(::Exception => :never) do
         __bind(${resources.map(r => snake(r.name)).join(", ")})

@@ -15,6 +15,26 @@ const generate = (ir, entries = []) => generateRubyHostProvider({
 	, namespace: "Workshop", extension: "libworkshop", identity: "a".repeat(64)
 });
 
+test("MRI validates the flattened record arity and public names before packaging", async () => {
+	const ir = await contract(), box = {kind: "named", id: ir.types[0].id};
+	const type = {kind: "host-record", declaration: "Station.Panel"
+		, constructor: "Station.Panel.mk"
+		, fields: ["first", "second", "third"].map(name => ({name, projection: "Station.Panel." + name, type: box}))};
+	const build = (record, count = 1) => generate(ir, [{name: "round_trip"
+		, declaration: "Station.roundTrip", effect: "IO"
+		, parameters: Array.from({length: count}, (_, i) => ({name: "p" + i, type: record}))
+		, result: record}]);
+	const ok = build(type, 2);
+	assert.match(ok.entryLean, /Station\.Panel\.mk v0 v1 v2/u);
+	assert.match(ok.entryLean, /Station\.Panel\.mk v3 v4 v5/u);
+	assert.match(ok.source, /rb_check_arity\(argc,2,2\); VALUE flat\[6\]/u);
+	assert.throws(() => build(type, 22), /too many arguments/u);
+	assert.throws(() => build({...type, declaration: "Station.ArgumentError", constructor: "Station.ArgumentError.mk"}), /reserved name/u);
+	const field = {...type.fields[0], name: "close", projection: "Station.Panel.close"};
+	assert.throws(() => build({...type, fields: [field]}), /reserved or invalid field/u);
+	assert.throws(() => build({...type, fields: [type.fields[0], type.fields[0]]}), /ambiguous fields/u);
+});
+
 test("Ruby binder keywords, operations and member dispatch cannot silently collide", async () => {
 	const ir = await contract(), box = ir.types[0];
 	ir.types.push({ ...box, id: "host:second.BOX", name: "BOX", resource: { ...box.resource, kindId: "resource:second.BOX" } });
