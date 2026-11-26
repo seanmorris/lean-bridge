@@ -38,8 +38,10 @@ const exercisePeer=async (stage,first,handoff,env)=>{
 	const local=join(stage,"client"),deploy=join(stage,"installed elsewhere"); await mkdir(local);
 	await copyFile("tests/fixtures/php-host-members/peer.php",join(local,"app.php"));
 	await copyFile("tests/fixtures/php-host-members/lifecycle.php",join(local,"lifecycle.php"));
+	const ownerSource=await readFile("tests/fixtures/php-host-members/error-owner.php");
+	await writeFile(join(local,"error-owner.php"),ownerSource);
 	const {vendor,components}=await installPhpIOComponents(stage,local,deploy,[first,handoff]);
-	const report=[];
+	const report=[],lastOwners=[];
 	for(const php of (env.LEAN_BRIDGE_PHP_HOST_INTERPRETERS ?? "/usr/bin/php").split(","))
 	{
 		const isolated={PATH: "/no-publisher-tools",LANG: "C.UTF-8",LEAN_NUM_THREADS: "1"};
@@ -51,9 +53,13 @@ const exercisePeer=async (stage,first,handoff,env)=>{
 			const lifecycle=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","lifecycle.php",join(vendor,"autoload.php"),order],deploy,isolated));
 			assert.equal(lifecycle.finalTokens,0); assert.equal(lifecycle.checks,25); assert.equal(lifecycle.retirementChecks,6);
 			report.push({php,order,result,lifecycle});
+			const owner=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","-d","zend.exception_ignore_args=1","error-owner.php",join(vendor,"autoload.php"),order],deploy,isolated));
+			assert.deepEqual(owner,{php: lifecycle.php,order,returned: 17,updated: 42,drops: 1,finalTokens: 0});lastOwners.push(owner);
 		}
 	}
 	await writeFile(join(stage,"consumer.json"),canonicalJson({report,archives: components.map(r=>r.pkg.artifacts[0]),receipts: components.map(r=>r.receiptSha256)}));
+	const packages=components.map(c=>({name: c.pkg.name,receiptSha256: c.receiptSha256,archive: c.pkg.artifacts[0]}));
+	await writeFile(join(stage,"error-owner.json"),canonicalJson({clientSha256: sha256(ownerSource),packages,results: lastOwners}));
 	await rm(deploy,{recursive: true});
 };
 

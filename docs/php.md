@@ -103,6 +103,11 @@ objects alive, even after the binding closes. Close the panel in `finally` to
 release its references. Cloning a panel gives you a separately closable
 record; it does not clone either meter.
 
+A declared Lean error can also carry your PHP object. Its `$payload` is the
+same object, not a copy. You can close the binding that threw and still use
+the payload with a compatible package. The [installed Composer example](evidence/effect-failure-crosswalk-20261126.md#when-the-declared-error-owns-an-application-object)
+shows when its last reference is released.
+
 If a PHP member suspends its Fiber while Lean is calling it, resume that
 Fiber before using or closing a binding from another Fiber. The second
 caller gets a `LogicException`; it does not cancel the first call. A

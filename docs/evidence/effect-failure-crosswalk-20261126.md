@@ -94,6 +94,21 @@ Sidekick then mutated the error payload to 42. A PHP weak reference cleared
 when the exception was dropped. Both source routes ran with embedded and
 Composer autoloaders in Node and in a real Chromium interpreter.
 
+In native Composer installs, the [PHP CLI client](../../tests/fixtures/php-host-members/error-owner.php)
+distinguishes `choose` returning `Err(17)` from `fail_with` throwing a
+`FailWithError` whose payload is the original application meter. It closes
+the throwing binding and drops the input, then uses the error’s only reference
+in the other package to change the meter from 23 to 42. Dropping the exception
+runs the object's destructor exactly once and clears its weak reference while
+the other binding is still open. The client disables exception trace arguments
+so a PHP backtrace cannot itself keep the meter alive.
+
+The [ordinary](php-error-owner-20261126/ordinary.json) and
+[reviewed](php-error-owner-20261126/reviewed.json) records pin the throwing
+peer's archive, the independent Workshop release and the client. Both package
+orders passed on PHP 8.2.35 and 8.5.10. To reproduce, run
+`npm run test:php-host-peer` with the [native PHP publisher inputs](php-host-finalizers-20261124.md).
+
 ## Which native failures actually retire a runtime?
 
 The trigger matters. A host method returning an invalid object is not the
