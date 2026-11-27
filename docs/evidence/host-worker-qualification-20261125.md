@@ -172,12 +172,12 @@ been credited here, not that the feature has been tested and failed.
 
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Lean resource | 17 | 17 | 17 | ≥16 | ≥13 |
-| Host-provided function | 17 | 12 | 17 | 12 | 12 |
+| Lean resource | 17 | 17 | 17 | ≥16 | ≥14 |
+| Host-provided function | 17 | 13 | 17 | 13 | 13 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 640 of 680** profile/route/position combinations.
+That accounts for **at least 648 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,14 +188,13 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **40 placements without a completed pair** break down as follows.
-Some already have an ordinary-route result; the table below subtracts those.
+The **32 placements without a completed pair** break down as follows.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | .NET, Java, Kotlin, native PHP, PHP-Wasm | 5 × 3 × 2 = 30 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | .NET, Java, Kotlin, PHP-Wasm | 4 × 3 × 2 = 24 |
 | Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
-| Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin, native PHP | 4 × 2 = 8 |
+| Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin | 3 × 2 = 6 |
 
 For example, Java has a qualifying resource argument but still needs a
 distinct reply; Kotlin needs both. A single installed workload can exercise all
@@ -203,20 +202,14 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-One profile has ordinary-package evidence inside that 40-placement gap.
-Count each profile and position once, even if multiple archives or build
-tools exercised it:
-
-| Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
-| --- | ---: | --- | ---: |
-| [Native PHP](c-wit-application-functions-20261127/ordinary.php-native.json) | 3 | Callback result | 4 |
-
-This brings the lower bound to **644/680 individual installed placements**:
-640 backed by pairs, plus four ordinary-only. **36** still lack an individual
-witness: 27 forwarded-function placements and nine resource placements.
-The paired figure is **640/680**; use the
-reviewed install to complete each pair. Neither number counts lifetime or
-error assertions, or qualifies a hosted release.
+None of the 32 outstanding positions has an ordinary-only result. The
+[ordinary](c-wit-application-functions-20261127/ordinary.php-native.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.php-native.json)
+native PHP packages complete the three forwarding pairs and the distinct
+resource reply. All **648/680** individual installed positions are now
+backed by pairs. **24** forwarding positions and **8** resource positions
+still need an installed witness. This does not count lifetime or error
+assertions, or qualify a hosted release.
 
 ### Reproducing application-provided function crossings
 
