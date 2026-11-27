@@ -99,6 +99,9 @@ const rust=async o=>{
 	const [clientSha256,observerSha256]=await files(build,"rs",o.application);
 	await rename(join(build,"tariff-incoming.rs"),join(build,"consumer.rs"));
 	await run("tar",["-xzf",archive],build,env);
+	// This is the disposable client's copy, not the retained handoff. Cargo
+	// only needs the unpacked crate from here through its offline build.
+	await rm(archive);
 	const root=join(build,o.pkg.name+"-"+o.pkg.version);
 	const pins=await validate(o,root,join(root,"lean-bridge"));
 	assert.equal(sha256(await readFile(join(root,"Cargo.lock"))),dependencies.lockSha256);
@@ -134,7 +137,7 @@ incremental=false
 	await run(env.LEAN_BRIDGE_CARGO,["generate-lockfile","--offline"],build,compile);
 	await run(env.LEAN_BRIDGE_CARGO,["build","--offline","--locked","--bins"],build,compile,1_800_000);
 	for(const n of ["consumer","observer"]) await rename(join(build,"target/debug",n),join(app,n));
-	await rm(build,{recursive: true});await rm(archive);
+	await rm(build,{recursive: true});
 	const clean={...copiedCleanEnvironment,TMPDIR: app,LEAN_NUM_THREADS: "1"};
 	assert.equal(await run(join(app,"consumer"),[],app,clean),"");
 	const output=await run(join(app,"observer"),[],app,clean);

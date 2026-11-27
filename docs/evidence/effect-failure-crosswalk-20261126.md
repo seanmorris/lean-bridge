@@ -526,6 +526,12 @@ The table identifies installed witnesses, not a release-wide pass count.
 The [direct Rust callback clients](rust-staged-callback-results-20261126.md)
 separately distinguish a returned host error from a resumed unwind after a
 nested allocation. Neither is a reason to retire those installed bindings.
+The [ordinary](native-application-functions-20261127/ordinary.cargo.json) and
+[reviewed](c-wit-application-functions-20261127/reviewed.cargo.json)
+Rust forwarding clients also tracked the original error string's allocation.
+It came back unchanged through a nested callback reply; the client then
+successfully used a fresh registration. Neither result relies on comparing
+error messages.
 The five npm profiles now each have an installed cross-package trap witness.
 For native profiles, check each runtime's fatal policy against the actual
 injector: a direct request to retire does not show what initiates retirement.

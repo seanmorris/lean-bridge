@@ -173,11 +173,11 @@ been credited here, not that the feature has been tested and failed.
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | ≥16 | ≥13 |
-| Host-provided function | 17 | 10 | 17 | 10 | 10 |
+| Host-provided function | 17 | 11 | 17 | 11 | 11 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 628 of 680** profile/route/position combinations.
+That accounts for **at least 634 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,12 +188,12 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **52 placements without a completed pair** break down as follows.
+The **46 placements without a completed pair** break down as follows.
 Some already have an ordinary-route result; the table below subtracts those.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 7 × 3 × 2 = 42 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 6 × 3 × 2 = 36 |
 | Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
 | Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin, native PHP | 4 × 2 = 8 |
 
@@ -203,20 +203,19 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Three profiles have ordinary-package evidence inside that 52-placement
+Two profiles have ordinary-package evidence inside that 46-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
 | Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
 | --- | ---: | --- | ---: |
-| [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
 | [Native PHP](c-wit-application-functions-20261127/ordinary.php-native.json) | 3 | Callback result | 4 |
 | [Perl](perl-forwarded-errors-20261127/ordinary-installed-comparison.json) | 3 | — | 3 |
 
-This brings the lower bound to **638/680 individual installed placements**:
-628 backed by pairs, plus 10 ordinary-only. **42** still lack an individual
-witness: 33 forwarded-function placements and nine resource placements.
-The paired figure is **628/680**; use the
+This brings the lower bound to **641/680 individual installed placements**:
+634 backed by pairs, plus seven ordinary-only. **39** still lack an individual
+witness: 30 forwarded-function placements and nine resource placements.
+The paired figure is **634/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
@@ -376,6 +375,16 @@ archive and `dependencies.json`. Pin the latter's SHA-256 with
 `LEAN_BRIDGE_FAMILY_APP_RUST_DEPS_SHA256`; the client checks the dependency
 archive and the lockfile inside the installed crate before compiling offline.
 Its runtime test covers forwarding, not a new Rust Ticket placement.
+
+The [reviewed Rust crate](c-wit-application-functions-20261127/reviewed.cargo.json)
+passed with the same application, observer, lockfile and vendored dependencies
+as the [ordinary crate](native-application-functions-20261127/ordinary.cargo.json).
+Both consumers built offline, ran after the build directory was removed,
+and observed three identities while holding a control and zero at all seven
+cleanup checkpoints. To audit the pair, set `LEAN_BRIDGE_FORWARDING_TARGET=cargo`
+and the two sets and reports as for C++. Supply the shared dependency
+directory and its receipt hash via `LEAN_BRIDGE_FORWARDING_RUST_DEPS` and
+`LEAN_BRIDGE_FORWARDING_RUST_DEPS_SHA256`.
 
 To audit Python, Ruby or native PHP results, run `test:projected-application-receipts`.
 Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi`, `rubygems` or `php-native`,

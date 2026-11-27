@@ -20,7 +20,8 @@ export const projectApplicationPackage=async options=>{
 	const stage=join(work,"projection");await mkdir(stage);
 	assert.ok(["c","pypi"].includes(donorTarget));
 	const restore=donorTarget==="c"?restoreApplicationC:restoreApplicationWheel;
-	const donor=await restore(stage,resolve(handoff),pin,route,leanPrefix);
+	const unpacked=join(stage,"donor");await mkdir(unpacked);
+	const donor=await restore(unpacked,resolve(handoff),pin,route,leanPrefix);
 	const {nativeRoot,runtimeRoot,model,runtimeIdentity}=donor,working=join(stage,"producer");
 	const srcComponent=JSON.parse(await readFile(join(nativeRoot,"native-component.json")));
 	const compiled=sha256(await readFile(join(nativeRoot,srcComponent.library)));
@@ -30,6 +31,9 @@ export const projectApplicationPackage=async options=>{
 	else
 	{
 		const projections=await project({working,nativeRoot,runtimeRoot,leanPrefix,environment: process.env});
+		// The packages are complete. Do not keep a second unpacked Lean runtime
+		// alive while copying the newly created archives to the retained handoff.
+		await rm(unpacked,{recursive: true});
 		await writeNativePackageSet({root: working,model,runtimeIdentity,projections});
 		await retainPackageSetEvidence(working,set);
 	}
