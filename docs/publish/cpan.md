@@ -609,6 +609,8 @@ execution of the exact author and consumer examples.
 
 ## Export resource-containing values
 
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
+
 Select resource types and their aggregate ownership contract explicitly. In a
 Lake package named `owned-aggregates`, add `Owned.lean`:
 

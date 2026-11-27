@@ -4,15 +4,18 @@
  * @file
  */
 import { constants } from "node:fs";
-import { mkdir, open, realpath, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, open, realpath, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
 import { gmpIdentity, gmpSource } from "../backends/c/gmp.mjs";
 import { sha256 } from "../capsule/node.mjs";
 import { buildNativeGmp } from "./native-gmp.mjs";
 import { validateNativeElf } from "./native-artifacts.mjs";
+import { processBuildRunner } from "./process-runner.mjs";
 
 const manifest = "share/lean-bridge/gmp.json", source = "share/lean-bridge/sources/gmp-6.3.0.tar.xz";
-const payload = ["include/gmp.h", "lib/libgmp.so.10", ...["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(n => "share/lean-bridge/licenses/GMP-" + n)];
+const notices = ["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(n => "share/lean-bridge/licenses/GMP-" + n);
+const privateName = "libgmp-lean-bridge.so.10", isolation = "LIBGMP_LDFLAGS=-release lean-bridge -Wl,-Bsymbolic";
 const read = async (root, name, bound) => {
 	const path = join(root, name);
 	if(await realpath(path) !== path) throw new Error("Unexpected link in GMP kit: " + name);
@@ -43,32 +46,68 @@ const read = async (root, name, bound) => {
  * @param options.environment - Producer environment and optional trusted kit pin.
  * @param options.signal - Optional producer cancellation signal.
  */
-export const taskGmpKit = async ({ root, environment, signal }) => {
-	const external = environment.LEAN_BRIDGE_TASK_GMP_ROOT, pin = environment.LEAN_BRIDGE_TASK_GMP_SHA256;
-	if((external !== undefined || pin !== undefined) && (!external || !isAbsolute(external) || !/^[a-f0-9]{64}$/u.test(pin ?? ""))) throw new Error("A prepared task GMP kit requires an absolute root and independently pinned receipt SHA-256");
-	if(!external) await buildNativeGmp({ root, environment, signal });
+export const taskGmpKit = options => stageKit(options, false);
+
+/**
+ * The isolated library must never be substituted by a host or public GMP.
+ * Without an explicit private pin, run the original source build and upstream tests.
+ *
+ * @param options - Private staging, producer environment and cancellation signal.
+ */
+export const privateGmpKit = options => stageKit(options, true);
+
+const stageKit = async ({ root, environment, signal }, isolated) => {
+	const external = isolated ? environment.LEAN_BRIDGE_PRIVATE_GMP_ROOT : environment.LEAN_BRIDGE_TASK_GMP_ROOT;
+	const pin = isolated ? environment.LEAN_BRIDGE_PRIVATE_GMP_SHA256 : environment.LEAN_BRIDGE_TASK_GMP_SHA256;
+	const library = "lib/" + (isolated ? privateName : "libgmp.so.10");
+	const payload = ["include/gmp.h", library, ...notices];
+	if((external !== undefined || pin !== undefined) && (!external || !isAbsolute(external) || !/^[a-f0-9]{64}$/u.test(pin ?? ""))) throw new Error("A prepared " + (isolated ? "private" : "task") + " GMP kit requires an absolute root and independently pinned receipt SHA-256");
+	if(!external) await buildNativeGmp({ root, environment, signal, privateSoname: isolated });
 	const from = await realpath(external ?? root), bytes = await read(from, manifest, 65536), identity = sha256(bytes);
 	if(external && identity !== pin) throw new Error("Task GMP kit receipt digest mismatch");
 	const doc = JSON.parse(bytes);
-	if(doc.checked !== true || doc.soname || doc.binding || !Array.isArray(doc.configure)
+	const wrongVariant = isolated
+		? doc.soname !== privateName || doc.binding !== "local-symbols" || !Array.isArray(doc.configure) || !doc.configure.includes(isolation)
+		: doc.soname !== undefined || doc.binding !== undefined;
+	if(doc.checked !== true || wrongVariant || !Array.isArray(doc.configure)
 		|| !["ABI=64", "--enable-shared", "--host=x86_64-pc-linux-gnu"].every(v => doc.configure.includes(v))
 		|| Object.entries(gmpIdentity).some(([key, value]) => doc[key] !== value)
-		|| Object.keys(doc.files ?? {}).sort().join() !== [...payload].sort().join()) throw new Error("Unsupported public GMP kit identity or contents");
+		|| Object.keys(doc.files ?? {}).sort().join() !== [...payload].sort().join()) throw new Error("Unsupported " + (isolated ? "private" : "public") + " GMP kit identity or contents");
 	const files = new Map([[manifest, bytes]]);
 	for(const path of payload)
 	{
 		const file = await read(from, path, 16 * 1024 * 1024), record = doc.files[path];
 		if(record?.bytes !== file.length || record.sha256 !== sha256(file)) throw new Error("Task GMP kit payload differs: " + path);
-		if(path === "lib/libgmp.so.10") validateNativeElf(file);
+		if(path === library) validateNativeElf(file);
 		files.set(path, file);
 	}
 	const upstream = await gmpSource();
 	if(!(await read(from, source, upstream.length)).equals(upstream)) throw new Error("Task GMP corresponding source differs");
 	files.set(source, upstream);
+	if(isolated) await checkPrivateLinkage(files.get(library),environment,signal);
 	if(external) for(const [path, contents] of files)
 	{
 		await mkdir(dirname(join(root, path)), { recursive: true });
 		await writeFile(join(root, path), contents, { flag: "wx" });
 	}
 	return { root, files, identity };
+};
+
+const checkPrivateLinkage = async (bytes, environment, signal) => {
+	// Inspect the same bytes that will be copied, independent of mutable input paths.
+	const scratch = await mkdtemp(join(tmpdir(),"lean-bridge-gmp-linkage-"));
+	try
+	{
+		await writeFile(join(scratch,"gmp.so"),bytes,{flag: "wx"});
+		const {stdout} = await processBuildRunner.capture({command: "readelf"
+			, args: ["--dynamic","--wide","gmp.so"]
+			, cwd: scratch
+			, env: {...environment,LC_ALL: "C"}
+			, signal});
+		const names = [...stdout.matchAll(/\(SONAME\)\s+Library soname: \[([^\]]+)\]/gu)];
+		if(names.length !== 1 || names[0][1] !== privateName || !/\(SYMBOLIC\)|\(FLAGS\)[^\n]*\bSYMBOLIC\b/u.test(stdout))
+			throw new Error("Private GMP requires its isolated ELF SONAME and symbolic binding");
+	}
+	finally
+	{ await rm(scratch,{recursive: true,force: true}); }
 };

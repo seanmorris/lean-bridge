@@ -1561,6 +1561,7 @@
     "test:native-application-function-interfaces": "node --test --test-concurrency=1 tests/helpers/native-application-function-interfaces.mjs",
     "test:c-wit-application-function-interfaces": "node --test tests/helpers/c-wit-application-interfaces.mjs",
     "test:ticket-exchange-authors": "node --test tests/helpers/ticket-exchange-authors.mjs",
+    "test:private-gmp-kit": "node --test tests/helpers/private-gmp-kit.mjs",
     "test:c-wit-application-function-positions": "node --test tests/helpers/c-wit-application-installed.mjs",
     "test:rust-lease-shapes": "node --test tests/helpers/rust-lease-shapes.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",

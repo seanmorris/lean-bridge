@@ -10,7 +10,7 @@ import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
 import { generateOwnedJvmPackage } from "../backends/jvm/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { ownedJvmAdapterSources, ownedJvmEvidence } from "./owned-jvm-artifacts.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { privateGmpKit } from "./task-gmp.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOwnedMaven } from "../release/owned-maven.mjs";
 import { compileJvmSources } from "./compile-jvm-sources.mjs";
@@ -45,7 +45,7 @@ export const projectOwnedJvm = async options => {
 		await mkdir(dirname(join(adapterRoot, path)), { recursive: true });
 		await writeFile(join(adapterRoot, path), source, { flag: "wx" });
 	}
-	await buildNativeGmp({ root: gmpRoot, environment, signal, privateSoname: true });
+	await privateGmpKit({ root: gmpRoot, environment, signal });
 	await mkdir(join(adapterRoot, "lib"));
 	const library = `lib${prefix}_jvm.so`, gmpLibrary = "libgmp-lean-bridge.so.10";
 	const nativeScratch = join(working, "jvm-native-compiler"); await mkdir(nativeScratch);

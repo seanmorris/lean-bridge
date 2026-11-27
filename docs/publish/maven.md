@@ -504,6 +504,8 @@ remain unsupported.
 
 ## Owned resources and aggregates
 
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
+
 Select the owned-value profile when records or other containers carry resources.
 For a Lean package named `owned-aggregates`, put these declarations in `Owned.lean`:
 

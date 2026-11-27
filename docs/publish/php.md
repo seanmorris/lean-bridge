@@ -458,6 +458,7 @@ lean-bridge build --project ./owned-aggregates --target php-native --output ./re
 
 The generated ZIP contains the PHP API, authenticated native libraries, private
 GMP 6.3.0, its corresponding source and license notices, and the package receipt.
+For repeated builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
 Composer installs `brick/math` 1.0.0. Consumers use ordinary autoloading and the
 [resource example](../php.md#resource-containing-values), without native
 declarations, runtime paths or a compilation step. Publish this ZIP using the

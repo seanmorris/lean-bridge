@@ -465,6 +465,8 @@ also select C, C++, PyPI and Cargo when each accepts the complete contract.
 
 ## Export resource-containing values
 
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
+
 Select resource types and the aggregate ownership contract explicitly. In a
 Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:
 

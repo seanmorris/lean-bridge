@@ -10,7 +10,7 @@ import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
 import { generateOwnedRubyPackage } from "../backends/ruby/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { ownedRubyAdapterSources } from "./owned-ruby-artifacts.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { privateGmpKit } from "./task-gmp.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOwnedRuby } from "../release/owned-rubygems.mjs";
 
@@ -46,7 +46,7 @@ export const projectOwnedRuby = async options => {
 		await mkdir(dirname(join(root, path)), { recursive: true });
 		await writeFile(join(root, path), source, { flag: "wx" });
 	}
-	await buildNativeGmp({ root: gmpRoot, environment, signal, privateSoname: true });
+	await privateGmpKit({ root: gmpRoot, environment, signal });
 	await mkdir(join(root, "lib"));
 	const library = `lib${prefix}_ruby.so`, gmpLibrary = "libgmp-lean-bridge.so.10";
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env: environment, signal });
