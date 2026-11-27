@@ -30,8 +30,11 @@ now exercise captured objects, owned failures and disposal. Two independent
 worker packages passed 80 pending-callback cancellation cases. The
 [synchronous peer check](wit-host-closures-20261125.md#two-installed-synchronous-packages)
 passed all eight route/order combinations. Its graph rejected an object
-provider importing the downstream close method; it did not exercise an
-active self-close from a guest member.
+provider importing the downstream close method; a synchronous guest member
+therefore cannot use it for active self-close. The [separate Meter task
+client](wit-task-retained-callbacks-20261123.md#reproduce-the-installed-callback-api)
+did revoke its own callback during dispatch: the current invocation returned,
+the second was refused, and destruction waited for the active body to exit.
 For **PHP-Wasm**, the [threaded and standalone packages](zend-host-closures-20261125.md)
 returned functions that captured a Zend object, including across nested calls
 and independent packages. The standalone installs also ran on a Chromium

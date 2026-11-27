@@ -95,6 +95,16 @@ was therefore rejected at composition. A box method in this graph cannot
 close the function whose body is currently calling it. This tests that
 boundary; it is not an observed close during an active invocation.
 
+The [installed Meter task packages](wit-task-retained-callbacks-20261123.md#reproduce-the-installed-callback-api)
+have a different owner: the Wasmtime embedding application registers the
+callback and can revoke it from inside its body. The [C client's chain](../../tests/fixtures/wit-task-package/retained-consumer.c)
+gave Lean the same registration twice. The first invocation revoked itself
+and returned; the next invocation failed with `retained callback is closed`
+without entering the callback again. Its context destructor ran once and
+never on the active callback stack. With two distinct, live registrations
+the same chain returned 112. Both Meter author routes ran this test;
+neither changes what a synchronous guest object provider can import.
+
 Run `node --test --test-concurrency=1 tests/helpers/wit-installed-peers.mjs`
 with the pinned WIT author tools. To rerun a consumer against the same archive
 bytes, set `LEAN_BRIDGE_WIT_SYNC_PEER_HANDOFFS` to an empty directory on the
