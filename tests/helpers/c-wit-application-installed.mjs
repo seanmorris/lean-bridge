@@ -11,10 +11,10 @@ import {nativeFixtureEnvironment} from "./copied-fixture-install.mjs";
 import {saveLakeFile} from "./lake-workspace.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
-import {checkStagedQuoteIdentities,checkApplicationFunctionPositions,prepareStagedQuoteProject} from "./staged-quote-project.mjs";
+import {checkStagedQuoteIdentities,checkApplicationFunctionPositions,checkTicketExchangePositions,prepareStagedQuoteProject} from "./staged-quote-project.mjs";
 
 const targets=["c","wit-wasi"],json=async path=>JSON.parse(await readFile(path));
-const sources=["tariff-application-function.c","tariff-application-observer.c"];
+const sources=["tariff-application-function.c","tariff-ticket-exchange.c","tariff-application-observer.c"];
 const app=async ({root,handoff,pkg,profile,route,env})=>{
 	const wit=pkg.target==="wit-wasi";assert.equal(pkg.artifacts.length,1);
 	const [archive]=pkg.artifacts,top=basename(archive.path,".tar.gz");
@@ -28,9 +28,10 @@ const app=async ({root,handoff,pkg,profile,route,env})=>{
 	assert.equal(manifest.pkgConfig,wit?"tariff-quotes-wit":"tariff-quotes");
 	const meta=name=>json(join(install,"share/lean-bridge/component",name+".json"));
 	const model=await meta("model"),ir=await meta("binding-ir");
-	const pins=checkStagedQuoteIdentities(model,ir,profile,route,{hostFunctions: true});checkApplicationFunctionPositions(ir);
+	const pins=checkStagedQuoteIdentities(model,ir,profile,route,{hostFunctions: true,ticketExchange: true});
+	checkApplicationFunctionPositions(ir);checkTicketExchangePositions(ir);
 	const author=model.sourceIdentity.modules.find(m=>m.module==="Owned").source;
-	assert.equal(author.path,"Owned.lean");assert.equal(author.sha256,"a5b7145185c50be1f7984d06b262556e5ef1ec94d67b8c9bab9dbb301b074415");
+	assert.equal(author.path,"Owned.lean");assert.equal(author.sha256,"a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb");
 	assert.equal(manifest.bindingIrSha256,pins.bindingIrSha256);assert.equal(manifest.runtimeIdentity,pkg.runtimeIdentity);
 	let componentSha256;
 	if(wit)
@@ -50,8 +51,8 @@ const app=async ({root,handoff,pkg,profile,route,env})=>{
 	await run(env.CC??"cc",["-std=c11","-Wall","-Wextra","-Werror","-UNDEBUG",wit?"-DTARIFF_WIT":"-DTARIFF_NATIVE_C",...sources,...tokens,"-ldl","-o","consumer"],root,env);
 	const exe=join(root,"consumer");
 	const output=await run(exe,[join(install,"lib/liblean_bridge_native.so")],root,{PATH: "/no-author-tools",LEAN_NUM_THREADS: "1",RAYON_NUM_THREADS: "1",LANG: "C.UTF-8"});
-	const expected=["expired","forward","reply","nested","failure","control","afterShutdown"];
-	assert.deepEqual(output.split("\n"),expected.map(n=>n+":"+(n==="afterShutdown"?0:1)));
+	const expected=["expired","forward","reply","nested","failure","control"].map(n=>n+":1");
+	assert.deepEqual(output.split("\n"),[...expected,"exchange:42:43","ticket42:1","exchange:71:72","ticket71:1","afterShutdown:0"]);
 	return {target: pkg.target
 		, ...pins
 		, leanSourceSha256: author.sha256
@@ -75,7 +76,7 @@ test("installed native and Wasmtime packages forward the actual application func
 		const project=join(work,"author-"+route),outputRoot=join(work,"producer-"+route),handoff=join(sets,route);
 		if(!replay)
 		{
-			await prepareStagedQuoteProject(project,route,targets,{hostFunctions: true});
+			await prepareStagedQuoteProject(project,route,targets,{hostFunctions: true,ticketExchange: true});
 			await buildCanonicalProject({projectRoot: project,outputRoot,targets,environment: env});
 			await copyPackageSetHandoff(outputRoot,handoff);await rm(project,{recursive: true});await rm(outputRoot,{recursive: true});
 		}

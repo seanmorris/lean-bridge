@@ -121,8 +121,9 @@ export const ownedAggregateReviewedIr = () => {
  * @param options.mixed - Include a mixed record and a two-record export.
  * @param options.incoming - Pass a captured Lean function directly into the host callback.
  * @param options.hostFunctions - Forward a caller's function through an export or a second callback.
+ * @param options.ticketExchange - Let a callback replace a borrowed Ticket with a different Ticket.
  */
-export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false, mixed = false, incoming = false, hostFunctions = false } = {}) => {
+export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false, mixed = false, incoming = false, hostFunctions = false, ticketExchange = false } = {}) => {
 	const ir = ownedAggregateReviewedIr();
 	ir.component = { id: "tariff-quotes@1.0.0", name: "tariff-quotes", version: "1.0.0" };
 	ir.aggregatePolicy = { ...policy(), closureFields: ["Owned.Tariff.quote"] };
@@ -164,6 +165,7 @@ export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false,
 	}
 	const choose = staged && signature([scalar], callback), flat = staged && signature([scalar, scalar], scalar);
 	const visit = (incoming || hostFunctions) && signature([callback, scalar], scalar);
+	const replaceTicket = ticketExchange && signature([ticket],ticket);
 	ir.declarations = [
 		["newTicket", [scalar], ticket], ["makeTariff", [scalar], tariff]
 		, ["applyTariff", [tariff, scalar], scalar], ["echoTariff", [tariff], tariff]
@@ -173,13 +175,14 @@ export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false,
 		, ...incoming ? [["visitQuote", [scalar, visit, scalar], scalar]] : []
 		, ...hostFunctions ? [["passApplicationQuote",[callback],callback]
 			, ["visitApplicationQuote",[callback,visit,scalar],scalar]] : []
+		, ...ticketExchange ? [["ticketSerial",[ticket],scalar],["exchangeTicket",[ticket,replaceTicket],scalar]] : []
 		, ...staged ? [["stagedQuote", [choose, scalar, scalar], scalar], ["flatQuote", [flat, scalar, scalar], scalar]] : []
 	].map(([name, inputs, output]) => {
-		const canInvoke = inputs.some(input => [tariff, callback, transform, choose, flat, card, visit].includes(input));
+		const canInvoke = inputs.some(input => [tariff, callback, transform, choose, flat, card, visit, replaceTicket].includes(input));
 		return { ...template, name, id: `lean:Owned.${name}`
 			, overloadKey: `Owned.${name}`, source: source(`Owned.${name}`)
 			, parameters: inputs.map(parameter), result: site(output, true)
-			, effects: [...canInvoke ? ["reads-resource", "host-call", "fails"] : [], ...output === scalar ? [] : ["allocates"]]
+			, effects: [...canInvoke ? ["reads-resource", "host-call", "fails"] : inputs.includes(ticket) ? ["reads-resource"] : [], ...output === scalar ? [] : ["allocates"]]
 			, failure: canInvoke ? callable.failure : template.failure };
 	});
 	return ir;

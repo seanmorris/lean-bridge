@@ -28,6 +28,24 @@ export const checkApplicationFunctionPositions=ir=>{
 };
 
 /**
+ * Check the specific resource a host callback borrows and returns by lease.
+ *
+ * @param ir - Compiled or independently reviewed contract.
+ */
+export const checkTicketExchangePositions=ir=>{
+	const find=n=>ir.declarations.find(d=>d.source.declaration==="Owned."+n);
+	const d=find("exchangeTicket"),ref=find("newTicket").result.type;
+	assert.equal(ref.id,"lean:Owned.Ticket");assert.equal(ir.types.find(t=>t.id===ref.id).kind,"resource");
+	assert.deepEqual(d.parameters[0].type,ref);assert.deepEqual(find("ticketSerial").parameters[0].type,ref);
+	const fn=ir.types.find(t=>t.id===d.parameters[1].type.id);
+	assert.equal(fn.kind,"callback");assert.equal(fn.callable.parameters.length,1);
+	const [arg]=fn.callable.parameters,ret=fn.callable.result;
+	assert.deepEqual(arg.type,ref);assert.equal(arg.ownership,"borrow");assert.equal(arg.lifetime.scope,"call");
+	assert.deepEqual(ret.type,ref);assert.equal(ret.ownership,"lease");assert.equal(ret.lifetime.scope,"explicit");
+	assert.equal(d.result.type.name,"uint32");
+};
+
+/**
  * Give the ordinary project explicit exports and give the reviewed project
  * only its module name and independent Binding IR.
  *
@@ -38,8 +56,9 @@ export const checkApplicationFunctionPositions=ir=>{
  * @param options.mixed - Include the PriceCard workload on both routes.
  * @param options.incoming - Include a callback borrowing a Lean closure directly.
  * @param options.hostFunctions - Include exports that forward an application-provided callable.
+ * @param options.ticketExchange - Include the direct resource-to-resource callback workload.
  */
-export const prepareStagedQuoteProject = async (project, route, target, {mixed = false, incoming = false, hostFunctions = false} = {}) => {
+export const prepareStagedQuoteProject = async (project, route, target, {mixed = false, incoming = false, hostFunctions = false, ticketExchange = false} = {}) => {
 	const targets=Array.isArray(target)?target:[target], supported=["c","cpp","cargo","nuget","npm","maven","pypi","rubygems","php-native","cpan","wit-wasi","php-wasm"];
 	if(!["ordinary","reviewed"].includes(route) || !targets.length || new Set(targets).size!==targets.length || !targets.every(t=>supported.includes(t))) throw new Error("Unexpected staged quote configuration");
 	await cp(new URL("../fixtures/onboarding/leased-closure-fields/", import.meta.url), project, {recursive: true});
@@ -59,6 +78,7 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
 	{
 		config.exports.push("Owned.flatQuote", "Owned.stagedQuote");
 		if(incoming) config.exports.push("Owned.visitQuote");
+		if(ticketExchange) config.exports.push("Owned.ticketSerial","Owned.exchangeTicket");
 		if(hostFunctions)
 		{
 			config.exports.push("Owned.passApplicationQuote","Owned.visitApplicationQuote");
@@ -72,7 +92,7 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
 			config.ownedAggregates.closureFields.push("Owned.PriceCard.quote","Owned.PriceCard.rebate");
 		}
 	}
-	else await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({staged: true,mixed,incoming,hostFunctions})));
+	else await saveLakeFile(project, "api.binding-ir.json", canonicalJson(leasedClosureFieldReviewedIr({staged: true,mixed,incoming,hostFunctions,ticketExchange})));
 	if(mixed)
 	{
 		const suffix=await readFile(new URL("../fixtures/structured-types/price-card.lean",import.meta.url),"utf8");
@@ -89,6 +109,11 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
 		const suffix=await readFile(new URL("../fixtures/structured-types/pass-application-quote.lean",import.meta.url),"utf8");
 		await saveLakeFile(project,"Owned.lean",await readFile(join(project,"Owned.lean"),"utf8")+"\n"+suffix);
 	}
+	if(ticketExchange)
+	{
+		const suffix=await readFile(new URL("../fixtures/structured-types/exchange-ticket.lean",import.meta.url),"utf8");
+		await saveLakeFile(project,"Owned.lean",await readFile(join(project,"Owned.lean"),"utf8")+"\n"+suffix);
+	}
 };
 
 /**
@@ -102,8 +127,9 @@ export const prepareStagedQuoteProject = async (project, route, target, {mixed =
  * @param options.mixed - Expect the independent PriceCard contract as well.
  * @param options.incoming - Expect the direct incoming closure contract as well.
  * @param options.hostFunctions - Check the caller-provided function contract.
+ * @param options.ticketExchange - Check the submitted direct Ticket callback contract.
  */
-export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = false, incoming = false, hostFunctions = false} = {}) => {
+export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = false, incoming = false, hostFunctions = false, ticketExchange = false} = {}) => {
 	assert.ok(["ordinary","reviewed"].includes(route));
 	assert.equal(ir.schemaVersion,4);
 	const bindingIrSha256 = sha256(canonicalizeJsonValue(ir));
@@ -114,7 +140,7 @@ export const checkStagedQuoteIdentities = (model, ir, profile, route, {mixed = f
 	assert.equal(Boolean(reviewed), route === "reviewed");
 	if(reviewed)
 	{
-		const original = leasedClosureFieldReviewedIr({staged: true,mixed,incoming,hostFunctions});
+		const original = leasedClosureFieldReviewedIr({staged: true,mixed,incoming,hostFunctions,ticketExchange});
 		assert.equal(reviewed.path, "api.binding-ir.json");
 		assert.equal(reviewed.source, canonicalJson(original));
 		assert.equal(reviewed.sourceSha256, sha256(canonicalJson(original)));

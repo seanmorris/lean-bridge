@@ -22,6 +22,7 @@ static void observe(const char *label) {
     printf("%s:%" PRIu32 "\n",label,s.live);
 }
 void application_consumer(Q(session) *,void (*)(const char *));
+void ticket_consumer(Q(session) *,void (*)(const char *));
 int main(int argc,char **argv) {
     assert(argc==2);
     Q(session) *session=NULL;
@@ -29,6 +30,7 @@ int main(int argc,char **argv) {
     void *broker=dlopen(argv[1],RTLD_NOW|RTLD_NOLOAD); assert(broker);
     read_snapshot=(void (*)(snapshot *))dlsym(broker,"lean_bridge_native_snapshot_read"); assert(read_snapshot);
     application_consumer(session,observe);
+    ticket_consumer(session,observe);
     assert(Q(session_close)(&session)==OK && !session);
     observe("afterShutdown"); dlclose(broker); return 0;
 }
