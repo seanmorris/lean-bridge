@@ -28,6 +28,13 @@ reads the original installation results; it does not reinstall those historical
 packages. The Ruby client in this generation uses a fallback identical to its
 callback reply and ignores its input, so it does not add either position here.
 
+Later [ordinary](c-wit-application-functions-20261127/ordinary.rubygems.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.rubygems.json)
+gems correct that ambiguity. Their installed caller read input serials 42 and
+71 and returned different Tickets with serials 43 and 72; recovery was 800.
+The [current inventory](host-worker-qualification-20261125.md#what-has-passed-on-just-the-ordinary-route)
+credits both direct callback positions to Ruby on both routes.
+
 The [managed-client audit](../../tests/helpers/managed-direct-callback-positions.mjs)
 also qualifies the **argument** on both routes for C#, Java and native PHP.
 Their `construct` callbacks built a record from the Ticket passed by Lean,

@@ -172,12 +172,12 @@ been credited here, not that the feature has been tested and failed.
 
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Lean resource | 17 | 17 | 17 | ≥15 | ≥12 |
-| Host-provided function | 17 | 7 | 17 | 7 | 7 |
+| Lean resource | 17 | 17 | 17 | ≥16 | ≥13 |
+| Host-provided function | 17 | 8 | 17 | 8 | 8 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 606 of 680** profile/route/position combinations.
+That accounts for **at least 616 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,14 +188,14 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **74 placements without a completed pair** break down as follows.
+The **64 placements without a completed pair** break down as follows.
 Some already have an ordinary-route result; the table below subtracts those.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | C++, Python, Ruby, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 10 × 3 × 2 = 60 |
-| Read the actual resource passed into a callback | Ruby, Kotlin | 2 × 2 = 4 |
-| Return a resource distinguishable from the input and recovery value | Ruby, .NET, Java, Kotlin, native PHP | 5 × 2 = 10 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | C++, Python, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 9 × 3 × 2 = 54 |
+| Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
+| Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin, native PHP | 4 × 2 = 8 |
 
 For example, Java has a qualifying resource argument but still needs a
 distinct reply; Kotlin needs both. A single installed workload can exercise all
@@ -203,7 +203,7 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Four profiles have ordinary-package evidence inside that 74-placement
+Three profiles have ordinary-package evidence inside that 64-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
@@ -211,12 +211,11 @@ build tools exercised it:
 | --- | ---: | --- | ---: |
 | [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
 | [Python](native-application-functions-20261127/ordinary.pypi.json) | 3 | — | 3 |
-| [Ruby](c-wit-application-functions-20261127/ordinary.rubygems.json) | 3 | argument and reply | 5 |
 | [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
 
-This brings the lower bound to **620/680 individual installed placements**:
-606 backed by pairs, plus 14 ordinary-only. **60** still lack an individual
-witness in this tally. The paired figure is **606/680**; use the
+This brings the lower bound to **625/680 individual installed placements**:
+616 backed by pairs, plus 9 ordinary-only. **55** still lack an individual
+witness in this tally. The paired figure is **616/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
@@ -306,13 +305,14 @@ directory and run `npm run test:c-wit-application-receipts`. Set
 route. This checks the archive, user source, compiled interface, source hashes
 and installed output, plus the actual WIT world and Wasm binary.
 
-The [ordinary MRI 3.3.12 gem from that C release](c-wit-application-functions-20261127/ordinary.rubygems.json)
-ran the forwarding and Ticket clients in separate relocated processes.
+The MRI 3.3.12 [ordinary gem](c-wit-application-functions-20261127/ordinary.rubygems.json)
+and [reviewed gem](c-wit-application-functions-20261127/reviewed.rubygems.json)
+each ran the forwarding and Ticket clients in separate relocated processes.
 The [Ticket application](../../tests/fixtures/structured-types/tariff-ticket-application.rb)
 read the incoming handle, returned a distinct Ticket, propagated the exact
 Ruby exception on failure and repeated the successful exchange. After each
-scenario the observer saw one live session; shutdown removed it. These are
-single-route results until the reviewed releases pass.
+scenario the observer saw one live session; shutdown removed it. Each
+gem contained the native library from its matching C author route.
 
 An alternative C++ run reuses the compiled Lean component in a retained
 Python wheel without running Python or rebuilding Lean. Set
@@ -333,6 +333,31 @@ the nested failure, and zero live identities on shutdown. To replay an
 existing projection, set `LEAN_BRIDGE_CPP_APP_REPLAY_SHA256` to the C++ set's
 receipt hash in addition to the donor wheel's pin. This never overwrites the
 retained handoff.
+
+To use the combined C/WIT release for C++ instead, set
+`LEAN_BRIDGE_CPP_APP_C` and `LEAN_BRIDGE_CPP_APP_C_SHA256` in place of the
+wheel settings. Both pkg-config and CMake clients then exercise the Ticket
+callback as well as function forwarding.
+
+`test:c-family-application-from-c` packages and installs one Python wheel
+or Rust crate from the same verified C release. Set `LEAN_BRIDGE_FAMILY_APP_TARGET`
+to `pypi` or `cargo`, and supply `LEAN_BRIDGE_FAMILY_APP_C`, `_C_SHA256`,
+`_ROUTE` and `_OUTPUT` with that same prefix. The output directory has a
+subdirectory per target. Python uses `LEAN_BRIDGE_PYTHON`; the relocated
+environment runs the forwarding and Ticket clients in separate processes.
+Rust requires the pinned Cargo/rustc toolchain, offline producer cache,
+and `LEAN_BRIDGE_FAMILY_APP_RUST_DEPS` containing the vendored dependency
+archive and `dependencies.json`. Pin the latter's SHA-256 with
+`LEAN_BRIDGE_FAMILY_APP_RUST_DEPS_SHA256`; the client checks the dependency
+archive and the lockfile inside the installed crate before compiling offline.
+Its runtime test covers forwarding, not a new Rust Ticket placement.
+
+To audit Python or Ruby results, run `test:projected-application-receipts`.
+Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi` or `rubygems`,
+`LEAN_BRIDGE_PROJECTED_APP_DONORS` to the directory of C release sets,
+and `LEAN_BRIDGE_PROJECTED_APP_OUTPUT` to the target directory with the
+retained handoffs and JSON reports. Leave `LEAN_BRIDGE_PROJECTED_APP_ROUTE`
+unset for a pair or set it to audit a single route.
 
 The same authenticated wheel can supply a new gem or NuGet package.
 Use `test:ruby-application-from-wheel` or `test:dotnet-application-from-wheel`
@@ -393,7 +418,8 @@ verified forwarding, nested exception identity, containment of a nonlocal
 exit, and rejection of fiber switches in both the inner and outer callback.
 An unrelated thread could switch fibers; the caller could too after return.
 The broker returned to its one-session baseline after every scenario and
-to zero on shutdown. The reviewed gem remains a separate qualification.
+to zero on shutdown. The combined C-donor gems above exercise the same
+guard on both author routes.
 
 For Java, Kotlin and native PHP, build **the same two author projects** for
 both Maven and Composer. Set `LEAN_BRIDGE_MANAGED_APPLICATION_KEEP` to an

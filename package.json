@@ -1568,6 +1568,8 @@
     "test:c-wit-application-function-positions": "node --test tests/helpers/c-wit-application-installed.mjs",
     "test:c-wit-application-receipts": "node --test tests/helpers/c-wit-application-receipts.mjs",
     "test:cpp-application-from-wheel": "node --test tests/helpers/cpp-application-from-wheel.mjs",
+    "test:c-family-application-from-c": "node --test tests/helpers/c-family-application-from-c.mjs",
+    "test:projected-application-receipts": "node --test tests/helpers/projected-application-receipts.mjs",
     "test:ruby-application-from-wheel": "node --test tests/helpers/ruby-application-from-wheel.mjs",
     "test:dotnet-application-from-wheel": "node --test tests/helpers/dotnet-application-from-wheel.mjs",
     "test:dotnet-application-function-positions": "node --test tests/helpers/dotnet-application-installed.mjs",

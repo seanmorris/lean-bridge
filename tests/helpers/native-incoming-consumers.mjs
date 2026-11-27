@@ -56,9 +56,16 @@ const python=async o=>{
 	const boot="import runpy,sys; import lean_tariff_quotes as api; from lean_tariff_quotes import _assets; "
 		+"runpy.run_path(sys.argv[1])['observe'](sys.argv[2],api._OwnedNative._runtime,_assets._LIBRARY)";
 	await rm(archive);
-	const observed=JSON.parse(await run(py,["-I","-B","-c",boot,"tariff-incoming-observer.py","tariff-incoming.py"],app,clean));
-	assert.deepEqual(observed,idle);
-	return {...pins,clientSha256,observerSha256,python: installed.python,dependency: installed.dependency,observed};
+	const inspect=async file=>JSON.parse(await run(py,["-I","-B","-c",boot,"tariff-incoming-observer.py",file],app,clean));
+	const observed=await inspect("tariff-incoming.py");assert.deepEqual(observed,idle);
+	const extra={};
+	if(o.tickets)
+	{
+		const name="tariff-ticket-application.py";await copyFile(join(fixture,name),join(app,name));
+		extra.ticketClientSha256=sha256(await readFile(join(app,name)));
+		extra.ticketObserved=await inspect(name);assert.deepEqual(extra.ticketObserved,idle);
+	}
+	return {...pins,clientSha256,observerSha256,python: installed.python,dependency: installed.dependency,observed,...extra};
 };
 const ruby=async o=>{
 	const {app,archive,env}=o, rb=env.LEAN_BRIDGE_RUBY,prefix=join(app,"prefix"),deploy=join(app,"deployed");

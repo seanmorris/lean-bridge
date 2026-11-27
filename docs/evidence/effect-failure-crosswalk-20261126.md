@@ -56,7 +56,10 @@ Forwarding an application coderef exposed a different failure in TariffQuotes.
 The original threaded Perl 5.36.3 [prebuilt](perl-forwarded-errors-20261127/5.36.3-threaded.prebuilt-only.failure.json)
 and [locally compiled XS](perl-forwarded-errors-20261127/5.36.3-threaded.build-xs.failure.json)
 installs both lost the thrown object. A call to the forwarded function
-raised a generic status-10 string instead. The callback had stored the
+raised a generic status-10 string instead. The [original package's complete
+run](perl-forwarded-errors-20261127/original-cpan-outcomes.json) failed the same
+identity comparison in all eight combinations of interpreter and install mode.
+The callback had stored the
 exception on the XS call that registered it rather than the call that
 invoked it. The repaired binding keeps the current call frame on Perl's
 save stack, which restores the enclosing frame even when Perl unwinds.
@@ -108,7 +111,8 @@ also covers recoverable failure during same-frame reentry: it preserves the
 original Ruby exception, contains `throw` as `LocalJumpError`, and refuses
 fiber suspension without retiring the healthy outer session. The updated
 trace guard is part of the gem, not a modification to its compiled Lean
-component. This is not a new IO signature or evidence for the reviewed gem.
+component. The separate ordinary and reviewed combined releases below
+also run that forwarding client. Neither adds an IO signature.
 
 For failures with a resource reply, the C11
 ([ordinary](c-wit-application-functions-20261127/ordinary.c.json),
@@ -118,7 +122,8 @@ For failures with a resource reply, the C11
 clients gave the adapter an allocated reply and then returned a failure
 status. The public call returned `CALLBACK_FAILED`, left the result owner
 empty and the caller's output untouched. Both the input and fallback Tickets
-remained usable. In the [ordinary Ruby gem](c-wit-application-functions-20261127/ordinary.rubygems.json),
+remained usable. In the Ruby [ordinary](c-wit-application-functions-20261127/ordinary.rubygems.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.rubygems.json) gems,
 the callback raised a Ruby exception instead: the application caught that
 same object and successfully retried. Neither outcome is a fatal runtime trap.
 
