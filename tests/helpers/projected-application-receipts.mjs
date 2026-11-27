@@ -7,6 +7,7 @@ import test from "node:test";
 import {sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
+import {checkManagedForwarding} from "./managed-forwarding-observations.mjs";
 import {checkApplicationFunctionPositions,checkStagedQuoteIdentities,checkTicketExchangePositions} from "./staged-quote-project.mjs";
 
 const fixture=resolve("tests/fixtures"),json=async p=>JSON.parse(await readFile(p));
@@ -33,7 +34,8 @@ const checkComposer=async(root,row,pkg)=>{
 test("the donor, installed archive and downstream observations agree on each selected author route",async t=>{
 	const env=process.env,target=env.LEAN_BRIDGE_PROJECTED_APP_TARGET,only=env.LEAN_BRIDGE_PROJECTED_APP_ROUTE;
 	const donors=env.LEAN_BRIDGE_PROJECTED_APP_DONORS,output=env.LEAN_BRIDGE_PROJECTED_APP_OUTPUT;
-	assert.ok(["pypi","rubygems","php-native"].includes(target)&&donors&&output);if(only)assert.ok(["ordinary","reviewed"].includes(only));
+	assert.ok(["pypi","rubygems","php-native","maven","nuget"].includes(target)&&donors&&output);if(only)assert.ok(["ordinary","reviewed"].includes(only));
+	const jvm=target==="maven",managed=jvm||target==="nuget";
 	const ruby=target==="rubygems",php=target==="php-native",ext=ruby?"rb":"py",pair=[];
 	const source=await Promise.all(["onboarding/leased-closure-fields/Owned.lean","structured-types/pass-application-quote.lean","structured-types/exchange-ticket.lean"].map(p=>readFile(join(fixture,p),"utf8")));
 	for(const route of only?[only]:["ordinary","reviewed"])
@@ -41,9 +43,16 @@ test("the donor, installed archive and downstream observations agree on each sel
 		const src=resolve(donors,route),dst=resolve(output,route,"handoff"),row=await json(resolve(output,route+".json"));
 		const a=await receipt(src),b=await receipt(dst);
 		const p=a.receipt.packages.find(p=>p.target==="c");assert.equal(b.receipt.packages.length,1);
-		const [q]=b.receipt.packages;assert.equal(q.target,target);assert.equal(p.name,"tariff-quotes");assert.equal(q.name,php?"example/tariff-quotes":p.name);assert.equal(q.version,"1.0.0");
+		const [q]=b.receipt.packages;assert.equal(q.target,target);assert.equal(p.name,"tariff-quotes");assert.equal(q.name,jvm?"org.leanbridge:tariff-quotes":php?"example/tariff-quotes":p.name);assert.equal(q.version,"1.0.0");
 		assert.equal(row.route,route);assert.equal(row.cReceiptSha256,a.result.receiptSha256);assert.equal(row.receiptSha256,b.result.receiptSha256);
-		assert.deepEqual(p.artifacts,[row.cArchive]);assert.deepEqual(q.artifacts,[row.archive]);assert.equal(p.runtimeIdentity,row.runtimeIdentity);assert.equal(q.runtimeIdentity,p.runtimeIdentity);
+		assert.deepEqual(p.artifacts,[row.cArchive]);
+		if(jvm)
+		{
+			assert.deepEqual(q.artifacts,row.archives);
+			assert.deepEqual(row.archive,q.artifacts.find(a=>a.path.endsWith(".jar")));
+			assert.deepEqual(row.pom,q.artifacts.find(a=>a.path.endsWith(".pom")));
+		} else assert.deepEqual(q.artifacts,[row.archive]);
+		assert.equal(p.runtimeIdentity,row.runtimeIdentity);assert.equal(q.runtimeIdentity,p.runtimeIdentity);
 		assert.equal(a.receipt.source.treeSha256,b.receipt.source.treeSha256);
 		const work=await mkdtemp(join(tmpdir(),"projected-receipt-"));
 		try
@@ -60,15 +69,21 @@ test("the donor, installed archive and downstream observations agree on each sel
 			assert.equal(row.sourceSha256,sha256(source.join("\n")));assert.equal(model.sourceIdentity.modules.find(m=>m.module==="Owned").source.sha256,row.sourceSha256);
 			assert.equal(model.sourceIdentity.sourceTreeSha256,b.receipt.source.treeSha256);
 			const archive=join(dst,row.archive.path),root=join(work,"downstream");await mkdir(root);
-			const meta=target==="pypi"?"lean_tariff_quotes/lean_bridge/component":"lean-bridge/component";
-			const prefix=ruby?"lib/lean_bridge/tariff_quotes/":php?"":"lean_tariff_quotes/";
-			const lib=prefix+"native/linux-x64/"+native.library;
+			const layouts={
+				pypi: ["lean_tariff_quotes/lean_bridge/component","lean_tariff_quotes/native/linux-x64"]
+				, rubygems: ["lean-bridge/component","lib/lean_bridge/tariff_quotes/native/linux-x64"]
+				, "php-native": ["lean-bridge/component","native/linux-x64"]
+				, nuget: ["lean-bridge/component","runtimes/linux-x64/native"]
+				, maven: ["META-INF/lean-bridge/component","META-INF/lean-bridge/native/linux-x64"]
+			};
+			const [meta,libraryDir]=layouts[target],lib=libraryDir+"/"+native.library;
 			const members=[...names.map(n=>meta+"/"+n),lib,...php?["composer.json"]:[]];
 			if(ruby)await run("bash",["-o","pipefail","-c",'tar -xOf "$1" data.tar.gz | tar -xzf - --no-same-owner --no-same-permissions -- "${@:2}"',"_",archive,...members],root,env);
 			else await run("unzip",["-q",archive,...members],root,env);
 			for(const n of names)assert.deepEqual(await json(join(root,meta,n)),await json(join(work,cmeta,n)));
 			assert.equal(sha256(await readFile(join(root,lib))),row.componentSha256);
-			if(php)await checkComposer(root,row,q);
+			if(managed)await checkManagedForwarding(target,row,fixture);
+			else if(php)await checkComposer(root,row,q);
 			else
 			{
 				for(const [id,name] of [["clientSha256","tariff-application-function"],["observerSha256","tariff-incoming-observer"],["ticketClientSha256","tariff-ticket-application"]])
@@ -85,7 +100,8 @@ test("the donor, installed archive and downstream observations agree on each sel
 	if(pair.length===2)
 	{
 		const [a,b]=pair;assert.notEqual(a.cReceiptSha256,b.cReceiptSha256);assert.notEqual(a.receiptSha256,b.receiptSha256);assert.notEqual(a.archive.sha256,b.archive.sha256);
-		const keys=php?["sources","observations"]:["clientSha256","observerSha256","ticketClientSha256","observed","ticketObserved"];
+		const keys=jvm?["sources","results"]:managed?["clientSha256","observerSha256","applicationSha256","counts"]
+			:php?["sources","observations"]:["clientSha256","observerSha256","ticketClientSha256","observed","ticketObserved"];
 		for(const k of ["runtimeIdentity","sourceSha256",...keys])assert.deepEqual(a[k],b[k],k);
 	}
 });

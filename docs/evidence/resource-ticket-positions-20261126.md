@@ -51,6 +51,13 @@ received Tickets 42 and 71 and returned 43 and 72, while its fallback remained
 800. PHP 8.2.35 and 8.5.10 ran both relocated vendor installations. That
 adds **one callback result per author route**, not a PHP-Wasm result.
 
+The [ordinary](c-wit-application-functions-20261127/ordinary.nuget.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.nuget.json)
+C# clients also read 42 and 71 inside their callback, returned 43 and 72
+instead of the fallback 800, and checked that throwing returned neither
+Ticket. Both installed assemblies repeated the checks on a runtime-only
+.NET host. The earlier callback argument was already counted.
+
 ### Five installed npm clients exchange Tickets directly
 
 Node, executed strict TypeScript, a Chromium page, mounted React and a

@@ -195,6 +195,14 @@ callback remained callable; the input and fallback Tickets remained readable.
 Each process held nine native identities during forwarding and zero after
 shutdown. This is recovery from a callback exception, not runtime retirement.
 
+On both [ordinary](c-wit-application-functions-20261127/ordinary.nuget.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.nuget.json) NuGet
+packages, the [C# caller](../../tests/fixtures/structured-types/tariff-application.cs)
+caught the identical `ApplicationException` from a nested callback and
+from a failed resource exchange. It reused the outer delegate and checked
+that the input and fallback Tickets still worked. The owner thread exited
+with zero live identities. This checks the recoverable path on .NET 8.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

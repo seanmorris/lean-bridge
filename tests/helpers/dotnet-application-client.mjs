@@ -27,7 +27,7 @@ export const runDotnetApplication=async options=>{
 		for(const key of expected.filter(k=>k!=="held"))assert.equal(counts[key],key==="afterThreadExit"?0:1,key);
 		return {counts,checks: expected.length};
 	};
-	const fixture={source: ()=>cs,parseResult,expectedChecks: expected.length};
+	const fixture={source: ()=>cs,parseResult,expectedChecks: expected.length,dropFeedAfterRestore: true};
 	const installed=await installCopiedConsumer({profile: "dotnet",consumer,handoff: set,packages: [pkg],environment: env,fixture});
 	assert.equal(installed.consumerSha256,sha256(cs));
 	const dir=join(consumer,"dotnet/packages",pkg.name,pkg.version),sub="lean-bridge/component";

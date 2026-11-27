@@ -175,12 +175,12 @@ been credited here, not that the feature has been tested and failed.
 
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Lean resource | 17 | 17 | 17 | ≥16 | ≥14 |
-| Host-provided function | 17 | 13 | 17 | 13 | 13 |
+| Lean resource | 17 | 17 | 17 | ≥16 | ≥15 |
+| Host-provided function | 17 | 14 | 17 | 14 | 14 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 648 of 680** profile/route/position combinations.
+That accounts for **at least 656 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -191,13 +191,13 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **32 placements without a completed pair** break down as follows.
+The **24 placements without a completed pair** break down as follows.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | .NET, Java, Kotlin, PHP-Wasm | 4 × 3 × 2 = 24 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | Java, Kotlin, PHP-Wasm | 3 × 3 × 2 = 18 |
 | Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
-| Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin | 3 × 2 = 6 |
+| Return a resource distinguishable from the input and recovery value | Java, Kotlin | 2 × 2 = 4 |
 
 For example, Java has a qualifying resource argument but still needs a
 distinct reply; Kotlin needs both. A single installed workload can exercise all
@@ -205,12 +205,15 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-None of the 32 outstanding positions has an ordinary-only result. The
+None of the 24 outstanding positions has an ordinary-only result. The
 [ordinary](c-wit-application-functions-20261127/ordinary.php-native.json)
 and [reviewed](c-wit-application-functions-20261127/reviewed.php-native.json)
 native PHP packages complete the three forwarding pairs and the distinct
-resource reply. All **648/680** individual installed positions are now
-backed by pairs. **24** forwarding positions and **8** resource positions
+resource reply for that profile. The [ordinary](c-wit-application-functions-20261127/ordinary.nuget.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.nuget.json)
+NuGet packages complete the same four pairs for C#. All **656/680**
+individual installed positions are backed by pairs. **18** forwarding
+positions and **6** resource positions
 still need an installed witness. This does not count lifetime or error
 assertions, or qualify a hosted release.
 
@@ -381,8 +384,8 @@ and the two sets and reports as for C++. Supply the shared dependency
 directory and its receipt hash via `LEAN_BRIDGE_FORWARDING_RUST_DEPS` and
 `LEAN_BRIDGE_FORWARDING_RUST_DEPS_SHA256`.
 
-To audit Python, Ruby or native PHP results, run `test:projected-application-receipts`.
-Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi`, `rubygems` or `php-native`,
+To audit Python, Ruby, native PHP or C# results, run `test:projected-application-receipts`.
+Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi`, `rubygems`, `php-native` or `nuget`,
 `LEAN_BRIDGE_PROJECTED_APP_DONORS` to the directory of C release sets,
 and `LEAN_BRIDGE_PROJECTED_APP_OUTPUT` to the target directory with the
 retained handoffs and JSON reports. Leave `LEAN_BRIDGE_PROJECTED_APP_ROUTE`
@@ -397,6 +400,10 @@ rebuilding a binding never changes the result recorded for an older archive.
 To include direct Ticket callbacks, select the combined C/WIT handoff instead
 of a wheel: use `*_APP_C` and `*_APP_C_SHA256` in place of the two
 `*_APP_WHEEL` settings. Ruby and .NET use the same restored native inputs.
+The C# client restores offline, removes its private feed archive, builds
+without restoring, and runs the relocated assembly on a .NET 8 runtime
+with no SDK. Both author routes held nine identities during forwarding and
+returned to zero after the owner thread exited.
 For CPAN, use `test:perl-application-from-c` with `LEAN_BRIDGE_PERL_APP_C`,
 `LEAN_BRIDGE_PERL_APP_C_SHA256`, `LEAN_BRIDGE_PERL_APP_ROUTE` and a fresh
 `LEAN_BRIDGE_PERL_APP_OUTPUT`. Set `LEAN_BRIDGE_PERLS` to the four ABI
