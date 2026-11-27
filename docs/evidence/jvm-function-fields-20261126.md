@@ -58,15 +58,17 @@ one owner at baseline, three while the leases were held, one again after each
 of six scenarios, and zero after thread exit. This is adapter execution with
 real application clients, not an installed Maven release.
 
-The [ordinary Maven installation](jvm-incoming-functions-20261127/ordinary.json)
+The [ordinary](jvm-incoming-functions-20261127/ordinary.json) and
+[reviewed](jvm-incoming-functions-20261127/reviewed.json) Maven installations
 subsequently passed on a relocated Java 22 runtime with only `java.base`.
-Java and Kotlin each ran three separate applications. In the two incoming
+On each route Java and Kotlin each ran three separate applications. In the incoming
 function clients, failing the inner callback expired its borrow without
 invalidating the outer one. Both processes recorded one live owner at
 baseline, three while leases were held, one after recovery, and zero after
-thread exit. The report identifies the installed JAR, its POM, all eight
-client/observer source files and the six main classes. It covers the ordinary
-route only.
+thread exit. The reports identify two distinct JARs and receipts, their
+POMs, all eight client/observer source files and six main classes per release.
+These callbacks receive a Lean-created function. They are not evidence for
+forwarding a function supplied by the application.
 
 ### Forwarding an application function and exchanging Tickets
 
