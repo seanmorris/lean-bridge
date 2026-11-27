@@ -61,6 +61,11 @@ directory and its manifest digest, then run `npm run test:wasm-worker-effect-ref
 
 ## Checks before closing the nodes
 
+For #1221, the [ownership review](host-lifetime-acceptance-20261127.md) maps
+transfers, borrowed results and receiver members to the installed client on
+each package target. Passing a position in the table below does not, by
+itself, test the lifetime of the value that crossed it.
+
 The [async delivery crosswalk](async-delivery-crosswalk-20261125.md) traces
 each of the 17 consumer profiles to its installed task, stream, callback and
 shutdown records, separately from synchronous iteration.

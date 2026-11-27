@@ -25,8 +25,9 @@ The enabled gate is `npm run test:owned-javascript-transfers`. It covers:
 - An installed author CLI and offline component/runtime installations after
   deleting producer sources and outputs.
 - Byte-identical package reassembly and rejected capability/source mutations.
-- Strict TypeScript, the exact consumer documentation example, and 130 checks
-  per run in Node and Chromium, Firefox and WebKit pages, React and workers.
+- A strict TypeScript declaration check (`tsc --noEmit`), the exact consumer
+  documentation example, and 130 JavaScript checks per run in Node and in
+  Chromium, Firefox and WebKit pages, React and workers.
   Each browser context repeats the checks twice using the same Wasm assets.
 - A combined reviewed C and JavaScript build with matching ownership contracts.
 
