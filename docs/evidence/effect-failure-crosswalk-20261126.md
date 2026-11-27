@@ -347,6 +347,14 @@ a Lean build, run `npm run test:c-host-packages` or
 `LEAN_BRIDGE_C_HOST_REPLAY` or `LEAN_BRIDGE_CPP_HOST_REPLAY` release directory.
 Set the matching `*_HOST_ERROR_OUTPUT` to retain the two JSON records.
 
+The [ordinary](native-application-functions-20261127/ordinary.cpp.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.cpp.json)
+C++ forwarding clients tested a recoverable exception. A nested call threw;
+the outer callback caught the original `std::exception_ptr` and still
+returned 43 through its own registration. Both packages ended with zero
+live identities. On the reviewed package, throwing inside the Ticket
+callback also preserved the exception and left the input and recovery Ticket usable.
+
 ## Which immediate errors keep a live resource?
 
 These checks use a Lean-owned resource as the payload of a synchronous

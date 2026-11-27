@@ -1,15 +1,14 @@
-/** @file Check the common installed forwarding workload without treating its two wheels as identical releases. */
+/** @file Verify a shared forwarding workload across independently installed native package routes. */
 import assert from "node:assert/strict";
-import {execFile} from "node:child_process";
 import {readFile} from "node:fs/promises";
 import {join,resolve} from "node:path";
 import test from "node:test";
-import {promisify} from "node:util";
 import {sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {forwardingPackage,verifyForwardingClient} from "./forwarding-package-layout.mjs";
 import {checkApplicationFunctionPositions,checkStagedQuoteIdentities,checkTicketExchangePositions} from "./staged-quote-project.mjs";
 
-const exec=promisify(execFile), fixtures=resolve("tests/fixtures"),json=async path=>JSON.parse(await readFile(path));
+const fixtures=resolve("tests/fixtures"),json=async path=>JSON.parse(await readFile(path));
 const textless=value=>JSON.parse(JSON.stringify(value,(key,v)=>key==="documentation"?undefined:v));
 const compareContracts=(ordinary,reviewed)=>{
 	const old=textless(ordinary),next=textless(reviewed);
@@ -31,7 +30,8 @@ const compareContracts=(ordinary,reviewed)=>{
 	assert.deepEqual(next,old); // Includes capabilities, producer/toolchain, assurance and aggregate policy.
 };
 
-test("both wheels executed the same forwarding program; the reviewed wheel only adds Ticket exchange",async t=>{
+const target=process.env.LEAN_BRIDGE_FORWARDING_TARGET??"pypi";
+test(target+": both installs executed the same forwarding program; the reviewed package only adds Ticket exchange",async t=>{
 	const base=(await Promise.all(["onboarding/leased-closure-fields/Owned.lean","structured-types/pass-application-quote.lean"].map(p=>readFile(join(fixtures,p),"utf8")))).join("\n");
 	const extra=await readFile(join(fixtures,"structured-types/exchange-ticket.lean"),"utf8"),rows=[];
 	for(const route of ["ordinary","reviewed"])
@@ -39,11 +39,11 @@ test("both wheels executed the same forwarding program; the reviewed wheel only 
 		const reviewed=route==="reviewed",prefix="LEAN_BRIDGE_FORWARDING_"+route.toUpperCase();
 		const dir=process.env[prefix+"_SET"],path=process.env[prefix+"_REPORT"];assert.ok(dir&&path,prefix);
 		const row=await json(path),{receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(dir,"package-set-receipt.json")});
-		const pkg=receipt.packages.find(p=>p.target==="pypi");assert.equal(pkg.name,"tariff-quotes");assert.equal(pkg.version,"1.0.0");
+		const pkg=receipt.packages.find(p=>p.target===target);assert.equal(pkg.name,"tariff-quotes");assert.equal(pkg.version,"1.0.0");
 		assert.equal(row.receiptSha256,result.receiptSha256);assert.deepEqual(pkg.artifacts,[row.archive]);
 		assert.equal(row.route,route);assert.equal(row.runtimeIdentity,pkg.runtimeIdentity);
-		const archive=join(dir,row.archive.path),member=async name=>(await exec("unzip",["-p",archive,"lean_tariff_quotes/"+name],{encoding: "buffer",maxBuffer: 16<<20})).stdout;
-		const meta=async name=>JSON.parse(await member("lean_bridge/component/"+name+".json"));
+		const payload=await forwardingPackage(target,join(dir,row.archive.path));
+		const meta=async name=>JSON.parse(await payload.member(payload.component+name+".json"));
 		const model=await meta("model"),ir=await meta("binding-ir"),native=await meta("native-component");
 		const profile=receipt.profiles.find(p=>p.id===pkg.profile);
 		const pins=checkStagedQuoteIdentities(model,ir,profile,route,{hostFunctions: true,ticketExchange: reviewed});
@@ -53,10 +53,8 @@ test("both wheels executed the same forwarding program; the reviewed wheel only 
 		assert.equal(model.sourceIdentity.modules.find(m=>m.module==="Owned").source.sha256,row.sourceSha256);
 		assert.equal(row.sourceSha256,sha256(reviewed?base+"\n"+extra:base));
 		assert.equal(row.componentSha256,native.nativeLibrary.sha256);
-		assert.equal(sha256(await member("native/linux-x64/"+native.library)),row.componentSha256);
-		for(const [key,file] of [["clientSha256","tariff-application-function.py"],["observerSha256","tariff-incoming-observer.py"]])
-			assert.equal(row[key],sha256(await readFile(join(fixtures,"structured-types",file))));
-		assert.deepEqual(row.observed,[1,1,1,1,1,1,0]);rows.push({row,ir});
+		assert.equal(sha256(await payload.member(payload.lib+native.library)),row.componentSha256);
+		await verifyForwardingClient(target,row,payload);rows.push({row,ir});
 	}
 	const [a,b]=rows;compareContracts(a.ir,b.ir);
 	for(const key of ["archive","receiptSha256","componentSha256","sourceSha256"])assert.notDeepEqual(a.row[key],b.row[key]);

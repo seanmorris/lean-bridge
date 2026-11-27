@@ -1,0 +1,35 @@
+{
+  "archive": {
+    "bytes": 53888580,
+    "path": "archives/tariff-quotes-1.0.0-cpp.tar.gz",
+    "sha256": "185e65280fa275ad3e7bef51d958eac764e5f85e2118091f823567f6f5720e17"
+  },
+  "bindingIrSha256": "ff73021df159f031112af8995936a76bdce18d1b6e060682c328f2cbc84501f0",
+  "cArchive": {
+    "bytes": 53878263,
+    "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+    "sha256": "b19a4b3e85646486667e0a9304047a4ff6cde49ade9c8d8a2c295508e1735cf4"
+  },
+  "cReceiptSha256": "66cc611fcb93279c10178229a4013798506bbd431847ddddccfab9a2b8d9b0ce",
+  "componentSha256": "6f603cd6ecec1288163f7038f0dbad6f2f0e9c4325dbd950934cf3cf36cef124",
+  "methods": {
+    "cmake": {
+      "clientSha256": "84a54d0cf47e685be8721c09d10eb7af1fc4b2d30bbdec9e6f09329e001f81b2",
+      "output": "expired\nforwarded:42\nforward\nafter-failure:43\nnested\nticket:42:43\nticket42\nticket:71:72\nticket71\nfresh\nidentities:1,1,1,1,1,1,0"
+    },
+    "pkgConfig": {
+      "clientSha256": "9f3dac3e7f2e8a67b417f7acad8c5f3a77e31e99000471d8432df1969b49a744",
+      "output": "expired\nforwarded:42\nforward\nafter-failure:43\nnested\nticket:42:43\nticket42\nticket:71:72\nticket71\nfresh\nidentities:1,1,1,1,1,1,0"
+    }
+  },
+  "receiptSha256": "10a136911003d9916e862f0358fba7e571170661abbd3a9c09ab7f1e7e3ad38c",
+  "reviewedSourceSha256": "6f85cf29080b2ce46d183ca925194ff296f5376b40cf623639c778ac0f43c341",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "sources": {
+    "CMakeLists.txt": "bb6b49dc6de2c9d22674007b5396284516369f7e6fde46a869a2bed11fae9010",
+    "tariff-application.cpp": "2b60b91cd0cea6bf6a02ed098255835ce63b44f726d2b4b7aa21473eba1f779c",
+    "tariff-cpp-probe.cpp": "a3b8242370c8225e4e760f9f6eee302959deb097aa481a76df2df3da9cb9625f"
+  }
+}

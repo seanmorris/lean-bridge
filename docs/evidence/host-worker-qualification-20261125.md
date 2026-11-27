@@ -173,11 +173,11 @@ been credited here, not that the feature has been tested and failed.
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | ≥16 | ≥13 |
-| Host-provided function | 17 | 9 | 17 | 9 | 9 |
+| Host-provided function | 17 | 10 | 17 | 10 | 10 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 622 of 680** profile/route/position combinations.
+That accounts for **at least 628 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,12 +188,12 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **58 placements without a completed pair** break down as follows.
+The **52 placements without a completed pair** break down as follows.
 Some already have an ordinary-route result; the table below subtracts those.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | C++, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 8 × 3 × 2 = 48 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 7 × 3 × 2 = 42 |
 | Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
 | Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin, native PHP | 4 × 2 = 8 |
 
@@ -203,21 +203,20 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Four profiles have ordinary-package evidence inside that 58-placement
+Three profiles have ordinary-package evidence inside that 52-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
 | Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
 | --- | ---: | --- | ---: |
-| [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
 | [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
 | [Native PHP](c-wit-application-functions-20261127/ordinary.php-native.json) | 3 | Callback result | 4 |
 | [Perl](perl-forwarded-errors-20261127/ordinary-installed-comparison.json) | 3 | — | 3 |
 
-This brings the lower bound to **635/680 individual installed placements**:
-622 backed by pairs, plus 13 ordinary-only. **45** still lack an individual
-witness: 36 forwarded-function placements and nine resource placements.
-The paired figure is **622/680**; use the
+This brings the lower bound to **638/680 individual installed placements**:
+628 backed by pairs, plus 10 ordinary-only. **42** still lack an individual
+witness: 33 forwarded-function placements and nine resource placements.
+The paired figure is **628/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
@@ -355,6 +354,15 @@ To use the combined C/WIT release for C++ instead, set
 `LEAN_BRIDGE_CPP_APP_C` and `LEAN_BRIDGE_CPP_APP_C_SHA256` in place of the
 wheel settings. Both pkg-config and CMake clients then exercise the Ticket
 callback as well as function forwarding.
+
+The [reviewed C++ archive](c-wit-application-functions-20261127/reviewed.cpp.json)
+passed both link methods. Both executables observed the same forwarded 42,
+43 after catching the nested exception, and zero final owners as on the
+ordinary route. They also returned Tickets 43 and 72 through the reviewed
+package's additional callback; those resource positions were already covered.
+To compare the forwarding contracts and actual client reports, use the same
+`_SET` / `_REPORT` variables as for the wheel above and set
+`LEAN_BRIDGE_FORWARDING_TARGET=cpp`. The comparison reads the C++ SDKs directly.
 
 `test:c-family-application-from-c` packages and installs one Python wheel
 or Rust crate from the same verified C release. Set `LEAN_BRIDGE_FAMILY_APP_TARGET`
