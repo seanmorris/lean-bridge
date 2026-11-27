@@ -1,0 +1,35 @@
+{
+  "archive": {
+    "bytes": 53876258,
+    "path": "archives/tariff-quotes-1.0.0-cpp.tar.gz",
+    "sha256": "6746eabdaf377d0018a350cd02032446ce46abba0ad87e9d332f005cc70d1404"
+  },
+  "bindingIrSha256": "5b6915f584e13d8bd64d3660defd10da7ad623162dc5fbb227d035b2d3dbe001",
+  "componentSha256": "4ea3f5e0847fec16f8bca390776d643731b212cbbd6f0f8e070e5cf73cdcc8dc",
+  "methods": {
+    "cmake": {
+      "clientSha256": "32385f8568d4e789287eacc0801ee9960dc06d49ec11a2c81028d305019c1bc6",
+      "output": "expired\nforwarded:42\nforward\nafter-failure:43\nnested\nregistration expired after success\nregistration expired after failure\nfresh\nidentities:1,1,1,1,1,1,0"
+    },
+    "pkgConfig": {
+      "clientSha256": "4ed1f6e766aa029796298c551a96289fbcd254493c1c2a5fd37d6de15fa8cf19",
+      "output": "expired\nforwarded:42\nforward\nafter-failure:43\nnested\nregistration expired after success\nregistration expired after failure\nfresh\nidentities:1,1,1,1,1,1,0"
+    }
+  },
+  "receiptSha256": "c3d5efe644c8515af52efefa567e43c3dd8937847929f885aa5e9529c39f70db",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sourceSha256": "a5b7145185c50be1f7984d06b262556e5ef1ec94d67b8c9bab9dbb301b074415",
+  "sources": {
+    "CMakeLists.txt": "b6ed0e7334226072b1403e9b95273d49d970f717919066600becada880b990b1",
+    "tariff-application.cpp": "2b60b91cd0cea6bf6a02ed098255835ce63b44f726d2b4b7aa21473eba1f779c",
+    "tariff-cpp-probe.cpp": "a3b8242370c8225e4e760f9f6eee302959deb097aa481a76df2df3da9cb9625f"
+  },
+  "wheel": {
+    "bytes": 53901177,
+    "path": "archives/tariff_quotes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+    "sha256": "c4005779b0847aa6e883e77f0208e721373d9cd5e7c226082e1bf81751276c77"
+  },
+  "wheelReceiptSha256": "8462de399a433d41cc5f24c2a67aeb530172681823fd0e0124d0b55abb55a56d"
+}

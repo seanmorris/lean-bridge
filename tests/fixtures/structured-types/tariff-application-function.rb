@@ -62,6 +62,36 @@ module DirectQuoteConsumer
     else
       raise "recovery replaced the original failure"
     end
+    # The nested activation must not switch fibers or remove the outer
+    # guard when it returns. Unrelated threads still have independent fibers.
+    switched = false
+    switch = -> { Fiber.new { switched = true }.resume }
+    guarded = -> {
+      begin
+        switch.call
+      rescue FiberError => error
+        raise unless error.message.include?("without switching Fibers")
+      else
+        raise "callback switched fiber"
+      end
+    }
+    guarded_price = ->(n) { guarded.call; n + 30 }
+    outer = ->(q, n) {
+      raise unless q.call(n) == n + 30
+      guarded.call
+      raise unless Thread.new { Fiber.new { :ok }.resume }.value == :ok
+      n
+    }
+    raise unless api.visit_application_quote(guarded_price, outer, 9) == 9
+    raise if switched
+    raise unless Fiber.new { :released }.resume == :released
+    begin
+      catch(:escape) { api.visit_application_quote(->(_) { throw :escape }, reply, 1) }
+    rescue LocalJumpError
+      # A nonlocal exit is contained at the foreign callback boundary.
+    else
+      raise "nonlocal exit escaped callback"
+    end
     checkpoint.call
 
     genuine = api.make_tariff(900).quote

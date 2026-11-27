@@ -12,7 +12,8 @@ import {prepareStagedQuoteProject} from "./staged-quote-project.mjs";
 test("build both ordinary and reviewed Maven/Composer application-function handoffs",{timeout: 7_200_000},async t=>{
 	const parent=process.env.LEAN_BRIDGE_MANAGED_APPLICATION_KEEP;
 	assert.ok(parent,"supply an existing directory for the verified consumer handoffs");
-	const sets=await mkdtemp(join(resolve(parent),"sets-")),targets=["maven","php-native"];
+	const sets=await mkdtemp(join(resolve(parent),"sets-"));
+	const targets=process.env.LEAN_BRIDGE_MANAGED_APPLICATION_NUGET==="1"?["maven","nuget","php-native"]:["maven","php-native"];
 	t.diagnostic("Consumer handoffs: "+sets);
 	const digests=[];
 	for(const route of ["ordinary","reviewed"])

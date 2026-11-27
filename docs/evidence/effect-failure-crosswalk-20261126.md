@@ -85,6 +85,13 @@ errors, and mutated the declared error's sole payload from 23 to 42 through
 the peer. The payload was collected after release; neither component leaked
 a host identity. Run `npm run test:ruby-host-workers` to repeat the checks.
 
+An [ordinary forwarding gem](native-application-functions-20261127/ordinary.rubygems.json)
+also covers recoverable failure during same-frame reentry: it preserves the
+original Ruby exception, contains `throw` as `LocalJumpError`, and refuses
+fiber suspension without retiring the healthy outer session. The updated
+trace guard is part of the gem, not a modification to its compiled Lean
+component. This is not a new IO signature or evidence for the reviewed gem.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

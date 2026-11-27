@@ -83,8 +83,8 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		const build = await mkdtemp(join(work,route+"-install-")), repo = join(build,"m2"), handoff = join(build,"handoff");
 		await copyPackageSetHandoff(join(set,route),handoff);
 		const {receipt,result} = await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
-		if(application&&replay&&receipt.packages.length===2)
-			assert.deepEqual(receipt.packages.map(p=>p.target).sort(),["maven","php-native"]);
+		if(application&&replay&&receipt.packages.length>1)
+			assert.deepEqual(receipt.packages.map(p=>p.target).sort(),receipt.packages.length===2?["maven","php-native"]:["maven","nuget","php-native"]);
 		else assert.equal(receipt.packages.length,1);
 		const pkg = receipt.packages.find(p=>p.target==="maven");assert.ok(pkg);
 		assert.equal(pkg.name,"org.leanbridge:tariff-quotes"); assert.equal(pkg.version,"1.0.0");

@@ -18,7 +18,7 @@ test("ordinary and reviewed Composer consumers forward application functions and
 		const handoff=resolve(sets,route);
 		const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
 		const targets=receipt.packages.map(p=>p.target).sort();
-		assert.deepEqual(targets,targets.length===1?["php-native"]:["maven","php-native"]);
+		assert.deepEqual(targets,targets.length===1?["php-native"]:targets.length===2?["maven","php-native"]:["maven","nuget","php-native"]);
 		const pkg=receipt.packages.find(p=>p.target==="php-native"),profile=receipt.profiles.find(p=>p.id===pkg.profile);
 		const root=await mkdtemp(join(tmpdir(),"php-app-install-"));
 		try

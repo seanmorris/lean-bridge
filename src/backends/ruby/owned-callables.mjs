@@ -27,6 +27,10 @@ const support = `
               end
             end
           end
+          # require_open checked this frame's thread/fiber before dispatch.
+          # A forwarded callable can reenter this same frame. Its outer
+          # invocation already guards the thread until that block returns.
+          return yield if @trace.enabled?
           @trace.enable(target_thread: ::Thread.current) { yield }
         end
         def finish(status)

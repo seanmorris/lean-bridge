@@ -246,7 +246,7 @@ the observer recorded one live identity after each scenario and zero on
 shutdown. The [ordinary Rust crate](native-application-functions-20261127/ordinary.cargo.json)
 also passed. Cargo built the application and observer offline from the locked
 dependencies. Both executables ran after removing the build tree; the observer
-saw three live identities while a registration was held and zero at all seven
+saw three live identities while holding a known Lean tariff and zero at all seven
 cleanup checkpoints. The wheel and crate share a compiled Lean component but
 have distinct archives and downstream applications. Neither single-route pass
 counts as a paired placement.
@@ -284,16 +284,47 @@ the component and runtime and emits a distinct C++ archive. Both link methods
 exercise this installed archive. Its Lean source has the forwarding exports
 but not the newer Ticket exchange; the program checks borrow expiry after
 both success and failure instead. This is not a fresh C++-targeted author build.
+The [ordinary C++20 replay](native-application-functions-20261127/ordinary.cpp.json)
+used the same compiled Lean bytes as the wheel. Independently built pkg-config
+and CMake executables both observed 42 from the forwarded function, 43 after
+the nested failure, and zero live identities on shutdown. To replay an
+existing projection, set `LEAN_BRIDGE_CPP_APP_REPLAY_SHA256` to the C++ set's
+receipt hash in addition to the donor wheel's pin. This never overwrites the
+retained handoff.
+
+The same authenticated wheel can supply a new gem or NuGet package.
+Use `test:ruby-application-from-wheel` or `test:dotnet-application-from-wheel`
+with the corresponding `LEAN_BRIDGE_RUBY_APP_*` or `LEAN_BRIDGE_DOTNET_APP_*`
+settings in place of `LEAN_BRIDGE_CPP_APP_*`, a pinned private GMP kit, and
+the Ruby 3.3 or .NET 8 toolchain. Each projection gets its own package receipt;
+rebuilding a binding never changes the result recorded for an older archive.
+
+The original ordinary gem (`ea79cbe3…`) raised `ArgumentError` before a
+forwarded Ruby function could run: MRI would not re-enable the same
+thread-filtered `TracePoint`. The [corrected gem](native-application-functions-20261127/ordinary.rubygems.json)
+(`52cfb2dc…`) ran the same Lean component with a binding that reuses the
+already active guard. The [installed application](../../tests/fixtures/structured-types/tariff-application-function.rb)
+verified forwarding, nested exception identity, containment of a nonlocal
+exit, and rejection of fiber switches in both the inner and outer callback.
+An unrelated thread could switch fibers; the caller could too after return.
+The broker returned to its one-session baseline after every scenario and
+to zero on shutdown. The reviewed gem remains a separate qualification.
 
 For Java, Kotlin and native PHP, build **the same two author projects** for
 both Maven and Composer. Set `LEAN_BRIDGE_MANAGED_APPLICATION_KEEP` to an
 existing directory and run `npm run test:managed-application-packages`. The
 resulting `sets-*` directory contains one verified handoff per author route.
-The downstream checks run independently; neither requires rebuilding Lean:
+The downstream checks run independently without rebuilding Lean:
 
 - Set `LEAN_BRIDGE_JVM_APPLICATION_REPLAY` to that directory and run
   `npm run test:jvm-application-function-positions`. See the
   [JDK, Kotlin and Maven settings](jvm-function-fields-20261126.md).
+- To include NuGet, set `LEAN_BRIDGE_MANAGED_APPLICATION_NUGET=1` **before**
+  running the producer. Set `LEAN_BRIDGE_DOTNET_APPLICATION_REPLAY` to that
+  three-target handoff directory, then run `npm run test:dotnet-application-function-positions`.
+  The C# client runs again after removal of the build tree, with a runtime
+  containing no SDK. The C# compile-only check also includes the two direct
+  Ticket replies; compilation alone is not a passing installed result.
 - Set `LEAN_BRIDGE_PHP_APPLICATION_REPLAY` to the same directory and run
   `npm run test:php-application-function-positions`. The [PHP application](../../tests/fixtures/structured-types/tariff-application.php)
   runs from a relocated Composer installation. Set `LEAN_BRIDGE_PHP_HOST_INTERPRETERS`

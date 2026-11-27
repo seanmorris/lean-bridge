@@ -31,12 +31,18 @@ test("both author routes describe the same Ticket exchange and Lean reduces the 
 			, "php-native": {name: "example/tariff-quotes",version: "1.0.0"}});
 		assert.deepEqual({...managedConfig,targets: config.targets},config);
 		assert.equal(await readFile(join(managed,"Owned.lean"),"utf8"),src);
+		const net=join(work,route+"-with-nuget");
+		await prepareStagedQuoteProject(net,route,["maven","nuget","php-native"],{hostFunctions: true,ticketExchange: true});
+		assert.equal(await readFile(join(net,"Owned.lean"),"utf8"),src);
+		const withNet=JSON.parse(await readFile(join(net,"lean-bridge.exports.json")));
+		assert.deepEqual(withNet,{...managedConfig,targets: {...managedConfig.targets,nuget: {name: "tariff-quotes",version: "1.0.0"}}});
 		if(route==="ordinary")
 		{
 			assert.ok(["Owned.ticketSerial","Owned.exchangeTicket"].every(n=>config.exports.includes(n)));
 			await assert.rejects(readFile(join(path,"api.binding-ir.json")),{code: "ENOENT"});
 			await assert.rejects(readFile(join(managed,"api.binding-ir.json")),{code: "ENOENT"});
 			await assert.rejects(readFile(join(family,"api.binding-ir.json")),{code: "ENOENT"});
+			await assert.rejects(readFile(join(net,"api.binding-ir.json")),{code: "ENOENT"});
 		}
 		else
 		{
@@ -44,6 +50,7 @@ test("both author routes describe the same Ticket exchange and Lean reduces the 
 			const ir=JSON.parse(await readFile(join(path,"api.binding-ir.json")));
 			assert.deepEqual(JSON.parse(await readFile(join(managed,"api.binding-ir.json"))),ir);
 			assert.deepEqual(JSON.parse(await readFile(join(family,"api.binding-ir.json"))),ir);
+			assert.deepEqual(JSON.parse(await readFile(join(net,"api.binding-ir.json"))),ir);
 			validateOwnedAggregateBindingIr(ir);checkTicketExchangePositions(ir);
 			const id=ir.declarations.find(d=>d.name==="exchangeTicket").parameters[1].type.id;
 			const fn=ir.types.find(v=>v.id===id).callable;

@@ -76,6 +76,8 @@ test("installed native and Wasmtime packages forward the actual application func
 	const env=nativeFixtureEnvironment(["c"]),work=await mkdtemp(join(tmpdir(),"c-wit-functions-"));
 	t.after(()=>rm(work,{recursive: true,force: true}));
 	const replay=env.LEAN_BRIDGE_C_WIT_APP_REPLAY,keep=env.LEAN_BRIDGE_C_WIT_APP_KEEP;assert.ok(!(keep&&replay));
+	if(!replay)
+		for(const tool of [env.CXX??"c++","pkg-config","cmake"])await run(tool,["--version"],work,env);
 	const sets=replay?resolve(replay):await mkdtemp(join(keep??work,"sets-"));
 	const out=resolve(env.LEAN_BRIDGE_C_WIT_APP_OUTPUT??"build/c-wit-application-functions");
 	const results=[],failures=[];let activeTargets;

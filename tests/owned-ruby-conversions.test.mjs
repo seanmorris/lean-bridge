@@ -11,6 +11,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
 import { generateOwnedRubyConversions } from "../src/backends/ruby/owned-conversions.mjs";
 import { ownedRubyRuntime } from "../src/backends/ruby/owned-runtime.mjs";
+import { ownedRubyCallbacks } from "../src/backends/ruby/owned-callables.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
@@ -27,6 +28,51 @@ test("Ruby owned adapters keep bounded exact conversions and private pointer cal
 	assert.match(model.cSource, /host->call\(host->context, session/u);
 	assert.match(model.cSource, /host1->call \? \(void \*\)host1 : host1->context/u);
 	assert.match(ownedRubyRuntime(model.c.prefix), /handle_interrupt\(::Object => :never/u);
+});
+
+test("the Ruby callback frame keeps the outer thread guard across nested success and failure", {
+	skip: !process.env.LEAN_BRIDGE_RUBY
+}, async () => {
+	const support = ownedRubyCallbacks({ c: {} }, { callbacks: [] }, {});
+	const program = `module Owned
+  def self.checkpoint; end
+  ${support}
+end
+scope = Object.new
+def scope.charge(kind, bytes)
+  raise unless kind == :storage && bytes == 512 && !@charged
+  @charged = true
+end
+frame = Owned::CallFrame.new(nil, scope)
+forbidden = -> {
+  begin
+    Fiber.new { raise "switched fiber in a callback" }.resume
+  rescue FiberError => e
+    raise unless e.message.include?("without switching Fibers")
+  end
+}
+original = RuntimeError.new("inner error")
+begin
+  frame.invoke do
+    raise unless frame.invoke { forbidden.call; 42 } == 42
+    begin
+      frame.invoke { raise original }
+    rescue RuntimeError => error
+      raise unless error.equal?(original)
+    end
+    forbidden.call
+    raise unless Thread.new { Fiber.new { 43 }.resume }.value == 43
+    raise original
+  end
+rescue RuntimeError => error
+  raise unless error.equal?(original)
+end
+raise unless Fiber.new { 44 }.resume == 44
+raise unless frame.invoke { forbidden.call; 45 } == 45
+frame.close
+raise unless Fiber.new { 46 }.resume == 46`;
+	const result = await runCopied(process.env.LEAN_BRIDGE_RUBY, ["--disable-gems", "-e", program], process.cwd());
+	assert.equal(result.stderr, "");
 });
 
 for(const scalar of [true, false]) for(const reviewed of [false, true]) test(`Ruby ${scalar ? "scalar" : "composed"} conversions execute compiled Lean (${reviewed ? "reviewed" : "ordinary"})`, {
