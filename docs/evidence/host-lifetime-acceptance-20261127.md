@@ -37,6 +37,34 @@ only**. A [separate executed TypeScript client](typescript-ticket-positions-2026
 establishes managed transfer and rollback for a Ticket inside a record; it is
 not evidence about the anchor of a named method result.
 
+## Running the TypeScript receiver client
+
+The [strict TypeScript program](../../tests/fixtures/structured-types/receiver-lifetime.mts)
+imports the installed Ticket API. It runs as emitted JavaScript after the
+producer and private package feed have been removed. A test-only observer
+reads the real ownership broker; the program needs no handles or dispatch code.
+
+- Sharing a Ticket kept its borrowed child usable. Dropping the last shared
+  owner expired both borrowed views, while an independent retain still read 41.
+- A result borrowed from a method's argument still read 73 after the receiver
+  was dropped. Dropping the argument then invalidated the result.
+- A consuming method returned 99 and invalidated its original receiver, the
+  shared alias and the borrowed dependent. All six expired views rejected
+  property access. The [ordinary](typescript-receiver-lifetime-20261127/ordinary.json)
+  and [reviewed](typescript-receiver-lifetime-20261127/reviewed.json)
+  packages ran identical emitted code against different verified archives.
+  Each observed one native Ticket identity while held, zero after release,
+  and zero after shutting down the binding.
+
+Run `npm run test:typescript-receiver-lifetime` with the owned npm publisher's
+Lean and wasm32 toolchains to build ordinary and reviewed packages. Set
+`LEAN_BRIDGE_TS_RECEIVER_OUTPUT` to a fresh directory to retain the package
+sets and execution reports. To run the client again against the same archives,
+set `LEAN_BRIDGE_TS_RECEIVER_REPLAY` to the retained directory; no Lean
+compiler or Emscripten SDK is needed for replay. Node, npm and the checkout's
+TypeScript compiler are still required. A second offline installation with
+only Node and npm on `PATH` reproduced both JSON reports byte for byte.
+
 ## Other lifetime requirements
 
 - **Identity across components, mutable objects and wrong-runtime use:**

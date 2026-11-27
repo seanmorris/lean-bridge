@@ -10,8 +10,9 @@ These are local qualifications, not a promotion of today's release archives.
 
 **Current installed coverage: 136/136.** The smaller totals below record
 earlier checkpoints. All 17 profiles passed the four signatures on both
-author routes. Node #1223 still depends on #1221 for ownership and #1222
-for effects.
+author routes. The [ownership review](host-lifetime-acceptance-20261127.md)
+and [failure review](effect-failure-crosswalk-20261126.md) establish how the
+same kinds of values survive cancellation and failure.
 
 | Consumer profile | Task, cancellation and iterator witness | Nested callback or teardown witness |
 | --- | --- | --- |
@@ -653,6 +654,5 @@ supported, or that every source revision is interchangeable.
   rejects pending and future work; unlike a live heap, it cannot be
   inspected for a zero owner count.
 
-Resolve [ownership](host-lifetime-acceptance-20261127.md) and
-[failure handling](effect-failure-crosswalk-20261126.md) before closing
-#1223. The full exact-release matrix belongs to #1224.
+The local family checks establish the behavior of the recorded packages.
+The full exact-release matrix belongs to #1224.

@@ -36,3 +36,6 @@ The prior PHP-Wasm receipt remains unchanged. The support inventory refreshes
 source hashes without promoting unrelated cells. This receipt does not claim
 an independent clean rebuild, Docker acceptance, WIT/WASI transfers or
 owner-anchored borrowed results.
+
+Later TypeScript programs ran a [rejected and successful Ticket transfer](typescript-ticket-positions-20261126.md#a-ticket-inside-a-claim)
+and a [consuming method with live aliases](host-lifetime-acceptance-20261127.md#running-the-typescript-receiver-client).

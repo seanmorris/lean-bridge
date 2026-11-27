@@ -9,7 +9,8 @@ a broken runtime safe to reuse.
 
 **Current installed coverage: 102 of 102** — 34 immediate IO, 34 typed
 EIO and 34 named-error combinations. Each is one of 17 profiles on one of
-two authoring routes. VO #1222 still depends on the ownership gate (#1221).
+two authoring routes. The [ownership review](host-lifetime-acceptance-20261127.md)
+records the lifetime rules used by these failure paths.
 The smaller totals below show how that evidence accumulated.
 
 **Disposal during a recoverable callback failure:** On the
@@ -590,6 +591,6 @@ For native profiles, check each runtime's fatal policy against the actual
 injector: a direct request to retire does not show what initiates retirement.
 For non-scalar failures, match the installed payload's owner, lifetime and
 error channel to #1221; returning copied bytes is not a test of a live
-resource surviving a thrown error. Reconcile the #1221 ownership dependency
-before closing #1222. The exact-release gate
-belongs to #1224.
+resource surviving a thrown error. The installed last-owner tests above
+exercise the #1221 ownership contract during failure. The exact-release
+gate belongs to #1224.

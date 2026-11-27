@@ -50,3 +50,6 @@ CI enforces the enabled TAP totals and preserves all eleven execution reports.
 WIT/WASI owner anchors, receiver/callback-result anchors and the final
 cross-language Docker audit remain separate work. This receipt does not claim
 registry publication or promote unrelated support-table cells.
+
+For a later TypeScript client that reads a borrowed result before and after
+dropping its argument owner, see the [installed receiver check](host-lifetime-acceptance-20261127.md#running-the-typescript-receiver-client).
