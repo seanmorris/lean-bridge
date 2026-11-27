@@ -8,7 +8,7 @@ import {copiedCleanEnvironment} from "./copied-fixture-install.mjs";
 import {saveLakeFile} from "./lake-workspace.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {installPythonWheel} from "./python-wheel-install.mjs";
-import {checkApplicationFunctionPositions,checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
+import {checkApplicationFunctionPositions,checkStagedQuoteIdentities,checkTicketExchangePositions} from "./staged-quote-project.mjs";
 
 const fixture=resolve("tests/fixtures/structured-types");
 const json=async path=>JSON.parse(await readFile(path));
@@ -27,9 +27,10 @@ const validate=async(o,root,meta)=>{
 	await verifyNativeFiles(root,inventory.files);
 	const component=join(meta,"component"), model=await json(join(component,"model.json"));
 	const ir=await json(join(component,"binding-ir.json")), native=await json(join(component,"native-component.json"));
-	const options=o.application?{hostFunctions: true}:{incoming: true};
+	const options=o.application?{hostFunctions: true,ticketExchange: Boolean(o.tickets)}:{incoming: true};
 	const pins=checkStagedQuoteIdentities(model,ir,o.profile,o.route,options);
 	if(o.application) checkApplicationFunctionPositions(ir);
+	if(o.tickets)checkTicketExchangePositions(ir);
 	const decl=o.application?"Owned.visitApplicationQuote":"Owned.visitQuote";
 	const d=ir.declarations.find(x=>x.source.declaration===decl);
 	const outer=ir.types.find(t=>t.id===d.parameters[1].type.id), arg=outer.callable.parameters[0];
@@ -72,10 +73,18 @@ const ruby=async o=>{
 	const pins=await validate(o,root,join(root,"lean-bridge")),[clientSha256,observerSha256]=await files(app,"rb",o.application);
 	const observe='load "./tariff-incoming-observer.rb";rt=LeanBridge::TariffQuotes.const_get(:Native,false).instance_variable_get(:@runtime);'
 		+'libs=Dir[File.join(root,"lib/**/liblean_bridge_native.so")];raise "expected one broker" unless libs.one?;'
-		+'DirectQuoteObserver.observe("./tariff-incoming.rb",rt,Fiddle.dlopen(libs.first))';
+		+'DirectQuoteObserver.observe(ARGV.fetch(0),rt,Fiddle.dlopen(libs.first))';
 	await rm(archive);
-	const observed=JSON.parse(await run(rb,["-e",boot+observe],app,clean));assert.deepEqual(observed,idle);
-	return {...pins,clientSha256,observerSha256,ruby: await run(rb,["-v"],app,clean),observed};
+	const inspect=async file=>JSON.parse(await run(rb,["-e",boot+observe,file],app,clean));
+	const observed=await inspect("./tariff-incoming.rb");assert.deepEqual(observed,idle);
+	const extra={};
+	if(o.tickets)
+	{
+		const name="tariff-ticket-application.rb";await copyFile(join(fixture,name),join(app,name));
+		extra.ticketClientSha256=sha256(await readFile(join(app,name)));
+		extra.ticketObserved=await inspect("./"+name);assert.deepEqual(extra.ticketObserved,idle);
+	}
+	return {...pins,clientSha256,observerSha256,ruby: await run(rb,["-v"],app,clean),observed,...extra};
 };
 const rust=async o=>{
 	const {app,archive,env,dependencies}=o, build=join(app,"build");

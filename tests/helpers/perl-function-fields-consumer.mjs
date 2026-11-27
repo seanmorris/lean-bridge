@@ -22,8 +22,9 @@ export const hostFixture = resolve("tests/fixtures/structured-types/tariff-host-
  * @param modes - Component installation modes to exercise.
  * @param packageRoot - Original component manifest for the installed-payload trace.
  * @param incoming - Exercise a function passed directly into the installed callback.
+ * @param options - Optional forwarding client and per-mode progress/error handlers.
  */
-export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,packageRoot,incoming=false) => {
+export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,packageRoot,incoming=false,options={}) => {
 	const work = await mkdtemp(join(root,"cpan-")), deployment = join(work,"relocated");
 	try
 	{
@@ -43,8 +44,7 @@ export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,
 		const borrowed=join(work,"host-fields.pl");
 		if(hostInputs) await copyFile(hostFixture,borrowed);
 		const results=[];
-		for(const mode of modes)
-		{
+		const exercise=async mode=>{
 			const component=await mount("component",mode,mode,runtime);
 			const child = {PERL5LIB: [component,runtime].join(":")
 				, PATH: "/no-author-tools", LANG: "C.UTF-8", LEAN_NUM_THREADS: "1"
@@ -74,7 +74,22 @@ export const installPerlTariff = async (root,packages,perl,env,hostInputs,modes,
 				record.hostInputs=result;
 			}
 			if(incoming) record.direct=await runPerlIncoming(work,perl,child);
-			results.push(record);
+			if(options.application) record.application=await runPerlIncoming(work,perl,child,true);
+			return record;
+		};
+		for(const mode of modes)
+		{
+			let record;
+			try
+			{
+				record=await exercise(mode);
+			}
+			catch(error)
+			{
+				if(!options.onModeError)throw error;
+				await options.onModeError(mode,error);continue;
+			}
+			await options.onResult?.(mode,record);results.push(record);
 		}
 		return results;
 	} finally

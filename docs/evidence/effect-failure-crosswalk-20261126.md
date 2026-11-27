@@ -92,6 +92,15 @@ fiber suspension without retiring the healthy outer session. The updated
 trace guard is part of the gem, not a modification to its compiled Lean
 component. This is not a new IO signature or evidence for the reviewed gem.
 
+For failures with a resource reply, the [ordinary C11](c-wit-application-functions-20261127/ordinary.c.json)
+and [Wasmtime](c-wit-application-functions-20261127/ordinary.wit-wasi.json)
+clients gave the adapter an allocated reply and then returned a failure
+status. The public call returned `CALLBACK_FAILED`, left the result owner
+empty and the caller's output untouched. Both the input and fallback Tickets
+remained usable. In the [ordinary Ruby gem](c-wit-application-functions-20261127/ordinary.rubygems.json),
+the callback raised a Ruby exception instead: the application caught that
+same object and successfully retried. Neither outcome is a fatal runtime trap.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

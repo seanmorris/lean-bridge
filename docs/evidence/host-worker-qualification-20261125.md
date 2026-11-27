@@ -136,12 +136,12 @@ Match the newer reports against the particular cell they exercise:
 - For a **Lean function as a callback result**, see the direct staged-reply
   installs below (17 profiles on both routes). For a **Lean function as a
   callback parameter**, use the [incoming-function releases](npm-incoming-functions-20261126.md)
-  instead. Both routes have installed passes for **16 of 17 profiles** in
+  instead. Both routes have installed passes for **all 17 profiles** in
   that incoming direction: five npm profiles, C11, C++20, the
   [Python, Ruby and Rust clients](npm-incoming-functions-20261126.md#installed-python-ruby-and-rust-clients),
   [C#, Java, Kotlin and native PHP](npm-incoming-functions-20261126.md#installed-c-java-kotlin-and-native-php-clients),
-  and [Perl and PHP-Wasm](npm-incoming-functions-20261126.md#installed-perl-and-php-wasm-clients).
-  WIT/WASI is the remaining profile for this position. An
+  [Perl and PHP-Wasm](npm-incoming-functions-20261126.md#installed-perl-and-php-wasm-clients),
+  and [WIT/WASI through Wasmtime](wit-function-fields-20261126.md). An
   application supplying its own callable as the *reply* is a
   different cell. For example, the [CPython staged-reply client](python-staged-callback-results-20261125.md)
   returns a Lean function and rejects a Python lambda.
@@ -200,6 +200,27 @@ Each listed profile needs results from both authoring routes.
 For example, C already has a distinct resource reply but lacks a qualifying
 argument; Kotlin needs both. A single installed workload can exercise all
 three rows, but only its previously uncredited positions increase the total.
+
+### What has passed on just the ordinary route?
+
+Six profiles now have ordinary-package evidence inside that 92-placement
+gap. Count each profile and position once, even if multiple archives or
+build tools exercised it:
+
+| Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
+| --- | ---: | --- | ---: |
+| [C11](c-wit-application-functions-20261127/ordinary.c.json) | 3 | argument (reply was already paired) | 4 |
+| [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
+| [Python](native-application-functions-20261127/ordinary.pypi.json) | 3 | — | 3 |
+| [Ruby](c-wit-application-functions-20261127/ordinary.rubygems.json) | 3 | argument and reply | 5 |
+| [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
+| [WIT/WASI](c-wit-application-functions-20261127/ordinary.wit-wasi.json) | 3 | argument and reply | 5 |
+
+This brings the lower bound to **611/680 individual installed placements**:
+588 backed by pairs, plus 23 ordinary-only. **69** still lack an individual
+witness in this tally. The paired figure remains **588/680**; use the
+reviewed install to complete each pair. Neither number counts lifetime or
+error assertions, or qualifies a hosted release.
 
 ### Reproducing application-provided function crossings
 
@@ -272,6 +293,27 @@ attributing a C++ result to it. Supply an existing scratch directory in
 without recompiling Lean. The smaller `test:c-wit-application-function-interfaces`
 check compiles the clients against all three headers; it does not execute them.
 
+The [ordinary C11 run](c-wit-application-functions-20261127/ordinary.c.json)
+and [ordinary Wasmtime run](c-wit-application-functions-20261127/ordinary.wit-wasi.json)
+used the public C interfaces in two distinct archives from the same release.
+Both forwarded the application function, recovered from a nested failure,
+observed Tickets 42 and 71 inside the callback, and returned different Tickets
+(43 and 72) rather than the recovery Ticket 800. The live count fell to zero
+at shutdown. To audit those results, set `LEAN_BRIDGE_C_WIT_APP_REPLAY` to
+the retained sets directory, `LEAN_BRIDGE_C_WIT_APP_OUTPUT` to the reports
+directory and run `npm run test:c-wit-application-receipts`. Set
+`LEAN_BRIDGE_C_WIT_APP_AUDIT_ROUTE=ordinary` to inspect only the first
+route. This checks the archive, user source, compiled interface, source hashes
+and installed output, plus the actual WIT world and Wasm binary.
+
+The [ordinary MRI 3.3.12 gem from that C release](c-wit-application-functions-20261127/ordinary.rubygems.json)
+ran the forwarding and Ticket clients in separate relocated processes.
+The [Ticket application](../../tests/fixtures/structured-types/tariff-ticket-application.rb)
+read the incoming handle, returned a distinct Ticket, propagated the exact
+Ruby exception on failure and repeated the successful exchange. After each
+scenario the observer saw one live session; shutdown removed it. These are
+single-route results until the reviewed releases pass.
+
 An alternative C++ run reuses the compiled Lean component in a retained
 Python wheel without running Python or rebuilding Lean. Set
 `LEAN_BRIDGE_CPP_APP_WHEEL` to its complete native package handoff,
@@ -298,6 +340,28 @@ with the corresponding `LEAN_BRIDGE_RUBY_APP_*` or `LEAN_BRIDGE_DOTNET_APP_*`
 settings in place of `LEAN_BRIDGE_CPP_APP_*`, a pinned private GMP kit, and
 the Ruby 3.3 or .NET 8 toolchain. Each projection gets its own package receipt;
 rebuilding a binding never changes the result recorded for an older archive.
+To include direct Ticket callbacks, select the combined C/WIT handoff instead
+of a wheel: use `*_APP_C` and `*_APP_C_SHA256` in place of the two
+`*_APP_WHEEL` settings. Ruby and .NET use the same restored native inputs.
+For CPAN, use `test:perl-application-from-c` with `LEAN_BRIDGE_PERL_APP_C`,
+`LEAN_BRIDGE_PERL_APP_C_SHA256`, `LEAN_BRIDGE_PERL_APP_ROUTE` and a fresh
+`LEAN_BRIDGE_PERL_APP_OUTPUT`. Set `LEAN_BRIDGE_PERLS` to the four ABI
+interpreter paths. The runner produces separate component and runtime archives,
+then exercises both prebuilt and generated XS installs. Set `*_APP_REPLAY_SHA256`
+to replay a previously retained destination receipt. Optional
+`LEAN_BRIDGE_PERL_APP_ABI` and `LEAN_BRIDGE_PERL_APP_MODE` select one result;
+a partial replay does not establish full Perl coverage.
+
+PHP-Wasm uses a separate wasm32 Zend extension. `npm run test:php-wasm-application-function-interfaces`
+compiles its C transport and inspects the PHP functions in a real PHP 8.4 VM.
+Use `npm run test:php-wasm-application-function-positions` for the installed
+test: the [wasm32 PHP caller](../../tests/fixtures/structured-types/tariff-zend-application.php)
+must forward its own function, preserve a nested exception, reject expired
+registrations, and survive a binding shutdown and VM refresh. The runner
+requires embedded and Composer installations, on startup and on demand in both
+Node and Chromium. Set `LEAN_BRIDGE_ZEND_TARIFF_KEEP` to retain the releases
+or `LEAN_BRIDGE_ZEND_TARIFF_REPLAY` to reuse them; select a single author
+with `LEAN_BRIDGE_ZEND_TARIFF_ROUTE` for a partial run.
 
 The original ordinary gem (`ea79cbe3…`) raised `ArgumentError` before a
 forwarded Ruby function could run: MRI would not re-enable the same

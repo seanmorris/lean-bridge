@@ -6,7 +6,7 @@ import {nativeSharedRuntimeHeader} from "../../src/build/native-component.mjs";
 import {readVerifiedNativeRuntime,readVerifiedNativeComponent} from "../../src/build/native-artifacts.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
 import {runNativeTool} from "./native-effect-consumers.mjs";
-import {checkApplicationFunctionPositions,checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
+import {checkApplicationFunctionPositions,checkStagedQuoteIdentities,checkTicketExchangePositions} from "./staged-quote-project.mjs";
 
 const json=async p=>JSON.parse(await readFile(p));
 const restore=async(src,dst)=>{
@@ -33,19 +33,32 @@ export const restoreApplicationWheel=async(work,handoff,pin,route,leanPrefix)=>{
 	assert.ok(entries.length&&entries.every(p=>[dist,mod].includes(p.split("/")[0])&&p.split("/").every(s=>/^[A-Za-z0-9_+.-]+$/u.test(s)&&s!=="."&&s!=="..")));
 	assert.equal(new Set(entries).size,entries.length);
 	await runNativeTool("unzip",["-q",file],work,process.env);
-	const base=join(work,mod),share=join(base,"lean_bridge"),libs=join(base,"native/linux-x64"),meta=join(share,"component");
+	const base=join(work,mod),share=join(base,"lean_bridge"),libs=join(base,"native/linux-x64"),licenses=join(work,dist,"licenses");
+	const payload=await restoreApplicationPayload({work,leanPrefix,share,libs,licenses,pkg,receipt,route,tickets: false});
+	return {...payload,wheel: artifact,receiptSha256: pin};
+};
+
+/**
+ * Reconstitute producer inputs from a native distribution. The same component
+ * and runtime verifiers authenticate the layout regardless of the host package.
+ *
+ * @param options - Unpacked metadata, library and notice roots and expected author contract.
+ */
+export const restoreApplicationPayload=async options=>{
+	const {work,leanPrefix,share,libs,licenses,pkg,receipt,route,tickets}=options,meta=join(share,"component");
 	const nativeRoot=join(work,"component"),runtimeRoot=join(work,"runtime");
 	const model=await json(join(meta,"model.json")),ir=await json(join(meta,"binding-ir.json"));
-	checkStagedQuoteIdentities(model,ir,receipt.profiles.find(p=>p.id===pkg.profile),route,{hostFunctions: true});checkApplicationFunctionPositions(ir);
+	checkStagedQuoteIdentities(model,ir,receipt.profiles.find(p=>p.id===pkg.profile),route,{hostFunctions: true,ticketExchange: tickets});
+	checkApplicationFunctionPositions(ir);if(tickets)checkTicketExchangePositions(ir);
 	const source=model.sourceIdentity.modules.find(m=>m.module==="Owned").source;
-	assert.equal(source.path,"Owned.lean");assert.equal(source.sha256,"a5b7145185c50be1f7984d06b262556e5ef1ec94d67b8c9bab9dbb301b074415");
+	assert.equal(source.path,"Owned.lean");assert.equal(source.sha256,tickets?"a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb":"a5b7145185c50be1f7984d06b262556e5ef1ec94d67b8c9bab9dbb301b074415");
 	assert.equal(model.sourceIdentity.sourceTreeSha256,receipt.source.treeSha256);
 	const component=await json(join(meta,"native-component.json")),inventory=await json(join(meta,"artifacts.json"));
 	for(const name of ["artifacts.json",...Object.keys(inventory.files)])
 	{
 		const notice=name==="source-notices.json"||/^source-notices\/[a-f0-9]{64}\.txt$/u.test(name);
 		assert.ok(notice||basename(name)===name&&/^[\w.-]+$/u.test(name)&&name!=="."&&name!=="..");
-		await restore(join(notice?join(work,dist,"licenses"):name===component.library?libs:meta,name),join(nativeRoot,name));
+		await restore(join(notice?licenses:name===component.library?libs:meta,name),join(nativeRoot,name));
 	}
 	await restore(join(share,"runtime.json"),join(runtimeRoot,"runtime.json"));
 	const runtime=await json(join(runtimeRoot,"runtime.json"));
@@ -63,5 +76,5 @@ export const restoreApplicationWheel=async(work,handoff,pin,route,leanPrefix)=>{
 	const {identity}=await readVerifiedNativeRuntime(runtimeRoot);assert.equal(identity,pkg.runtimeIdentity);
 	const verified=await readVerifiedNativeComponent(nativeRoot,identity,{ownedGraphs: true,ownedHostCallbacks: true});
 	assert.deepEqual(verified.model,model);assert.deepEqual(verified.receipt,component);
-	return {nativeRoot,runtimeRoot,model,runtimeIdentity: identity,sourceSha256: source.sha256,wheel: artifact,receiptSha256: pin};
+	return {nativeRoot,runtimeRoot,model,runtimeIdentity: identity,sourceSha256: source.sha256};
 };

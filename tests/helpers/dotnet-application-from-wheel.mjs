@@ -7,7 +7,7 @@ import test from "node:test";
 import {projectOwnedDotnet} from "../../src/build/owned-dotnet-projection.mjs";
 import {generateOwnedDotnetPackage} from "../../src/backends/dotnet/owned-package.mjs";
 import {canonicalJson} from "../../src/capsule/node.mjs";
-import {projectApplicationWheel} from "./application-wheel-projection.mjs";
+import {projectApplicationPackage} from "./application-package-projection.mjs";
 import {runDotnetApplication} from "./dotnet-application-client.mjs";
 import {saveLakeFile} from "./lake-workspace.mjs";
 import {runCopied} from "./copied-fixture-install.mjs";
@@ -28,13 +28,15 @@ test("C# public interfaces support the forwarded delegate and direct Ticket clie
 
 test("runtime-only C# application uses host delegates forwarded by the installed NuGet package",async t=>{
 	const env=process.env,root=env.LEAN_BRIDGE_DOTNET_APP_OUTPUT,route=env.LEAN_BRIDGE_DOTNET_APP_ROUTE;
-	const handoff=env.LEAN_BRIDGE_DOTNET_APP_WHEEL,pin=env.LEAN_BRIDGE_DOTNET_APP_WHEEL_SHA256,leanPrefix=env.LEAN_BRIDGE_LEAN_PREFIX;
+	const c=env.LEAN_BRIDGE_DOTNET_APP_C;assert.ok(!(c&&env.LEAN_BRIDGE_DOTNET_APP_WHEEL),"select only one donor");
+	const handoff=c??env.LEAN_BRIDGE_DOTNET_APP_WHEEL,pin=c?env.LEAN_BRIDGE_DOTNET_APP_C_SHA256:env.LEAN_BRIDGE_DOTNET_APP_WHEEL_SHA256;
+	const leanPrefix=env.LEAN_BRIDGE_LEAN_PREFIX,donorTarget=c?"c":"pypi";
 	assert.ok(root&&["ordinary","reviewed"].includes(route)&&handoff&&pin&&leanPrefix&&env.LEAN_BRIDGE_DOTNET);
 	const work=await mkdtemp(join(tmpdir(),"dotnet-forward-"));t.after(()=>rm(work,{recursive: true,force: true}));
 	const project=async o=>[await projectOwnedDotnet({...o,settings: {name: "tariff-quotes",version: "1.0.0"}})];
 	const replayPin=env.LEAN_BRIDGE_DOTNET_APP_REPLAY_SHA256;
-	const {set,pkg,profile,row}=await projectApplicationWheel({work,root,handoff,pin,route,leanPrefix,target: "nuget",project,replayPin});
-	const checked=await runDotnetApplication({work,set,pkg,profile,route,env,tickets: false});
+	const {set,pkg,profile,row}=await projectApplicationPackage({work,root,handoff,pin,route,leanPrefix,target: "nuget",project,replayPin,donorTarget});
+	const checked=await runDotnetApplication({work,set,pkg,profile,route,env,tickets: Boolean(c)});
 	assert.equal(checked.componentSha256,row.componentSha256);
 	await saveLakeFile(root,route+".json",canonicalJson({...row,...checked}));
 	t.diagnostic(route+": "+row.receiptSha256);

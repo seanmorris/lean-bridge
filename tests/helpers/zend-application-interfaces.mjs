@@ -1,0 +1,50 @@
+/** @file Compile the wasm32 Zend transport and inspect its PHP-facing forwarding interface, without claiming installation. */
+import assert from "node:assert/strict";
+import {mkdtemp,readFile,rm} from "node:fs/promises";
+import {tmpdir} from "node:os";
+import {join,resolve} from "node:path";
+import test from "node:test";
+import {pathToFileURL} from "node:url";
+import {createOwnedPhpWasmModel,generateOwnedPhpWasmLeanAdapters} from "../../src/build/php-wasm-owned-model.mjs";
+import {generateCompiledPhpWasmOwned} from "../../src/build/php-wasm-owned-component.mjs";
+import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {saveLakeFile} from "./lake-workspace.mjs";
+import {runNativeTool as run} from "./native-effect-consumers.mjs";
+import {checkApplicationFunctionPositions,checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
+
+test("the real wasm32 PHP interpreter exposes the generated application-function interface",async t=>{
+	const env=process.env,set=env.LEAN_BRIDGE_ZEND_APP_WHEEL,pin=env.LEAN_BRIDGE_ZEND_APP_WHEEL_SHA256,route=env.LEAN_BRIDGE_ZEND_APP_ROUTE;
+	assert.ok(set&&pin&&["ordinary","reviewed"].includes(route));
+	const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(set,"package-set-receipt.json")});assert.equal(result.receiptSha256,pin);
+	const pkg=receipt.packages.find(p=>p.target==="pypi");assert.ok(pkg);assert.equal(pkg.name,"tariff-quotes");
+	const work=await mkdtemp(join(tmpdir(),"zend-forward-types-"));t.after(()=>rm(work,{recursive: true,force: true}));
+	const meta=async n=>JSON.parse(await run("unzip",["-p",join(set,pkg.artifacts[0].path),"lean_tariff_quotes/lean_bridge/component/"+n+".json"],work,env));
+	const [original,metadata,ir]=await Promise.all(["model","metadata","binding-ir"].map(meta));
+	checkStagedQuoteIdentities(original,ir,receipt.profiles.find(p=>p.id===pkg.profile),route,{hostFunctions: true});
+	assert.equal(original.sourceIdentity.modules.find(m=>m.module==="Owned").source.sha256,"a5b7145185c50be1f7984d06b262556e5ef1ec94d67b8c9bab9dbb301b074415");
+	const model=createOwnedPhpWasmModel({component: original.component,metadata,sourceIdentity: original.sourceIdentity});
+	checkApplicationFunctionPositions(model.bindingIr);
+	const adapters=generateOwnedPhpWasmLeanAdapters(model),graph=generateCompiledPhpWasmOwned(model,metadata,adapters);
+	for(const [n,v] of Object.entries({...graph.files,"component.h": adapters.header}))await saveLakeFile(work,n,v);
+	const kit=resolve(env.LEAN_BRIDGE_PHP_INPUTS),headers=join(kit,"php"),sdk=resolve(env.LEAN_BRIDGE_PHP_EMSDK);
+	const roots=[work,join(work,"owned"),join(kit,"runtime/include"),headers,...["Zend","main","TSRM","ext"].map(n=>join(headers,n))];
+	const args=["-fsyntax-only","-DLEAN_EMSCRIPTEN","-fbracket-depth=4096",...roots.flatMap(p=>["-I",p]),"extension/"+graph.manifest.extension+".c","owned/callbacks.c"];
+	await run(join(sdk,"upstream/emscripten/emcc"),args,work,{...env,EM_CONFIG: join(sdk,".emscripten"),EMSDK: sdk});
+	const {PhpNode}=await import(pathToFileURL(join(resolve(env.LEAN_BRIDGE_PHP_WASM_HOST),"PhpNode.mjs")));
+	const vm=new PhpNode({version: "8.4",autoTransaction: false});let output="",errors="";
+	vm.addEventListener("output",e=>{output+=e.detail.join("");});vm.addEventListener("error",e=>{errors+=e.detail.join("");});
+	await vm.binary;await vm.mkdir("/api");await vm.mkdir("/api/Internal");
+	for(const [n,v] of Object.entries(graph.files))if(n.startsWith("src/"))await vm.writeFile("/api/"+n.slice(4),v);
+	const client=await readFile("tests/fixtures/structured-types/tariff-zend-application.php","utf8");
+	// Parse the real caller with wasm32 PHP, without executing a pretend binding.
+	assert.ok(client.includes("declare(strict_types=1);"));
+	await vm.writeFile("/caller.php",client.replace("declare(strict_types=1);","declare(strict_types=1); return;"));
+	const program=String.raw`<?php require '/api/Api.php'; require '/caller.php';
+if (PHP_INT_SIZE!==4 || intdiv(PHP_VERSION_ID,100)!==804) throw new LogicException('wrong interpreter');
+$f=static fn($n)=>new ReflectionFunction('LeanTariffQuotes\\'.$n);
+$arity=[]; foreach (['pass_application_quote','visit_application_quote','staged_quote','with_recovery'] as $n) $arity[]=$f($n)->getNumberOfRequiredParameters();
+$cls=$f('pass_application_quote')->getReturnType()->getName(); foreach (['__invoke','retain','close'] as $m) if (!(new ReflectionMethod($cls,$m))->isPublic()) throw new LogicException($m);
+echo json_encode([$arity,$f('visit_application_quote')->getReturnType()->getName(),function_exists('prices')]);`;
+	const status=await vm.run(program);assert.equal(status,0,errors+output);assert.equal(errors,"");
+	assert.deepEqual(JSON.parse(output),[[1,3,3,2],"Brick\\Math\\BigInteger",true]);
+});

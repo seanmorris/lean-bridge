@@ -35,6 +35,14 @@ test("Perl XS compares live callback argument identities without result anchors"
 	await compileXs(t,model,[]);
 });
 
+test("Perl XS compiles the public application-coderef and direct Ticket exchange entry points", {timeout: 300000}, async t=>{
+	const ir=leasedClosureFieldReviewedIr({staged: true,hostFunctions: true,ticketExchange: true});
+	const model=generateOwnedPerlXs(ir,"LeanBridge::TariffQuotes");
+	for(const name of ["pass_application_quote","visit_application_quote","staged_quote","new_ticket","exchange_ticket","ticket_serial"])
+		assert.ok(model.functions.some(fn=>fn.publicName===name),name);
+	await compileXs(t,model,[]);
+});
+
 /**
  * Compile the generated XS against the matching public C header.
  *
