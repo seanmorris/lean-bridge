@@ -13,7 +13,9 @@ import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
 import {checkStagedQuoteIdentities,checkApplicationFunctionPositions,checkTicketExchangePositions,prepareStagedQuoteProject} from "./staged-quote-project.mjs";
 
-const targets=["c","wit-wasi"],json=async path=>JSON.parse(await readFile(path));
+import {runCppApplication} from "./cpp-application-client.mjs";
+
+const targets=["c","cpp","wit-wasi"],json=async path=>JSON.parse(await readFile(path));
 const sources=["tariff-application-function.c","tariff-ticket-exchange.c","tariff-application-observer.c"];
 const app=async ({root,handoff,pkg,profile,route,env})=>{
 	const wit=pkg.target==="wit-wasi";assert.equal(pkg.artifacts.length,1);
@@ -24,7 +26,7 @@ const app=async ({root,handoff,pkg,profile,route,env})=>{
 	await run("tar",["-xzf",path],root,env);
 	const install=join(root,"relocated");await rename(join(root,top),install);
 	const manifest=await json(join(install,"lean-bridge-package.json"));
-	assert.equal(manifest.kind,wit?"lean-bridge-owned-wit-package":"lean-bridge-native-c-package");
+	assert.equal(manifest.kind,wit?"lean-bridge-owned-wit-package":"lean-bridge-native-"+pkg.target+"-package");
 	assert.equal(manifest.pkgConfig,wit?"tariff-quotes-wit":"tariff-quotes");
 	const meta=name=>json(join(install,"share/lean-bridge/component",name+".json"));
 	const model=await meta("model"),ir=await meta("binding-ir");
@@ -33,6 +35,12 @@ const app=async ({root,handoff,pkg,profile,route,env})=>{
 	const author=model.sourceIdentity.modules.find(m=>m.module==="Owned").source;
 	assert.equal(author.path,"Owned.lean");assert.equal(author.sha256,"a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb");
 	assert.equal(manifest.bindingIrSha256,pins.bindingIrSha256);assert.equal(manifest.runtimeIdentity,pkg.runtimeIdentity);
+	if(pkg.target==="cpp")
+	{
+		assert.equal(manifest.cmakePackage,"LeanBridgeTariffQuotesCpp");assert.equal(manifest.cmakeTarget,"LeanBridge::tariff_quotes_cpp");
+		const client=await runCppApplication(root,install,env);
+		return {target: pkg.target,...pins,leanSourceSha256: author.sha256,runtimeIdentity: pkg.runtimeIdentity,archive,...client};
+	}
 	let componentSha256;
 	if(wit)
 	{
@@ -70,7 +78,7 @@ test("installed native and Wasmtime packages forward the actual application func
 	const replay=env.LEAN_BRIDGE_C_WIT_APP_REPLAY,keep=env.LEAN_BRIDGE_C_WIT_APP_KEEP;assert.ok(!(keep&&replay));
 	const sets=replay?resolve(replay):await mkdtemp(join(keep??work,"sets-"));
 	const out=resolve(env.LEAN_BRIDGE_C_WIT_APP_OUTPUT??"build/c-wit-application-functions");
-	const results=[];
+	const results=[],failures=[];let activeTargets;
 	for(const route of ["ordinary","reviewed"])
 	{
 		const project=join(work,"author-"+route),outputRoot=join(work,"producer-"+route),handoff=join(sets,route);
@@ -81,19 +89,33 @@ test("installed native and Wasmtime packages forward the actual application func
 			await copyPackageSetHandoff(outputRoot,handoff);await rm(project,{recursive: true});await rm(outputRoot,{recursive: true});
 		}
 		const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
-		assert.deepEqual(receipt.packages.map(p=>p.target).sort(),targets);
+		const actual=receipt.packages.map(p=>p.target).sort();
+		if(replay&&actual.length===2)assert.deepEqual(actual,["c","wit-wasi"]);
+		else assert.deepEqual(actual,targets);
+		if(activeTargets)assert.deepEqual(activeTargets,actual);else activeTargets=actual;
 		const reports=[];
 		for(const pkg of receipt.packages)
 		{
 			const root=join(work,route+pkg.target);await mkdir(root);
-			const row=await app({root,handoff,pkg,route,env,profile: receipt.profiles.find(p=>p.id===pkg.profile)});
-			reports.push(row);await saveLakeFile(out,route+"."+pkg.target+".json",canonicalJson({route,receiptSha256: result.receiptSha256,...row}));
-			await rm(root,{recursive: true});
+			try
+			{
+				const row=await app({root,handoff,pkg,route,env,profile: receipt.profiles.find(p=>p.id===pkg.profile)});
+				reports.push(row);await saveLakeFile(out,route+"."+pkg.target+".json",canonicalJson({route,receiptSha256: result.receiptSha256,...row}));
+			}
+			catch(cause)
+			{
+				const message=route+"/"+pkg.target+": "+cause.message;t.diagnostic(message);failures.push(new Error(message,{cause}));
+			}
+			finally
+			{
+				await rm(root,{recursive: true});
+			}
 		}
-		assert.equal(reports[0].bindingIrSha256,reports[1].bindingIrSha256);
+		for(const row of reports)assert.equal(row.bindingIrSha256,reports[0].bindingIrSha256);
 		results.push({route,receiptSha256: result.receiptSha256,reports});
 	}
-	for(const target of targets)
+	if(failures.length)throw new AggregateError(failures,"Failed installed clients: "+failures.length);
+	for(const target of activeTargets)
 	{
 		const [a,b]=results.map(r=>r.reports.find(p=>p.target===target));assert.notEqual(a.archive.sha256,b.archive.sha256);
 		assert.equal(a.runtimeIdentity,b.runtimeIdentity);assert.deepEqual(a.sources,b.sources);

@@ -19,6 +19,11 @@ test("both author routes describe the same Ticket exchange and Lean reduces the 
 		const src=await readFile(join(path,"Owned.lean"),"utf8");sources.push(src);
 		assert.equal(sha256(src),"a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb");
 		const config=JSON.parse(await readFile(join(path,"lean-bridge.exports.json")));
+		const family=join(work,route+"-cpp");
+		await prepareStagedQuoteProject(family,route,["c","cpp","wit-wasi"],{hostFunctions: true,ticketExchange: true});
+		const familyConfig=JSON.parse(await readFile(join(family,"lean-bridge.exports.json")));
+		assert.deepEqual(familyConfig,{...config,targets: {...config.targets,cpp: {name: "tariff-quotes",version: "1.0.0"}}});
+		assert.equal(await readFile(join(family,"Owned.lean"),"utf8"),src);
 		const managed=join(work,route+"-managed");
 		await prepareStagedQuoteProject(managed,route,["maven","php-native"],{hostFunctions: true,ticketExchange: true});
 		const managedConfig=JSON.parse(await readFile(join(managed,"lean-bridge.exports.json")));
@@ -31,12 +36,14 @@ test("both author routes describe the same Ticket exchange and Lean reduces the 
 			assert.ok(["Owned.ticketSerial","Owned.exchangeTicket"].every(n=>config.exports.includes(n)));
 			await assert.rejects(readFile(join(path,"api.binding-ir.json")),{code: "ENOENT"});
 			await assert.rejects(readFile(join(managed,"api.binding-ir.json")),{code: "ENOENT"});
+			await assert.rejects(readFile(join(family,"api.binding-ir.json")),{code: "ENOENT"});
 		}
 		else
 		{
 			assert.equal(config.exports,undefined);
 			const ir=JSON.parse(await readFile(join(path,"api.binding-ir.json")));
 			assert.deepEqual(JSON.parse(await readFile(join(managed,"api.binding-ir.json"))),ir);
+			assert.deepEqual(JSON.parse(await readFile(join(family,"api.binding-ir.json"))),ir);
 			validateOwnedAggregateBindingIr(ir);checkTicketExchangePositions(ir);
 			const id=ir.declarations.find(d=>d.name==="exchangeTicket").parameters[1].type.id;
 			const fn=ir.types.find(v=>v.id===id).callable;

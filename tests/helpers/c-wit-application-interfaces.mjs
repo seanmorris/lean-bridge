@@ -5,6 +5,7 @@ import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
 import {generateOwnedCValues} from "../../src/backends/c/owned-values.mjs";
+import {generateOwnedCppPackage} from "../../src/backends/cpp/owned-package.mjs";
 import {compileOwnedWitGraphModel} from "../../src/backends/wit/owned-graph-model.mjs";
 import {ownedWitPublicPrefix} from "../../src/backends/wit/owned-package.mjs";
 import {leasedClosureFieldReviewedIr} from "./owned-aggregate-fixture.mjs";
@@ -12,7 +13,7 @@ import {checkApplicationFunctionPositions,checkTicketExchangePositions} from "./
 import {saveLakeFile} from "./lake-workspace.mjs";
 import {runNativeTool} from "./native-effect-consumers.mjs";
 
-test("host-provided C functions use public calls in both native and Wasmtime headers",async t=>{
+test("C, C++ and Wasmtime clients compile against their own generated public headers",async t=>{
 	const ir=leasedClosureFieldReviewedIr({staged: true,hostFunctions: true,ticketExchange: true}),m=compileOwnedWitGraphModel(ir);
 	checkApplicationFunctionPositions(ir);checkTicketExchangePositions(ir);
 	assert.match(m.wit,/pass-application-quote: func\(arg0: borrow<(identity-[\w-]+)>\) -> own<\1>;/u);
@@ -25,4 +26,9 @@ test("host-provided C functions use public calls in both native and Wasmtime hea
 		const sources=["tariff-application-function.c","tariff-ticket-exchange.c","tariff-application-observer.c"].map(f=>resolve("tests/fixtures/structured-types",f));
 		await runNativeTool(process.env.CC??"cc",["-std=c11","-Wall","-Wextra","-Werror","-UNDEBUG","-I.",wit?"-DTARIFF_WIT":"-DTARIFF_NATIVE_C","-fsyntax-only",...sources],root,process.env);
 	}
+	const cpp=generateOwnedCppPackage(ir);
+	for(const [name,source] of Object.entries(cpp.files))
+		if(name.startsWith("include/"))await saveLakeFile(root,name,source);
+	await saveLakeFile(root,"include/tariff_quotes.h",cpp.c.header);
+	await runNativeTool(process.env.CXX??"c++",["-std=c++20","-Wall","-Wextra","-Werror","-UNDEBUG","-Iinclude","-fsyntax-only",resolve("tests/fixtures/structured-types/tariff-application.cpp")],root,process.env);
 });

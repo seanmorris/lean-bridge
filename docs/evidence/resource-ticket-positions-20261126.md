@@ -55,11 +55,11 @@ set `LEAN_BRIDGE_NPM_TICKET_CALLBACK_REPLAY` to the directory containing their
 matches the original [incoming-function packages](npm-incoming-functions-20261126/matched/pair.json).
 The two tests exercised different public calls using the same archives.
 
-### A direct Ticket-to-Ticket callback in C and Wasmtime
+### A direct Ticket-to-Ticket callback in C, C++ and Wasmtime
 
 `npm run test:c-wit-application-function-positions` also exercises
 [`Owned.exchangeTicket`](../../tests/fixtures/structured-types/exchange-ticket.lean)
-in the same two-target releases as the application-provided functions.
+in the same releases as the application-provided functions.
 The callback reads 42 or 71 from the Ticket supplied by Lean and returns a
 fresh Ticket with serial 43 or 72. Its recovery Ticket has serial 800.
 Lean reads the reply's serial. In the failure case the callback hands over

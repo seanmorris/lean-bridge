@@ -1,0 +1,51 @@
+/** @file Install the production C++ projection of an already compiled, authenticated native component. */
+import assert from "node:assert/strict";
+import {mkdir,mkdtemp,readFile,rename,rm} from "node:fs/promises";
+import {tmpdir} from "node:os";
+import {basename,join,resolve} from "node:path";
+import test from "node:test";
+import {projectOwnedNativeCFamily} from "../../src/build/owned-c-projection.mjs";
+import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
+import {writeNativePackageSet} from "../../src/release/package-set-assembly.mjs";
+import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {runCppApplication} from "./cpp-application-client.mjs";
+import {saveLakeFile} from "./lake-workspace.mjs";
+import {restoreApplicationWheel} from "./native-application-wheel.mjs";
+import {runNativeTool as run} from "./native-effect-consumers.mjs";
+import {copyPackageSetHandoff} from "./package-set.mjs";
+import {checkStagedQuoteIdentities,checkApplicationFunctionPositions} from "./staged-quote-project.mjs";
+
+test("a relocated C++ package forwards application functions from the verified native Lean component",async t=>{
+	const env=process.env,root=env.LEAN_BRIDGE_CPP_APP_OUTPUT,route=env.LEAN_BRIDGE_CPP_APP_ROUTE;
+	assert.ok(root&&["ordinary","reviewed"].includes(route));
+	const handoff=env.LEAN_BRIDGE_CPP_APP_WHEEL,pin=env.LEAN_BRIDGE_CPP_APP_WHEEL_SHA256,leanPrefix=env.LEAN_BRIDGE_LEAN_PREFIX;
+	assert.ok(handoff&&pin&&leanPrefix);
+	const work=await mkdtemp(join(tmpdir(),"cpp-forward-"));t.after(()=>rm(work,{recursive: true,force: true}));
+	const donor=await restoreApplicationWheel(work,resolve(handoff),pin,route,leanPrefix);
+	const working=join(work,"producer"),{nativeRoot,runtimeRoot,model,runtimeIdentity}=donor;
+	const projections=await projectOwnedNativeCFamily({working,nativeRoot,runtimeRoot,leanPrefix,targets: ["cpp"],settings: {cpp: {name: "tariff-quotes",version: "1.0.0"}},environment: env});
+	await writeNativePackageSet({root: working,model,runtimeIdentity,projections});
+	const set=resolve(root,route,"handoff");
+	await copyPackageSetHandoff(working,set);
+	const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(set,"package-set-receipt.json")});
+	assert.equal(receipt.packages.length,1);const [pkg]=receipt.packages;
+	assert.equal(pkg.target,"cpp");assert.equal(pkg.runtimeIdentity,runtimeIdentity);assert.equal(pkg.artifacts.length,1);
+	const [archive]=pkg.artifacts,file=join(set,archive.path),app=join(work,"app");await mkdir(app);
+	const top=basename(archive.path,".tar.gz");assert.equal(top,"tariff-quotes-1.0.0-cpp");
+	const entries=(await run("tar",["-tzf",file],app,env)).split("\n");
+	assert.ok(entries.length&&entries.every(p=>p.startsWith(top+"/")&&!p.split("/").includes("..")));
+	await run("tar",["-xzf",file],app,env);const install=join(app,"relocated");await rename(join(app,top),install);
+	const meta=async n=>JSON.parse(await readFile(join(install,"share/lean-bridge/component",n+".json")));
+	const installed=await meta("model"),ir=await meta("binding-ir");assert.deepEqual(installed,model);
+	const pins=checkStagedQuoteIdentities(installed,ir,receipt.profiles.find(p=>p.id===pkg.profile),route,{hostFunctions: true});
+	checkApplicationFunctionPositions(ir);
+	const component=await meta("native-component"),shared=join(install,"lib",component.library);
+	const compiled=sha256(await readFile(shared));assert.equal(compiled,sha256(await readFile(join(nativeRoot,component.library))));
+	const origin={wheelReceiptSha256: donor.receiptSha256,wheel: donor.wheel,sourceSha256: donor.sourceSha256};
+	const row={route,...origin,componentSha256: compiled,runtimeIdentity,receiptSha256: result.receiptSha256,archive,...pins};
+	// Collect deployment results after removing the producer and both unpacked donor trees.
+	for(const dir of [working,nativeRoot,runtimeRoot,join(work,"lean_tariff_quotes"),join(work,"tariff_quotes-1.0.0.dist-info")])await rm(dir,{recursive: true});
+	const clients=await runCppApplication(app,install,env,false);
+	await saveLakeFile(root,route+".json",canonicalJson({...row,...clients}));
+	t.diagnostic(route+": "+result.receiptSha256);
+});

@@ -239,14 +239,45 @@ host error, and try the saved wrappers again after their registration ends.
 Rust client against the generated public API. Type-checking alone does not
 qualify an installed client in the table.
 
-`npm run test:c-wit-application-function-positions` builds the C and
-WIT/WASI archives together on each author route, then runs the same C11
-application against each relocated package. It uses six scenarios and an
-independent observer for cleanup. Supply an existing scratch directory in
+The [ordinary Python wheel](native-application-functions-20261127/ordinary.pypi.json)
+has now passed in a relocated Python 3.11 environment. The client observed
+the original inner exception and no calls through an expired registration;
+the observer recorded one live identity after each scenario and zero on
+shutdown. This single route is not a paired placement.
+Set `LEAN_BRIDGE_PYTHON` to an interpreter with `venv` and `ensurepip`.
+To run a single retained route without rebuilding, set
+`LEAN_BRIDGE_NATIVE_APP_QUOTE_REPLAY` to the two-route directory and
+`LEAN_BRIDGE_NATIVE_APP_QUOTE_ROUTE` to `ordinary` or `reviewed`.
+Use `LEAN_BRIDGE_NATIVE_APP_QUOTE_RESUME` in place of `REPLAY` to build
+a missing route. A single-route run never writes paired evidence.
+Set `LEAN_BRIDGE_NATIVE_APP_QUOTE_TARGET` during a replay to isolate one
+installed consumer (`pypi`, `rubygems`, or `cargo`). Check the recorded results
+against the retained archives and actual client sources with
+`npm run test:native-application-function-receipts`.
+
+`npm run test:c-wit-application-function-positions` now builds C, C++ and
+WIT/WASI archives together on each author route. The C11 application runs
+against native C and Wasmtime; the C++20 application uses the public C++
+facade through **both pkg-config and CMake**. Separate observers check
+cleanup. A retained two-target C/WIT handoff can still be replayed without
+attributing a C++ result to it. Supply an existing scratch directory in
 `LEAN_BRIDGE_C_WIT_APP_KEEP` to keep the two releases or point
 `LEAN_BRIDGE_C_WIT_APP_REPLAY` to their `sets-*` directory to reinstall
 without recompiling Lean. The smaller `test:c-wit-application-function-interfaces`
-check compiles the consumer against both headers; it does not execute it.
+check compiles the clients against all three headers; it does not execute them.
+
+An alternative C++ run reuses the compiled Lean component in a retained
+Python wheel without running Python or rebuilding Lean. Set
+`LEAN_BRIDGE_CPP_APP_WHEEL` to its complete native package handoff,
+`LEAN_BRIDGE_CPP_APP_WHEEL_SHA256` to the independently verified receipt
+hash, `LEAN_BRIDGE_CPP_APP_ROUTE` to the author route, and
+`LEAN_BRIDGE_CPP_APP_OUTPUT` to a fresh directory. Run
+`npm run test:cpp-application-from-wheel` with the matching Lean headers and
+[pinned public GMP kit](../publishing.md). The production C++ packager verifies
+the component and runtime and emits a distinct C++ archive. Both link methods
+exercise this installed archive. Its Lean source has the forwarding exports
+but not the newer Ticket exchange; the program checks borrow expiry after
+both success and failure instead. This is not a fresh C++-targeted author build.
 
 For Java, Kotlin and native PHP, build **the same two author projects** for
 both Maven and Composer. Set `LEAN_BRIDGE_MANAGED_APPLICATION_KEEP` to an

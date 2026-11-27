@@ -1564,6 +1564,8 @@
     "test:ticket-exchange-authors": "node --test tests/helpers/ticket-exchange-authors.mjs",
     "test:private-gmp-kit": "node --test tests/helpers/private-gmp-kit.mjs",
     "test:c-wit-application-function-positions": "node --test tests/helpers/c-wit-application-installed.mjs",
+    "test:cpp-application-from-wheel": "node --test tests/helpers/cpp-application-from-wheel.mjs",
+    "test:native-application-function-receipts": "node --test tests/helpers/native-application-receipts.mjs",
     "test:jvm-application-function-interfaces": "node --test tests/helpers/jvm-application-interfaces.mjs",
     "test:jvm-application-function-positions": "LEAN_BRIDGE_JVM_APPLICATION_FUNCTIONS=1 node --test tests/helpers/jvm-function-fields-installed.mjs",
     "test:managed-application-packages": "node --test tests/helpers/managed-application-packages.mjs",
