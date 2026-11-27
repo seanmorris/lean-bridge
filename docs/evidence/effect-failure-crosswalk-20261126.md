@@ -87,7 +87,16 @@ installs did too. Perl 5.38.2 passed the same four combinations.
 The [installed comparison](perl-forwarded-errors-20261127/ordinary-installed-comparison.json)
 matches all eight corrected observations to their ABI, XS build mode and
 package, and checks all eight original failures. This completes the
-ordinary-route regression check; the reviewed CPAN release is separate.
+ordinary-route regression check.
+
+The [reviewed CPAN release](perl-forwarded-errors-20261127/corrected-reviewed/)
+also passed all eight installed combinations (receipt `667a7e67…`).
+Its generated XS preserved the original blessed exception when forwarded and
+the replacement when a nested callback threw a different object. Each client
+recovered and observed zero live identities after shutdown. The two-route
+audit checked both sets of eight results against their own compiled C
+components and the same runtime archive. The eight original failing controls
+belong to the ordinary route only.
 
 To audit the repair, set `LEAN_BRIDGE_PERL_REPAIR_ORIGINAL` and
 `LEAN_BRIDGE_PERL_REPAIR_CORRECTED` to their respective ordinary run directories

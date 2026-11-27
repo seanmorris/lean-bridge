@@ -173,11 +173,11 @@ been credited here, not that the feature has been tested and failed.
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | ≥16 | ≥13 |
-| Host-provided function | 17 | 11 | 17 | 11 | 11 |
+| Host-provided function | 17 | 12 | 17 | 12 | 12 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 634 of 680** profile/route/position combinations.
+That accounts for **at least 640 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,12 +188,12 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **46 placements without a completed pair** break down as follows.
+The **40 placements without a completed pair** break down as follows.
 Some already have an ordinary-route result; the table below subtracts those.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 6 × 3 × 2 = 36 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | .NET, Java, Kotlin, native PHP, PHP-Wasm | 5 × 3 × 2 = 30 |
 | Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
 | Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin, native PHP | 4 × 2 = 8 |
 
@@ -203,19 +203,18 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Two profiles have ordinary-package evidence inside that 46-placement
-gap. Count each profile and position once, even if multiple archives or
-build tools exercised it:
+One profile has ordinary-package evidence inside that 40-placement gap.
+Count each profile and position once, even if multiple archives or build
+tools exercised it:
 
 | Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
 | --- | ---: | --- | ---: |
 | [Native PHP](c-wit-application-functions-20261127/ordinary.php-native.json) | 3 | Callback result | 4 |
-| [Perl](perl-forwarded-errors-20261127/ordinary-installed-comparison.json) | 3 | — | 3 |
 
-This brings the lower bound to **641/680 individual installed placements**:
-634 backed by pairs, plus seven ordinary-only. **39** still lack an individual
-witness: 30 forwarded-function placements and nine resource placements.
-The paired figure is **634/680**; use the
+This brings the lower bound to **644/680 individual installed placements**:
+640 backed by pairs, plus four ordinary-only. **36** still lack an individual
+witness: 27 forwarded-function placements and nine resource placements.
+The paired figure is **640/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
@@ -410,6 +409,12 @@ then exercises both prebuilt and generated XS installs. Set `*_APP_REPLAY_SHA256
 to replay a previously retained destination receipt. Optional
 `LEAN_BRIDGE_PERL_APP_ABI` and `LEAN_BRIDGE_PERL_APP_MODE` select one result;
 a partial replay does not establish full Perl coverage.
+
+The [ordinary comparison](perl-forwarded-errors-20261127/ordinary-installed-comparison.json)
+and [reviewed results](perl-forwarded-errors-20261127/corrected-reviewed/)
+cover all eight ABI/XS combinations on **each** route. The archive audit matched
+each installed release to its own original C donor; the two use the same runtime
+archive. This completes three Perl forwarding pairs, not 16 new placements.
 
 To isolate a Perl forwarding failure without building a new CPAN release,
 use `npm run test:perl-callback-frame-facade` with
