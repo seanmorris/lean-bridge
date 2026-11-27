@@ -7,7 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { gmpIdentity } from "../backends/c/gmp.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { taskGmpKit } from "./task-gmp.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
 import { snapshotWasmtimeCapi } from "./native-wit-projection.mjs";
@@ -32,7 +32,7 @@ export const projectOwnedWasi = async options => {
 		return files;
 	};
 	const wasmtimeFiles = await snapshotWasmtimeCapi(environment.LEAN_BRIDGE_WASMTIME_C_API, join(root, "wasmtime"));
-	await buildNativeGmp({ root: join(root, "gmp"), environment, signal });
+	await taskGmpKit({ root: join(root, "gmp"), environment, signal });
 	const gmpFiles = await inventory(join(root, "gmp"));
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env: environment, signal });
 	const wasmTools = environment.LEAN_BRIDGE_WASM_TOOLS ?? "wasm-tools";

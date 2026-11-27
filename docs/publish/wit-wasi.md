@@ -287,11 +287,18 @@ containers or recursive values contain resource identities:
 
 Use the same `lean-bridge build --target wit-wasi` command. The builder compiles
 the selected Lean implementation, generates the owned Component Model and typed
-public C API, builds the pinned GMP source, and bundles GMP, Wasmtime and the
+public C API, and bundles GMP, Wasmtime and the
 shared Lean runtime. The archive includes pkg-config and CMake metadata,
 compiler receipts, generated sources, dependency licenses and GMP's corresponding
 source. Reassembling the archive from verified build artifacts requires no
 compiler and preserves its bytes.
+
+The default build compiles pinned GMP and runs its upstream tests. A producer
+can reuse that checked build by supplying `LEAN_BRIDGE_TASK_GMP_ROOT` and
+an independently trusted `LEAN_BRIDGE_TASK_GMP_SHA256` for its receipt.
+Both are required together. The builder verifies the header, shared library,
+notices and corresponding source before packaging; a bad pin fails the build.
+Consumers do not set either variable.
 
 Ordinary source extraction and independently reviewed version-4 binding IR use
 the same ownership-aware build path. Inputs borrow resource-containing values

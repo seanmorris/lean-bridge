@@ -12,6 +12,7 @@ import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
 import {verifyDirectQuoteCounts} from "./direct-quote-counts.mjs";
 import {assertDirectWitWorld} from "./wit-direct-world.mjs";
+import {buildWitFromIncomingC} from "./wit-native-incoming-reprojection.mjs";
 import {checkStagedQuoteIdentities, prepareStagedQuoteProject} from "./staged-quote-project.mjs";
 
 const json = async path => JSON.parse(await readFile(path));
@@ -132,6 +133,8 @@ test("installed WIT function fields and direct staged replies execute through th
 	const work = await mkdtemp(join(tmpdir(),"wasmtime-tariff-")); t.after(()=>rm(work,{recursive: true,force: true}));
 	const keep = process.env.LEAN_BRIDGE_WIT_TARIFF_KEEP, replay = process.env.LEAN_BRIDGE_WIT_TARIFF_REPLAY;
 	const incoming=process.env.LEAN_BRIDGE_WIT_TARIFF_REQUIRE_INCOMING==="1";
+	const donors=process.env.LEAN_BRIDGE_WIT_TARIFF_C_HANDOFFS;
+	assert.ok(!donors||incoming&&!replay,"native reprojection requires direct incoming mode and no WIT replay input");
 	assert.ok(!(keep && replay));
 	const sets = replay ? resolve(replay) : await mkdtemp(join(keep ?? work,"handoffs-"));
 	t.diagnostic("Handoffs: "+sets);
@@ -139,9 +142,12 @@ test("installed WIT function fields and direct staged replies execute through th
 	await mkdir(output,{recursive: true});
 	for(const route of routes)
 	{
-		if(!replay) await buildHandoff(sets,work,route,incoming);
+		let nativeInput;
+		if(donors) nativeInput=await buildWitFromIncomingC({work,donors: resolve(donors),destination: join(sets,route),route});
+		else if(!replay) await buildHandoff(sets,work,route,incoming);
 		const root = join(work,route); await mkdir(root);
 		const report = await exercise(root,join(sets,route),route,Boolean(replay),incoming);
+		if(nativeInput) report.reprojectedFrom=nativeInput;
 		await writeFile(join(output,route+".json"),canonicalJson(report));
 		t.diagnostic(route+": "+report.receiptSha256);
 		await rm(root,{recursive: true});

@@ -34,6 +34,9 @@ const fileIdentity = async path => { const bytes = await readFile(path); return 
 
 export { nativeCallbackHeader, nativeCallbackBroker } from "../backends/native/callback-broker.mjs";
 
+/** Exact C header shipped with the compiled Linux runtime, including callback slots. */
+export const nativeSharedRuntimeHeader = linuxBrokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`);
+
 /**
  * Build one process-wide runtime, reused unchanged by every component and XS ABI.
  *
@@ -50,7 +53,7 @@ export const buildNativeSharedRuntime = async ({ outputRoot, leanPrefix, cc = "c
 	{
 		const probe = await run(join(leanPrefix, "bin/lean"), ["--version"]);
 		if(!probe.stdout.includes(pinnedNativeLean)) throw new Error("native runtime Lean identity mismatch");
-		await save(join(staging, "include/lean_bridge_native_runtime.h"), linuxBrokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`));
+		await save(join(staging, "include/lean_bridge_native_runtime.h"), nativeSharedRuntimeHeader);
 		await save(join(staging, "broker.c"), `${linuxBrokerSource}\n${nativeCallbackBroker}`);
 		await mkdir(join(staging, "lib"));
 		const leanLibrary = join(leanPrefix, "lib/lean/libleanshared.so");

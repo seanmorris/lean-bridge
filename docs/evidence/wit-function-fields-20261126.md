@@ -25,6 +25,17 @@ Set `LEAN_BRIDGE_WIT_TARIFF_KEEP` to an existing scratch directory to keep
 both handoffs, or use `LEAN_BRIDGE_WIT_TARIFF_REPLAY` to run the checks
 against the retained archives without rebuilding Lean.
 
+For the separate case where a host callback receives a Lean-created function
+directly, set `LEAN_BRIDGE_WIT_TARIFF_REQUIRE_INCOMING=1`. By default this
+builds both WIT releases from the Lean author projects. To test another
+projection of the **original compiled components**, also set
+`LEAN_BRIDGE_WIT_TARIFF_C_HANDOFFS` to the directory containing the
+[ordinary and reviewed C handoffs](c-incoming-functions-20261126/ordinary.json).
+The test checks each C receipt and archive against its recorded digest, builds
+the WIT adapter with the production packager, then installs and runs the same
+Wasmtime client. The report identifies the C input; this mode is not a fresh
+build of a WIT-targeted author project.
+
 The two linked receipts cover Lean-produced function fields. They predate
 the input record that accepts a caller's C function. Fresh packages must
 also build and run a [second Wasmtime client](../../tests/fixtures/structured-types/tariff-wasmtime-inputs.c).
