@@ -20,6 +20,24 @@ Stages can finish independently. Plan 1208 stays open until every required cell 
 | Packages and verification | 1240, 1224 | Produce native ecosystem packages and generic local receipts, verify exact installed archives, and retain signed-receipt compatibility. |
 | Documentation and acceptance | 1227, 1225, 1226 | Execute documentation examples, pass the complete matrix and latency/throughput thresholds, and reconcile every remaining gap. |
 
+For identity, effects and async, use the installed consumer records:
+
+- [Resources, objects and functions](../evidence/host-worker-qualification-20261125.md#installed-coverage-after-the-november-26-replays):
+  680 positions across the 17 profiles on both authoring routes. The
+  [ownership review](../evidence/host-lifetime-acceptance-20261127.md)
+  distinguishes moves, shared owners, independent retains and borrowed results.
+- [Effects and failures](../evidence/effect-failure-crosswalk-20261126.md):
+  102 signatures. Synchronous IO returns directly, not through a future. A returned error value,
+  a declared failure, an exception from a callback and a terminal fault have
+  different observable outcomes.
+- [Tasks, cancellation and iteration](../evidence/async-delivery-crosswalk-20261125.md):
+  136 signatures. The records identify the event loop or polling interface,
+  how demand starts a read, who finalizes a cancelled cursor and what happens
+  to a late result.
+
+These results come from the packages named in each record. Task 1224 checks
+the complete matrix against the exact archives selected for a release.
+
 Task 1219 has installed arrays, Lists, products, Option, Except, copied records,
 aliases and variants across all seventeen consumer profiles. The
 [structured-types record](../evidence/structured-types-20260921.md) links the
@@ -55,7 +73,8 @@ For an application-owned class in another runtime, see the
 The [JavaScript host-object integration check](../evidence/javascript-host-imports-20261124.md)
 runs two separately compiled Lean components against the same JavaScript object
 and verifies that they receive the same native wrapper in WebAssembly.
-It does not yet produce an installable npm host-object adapter.
+The separate installed npm check runs the generated adapter in Node and
+Chromium with Workshop and Peer sharing one runtime.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),
@@ -117,7 +136,7 @@ coverage; compiler adapters and per-profile package checks must follow.
 
 The shared configuration supplies `modules`, `exports`, `specializations`, `contracts`, `resources`, `arities`, and target metadata validation. Source analysis and builds hash the configuration. npm and CPAN implement finite specialization within their existing type profiles; npm and native builds implement closure arities; CPAN also implements resources and its module/version settings. npm packaging and publication use the sealed settings while preserving the compiled Lean identity. Other configured target settings fail when their projection does not implement them.
 
-[Export contracts](../lean/existing-package.md#declare-export-contracts) now express ownership, lifetime, refinement and boundary-effect requirements for exact exports. Lean checks those constraints against compiled signatures; the request identity, metadata validators, target re-extraction and package model retain them. Current adapters enforce copied values, native call-scoped borrowing, returned leases and synchronous callback effects. Unsupported transfers, anchored lifetimes, checked constructors and async choices fail. Their runtime implementations remain in tasks 1220, 1221, 1222 and 1223; configuration does not complete those tasks.
+[Export contracts](../lean/existing-package.md#declare-export-contracts) express ownership, lifetime, refinement and boundary-effect requirements for specific exports. Lean checks those constraints against compiled signatures; the request identity, metadata validators, target re-extraction and package model retain them. The selected profile must implement the declared contract. For example, a result borrowed from a parameter must expire with that parameter's owner. Declaring the borrow in configuration does not establish that behavior; the installed caller must exercise it.
 
 The [contract acceptance record](../evidence/export-contracts-20260914.md) covers installed npm/CPAN packages, relocated builds, contract tampering, pre-link rejection and unchanged source inputs.
 

@@ -632,7 +632,27 @@ All 17 profiles have [separate installed synchronous iterator evidence](host-wor
 on both author routes. Do not use that count for tasks or async iterators.
 The table locates actual execution evidence for each async profile; it does
 not claim that every case ran on one archive, every optional scheduler is
-supported, or that every source revision is interchangeable. Before marking
-#1223 done, resolve the ownership and failure dependencies (#1221 and #1222)
-and reconcile accepted runtime prerequisites and case-level gaps with those
-results. The full exact-release matrix belongs to #1224.
+supported, or that every source revision is interchangeable.
+
+- **Which runtime?** The native records name the actual event loop, scheduler
+  or polling API and ABI. Perl's four foreign-interpreter assertions ran on
+  threaded Perl; an unthreaded interpreter cannot create the foreign thread.
+  The browser tests used isolated Chromium with real workers. PHP-Wasm ran
+  PHP inside the interpreter, not a JavaScript stand-in. For WIT, the
+  pollable-resource and canonical-stream interfaces have separate installations.
+- **Who can settle or cancel?** The managed, npm, C/C++, Perl/PHP and
+  Python/Ruby reconciliation commands above compare the real callers,
+  package identities and recorded outcomes. The npm archive check also
+  extracts the deployed Wasm from seven original package receipts.
+  The Rust client changed its primary crate; the WIT peer check changed
+  both package and registration order. Reusing a callback or closing a
+  sibling owner must not settle an already-cancelled operation.
+- **What ended?** The parked-reader tests distinguish a late computation
+  from delivery to a closed reader. They count the finalizer even if the
+  application never received an item. Shutdown that destroys a Wasm heap
+  rejects pending and future work; unlike a live heap, it cannot be
+  inspected for a zero owner count.
+
+Resolve [ownership](host-lifetime-acceptance-20261127.md) and
+[failure handling](effect-failure-crosswalk-20261126.md) before closing
+#1223. The full exact-release matrix belongs to #1224.
