@@ -510,6 +510,11 @@ following variables to the matching original captures:
 | CPython | `LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL` | `LEAN_BRIDGE_PY_ASYNC_RETAINED` (contains `cpython-311/`, `cpython-312/`) | `LEAN_BRIDGE_PY_ASYNC_LEASES` (contains `cp311/`, `cp312/`) |
 | Ruby | `LEAN_BRIDGE_RUBY_PARKED_ORIGINAL` | `LEAN_BRIDGE_RB_ASYNC_RETAINED` | `LEAN_BRIDGE_RB_ASYNC_LEASES` |
 
+For each Python interpreter and author route, the check also matches the
+same-thread loop probe to the original Timers archive set, binding IR and
+installed files. It checks the loop client's own digest separately from
+the earlier cancellation client. Both use the same native owner observer.
+
 ### Rust: both authoring routes as the primary task owner
 
 The [installed Cargo replay](rust-async-owners-20261126/owners.json) ran the

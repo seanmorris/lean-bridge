@@ -23,7 +23,8 @@ test("asyncio: original Timers, retained callbacks and leased stream installatio
 	const leases = await report("python-resource-leases-20261123");
 	assert.equal(callback.consumerSha256,await fixture("python-retained-tasks/installed.py"));
 	assert.equal(callback.lifecycleObserverSha256,await fixture("python-retained-tasks/audit.py"));
-	for (const tag of ["cp311","cp312"]) {
+	for(const tag of ["cp311","cp312"])
+	{
 		const abi = "cpython-"+tag.slice(2);
 		const cb = join(dir.LEAN_BRIDGE_PY_ASYNC_RETAINED,abi);
 		const batch = await json(join(cb,"acceptance.json"));
@@ -38,7 +39,8 @@ test("asyncio: original Timers, retained callbacks and leased stream installatio
 		assert.deepEqual(await json(old),control.installed);
 		assert.equal(terminal.clientSha256,await fixture("python-task-resources/terminal.py"));
 		assert.equal(terminal.observerSha256,control.installed.clients["observe.py"]);
-		for (const route of routes) {
+		for(const route of routes)
+		{
 			const installed = join(dir.LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL,"tasks",tag+"-"+tag+"-linux_x86_64",route);
 			const saved = await json(join(installed,"acceptance.json"));
 			const parked = await report("python-parked-pull-20261126/"+tag+"-"+route);
@@ -55,6 +57,14 @@ test("asyncio: original Timers, retained callbacks and leased stream installatio
 			assert.equal(await fixture("python-lean-tasks/streams.py"),await digest(join(installed,"streams.py")));
 			assert.equal(await fixture("python-lean-tasks/cancel_pull.py"),parked.clientSha256);
 			assert.equal(await fixture("python-task-resources/observe.py"),parked.observerSha256);
+			const loops = await report("python-loop-ownership-20261127/"+tag+"-"+route+".loops");
+			for(const key of ["route","tag","packageSetSha256","bindingIrSha256","archives","verified","observerSha256"])
+				assert.deepEqual(loops[key],parked[key],key);
+			assert.equal(loops.clientSha256,await fixture("python-lean-tasks/loop_ownership.py"));
+			assert.deepEqual(loops.observed,{
+				foreignLoop: {rejected: ["anext","aclose"],settled: [41],finalizers: 1,owners: 0}
+				, refusedReader: {registrationAttempts: 1,finalizersBeforeClose: 1,fresh: 73,owners: 0}
+			});
 			assert.equal(parked.observed,"parked cooperative and noncooperative pulls: one cancellation, finalized before aclose, no late item, zero owner and selector delta");
 			const r = rowFor(batch.routes,route), wheel = rowFor(callback.wheels.filter(w=>w.interpreter===abi),route);
 			assert.equal(r.receiptSha256,wheel.receiptSha256);
@@ -73,7 +83,7 @@ test("asyncio: original Timers, retained callbacks and leased stream installatio
 			const files = original.flatMap(p=>[basename(p.component.path),basename(p.runtime.path)]);
 			assert.deepEqual(Object.keys(end.verified).sort(),[...new Set(files)].sort());
 			assert.deepEqual(end.calls.map(c=>c.order),[["lease_desk","lease_depot"],["lease_depot","lease_desk"]]);
-			for (const call of end.calls) assert.equal(call.result,
+			for(const call of end.calls) assert.equal(call.result,
 				"exhaustion and typed failure finalized before aclose; early close finalized on request; last error owner usable, zero owner and descriptor delta");
 		}
 	}
@@ -84,17 +94,23 @@ test("Ruby Fiber: both primary gems, nested retained calls and a late pull after
 }, async () => {
 	const pulse = await report("ruby-fiber-tasks-20261122"), relay = await report("ruby-retained-tasks-20261122");
 	const leases = await report("ruby-resource-leases-20261122");
-	for (const [base,record] of [[dir.LEAN_BRIDGE_RUBY_PARKED_ORIGINAL,pulse],[dir.LEAN_BRIDGE_RB_ASYNC_RETAINED,relay],
-		[dir.LEAN_BRIDGE_RB_ASYNC_LEASES,leases]]) {
+	const captures = [
+		[dir.LEAN_BRIDGE_RUBY_PARKED_ORIGINAL,pulse]
+		, [dir.LEAN_BRIDGE_RB_ASYNC_RETAINED,relay]
+		, [dir.LEAN_BRIDGE_RB_ASYNC_LEASES,leases]
+	];
+	for(const [base,record] of captures)
+	{
 		const path = join(base,"acceptance.json");
 		assert.equal(await digest(path),record.acceptanceSha256);
-		if (record === leases) assert.deepEqual(await json(path),record.installed);
+		if(record === leases) assert.deepEqual(await json(path),record.installed);
 		else assert.deepEqual((await json(path)).routes,record.routes);
 	}
 	assert.equal(leases.installed.clientSha256,await fixture("ruby-task-resources/consumer.rb"));
 	assert.equal(relay.coInstallation.clientSha256,await fixture("ruby-retained-tasks/compose.rb"));
 	assert.equal(await digest(join(dir.LEAN_BRIDGE_RB_ASYNC_RETAINED,"composition.json")),relay.coInstallationSha256);
-	for (const route of routes) {
+	for(const route of routes)
+	{
 		const plain = rowFor(pulse.routes,route), cb = rowFor(relay.routes,route);
 		const paired = rowFor(relay.coInstallation.reports,route);
 		assert.equal(paired.primaryArchiveSha256,cb.archive.sha256);
@@ -112,10 +128,14 @@ test("Ruby Fiber: both primary gems, nested retained calls and a late pull after
 		assert.equal(p.packageSetSha256,plain.receiptSha256); assert.equal(p.peerPackageSetSha256,peer.receiptSha256);
 		assert.equal(p.gemSha256,plain.archive.sha256); assert.equal(p.peerGemSha256,peer.archive.sha256);
 		const message = "parked Ruby fiber: original interruption, cursor cancellation, peer delivery, one finalizer, no late item or leaked owner";
-		assert.deepEqual(p.checks,{"peer-first":message,"pulse-first":message});
-		for(const [record,names] of [[paired,["ruby_feedback","ruby_relay"]],[rowFor(leases.installed.rows,route),["ruby_lease_desk","ruby_lease_depot"]]]) {
+		assert.deepEqual(p.checks,{"peer-first": message,"pulse-first": message});
+		for(const [record,names] of [[paired,["ruby_feedback","ruby_relay"]],[rowFor(leases.installed.rows,route),["ruby_lease_desk","ruby_lease_depot"]]])
+		{
 			assert.deepEqual(record.orders.map(o=>o.order),[names,[...names].reverse()]);
-			for (const o of record.orders) { assert.equal(o.liveIdentities,0); assert.equal(o.runtimeInitializations,1); }
+			for(const o of record.orders)
+			{
+				assert.equal(o.liveIdentities,0); assert.equal(o.runtimeInitializations,1);
+			}
 		}
 	}
 });
