@@ -83,7 +83,11 @@ and [threaded locally generated XS](perl-forwarded-errors-20261127/corrected-ord
 preserved the original and replacement objects and reached zero owners;
 the [unthreaded prebuilt](perl-forwarded-errors-20261127/corrected-ordinary/5.36.3-unthreaded.prebuilt-only.json)
 and [unthreaded generated](perl-forwarded-errors-20261127/corrected-ordinary/5.36.3-unthreaded.build-xs.json)
-installs did too. These are ordinary-route results, not a reviewed CPAN pass.
+installs did too. Perl 5.38.2 passed the same four combinations.
+The [installed comparison](perl-forwarded-errors-20261127/ordinary-installed-comparison.json)
+matches all eight corrected observations to their ABI, XS build mode and
+package, and checks all eight original failures. This completes the
+ordinary-route regression check; the reviewed CPAN release is separate.
 
 To audit the repair, set `LEAN_BRIDGE_PERL_REPAIR_ORIGINAL` and
 `LEAN_BRIDGE_PERL_REPAIR_CORRECTED` to their respective ordinary run directories

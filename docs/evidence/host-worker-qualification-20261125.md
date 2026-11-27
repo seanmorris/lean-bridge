@@ -203,7 +203,7 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Three profiles have ordinary-package evidence inside that 58-placement
+Four profiles have ordinary-package evidence inside that 58-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
@@ -212,10 +212,12 @@ build tools exercised it:
 | [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
 | [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
 | [Native PHP](c-wit-application-functions-20261127/ordinary.php-native.json) | 3 | Callback result | 4 |
+| [Perl](perl-forwarded-errors-20261127/ordinary-installed-comparison.json) | 3 | — | 3 |
 
-This brings the lower bound to **632/680 individual installed placements**:
-622 backed by pairs, plus 10 ordinary-only. **48** still lack an individual
-witness in this tally. The paired figure is **622/680**; use the
+This brings the lower bound to **635/680 individual installed placements**:
+622 backed by pairs, plus 13 ordinary-only. **45** still lack an individual
+witness: 36 forwarded-function placements and nine resource placements.
+The paired figure is **622/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
