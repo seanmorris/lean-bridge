@@ -243,7 +243,13 @@ The [ordinary Python wheel](native-application-functions-20261127/ordinary.pypi.
 has now passed in a relocated Python 3.11 environment. The client observed
 the original inner exception and no calls through an expired registration;
 the observer recorded one live identity after each scenario and zero on
-shutdown. This single route is not a paired placement.
+shutdown. The [ordinary Rust crate](native-application-functions-20261127/ordinary.cargo.json)
+also passed. Cargo built the application and observer offline from the locked
+dependencies. Both executables ran after removing the build tree; the observer
+saw three live identities while a registration was held and zero at all seven
+cleanup checkpoints. The wheel and crate share a compiled Lean component but
+have distinct archives and downstream applications. Neither single-route pass
+counts as a paired placement.
 Set `LEAN_BRIDGE_PYTHON` to an interpreter with `venv` and `ensurepip`.
 To run a single retained route without rebuilding, set
 `LEAN_BRIDGE_NATIVE_APP_QUOTE_REPLAY` to the two-route directory and
