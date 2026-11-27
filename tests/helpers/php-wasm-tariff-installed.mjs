@@ -13,6 +13,7 @@ import {buildOwnedPhpWasmObserver} from "./owned-php-wasm-observer.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
 import {bindPhpWasmReceiptArchives,installPhpWasmGraphPackages} from "./php-wasm-graph-packages.mjs";
 import {exerciseInstalledIOBrowser} from "./php-wasm-io-installed-browser.mjs";
+import {checkPhpWasmLoadMatrix} from "./php-wasm-load-matrix.mjs";
 import {verifyDirectQuoteCounts} from "./direct-quote-counts.mjs";
 import {prepareStagedQuoteProject,checkStagedQuoteIdentities,checkApplicationFunctionPositions} from "./staged-quote-project.mjs";
 
@@ -89,6 +90,7 @@ test("both installed PHP-Wasm packages round-trip callable fields and directly r
 		assert.equal(verified.report.runtimeIdentity,observer.identity.runtimeIdentity);
 		const archiveRoot = await bindPhpWasmReceiptArchives(handoff,verified.report);
 		const installed = await installPhpWasmGraphPackages({root, host
+			, reserveBytes: Number(env.LEAN_BRIDGE_ZEND_INSTALL_RESERVE_BYTES ?? 0)
 			, release: {...verified,output: source,archiveRoot}
 			, diagnostic: message=>t.diagnostic(message)
 		});
@@ -145,7 +147,7 @@ test("both installed PHP-Wasm packages round-trip callable fields and directly r
 		}
 		const browser=await exerciseInstalledIOBrowser({app,host: join(app,"node_modules/php-wasm"),t,component,observer: true,checkResult: text=>checkResult(text,inputs,incoming,application)});
 		for(const obs of browser) observations.push({...obs,result: JSON.parse(obs.result)});
-		assert.equal(observations.length,8);
+		checkPhpWasmLoadMatrix(observations);
 		const installedHash=path=>sha256(canonicalJson(installed.installed[path]));
 		const row={route
 			, receiptSha256: result.receiptSha256

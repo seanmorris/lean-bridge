@@ -315,6 +315,14 @@ with the [Ledger handoffs](php-wasm-installed-sync-io-20261123.md#both-author-ro
 These four additional EIO/named-error combinations bring #1222 to **62/102**:
 34 direct IO, 14 typed EIO and 14 named errors.
 
+The separate [ordinary](zend-application-functions-20261127/ordinary.json)
+and [reviewed](zend-application-functions-20261127/reviewed.json) forwarding
+installs tested a recoverable failure. An inner PHP function threw a
+`DomainException`; the outer PHP callback caught the identical object and
+continued to 43. A new call returned 47. All 16 executions released the
+temporary native identities; closing the binding dropped its last identity
+from one to zero. This was an application exception, not a guest trap.
+
 ### .NET: the same NuGet install owns the error and enforces retirement
 
 The [ordinary](dotnet-error-owner-20261126/ordinary.json) and

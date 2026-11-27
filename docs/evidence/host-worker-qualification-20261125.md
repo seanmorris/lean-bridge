@@ -167,43 +167,51 @@ Match the newer reports against the particular cell they exercise:
 - The [one-call restriction](native-once-callback-20261126.md) is a behavior
   exercised across all 17 profiles. It adds no new position by itself.
 
-The remaining review has two parts: attach the installed evidence on each
-specific route, then identify the places that actually need a new package or
-application case. Do not subtract 74 from 680 to estimate the tests left.
+For the later installed results, use the table below rather than subtracting
+the historical 74 from 680. Check the behavior against the ownership review.
 
 ### Installed coverage after the November 26 replays
 
 This table counts **profiles with both ordinary and reviewed results**, out
 of 17, not individual test assertions. It combines the original contract's
-passes with the linked client results. A dash means no paired result has
-been credited here, not that the feature has been tested and failed.
+passes with the linked client results through November 27.
 
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | 17 | 17 |
-| Host-provided function | 17 | 16 | 17 | 16 | 16 |
+| Host-provided function | 17 | 17 | 17 | 17 | 17 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 674 of 680** profile/route/position combinations.
+That accounts for **680 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
 WIT-targeted source build or a hosted release.
 The resource callback counts include the two original PHP-Wasm routes, plus
 the [separately checked callers](resource-ticket-positions-20261126.md#direct-callbacks-are-separate).
-The difference is not a count of missing implementations: some installations
-still need review or a more discriminating client. These counts also do not
-measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
+These counts do not measure lifetime, failure, reentry or cleanup coverage,
+or hosted release acceptance.
 
-The **six outstanding placements** are all in PHP-Wasm: an application
-function forwarded through an immediate export result, a callback argument,
-and a callback result, on the ordinary and reviewed routes. Incoming Lean
-functions and native Composer installs are different witnesses.
+The [ordinary](zend-application-functions-20261127/ordinary.json) and
+[reviewed](zend-application-functions-20261127/reviewed.json) PHP-Wasm
+packages supplied the last six. The [PHP application](../../tests/fixtures/structured-types/tariff-zend-application.php)
+forwarded its own function through an immediate result, a callback argument
+and another callback's reply. Lean invoked that reply and got 42, not the
+fallback. Escaped call-scoped registrations failed without calling PHP again.
+The test counted four native identities while values were held and zero after
+the calls returned. Each release ran inside PHP 8.4 in both Node and Chromium,
+with embedded and Composer loading at startup and on demand.
+
+To reproduce, run `npm run test:php-wasm-application-function-positions`
+with the [standalone Zend SDK](php-wasm-function-fields-20261126.md).
+Set `LEAN_BRIDGE_ZEND_TARIFF_KEEP` to retain new handoffs, or
+`LEAN_BRIDGE_ZEND_TARIFF_REPLAY` to the directory containing both original
+handoffs to exercise the installed clients again. Do not set both.
 
 ### What has passed on just the ordinary route?
 
-None of the six outstanding positions has an ordinary-only result. The
+None. Every position has both results. The
 [ordinary](c-wit-application-functions-20261127/ordinary.php-native.json)
 and [reviewed](c-wit-application-functions-20261127/reviewed.php-native.json)
 native PHP packages complete the three forwarding pairs and the distinct
@@ -214,9 +222,7 @@ NuGet packages complete the same four pairs for C#. Both the
 [reviewed](c-wit-application-functions-20261127/reviewed.maven.json) Maven
 JARs ran two distinct clients: Java added its three function positions and
 resource reply per route; Kotlin added the three function positions and
-both resource directions. All **674/680** individual installed positions
-are backed by pairs. This does not count lifetime or error assertions, or
-qualify a hosted release.
+both resource directions. The Zend runs above complete the remaining pairs.
 
 ### Reproducing application-provided function crossings
 
