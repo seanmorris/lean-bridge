@@ -218,6 +218,15 @@ host error, and try the saved wrappers again after their registration ends.
 Rust client against the generated public API. Type-checking alone does not
 qualify an installed client in the table.
 
+`npm run test:c-wit-application-function-positions` builds the C and
+WIT/WASI archives together on each author route, then runs the same C11
+application against each relocated package. It uses six scenarios and an
+independent observer for cleanup. Supply an existing scratch directory in
+`LEAN_BRIDGE_C_WIT_APP_KEEP` to keep the two releases or point
+`LEAN_BRIDGE_C_WIT_APP_REPLAY` to their `sets-*` directory to reinstall
+without recompiling Lean. The smaller `test:c-wit-application-function-interfaces`
+check compiles the consumer against both headers; it does not execute it.
+
 ### Host-owned objects: which installs cover each position?
 
 An immediate export argument or result is the object itself. Passing a
