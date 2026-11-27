@@ -207,6 +207,15 @@ Set `LEAN_BRIDGE_APP_QUOTE_KEEP` to an existing directory to retain the
 package sets, or `LEAN_BRIDGE_APP_QUOTE_REPLAY` to the resulting `sets-*`
 directory to rerun the installed clients without rebuilding Lean.
 
+For Python, Ruby and Rust, `npm run test:native-application-function-positions`
+builds a wheel, gem and crate from each authoring route, installs them, and
+runs downstream clients. They distinguish forwarding the live application
+function from returning a substitute, exercise nested calls and the original
+host error, and try the saved wrappers again after their registration ends.
+`npm run test:native-application-function-interfaces` separately checks the
+Rust client against the generated public API. Type-checking alone does not
+qualify an installed client in the table.
+
 ### Host-owned objects: which installs cover each position?
 
 An immediate export argument or result is the object itself. Passing a

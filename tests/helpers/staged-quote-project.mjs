@@ -8,6 +8,26 @@ import {saveLakeFile} from "./lake-workspace.mjs";
 import {leasedClosureFieldReviewedIr} from "./owned-aggregate-fixture.mjs";
 
 /**
+ * Verify the registration, borrow and independent result lease in the compiled signature.
+ *
+ * @param ir - Complete binding contract, either independently reviewed or emitted by Lean.
+ */
+export const checkApplicationFunctionPositions=ir=>{
+	const find=n=>ir.declarations.find(d=>d.source.declaration==="Owned."+n);
+	const pass=find("passApplicationQuote"),visit=find("visitApplicationQuote");
+	assert.equal(pass.parameters.length,1);assert.equal(visit.parameters.length,3);
+	const id=pass.parameters[0].type.id;
+	assert.equal(pass.parameters[0].ownership,"borrow");assert.equal(pass.parameters[0].lifetime.scope,"call");
+	assert.equal(pass.result.type.id,id);assert.equal(visit.parameters[0].type.id,id);
+	const visitor=ir.types.find(t=>t.id===visit.parameters[1].type.id).callable;
+	assert.equal(visitor.parameters[0].type.id,id);assert.equal(visitor.parameters[0].ownership,"borrow");
+	assert.equal(visitor.parameters[0].lifetime.scope,"call");
+	const choose=ir.types.find(t=>t.id===find("stagedQuote").parameters[0].type.id).callable;
+	assert.equal(choose.result.type.id,id);assert.equal(choose.result.ownership,"lease");
+	assert.equal(pass.result.ownership,"lease");
+};
+
+/**
  * Give the ordinary project explicit exports and give the reviewed project
  * only its module name and independent Binding IR.
  *

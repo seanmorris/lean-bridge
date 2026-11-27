@@ -1557,6 +1557,8 @@
     "test:zend-direct-transport": "node --test tests/helpers/zend-direct-transport.mjs",
     "test:perl-callback-frame-facade": "node --test --test-concurrency=1 tests/helpers/perl-frame-facade.mjs",
     "test:native-incoming-function": "node --test --test-concurrency=1 tests/helpers/native-incoming-installed.mjs",
+    "test:native-application-function-positions": "LEAN_BRIDGE_NATIVE_APPLICATION_FUNCTIONS=1 node --test --test-concurrency=1 tests/helpers/native-incoming-installed.mjs",
+    "test:native-application-function-interfaces": "node --test --test-concurrency=1 tests/helpers/native-application-function-interfaces.mjs",
     "test:rust-lease-shapes": "node --test tests/helpers/rust-lease-shapes.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",
     "test:native-immediate-cursor": "node --test --test-concurrency=1 tests/helpers/native-immediate-cursor.mjs",

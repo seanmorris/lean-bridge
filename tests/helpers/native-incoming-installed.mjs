@@ -1,6 +1,6 @@
 /** @file Build two real author releases; consume each offline with pip, RubyGems and Cargo. */
 import assert from "node:assert/strict";
-import {mkdir,mkdtemp,readFile,rm} from "node:fs/promises";
+import {access,mkdir,mkdtemp,readFile,rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join,resolve} from "node:path";
 import test from "node:test";
@@ -16,26 +16,32 @@ import {prepareRustCorpusDependencies} from "./type-corpus-rust.mjs";
 
 const targets=["pypi","rubygems","cargo"],fixture=resolve("tests/fixtures");
 
-test("offline installed direct callback borrows: wheel, gem and crate",{timeout: 14_400_000},async t=>{
+const application=process.env.LEAN_BRIDGE_NATIVE_APPLICATION_FUNCTIONS==="1";
+const fixtureOptions=application?{hostFunctions: true}:{incoming: true};
+test("offline installed "+(application?"application-origin functions":"direct callback borrows")+": wheel, gem and crate",{timeout: 14_400_000},async t=>{
 	const env={...nativeFixtureEnvironment(["rust","ruby","python"]),CARGO_NET_OFFLINE: "true"
 		, CARGO_HOME: process.env.CARGO_HOME??resolve(".toolchains/cargo-copied")
 		, LEAN_BRIDGE_PYTHON: process.env.LEAN_BRIDGE_PYTHON??"/usr/bin/python3"};
-	const keep=env.LEAN_BRIDGE_NATIVE_INCOMING_KEEP,replay=env.LEAN_BRIDGE_NATIVE_INCOMING_REPLAY;
-	assert.ok(!(keep && replay),"select either original releases or a retention directory");
+	const prefix=application?"LEAN_BRIDGE_NATIVE_APP_QUOTE_":"LEAN_BRIDGE_NATIVE_INCOMING_";
+	const keep=env[prefix+"KEEP"],replay=env[prefix+"REPLAY"],resume=env[prefix+"RESUME"];
+	assert.ok([keep,replay,resume].filter(Boolean).length<=1,"select one retention, resume or replay directory");
 	const work=await mkdtemp(join(tmpdir(),"native-incoming-"));t.after(()=>rm(work,{recursive: true,force: true}));
-	const sets=replay?resolve(replay):keep?await mkdtemp(join(resolve(keep),"sets-")):join(work,"sets");
-	const out=resolve(env.LEAN_BRIDGE_NATIVE_INCOMING_OUTPUT??"build/native-incoming-reports");
+	const sets=replay||resume?resolve(replay??resume):keep?await mkdtemp(join(resolve(keep),"sets-")):join(work,"sets");
+	if(replay||resume) await access(sets);
+	const out=resolve(env[prefix+"OUTPUT"]??(application?"build/native-application-functions":"build/native-incoming-reports"));
 	const base=await readFile(join(fixture,"onboarding/leased-closure-fields/Owned.lean"),"utf8");
-	const suffix=await readFile(join(fixture,"structured-types/visit-quote.lean"),"utf8"),sourceSha256=sha256(base+"\n"+suffix);
+	const suffix=await readFile(join(fixture,"structured-types",application?"pass-application-quote.lean":"visit-quote.lean"),"utf8");
+	const sourceSha256=sha256(base+"\n"+suffix);
 	const reports=[];
 	for(const route of ["ordinary","reviewed"])
 	{
 		const stage=join(work,route),dest=join(sets,route),handoff=join(dest,"package"),depRoot=join(dest,"locked");
 		await mkdir(stage);
-		if(!replay)
+		const exists=resume&&await access(dest).then(()=>true,e=>{if(e.code!=="ENOENT")throw e;return false;});
+		if(!replay&&!exists)
 		{
 			const project=join(stage,"project"),output=join(stage,"producer");
-			await prepareStagedQuoteProject(project,route,targets,{incoming: true});
+			await prepareStagedQuoteProject(project,route,targets,fixtureOptions);
 			assert.equal(sha256(await readFile(join(project,"Owned.lean"))),sourceSha256);
 			try
 			{
@@ -60,7 +66,7 @@ test("offline installed direct callback borrows: wheel, gem and crate",{timeout:
 		{
 			const pkg=receipt.packages.find(p=>p.target===target),profile=receipt.profiles.find(p=>p.id===pkg.profile);
 			const app=join(stage,target);
-			const checked=await runIncomingConsumer({app,handoff,depRoot,dependencies,env,sourceSha256,route,pkg,profile});
+			const checked=await runIncomingConsumer({app,handoff,depRoot,dependencies,env,sourceSha256,route,pkg,profile,application});
 			results[target]={archive: pkg.artifacts[0],runtimeIdentity: pkg.runtimeIdentity,...checked};
 			await saveLakeFile(out,route+"."+target+".json",canonicalJson({route,sourceSha256,receiptSha256: result.receiptSha256,...results[target]}));
 			await rm(app,{recursive: true});t.diagnostic(route+" "+target+" passed");

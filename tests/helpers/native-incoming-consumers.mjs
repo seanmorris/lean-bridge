@@ -8,14 +8,16 @@ import {copiedCleanEnvironment} from "./copied-fixture-install.mjs";
 import {saveLakeFile} from "./lake-workspace.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {installPythonWheel} from "./python-wheel-install.mjs";
-import {checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
+import {checkApplicationFunctionPositions,checkStagedQuoteIdentities} from "./staged-quote-project.mjs";
 
 const fixture=resolve("tests/fixtures/structured-types");
 const json=async path=>JSON.parse(await readFile(path));
 const idle=[1,1,1,1,1,1,0];
-const files=async(app,ext)=>{
+const files=async(app,ext,application)=>{
 	const names=["tariff-incoming."+ext,"tariff-incoming-observer."+ext];
-	for(const n of names) await copyFile(join(fixture,n),join(app,n));
+	const client=application?"tariff-application-function."+ext:names[0];
+	await copyFile(join(fixture,client),join(app,names[0]));
+	await copyFile(join(fixture,names[1]),join(app,names[1]));
 	return Promise.all(names.map(n=>readFile(join(app,n)).then(sha256)));
 };
 const validate=async(o,root,meta)=>{
@@ -25,8 +27,11 @@ const validate=async(o,root,meta)=>{
 	await verifyNativeFiles(root,inventory.files);
 	const component=join(meta,"component"), model=await json(join(component,"model.json"));
 	const ir=await json(join(component,"binding-ir.json")), native=await json(join(component,"native-component.json"));
-	const pins=checkStagedQuoteIdentities(model,ir,o.profile,o.route,{incoming: true});
-	const d=ir.declarations.find(x=>x.source.declaration==="Owned.visitQuote");
+	const options=o.application?{hostFunctions: true}:{incoming: true};
+	const pins=checkStagedQuoteIdentities(model,ir,o.profile,o.route,options);
+	if(o.application) checkApplicationFunctionPositions(ir);
+	const decl=o.application?"Owned.visitApplicationQuote":"Owned.visitQuote";
+	const d=ir.declarations.find(x=>x.source.declaration===decl);
 	const outer=ir.types.find(t=>t.id===d.parameters[1].type.id), arg=outer.callable.parameters[0];
 	assert.equal(arg.ownership,"borrow");assert.equal(arg.lifetime.scope,"call");
 	const callback=ir.types.find(t=>t.id===arg.type.id);
@@ -46,7 +51,7 @@ const python=async o=>{
 	const mod=await run(py,["-I","-B","-c","import lean_tariff_quotes as api; print(api.__file__)"],app,clean);
 	assert.ok(mod.startsWith(deploy+"/lib/"));const packageDir=dirname(mod);
 	const pins=await validate(o,dirname(packageDir),join(packageDir,"lean_bridge"));
-	const [clientSha256,observerSha256]=await files(app,"py");
+	const [clientSha256,observerSha256]=await files(app,"py",o.application);
 	const boot="import runpy,sys; import lean_tariff_quotes as api; from lean_tariff_quotes import _assets; "
 		+"runpy.run_path(sys.argv[1])['observe'](sys.argv[2],api._OwnedNative._runtime,_assets._LIBRARY)";
 	await rm(archive);
@@ -64,7 +69,7 @@ const ruby=async o=>{
 	const root=await run(rb,["-e",boot+"print root"],app,clean);
 	assert.ok(root.startsWith(deploy+"/gems/"));
 	assert.equal(sha256(await readFile(join(deploy,"cache",basename(archive)))),o.pkg.artifacts[0].sha256);
-	const pins=await validate(o,root,join(root,"lean-bridge")),[clientSha256,observerSha256]=await files(app,"rb");
+	const pins=await validate(o,root,join(root,"lean-bridge")),[clientSha256,observerSha256]=await files(app,"rb",o.application);
 	const observe='load "./tariff-incoming-observer.rb";rt=LeanBridge::TariffQuotes.const_get(:Native,false).instance_variable_get(:@runtime);'
 		+'libs=Dir[File.join(root,"lib/**/liblean_bridge_native.so")];raise "expected one broker" unless libs.one?;'
 		+'DirectQuoteObserver.observe("./tariff-incoming.rb",rt,Fiddle.dlopen(libs.first))';
@@ -75,14 +80,15 @@ const ruby=async o=>{
 const rust=async o=>{
 	const {app,archive,env,dependencies}=o, build=join(app,"build");
 	await mkdir(build);
-	const [clientSha256,observerSha256]=await files(build,"rs");
+	const [clientSha256,observerSha256]=await files(build,"rs",o.application);
 	await rename(join(build,"tariff-incoming.rs"),join(build,"consumer.rs"));
 	await run("tar",["-xzf",archive],build,env);
 	const root=join(build,o.pkg.name+"-"+o.pkg.version);
 	const pins=await validate(o,root,join(root,"lean-bridge"));
 	assert.equal(sha256(await readFile(join(root,"Cargo.lock"))),dependencies.lockSha256);
 	const manifest=await json(join(root,"binding-manifest.json"));
-	assert.ok(manifest.contract.directClosureEntries.some(x=>x.original==="visit_quote" && x.name==="visit_quote_with"));
+	const entry=o.application?"visit_application_quote":"visit_quote";
+	assert.ok(manifest.contract.directClosureEntries.some(x=>x.original===entry && x.name===entry+"_with"));
 	const vendored=join(o.depRoot,"rust-dependencies.tar.gz"); assert.equal(dependencies.archive,basename(vendored));
 	assert.equal(sha256(await readFile(vendored)),dependencies.sha256);
 	await run("tar",["-xzf",vendored],build,env);

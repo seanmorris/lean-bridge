@@ -11,31 +11,17 @@ import {ledgerFrameworkArchives} from "./javascript-ledger-delivery.mjs";
 import {saveLakeFile} from "./lake-workspace.mjs";
 import {runFiveInstalledNpm} from "./npm-five-installed.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
-import {checkStagedQuoteIdentities,prepareStagedQuoteProject} from "./staged-quote-project.mjs";
+import {checkApplicationFunctionPositions,checkStagedQuoteIdentities,prepareStagedQuoteProject} from "./staged-quote-project.mjs";
 
 const options={hostFunctions: true},fixtures=resolve("tests/fixtures");
 const original=await readFile(join(fixtures,"onboarding/leased-closure-fields/Owned.lean"));
 const extra=await readFile(join(fixtures,"structured-types/pass-application-quote.lean"));
 const source=Buffer.concat([original,Buffer.from("\n"),extra]);
 const readJson=async path=>JSON.parse(await readFile(path));
-const checkPositions=ir=>{
-	const find=n=>ir.declarations.find(d=>d.source.declaration==="Owned."+n);
-	const pass=find("passApplicationQuote"),visit=find("visitApplicationQuote");
-	assert.equal(pass.parameters.length,1);assert.equal(visit.parameters.length,3);
-	const id=pass.parameters[0].type.id;
-	assert.equal(pass.parameters[0].ownership,"borrow");assert.equal(pass.parameters[0].lifetime.scope,"call");
-	assert.equal(pass.result.type.id,id);assert.equal(visit.parameters[0].type.id,id);
-	const visitor=ir.types.find(t=>t.id===visit.parameters[1].type.id).callable;
-	assert.equal(visitor.parameters[0].type.id,id);assert.equal(visitor.parameters[0].ownership,"borrow");
-	assert.equal(visitor.parameters[0].lifetime.scope,"call");
-	const choose=ir.types.find(t=>t.id===find("stagedQuote").parameters[0].type.id).callable;
-	assert.equal(choose.result.type.id,id);assert.equal(choose.result.ownership,"lease");
-	assert.equal(pass.result.ownership,"lease");
-};
 const verify=(model,ir,profile,route)=>{
 	const meta=checkStagedQuoteIdentities(model,ir,profile,route,options);
 	assert.equal(model.sourceIdentity.modules[0].source.sha256,sha256(source));
-	checkPositions(ir);
+	checkApplicationFunctionPositions(ir);
 	return {...meta,sourceSha256: sha256(source)};
 };
 
@@ -56,7 +42,7 @@ test("the two author contracts select application functions without changing the
 		{
 			assert.equal(cfg.exports,undefined);const ir=await readJson(join(src,"api.binding-ir.json"));
 			validateOwnedAggregateBindingIr(ir);
-			if(enabled) checkPositions(ir);
+			if(enabled) checkApplicationFunctionPositions(ir);
 			else assert.ok(ir.declarations.every(d=>!d.name.endsWith("ApplicationQuote")));
 		}
 	}
