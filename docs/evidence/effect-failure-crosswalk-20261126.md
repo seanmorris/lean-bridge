@@ -52,6 +52,24 @@ its value from 23 to 42, and dropping the error destroyed it once. All 32
 checks ended with zero live identities. The two routes used distinct
 Workshop archives and the same independently built peer and shared runtime.
 
+Forwarding an application coderef exposed a different failure in TariffQuotes.
+The original threaded Perl 5.36.3 [prebuilt](perl-forwarded-errors-20261127/5.36.3-threaded.prebuilt-only.failure.json)
+and [locally compiled XS](perl-forwarded-errors-20261127/5.36.3-threaded.build-xs.failure.json)
+installs both lost the thrown object. A call to the forwarded function
+raised a generic status-10 string instead. The callback had stored the
+exception on the XS call that registered it rather than the call that
+invoked it. The repaired binding keeps the current call frame on Perl's
+save stack, which restores the enclosing frame even when Perl unwinds.
+
+The [threaded 5.36.3 ordinary](perl-forwarded-errors-20261127/ordinary.5.36.3-threaded.json)
+and [unthreaded 5.38.2 reviewed](perl-forwarded-errors-20261127/reviewed.5.38.2-unthreaded.json)
+spot checks compiled the changed XS against their respective C archives and ran
+the [Perl application](../../tests/fixtures/structured-types/tariff-application.pl).
+The visitor caught the original blessed object and could either return
+107 or throw a distinct replacement. The enclosing registration remained
+usable; the observer saw nine live identities while values were held and
+zero after shutdown. This verifies the XS change, not a new CPAN install.
+
 **CPython:** An older installed peer accepted the integer
 `2` as a true tag inside a native `Except` result. A property setter let
 the call continue, and a getter returned `97`. The [CPython 3.11](python-host-error-policy-20261126/cp311-cp311-linux_x86_64.json)

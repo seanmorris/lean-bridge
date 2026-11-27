@@ -14,7 +14,6 @@ typedef struct {
   SV *error, *replacement;
 } lpo_frame;
 typedef struct {
-  lpo_frame *frame;
   SV *code;
   CV *invoker;
 } lpo_callback;
@@ -26,6 +25,9 @@ typedef struct {
   int returned;
 } lpo_invocation;
 static lpo_invocation *lpo_active;
+/* A forwarded coderef can be invoked through a newer XS call than the
+   one that registered it. The immediate caller owns its exception. */
+static lpo_frame *lpo_call_frame;
 static void lpo_frame_end(pTHX_ void *value) {
   lpo_frame *frame = value;
   SvREFCNT_dec(frame->error); SvREFCNT_dec(frame->replacement);
@@ -36,6 +38,7 @@ static lpo_frame *lpo_begin_frame(pTHX_ lpg_scope *scope) {
   frame->scope = scope;
   save_scalar(PL_errgv);
   LB_PERL_GRAPH_CHECKPOINT(); frame->replacement = newSVpvs("");
+  SAVEVPTR(lpo_call_frame); lpo_call_frame = frame;
   return frame;
 }
 static lpo_callback *lpo_new_callback(pTHX_ lpo_frame *frame, SV *code, const char *name) {
@@ -45,7 +48,6 @@ static lpo_callback *lpo_new_callback(pTHX_ lpo_frame *frame, SV *code, const ch
   CV *invoker = get_cv(name, 0);
   if (!invoker) croak("Missing generated owned callback converter");
   lpo_callback *callback = lpg_allocate(aTHX_ frame->scope, 1, sizeof(*callback));
-  callback->frame = frame;
   callback->code = lpg_pin(aTHX_ SvRV(code));
   callback->invoker = (CV *)lpg_pin(aTHX_ (SV *)invoker);
   return callback;
@@ -54,14 +56,14 @@ static uint32_t lpo_invoke(lpo_callback *callback, ${prefix}_session *session,
     const void **arguments, void *output, ${prefix}_result **owner) {
   dTHX; dSP;
   if (!lpo_origin(aTHX) || lpo_state.closed || session != lpo_state.session) return 10;
-  lpo_frame *frame = callback->frame;
-  if (frame->error) return 10;
+  lpo_frame *frame = lpo_call_frame;
+  if (!frame || frame->error) return 10;
   lpo_invocation invocation = { callback, arguments, output, owner, 0 }, *previous = lpo_active;
   lpo_active = &invocation;
   PUSHMARK(SP); PUTBACK;
   int count = call_sv((SV *)callback->invoker, G_VOID | G_EVAL);
   SPAGAIN; SP -= count;
-  if (SvROK(ERRSV) || SvTRUE(ERRSV)) {
+  if (!frame->error && (SvROK(ERRSV) || SvTRUE(ERRSV))) {
     frame->error = GvSV(PL_errgv);
     GvSV(PL_errgv) = frame->replacement; frame->replacement = NULL;
   }

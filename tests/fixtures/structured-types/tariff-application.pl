@@ -43,7 +43,27 @@ sub exercise_incoming_quote {
         checked(ref($error) && refaddr($error)==refaddr($marker));
         return $outer->call($n);
     },3);
-    checked($after==43 && join(',',@calls) eq '0,2,3'); $checkpoint->('nested');
+    checked($after==43 && join(',',@calls) eq '0,2,3');
+    # The visitor itself may catch the failure at the call site, without
+    # poisoning its enclosing registration. It may also throw its own error.
+    my $other=bless {},'Tariff::ReplacementFailure';
+    for my $replace (0,1) {
+        my $visits=0;
+        my $attempt=sub { LeanBridge::TariffQuotes::visit_application_quote(
+            sub { ++$visits; die $marker },sub {
+                my ($q,$n)=@_;
+                my $e=caught(sub { $q->call($n) });
+                checked(ref($e) && refaddr($e)==refaddr($marker));
+                die $other if $replace;
+                return $n+100;
+            },7) };
+        if ($replace) {
+            my $e=caught($attempt);
+            checked(ref($e) && refaddr($e)==refaddr($other));
+        } else { checked($attempt->()==107) }
+        checked($visits==1);
+    }
+    $checkpoint->('nested');
     for my $n (42,71) {
         my $input=LeanBridge::TariffQuotes::new_ticket($n);
         my $recovery=LeanBridge::TariffQuotes::new_ticket(800);

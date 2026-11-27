@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import {mkdir,mkdtemp,readFile,rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
-import {basename,join} from "node:path";
+import {basename,join,resolve} from "node:path";
 import test from "node:test";
 import {projectOwnedPerl} from "../../src/build/owned-perl-projection.mjs";
 import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
@@ -17,6 +17,11 @@ test("installed CPAN coderefs forward real application functions and exchange di
 	const env=process.env,root=env.LEAN_BRIDGE_PERL_APP_OUTPUT,route=env.LEAN_BRIDGE_PERL_APP_ROUTE;
 	const handoff=env.LEAN_BRIDGE_PERL_APP_C,pin=env.LEAN_BRIDGE_PERL_APP_C_SHA256,leanPrefix=env.LEAN_BRIDGE_LEAN_PREFIX;
 	assert.ok(root&&["ordinary","reviewed"].includes(route)&&handoff&&pin&&leanPrefix);
+	// Eight installs may outlive a local edit. Never combine observations
+	// from different application or observer revisions into one route.
+	const sources={};
+	for(const file of ["tariff-application.pl","tariff-incoming-observer.pl"])
+		sources[file]=sha256(await readFile(resolve("tests/fixtures/structured-types",file)));
 	const perls=JSON.parse(env.LEAN_BRIDGE_PERLS);assert.equal(perls.length,4);
 	const versions=new Map();
 	for(const perl of perls)
@@ -51,6 +56,7 @@ test("installed CPAN coderefs forward real application functions and exchange di
 		};
 		const onResult=async(selected,observation)=>{
 			assert.equal(observation.version+"-"+observation.threads,abi);assert.equal(observation.installXs.mode,selected);
+			assert.deepEqual(observation.application.sources,sources);
 			const result={...row,...pins,abi,mode: selected,observation};
 			await saveLakeFile(root,route+"/results/"+abi+"."+selected+".json",canonicalJson(result));
 			await rm(join(root,route,"results",abi+"."+selected+".failure.json"),{force: true});

@@ -352,6 +352,17 @@ to replay a previously retained destination receipt. Optional
 `LEAN_BRIDGE_PERL_APP_ABI` and `LEAN_BRIDGE_PERL_APP_MODE` select one result;
 a partial replay does not establish full Perl coverage.
 
+To isolate a Perl forwarding failure without building a new CPAN release,
+use `npm run test:perl-callback-frame-facade` with
+`LEAN_BRIDGE_FRAME_APPLICATION=1` and `LEAN_BRIDGE_FRAME_C_HANDOFF`
+pointing at the ordinary/reviewed C package sets. Supply each selected
+route's receipt pin as `LEAN_BRIDGE_FRAME_APPLICATION_ORDINARY_SHA256`
+or `LEAN_BRIDGE_FRAME_APPLICATION_REVIEWED_SHA256`, the matching
+`LEAN_BRIDGE_LEAN_PREFIX` and `LEAN_BRIDGE_PERLS`. Optionally select
+`LEAN_BRIDGE_FRAME_APPLICATION_ROUTE` and `LEAN_BRIDGE_FRAME_APPLICATION_ABI`.
+The [failure crosswalk](effect-failure-crosswalk-20261126.md) distinguishes
+this compiled XS probe from the separately installed CPAN results.
+
 For native PHP, `test:php-application-from-c` installs a separate Composer
 distribution from the same authenticated C donor. Set `LEAN_BRIDGE_PHP_APP_C`,
 `LEAN_BRIDGE_PHP_APP_C_SHA256`, `LEAN_BRIDGE_PHP_APP_ROUTE` and
