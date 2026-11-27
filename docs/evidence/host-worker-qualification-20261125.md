@@ -173,11 +173,11 @@ been credited here, not that the feature has been tested and failed.
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | ≥13 | ≥11 |
-| Host-provided function | 17 | — | 17 | — | — |
+| Host-provided function | 17 | 5 | 17 | 5 | 5 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 16 | 17 |
 
-That accounts for **at least 556 of 680** profile/route/position combinations.
+That accounts for **at least 586 of 680** profile/route/position combinations.
 The resource callback counts include the two original PHP-Wasm routes, plus
 the [separately checked callers](resource-ticket-positions-20261126.md#direct-callbacks-are-separate).
 The difference is not a count of missing implementations: some installations
@@ -196,12 +196,14 @@ ends, a saved wrapper must not re-enter the application. This tests
 forwarding a **call-borrowed registration**, not creating a new long-lived
 registration by returning a bare JavaScript function.
 
-The [ordinary-package executions](npm-application-functions-20261126/ordinary.json)
-passed in all five clients: three calls per client reached the original
-application function, the original exception propagated, and no stale call
-entered application code. The executed TypeScript client also returned 903
-through its typed entry points. An ordinary result alone does not increase
-the paired count in the table.
+The [ordinary](npm-application-functions-20261126/ordinary.json) and
+[reviewed](npm-application-functions-20261126/reviewed.json) packages passed
+in Node, strict TypeScript, a Chromium page, mounted React and a dedicated
+worker. On both routes, three calls per client reached the application
+function, the original exception propagated, no stale call entered application
+code, and the live identity count returned to zero. The executed TypeScript
+client also returned 903 through its typed API. These runs qualify three
+positions on five profiles and two routes (30 placements).
 
 Set `LEAN_BRIDGE_APP_QUOTE_KEEP` to an existing directory to retain the
 package sets, or `LEAN_BRIDGE_APP_QUOTE_REPLAY` to the resulting `sets-*`
