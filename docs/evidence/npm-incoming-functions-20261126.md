@@ -195,3 +195,21 @@ identities. These are PHP observations, not JavaScript callback tests.
 Run `npm run test:perl-zend-direct-callback-positions` to match the two
 original caller sources, Lean fixture, package identities and execution
 results. Neither client establishes what happens in WIT/WASI.
+
+The November 27 [ordinary](zend-incoming-functions-20261127/ordinary.json)
+and [reviewed](zend-incoming-functions-20261127/reviewed.json) packages ran
+[a PHP 8.4 client](../../tests/fixtures/structured-types/tariff-zend-direct.php)
+in all eight combinations of Node/Chromium, embedded/Composer and startup/lazy
+loading per route. After either a successful or throwing callback, the
+borrowed function rejected another call. A separately retained function still
+returned 45. A nested callback threw its own `DomainException`; the outer
+callback caught that exact object and used its own still-live borrow to
+return 34. The observer counted one identity while held, zero after each
+release and zero after shutting down a binding with a live control.
+Reopening the binding produced 42. This is a Lean-created function received
+by PHP, not a PHP-supplied function forwarded through Lean.
+
+To replay, set `LEAN_BRIDGE_ZEND_TARIFF_REQUIRE_INCOMING=1` and point
+`LEAN_BRIDGE_ZEND_TARIFF_REPLAY` at the directory containing the original
+ordinary and reviewed handoffs. Run `npm run test:php-wasm-function-fields`
+with the PHP-Wasm host, observer build inputs and Chromium configured.
