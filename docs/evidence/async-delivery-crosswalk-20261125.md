@@ -8,6 +8,11 @@ former proves demand and item delivery, not that callbacks can reenter. Dates
 and package identities belong to the linked runs, not to this inventory.
 These are local qualifications, not a promotion of today's release archives.
 
+**Current installed coverage: 136/136.** The smaller totals below record
+earlier checkpoints. All 17 profiles passed the four signatures on both
+author routes. Node #1223 still depends on #1221 for ownership and #1222
+for effects.
+
 | Consumer profile | Task, cancellation and iterator witness | Nested callback or teardown witness |
 | --- | --- | --- |
 | `perl` | [CPAN installs](perl-tasks-20261123.json): a real event loop advances while a Future is pending; demand, early close, typed step failure and cancellation run on installed XS. | [Retained workers](perl-retained-workers-20261123.json): the callback waits for another installed Future; separate retirement runs exercise blocked work on threaded and unthreaded Perls. |
@@ -565,6 +570,15 @@ package order, guest digests and actual output or exit code for all 52 launches.
 Retirement is a different observation: the [original Depot/Peer installs](wit-task-retained-callbacks-20261123.md#retire-the-shared-runtime-with-two-packages-installed)
 refused further work both before observation and inside an executing callback
 on each author route. Those are not the Workshop and Gauge archives.
+
+For #1221, [two installed Tariff packages](wit-function-fields-20261126.md)
+separately establish how a Wasmtime callback borrows a Lean-created function:
+an explicitly retained function survives even when the callback fails;
+the borrowed view expires at return. That synchronous result and the
+Workshop/Gauge registration-destruction counts above answer different
+questions. Neither establishes that a call-scoped borrow can be used later
+by a pending task.
+
 To repeat the new replays, set `LEAN_BRIDGE_WIT_CURSOR_REPLAY` to each
 original Watch handoff and `LEAN_BRIDGE_WIT_CURSOR_OBSERVATIONS` to a fresh
 output directory for `npm run test:wit-cursor-io`. For the pair, set

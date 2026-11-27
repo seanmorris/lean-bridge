@@ -10,6 +10,21 @@ a broken runtime safe to reuse.
 **Current installed coverage: 102 of 102** — 34 immediate IO, 34 typed
 EIO and 34 named-error combinations. Each is one of 17 profiles on one of
 two authoring routes. VO #1222 still depends on the ownership gate (#1221).
+The smaller totals below show how that evidence accumulated.
+
+**Disposal during a recoverable callback failure:** On the
+[ordinary](npm-active-disposal-20261127/ordinary.json) and
+[reviewed](npm-active-disposal-20261127/reviewed.json) npm releases, Node,
+compiled TypeScript, a browser page, React and a dedicated worker ran the
+[same nested callback](../../tests/fixtures/npm-active-disposal/calls.mjs).
+The inner function disposed its executing wrapper and threw. The caller
+caught the **original error object**; invoking the expired registration
+did not reenter application code. The outer registration still returned
+43 (73 in React and the worker), a fresh call returned 903, and the live
+owner count returned to zero. This checks #1221 ownership during a #1222
+callback failure; it adds no new IO signature and does not simulate a trap.
+To replay, point `LEAN_BRIDGE_APP_QUOTE_REPLAY` at the retained directory
+containing both package sets and run `npm run test:npm-active-disposal`.
 
 **Java and Kotlin:** The [ordinary](jvm-host-error-policy-20261126/ordinary.json)
 and [reviewed](jvm-host-error-policy-20261126/reviewed.json) reports pin
@@ -137,8 +152,13 @@ on the **same Ledger or Journal release**:
   [custom store](../../tests/fixtures/wit-sync-io/custom.c) instead requires
   discarding it and prevents its peer from reusing the runtime. The same
   two verified Journal archives supplied the bindings for both programs.
+  In the distinct [installed Wasmtime Tariff releases](wit-function-fields-20261126.md),
+  a failing visitor leaves the caller's output untouched without poisoning
+  the runtime. Its explicitly retained function remains callable; its borrowed
+  function does not. An inner failure also leaves the outer borrow usable.
+  These results verify cleanup after callback failure, not recovery from a trap.
 
-The resulting lower bound for #1222 is **58/102 (56%, rounded down)**: 34 immediate
+At this checkpoint, the lower bound for #1222 was **58/102**: 34 immediate
 IO, twelve EIO, and twelve named-error signature combinations. These counts are
 not estimates of time remaining. In particular, a named error carrying
 copied bytes does not establish that an error can be the sole owner of a

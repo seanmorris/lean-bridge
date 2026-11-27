@@ -1,0 +1,88 @@
+{
+  "archives": [
+    {
+      "bytes": 102185,
+      "path": "@example-tariff-quotes-1.0.0.tgz",
+      "sha256": "694721109ea40f80ad561e2ae0c022cb53ec71960a888e695b3779aaf1a77f63"
+    },
+    {
+      "bytes": 1676803,
+      "path": "lean-bridge-runtime-0.0.0-abi2.ae3b114c3563244686b64caebef7e5b9deff056c12907a18fb35220e9ec1edf7.tgz",
+      "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+    }
+  ],
+  "bindingIrSha256": "e574befec27f0f05d6fa9cb94e169117f2d49ab42e9e63b99313d031fd017fa9",
+  "browser": {
+    "page": {
+      "after": 0,
+      "fresh": 903,
+      "sameError": true,
+      "trace": [
+        "outer:2",
+        "inner:7",
+        "outer:3"
+      ],
+      "value": 43
+    },
+    "react": {
+      "after": 0,
+      "fresh": 903,
+      "sameError": true,
+      "trace": [
+        "outer:2",
+        "inner:7",
+        "outer:3"
+      ],
+      "value": 73
+    },
+    "worker": {
+      "after": 0,
+      "fresh": 903,
+      "sameError": true,
+      "trace": [
+        "outer:2",
+        "inner:7",
+        "outer:3"
+      ],
+      "value": 73
+    }
+  },
+  "installedBytes": [
+    "069a9833cae2cb339020636e686ad79acc8f4eb48a68797f6968f38a2b20dc36",
+    "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  ],
+  "node": {
+    "after": 0,
+    "fresh": 903,
+    "sameError": true,
+    "trace": [
+      "outer:2",
+      "inner:7",
+      "outer:3"
+    ],
+    "value": 43
+  },
+  "receiptSha256": "2f48ff1fa0692bfc12644e44638d429e358212fe63b7c973c4442cbef653bc9a",
+  "reviewedSourceSha256": "873652ebf5a38e90a70700dede8ea8a4e84f078ef415537b32b47ae81c19b97f",
+  "route": "reviewed",
+  "sourceHashes": {
+    "calls.d.mts": "640ee27dcaf82224eb85006812a86c9d2bbff9b9af8ca6a2e76083b7937cca9a",
+    "calls.mjs": "d487c3191c46373101a9569e39938ebe281ed3b0e69df91cc6b1053a9c3a2725",
+    "observer.mjs": "aa0116bad442b8d501c54c68a089e4873381b0b9309f1c2f691e4d6f464f0997",
+    "page.mjs": "6e7d42f2ecfa4754c80f1d80329c54787a91cc5c83db62270c63018be1ae0b09",
+    "typed.mts": "f23d0ff9e8f102415f3eb040851b3f99b237c2462bf5d3b8b92fd3056baea30e",
+    "worker.mjs": "e916d49cdd522d1f549603c1e33a738b5fd381ad95597d28df0d19cdc3ec635b"
+  },
+  "typescript": {
+    "after": 0,
+    "fresh": 903,
+    "sameError": true,
+    "trace": [
+      "outer:2",
+      "inner:7",
+      "outer:3"
+    ],
+    "typedValue": 904,
+    "value": 43
+  }
+}
