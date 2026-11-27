@@ -203,7 +203,7 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Two profiles have ordinary-package evidence inside that 58-placement
+Three profiles have ordinary-package evidence inside that 58-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
@@ -211,9 +211,10 @@ build tools exercised it:
 | --- | ---: | --- | ---: |
 | [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
 | [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
+| [Native PHP](c-wit-application-functions-20261127/ordinary.php-native.json) | 3 | Callback result | 4 |
 
-This brings the lower bound to **628/680 individual installed placements**:
-622 backed by pairs, plus 6 ordinary-only. **52** still lack an individual
+This brings the lower bound to **632/680 individual installed placements**:
+622 backed by pairs, plus 10 ordinary-only. **48** still lack an individual
 witness in this tally. The paired figure is **622/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
@@ -366,8 +367,8 @@ archive and `dependencies.json`. Pin the latter's SHA-256 with
 archive and the lockfile inside the installed crate before compiling offline.
 Its runtime test covers forwarding, not a new Rust Ticket placement.
 
-To audit Python or Ruby results, run `test:projected-application-receipts`.
-Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi` or `rubygems`,
+To audit Python, Ruby or native PHP results, run `test:projected-application-receipts`.
+Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi`, `rubygems` or `php-native`,
 `LEAN_BRIDGE_PROJECTED_APP_DONORS` to the directory of C release sets,
 and `LEAN_BRIDGE_PROJECTED_APP_OUTPUT` to the target directory with the
 retained handoffs and JSON reports. Leave `LEAN_BRIDGE_PROJECTED_APP_ROUTE`

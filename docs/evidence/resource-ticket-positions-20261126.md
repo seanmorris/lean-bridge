@@ -44,6 +44,12 @@ whose callback returns the very same Ticket as its recovery value cannot
 distinguish the successful reply from the fallback, so these comparisons
 do not add a resource callback **result**.
 
+The later [ordinary native PHP package](c-wit-application-functions-20261127/ordinary.php-native.json)
+does distinguish its reply. The [Composer client](../../tests/fixtures/structured-types/tariff-application.php)
+received Tickets 42 and 71 and returned 43 and 72, while its fallback remained
+800. PHP 8.2.35 and 8.5.10 both ran the relocated vendor installation. That
+adds **one ordinary callback result**, not a reviewed result or a PHP-Wasm test.
+
 ### Five installed npm clients exchange Tickets directly
 
 Node, executed strict TypeScript, a Chromium page, mounted React and a

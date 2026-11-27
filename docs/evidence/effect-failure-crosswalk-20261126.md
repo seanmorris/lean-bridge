@@ -134,6 +134,13 @@ read the original and fallback Tickets, then retried successfully. After six
 success/failure/retry checkpoints, closing the session left zero live owners.
 The ordinary forwarding wheel did not contain this Ticket workload.
 
+On the [ordinary native Composer install](c-wit-application-functions-20261127/ordinary.php-native.json),
+both PHP CLIs caught the exact `DomainException` thrown by the application
+inside the nested price callback and the resource exchange. The outer price
+callback remained callable; the input and fallback Tickets remained readable.
+Each process held nine native identities during forwarding and zero after
+shutdown. This is recovery from a callback exception, not runtime retirement.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

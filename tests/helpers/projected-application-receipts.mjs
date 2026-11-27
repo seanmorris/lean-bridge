@@ -1,4 +1,4 @@
-/** @file Bind installed Python and Ruby forwarding/Ticket results to the component in the original C release. */
+/** @file Bind installed forwarding/Ticket results to the component in the original C release. */
 import assert from "node:assert/strict";
 import {mkdir,mkdtemp,readFile,rm} from "node:fs/promises";
 import {tmpdir} from "node:os";
@@ -12,18 +12,36 @@ import {checkApplicationFunctionPositions,checkStagedQuoteIdentities,checkTicket
 const fixture=resolve("tests/fixtures"),json=async p=>JSON.parse(await readFile(p));
 const receipt=root=>readVerifiedPackageSetReceipt({receiptPath: join(root,"package-set-receipt.json")});
 const names=["model.json","binding-ir.json","native-component.json"];
-test("the source release, installed archive and observed programs agree on both author routes",async t=>{
+const checkComposer=async(root,row,pkg)=>{
+	const manifest=await json(join(root,"composer.json"));
+	assert.equal(manifest.name,pkg.name);assert.equal(manifest.version,pkg.version);
+	assert.equal(manifest.require["ext-ffi"],"*");assert.equal(row.leanSourceSha256,row.sourceSha256);
+	assert.deepEqual(row.artifacts,[row.archive]);assert.match(row.composerVersion,/^Composer version /u);assert.match(row.lockSha256,/^[a-f0-9]{64}$/u);
+	const keys=["tariff-application.php","tariff-application-observer.php"].sort();
+	assert.deepEqual(Object.keys(row.sources).sort(),keys);
+	for(const file of keys)assert.equal(sha256(await readFile(join(fixture,"structured-types",file))),row.sources[file]);
+	assert.deepEqual(row.observations.map(o=>o.php.split(".").slice(0,2).join(".")).sort(),["8.2","8.5"]);
+	assert.equal(new Set(row.observations.map(o=>o.interpreterSha256)).size,2);
+	for(const o of row.observations)
+	{
+		assert.match(o.interpreterSha256,/^[a-f0-9]{64}$/u);
+		assert.deepEqual(o.values,{forwarded: 42,after: 43,replies: [43,72],trace: [0,2,3]});
+		const {held,...counts}=o.counts;assert.ok(Number.isSafeInteger(held)&&held>1);
+		assert.deepEqual(counts,{baseline: 1,expired: 1,forward: 1,nested: 1,ticket42: 1,ticket71: 1,afterShutdown: 0});
+	}
+};
+test("the donor, installed archive and downstream observations agree on each selected author route",async t=>{
 	const env=process.env,target=env.LEAN_BRIDGE_PROJECTED_APP_TARGET,only=env.LEAN_BRIDGE_PROJECTED_APP_ROUTE;
 	const donors=env.LEAN_BRIDGE_PROJECTED_APP_DONORS,output=env.LEAN_BRIDGE_PROJECTED_APP_OUTPUT;
-	assert.ok(["pypi","rubygems"].includes(target)&&donors&&output);if(only)assert.ok(["ordinary","reviewed"].includes(only));
-	const ruby=target==="rubygems",ext=ruby?"rb":"py",pair=[];
+	assert.ok(["pypi","rubygems","php-native"].includes(target)&&donors&&output);if(only)assert.ok(["ordinary","reviewed"].includes(only));
+	const ruby=target==="rubygems",php=target==="php-native",ext=ruby?"rb":"py",pair=[];
 	const source=await Promise.all(["onboarding/leased-closure-fields/Owned.lean","structured-types/pass-application-quote.lean","structured-types/exchange-ticket.lean"].map(p=>readFile(join(fixture,p),"utf8")));
 	for(const route of only?[only]:["ordinary","reviewed"])
 	{
 		const src=resolve(donors,route),dst=resolve(output,route,"handoff"),row=await json(resolve(output,route+".json"));
 		const a=await receipt(src),b=await receipt(dst);
 		const p=a.receipt.packages.find(p=>p.target==="c");assert.equal(b.receipt.packages.length,1);
-		const [q]=b.receipt.packages;assert.equal(q.target,target);assert.equal(p.name,"tariff-quotes");assert.equal(q.name,p.name);assert.equal(q.version,"1.0.0");
+		const [q]=b.receipt.packages;assert.equal(q.target,target);assert.equal(p.name,"tariff-quotes");assert.equal(q.name,php?"example/tariff-quotes":p.name);assert.equal(q.version,"1.0.0");
 		assert.equal(row.route,route);assert.equal(row.cReceiptSha256,a.result.receiptSha256);assert.equal(row.receiptSha256,b.result.receiptSha256);
 		assert.deepEqual(p.artifacts,[row.cArchive]);assert.deepEqual(q.artifacts,[row.archive]);assert.equal(p.runtimeIdentity,row.runtimeIdentity);assert.equal(q.runtimeIdentity,p.runtimeIdentity);
 		assert.equal(a.receipt.source.treeSha256,b.receipt.source.treeSha256);
@@ -42,16 +60,21 @@ test("the source release, installed archive and observed programs agree on both 
 			assert.equal(row.sourceSha256,sha256(source.join("\n")));assert.equal(model.sourceIdentity.modules.find(m=>m.module==="Owned").source.sha256,row.sourceSha256);
 			assert.equal(model.sourceIdentity.sourceTreeSha256,b.receipt.source.treeSha256);
 			const archive=join(dst,row.archive.path),root=join(work,"downstream");await mkdir(root);
-			const meta=ruby?"lean-bridge/component":"lean_tariff_quotes/lean_bridge/component";
-			const lib=(ruby?"lib/lean_bridge/tariff_quotes":"lean_tariff_quotes")+"/native/linux-x64/"+native.library;
-			const members=[...names.map(n=>meta+"/"+n),lib];
+			const meta=target==="pypi"?"lean_tariff_quotes/lean_bridge/component":"lean-bridge/component";
+			const prefix=ruby?"lib/lean_bridge/tariff_quotes/":php?"":"lean_tariff_quotes/";
+			const lib=prefix+"native/linux-x64/"+native.library;
+			const members=[...names.map(n=>meta+"/"+n),lib,...php?["composer.json"]:[]];
 			if(ruby)await run("bash",["-o","pipefail","-c",'tar -xOf "$1" data.tar.gz | tar -xzf - --no-same-owner --no-same-permissions -- "${@:2}"',"_",archive,...members],root,env);
 			else await run("unzip",["-q",archive,...members],root,env);
 			for(const n of names)assert.deepEqual(await json(join(root,meta,n)),await json(join(work,cmeta,n)));
 			assert.equal(sha256(await readFile(join(root,lib))),row.componentSha256);
-			for(const [id,name] of [["clientSha256","tariff-application-function"],["observerSha256","tariff-incoming-observer"],["ticketClientSha256","tariff-ticket-application"]])
-				assert.equal(row[id],sha256(await readFile(join(fixture,"structured-types",name+"."+ext))));
-			assert.deepEqual(row.observed,[1,1,1,1,1,1,0]);assert.deepEqual(row.ticketObserved,row.observed);
+			if(php)await checkComposer(root,row,q);
+			else
+			{
+				for(const [id,name] of [["clientSha256","tariff-application-function"],["observerSha256","tariff-incoming-observer"],["ticketClientSha256","tariff-ticket-application"]])
+					assert.equal(row[id],sha256(await readFile(join(fixture,"structured-types",name+"."+ext))));
+				assert.deepEqual(row.observed,[1,1,1,1,1,1,0]);assert.deepEqual(row.ticketObserved,row.observed);
+			}
 			pair.push(row);t.diagnostic(route+"/"+target+": "+row.archive.sha256);
 		}
 		finally
@@ -62,6 +85,7 @@ test("the source release, installed archive and observed programs agree on both 
 	if(pair.length===2)
 	{
 		const [a,b]=pair;assert.notEqual(a.cReceiptSha256,b.cReceiptSha256);assert.notEqual(a.receiptSha256,b.receiptSha256);assert.notEqual(a.archive.sha256,b.archive.sha256);
-		for(const k of ["runtimeIdentity","sourceSha256","clientSha256","observerSha256","ticketClientSha256","observed","ticketObserved"])assert.deepEqual(a[k],b[k],k);
+		const keys=php?["sources","observations"]:["clientSha256","observerSha256","ticketClientSha256","observed","ticketObserved"];
+		for(const k of ["runtimeIdentity","sourceSha256",...keys])assert.deepEqual(a[k],b[k],k);
 	}
 });
