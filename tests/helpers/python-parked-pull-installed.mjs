@@ -23,6 +23,7 @@ test("installed Timers wheels cancel an already parked pull before caller cleanu
 	assert.ok(Object.hasOwn(pins, tag));
 	const client = join(work, "cancel_pull.py"), observer = join(work, "observe.py");
 	await copyFile(resolve("tests/fixtures/python-lean-tasks/cancel_pull.py"), client);
+	const loopClient=join(work,"loop_ownership.py");await copyFile(resolve("tests/fixtures/python-lean-tasks/loop_ownership.py"),loopClient);
 	await copyFile(resolve("tests/fixtures/python-task-resources/observe.py"), observer);
 	const out = resolve(env.LEAN_BRIDGE_PYTHON_PARKED_PULL_OUTPUT ?? "build/python-parked-pull"); await mkdir(out, {recursive: true});
 	for(const [i, route] of ["ordinary", "reviewed"].entries())
@@ -62,5 +63,10 @@ test("installed Timers wheels cancel an already parked pull before caller cleanu
 			, verified, observed, clientSha256: sha256(await readFile(client))
 			, observerSha256: sha256(await readFile(observer))};
 		await writeFile(join(out, tag+"-"+route+".json"), canonicalJson(report));
+		const loops=JSON.parse(await run(python,["-S","-B","-W","error",loopClient],work,{PATH: "/unavailable",PYTHONPATH: moved,PYTHONNOUSERSITE: "1",LEAN_NUM_THREADS: "1"}));
+		assert.deepEqual(loops.foreignLoop,{rejected: ["anext","aclose"],settled: [41],finalizers: 1,owners: 0});
+		assert.deepEqual(loops.refusedReader,{registrationAttempts: 1,finalizersBeforeClose: 1,fresh: 73,owners: 0});
+		await writeFile(join(out,tag+"-"+route+".loops.json"),canonicalJson({...report,observed: loops,clientSha256: sha256(await readFile(loopClient))}));
+		await rm(dir,{recursive: true}); // Never hold two relocated native runtimes at once.
 	}
 });

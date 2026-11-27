@@ -174,6 +174,16 @@ item or settled the reader twice. Repeated close did not repeat the finalizer.
 | CPython 3.11 | [Execution record](python-parked-pull-20261126/cp311-ordinary.json) | [Execution record](python-parked-pull-20261126/cp311-reviewed.json) |
 | CPython 3.12 | [Execution record](python-parked-pull-20261126/cp312-ordinary.json) | [Execution record](python-parked-pull-20261126/cp312-reviewed.json) |
 
+The [loop ownership client](../../tests/fixtures/python-lean-tasks/loop_ownership.py)
+parked a pull on one event loop and tried both `anext` and `aclose` on another
+loop on the same thread. Both calls failed without changing the pending
+result, the two live leases, or the descriptors. The owner received 41 once;
+closing twice ran the finalizer once and left no live leases.
+When a Linux selector loop's `add_reader` was made to raise, the pending
+pull propagated that same exception. The cursor finalized before explicit
+close and a fresh stream delivered 73. The [four installed wheel records](python-loop-ownership-20261127/)
+cover both author routes on CPython 3.11 and 3.12, not a different OS.
+
 To reproduce, set `LEAN_BRIDGE_PYTHON_PARKED_PULL_ORIGINAL` to the original
 Timers capture containing `tasks/` and `wheels/`, and `LEAN_BRIDGE_PYTHON` to
 each interpreter in turn. Run `node --test tests/helpers/python-parked-pull-installed.mjs`.

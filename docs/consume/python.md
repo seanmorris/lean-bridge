@@ -329,6 +329,12 @@ exception. A worker that ignores cancellation can still finish computing
 the item, but the reader won't receive it. An explicit `aclose()` afterward
 doesn't run the close action again. See the [installed cancellation check](../evidence/async-delivery-crosswalk-20261125.md#cancelling-a-pull-already-waiting-on-lean).
 
+Use the same event loop for every pull and close on an open stream. A
+different loop cannot take it over, even on the same thread. If a pull must
+wait for Lean, the Linux wheel uses the loop's `add_reader`. If the loop
+refuses registration, the pull raises that error and the cursor closes;
+the binding is still usable.
+
 A typed startup failure raises `LeanEIOError`. A typed failure during a pull
 raises `LeanStreamError`, with `declaration` and `payload`. An `Ok` or `Err`
 yielded as an item is still a value. See the [working consumer](../../tests/fixtures/python-lean-tasks/streams.py).
