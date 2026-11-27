@@ -25,7 +25,10 @@ export const runInstalledPhpApplication=async({pkg,profile,route,handoff,root,en
 	const archive=join(handoff,zip.path),expected={name: pkg.name,version: pkg.version,sha256: zip.sha256};
 	const {deployment,environment,evidence}=await installOwnedPhpArchive({root,archive,pkg: expected,environment: env});
 	const meta=async n=>JSON.parse(await readFile(join(deployment,"vendor",pkg.name,"lean-bridge/component",n+".json")));
-	const model=await meta("model"),ir=await meta("binding-ir");
+	const model=await meta("model"),ir=await meta("binding-ir"),native=await meta("native-component");
+	assert.match(native.library,/^libcomponent_[a-f0-9]+\.so$/u);
+	const componentSha256=sha256(await readFile(join(deployment,"vendor",pkg.name,"native/linux-x64",native.library)));
+	assert.equal(componentSha256,native.nativeLibrary.sha256);
 	const pins=checkStagedQuoteIdentities(model,ir,profile,route,{hostFunctions: true,ticketExchange: true});
 	checkApplicationFunctionPositions(ir);checkTicketExchangePositions(ir);
 	const leanSourceSha256=model.sourceIdentity.modules.find(m=>m.module==="Owned").source.sha256;
@@ -49,5 +52,5 @@ export const runInstalledPhpApplication=async({pkg,profile,route,handoff,root,en
 	}
 	assert.ok(observations.length);
 	const {composerVersion,lockSha256}=evidence,{runtimeIdentity,artifacts}=pkg;
-	return {...pins,leanSourceSha256,runtimeIdentity,artifacts,composerVersion,lockSha256,sources,observations};
+	return {...pins,leanSourceSha256,componentSha256,runtimeIdentity,artifacts,composerVersion,lockSha256,sources,observations};
 };

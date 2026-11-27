@@ -92,8 +92,11 @@ fiber suspension without retiring the healthy outer session. The updated
 trace guard is part of the gem, not a modification to its compiled Lean
 component. This is not a new IO signature or evidence for the reviewed gem.
 
-For failures with a resource reply, the [ordinary C11](c-wit-application-functions-20261127/ordinary.c.json)
-and [Wasmtime](c-wit-application-functions-20261127/ordinary.wit-wasi.json)
+For failures with a resource reply, the C11
+([ordinary](c-wit-application-functions-20261127/ordinary.c.json),
+[reviewed](c-wit-application-functions-20261127/reviewed.c.json)) and Wasmtime
+([ordinary](c-wit-application-functions-20261127/ordinary.wit-wasi.json),
+[reviewed](c-wit-application-functions-20261127/reviewed.wit-wasi.json))
 clients gave the adapter an allocated reply and then returned a failure
 status. The public call returned `CALLBACK_FAILED`, left the result owner
 empty and the caller's output untouched. Both the input and fallback Tickets

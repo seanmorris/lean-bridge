@@ -172,12 +172,12 @@ been credited here, not that the feature has been tested and failed.
 
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Lean resource | 17 | 17 | 17 | ≥13 | ≥11 |
-| Host-provided function | 17 | 5 | 17 | 5 | 5 |
+| Lean resource | 17 | 17 | 17 | ≥15 | ≥12 |
+| Host-provided function | 17 | 7 | 17 | 7 | 7 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 588 of 680** profile/route/position combinations.
+That accounts for **at least 606 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,37 +188,35 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-At this checkpoint the **92 uncredited placements** break down as follows.
-Each listed profile needs results from both authoring routes.
+The **74 placements without a completed pair** break down as follows.
+Some already have an ordinary-route result; the table below subtracts those.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | C, C++, Python, Ruby, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl, WIT/WASI | 12 × 3 × 2 = 72 |
-| Read the actual resource passed into a callback | C, Ruby, Kotlin, WIT/WASI | 4 × 2 = 8 |
-| Return a resource distinguishable from the input and recovery value | Ruby, .NET, Java, Kotlin, native PHP, WIT/WASI | 6 × 2 = 12 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | C++, Python, Ruby, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 10 × 3 × 2 = 60 |
+| Read the actual resource passed into a callback | Ruby, Kotlin | 2 × 2 = 4 |
+| Return a resource distinguishable from the input and recovery value | Ruby, .NET, Java, Kotlin, native PHP | 5 × 2 = 10 |
 
-For example, C already has a distinct resource reply but lacks a qualifying
-argument; Kotlin needs both. A single installed workload can exercise all
+For example, Java has a qualifying resource argument but still needs a
+distinct reply; Kotlin needs both. A single installed workload can exercise all
 three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Six profiles now have ordinary-package evidence inside that 92-placement
+Four profiles have ordinary-package evidence inside that 74-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
 | Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
 | --- | ---: | --- | ---: |
-| [C11](c-wit-application-functions-20261127/ordinary.c.json) | 3 | argument (reply was already paired) | 4 |
 | [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
 | [Python](native-application-functions-20261127/ordinary.pypi.json) | 3 | — | 3 |
 | [Ruby](c-wit-application-functions-20261127/ordinary.rubygems.json) | 3 | argument and reply | 5 |
 | [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
-| [WIT/WASI](c-wit-application-functions-20261127/ordinary.wit-wasi.json) | 3 | argument and reply | 5 |
 
-This brings the lower bound to **611/680 individual installed placements**:
-588 backed by pairs, plus 23 ordinary-only. **69** still lack an individual
-witness in this tally. The paired figure remains **588/680**; use the
+This brings the lower bound to **620/680 individual installed placements**:
+606 backed by pairs, plus 14 ordinary-only. **60** still lack an individual
+witness in this tally. The paired figure is **606/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
@@ -293,10 +291,12 @@ attributing a C++ result to it. Supply an existing scratch directory in
 without recompiling Lean. The smaller `test:c-wit-application-function-interfaces`
 check compiles the clients against all three headers; it does not execute them.
 
-The [ordinary C11 run](c-wit-application-functions-20261127/ordinary.c.json)
-and [ordinary Wasmtime run](c-wit-application-functions-20261127/ordinary.wit-wasi.json)
-used the public C interfaces in two distinct archives from the same release.
-Both forwarded the application function, recovered from a nested failure,
+C11 ([ordinary](c-wit-application-functions-20261127/ordinary.c.json),
+[reviewed](c-wit-application-functions-20261127/reviewed.c.json)) and Wasmtime
+([ordinary](c-wit-application-functions-20261127/ordinary.wit-wasi.json),
+[reviewed](c-wit-application-functions-20261127/reviewed.wit-wasi.json))
+ran the same application through four distinct installed archives.
+All four forwarded the application function, recovered from a nested failure,
 observed Tickets 42 and 71 inside the callback, and returned different Tickets
 (43 and 72) rather than the recovery Ticket 800. The live count fell to zero
 at shutdown. To audit those results, set `LEAN_BRIDGE_C_WIT_APP_REPLAY` to
@@ -352,6 +352,16 @@ to replay a previously retained destination receipt. Optional
 `LEAN_BRIDGE_PERL_APP_ABI` and `LEAN_BRIDGE_PERL_APP_MODE` select one result;
 a partial replay does not establish full Perl coverage.
 
+For native PHP, `test:php-application-from-c` installs a separate Composer
+distribution from the same authenticated C donor. Set `LEAN_BRIDGE_PHP_APP_C`,
+`LEAN_BRIDGE_PHP_APP_C_SHA256`, `LEAN_BRIDGE_PHP_APP_ROUTE` and
+`LEAN_BRIDGE_PHP_APP_OUTPUT` as above. Set `LEAN_BRIDGE_PHP_HOST_INTERPRETERS`
+to the comma-separated PHP CLI executables with FFI (the qualification uses
+PHP 8.2 and 8.5). The client installs offline, relocates the vendor tree,
+and checks the installed native library against the donor before reporting.
+To rerun the same ZIP, also supply `LEAN_BRIDGE_PHP_APP_REPLAY_SHA256`.
+This does not exercise the separate wasm32 Zend runtime.
+
 PHP-Wasm uses a separate wasm32 Zend extension. `npm run test:php-wasm-application-function-interfaces`
 compiles its C transport and inspects the PHP functions in a real PHP 8.4 VM.
 Use `npm run test:php-wasm-application-function-positions` for the installed
@@ -383,6 +393,13 @@ The downstream checks run independently without rebuilding Lean:
 - Set `LEAN_BRIDGE_JVM_APPLICATION_REPLAY` to that directory and run
   `npm run test:jvm-application-function-positions`. See the
   [JDK, Kotlin and Maven settings](jvm-function-fields-20261126.md).
+- For one route without recompiling Lean, set `LEAN_BRIDGE_JVM_APPLICATION_C`
+  to the verified C/WIT handoff, `LEAN_BRIDGE_JVM_APPLICATION_C_SHA256` to
+  its receipt hash, and `LEAN_BRIDGE_JVM_APPLICATION_ROUTE` and
+  `LEAN_BRIDGE_JVM_APPLICATION_OUTPUT` to the route and destination. Leave
+  `*_KEEP` and `*_REPLAY` unset; `*_REPLAY_SHA256` can pin a previously
+  retained Maven projection. The same Java and Kotlin clients install the JAR
+  and POM offline and run on a relocated JRE with no compiler.
 - To include NuGet, set `LEAN_BRIDGE_MANAGED_APPLICATION_NUGET=1` **before**
   running the producer. Set `LEAN_BRIDGE_DOTNET_APPLICATION_REPLAY` to that
   three-target handoff directory, then run `npm run test:dotnet-application-function-positions`.

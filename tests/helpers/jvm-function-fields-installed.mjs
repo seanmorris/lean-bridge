@@ -5,8 +5,10 @@ import {tmpdir} from "node:os";
 import {basename, delimiter, dirname, isAbsolute, join, relative, resolve} from "node:path";
 import test from "node:test";
 import {buildCanonicalProject} from "../../src/build/canonical-build.mjs";
+import {projectOwnedJvm} from "../../src/build/owned-jvm-projection.mjs";
 import {canonicalJson, sha256} from "../../src/capsule/node.mjs";
 import {readVerifiedPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {projectApplicationPackage} from "./application-package-projection.mjs";
 import {runNativeTool as run} from "./native-effect-consumers.mjs";
 import {copyPackageSetHandoff} from "./package-set.mjs";
 import {prepareStagedQuoteProject, checkStagedQuoteIdentities, checkApplicationFunctionPositions, checkTicketExchangePositions} from "./staged-quote-project.mjs";
@@ -48,12 +50,14 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 	const work = await mkdtemp(join(tmpdir(),"jvm-tariff-")); t.after(() => rm(work, {recursive: true,force: true}));
 	const application=env.LEAN_BRIDGE_JVM_APPLICATION_FUNCTIONS==="1",prefix=application?"LEAN_BRIDGE_JVM_APPLICATION_":"LEAN_BRIDGE_JVM_TARIFF_";
 	const keep=env[prefix+"KEEP"],replay=env[prefix+"REPLAY"];
+	const donor=application&&env[prefix+"C"],single=application&&env[prefix+"ROUTE"];
+	if(single||donor)assert.ok(donor&&!keep&&!replay&&env[prefix+"OUTPUT"]&&["ordinary","reviewed"].includes(single),"select one C donor, route and destination");
 	const incoming=env.LEAN_BRIDGE_JVM_TARIFF_REQUIRE_INCOMING==="1";
 	assert.ok(!(application&&incoming),"select one workload");
 	const variant=application?{hostFunctions: true,ticketExchange: true}:{incoming};
 	assert.ok(!(keep && replay));
 	const set = replay ? resolve(replay) : keep ? await mkdtemp(join(resolve(keep),"tariff-")) : join(work,"handoffs");
-	const routes = ["ordinary","reviewed"],pair=[];
+	const routes = donor?[single]:["ordinary","reviewed"],pair=[];
 	const runtime = join(work,"jre"), java = join(runtime,"bin/java");
 	await run(join(jdk,"bin/jlink"),["--module-path",join(jdk,"jmods"),"--add-modules","java.base","--no-header-files","--no-man-pages","--output",runtime],work,env);
 	const clean = {PATH: "/no-author-tools", LANG: "C.UTF-8", LEAN_NUM_THREADS: "1"};
@@ -64,7 +68,17 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 	await mkdir(output,{recursive: true});
 	for(const route of routes)
 	{
-		if(!replay)
+		let originalSet=join(set,route),origin;
+		if(donor)
+		{
+			const project=async o=>[await projectOwnedJvm({...o,settings: {name: "org.leanbridge:tariff-quotes",version: "1.0.0"}})];
+			const projected=await projectApplicationPackage({work,root: output
+				, handoff: donor,pin: env[prefix+"C_SHA256"],route,target: "maven"
+				, leanPrefix: env.LEAN_BRIDGE_LEAN_PREFIX,project,donorTarget: "c"
+				, replayPin: env[prefix+"REPLAY_SHA256"]});
+			originalSet=projected.set;origin=projected.row;
+		}
+		else if(!replay)
 		{
 			const src=join(work,route+"-src"),out=join(work,route+"-out");
 			await prepareStagedQuoteProject(src,route,"maven",variant);
@@ -81,7 +95,7 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 			await rm(src,{recursive: true});await rm(out,{recursive: true});
 		}
 		const build = await mkdtemp(join(work,route+"-install-")), repo = join(build,"m2"), handoff = join(build,"handoff");
-		await copyPackageSetHandoff(join(set,route),handoff);
+		await copyPackageSetHandoff(originalSet,handoff);
 		const {receipt,result} = await readVerifiedPackageSetReceipt({receiptPath: join(handoff,"package-set-receipt.json")});
 		if(application&&replay&&receipt.packages.length>1)
 			assert.deepEqual(receipt.packages.map(p=>p.target).sort(),receipt.packages.length===2?["maven","php-native"]:["maven","nuget","php-native"]);
@@ -111,6 +125,14 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		{
 			checkApplicationFunctionPositions(ir);checkTicketExchangePositions(ir);
 			assert.equal(model.sourceIdentity.modules.find(m=>m.module==="Owned").source.sha256,"a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb");
+			if(origin)
+			{
+				assert.equal(origin.receiptSha256,result.receiptSha256);assert.equal(origin.runtimeIdentity,pkg.runtimeIdentity);
+				const native=await metadata("native-component.json");assert.match(native.library,/^libcomponent_[a-f0-9]+\.so$/u);
+				const member="META-INF/lean-bridge/native/linux-x64/"+native.library;
+				await run("unzip",["-q",component,member],build,env);
+				assert.equal(await digest(join(build,member)),origin.componentSha256);assert.equal(native.nativeLibrary.sha256,origin.componentSha256);
+			}
 		}
 		const manifest=JSON.parse(await run("unzip",["-p",component,"META-INF/lean-bridge/jvm/binding-manifest.json"],build,env));
 		if(incoming)
@@ -163,7 +185,7 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 			// Do not carry another extracted copy of the native runtime into the next client.
 			await rm(scratch,{recursive: true});
 		}
-		const row={route,receiptSha256: result.receiptSha256,archives: pkg.artifacts,...identity,modules,sources,deployed,compiled,results};
+		const row={...origin,route,receiptSha256: result.receiptSha256,archives: pkg.artifacts,...identity,modules,sources,deployed,compiled,results};
 		if(application)
 		{
 			row.runtimeIdentity=pkg.runtimeIdentity;assert.match(row.runtimeIdentity,/^[0-9a-f]{64}$/u);
@@ -174,7 +196,7 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		await rm(deployment,{recursive: true});
 		t.diagnostic(route+": "+result.receiptSha256);
 	}
-	if(application)
+	if(application&&routes.length===2)
 	{
 		const [ordinary,reviewed]=pair;
 		assert.notEqual(ordinary.receiptSha256,reviewed.receiptSha256);
@@ -182,5 +204,5 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		for(const k of ["sources","leanSourceSha256","runtimeIdentity","results"])
 			assert.deepEqual(ordinary[k],reviewed[k],k);
 	}
-	t.diagnostic("Handoffs: "+set);
+	t.diagnostic("Handoffs: "+(donor?join(output,single,"handoff"):set));
 });

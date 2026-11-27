@@ -1,0 +1,22 @@
+{
+  "archive": {
+    "bytes": 61816761,
+    "path": "archives/tariff-quotes-1.0.0-wit-wasi.tar.gz",
+    "sha256": "7f7d2172f74aa40f8e4b5cffb0bf1ffdd1b776493f06d13ff114f605a93f1125"
+  },
+  "bindingIrSha256": "ff73021df159f031112af8995936a76bdce18d1b6e060682c328f2cbc84501f0",
+  "clientSha256": "50218976c05166870f27209f39ff3b9aed63ed53d7b3a20d55a4fe404b9132db",
+  "componentSha256": "465dfd824ca2317537af27dbdf11a389340438a2d078bb27dcdee1ccb6eb269a",
+  "leanSourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "output": "expired:1\nforward:1\nreply:1\nnested:1\nfailure:1\ncontrol:1\nexchange:42:43\nticket42:1\nexchange:71:72\nticket71:1\nafterShutdown:0",
+  "receiptSha256": "66cc611fcb93279c10178229a4013798506bbd431847ddddccfab9a2b8d9b0ce",
+  "reviewedSourceSha256": "6f85cf29080b2ce46d183ca925194ff296f5376b40cf623639c778ac0f43c341",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sources": {
+    "tariff-application-function.c": "d2240c0516ed4f10e0422526dfc3dc3deb64b865bb246c66ff116217f881c4fe",
+    "tariff-application-observer.c": "68f030399c5f022c1846964c872e67927a17ee97f84307146d895f2b80d7cbb6",
+    "tariff-ticket-exchange.c": "80148c21e2a039d0fe36d35bb60f521cf6810e08eccc3409dc61de7ab938ace9"
+  },
+  "target": "wit-wasi"
+}

@@ -1577,6 +1577,7 @@
     "test:jvm-application-function-positions": "LEAN_BRIDGE_JVM_APPLICATION_FUNCTIONS=1 node --test tests/helpers/jvm-function-fields-installed.mjs",
     "test:managed-application-packages": "node --test tests/helpers/managed-application-packages.mjs",
     "test:php-application-function-interfaces": "node --test tests/helpers/php-application-interfaces.mjs",
+    "test:php-application-from-c": "node --test tests/helpers/php-application-from-c.mjs",
     "test:php-application-function-positions": "node --test tests/helpers/php-application-installed.mjs",
     "test:rust-lease-shapes": "node --test tests/helpers/rust-lease-shapes.mjs",
     "test:python-sync-iterator": "node --test --test-concurrency=1 tests/helpers/python-sync-iterator.mjs",

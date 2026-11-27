@@ -36,7 +36,18 @@ export const projectApplicationPackage=async options=>{
 	const {receipt,result}=await readVerifiedPackageSetReceipt({receiptPath: join(set,"package-set-receipt.json")});
 	if(replayPin)assert.equal(result.receiptSha256,replayPin);
 	assert.equal(receipt.packages.length,target==="cpan"?2:1);const pkg=receipt.packages.find(p=>p.role==="component");assert.ok(pkg);
-	assert.equal(pkg.target,target);assert.equal(pkg.runtimeIdentity,runtimeIdentity);assert.equal(pkg.artifacts.length,1);
+	assert.equal(pkg.target,target);assert.equal(pkg.runtimeIdentity,runtimeIdentity);
+	let archive,pom;
+	if(target==="maven")
+	{
+		assert.equal(pkg.name,"org.leanbridge:tariff-quotes");assert.equal(pkg.version,"1.0.0");
+		assert.deepEqual(pkg.artifacts.map(a=>a.path).sort(),["archives/tariff-quotes-1.0.0.jar","archives/tariff-quotes-1.0.0.pom"]);
+		archive=pkg.artifacts.find(a=>a.path.endsWith(".jar"));pom=pkg.artifacts.find(a=>a.path.endsWith(".pom"));
+	}
+	else
+	{
+		assert.equal(pkg.artifacts.length,1);[archive]=pkg.artifacts;
+	}
 	const runtime=receipt.packages.find(p=>p.role==="runtime");
 	if(target==="cpan")
 	{
@@ -46,7 +57,8 @@ export const projectApplicationPackage=async options=>{
 	assert.equal(receipt.source.treeSha256,model.sourceIdentity.sourceTreeSha256);
 	await rm(stage,{recursive: true});
 	const origin=donorTarget==="c"?{cReceiptSha256: donor.receiptSha256,cArchive: donor.cArchive}:{wheelReceiptSha256: donor.receiptSha256,wheel: donor.wheel};
-	const row={route,...origin,sourceSha256: donor.sourceSha256,componentSha256: compiled,runtimeIdentity,receiptSha256: result.receiptSha256,archive: pkg.artifacts[0]};
+	const row={route,...origin,sourceSha256: donor.sourceSha256,componentSha256: compiled,runtimeIdentity,receiptSha256: result.receiptSha256,archive};
+	if(pom)row.pom=pom;
 	if(runtime)row.runtimeArchive=runtime.artifacts[0];
 	return {set,pkg,profile: receipt.profiles.find(p=>p.id===pkg.profile),row,srcComponent,model};
 };
