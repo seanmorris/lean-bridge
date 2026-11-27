@@ -1570,6 +1570,7 @@
     "test:cpp-application-from-wheel": "node --test tests/helpers/cpp-application-from-wheel.mjs",
     "test:c-family-application-from-c": "node --test tests/helpers/c-family-application-from-c.mjs",
     "test:projected-application-receipts": "node --test tests/helpers/projected-application-receipts.mjs",
+    "test:forwarding-wheel-extension": "node --test tests/helpers/forwarding-wheel-extension.mjs",
     "test:ruby-application-from-wheel": "node --test tests/helpers/ruby-application-from-wheel.mjs",
     "test:dotnet-application-from-wheel": "node --test tests/helpers/dotnet-application-from-wheel.mjs",
     "test:dotnet-application-function-positions": "node --test tests/helpers/dotnet-application-installed.mjs",

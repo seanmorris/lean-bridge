@@ -127,6 +127,13 @@ and [reviewed](c-wit-application-functions-20261127/reviewed.rubygems.json) gems
 the callback raised a Ruby exception instead: the application caught that
 same object and successfully retried. Neither outcome is a fatal runtime trap.
 
+In the [reviewed CPython wheel](c-wit-application-functions-20261127/reviewed.pypi.json),
+the [Ticket callback](../../tests/fixtures/structured-types/tariff-ticket-application.py)
+raised a particular `ValueError`. The caller caught that object by identity,
+read the original and fallback Tickets, then retried successfully. After six
+success/failure/retry checkpoints, closing the session left zero live owners.
+The ordinary forwarding wheel did not contain this Ticket workload.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

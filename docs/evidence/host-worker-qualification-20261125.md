@@ -173,11 +173,11 @@ been credited here, not that the feature has been tested and failed.
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Lean resource | 17 | 17 | 17 | ≥16 | ≥13 |
-| Host-provided function | 17 | 8 | 17 | 8 | 8 |
+| Host-provided function | 17 | 9 | 17 | 9 | 9 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 616 of 680** profile/route/position combinations.
+That accounts for **at least 622 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -188,12 +188,12 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **64 placements without a completed pair** break down as follows.
+The **58 placements without a completed pair** break down as follows.
 Some already have an ordinary-route result; the table below subtracts those.
 
 | Public call that still needs a witness | Profiles without a paired witness | Placements |
 | --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | C++, Python, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 9 × 3 × 2 = 54 |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | C++, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl | 8 × 3 × 2 = 48 |
 | Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
 | Return a resource distinguishable from the input and recovery value | .NET, Java, Kotlin, native PHP | 4 × 2 = 8 |
 
@@ -203,19 +203,18 @@ three rows, but only its previously uncredited positions increase the total.
 
 ### What has passed on just the ordinary route?
 
-Three profiles have ordinary-package evidence inside that 64-placement
+Two profiles have ordinary-package evidence inside that 58-placement
 gap. Count each profile and position once, even if multiple archives or
 build tools exercised it:
 
 | Ordinary installed consumer | Forwarded function positions | New Ticket positions | Newly evidenced route checks |
 | --- | ---: | --- | ---: |
 | [C++20](native-application-functions-20261127/ordinary.cpp.json) | 3 | — | 3 |
-| [Python](native-application-functions-20261127/ordinary.pypi.json) | 3 | — | 3 |
 | [Rust](native-application-functions-20261127/ordinary.cargo.json) | 3 | — | 3 |
 
-This brings the lower bound to **625/680 individual installed placements**:
-616 backed by pairs, plus 9 ordinary-only. **55** still lack an individual
-witness in this tally. The paired figure is **616/680**; use the
+This brings the lower bound to **628/680 individual installed placements**:
+622 backed by pairs, plus 6 ordinary-only. **52** still lack an individual
+witness in this tally. The paired figure is **622/680**; use the
 reviewed install to complete each pair. Neither number counts lifetime or
 error assertions, or qualifies a hosted release.
 
@@ -313,6 +312,21 @@ read the incoming handle, returned a distinct Ticket, propagated the exact
 Ruby exception on failure and repeated the successful exchange. After each
 scenario the observer saw one live session; shutdown removed it. Each
 gem contained the native library from its matching C author route.
+
+The CPython 3.11.16 [ordinary wheel](native-application-functions-20261127/ordinary.pypi.json)
+and [reviewed wheel](c-wit-application-functions-20261127/reviewed.pypi.json)
+ran the same forwarding client and observer. The wheels are **not** builds
+of an identical module: the reviewed module appends two Ticket definitions.
+Comparing their archived interfaces found the same original declarations,
+ownership rules, types and errors. A control that changes a returned function
+from leased to copied fails the comparison. This qualifies three forwarding
+positions on both routes. The separate Ticket client ran only in the newer
+wheel and adds no new Python placement.
+
+To repeat that comparison, set `LEAN_BRIDGE_FORWARDING_ORDINARY_SET` and
+`LEAN_BRIDGE_FORWARDING_REVIEWED_SET` to the package-set directories for
+those wheels, and the corresponding `_REPORT` variables to the linked JSON
+files. Run `npm run test:forwarding-wheel-extension`.
 
 An alternative C++ run reuses the compiled Lean component in a retained
 Python wheel without running Python or rebuilding Lean. Set
