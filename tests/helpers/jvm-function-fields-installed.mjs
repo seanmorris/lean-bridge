@@ -59,11 +59,8 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 	const set = replay ? resolve(replay) : keep ? await mkdtemp(join(resolve(keep),"tariff-")) : join(work,"handoffs");
 	const routes = donor?[single]:["ordinary","reviewed"],pair=[];
 	const runtime = join(work,"jre"), java = join(runtime,"bin/java");
-	await run(join(jdk,"bin/jlink"),["--module-path",join(jdk,"jmods"),"--add-modules","java.base","--no-header-files","--no-man-pages","--output",runtime],work,env);
 	const clean = {PATH: "/no-author-tools", LANG: "C.UTF-8", LEAN_NUM_THREADS: "1"};
-	const modules = await run(java,["--list-modules"],work,clean);
-	assert.match(modules,/^java\.base@22(?:[.][\w.+-]+)?$/u);
-	await assert.rejects(access(join(runtime,"bin/javac")),{code: "ENOENT"});
+	let modules;
 	const output = resolve(env[prefix+"OUTPUT"] ?? (application?"build/jvm-application-functions":"build/jvm-function-fields"));
 	await mkdir(output,{recursive: true});
 	for(const route of routes)
@@ -117,6 +114,9 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		}
 		const component = jars.find(p=>basename(p)==="tariff-quotes-1.0.0.jar"); assert.ok(component);
 		for(const a of pkg.artifacts) assert.equal(await digest(join(dirname(component),basename(a.path))),a.sha256);
+		// Maven resolved the JAR/POM into this client's private repository.
+		// The rest of the build must work without the temporary input handoff.
+		await rm(handoff,{recursive: true});
 		const metadata = async file => JSON.parse(await run("unzip",["-p",component,"META-INF/lean-bridge/component/"+file],build,env));
 		const ir=await metadata("binding-ir.json");
 		const model=await metadata("model.json");
@@ -170,9 +170,16 @@ test("Java and Kotlin clients retain, repack and return functions from installed
 		for(const p of jars)
 		{
 			const n=basename(p); assert.ok(!Object.hasOwn(deployed,n));
-			await copyFile(p,join(deployment,n)); deployed[n]=await digest(join(deployment,n));
+			await rename(p,join(deployment,n)); deployed[n]=await digest(join(deployment,n));
 		}
 		await rm(build,{recursive: true});
+		if(!modules)
+		{
+			await run(join(jdk,"bin/jlink"),["--module-path",join(jdk,"jmods"),"--add-modules","java.base","--no-header-files","--no-man-pages","--output",runtime],work,env);
+			modules=await run(java,["--list-modules"],work,clean);
+			assert.match(modules,/^java\.base@22(?:[.][\w.+-]+)?$/u);
+			await assert.rejects(access(join(runtime,"bin/javac")),{code: "ENOENT"});
+		}
 		const results={}, compiled={};
 		const programs=application?{javaApplication: "JavaApplication",kotlinApplication: "KotlinApplicationKt"}:{...clients,...inputs ? {javaInput: "JavaInput",kotlinInput: "KotlinInputKt"} : {}
 			, ...incoming ? {javaIncoming: "JavaIncoming",kotlinIncoming: "KotlinIncomingKt"} : {}};

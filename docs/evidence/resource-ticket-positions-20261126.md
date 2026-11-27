@@ -58,6 +58,15 @@ instead of the fallback 800, and checked that throwing returned neither
 Ticket. Both installed assemblies repeated the checks on a runtime-only
 .NET host. The earlier callback argument was already counted.
 
+On the [ordinary](c-wit-application-functions-20261127/ordinary.maven.json)
+and [reviewed](c-wit-application-functions-20261127/reviewed.maven.json)
+Maven JARs, [Java](../../tests/fixtures/jvm-tariff/JavaApplication.java)
+and [Kotlin](../../tests/fixtures/jvm-tariff/KotlinApplication.kt) read the
+actual input and returned 43 and 72. Each ran its own bytecode on a
+`java.base`-only runtime after the private Maven repository and input handoff
+were gone. This completes the missing Java result and both Kotlin positions;
+it does not count the already qualified Java input a second time.
+
 ### Five installed npm clients exchange Tickets directly
 
 Node, executed strict TypeScript, a Chromium page, mounted React and a

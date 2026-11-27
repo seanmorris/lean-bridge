@@ -203,6 +203,13 @@ from a failed resource exchange. It reused the outer delegate and checked
 that the input and fallback Tickets still worked. The owner thread exited
 with zero live identities. This checks the recoverable path on .NET 8.
 
+The [ordinary](c-wit-application-functions-20261127/ordinary.maven.json)
+and [reviewed Maven JARs](c-wit-application-functions-20261127/reviewed.maven.json)
+also ran separate Java and Kotlin clients. Each caught the nested application
+exception by identity, reused the outer function for 43, and observed zero
+identities after thread exit. A failed Ticket exchange did not publish its
+recovery Ticket. A caught terminal linkage fault is a separate test.
+
 Each row points to ordinary-source and reviewed-interface installed results.
 The second column concerns synchronous calls; the last column is separate
 evidence, sometimes from a different package or execution mode.

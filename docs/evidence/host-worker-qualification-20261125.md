@@ -175,12 +175,12 @@ been credited here, not that the feature has been tested and failed.
 
 | What crosses the boundary | Export argument | Export result | Record field | Callback argument | Callback result |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Lean resource | 17 | 17 | 17 | ≥16 | ≥15 |
-| Host-provided function | 17 | 14 | 17 | 14 | 14 |
+| Lean resource | 17 | 17 | 17 | 17 | 17 |
+| Host-provided function | 17 | 16 | 17 | 16 | 16 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
 | Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 656 of 680** profile/route/position combinations.
+That accounts for **at least 674 of 680** profile/route/position combinations.
 The final two incoming Lean-function placements are the [installed Wasmtime
 replays](wit-function-fields-20261126.md) of the ordinary and reviewed
 compiled Lean components. They verify the WIT host at runtime, not a fresh
@@ -191,31 +191,27 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
-The **24 placements without a completed pair** break down as follows.
-
-| Public call that still needs a witness | Profiles without a paired witness | Placements |
-| --- | --- | ---: |
-| Forward an application function through an immediate export result, a callback argument, and a callback reply | Java, Kotlin, PHP-Wasm | 3 × 3 × 2 = 18 |
-| Read the actual resource passed into a callback | Kotlin | 1 × 2 = 2 |
-| Return a resource distinguishable from the input and recovery value | Java, Kotlin | 2 × 2 = 4 |
-
-For example, Java has a qualifying resource argument but still needs a
-distinct reply; Kotlin needs both. A single installed workload can exercise all
-three rows, but only its previously uncredited positions increase the total.
+The **six outstanding placements** are all in PHP-Wasm: an application
+function forwarded through an immediate export result, a callback argument,
+and a callback result, on the ordinary and reviewed routes. Incoming Lean
+functions and native Composer installs are different witnesses.
 
 ### What has passed on just the ordinary route?
 
-None of the 24 outstanding positions has an ordinary-only result. The
+None of the six outstanding positions has an ordinary-only result. The
 [ordinary](c-wit-application-functions-20261127/ordinary.php-native.json)
 and [reviewed](c-wit-application-functions-20261127/reviewed.php-native.json)
 native PHP packages complete the three forwarding pairs and the distinct
 resource reply for that profile. The [ordinary](c-wit-application-functions-20261127/ordinary.nuget.json)
 and [reviewed](c-wit-application-functions-20261127/reviewed.nuget.json)
-NuGet packages complete the same four pairs for C#. All **656/680**
-individual installed positions are backed by pairs. **18** forwarding
-positions and **6** resource positions
-still need an installed witness. This does not count lifetime or error
-assertions, or qualify a hosted release.
+NuGet packages complete the same four pairs for C#. Both the
+[ordinary](c-wit-application-functions-20261127/ordinary.maven.json) and
+[reviewed](c-wit-application-functions-20261127/reviewed.maven.json) Maven
+JARs ran two distinct clients: Java added its three function positions and
+resource reply per route; Kotlin added the three function positions and
+both resource directions. All **674/680** individual installed positions
+are backed by pairs. This does not count lifetime or error assertions, or
+qualify a hosted release.
 
 ### Reproducing application-provided function crossings
 
@@ -384,8 +380,8 @@ and the two sets and reports as for C++. Supply the shared dependency
 directory and its receipt hash via `LEAN_BRIDGE_FORWARDING_RUST_DEPS` and
 `LEAN_BRIDGE_FORWARDING_RUST_DEPS_SHA256`.
 
-To audit Python, Ruby, native PHP or C# results, run `test:projected-application-receipts`.
-Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi`, `rubygems`, `php-native` or `nuget`,
+To audit Python, Ruby, native PHP, C#, Java or Kotlin results, run `test:projected-application-receipts`.
+Set `LEAN_BRIDGE_PROJECTED_APP_TARGET` to `pypi`, `rubygems`, `php-native`, `nuget` or `maven`,
 `LEAN_BRIDGE_PROJECTED_APP_DONORS` to the directory of C release sets,
 and `LEAN_BRIDGE_PROJECTED_APP_OUTPUT` to the target directory with the
 retained handoffs and JSON reports. Leave `LEAN_BRIDGE_PROJECTED_APP_ROUTE`
