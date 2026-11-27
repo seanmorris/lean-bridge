@@ -97,6 +97,26 @@ The default requires all eight installed results. Set `LEAN_BRIDGE_PERL_REPAIR_L
 for archive comparison alone, or `cell` with `LEAN_BRIDGE_PERL_REPAIR_CELL`
 set to one ABI/mode (e.g. `5.36.3-threaded.build-xs`) for a single result.
 
+To check whether the publisher's smaller XS compiler environment changes
+the release, run `npm run test:perl-owned-compiler-view` with the same
+four Perl interpreters, C donor, route, Lean headers and GMP inputs as
+`test:perl-application-from-c`. Set `LEAN_BRIDGE_PERL_VIEW_REFERENCE` to
+the previously installed ordinary handoff and
+`LEAN_BRIDGE_PERL_VIEW_REFERENCE_SHA256` to its receipt hash. The test
+rebuilds the packages, hashes both original and rebuilt archives, and
+requires the entire package-set receipt to match. With the four installed
+ABIs above, this reproduced receipt
+`ee860eab400aaf5e09260bda0677367ca8ab4b739ef02a6ae029856c8a21aba6`
+without a full publisher-side runtime installation per ABI. It does not
+count as another consumer install.
+
+To trace the installed results back to the C donors, set
+`LEAN_BRIDGE_PERL_APP_DONORS` to the parent of the two original C handoffs
+and `LEAN_BRIDGE_PERL_APP_OUTPUT` to the parent of the CPAN route directories.
+Run `npm run test:perl-application-route-evidence`.
+`LEAN_BRIDGE_PERL_APP_AUDIT_ROUTE=ordinary` checks only that route; without
+the selector, both routes must pass all eight installs and agree on the runtime.
+
 **CPython:** An older installed peer accepted the integer
 `2` as a true tag inside a native `Except` result. A property setter let
 the call continue, and a getter returned `97`. The [CPython 3.11](python-host-error-policy-20261126/cp311-cp311-linux_x86_64.json)

@@ -1575,6 +1575,8 @@
     "test:dotnet-application-from-wheel": "node --test tests/helpers/dotnet-application-from-wheel.mjs",
     "test:dotnet-application-function-positions": "node --test tests/helpers/dotnet-application-installed.mjs",
     "test:perl-application-from-c": "node --test tests/helpers/perl-application-from-c.mjs",
+    "test:perl-owned-compiler-view": "node --test tests/helpers/perl-owned-compiler-view.mjs",
+    "test:perl-application-route-evidence": "node --test tests/helpers/perl-application-route-evidence.mjs",
     "test:perl-forwarded-repair-evidence": "node --test tests/helpers/perl-forwarded-repair-evidence.mjs",
     "test:native-application-function-receipts": "node --test tests/helpers/native-application-receipts.mjs",
     "test:jvm-application-function-interfaces": "node --test tests/helpers/jvm-application-interfaces.mjs",

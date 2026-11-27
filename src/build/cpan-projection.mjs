@@ -80,7 +80,7 @@ export const projectCpanPackages = async ({
 		, ownedModuleName
 		, syncIO
 		, hostImports });
-	const useView = Boolean(hostImports || syncIO?.wire?.methods.some(m => m.delivery === "iterator"));
+	const useView = Boolean(ownedModuleName || hostImports || syncIO?.wire?.methods.some(m => m.delivery === "iterator"));
 	for(const perl of perls)
 	{
 		signal?.throwIfAborted();
