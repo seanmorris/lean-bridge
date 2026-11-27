@@ -175,9 +175,13 @@ been credited here, not that the feature has been tested and failed.
 | Lean resource | 17 | 17 | 17 | ≥13 | ≥11 |
 | Host-provided function | 17 | 5 | 17 | 5 | 5 |
 | Host-owned object | 17 | 17 | 17 | 17 | 17 |
-| Lean-created function | 17 | 17 | 17 | 16 | 17 |
+| Lean-created function | 17 | 17 | 17 | 17 | 17 |
 
-That accounts for **at least 586 of 680** profile/route/position combinations.
+That accounts for **at least 588 of 680** profile/route/position combinations.
+The final two incoming Lean-function placements are the [installed Wasmtime
+replays](wit-function-fields-20261126.md) of the ordinary and reviewed
+compiled Lean components. They verify the WIT host at runtime, not a fresh
+WIT-targeted source build or a hosted release.
 The resource callback counts include the two original PHP-Wasm routes, plus
 the [separately checked callers](resource-ticket-positions-20261126.md#direct-callbacks-are-separate).
 The difference is not a count of missing implementations: some installations

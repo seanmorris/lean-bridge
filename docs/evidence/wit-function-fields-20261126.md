@@ -36,8 +36,11 @@ the WIT adapter with the production packager, then installs and runs the same
 Wasmtime client. The report identifies the C input; this mode is not a fresh
 build of a WIT-targeted author project.
 
-The [ordinary native-component replay](wit-incoming-native-components-20261127/ordinary.json)
-passed in the installed Wasmtime host. A borrow expired after the visitor
+The [ordinary](wit-incoming-native-components-20261127/ordinary.json) and
+[reviewed](wit-incoming-native-components-20261127/reviewed.json) native
+components passed in separate installed Wasmtime packages. The WIT archives
+and source receipts differed by route; both used the same downstream C client
+and independent observer. A borrow expired after the visitor
 returned, while an explicitly retained Lean function could still be called
 after either success or failure. An inner failure left the outer borrow
 usable; a foreign session rejected the live borrow. The independent observer

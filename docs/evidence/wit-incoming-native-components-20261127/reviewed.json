@@ -1,0 +1,37 @@
+{
+  "archive": {
+    "bytes": 61797637,
+    "path": "archives/tariff-quotes-1.0.0-wit-wasi.tar.gz",
+    "sha256": "e9a4f9c3fa69f9f8f83403d7af46c36e42d2bd880b72423c919014d887914fa9"
+  },
+  "bindingIrSha256": "0958e16132c51cc15df867ba8908dac748f15cd75ca250bb9ba6cc3a21249b29",
+  "clientSha256": "5dcd2a155adce86c5f16b886ede905e3fc589d79efc35d33f9e032f16a67a99a",
+  "componentSha256": "ac932bad4847438b03f78eaa1bcb158dfdab969a3d8bcadd3011a069aec8477a",
+  "counts": {
+    "afterShutdown": 0,
+    "baseline": 1,
+    "error": 1,
+    "errorLease": 1,
+    "fresh": 1,
+    "held": 3,
+    "lease": 1,
+    "nested": 1,
+    "success": 1
+  },
+  "receiptSha256": "ea4872ec70c2f4e9c06318514c8dfdb3b8aa71c5c757d17b451cadf1b3e0db65",
+  "reprojectedFrom": {
+    "leanSourceSha256": "8df990ee7666a9ea95544392fd379b3e656eefaaebce56dc1d92fdaa69661793",
+    "sourceArchiveSha256": "101dca024bd959a6ae8392bf3245a8faee3bb0748535afc1331cb90eecb48294",
+    "sourceReceiptSha256": "36ac3f807944f866df614df5ccb033495b697b0ad565c493774507ea1ac96f88",
+    "sourceTarget": "c"
+  },
+  "reviewedSourceSha256": "27e336bc168cd27d5780da31ff76836c8807ee179097833cc89e4b5f5299f8fb",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sources": {
+    "tariff-incoming-wasmtime-observer.c": "f5b27b19e757890808d53b794dc45527b691706683a33bf17acc2636a69e5dab",
+    "tariff-incoming-wasmtime.c": "bb7b9adf4b7621ed8731e23a05c24390b99801bcbb14ec41ce7209446160e1ed"
+  },
+  "wasmtime": "42.0.1",
+  "worldSha256": "088d815fe91c5bd6770b5b2380dacf5cd986c34c9c3559f9e96f26711595d41a"
+}
