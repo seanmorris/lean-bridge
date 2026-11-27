@@ -1,0 +1,41 @@
+{
+  "componentSha256": "0e7bdfa7729208cf92e10cec024d12b7e55f635c665d39353d1d65599c9f6be1",
+  "correctedArchive": {
+    "bytes": 3190680,
+    "path": "archives/LeanBridge-TariffQuotes-0.001.tar.gz",
+    "sha256": "ae49cb940a987d47f76567f7b2e28e239dd871562b5adaf90f5e998dfbc6421b"
+  },
+  "correctedReceiptSha256": "ee860eab400aaf5e09260bda0677367ca8ab4b739ef02a6ae029856c8a21aba6",
+  "correctedXsSha256": "d1c2962a7270bb202da0c668c2bb7401f1af2e2672ab22eb6fcf5e3328604433",
+  "images": {
+    "5.36.3-threaded": {
+      "after": "0e58c6c7601456d10f1b671032e2f6bb1e21b50cf84eaf9d7a5c6f8461f8078a",
+      "before": "6873fa983ffd841fee6116d53f83f45fd2a525b995fa46ae3966449d55d1a0ab"
+    },
+    "5.36.3-unthreaded": {
+      "after": "6d458304e24c2b93b0661a351a362354d3c737af263846866f86e3bf279b7390",
+      "before": "0186eef7aab66c667707700129a183ec06093993c742654e80594bc3cd8c0f64"
+    },
+    "5.38.2-threaded": {
+      "after": "9979db207219e92cee32f151d6cd934a94f84299bf412113ce32e0714c8a4b66",
+      "before": "0c1a661bd30298cdb2614de3781831bdccca536ab3ba9ab7a4b50132a73df4f7"
+    },
+    "5.38.2-unthreaded": {
+      "after": "204f31e5447b46a7d0e708d20507d3164b113e2197b6ff4d65f8214dcc8c493a",
+      "before": "40d05287be9c960a890bfbdb757b201038c8b8e5aae2f3faa1fc6b8bf45fc2a6"
+    }
+  },
+  "level": "payload",
+  "originalArchive": {
+    "bytes": 3190138,
+    "path": "archives/LeanBridge-TariffQuotes-0.001.tar.gz",
+    "sha256": "125e48bd5357b7c78c701456341114551cc9d3f8c409a7d09353aa20f9bf56ba"
+  },
+  "originalReceiptSha256": "62fd231fbe0116074ddd8558c2391fa7371cedd7561299b890493dc4ace76730",
+  "originalXsSha256": "baa806ef4ed5cd222cb77335045e7341e519e0aa3fbd3804102da561990524f3",
+  "runtime": {
+    "bytes": 51422277,
+    "path": "archives/LeanBridge-Runtime-0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471.tar.gz",
+    "sha256": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+  }
+}

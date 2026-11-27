@@ -1,0 +1,67 @@
+ok 1 - exact callback input at slot 0
+ok 2 - exact callback input at slot 1
+ok 3 - exact callback input at slot 2
+ok 4 - exact callback input at slot 3
+ok 5 - exact callback input at slot 4
+ok 6 - exact callback input at slot 5
+ok 7 - exact callback input at slot 6
+ok 8 - exact callback input at slot 7
+ok 9 - exact callback input at slot 8
+ok 10 - exact callback input at slot 9
+ok 11 - exact callback input at slot 10
+ok 12 - exact callback input at slot 11
+ok 13 - exact callback input at slot 12
+ok 14 - exact callback input at slot 13
+ok 15 - exact callback input at slot 14
+ok 16 - exact callback input at slot 15
+ok 17 - exact callback input at slot 16
+ok 18 - exact callback input at slot 17
+ok 19 - exact callback input at slot 18
+ok 20 - task delivered exactly one Unit after all nineteen callback replies
+ok 21 - callbacks ran in the actual Lean request order
+ok 22 - factory and worker use application loop
+ok 23 - callback reenters an ordinary export
+ok 24 - nested wait dispatches a different retained owner
+ok 25 - callbacks before and after start execute in order
+ok 26 - uncaught callback error preserves Perl object identity
+ok 27 - false-valued original exception survives the worker round trip
+ok 28 - failed future exposes that same object
+ok 29 - Future::Exception is not decomposed and reconstructed by the scheduler
+ok 30 - on_fail receives the original object
+ok 31 - native failure identity belongs to owner 1 even with identical diagnostic text
+ok 32 - native failure identity belongs to owner 0 even with identical diagnostic text
+ok 33 - concurrent failing callback owners each settled exactly once
+ok 34 - exception can round-trip without coercion
+ok 35 - bridge did not invoke host conversion hooks while reporting failure
+ok 36 - An object of class 'LeanBridge::Retained::Err' isa 'LeanBridge::Retained::Err'
+ok 37 - caught host error does not fail the future
+ok 38 - An object of class 'LeanBridge::Retained::TaskIOError' isa 'LeanBridge::Retained::TaskIOError'
+ok 39 - matching text does not resurrect a replaced exception
+ok 40 - An object of class 'LeanBridge::Retained::Error::typed_start' isa 'LeanBridge::Retained::Error::typed_start'
+ok 41 - typed factory error retains its payload
+ok 42 - failed factory did not invoke Perl
+ok 43 - IO factory failure is not a terminal task failure
+ok 44 - factory message comes from the shared Lean fixture
+ok 45 - rejected IO factory never ran Perl
+ok 46 - invalid reply is a boundary error, not a declared Lean failure
+ok 47 - wrong reply released its owner without poisoning the runtime
+ok 48 - callback cannot deadlock waiting on its own owner
+ok 49 - callback may cancel its own owner
+ok 50 - cancelled owner did not dispatch a second invocation
+ok 51 - cancellation during a host reply conversion wins over the reply
+ok 52 - reentrant scalar conversion ran exactly once
+ok 53 - reentrant reply cancellation did not retire the runtime
+ok 54 - self-revocation permits the reply already in flight
+ok 55 - subsequent invocation sees revocation
+ok 56 - Lean kept a callback past task completion
+ok 57 - An object of class 'LeanBridge::Retained::TaskIOError' isa 'LeanBridge::Retained::TaskIOError'
+ok 58 - expired retained callback cannot invoke Perl
+ok 59 - cancelled worker cannot settle the future again
+ok 60 - cancelled worker cannot call the released Perl sub
+ok 61 - cancel propagates to a native worker created after its owner cancelled
+ok 62 - late worker never invoked its revoked Perl callback
+ok 63 - worker is pending as its last public owner is released
+ok 64 - native callback watch does not retain an abandoned future
+ok 65 - worker observed revocation after the future went out of scope without cancel
+ok 66 - all native owners released
+1..66

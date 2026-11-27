@@ -73,6 +73,26 @@ The visitor caught the original blessed object and could either return
 usable; the observer saw nine live identities while values were held and
 zero after shutdown. This verifies the XS change, not a new CPAN install.
 
+The subsequent [ordinary CPAN release comparison](perl-forwarded-errors-20261127/ordinary-package-diff.json)
+checks the two actual CPAN archives: the runtime archive, Lean component,
+public contracts and source tree are unchanged. Only the generated XS, its
+four prebuilt libraries and their four build receipts differ. The corrected
+XS matches the source regenerated from the packaged compiler metadata.
+In relocated Perl 5.36.3 installs, both [threaded prebuilt XS](perl-forwarded-errors-20261127/corrected-ordinary/5.36.3-threaded.prebuilt-only.json)
+and [threaded locally generated XS](perl-forwarded-errors-20261127/corrected-ordinary/5.36.3-threaded.build-xs.json)
+preserved the original and replacement objects and reached zero owners;
+the [unthreaded prebuilt](perl-forwarded-errors-20261127/corrected-ordinary/5.36.3-unthreaded.prebuilt-only.json)
+and [unthreaded generated](perl-forwarded-errors-20261127/corrected-ordinary/5.36.3-unthreaded.build-xs.json)
+installs did too. These are ordinary-route results, not a reviewed CPAN pass.
+
+To audit the repair, set `LEAN_BRIDGE_PERL_REPAIR_ORIGINAL` and
+`LEAN_BRIDGE_PERL_REPAIR_CORRECTED` to their respective ordinary run directories
+(each contains `handoff/` and `results/`), and `LEAN_BRIDGE_PERL_REPAIR_SHA256`
+to the corrected receipt digest. Run `npm run test:perl-forwarded-repair-evidence`.
+The default requires all eight installed results. Set `LEAN_BRIDGE_PERL_REPAIR_LEVEL=payload`
+for archive comparison alone, or `cell` with `LEAN_BRIDGE_PERL_REPAIR_CELL`
+set to one ABI/mode (e.g. `5.36.3-threaded.build-xs`) for a single result.
+
 **CPython:** An older installed peer accepted the integer
 `2` as a true tag inside a native `Except` result. A property setter let
 the call continue, and a getter returned `97`. The [CPython 3.11](python-host-error-policy-20261126/cp311-cp311-linux_x86_64.json)

@@ -248,6 +248,26 @@ and unthreaded Perl 5.36.3 and 5.38.2, with both package load orders: 16
 processes, each testing both ways of stopping. This uses prebuilt XS; it is
 not a test of locally compiled XS.
 
+What happens if the **callback** cancels its own task? In the separately
+installed Retained package, self-cancellation prevented a second invocation.
+Cancellation during reply conversion won over the value being converted and
+left the runtime usable. Closing the registration *inside* a callback instead
+allowed its in-flight reply to finish; the next invocation saw the closure.
+Two concurrently failing owners each delivered their own error and settled
+once. [Public callback TAP](perl-retained-tap-20261127/public.tap)
+and [retirement TAP](perl-retained-tap-20261127/retirement.tap) distinguish
+those outcomes from a queued callback rejected after runtime retirement.
+
+The byte-identical transcripts are stored once per distinct result. Across
+both author routes and four Perl ABIs, the public, registration and retirement
+suites have **704 passed assertions and 16 explicit skips**. The four
+[foreign-interpreter assertions](perl-retained-tap-20261127/registration-threaded.tap)
+ran on threaded builds; the [unthreaded transcript](perl-retained-tap-20261127/registration-unthreaded.tap)
+skips them. Set `LEAN_BRIDGE_PERL_CALLBACK_CAPTURE_AUDIT` to the original
+Retained capture when running `node --test tests/helpers/perl-php-async-reconciliation.mjs`
+to match all 24 original result files. This is task-owner evidence, not a
+conclusion about a synchronous XS call or a fresh release.
+
 To replay, set `LEAN_BRIDGE_PERL_PARKED_ORIGINAL` to the directory with the
 [original pinned handoffs and acceptance record](perl-tasks-20261123.json),
 `LEAN_BRIDGE_PERL_TASK_DEPS` to the installed Future and IO::Async library
