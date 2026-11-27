@@ -67,3 +67,27 @@ baseline, three while leases were held, one after recovery, and zero after
 thread exit. The report identifies the installed JAR, its POM, all eight
 client/observer source files and the six main classes. It covers the ordinary
 route only.
+
+### Forwarding an application function and exchanging Tickets
+
+The [Java](../../tests/fixtures/jvm-tariff/JavaApplication.java) and
+[Kotlin](../../tests/fixtures/jvm-tariff/KotlinApplication.kt) applications
+supply their own price function and pass it through three public positions.
+They distinguish a registration that has expired from one that is still
+callable, including after a nested failure. The same applications pass
+Tickets numbered 42 and 71 into a callback and return different Tickets
+numbered 43 and 72. Lean reads the returned serial; neither result can
+come from the recovery Ticket numbered 800.
+
+- `npm run test:jvm-application-function-interfaces` compiles the two
+  programs against the generated Java and Kotlin source with JDK 22
+  and Kotlin 2.2.0. No installed-package coverage is awarded for this check.
+- `npm run test:jvm-application-function-positions` builds both author
+  routes, installs the Maven packages offline, and runs Java and Kotlin in
+  separate processes on a compiler-free JRE. It checks the observed returns,
+  the exact exception object, stale registration rejection, and zero owners
+  after thread exit. Use the JDK, Kotlin and Maven settings above.
+  `LEAN_BRIDGE_JVM_APPLICATION_KEEP` retains the two handoffs under a new
+  directory; set `LEAN_BRIDGE_JVM_APPLICATION_REPLAY` to that directory to
+  reinstall them without rebuilding. The older incoming-function and field
+  packages do not contain these exports.

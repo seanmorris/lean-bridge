@@ -188,6 +188,19 @@ The difference is not a count of missing implementations: some installations
 still need review or a more discriminating client. These counts also do not
 measure lifetime, failure, reentry or cleanup coverage, or hosted release acceptance.
 
+At this checkpoint the **92 uncredited placements** break down as follows.
+Each listed profile needs results from both authoring routes.
+
+| Public call that still needs a witness | Profiles without a paired witness | Placements |
+| --- | --- | ---: |
+| Forward an application function through an immediate export result, a callback argument, and a callback reply | C, C++, Python, Ruby, Rust, .NET, Java, Kotlin, native PHP, PHP-Wasm, Perl, WIT/WASI | 12 × 3 × 2 = 72 |
+| Read the actual resource passed into a callback | C, Ruby, Kotlin, WIT/WASI | 4 × 2 = 8 |
+| Return a resource distinguishable from the input and recovery value | Ruby, .NET, Java, Kotlin, native PHP, WIT/WASI | 6 × 2 = 12 |
+
+For example, C already has a distinct resource reply but lacks a qualifying
+argument; Kotlin needs both. A single installed workload can exercise all
+three rows, but only its previously uncredited positions increase the total.
+
 ### Reproducing application-provided function crossings
 
 `npm run test:npm-application-function-positions` builds ordinary and reviewed
@@ -208,6 +221,10 @@ function, the original exception propagated, no stale call entered application
 code, and the live identity count returned to zero. The executed TypeScript
 client also returned 903 through its typed API. These runs qualify three
 positions on five profiles and two routes (30 placements).
+
+On those same two releases the [self-disposal replay](effect-failure-crosswalk-20261126.md)
+also verifies that an inner host exception neither revives an expired
+registration nor invalidates its still-active caller. It does not add positions.
 
 Set `LEAN_BRIDGE_APP_QUOTE_KEEP` to an existing directory to retain the
 package sets, or `LEAN_BRIDGE_APP_QUOTE_REPLAY` to the resulting `sets-*`
@@ -230,6 +247,26 @@ independent observer for cleanup. Supply an existing scratch directory in
 `LEAN_BRIDGE_C_WIT_APP_REPLAY` to their `sets-*` directory to reinstall
 without recompiling Lean. The smaller `test:c-wit-application-function-interfaces`
 check compiles the consumer against both headers; it does not execute it.
+
+For Java, Kotlin and native PHP, build **the same two author projects** for
+both Maven and Composer. Set `LEAN_BRIDGE_MANAGED_APPLICATION_KEEP` to an
+existing directory and run `npm run test:managed-application-packages`. The
+resulting `sets-*` directory contains one verified handoff per author route.
+The downstream checks run independently; neither requires rebuilding Lean:
+
+- Set `LEAN_BRIDGE_JVM_APPLICATION_REPLAY` to that directory and run
+  `npm run test:jvm-application-function-positions`. See the
+  [JDK, Kotlin and Maven settings](jvm-function-fields-20261126.md).
+- Set `LEAN_BRIDGE_PHP_APPLICATION_REPLAY` to the same directory and run
+  `npm run test:php-application-function-positions`. The [PHP application](../../tests/fixtures/structured-types/tariff-application.php)
+  runs from a relocated Composer installation. Set `LEAN_BRIDGE_PHP_HOST_INTERPRETERS`
+  to a comma-separated list to check additional native PHP builds with FFI.
+
+The clients record the forwarded value, the surviving outer call after
+an inner failure, and both actual Ticket replies. A separate observer
+checks live native owners after cleanup. The faster `test:jvm-application-function-interfaces`
+and `test:php-application-function-interfaces` checks only compile or
+inspect the public API; they are not installed-run evidence.
 
 ### Host-owned objects: which installs cover each position?
 
