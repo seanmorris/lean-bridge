@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "tariff-quotes@1.0.0",
+    "name": "tariff-quotes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53864292,
+          "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+          "sha256": "35cc5d525c9d9d4ea01a04e310d0f496d3b8a05646cebacc17df8b7434cf9f7c"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "tariff-quotes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "4693aab4d910109e0904579deaf1eb429d1ae17df0cd11fe1ef2434c3faa66ac",
+      "id": "native-library-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "5fc88d6ca50786a30513f8fd67533464fbdbf23ca10c85b9b65be4109f08d1a9"
+  }
+}

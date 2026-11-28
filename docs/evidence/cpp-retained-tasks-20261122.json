@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "profile": "native-cpp-task-v1",
+  "cppTaskSupportAbi": 2,
+  "platform": "Linux x86-64; glibc 2.36 locally; advertised glibc floor 2.38.",
+  "toolchain": {
+    "lean": "4.32.2",
+    "compiler": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "cmake": "cmake version 3.31.6"
+  },
+  "source": [
+    "tests/fixtures/python-retained-tasks/Retained.lean",
+    "tests/fixtures/cpp-retained-tasks/CppTasks.lean"
+  ],
+  "test": "tests/helpers/cpp-retained-task-installed.mjs",
+  "consumer": "tests/fixtures/cpp-retained-tasks/consumer.cpp",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "releases": [
+    {
+      "archive": {
+        "bytes": 51792942,
+        "path": "archives/cpp-retained-1.0.0-cpp.tar.gz",
+        "sha256": "93d2041748da36d6819901515498dbb1cc0ce265cfa9480e85c735ec75181b9b"
+      },
+      "bindingIrSha256": "8d607370c68c3a69c98eee3133db4043375a5feab8dc3f18fe2acf431c725e07",
+      "componentIdentity": "4a7e991d3fe02f6f503677839416fe886123fda0aa6435e5d5deb9afbe7fac30",
+      "extractorSha256": "a413b63bc4f747a239604fabc9b780ec891c98130874f325b4f5576a18126572",
+      "receiptSha256": "a4010c263e70ac64be47c23dec90d094800277504a98f95da83c9269f117fc11",
+      "route": "ordinary",
+      "sourceTreeSha256": "e82ec912fe93610221d51ae13411a702c5c08671609f858e2138f04810b24151"
+    },
+    {
+      "archive": {
+        "bytes": 51792663,
+        "path": "archives/cpp-peer-1.0.0-cpp.tar.gz",
+        "sha256": "1c5598b2ce0f94c5504b8450a1e557521e2599a9960c490022a3958ba84d29d1"
+      },
+      "bindingIrSha256": "8d607370c68c3a69c98eee3133db4043375a5feab8dc3f18fe2acf431c725e07",
+      "componentIdentity": "fa91b585906600004027e1fd957d70f3fc4e1ef20e698ba7626a189b2bff6445",
+      "extractorSha256": "a413b63bc4f747a239604fabc9b780ec891c98130874f325b4f5576a18126572",
+      "receiptSha256": "b501d036618d55d9ba9c3cd382e0ac734253cee8548667329e3a3455db4eaab5",
+      "route": "reviewed",
+      "sourceTreeSha256": "6baac326bb5aee38366b5fedb6c6497d4e0c5526173e24d640b1a608822ffd30"
+    }
+  ],
+  "clientSources": {
+    "CMakeLists.txt": "8985843f685472fb0bd822f5eaf88801be85a8bdf0cbc5e75e06cb09289574bb",
+    "audit.hpp": "cb6d13a808fc3a47be81fa68c153054a778c7d720eb2de7b1f6aef7e8696fd86",
+    "consumer.cpp": "eabbfc9e1436d6e66daff15450470c12f01149ba7a948df335f4fe54f18bd735",
+    "example.hpp": "ea8fa90107b16d24d3d60bbbf9b55aee75703bb873d89bd38f74679aeee6c7b4",
+    "scalars.hpp": "6dcb4eecb0b08d4bcd024514c72cb86cabd1efb7664ecb1f7b46eb74ad0bf74c"
+  },
+  "installers": [
+    "pkg-config",
+    "CMake"
+  ],
+  "isolatedProcesses": [
+    "trap",
+    "peer-trap",
+    "cancel-trap",
+    "retire",
+    "shutdown"
+  ],
+  "observations": [
+    "An ordinary-source export and an independently re-elaborated reviewed API produced two distinct native components. The client built against both prepared packages using pkg-config and CMake, then ran after its sources and build directory were removed and both library trees moved again. The runtime and both component libraries resolved from those relocated trees. No Lean executable, C++ compiler, network service or event-loop glue was needed at runtime.",
+    "A factory called C++ before returning, including via a Lean worker it waited for. An owner-thread callback recursively waited on the peer package’s callback-taking task. Both co_await and blocking get completed. The reviewed component exercised all 19 copied scalar types in both callback directions, including exact 4096-bit integers, Unicode, embedded NUL, raw bytes, negative zero and infinity.",
+    "Driving run_one before awaiting dispatched a callback and released its capture at settlement even though Lean kept a copy of its closure. The future buffered its result or exception for exactly one waiter; later cancellation could not overwrite it. An attempt to wait on the same future inside its own callback reported Busy. An explicit callback handle could close itself, finish the active call and reject the next one.",
+    "C++ rethrew the original exception_ptr and preserved its custom payload for factory and terminal callbacks. Non-UTF-8 diagnostic text did not lose the exception. A new Lean error with identical text stayed TaskIOError. A caught failure remained a returned Except value. Typed EIO factory rejection, eager callback-free factory IO, a callback-capable factory’s IO failure and a terminal IO failure were distinguished.",
+    "An independent observer saw the queued request become readable before worker-thread cancellation. The associated closure never ran, and its capture was destroyed on the main thread. An uncooperative factory cancelled its late-returned inner task. Native lease and eventfd counts returned to baseline.",
+    "Both executables ran five failure or shutdown cases in fresh processes. A non-standard exception retired the shared runtime and preserved CallbackTrap at the origin; a parked peer waiting on a task with no normal completion woke with Unavailable. A callback that cancelled its own future and then trapped could not undo cancellation or leave the runtime reusable. Retirement with a request already queued did not invoke the host. Explicit shutdown during dispatch delivered Cancelled.",
+    "The original archives then passed an independent archive-only installation, with identical receipt, source and consumer hashes and the same terminal outputs. The release CLI verified both receipts. The archived Lean entry, extractor, C ABI header, C++ wrapper and all four support headers matched the current producer’s regenerated source hashes on both routes."
+  ],
+  "compilerControls": [
+    "Fresh Lean elaboration rejected a callback returning a copied array instead of a supported primitive, a false terminal IO.Error annotation, and a callback-taking task with no scheduler selected.",
+    "Reviewed IR could not swap the host exception policy, shorten the callback lease, change self-disposal or remove the selected terminal failure."
+  ],
+  "plainTaskRegression": {
+    "test": "tests/helpers/cpp-task-installed.mjs",
+    "routes": [
+      {
+        "route": "ordinary",
+        "receiptSha256": "21e4f1ba8d0254080a022783dc1c03078102427233d61e0c5b199bbb4903e669",
+        "archiveSha256": "966fedfaadca9b595e387de5fc2d8e51217e54212aac6a15c5790774f586dc23"
+      },
+      {
+        "route": "reviewed",
+        "receiptSha256": "bc3c6c0fe1becd48cb597c35fa6c9454e9e6445ce05a3e8f156e1f4543a7dc64",
+        "archiveSha256": "414bb70fd2d2e6cf72626ab17284abd642aac2635b8371d0f0e1f2adaca61e9a"
+      }
+    ],
+    "result": "Fresh ordinary and reviewed callback-free releases passed the pre-existing installed C++ futures, streams and cancellation suite with both pkg-config and CMake on support ABI 2."
+  },
+  "abiCoexistence": {
+    "legacyRelease": "docs/evidence/cpp-task-streams-20261122.json",
+    "test": "tests/helpers/cpp-task-abi-coexistence.mjs",
+    "checked": {
+      "includeOrders": [
+        "old-first",
+        "new-first"
+      ],
+      "receipts": [
+        "6bbd44b66749fc5b78558941cfb437624d57c502e493069e3ab7a50b70824faf",
+        "a4010c263e70ac64be47c23dec90d094800277504a98f95da83c9269f117fc11"
+      ],
+      "sourceSha256": "0da99d5a3ba2e600d62cfc356c6808c919e6fe6b7a688206e3c13508511a8689"
+    },
+    "result": "A single C++20 executable used the earlier completion-only package and the callback-capable package. Both combinations of include and pkg-config search order compiled and ran, and the two Future types were distinct."
+  },
+  "reproduce": "Set LEAN_BRIDGE_CPP_CALLBACK_TEST=1 and LEAN_BRIDGE_CPP_CALLBACK_EVIDENCE to a new output directory; run node --test --test-concurrency=1 tests/helpers/cpp-retained-task-installed.mjs. Supply LEAN_BRIDGE_C_TASK_CMAKE if CMake is not on PATH.",
+  "replay": "Set LEAN_BRIDGE_CPP_CALLBACK_REPLAY to the directory containing the two original handoffs, client sources and acceptance.json. Run the same test without the producer flag to authenticate, relocate, compile each consumer and replay the archived result.",
+  "boundaries": [
+    "Local installed Linux C++20 evidence, not hosted CI, registry publication or acceptance for other targets.",
+    "Synchronous, many-use host replies to unary Lean IO callbacks over copied primitives. This does not establish resource or aggregate callback payloads, once-only invocation, asynchronous replies or callback-taking stream pulls.",
+    "Unexpected exception containment covers C++ exceptions thrown from the callable, not process signals, std::terminate, undefined behavior, or waking an unrelated dispatcher when a different runtime integration initiates retirement."
+  ]
+}

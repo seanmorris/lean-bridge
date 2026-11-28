@@ -218,7 +218,13 @@ Factories that cannot derive a failure-path value require
 with_recovery(callback, typedValue); failures never publish it as successful output.
 Returned Lean closures support function-call syntax and retain(). A closure that
 captures a borrowed host callback cannot invoke that callback after the borrow ends.
-`}
+`}${cpp.contract.hostInputRecords ? `
+For borrowed record parameters, construct the generated input record with your
+own function object, including move-only lambdas. The overload uses the original
+function for this call only. Returned records still contain checked Lean function
+leases. Returning a record cannot keep a caller's borrowed function alive.
+${cpp.contract.hostInputRecords.map(r => "- " + r.input + ": " + r.fields.join(", ")).join("\n")}
+` : ""}
 
 Input, callback and result conversions share per-call depth128,262144-visit and
 16MiB native/storage budgets. C/native conversion limits also apply; these do not

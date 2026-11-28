@@ -10,11 +10,27 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedJvmValues } from "../src/backends/jvm/owned-values.mjs";
+import { generateOwnedJvmPackage } from "../src/backends/jvm/owned-package.mjs";
 import { ownedJvmException, ownedJvmRuntime } from "../src/backends/jvm/owned-runtime.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
+import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { javaCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+
+test("JVM callback views expose typed canonical equality without introducing whole-result ownership", () => {
+	const ir = leasedClosureFieldReviewedIr({staged: true, incoming: true});
+	const p = generateOwnedJvmPackage(ir);
+	assert.ok(p.c.callbackArgumentViews && p.canonicalEquality);
+	assert.equal(p.wholeOwners, false);
+	const features = JSON.parse(p.files["binding-manifest.json"]).supportedFeatures;
+	assert.ok(features.includes("canonical-resource-equality"));
+	assert.ok(!features.includes("whole-value-owners") && !features.includes("parameter-anchored-results"));
+	const cls = file => Object.entries(p.files).find(([path]) => path.endsWith("/"+file))[1];
+	assert.match(cls("PackQuoteArgument0Closure.java"), /boolean sameIdentity\(PackQuoteArgument0Closure other\)/u);
+	assert.match(cls("_OwnedKotlinPackQuoteArgument0Closure.kt"), /fun sameIdentity\(/u);
+	assert.match(cls("_OwnedBindings.java"), /invokeExact\(MemorySegment.ofAddress\(state.require\(\)\), a, b, result\)/u);
+});
 
 test("owned Java signatures preserve aliases, higher-order direction and closed values", () => {
 	const ir = ownedCppCompositionReviewedIr(), original = structuredClone(ir);

@@ -53,6 +53,7 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 	};
 	closed(graph.abi, ["cType", "box", "unbox", "heap"]);
 	const edges = new Map(), resources = new Map(), table = new Map();
+	let closureFields = 0;
 	const edge = (value, references, depth = 0) => {
 		charge(depth);
 		const kind = kindOf(value);
@@ -89,7 +90,17 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 		{
 			closed(field, ["name", "type", ...(record ? ["projection"] : [])]);
 			name(field.name); if(record) name(field.projection);
-			edge(field.type, references);
+			if(record && policy.closureFields?.includes(field.projection))
+			{
+				if(kindOf(field.type) !== "callback") fail("closureFields requires a direct function field");
+				keys(field.type, ["kind", "parameters", "result"]);
+				if(field.type.abi.cType !== "lean_object*" || field.type.abi.heap !== true)
+					fail("a leased function field needs a heap closure");
+				dense(field.type.parameters, 16); charge(0);
+				for(const parameter of field.type.parameters) edge(parameter, references, 1);
+				edge(field.type.result, references, 1); ++closureFields;
+			}
+			else edge(field.type, references);
 		}
 	};
 	const rootReferences = new Set(); edge(graph.root, rootReferences);
@@ -122,7 +133,7 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 			}
 		}
 	}
-	if(!resources.size) fail("owned aggregates must contain a resource identity");
+	if(!resources.size && !closureFields) fail("owned aggregates must contain a resource identity or an authorized closure field");
 	for(const resource of resources.keys()) if(table.has(resource)) fail("resource identity conflicts with a value definition");
 	for(const references of [rootReferences, ...edges.values()])
 		for(const reference of references) if(!table.has(reference)) fail(`missing nominal definition ${reference}`);

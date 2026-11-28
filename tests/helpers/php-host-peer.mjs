@@ -1,0 +1,128 @@
+/** @file Build an independent Composer peer and replay a verified first component against it. */
+import assert from "node:assert/strict";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { prepareNativeHostFixture } from "./native-host-import-check.mjs";
+import { runNativeTool as run } from "./native-effect-consumers.mjs";
+import { installPhpIOComponents } from "./php-io-install.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+
+const preparePeer=async project=>{
+	const lake=join(project,"lakefile.toml"),config=join(project,"lean-bridge.exports.json");
+	const manifest=(await readFile(lake,"utf8")).replace('name = "workshop"','name = "workshop-peer"');
+	await writeFile(lake,manifest+'\n[[lean_lib]]\nname = "Peer"\n');
+	const cfg=JSON.parse(await readFile(config,"utf8")); cfg.targets["php-native"].name="lean-bridge/workshop-peer";
+	const imports=join(project,"lean-bridge.hosts.json"), ir=JSON.parse(await readFile(imports,"utf8"));
+	const [box]=ir.types, key=structuredClone(box);
+	key.name="Key"; key.id="host:meter.Key"; key.resource.kindId="resource:meter.Key"; key.host.identity="strong-canonical";
+	const identity=ir.declarations.find(d=>d.name==="identity"), keep=structuredClone(identity), child=structuredClone(identity);
+	keep.owner=key.id; keep.receiver.type.id=key.id; keep.result.type.id=key.id; keep.id=key.id+".identity";
+	keep.source.declaration=keep.overloadKey="Key.identity";
+	child.name="child"; child.id=box.id+".child"; child.source.declaration=child.overloadKey="Box.child";
+	child.result.type.id=key.id; child.result.ownership="borrow"; child.result.lifetime={scope: "receiver",anchor: "receiver"};
+	const from=structuredClone(child);
+	from.name="childOf"; from.id=box.id+".childOf"; from.source.declaration=from.overloadKey="Box.childOf";
+	from.parameters=[{...structuredClone(identity.receiver),name: "parent",optional: false,default: null}];
+	from.result.lifetime={scope: "parameter",anchor: "parent"};
+	ir.types.push(key); ir.declarations.push(keep,child,from);
+	await writeFile(imports,canonicalJson(ir));
+	await copyFile("tests/fixtures/php-host-members/Peer.lean",join(project,"Peer.lean"));
+	cfg.modules.push("Peer"); cfg.exports.push("Peer.transient","Peer.mappedTransient","Peer.ioFail","Peer.watch","Peer.watchFrom","Peer.keepKey");
+	await writeFile(config,canonicalJson(cfg));
+};
+
+const exercisePeer=async (stage,first,handoff,env)=>{
+	const local=join(stage,"client"),deploy=join(stage,"installed elsewhere"); await mkdir(local);
+	await copyFile("tests/fixtures/php-host-members/peer.php",join(local,"app.php"));
+	await copyFile("tests/fixtures/php-host-members/lifecycle.php",join(local,"lifecycle.php"));
+	const ownerSource=await readFile("tests/fixtures/php-host-members/error-owner.php");
+	await writeFile(join(local,"error-owner.php"),ownerSource);
+	const limitSource=await readFile("tests/fixtures/php-host-members/registry-limit.php");
+	await writeFile(join(local,"registry-limit.php"),limitSource);
+	const {vendor,components}=await installPhpIOComponents(stage,local,deploy,[first,handoff]);
+	const installed=join(vendor,components[1].pkg.name,"lean-bridge");
+	const json=async path=>JSON.parse(await readFile(path));
+	const api=await json(join(installed,"binding-ir.json")), compiler=await json(join(installed,"elaboration.json"));
+	const receipt=await json(join(handoff,"package-set-receipt.json"));
+	assert.equal(receipt.profiles[0].bindingIrSha256,hashBindingIr(api));
+	assert.equal(receipt.source.treeSha256,compiler.sourceTreeSha256);
+	const author=await json(join(handoff,"host-export-evidence.json"));
+	assert.equal(compiler.reviewedSourceSha256,author.reviewedSourceSha256);
+	for(const name of ["Workshop.failWith","Peer.mappedTransient"])
+	{
+		const decl=api.declarations.find(d=>d.source.declaration===name);
+		assert.equal(decl.source.extensions["lean-lang.org/effect"],"EIO");
+		assert.deepEqual(decl.failure,{mode: "declared",errors: ["error:EIO."+name],unexpected: "poison-runtime"});
+		if(name==="Workshop.failWith")
+			assert.equal(decl.source.extensions["lean-bridge.dev/error-payload-site"].ownership,"lease");
+	}
+	const report=[],lastOwners=[],faults=[];
+	for(const php of (env.LEAN_BRIDGE_PHP_HOST_INTERPRETERS ?? "/usr/bin/php").split(","))
+	{
+		const isolated={PATH: "/no-publisher-tools",LANG: "C.UTF-8",LEAN_NUM_THREADS: "1"};
+		const flags=await run(resolve(php),["-n","-r","echo (int)extension_loaded('ffi');"],deploy,isolated)==="1" ? ["-n"] : ["-n","-d","extension=ffi"];
+		for(const order of ["peer","workshop"])
+		{
+			const result=await run(resolve(php),[...flags,"-d","ffi.enable=1","app.php",join(vendor,"autoload.php"),order],deploy,isolated);
+			assert.match(result,/independent close; zero tokens/u);
+			const lifecycle=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","lifecycle.php",join(vendor,"autoload.php"),order],deploy,isolated));
+			assert.equal(lifecycle.finalTokens,0); assert.equal(lifecycle.checks,25); assert.equal(lifecycle.retirementChecks,6);
+			report.push({php,order,result,lifecycle});
+			const owner=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","-d","zend.exception_ignore_args=1","error-owner.php",join(vendor,"autoload.php"),order],deploy,isolated));
+			assert.deepEqual(owner,{php: lifecycle.php,order,returned: 17,updated: 42,drops: 1,finalTokens: 0});lastOwners.push(owner);
+			const limit=JSON.parse(await run(resolve(php),[...flags,"-d","ffi.enable=1","-d","zend.exception_ignore_args=1","registry-limit.php",join(vendor,"autoload.php"),order],deploy,isolated));
+			assert.deepEqual(limit,{php: lifecycle.php,order,original: true,mapped: true
+				, replacementIO: true,trigger: "reference-token exhaustion"
+				, afterReset: "both unavailable",reads: 1,constructs: 1,finalTokens: 0});
+			faults.push(limit);
+		}
+	}
+	await writeFile(join(stage,"consumer.json"),canonicalJson({report,archives: components.map(r=>r.pkg.artifacts[0]),receipts: components.map(r=>r.receiptSha256)}));
+	const packages=components.map(c=>({name: c.pkg.name,receiptSha256: c.receiptSha256,archive: c.pkg.artifacts[0]}));
+	await writeFile(join(stage,"error-owner.json"),canonicalJson({clientSha256: sha256(ownerSource),packages,results: lastOwners}));
+	await writeFile(join(stage,"error-policy.json"),canonicalJson({packages
+		, interface: hashBindingIr(api)
+		, reviewedSourceSha256: compiler.reviewedSourceSha256
+		, ownerClientSha256: sha256(ownerSource)
+		, faultClientSha256: sha256(limitSource)
+		, lastOwners, faults}));
+	await rm(deploy,{recursive: true});
+};
+
+test("independent Composer packages share identity, anchors and safe finalization in either load order",{timeout: 1_800_000},async t=>{
+	const env=process.env,keep=env.LEAN_BRIDGE_PHP_HOST_OUTPUT,existing=env.LEAN_BRIDGE_PHP_HOST_HANDOFF;
+	const replay=env.LEAN_BRIDGE_PHP_HOST_PEER_REPLAY;
+	if(replay && !existing) throw new Error("Peer replay requires the first package handoff as LEAN_BRIDGE_PHP_HOST_HANDOFF");
+	const root=await mkdtemp(join(keep ?? tmpdir(),"php-host-peer-"));
+	if(!keep) t.after(()=>rm(root,{recursive: true,force: true}));
+	const first=existing ? resolve(existing) : join(root,"first-handoff");
+	const build=(projectRoot,outputRoot)=>buildCanonicalProject({projectRoot,outputRoot,targets: ["php-native"],environment: env});
+	let review;
+	for(const route of ["ordinary","reviewed"])
+	{
+		const stage=join(root,route),project=join(stage,"producer"),handoff=join(replay ? resolve(replay,route) : stage,"handoff");
+		await mkdir(stage);
+		if(!replay)
+		{
+			await prepareNativeHostFixture(project,"php"); await copyFile("LICENSE",join(project,"LICENSE"));
+			if(!existing && !review)
+			{
+				await build(project,first);
+				await rm(join(first,"packages"),{recursive: true});
+			}
+			await preparePeer(project);
+			if(review) await writeFile(join(project,"peer.binding-ir.json"),review);
+			await build(project,handoff);
+			await rm(project,{recursive: true}); await rm(join(handoff,"packages"),{recursive: true});
+		}
+		const ir=await readFile(join(handoff,"binding-ir.json"),"utf8");
+		const evidence=JSON.parse(await readFile(join(handoff,"host-export-evidence.json"),"utf8"));
+		assert.equal(evidence.reviewedSourceSha256,review ? sha256(review) : null);
+		if(review) assert.equal(ir,review); else review=ir;
+		await exercisePeer(stage,first,handoff,env); t.diagnostic("Verified "+route+" peer: "+stage);
+	}
+});

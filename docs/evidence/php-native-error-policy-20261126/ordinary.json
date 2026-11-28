@@ -1,0 +1,110 @@
+{
+  "faultClientSha256": "e53c2b896795dc4217af7dca04f2d065643f0eb9e024335fe42fc273588d3943",
+  "faults": [
+    {
+      "afterReset": "both unavailable",
+      "constructs": 1,
+      "finalTokens": 0,
+      "mapped": true,
+      "order": "peer",
+      "original": true,
+      "php": "8.2.35",
+      "reads": 1,
+      "replacementIO": true,
+      "trigger": "reference-token exhaustion"
+    },
+    {
+      "afterReset": "both unavailable",
+      "constructs": 1,
+      "finalTokens": 0,
+      "mapped": true,
+      "order": "workshop",
+      "original": true,
+      "php": "8.2.35",
+      "reads": 1,
+      "replacementIO": true,
+      "trigger": "reference-token exhaustion"
+    },
+    {
+      "afterReset": "both unavailable",
+      "constructs": 1,
+      "finalTokens": 0,
+      "mapped": true,
+      "order": "peer",
+      "original": true,
+      "php": "8.5.10",
+      "reads": 1,
+      "replacementIO": true,
+      "trigger": "reference-token exhaustion"
+    },
+    {
+      "afterReset": "both unavailable",
+      "constructs": 1,
+      "finalTokens": 0,
+      "mapped": true,
+      "order": "workshop",
+      "original": true,
+      "php": "8.5.10",
+      "reads": 1,
+      "replacementIO": true,
+      "trigger": "reference-token exhaustion"
+    }
+  ],
+  "interface": "06db16a371bd312ea92ab29385e24bb528a1b6cfb4702eb9dfddf1eff8fb81d7",
+  "lastOwners": [
+    {
+      "drops": 1,
+      "finalTokens": 0,
+      "order": "peer",
+      "php": "8.2.35",
+      "returned": 17,
+      "updated": 42
+    },
+    {
+      "drops": 1,
+      "finalTokens": 0,
+      "order": "workshop",
+      "php": "8.2.35",
+      "returned": 17,
+      "updated": 42
+    },
+    {
+      "drops": 1,
+      "finalTokens": 0,
+      "order": "peer",
+      "php": "8.5.10",
+      "returned": 17,
+      "updated": 42
+    },
+    {
+      "drops": 1,
+      "finalTokens": 0,
+      "order": "workshop",
+      "php": "8.5.10",
+      "returned": 17,
+      "updated": 42
+    }
+  ],
+  "ownerClientSha256": "8b96b190d8c690ed7d9d83f4ad70f77239b3996b8017a7c937757eb425b94f3c",
+  "packages": [
+    {
+      "archive": {
+        "bytes": 51351190,
+        "path": "archives/lean-bridge-workshop-1.0.0-linux-x86_64.zip",
+        "sha256": "412e2c2b581adc6b7294e09912f497b9b63e940967fe11fc86a07d0660191e19"
+      },
+      "name": "lean-bridge/workshop",
+      "receiptSha256": "b1b0cf163256f7b995aa6a4020cc2cbc3329215aeefd5ac40374966469e91b95"
+    },
+    {
+      "archive": {
+        "bytes": 51357381,
+        "path": "archives/lean-bridge-workshop-peer-1.0.0-linux-x86_64.zip",
+        "sha256": "a82ae110cd4801e306e15f11f74bc4a49f5476cb2126b479e7afdf06c96887e4"
+      },
+      "name": "lean-bridge/workshop-peer",
+      "receiptSha256": "384fcf5ef97e794e4247fec32ef6142de9e985c3c2832e311353961083c405f1"
+    }
+  ],
+  "reviewedSourceSha256": null
+}

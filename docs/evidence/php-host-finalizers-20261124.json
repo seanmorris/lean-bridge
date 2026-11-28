@@ -1,0 +1,227 @@
+{
+  "runtime": "Linux x86-64 NTS PHP; Lean 4.32.2; local glibc floor 2.36",
+  "clientFiles": {
+    "compiled.php": "c6402e7e2974e7c0b514daac765718253797a00984b8e987b9925145739bcbf9",
+    "peer.php": "e0718c315d6d001e097cb0207f17f65a936e6e01fc12ef956c6423afcea96855",
+    "lifecycle.php": "a736a77e5937aa9a8f1c95b53f213c6c107839567104974cc5d050ccd799725a",
+    "Peer.lean": "668c017826cc548a9c851e5eff5e00907f22d5fe379ae21bf2f50a8a098e3115"
+  },
+  "baseline": {
+    "ordinary": {
+      "artifact": "412e2c2b581adc6b7294e09912f497b9b63e940967fe11fc86a07d0660191e19",
+      "receipt": "b1b0cf163256f7b995aa6a4020cc2cbc3329215aeefd5ac40374966469e91b95",
+      "executions": [
+        {
+          "checks": 35,
+          "fork": true,
+          "php": "8.2.35"
+        },
+        {
+          "checks": 34,
+          "fork": false,
+          "php": "8.5.10"
+        }
+      ]
+    },
+    "reviewed": {
+      "artifact": "506b71798d03dfe0c5d82993ef0d0cc8b9f308949d5b7003b53248000ea93390",
+      "receipt": "a65b9346990c94cffcf096d76f5d7b3e8f8f7e324204d758e5924104bc03d72a",
+      "executions": [
+        {
+          "checks": 35,
+          "fork": true,
+          "php": "8.2.35"
+        },
+        {
+          "checks": 34,
+          "fork": false,
+          "php": "8.5.10"
+        }
+      ]
+    }
+  },
+  "peers": {
+    "ordinary": {
+      "artifact": "a82ae110cd4801e306e15f11f74bc4a49f5476cb2126b479e7afdf06c96887e4",
+      "receipt": "384fcf5ef97e794e4247fec32ef6142de9e985c3c2832e311353961083c405f1",
+      "reviewedSourceSha256": null,
+      "executions": [
+        {
+          "bindingOrder": "peer first",
+          "php": "8.2.35",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        },
+        {
+          "bindingOrder": "workshop first",
+          "php": "8.2.35",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        },
+        {
+          "bindingOrder": "peer first",
+          "php": "8.5.10",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        },
+        {
+          "bindingOrder": "workshop first",
+          "php": "8.5.10",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        }
+      ]
+    },
+    "reviewed": {
+      "artifact": "5eb99b6834a77d18ab0ed16ca5b1b91b79ede59ad73d05366195e64304e04421",
+      "receipt": "84050504c605796ce44ac2c2929f8f96b9e14a007e03ea89518e6576deeae42c",
+      "reviewedSourceSha256": "155c55ad4af98f9717a1360b10333e5c31bd42ad48d892678d2f1184bede093b",
+      "executions": [
+        {
+          "bindingOrder": "peer first",
+          "php": "8.2.35",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        },
+        {
+          "bindingOrder": "workshop first",
+          "php": "8.2.35",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        },
+        {
+          "bindingOrder": "peer first",
+          "php": "8.5.10",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        },
+        {
+          "bindingOrder": "workshop first",
+          "php": "8.5.10",
+          "lifetimeChecks": 25,
+          "retirementChecks": 6,
+          "finalTokens": 0,
+          "destructors": [
+            "meter:10",
+            "meter:9",
+            "meter:11",
+            "meter:12",
+            "meter:13",
+            "meter:14",
+            "meter:21",
+            "key",
+            "meter:20",
+            "meter:22",
+            "key",
+            "meter:30"
+          ]
+        }
+      ]
+    }
+  }
+}

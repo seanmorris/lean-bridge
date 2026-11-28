@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-cpan-synchronous-lean-io",
+  "date": "2026-11-23",
+  "planNode": 1222,
+  "profile": "native-perl-io-v1",
+  "scope": "Local Linux x86-64; Lean 4.32.2, GCC 12.2, Perl 5.36.3 and 5.38.2, each with and without interpreter threads. For this host the packages declare test glibc 2.36; the production default is 2.38. No hosted run or CPAN publication is claimed.",
+  "checks": [
+    "Built the original Journal distributions from a Lake source selection and from a separately elaborated reviewed Binding IR. Compiled an independent Companion distribution and all four real XS variants per component. The three handoffs contain the identical byte-for-byte shared LeanBridge-Runtime archive; none of the components embeds its own Lean runtime.",
+    "Verified the complete tar inventories, MANIFEST, native/runtime digests, exact version pins, build receipts, Perl ABI keys and ELF symbols, dependencies, absence of XS RPATH/RUNPATH, and maximum referenced glibc symbol version. Validated each package-set receipt against its JSON Schema and its original archives.",
+    "Installed each original runtime and each component in prebuilt-only mode; moved their prefixes before invoking any application client. The installed XS digest matches the selected archived ABI binary. PATH contained no compiler or Lean during every application invocation. Ran the published Perl example on both primary packages and all four interpreters.",
+    "Exercised all nineteen copied scalar types, arbitrary precision and full-width machine integers, Unicode including embedded NUL and a supplementary character, opaque octets, binary32 rounding, signed zero and NaN. A tied input is read exactly once. An argument conversion reentered the component and changed a previously supplied path without redirecting the outer write; a throwing conversion preserved the original Perl exception and left the file unchanged.",
+    "Ordered BaseIO state and real filesystem IO were synchronous. Nested returned Except data, typed EIO failures, IO.Error messages, host conversion errors and retirement refusals remained distinct. In each installed combination, separately built packages ran in both load orders; a native observer checked one runtime, two initialized components, then irreversible retirement and zero live identities. Forked runtime entry was refused; the thread check ran on threaded builds only.",
+    "Compiled just the XS again from the original ordinary component archive with build-xs; verified its installer receipt, relocated it, and ran the example and the complete public suite. The targeted development probe also exercised automatic XS-only fallback before the final four-ABI builds.",
+    "Negative production builds rejected a missing filesystem grant, a task on the synchronous-only profile, and a source-incompatible reviewed error payload before a handoff existed. The package verifier rejected changes to the installer, XS, conversion header and loader, and a stripped IO profile label.",
+    "Packed the project CLI, installed it with npm offline, and built in a different source and output directory. Its ordinary runtime and component archives, package-set receipt, native manifest, binding IR, elaboration evidence and prepared package manifests reproduced byte for byte. The CLI verified both archives."
+  ],
+  "limits": [
+    "This milestone covers synchronous standalone BaseIO, IO, EIO and pure companion declarations with copied scalar inputs and nested result payloads. It is not evidence for Perl task/stream delivery, nominal resources in this wire, retained callbacks, cross-platform support or registry publication.",
+    "The explicit native capability grant checks what the package declares and compiles. It is not a sandbox for the host application."
+  ],
+  "reproduce": {
+    "instructions": "docs/contributing/testing.md#synchronous-perl-io",
+    "producer": "tests/helpers/perl-io-installed.mjs",
+    "consumer": "tests/helpers/perl-io-consumers.mjs",
+    "independentInspector": "tests/fixtures/perl-sync-io/verify.py",
+    "offlineInstalledCLI": "tests/helpers/perl-io-repro.mjs"
+  },
+  "tiedScalarRegression": {
+    "initialXsSha256": "22f1f8a86a86073017a0267f58a9b4b7f4f3b2b43ee666f87a6bfb7d48a48c8d",
+    "correctedXsSha256": "585d98fd5fb43267bf311b39e3c4cdf442718fe13c6c44dd4c447ac39a0b2437",
+    "unchangedNativeSha256": "e5fe26a3988d217353759c980c52c22bb216c0e03cd912232d3abc9e9835fe6d",
+    "targetedAdapterProbe": {
+      "currentComponent": "6aba63845617f6e2f7767bebad30ada646b9fffb4d1af2205999f7781d894cee",
+      "observations": {
+        "installed.t": {
+          "sha256": "f22fd0c383bdff896b2dad3227e2f02445c228015734f29f85ae3f91a8f8df6d",
+          "tests": 87
+        },
+        "magic.t": {
+          "sha256": "fd3ecf5d3fa0cfbb2293870bce3ec2a07a9eb7279ab732c528be9ac98521d6ea",
+          "tests": 27
+        }
+      },
+      "originalNative": "e5fe26a3988d217353759c980c52c22bb216c0e03cd912232d3abc9e9835fe6d",
+      "originalReceipt": "7b0cca57a5acdec9f7ec498336260401cb782194bbf6ea0b4d16c86f874d450a"
+    }
+  },
+  "acceptanceSha256": "f1cead10f02d0cb7e4fb6d460e49f0451b9191bc1dd012eceaccd006b20562b1",
+  "reproductionSha256": "33b3fbff466c03c1a8b04a6f3e8bcc0aed95ad8bc2d999e64fc6b2d55eb52cba",
+  "prebuiltTAP": {
+    "passed": 1172,
+    "skipped": 4,
+    "planned": 1176
+  },
+  "fallbackTAP": {
+    "passed": 87,
+    "skipped": 0,
+    "planned": 87
+  },
+  "sharedRuntime": {
+    "bytes": 51394992,
+    "path": "archives/LeanBridge-Runtime-0.0020276624700658970660393113293618122178994814009577038764491667816735790235240581.tar.gz",
+    "sha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+  },
+  "packages": [
+    {
+      "route": "ordinary",
+      "receiptSha256": "22b95e2a975feaeb24a10d51a7d7260143984dbe2186acbc860c4c38fdbd0a90",
+      "profile": {
+        "bindingIrSha256": "76946f253967bf7cc4ae4f73d4675079f57ccc02c6e36c1b93d4a652eee036b4",
+        "id": "native-perl-io-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "component": {
+        "bytes": 140550,
+        "path": "archives/LeanBridge-Journal-0.001.tar.gz",
+        "sha256": "7f1ba9e4305fab7bf08cf2229f0183594be5affd82e0ee84320282b3030fcda2"
+      },
+      "runtimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731",
+      "nativeLibrarySha256": "e5fe26a3988d217353759c980c52c22bb216c0e03cd912232d3abc9e9835fe6d",
+      "abiKeys": [
+        "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77"
+      ],
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "sourceTreeSha256": "95030f7314b5eeb73c078d77b039fab8e96b1663e9ccc748f381939ccd62ae7d",
+      "reviewedSourceSha256": null
+    },
+    {
+      "route": "reviewed",
+      "receiptSha256": "13bb0ac5e6b7a63355d7656e93a440fad39c0b19df5ff0eb70dd468416f36273",
+      "profile": {
+        "bindingIrSha256": "76946f253967bf7cc4ae4f73d4675079f57ccc02c6e36c1b93d4a652eee036b4",
+        "id": "native-perl-io-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "component": {
+        "bytes": 140549,
+        "path": "archives/LeanBridge-Journal-0.001.tar.gz",
+        "sha256": "4cb176247345be16af4192127238a645015e2ff510066d39e4651706901f5869"
+      },
+      "runtimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731",
+      "nativeLibrarySha256": "9a99144625068a3723903e0230602ac190f847ba9a049166b49636cbee9c2191",
+      "abiKeys": [
+        "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77"
+      ],
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "sourceTreeSha256": "73c185f0cd38f384208040c0f0080c3e79f3aa5f2bd8b6e2277adbc7ff3e1be6",
+      "reviewedSourceSha256": "e4b3066d84336e41481cf9fb9f6dd814939ca0204a42ebb1094eb0d8988a466b"
+    },
+    {
+      "route": "peer",
+      "receiptSha256": "e3d8ebc9544da72a587b0bfac809ca8bb47cd333f9d3ce3edd3651bb0893c749",
+      "profile": {
+        "bindingIrSha256": "158261a6b8e00dca775ab5957dcaa5c67f2ac61f94246b12f7b428b423dd8acc",
+        "id": "native-perl-io-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "component": {
+        "bytes": 75671,
+        "path": "archives/LeanBridge-Companion-0.001.tar.gz",
+        "sha256": "837433152bd4074bff5511e1f8b61d71c3d404cb304c6a23a8354aa400649e3b"
+      },
+      "runtimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731",
+      "nativeLibrarySha256": "5cdba1f866b96aecb4e4d683710eec4868cd7b3364ca9282131784ab21b6daea",
+      "abiKeys": [
+        "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77"
+      ],
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "sourceTreeSha256": "80f027de313aefdbe83e5c24b86be71902d9dee493a95dc6568524426165a8cc",
+      "reviewedSourceSha256": null
+    }
+  ],
+  "sources": {
+    "Observe.xs": "24029e29f2faa3fa70d89598ad8de8752feeb12c5eb8de202bdfab8c5b58efd2",
+    "build-observer.pl": "2081ccf5c50cf0435c11bd888bd450e2f338a4373244f7974b9482336ea8e7d9",
+    "compose.t": "ba623d1b7c258a97beda0568100280abeac2bd39e7b1485f40d655406d367aff",
+    "example.pl": "85d4de65654d1ffe43120eef32024c1d80dd18039b80099407eb50426bd0d129",
+    "installed.t": "66901d26254cfef3ade561cc05ec82e6fb7135ff4174dd33843e5ce7ba397f56",
+    "magic.t": "52e6dd7fe4e9896be0765498ec43161698212a826506206e3aff60acd697db04",
+    "retire.t": "256b028e1dbcfa624ec5a5bd121f11bb693c7c016e4d655299945e172fca1a12",
+    "verify.py": "ab9bb8670f56122390ce94703b3c4d5c2637f51901a307950169d2afc87a2fca"
+  },
+  "rows": [
+    {
+      "installedXsSha256": "2f8dafe0297012c80d131407dacf96b2aa75c520eccf38bdc8bbf837f8c9da8e",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "f22fd0c383bdff896b2dad3227e2f02445c228015734f29f85ae3f91a8f8df6d",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 1,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "2f8dafe0297012c80d131407dacf96b2aa75c520eccf38bdc8bbf837f8c9da8e",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "f22fd0c383bdff896b2dad3227e2f02445c228015734f29f85ae3f91a8f8df6d",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 1,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "61fcf80b344bb20296d1106e0f42c657087fd4cd3607f107baafb029e4a402c1",
+      "key": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "d9987591ec16ae0101b1eaf019105f1e974e739e00a2f3a26f7c12d47bc1bc01",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 0,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "61fcf80b344bb20296d1106e0f42c657087fd4cd3607f107baafb029e4a402c1",
+      "key": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "d9987591ec16ae0101b1eaf019105f1e974e739e00a2f3a26f7c12d47bc1bc01",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 0,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "07361689ca0d9045efbf61a36615d10934f9b1204d8c44573258339b6153e542",
+      "key": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "f22fd0c383bdff896b2dad3227e2f02445c228015734f29f85ae3f91a8f8df6d",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 1,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "07361689ca0d9045efbf61a36615d10934f9b1204d8c44573258339b6153e542",
+      "key": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "f22fd0c383bdff896b2dad3227e2f02445c228015734f29f85ae3f91a8f8df6d",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 1,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "6b14912a67f7b946d2aea184923eca4aee8dbea4a9a208b091073c2ca2221dab",
+      "key": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "d9987591ec16ae0101b1eaf019105f1e974e739e00a2f3a26f7c12d47bc1bc01",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 0,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "6b14912a67f7b946d2aea184923eca4aee8dbea4a9a208b091073c2ca2221dab",
+      "key": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "observations": {
+        "journal-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "magic": {
+          "tapSha256": "4569654d9c5be06f3eecae199c51567206cd9a934ce14778cc91bac0e4c439af",
+          "tests": 34
+        },
+        "peer-first": {
+          "tapSha256": "744799ec5bb77c8b01b5bba2c2e4eb31d02da923715c8c198f88136c9d26178e",
+          "tests": 10
+        },
+        "public": {
+          "tapSha256": "d9987591ec16ae0101b1eaf019105f1e974e739e00a2f3a26f7c12d47bc1bc01",
+          "tests": 87
+        },
+        "retirement": {
+          "tapSha256": "9536439bc50019f2c140a610846c1ae7e7747d08a0f54a7da0f267d12eda5392",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 0,
+      "version": "5.38.2"
+    }
+  ],
+  "fallback": [
+    {
+      "installedXsSha256": "04190d092094cf8fe75928c1b904c3ba4dd0ace1c946b61f4514f1de13075970",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "sourceSha256": "585d98fd5fb43267bf311b39e3c4cdf442718fe13c6c44dd4c447ac39a0b2437",
+      "tapSha256": "f22fd0c383bdff896b2dad3227e2f02445c228015734f29f85ae3f91a8f8df6d"
+    }
+  ],
+  "offlineCLI": {
+    "artifacts": [
+      {
+        "bytes": 140550,
+        "path": "archives/LeanBridge-Journal-0.001.tar.gz",
+        "sha256": "7f1ba9e4305fab7bf08cf2229f0183594be5affd82e0ee84320282b3030fcda2"
+      },
+      {
+        "bytes": 51394992,
+        "path": "archives/LeanBridge-Runtime-0.0020276624700658970660393113293618122178994814009577038764491667816735790235240581.tar.gz",
+        "sha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+      }
+    ],
+    "cliArchiveSha256": "fd210275b042b273b9d9c29f7a45489e458dc9fb0fb745df8c7727e95749d2fe",
+    "receiptSha256": "22b95e2a975feaeb24a10d51a7d7260143984dbe2186acbc860c4c38fdbd0a90"
+  }
+}

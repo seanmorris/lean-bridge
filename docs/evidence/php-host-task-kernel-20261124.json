@@ -1,0 +1,57 @@
+{
+  "profile": "private-native-php-task-kernel",
+  "platform": "linux-x86_64",
+  "compiler": "Lean 4.32.2",
+  "sourceSha256": {
+    "tests/fixtures/php-host-tasks/Workshop.lean": "b843b44a696fbcf30a973daff41f37984b9f4e7998c44ccbd7d1679422af346a",
+    "tests/fixtures/php-host-tasks/lean-bridge.exports.json": "8949070d3200ff6c392914dcabd706192cd479a6b7bfd968190725255e733d63",
+    "tests/fixtures/php-host-tasks/kernel.php": "d1f2a58ebb60b77c211d1d7aeb38283ec82e0d74b6e789a28d57361c4775f0c1",
+    "src/backends/php/host-task-objects.php": "1f89c3d5e666c00d9f11ce5ebfd7b00e3d9db591dd0149c3a059093ef791170f"
+  },
+  "routes": {
+    "ordinary": {
+      "api": "d8819ab0e1de0d8581879effd9b9d29441c4e5587f9d1dc8f0dd75e0c2772ab5",
+      "binaries": {
+        "liblb_php_host_96b080fe6c50d97cb7e4aaa12d8bc3a92db619f170160277fefa8d7df306da3e.so": "0e84f37ed8d424afaef7df1ea456485e7fab8182ffc0b6b51ff54cbd7ce5068b",
+        "liblb_php_host_domain_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "af7cdc9015c09f461245bc1b08145605776ca2f944ec43b9871a187445e25b3b",
+        "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "identity": "96b080fe6c50d97cb7e4aaa12d8bc3a92db619f170160277fefa8d7df306da3e",
+      "results": [
+        {
+          "checks": 72,
+          "livePhpReferences": 0,
+          "php": "8.2.35"
+        },
+        {
+          "checks": 72,
+          "livePhpReferences": 0,
+          "php": "8.5.10"
+        }
+      ],
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "reviewed": {
+      "api": "d8819ab0e1de0d8581879effd9b9d29441c4e5587f9d1dc8f0dd75e0c2772ab5",
+      "binaries": {
+        "liblb_php_host_dfdd8669ffab1d45836cdb68a86e8aff643d63beb05e262d638893a380f1fec7.so": "a57356e49c2e79e897b5f5366ca5d22e8e0fc2283cef3211991b3eed30fe7ec6",
+        "liblb_php_host_domain_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "af7cdc9015c09f461245bc1b08145605776ca2f944ec43b9871a187445e25b3b",
+        "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "identity": "dfdd8669ffab1d45836cdb68a86e8aff643d63beb05e262d638893a380f1fec7",
+      "results": [
+        {
+          "checks": 72,
+          "livePhpReferences": 0,
+          "php": "8.2.35"
+        },
+        {
+          "checks": 72,
+          "livePhpReferences": 0,
+          "php": "8.5.10"
+        }
+      ],
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  }
+}

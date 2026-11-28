@@ -1,0 +1,41 @@
+/** @file Install the production C++ projection of an already compiled, authenticated native component. */
+import assert from "node:assert/strict";
+import {mkdir,mkdtemp,readFile,rename,rm} from "node:fs/promises";
+import {tmpdir} from "node:os";
+import {basename,join} from "node:path";
+import test from "node:test";
+import {projectOwnedNativeCFamily} from "../../src/build/owned-c-projection.mjs";
+import {canonicalJson,sha256} from "../../src/capsule/node.mjs";
+import {projectApplicationPackage} from "./application-package-projection.mjs";
+import {runCppApplication} from "./cpp-application-client.mjs";
+import {saveLakeFile} from "./lake-workspace.mjs";
+import {runNativeTool as run} from "./native-effect-consumers.mjs";
+import {checkStagedQuoteIdentities,checkApplicationFunctionPositions,checkTicketExchangePositions} from "./staged-quote-project.mjs";
+
+test("a relocated C++ package forwards application functions from the verified native Lean component",async t=>{
+	const env=process.env,root=env.LEAN_BRIDGE_CPP_APP_OUTPUT,route=env.LEAN_BRIDGE_CPP_APP_ROUTE;
+	assert.ok(root&&["ordinary","reviewed"].includes(route));
+	const c=env.LEAN_BRIDGE_CPP_APP_C;assert.ok(!(c&&env.LEAN_BRIDGE_CPP_APP_WHEEL),"select only one compiled donor");
+	const handoff=c??env.LEAN_BRIDGE_CPP_APP_WHEEL,pin=c?env.LEAN_BRIDGE_CPP_APP_C_SHA256:env.LEAN_BRIDGE_CPP_APP_WHEEL_SHA256;
+	const leanPrefix=env.LEAN_BRIDGE_LEAN_PREFIX,donorTarget=c?"c":"pypi";
+	assert.ok(handoff&&pin&&leanPrefix);
+	for(const tool of [env.CXX??"c++","pkg-config","cmake"])await run(tool,["--version"],process.cwd(),env);
+	const work=await mkdtemp(join(tmpdir(),"cpp-forward-"));t.after(()=>rm(work,{recursive: true,force: true}));
+	const project=o=>projectOwnedNativeCFamily({...o,targets: ["cpp"],settings: {cpp: {name: "tariff-quotes",version: "1.0.0"}}});
+	const replayPin=env.LEAN_BRIDGE_CPP_APP_REPLAY_SHA256;
+	const {set,profile,row,srcComponent,model}=await projectApplicationPackage({work,root,handoff,pin,route,leanPrefix,target: "cpp",project,replayPin,donorTarget});
+	const archive=row.archive,file=join(set,archive.path),app=join(work,"app");await mkdir(app);
+	const top=basename(archive.path,".tar.gz");assert.equal(top,"tariff-quotes-1.0.0-cpp");
+	const entries=(await run("tar",["-tzf",file],app,env)).split("\n");
+	assert.ok(entries.length&&entries.every(p=>p.startsWith(top+"/")&&!p.split("/").includes("..")));
+	await run("tar",["-xzf",file],app,env);const install=join(app,"relocated");await rename(join(app,top),install);
+	const meta=async n=>JSON.parse(await readFile(join(install,"share/lean-bridge/component",n+".json")));
+	const installed=await meta("model"),ir=await meta("binding-ir");assert.deepEqual(installed,model);
+	const pins=checkStagedQuoteIdentities(installed,ir,profile,route,{hostFunctions: true,ticketExchange: Boolean(c)});
+	checkApplicationFunctionPositions(ir);if(c)checkTicketExchangePositions(ir);
+	const component=await meta("native-component"),shared=join(install,"lib",component.library);
+	assert.deepEqual(component,srcComponent);assert.equal(row.componentSha256,sha256(await readFile(shared)));
+	const clients=await runCppApplication(app,install,env,Boolean(c));
+	await saveLakeFile(root,route+".json",canonicalJson({...row,...pins,...clients}));
+	t.diagnostic(route+": "+row.receiptSha256);
+});

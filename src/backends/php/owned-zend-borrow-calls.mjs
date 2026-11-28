@@ -5,7 +5,7 @@
  */
 
 const declarations = model => [
-	...model.functions.map(fn => ({ ...fn, entry: `call${fn.index}` }))
+	...[...model.functions,...model.recordInputs?.functions ?? []].map(fn => ({ ...fn, entry: `call${fn.index}` }))
 	, ...model.callbacks.map(fn => ({ ...fn, entry: `invoke${fn.index}` }))
 	, ...model.types.filter(node => node.representation !== "copied").map(node => ({
 		entry: `copy${node.index}`, copy: true, result: node.id
@@ -120,7 +120,7 @@ ${parameters.map((node, index) => {
   call->walk.status = lgo_whole_reserve(&frame->moves[${transfers.indexOf(index)}], frame->pins[${index}]);
   if (call->walk.status) return;
   frame->input_owners[${transfers.indexOf(index)}] = &frame->pins[${index}]->owner;` : ""}
-  if (!${fn.hostArguments[index] ? `lgo_host${signatures.get(node.id)}_begin(call, input${index}, &frame->a${index})`
+  if (!${fn.records?.[index] ? `lgo_row${node.index}(call, input${index}, &frame->a${index})` : fn.hostArguments[index] ? `lgo_host${signatures.get(node.id)}_begin(call, input${index}, &frame->a${index})`
 				: `lgo_to(&call->walk, ${node.index}, input${index}, &frame->a${index})`}) return;`;
 }).join("\n")}${anchored ? `
   call->walk.status = lgo_lease_check(frame->pins[${fn.anchor}]);
@@ -208,7 +208,9 @@ static ZEND_FUNCTION(lgo_owner_share) {
   if (!status) status = lgo_root_wrap(root->lease, (unsigned)type, return_value);
   lgo_error(status, NULL, 0); if (EG(exception)) RETURN_THROWS();
 }
-ZEND_BEGIN_ARG_INFO_EX(lgo_equal_args, 0, 0, 3)
+${ownedZendIdentityHandle}`;
+
+export const ownedZendIdentityHandle = `ZEND_BEGIN_ARG_INFO_EX(lgo_equal_args, 0, 0, 3)
   ZEND_ARG_INFO(0, type)
   ZEND_ARG_INFO(0, left)
   ZEND_ARG_INFO(0, right)

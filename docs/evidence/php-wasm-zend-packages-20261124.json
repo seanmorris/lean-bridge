@@ -1,0 +1,131 @@
+{
+  "profile": "php-wasm-threaded-task-v1",
+  "command": "npm run test:php-wasm-zend-packages",
+  "authorCli": {
+    "bytes": 5446360,
+    "path": "lean-bridge-0.1.0-rc.1.tgz",
+    "sha256": "a14d249898e5d4444dd45a4f01dc23393f6b385657cc95f7f080885fced21d17"
+  },
+  "releases": {
+    "ordinary": {
+      "receiptSha256": "a59f3281e5483ea5aa4dc0d65d2d50cb1fa5b460446b18570f91c55c9599620e",
+      "sourceTreeSha256": "9639330583413ef5d935a675f294ab72a7a47e497ab8f0b94d42ab7941767f30",
+      "bindingIrSha256": "0efefa00f4eda099c3a6676d8e21384341efab2082c8765191f68cc008dcbf2b",
+      "reviewedSourceSha256": null,
+      "hostImportsSha256": "dbdf48422e01dfb2c6bcbe8a7c53a2f70587e8c13a3fa5ed999e34ff0dc97f8f",
+      "sideModuleSha256": "946aa6243b806363c8b9a1c4eac8675277fea1f197ed8363a797b5815e1cd540",
+      "componentIdentity": "5851810710b674e99a72b3a1a5dc4fb4d88773891dfd9b9fa6d64c6997057d8d",
+      "packages": {
+        "runtime": {
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-task1.r8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9",
+          "bytes": 794342,
+          "path": "lean-bridge-runtime-0.0.0-task1.r8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9.tgz",
+          "sha256": "20b40f22057fef9d1f0d42103100a9781ca2e9514beaf995f58687f5da42885a"
+        },
+        "component": {
+          "name": "@example/php-workshop",
+          "version": "1.0.0",
+          "bytes": 89046,
+          "path": "@example-php-workshop-1.0.0.tgz",
+          "sha256": "e4e7871fe592ea6a169edb01951110a5aaaf112a5c204c0838736bd2da3eeadd"
+        },
+        "api": {
+          "name": "example/php-workshop",
+          "version": "1.0.0",
+          "bytes": 21333,
+          "path": "example-php-workshop-1.0.0.zip",
+          "sha256": "3ea2275a94271b7980c14a5d2b9e9a3ead8601429c811e72d76b6a2d1076c580"
+        }
+      }
+    },
+    "reviewed": {
+      "receiptSha256": "88a1dfe746d73c7c8dac83a392cc8b733515d9920619af31037adf9ec7b2958e",
+      "sourceTreeSha256": "984dfcda4c13cbee9c361ae7dfc2be8dd94d0c63edfeb0185633d75711929d31",
+      "bindingIrSha256": "0efefa00f4eda099c3a6676d8e21384341efab2082c8765191f68cc008dcbf2b",
+      "reviewedSourceSha256": "9c08389452c812ae3692eba705cbc382e68e9fcf6c8b36095d8261387d3629f4",
+      "hostImportsSha256": "dbdf48422e01dfb2c6bcbe8a7c53a2f70587e8c13a3fa5ed999e34ff0dc97f8f",
+      "sideModuleSha256": "1ffdc893b301420006938a0d7dc62e92f611f6b34e448cf765d8bc52664ad530",
+      "componentIdentity": "40b9f0736efc13a2b4a504f7fcf7a1346826627d8662db5d7ed0d4b666bbf80a",
+      "packages": {
+        "runtime": {
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-task1.r8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9",
+          "bytes": 794342,
+          "path": "lean-bridge-runtime-0.0.0-task1.r8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9.tgz",
+          "sha256": "20b40f22057fef9d1f0d42103100a9781ca2e9514beaf995f58687f5da42885a"
+        },
+        "component": {
+          "name": "@example/php-workshop",
+          "version": "1.0.0",
+          "bytes": 91413,
+          "path": "@example-php-workshop-1.0.0.tgz",
+          "sha256": "b16d24bcadcf3c76753eb4d607d53e44ce65d45ec57128fe652aad744efd3566"
+        },
+        "api": {
+          "name": "example/php-workshop",
+          "version": "1.0.0",
+          "bytes": 21326,
+          "path": "example-php-workshop-1.0.0.zip",
+          "sha256": "00bac34a71bacea4c4509bd92c09bccd0b0741f4ac6799a396ff80a9eb758694"
+        }
+      }
+    },
+    "peer": {
+      "receiptSha256": "dc7e6a7831edaba480dd46e8a0a98d3e2981a2c738164cee199ffb9891502501",
+      "sourceTreeSha256": "1ad5872e70a0529c888d34ce60cdfdb4f92f17940879b9f03e067df1592cee5a",
+      "bindingIrSha256": "5a3ef706b05fe53ff1b4aaac1a09829ae15af1602f2b5d554787e10122b0ca64",
+      "reviewedSourceSha256": null,
+      "hostImportsSha256": "dbdf48422e01dfb2c6bcbe8a7c53a2f70587e8c13a3fa5ed999e34ff0dc97f8f",
+      "sideModuleSha256": "af3b09aa7c0869745025b89c556a8f7f5209e037ce7a010b5c3fa7faed1c6f75",
+      "componentIdentity": "5da4e5bd6dd9642b4b5643f716fe366c09ba1297ab9c0101976092b24b666602",
+      "packages": {
+        "runtime": {
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-task1.r8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9",
+          "bytes": 794342,
+          "path": "lean-bridge-runtime-0.0.0-task1.r8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9.tgz",
+          "sha256": "20b40f22057fef9d1f0d42103100a9781ca2e9514beaf995f58687f5da42885a"
+        },
+        "component": {
+          "name": "@example/php-sidekick",
+          "version": "1.0.0",
+          "bytes": 89071,
+          "path": "@example-php-sidekick-1.0.0.tgz",
+          "sha256": "9cdb8a13efa1776cd3078a64896b2d5faf7abe5e172bd94abeb7406fcefb90d5"
+        },
+        "api": {
+          "name": "example/php-sidekick",
+          "version": "1.0.0",
+          "bytes": 21335,
+          "path": "example-php-sidekick-1.0.0.zip",
+          "sha256": "fa5913b8e6edbdbf1527016336193aa457f2be2ac0396e6e8657665c813009d9"
+        }
+      }
+    }
+  },
+  "consumerFixtureSha256": {
+    "tests/fixtures/php-host-tasks/Workshop.lean": "b843b44a696fbcf30a973daff41f37984b9f4e7998c44ccbd7d1679422af346a",
+    "tests/fixtures/php-wasm-task-owner/ZendMembers.lean": "e61e835345c2f6668824b5d09d30bbb012dad53ded5c8ba053ff90cf3b028dc9",
+    "tests/fixtures/php-wasm-task-owner/zend-installed.php": "0da263b32ee98d4c5902ed34b3516eb9bcf36b0ddda98861e4d2f14482d0c7bb",
+    "tests/fixtures/php-wasm-task-owner/zend-trap.php": "671e64f6eeec79488ed9f1031fa37beca89b73b7c9bbbc809966772165d06b6c",
+    "tests/fixtures/php-wasm-task-owner/installed.mjs": "13a36e0d58a54470d7680b77bba22e088fa1744e8ca61f872753e6beb4cde2ac",
+    "tests/helpers/php-wasm-zend-packages.mjs": "2e36aef8eaa3a88cbb9eda0ddb4f11edea81c838cb97ee880bb14cd96c2a4788"
+  },
+  "sdkManifestSha256": "9f9b2c252f457e4f77b1efb81a85cbd47eddee4ddfa312f68f8f8afc019ef2c1",
+  "runtimeIdentity": "8c4f2fedaaf504d2fb47df9b872e447a56db866a7bfc566914e1b6c44ca0dbc9",
+  "runs": {
+    "ordinary": [
+      "Node embedded + two overlapping interpreters",
+      "Node Composer",
+      "isolated Chromium",
+      "Node fatal callback"
+    ],
+    "reviewed": [
+      "Node embedded + two overlapping interpreters",
+      "Node Composer",
+      "isolated Chromium",
+      "Node fatal callback"
+    ]
+  }
+}

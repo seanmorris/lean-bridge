@@ -40,6 +40,305 @@ Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact 
 
 Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
 
+### Supply a Ruby object to Lean
+
+When a gem imports a Ruby class, pass the class to its `bind_hosts` block.
+Use ordinary Ruby objects inside the block. For example, this component calls
+the public `level=` and `level` methods on the exact instance you give it:
+
+```ruby
+require "lean_bridge/workshop"
+
+class Box
+  attr_accessor :level
+  def initialize(level) = (@level = level)
+  def read = level
+  def identity = self
+end
+
+api = LeanBridge::Workshop
+api.bind_hosts(box: Box) do
+  box = api.make(4)
+  api.update(box, 17)
+  puts box.level                 # 17
+  puts api.identity(box).equal?(box) # true
+end
+```
+
+Call on the original process's main thread, on the fiber that entered the
+block. Independently installed components with the same host contract can
+share the object while both are bound. Leaving the last binding invalidates
+the references Lean retained, not the Ruby object itself. If the Ruby method
+raises and Lean propagates that failure unchanged, the caller gets the original
+Ruby exception, including its identity. Lean can also catch or replace it.
+
+A gem can return a Lean function that remembers the Ruby instance. For
+example, the [reader factory](../../tests/fixtures/ruby-host-closures/Closures.lean)
+captures a box, but reads its current value only when you call the function:
+
+```ruby
+api.bind_hosts(box: Box) do
+  box = api.make(40)
+  read_plus = api.reader(box)
+  puts read_plus.call(2)     # 42
+  box.level = 50
+  p [1, 2].map(&read_plus)   # [51, 52]
+  read_plus.close
+end
+```
+
+Call and close it on the creating fiber. Leaving the block closes any
+remaining functions, including ones converted to a Ruby block. Closing from
+inside a call lets that invocation finish but rejects further calls.
+
+If a generated record holds a Lean function, use `retain` when you need
+your own reference. In the [Tariff example](../evidence/ruby-function-fields-20261126.md),
+the retained field stays callable after the original is closed:
+
+```ruby
+quote = LeanBridge::TariffQuotes.make_tariff(40).quote
+mine = quote.retain
+begin
+  quote.close
+  puts mine.call(2)  # 42
+ensure
+  mine.close
+end
+```
+
+When the package also exposes a borrowed input record, you can supply your
+own Ruby function. For example, `TariffInput.new(quote: ->(n) { n + 40 })`
+can be passed to `apply_tariff_with_host_fields`. Lean can call the function
+during that call; returning the record does not keep the callable alive.
+See the [Ruby input-record example](../evidence/host-callback-input-records-20261126.md#ruby-callers).
+
+A synchronous export may return your object in an `Ok` or `Err`, or raise
+`api::DeclaredError` with the object in `payload`. Read the active arm of a
+nested result through `value`. These are ordinary Ruby references: they still
+refer to the same object after the binding block ends. Closing the binding
+prevents further calls through it; it does not invalidate a saved error.
+
+In the [station example](../../tests/fixtures/ruby-host-record/Workshop.lean),
+a panel carries two such objects and a threshold. With the gem that exports
+`Panel` and the `Box` class above:
+
+```ruby
+api = LeanBridge::Workshop
+first, spare = Box.new(11), Box.new(7)
+api.bind_hosts(box: Box) do
+  api::Panel.new(first, 3, spare).with do |panel|
+    api.switch_meters(panel).with do |updated|
+      raise unless updated.active_meter.equal?(spare)
+      raise unless updated.spare_meter.equal?(first) && updated.threshold == 14
+    end
+  end
+end
+```
+
+`with` closes the panel on block exit, including after an exception. The fields
+are read-only. Closing a panel releases its references, not the meters or
+other panels that hold them. A returned panel's fields stay readable after
+the binding ends, until that panel is closed.
+
+The package declares how long it keeps each kind of Ruby object. A
+`weak-canonical` import does not keep an object alive once Lean releases
+its last reference. A `strong-canonical` import keeps the same Ruby instance
+until the last matching binding closes. Passing an object to a call that
+fails argument validation does not pin it. Once the call enters Lean, a
+later exception does not undo that admission.
+
+A gem can also use the bound class in tasks and pull streams. Keep that work
+inside the same block and on the same fiber:
+
+```ruby
+api.bind_hosts(box: Box) do
+  box = Box.new(4)
+  task = api.relay(box) { |original| api.update(original, 17); original }
+  puts task.await.equal?(box) # true
+  api.open_cursor(box).each { |item| break item }
+end
+```
+
+The Lean worker carries an opaque reference. The Ruby callback runs on the
+fiber calling `await`. Leaving the binding cancels its outstanding work;
+entering a new block with the same class does not revive an old task.
+Another gem with an open binding can still use the same Ruby object.
+The [installed-gem checks](../evidence/ruby-worker-gems-20261124.md) exercise
+this with two independent components and both strong and weak imports.
+
+### Call synchronous IO
+
+Install the prepared platform gem as above. For a package marked
+`native-ruby-io-v1`, call the method on the process main thread. It finishes
+before returning; there is no event loop, compiler, or second gem to install.
+A compatible pure Lean gem shares that runtime automatically, whichever gem
+you require first. For the Journal example:
+
+```ruby
+require "lean_bridge/journal_ruby"
+
+journal = LeanBridge::JournalRuby
+begin
+  puts journal.read("notes.txt")
+rescue journal::IOError => error
+  warn "#{error.declaration}: #{error.message}"
+end
+```
+
+A thrown `EIO` raises the package's `DeclaredError` with its Lean
+`declaration` and Ruby `payload`. A returned `Except` is a normal
+`Ok.new(value)` or `Err.new(value)`, even when that value is another
+`Except`. Neither is a rejected Ruby argument. For example, a negative
+`Nat` raises `RangeError` before Lean runs. A retired shared runtime raises
+the package's `Unavailable`; another call cannot restart it. See the
+[installed Ruby caller](../../tests/fixtures/ruby-sync-io/consumer.rb).
+
+### Read a synchronous iterator
+
+When the gem exposes a synchronous Lean iterator, use Ruby's `Enumerable`
+on the main thread. Each request runs one Lean pull; there is no task to
+await. For the [Dials example](../../tests/fixtures/native-immediate-cursor/Dials.lean):
+
+```ruby
+require "lean_bridge/dials"
+
+LeanBridge::Dials.sequence(10).each do |n|
+  puts n
+  break if n == 2
+end
+```
+
+The block form closes the cursor on exhaustion, `break` or a raised exception.
+When calling `cursor.next` yourself, exhaustion raises `StopIteration`;
+use `ensure` to call `cursor.close` if you stop early. A yielded Lean unit
+is the gem's `UNIT` object, not an end marker.
+
+### Await a task or read a stream
+
+A gem marked `native-ruby-task-v1` returns a `Task` for a selected Lean task
+and an `Enumerable` for a selected cursor. Install the gem normally; no
+compiler, scheduler gem, or native handle is required. For Ruby Pulse:
+
+```ruby
+require "lean_bridge/ruby_pulse"
+
+pulse = LeanBridge::RubyPulse
+task = pulse.bytes("packet".b)
+puts task.await
+
+pulse.series(false, false, "first").each do |item|
+  p item
+  break                    # closes the Lean cursor
+end
+```
+
+`await` returns the same settled value on later calls. With a
+[Ruby fiber scheduler](https://docs.ruby-lang.org/en/3.3/Fiber/Scheduler.html#method-i-io_wait)
+on the main thread, a pending task parks the calling fiber while others run;
+without one, the caller waits for IO readiness. `cancel` wakes waiters with
+the package's `Cancelled` exception. Lean cancellation is cooperative: code
+that ignores it may finish, but it cannot deliver a late result to that task.
+Use `task.with { |t| ... }` or `ensure` with `close` if you may leave work
+unconsumed. Use the original process main thread for all operations.
+
+A stream pulls one item at a time. `next` raises `StopIteration` on
+exhaustion, and `each` closes on exhaustion, `break`, or a block exception.
+A concurrent pull raises `Busy`. A declared pull failure raises `StepError`
+with the pull declaration and its typed payload. A selected terminal IO
+failure raises `TaskIOError` from `await`. For a task without callbacks,
+a factory failure raises from the factory call instead. A returned `Except` is
+still an `Ok` or `Err` value. The [installed client](../../tests/fixtures/ruby-task-lab/consumer.rb)
+shows each case. The [installed task and stream receipts](../evidence/ruby-fiber-tasks-20261122.json)
+identify the exact gems and callers, including the stream-only package.
+
+If another fiber closes a stream while `each` is waiting for an item, the
+reader wakes with `Cancelled`. If you interrupt the reader with
+`reader.raise(error)`, it receives your original exception. In both cases
+the cursor closes; a worker that finishes later cannot yield another item.
+See the [installed two-gem check](../evidence/async-delivery-crosswalk-20261125.md#interrupting-a-parked-ruby-reader).
+
+### Pass a callback to a Lean task
+
+Some standalone task parameters permit one call per registration. If Lean
+tries again, `await` raises the component's `CallbackAlreadyInvoked` with
+the Lean `declaration` name. Your Ruby callable does not run a second time,
+even if Lean caught an exception from the first call. Passing the same
+callable to another parameter or another task gives it a separate allowance.
+
+For a task that takes a Ruby callback, pass an object with `call`. If the
+last parameter is a callback, you can pass a block instead. For example,
+the [Feedback package](../../tests/fixtures/ruby-retained-tasks/Feedback.lean) calls
+your function with a `UInt32` and uses its return value:
+
+```ruby
+require "lean_bridge/ruby_feedback"
+api = LeanBridge::RubyFeedback
+task = api.once(21) { |n| n * 2 }
+puts task.await  # 42
+```
+
+`await` services requests on the original process's main Ruby thread.
+With a fiber scheduler, other fibers can run while Lean is working. A
+callback can call another generated function or await a *different* task.
+Trying to await the task that is invoking the callback raises `Busy`.
+Return a value of the declared reply type, not a task.
+
+Ordinary Ruby exceptions become Lean IO failures. If Lean catches the
+failure, its recovery value is returned. If it propagates that same
+`IO.Error`, `await` raises the original Ruby exception object. A new Lean
+error with identical text remains a Lean error. If Ruby cannot format the
+exception's message, Lean gets a generic message; the original exception
+is still available if Lean propagates that failure. A callback that raises a
+non-`StandardError` exception retires the runtime. If the task is still
+pending, `await` raises that exception; if cancellation already won, all
+waiters still receive the same cancellation.
+
+The task releases its callbacks on settlement or cancellation. To revoke a
+callback shared by several tasks, wrap it in `api::RetainedCallback.new { |n| … }`
+and call `close`. An invocation already running can finish; later invocations
+fail with `CallbackClosed`. A callback-taking factory also runs via the
+task driver, so its Lean factory errors are observed at `await`, not when
+the Ruby method returns. See the [installed caller](../../tests/fixtures/ruby-retained-tasks/consumer.rb)
+and the [receipts for the two callback packages and their load-order tests](../evidence/ruby-retained-tasks-20261122.json).
+
+### Share a Lean resource between gems
+
+A resource such as `Ticket` identifies a Lean object, not a copy of its
+fields. An IO gem can create one and a task from another gem can use it:
+
+```ruby
+require "lean_bridge/ruby_lease_desk"
+require "lean_bridge/ruby_lease_depot"
+
+desk = LeanBridge::RubyLeaseDesk
+depot = LeanBridge::RubyLeaseDepot
+desk.issue(40).with do |ticket|
+  job = depot.revisit(ticket) { |n| n + 2 }
+  job.await.with do |updated|
+    puts updated.same_resource?(ticket)  # true: one Lean object
+    puts desk.count(updated)             # 42
+  end
+end
+```
+
+Each returned wrapper owns an independent **lease**. `close` releases just
+that lease; `with` closes it when the block exits. Use `retain` to obtain
+another lease, and `same_resource?` to compare the underlying objects.
+Repeated `await` on the same task returns its cached wrapper, not a new
+lease. A resource returned in a stream item or a typed exception's
+`payload` is yours to close, too.
+
+Passing a lease does not consume it. Once a task starts, closing the
+caller's lease is safe: Lean keeps the value alive for as long as its
+worker needs it. Cancelling stops delivery; a worker that ignores
+cancellation can still hold its reference until it exits. A closed lease
+raises `ClosedResource` when passed to a function. An unrelated kind,
+even one with the same Ruby name, raises `TypeError`. Use resources on
+the original process's main thread; neither a fork nor `Marshal` transfers
+ownership. The [installed caller](../../tests/fixtures/ruby-task-resources/consumer.rb)
+exercises these cases. The [installed gem results](../evidence/ruby-resource-leases-20261122.json)
+record both load orders and check that no file descriptors leak.
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/rubygems.md#export-arrays-and-records),
@@ -857,6 +1156,8 @@ The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-202610
 Profiles: Ruby. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+The package receipt identifies the native Ruby profile: `native-ruby-host-v1` lets [Lean call Ruby-owned objects](#supply-a-ruby-object-to-lean), `native-ruby-io-v1` exposes [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` exposes [tasks and pull streams](#await-a-task-or-read-a-stream). These profiles have their own installed checks, separate from the general audit rows below.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Ruby in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

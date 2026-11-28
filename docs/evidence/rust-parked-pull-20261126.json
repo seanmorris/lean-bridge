@@ -1,0 +1,59 @@
+{
+  "clientSha256": "b5542c49d7ae8a4ff37fcd899918462c698f3379b106b6e9eaf1e55969b0ba22",
+  "orders": {
+    "ordinary-then-reviewed": [
+      "ordinary replace pulls=1 closes=1 observed=item",
+      "ordinary close pulls=1 closes=1 observed=end",
+      "ordinary drop pulls=1 closes=1 observed=owner-dropped",
+      "reviewed replace pulls=1 closes=1 observed=item",
+      "reviewed close pulls=1 closes=1 observed=end",
+      "reviewed drop pulls=1 closes=1 observed=owner-dropped"
+    ],
+    "reviewed-then-ordinary": [
+      "reviewed replace pulls=1 closes=1 observed=item",
+      "reviewed close pulls=1 closes=1 observed=end",
+      "reviewed drop pulls=1 closes=1 observed=owner-dropped",
+      "ordinary replace pulls=1 closes=1 observed=item",
+      "ordinary close pulls=1 closes=1 observed=end",
+      "ordinary drop pulls=1 closes=1 observed=owner-dropped"
+    ]
+  },
+  "releases": [
+    {
+      "bindingIrSha256": "0c96e4121739547da3081bc9fae57936ae13911939228198b404422b53152e21",
+      "componentArchive": {
+        "bytes": 70423,
+        "path": "archives/task-lab-1.0.0.crate",
+        "sha256": "fb534c0e1ed86a13d0f08b323da5a20fffbb7a34dd59b876c643669376116c60"
+      },
+      "componentIdentity": "b98be36acf3cf2e95236cee4ea974a6712d96b0aba1a03ce44119d5e4120075b",
+      "receiptSha256": "2d387a92b7c8de0e631ff0d3eae88bab7e639b699b61fa6e7b22f1c331c7fae9",
+      "route": "ordinary",
+      "runtimeArchive": {
+        "bytes": 51309971,
+        "path": "archives/lean-bridge-task-runtime-1.0.0-r6d917cb3f2d0942212874365fe25f029ba408ae6d16787f6105e3ff98d1c22e8.crate",
+        "sha256": "5f8fd2e28aa139fef9eca8da36e1174b2f1fef62cb76def2fe59fb4380eb0503"
+      },
+      "runtimeVersion": "1.0.0-r6d917cb3f2d0942212874365fe25f029ba408ae6d16787f6105e3ff98d1c22e8",
+      "sourceTreeSha256": "247f952b853d60e978c15b9d1407b0c8f6ce3e8bb5724f69c2cb50614cc422fa"
+    },
+    {
+      "bindingIrSha256": "0c96e4121739547da3081bc9fae57936ae13911939228198b404422b53152e21",
+      "componentArchive": {
+        "bytes": 70503,
+        "path": "archives/task-lab-peer-1.0.0.crate",
+        "sha256": "df165fe657334a6366dfb2c645af46df9dc6ea16df09da701743e71ccb42a58f"
+      },
+      "componentIdentity": "5124ddfcc4883d9a7baf627aa11e65c6f3f1b2526005bd0e413c3df66d935063",
+      "receiptSha256": "d61ebc90fdd61030845830f15d378a0e58f09ba33570025e2278fb0c5f1015d7",
+      "route": "reviewed",
+      "runtimeArchive": {
+        "bytes": 51309971,
+        "path": "archives/lean-bridge-task-runtime-1.0.0-r6d917cb3f2d0942212874365fe25f029ba408ae6d16787f6105e3ff98d1c22e8.crate",
+        "sha256": "5f8fd2e28aa139fef9eca8da36e1174b2f1fef62cb76def2fe59fb4380eb0503"
+      },
+      "runtimeVersion": "1.0.0-r6d917cb3f2d0942212874365fe25f029ba408ae6d16787f6105e3ff98d1c22e8",
+      "sourceTreeSha256": "41de98c596994cbc22d30fd4c5013afd8e7c15f81ba0ae7e93f396e7f6d94e68"
+    }
+  ]
+}

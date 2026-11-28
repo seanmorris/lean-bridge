@@ -1,0 +1,53 @@
+{
+  "consumerSha256": "23c00cd14b48654e8ea35a6a34f07e637b4344d8cd1c32f03afd8ed827ca070a",
+  "installed": [
+    {
+      "archive": {
+        "bytes": 51401898,
+        "path": "archives/Acme.Pulse.1.0.0.nupkg",
+        "sha256": "8d4895a5fc5989459cab5d763b0d62eb9f3f1c405c419ccacad5c8dd46a7b5f3"
+      },
+      "assembly": "LeanBridge.Pulse",
+      "assemblySha256": "6dc9351d00a9fe5ff8652c3f3c8e621be72ae2ea724aec01a7e0bfd824be9162",
+      "bindingIrSha256": "6e6d981517cf56a1baf809426ecd722fe244d940108b40cb1bfc99e55eadd2e2",
+      "name": "Acme.Pulse",
+      "nativeLibrary": "liblbc_acme_pulse.so",
+      "nativeSha256": "9592c674bcdf3296606455a2b001e46c415add59110058677819e782a848c964",
+      "profile": "native-dotnet-task-v1",
+      "receiptSha256": "69c96e83e1a8634030ac60a1e1158c4f8a4878b710c1a68ee8ff95151606f093",
+      "reviewedSourceSha256": "da56173137e4fc4ea346f6e39c4daffca8ffa9ff42a28ad7b6f7b04252a4a7c4",
+      "route": "reviewed",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sdk": "8.0.424",
+      "sourceTreeSha256": "552808268d2c0bf8310e2b62c3b778cc067037c569b4ce93f7dfa7f25e023a49",
+      "version": "1.0.0"
+    },
+    {
+      "archive": {
+        "bytes": 51352332,
+        "path": "archives/Acme.Signals.1.0.0.nupkg",
+        "sha256": "1dacc4fff9e96c4b8b0956ecb06b8cf266b2a11da957557cfd2525b24260eeeb"
+      },
+      "assembly": "LeanBridge.Signals",
+      "assemblySha256": "7e7dfaebc652d66ad56ce2306a042ca9562a5d99a394902307d0edd6504d87fd",
+      "bindingIrSha256": "470db88cdb09d59ca56fa91529b7a3377f6fcce14cc6ea6ecb15070c22d9bb81",
+      "name": "Acme.Signals",
+      "nativeLibrary": "liblbc_acme_signals.so",
+      "nativeSha256": "c2fe995fdbff55364affba450fbae2a767e2e4e5291c5cb4845c9de4c7083bf9",
+      "profile": "native-dotnet-task-v1",
+      "receiptSha256": "ec85d664abc814a11d8732474fe25c3f183d483b853265ac74f1862bf029417d",
+      "reviewedSourceSha256": null,
+      "route": "peer",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sdk": "8.0.424",
+      "sourceTreeSha256": "db82e355aec64ed1ab682b777f571843356268b4eec69de7db94ab8e0ae4879d",
+      "version": "1.0.0"
+    }
+  ],
+  "observations": [
+    "pulse-first: parked token cancellation finalized before disposal; disposal woke a second blocked pull; no late items or live owners",
+    "peer-first: parked token cancellation finalized before disposal; disposal woke a second blocked pull; no late items or live owners"
+  ],
+  "observerSha256": "aa5bb1391377472075d9ba816fdbf75f65973edac8ba7df44d80da38451a74f9",
+  "route": "reviewed"
+}

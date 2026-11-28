@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Signals"],
+  "asyncIterators": [
+    {"open": "Signals.constant", "next": "Signals.pull", "close": "Signals.stop"},
+    {"open": "Signals.checked", "next": "Signals.pull", "close": "Signals.stop"}
+  ]
+}

@@ -3,7 +3,14 @@
  *
  * @file
  */
-export const brokerHeader = `#ifndef LEAN_BRIDGE_NATIVE_RUNTIME_H
+/** Values of runtime_state in ABI v1 snapshots, including before the first Lean call. */
+export const nativeRuntimeState=Object.freeze({cold: 0,initializing: 1,ready: 2,failed: 3,shutDown: 4});
+const linuxPollDeclarations = `
+/* Linux task dispatchers borrow a level-triggered descriptor. Release one
+   registration per successful watch; do not read or close the descriptor. */
+LEAN_BRIDGE_NATIVE_API int lean_bridge_native_retirement_watch(void);
+LEAN_BRIDGE_NATIVE_API void lean_bridge_native_retirement_unwatch(void);`;
+const makeBrokerHeader = linux => `#ifndef LEAN_BRIDGE_NATIVE_RUNTIME_H
 #define LEAN_BRIDGE_NATIVE_RUNTIME_H
 
 #include <stddef.h>
@@ -45,7 +52,7 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *comp
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_process_valid(void);
 /* Retirement is permanent. Existing owners may still release their values. */
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_ready(const char *component_id);
-LEAN_BRIDGE_NATIVE_API void lean_bridge_native_runtime_retire(void);
+LEAN_BRIDGE_NATIVE_API void lean_bridge_native_runtime_retire(void);${linux ? linuxPollDeclarations : ""}
 LEAN_BRIDGE_NATIVE_API uint64_t lean_bridge_native_identity_acquire(const char *kind, const void *pointer);
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, const char *kind, const void *pointer);
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const char *kind, const void *pointer);
@@ -58,24 +65,29 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_
 #endif
 `;
 
-export const brokerSource = `#include "lean_bridge_native_runtime.h"
+export const brokerHeader = makeBrokerHeader(false);
+export const linuxBrokerHeader = makeBrokerHeader(true);
+
+const makeBrokerSource = linux => `#include "lean_bridge_native_runtime.h"
 
 #include <lean/lean.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include <unistd.h>
+#include <unistd.h>${linux ? `
+#include <errno.h>
+#include <sys/eventfd.h>` : ""}
 
 extern lean_object *initialize_Init(uint8_t builtin);
 extern void lean_initialize_runtime_module(void);
 
 enum lean_bridge_runtime_state {
-  LEAN_BRIDGE_RUNTIME_COLD = 0,
-  LEAN_BRIDGE_RUNTIME_INITIALIZING = 1,
-  LEAN_BRIDGE_RUNTIME_READY = 2,
-  LEAN_BRIDGE_RUNTIME_FAILED = 3,
-  LEAN_BRIDGE_RUNTIME_SHUT_DOWN = 4
+  LEAN_BRIDGE_RUNTIME_COLD = ${nativeRuntimeState.cold},
+  LEAN_BRIDGE_RUNTIME_INITIALIZING = ${nativeRuntimeState.initializing},
+  LEAN_BRIDGE_RUNTIME_READY = ${nativeRuntimeState.ready},
+  LEAN_BRIDGE_RUNTIME_FAILED = ${nativeRuntimeState.failed},
+  LEAN_BRIDGE_RUNTIME_SHUT_DOWN = ${nativeRuntimeState.shutDown}
 };
 
 enum {
@@ -106,7 +118,28 @@ static uint32_t attached_components = 0;
 static uint32_t live_identities = 0;
 static lean_bridge_component_slot components[LEAN_BRIDGE_COMPONENT_CAPACITY];
 static lean_bridge_identity_slot identities[LEAN_BRIDGE_IDENTITY_CAPACITY];
-static pid_t runtime_process;
+static pid_t runtime_process;${linux ? `
+static int retirement_fd = -1;
+static unsigned retirement_watchers;
+LEAN_BRIDGE_NATIVE_API int lean_bridge_native_retirement_watch(void)
+{
+  if (!lean_bridge_native_process_valid()) return -1;
+  pthread_mutex_lock(&runtime_mutex);
+  int fd = -1;
+  if (runtime_state == LEAN_BRIDGE_RUNTIME_READY && retirement_watchers < UINT32_MAX) {
+    if (retirement_fd < 0) retirement_fd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
+    if (retirement_fd >= 0) { fd = retirement_fd; retirement_watchers++; }
+  }
+  pthread_mutex_unlock(&runtime_mutex);
+  return fd;
+}
+LEAN_BRIDGE_NATIVE_API void lean_bridge_native_retirement_unwatch(void)
+{
+  if (!lean_bridge_native_process_valid()) return;
+  pthread_mutex_lock(&runtime_mutex);
+  if (retirement_watchers && --retirement_watchers == 0) { close(retirement_fd); retirement_fd = -1; }
+  pthread_mutex_unlock(&runtime_mutex);
+}` : ""}
 
 __attribute__((constructor))
 static void lean_bridge_native_capture_process(void)
@@ -270,7 +303,13 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_runtime_retire(void)
 {
   if (!lean_bridge_native_process_valid()) return;
   pthread_mutex_lock(&runtime_mutex);
-  if (runtime_state != LEAN_BRIDGE_RUNTIME_SHUT_DOWN) runtime_state = LEAN_BRIDGE_RUNTIME_FAILED;
+  ${linux ? `if (runtime_state != LEAN_BRIDGE_RUNTIME_SHUT_DOWN && runtime_state != LEAN_BRIDGE_RUNTIME_FAILED) {
+    runtime_state = LEAN_BRIDGE_RUNTIME_FAILED;
+    if (retirement_fd >= 0) {
+      uint64_t one = 1;
+      while (write(retirement_fd, &one, sizeof(one)) < 0 && errno == EINTR) {}
+    }
+  }` : "if (runtime_state != LEAN_BRIDGE_RUNTIME_SHUT_DOWN) runtime_state = LEAN_BRIDGE_RUNTIME_FAILED;"}
   pthread_mutex_unlock(&runtime_mutex);
 }
 
@@ -386,3 +425,5 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_
   pthread_mutex_unlock(&runtime_mutex);
 }
 `;
+export const brokerSource = makeBrokerSource(false);
+export const linuxBrokerSource = makeBrokerSource(true);

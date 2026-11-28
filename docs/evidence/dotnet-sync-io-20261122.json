@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-dotnet-synchronous-io",
+  "nodes": [
+    1222
+  ],
+  "profile": "native-dotnet-io-v1",
+  "scope": "C# methods over pinned Linux x86-64 Lean IO, BaseIO, EIO and their pure companions. Code is compiled before packaging. Consumers restore an exact NuGet version and call a precompiled assembly.",
+  "checks": [
+    "The ordinary and independently reviewed Journal archives have the same Binding IR and different source and archive digests. Fresh elaboration must accept the real review and reject a type-changed review. At capture, regenerated C# sources agree with the installed files.",
+    "A local-only NuGet restore installs Journal and an independently built Clock. The original archive digest and the installed package inventory are checked. The client is relocated; its feed, package cache and project are removed before execution with no build tools on PATH.",
+    "Both load orders execute 19 scalar carriers, exact signed/unsigned integers including a 4098-bit value, strict text, independent byte arrays, and all three nested returned/thrown Except cases. Negative and oversized inputs are rejected before the Lean operation can alter a file.",
+    "Both load orders observe one native runtime, two component initializations and zero live identities. Declared IO failures remain recoverable. Explicit test-only runtime retirement makes subsequent calls from either package fail without changing the file; a fresh process refuses an altered native component."
+  ],
+  "buildPolicy": "Separate real producer checks rejected a missing filesystem grant, an async selection, and a requested resource lease. None emitted a release directory.",
+  "limits": [
+    "Local .NET 8 SDK 8.0.424 and runtime 8.0.30 / Lean 4.32.2 / Linux x86-64 glibc 2.36 test build; this is not hosted or full-matrix evidence.",
+    "This profile covers synchronous direct copied values and returned/nested Except. It does not project Task, streams, callbacks, or resource-valued errors. The observer explicitly retires the runtime; this is not evidence of automatic recovery or poisoning after arbitrary process faults."
+  ],
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_IO_BUILD=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "capture": "LEAN_BRIDGE_DOTNET_IO_CAPTURE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "replay": "LEAN_BRIDGE_DOTNET_IO_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_DOTNET_IO_EXPECTED=docs/evidence/dotnet-sync-io-20261122.json node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "policy": "LEAN_BRIDGE_DOTNET_IO_POLICY=1 node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "requirements": "The producer needs the pinned LEAN_BRIDGE_LEAN_PREFIX, C compiler and .NET 8 SDK. Set LEAN_BRIDGE_DOTNET if necessary. Replay needs the original three handoffs, retained Program.cs, Audit.cs, acceptance.json and the SDK to build the independent consumer, not Lean or a native compiler."
+  },
+  "acceptanceSha256": "c180bba1853253a8fd6a17bbfb51dcd1893794652cf3dfb44ce4791329ef7bc6",
+  "installed": {
+    "clients": {
+      "Audit.cs": "aa5bb1391377472075d9ba816fdbf75f65973edac8ba7df44d80da38451a74f9",
+      "Program.cs": "f57948bc5a5a068b38bcebb99e10fa70416b17b8de74c07dea6cbf1a1d4cb39f"
+    },
+    "rows": [
+      {
+        "calls": [
+          "journal-first: 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities",
+          "peer-first: 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities"
+        ],
+        "installed": [
+          {
+            "archive": {
+              "bytes": 51357186,
+              "path": "archives/Acme.Journal.1.2.0-rc.1.nupkg",
+              "sha256": "9b829507fa28eace41d6fe9c092223b586014e91d6f3560a7de0f75ec603f248"
+            },
+            "assembly": "LeanBridge.Journal",
+            "assemblySha256": "9102937f1cbfa3b2833c51076161275ef893fd4365c0148dabd0afa7a2acc8a2",
+            "bindingIrSha256": "45e1906fbfa10dbc31cb0da1eb4db599e13039a79d8ff0dc29b81bfc88900e8d",
+            "name": "Acme.Journal",
+            "nativeLibrary": "liblbc_acme_journal.so",
+            "nativeSha256": "4112c4bb1cdde4f3eb7b8e24cb0e7b088c95b94ecbc1fedb8a250ae42b7314de",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "451d22b7e4bc9848664a6c4b59f1d671329c3e439ed385566f01fc838239b00f",
+            "reviewedSourceSha256": null,
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "7e38759281a6c195bada8d579a34914967eda87e074d4394b82bc9e4a6b47084",
+            "version": "1.2.0-rc.1"
+          },
+          {
+            "archive": {
+              "bytes": 51329415,
+              "path": "archives/Acme.Clock.1.2.0-rc.1.nupkg",
+              "sha256": "699fbdac6c83ea48793c937e56a011ad6ddf61e3232ccc83c25551a7ba47bfda"
+            },
+            "assembly": "LeanBridge.Clock",
+            "assemblySha256": "c734c0b6c649ce7a0681932267383b9c82b423bc62a86f661ab3d477127c59bf",
+            "bindingIrSha256": "e55489ef87384de63b33521e98f7c2533a0d99e4c57e2589f97cd73158d3f41a",
+            "name": "Acme.Clock",
+            "nativeLibrary": "liblbc_acme_clock.so",
+            "nativeSha256": "e28cfafddeabda246e692183b2a8822a40c6df19d86108b6ef964e9c4fac6034",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "831ca383cc1661ca61187f3747ab1c36f2eabbe27c2ec7dfbd54212c0008a4d6",
+            "reviewedSourceSha256": null,
+            "route": "peer",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "22f53407596751c27405e5c92fe47e8ca1efc73865e17f3447b33dc13b171724",
+            "version": "1.2.0-rc.1"
+          }
+        ],
+        "route": "ordinary"
+      },
+      {
+        "calls": [
+          "journal-first: 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities",
+          "peer-first: 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities"
+        ],
+        "installed": [
+          {
+            "archive": {
+              "bytes": 51357238,
+              "path": "archives/Acme.Journal.1.2.0-rc.1.nupkg",
+              "sha256": "1c768e0f1493cc73dd14c29b3ec2f4390795307af38df30ec727bbb65c13dc30"
+            },
+            "assembly": "LeanBridge.Journal",
+            "assemblySha256": "bcd9fde3f828b1d2cedd71cd30e6f3fe6e51190e2c291eb8854754bbaff987ed",
+            "bindingIrSha256": "45e1906fbfa10dbc31cb0da1eb4db599e13039a79d8ff0dc29b81bfc88900e8d",
+            "name": "Acme.Journal",
+            "nativeLibrary": "liblbc_acme_journal.so",
+            "nativeSha256": "2ed40641f9426b26ba09ac02a3741f4fc9b261ef6d0d176b02ff92fa28fec13b",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "6b346038a5bc790b2b91ba978323a4423a1aec13feccf79d52a54d8efb44d91f",
+            "reviewedSourceSha256": "f7743e636be2151d6cd11dd0b4c50290f244cd2d4ac6a7ff090fcd63862aa725",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "9c7153b74d8e63797cad3eae02e66b007a4c08f80d840c765465737218fd7845",
+            "version": "1.2.0-rc.1"
+          },
+          {
+            "archive": {
+              "bytes": 51329415,
+              "path": "archives/Acme.Clock.1.2.0-rc.1.nupkg",
+              "sha256": "699fbdac6c83ea48793c937e56a011ad6ddf61e3232ccc83c25551a7ba47bfda"
+            },
+            "assembly": "LeanBridge.Clock",
+            "assemblySha256": "c734c0b6c649ce7a0681932267383b9c82b423bc62a86f661ab3d477127c59bf",
+            "bindingIrSha256": "e55489ef87384de63b33521e98f7c2533a0d99e4c57e2589f97cd73158d3f41a",
+            "name": "Acme.Clock",
+            "nativeLibrary": "liblbc_acme_clock.so",
+            "nativeSha256": "e28cfafddeabda246e692183b2a8822a40c6df19d86108b6ef964e9c4fac6034",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "831ca383cc1661ca61187f3747ab1c36f2eabbe27c2ec7dfbd54212c0008a4d6",
+            "reviewedSourceSha256": null,
+            "route": "peer",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "22f53407596751c27405e5c92fe47e8ca1efc73865e17f3447b33dc13b171724",
+            "version": "1.2.0-rc.1"
+          }
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

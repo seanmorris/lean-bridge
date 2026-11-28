@@ -119,6 +119,24 @@ Choose package coordinates and destinations you control before creating the cand
 
 The npm [local handoff](publish/local-handoff.md) reproduces the source build and writes archives plus a receipt. The [Perl guide](publish/cpan.md) documents its native build, two-build comparison, ABI matrix, and CPAN archives. Repository fixture builds and the universal reproducibility gate belong to [Contributing](contributing/testing.md).
 
+### Reuse checked GMP in native resource packages
+
+The owned-resource builders for RubyGems, Maven, NuGet, native PHP and CPAN
+normally compile GMP and run its upstream tests. To reuse that dependency on
+Linux x86-64, set the following **on the producer**:
+
+- `LEAN_BRIDGE_PRIVATE_GMP_ROOT`: absolute path to the previously checked GMP
+  tree, containing `include/`, `lib/` and `share/lean-bridge/`.
+- `LEAN_BRIDGE_PRIVATE_GMP_SHA256`: the digest of
+  `share/lean-bridge/gmp.json` taken from a separately approved release
+  receipt. Do not use a digest supplied only by the directory being checked.
+
+The builder authenticates the header, binary, notices and corresponding
+source. It also checks that the binary is named `libgmp-lean-bridge.so.10`
+in its ELF metadata and binds its own symbols. The [public C kit](publish/c.md)
+is not interchangeable with this library. Neither setting is needed to
+install or use the resulting package.
+
 ## Choose the delivery path
 
 | Delivery | Procedure |

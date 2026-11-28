@@ -44,6 +44,10 @@ Installing both archives together satisfies the component's runtime dependency. 
 
 ## JavaScript
 
+For a local threaded-task release, install the component and runtime archives together as above. Import the component by its package name. A task call returns a native Promise with a `cancel()` method; an iterator supports `for await…of` and closes on `break`. Synchronous companion functions still return synchronously. Node and cross-origin-isolated browsers can run the package. On the web, serve the page with `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` and serve the worker and Wasm assets under that isolation policy. The application needs no compiler or scheduler setup. See the [installed consumer example](../tests/fixtures/javascript-wasm-task-runtime/public-consumer.mjs).
+
+When a threaded package returns a Lean resource, call `dispose()` when you're finished with that handle. Passing it to a task does not give up your handle: the worker keeps its own reference. Use `retain()` for a second independently disposable handle and `same(other)` to compare the underlying Lean objects. A resource received in an iterator element or typed error payload is yours to dispose, too. The [two-package consumer](../tests/fixtures/javascript-wasm-resource-tasks/calls.mjs) shows the complete lifetime, including cancellation.
+
 Create a Node.js application:
 
 ```sh
@@ -84,6 +88,251 @@ Expected output:
 The import initializes the runtime and loads the component before the module body executes. Calls are synchronous after loading. `add` returns a `bigint`; `isEmpty` returns a `boolean`. Convert a `bigint` to a decimal string before JSON serialization.
 
 Both functions return copied primitives, so no disposal step is required. Imports in one JavaScript realm share the runtime module.
+
+### Synchronous Lean IO
+
+Install the component normally. Its declared dependency loads the shared
+runtime; application code imports only the component. Once the module is
+loaded, calls return immediately. A returned Lean `Except` is data
+(`{ ok: value }` or `{ error: value }`); a thrown `EIO` is a generated error
+class whose `payload` preserves that same shape. Catching a declared error
+does not discard previously updated Lean state.
+
+For example, the [Ledger package](publish/npm.md#export-synchronous-lean-io)
+can either return or throw a decision with identical contents:
+
+```js
+import { add, read_total, choose, EIO_Ledger_choose } from "@example/ledger-io";
+
+add(2);
+console.log(choose(false, false, "retry")); // { error: 4000000000 }
+try {
+  choose(true, false, "retry");
+} catch (error) {
+  if (!(error instanceof EIO_Ledger_choose)) throw error;
+  console.log(error.payload);              // { error: 4000000000 }
+}
+console.log(read_total());                 // 2
+```
+
+An ordinary `IO.Error` throws `IOError` with Lean's message. Invalid arguments
+are rejected before the call changes state. A synchronous callback can call
+another installed component and catch its declared error. If the callback
+throws a JavaScript exception, the caller receives the same exception and
+both packages remain usable.
+
+An unexpected trap **inside a bridge component** retires every package using
+that runtime instance. Catching the trap inside a callback does not make the
+suspended call safe to resume. Discard the instance and its leases; don't
+retry on the same heap. A Node worker or a dedicated browser module worker
+has its own runtime. Retiring the worker's instance leaves the parent’s
+runtime and its existing objects usable. See the [worker isolation checks](evidence/javascript-wasm-callback-io-retirement-20261123.md).
+
+### Iterate without a Promise
+
+When a package exports an immediate Lean iterator, use ordinary `for…of`.
+Each demand calls Lean once. A `break`, an exception in the loop body, or
+exhaustion closes the cursor. Nothing runs in the background.
+
+```js
+import { sequence } from "@example/pulls";
+
+for (const value of sequence(10)) {
+  console.log(value);
+  if (value === 1) break; // prints 0 and 1; Lean finalizes the cursor here
+}
+```
+
+If you use `.next()` manually, call `.return()` in a `finally` block, even
+if you never pulled a value. Check `done`, not `value === undefined`: Lean
+can yield `Unit` as an item. When a factory declares an error, the factory
+call throws it; a declared step error is thrown by `next()`
+or the loop. A yielded `Except.error` is still a value. Close worker-owned
+cursors **inside the worker** before asking the parent to terminate it.
+
+The [package author’s guide](publish/npm.md#export-an-immediate-iterator)
+shows the Lean declarations behind this example.
+
+### Pass application objects to Lean
+
+Some packages export `withHosts` because their Lean functions call methods on
+objects that your application owns. Supply the classes once, then call the
+bound functions. The package loads its runtime; you do not pass it a Wasm
+module, a pointer, or a table of handles.
+
+```js
+import { withHosts } from "@lean-bridge/workshop-host-example";
+
+class Box {
+  constructor(level) { this.level = level; }
+  read() { return this.level; }
+  identity() { return this; }
+}
+
+const workshop = withHosts({ Box });
+try {
+  const box = workshop.make(7);            // an actual Box
+  workshop.update(box, 12);
+  console.log(box.read());                 // 12
+  console.log(workshop.identity(box) === box); // true
+} finally {
+  workshop.dispose();
+}
+```
+
+The example uses the [Workshop handoff](publish/npm.md#export-functions-that-call-javascript-objects).
+In TypeScript, `make` and `identity` return your class's instance type.
+If a method throws and Lean propagates the same error unchanged, the caller
+catches the original JavaScript value. If Lean maps it to a declared `EIO`
+failure, the caller catches the package's error class with its typed payload.
+A returned Lean `Except` is a value (`{ok: …}` or `{error: …}`), not a throw.
+The binding belongs to the JavaScript agent that supplied the classes. A
+module worker supplies its own classes. The synchronous Workshop above
+returns its values directly.
+
+If a package returns a Lean function, you can call it like any other JavaScript
+function. In the [worker example](../tests/fixtures/javascript-threaded-host-functions/Workshop.lean),
+`remember` captures one `Box`. Both a direct call and a task callback give
+you that same instance back, even when you pass a different box:
+
+```js
+const workshop = withHosts({ Box });
+try {
+  const original = new Box(7), other = new Box(7);
+  const remember = workshop.remember(original);
+  try {
+    console.log(remember(other) === original);                // true
+    console.log((await workshop.map_box(other, remember)) === original); // true
+  } finally {
+    remember.dispose();
+  }
+} finally {
+  await workshop.dispose();
+}
+```
+
+The factory and the returned function are synchronous; only the task needs
+`await`. Keep the creating binding alive while using the function. Disposing
+the binding revokes its functions, not another package's. Disposing a function
+during one of its own calls lets that call finish and rejects subsequent calls.
+
+A **threaded** package can also call those members from a Lean task or
+cursor. Your method still runs on the JavaScript owner, with the original
+object as its receiver. With the [threaded Workshop](../tests/fixtures/javascript-threaded-host/Workshop.lean)
+and the same `Box` class:
+
+```js
+const workshop = withHosts({ Box });
+try {
+  const box = await workshop.start(7);
+  console.log(await workshop.work(box, n => n + 1)); // 8
+  for await (const item of workshop.open_cursor(box)) {
+    console.log(item === box); // true
+    break;                     // closes the Lean cursor
+  }
+} finally {
+  await workshop.dispose();
+}
+```
+
+Use one live binding per threaded component. Disposing it stops new calls,
+cancels its outstanding operations, and waits for native cleanup. Other
+components on the heap remain usable. Calling `withHosts` prepares the Lean
+component: your first call can take an application object, and you can also
+dispose the binding without calling any exports. A host member's original thrown value
+and a retained callback failure are different: the callback rejects with
+`JavaScriptCallbackError` and exposes the original value as `cause`.
+
+### Pass a record containing application objects
+
+When a synchronous npm package exports a record constructor, use that constructor
+on the same JavaScript agent as the binding. For example, Gauge's `Pair` holds
+two application meters, bytes, and a natural number:
+
+```js
+import { Pair, withHosts } from "@example/gauge-records";
+
+const gauge = withHosts({ Box: Meter });
+const left = new Meter(7), right = new Meter(4);
+const input = new Pair(left, new Uint8Array([1]), 42n, right);
+try {
+  const flipped = gauge.flip(input);
+  try {
+    console.log(flipped.lead === right); // true: the original instance
+    console.log(flipped.sequence);       // 43n
+  } finally {
+    flipped.dispose();
+  }
+} finally {
+  input.dispose();
+  gauge.dispose();
+}
+```
+
+The record owns a copy of its bytes. Each byte getter returns a fresh
+`Uint8Array`; changing it cannot change the record. An object getter returns
+the original JavaScript instance instead. Disposing the record releases its
+references and makes its getters unusable; it does not invalidate a meter
+you already retrieved. The returned record can also outlive its binding.
+TypeScript infers `Pair<Meter>` from the constructor arguments.
+
+### Answer a callback from a Lean task
+
+A threaded npm package can ask your application for a value while its Lean
+task is running. Pass a function; it runs on the JavaScript event loop that
+started the task and can return either the value or a Promise for it.
+For example, with the [Relay package](publish/npm.md#build-a-threaded-npm-handoff):
+
+```js
+import { worker, JavaScriptCallbackError } from "@example/lean-relay";
+
+const job = worker(21, n => n * 2);
+try {
+  console.log(await job); // 42
+} catch (error) {
+  if (!(error instanceof JavaScriptCallbackError)) throw error;
+  console.error(error.phase, error.cause);
+}
+```
+
+If a callback throws or rejects and Lean propagates that error, `cause` is
+the original JavaScript value. `phase` distinguishes the task factory from
+the worker. Lean can instead catch the error and return a normal result.
+To stop waiting, call `job.cancel()`. A successful cancellation rejects the
+job and discards late callback replies; it does not cancel unrelated work
+started by your JavaScript function. Browser pages using this pthread profile
+require cross-origin isolation.
+
+If the package declares a **one-shot callback**, you still pass a normal
+function. If Lean requests that registration a second time, your function
+doesn’t run again. If Lean propagates the refusal, the task rejects with
+`JavaScriptCallbackError` and `error.cause.code === "callback-already-invoked"`.
+A failed first call still counts. Passing the same function to another task
+creates a separate registration.
+
+A package can also ask for an instance of a class you supplied to `withHosts`.
+For example, the [Workshop task](../tests/fixtures/javascript-threaded-host-callbacks/Workshop.lean)
+passes its `Box` directly to your callback. The callback can return that same
+instance or a replacement:
+
+```js
+const original = new Box(7);
+const replacement = new Box(11);
+const result = await workshop.map_box(original, box => {
+  if (box !== original) throw new Error("unexpected box");
+  return replacement;
+});
+console.log(result === replacement); // true
+```
+
+Neither object needs a bridge wrapper or a release call. If the callback
+returns an object of the wrong class, the task reports a
+`JavaScriptCallbackError` whose `cause` is a `TypeError`.
+
+Two Lean workers on the same runtime can wait for JavaScript replies at once,
+including calls from different packages. A third callback attempt raises a
+Lean IO error before invoking JavaScript. The two outstanding calls can
+still finish; the slot becomes available when a worker receives its reply.
 
 ## TypeScript
 
@@ -229,8 +478,9 @@ thrown value survives cleanup, including `throw undefined`.
 
 Primitive and structured exports can share a package and runtime. Callables and
 resource identities cannot be fields or elements of copied values. A callback
-borrow expires when its enclosing call returns; Promise results and retained
-host callbacks remain unsupported.
+borrow expires when its enclosing synchronous call returns. A [threaded
+task](#answer-a-callback-from-a-lean-task) uses a different contract: it
+retains its callback and can await a JavaScript reply.
 
 [Installed structured-callback checks](evidence/npm-structured-callables-20260925.md)
 cover both source paths in Node, strict TypeScript and three browser engines,
@@ -338,6 +588,31 @@ Nested resource views do not keep their whole owner alive. Their `retain()`
 method creates an independent `LeanValue`. Compare resource identity with
 `view.equals(otherView)`, including views obtained from different owners.
 Returned functions can also borrow results from their own arguments.
+
+When a generated record exposes a **leased function field**, use `retain()`
+if you need the function after closing the original handle. For example, in
+the [Tariff package and its five clients](evidence/npm-function-fields-20261126.md):
+
+```js
+const tariff = api.makeTariff(40);
+const quote = tariff.quote.retain();
+tariff.quote.dispose();
+try {
+  console.log(quote(2)); // 42
+} finally {
+  quote.dispose();
+}
+```
+
+Passing a plain JavaScript function to a call-scoped callback parameter
+doesn't give it that lifetime. Putting it into a returned record doesn't
+extend the borrow: calling it later fails before JavaScript enters the callback.
+
+You can also supply a plain function *inside* a record. For example,
+`api.applyTariff({ quote: units => units + 7 }, 35)` returns 42.
+The function may read current application state or call Lean again during
+that call. If Lean returns the record through `echoTariff`, the returned
+field cannot call that JavaScript function later.
 
 ### Borrowed callback results
 
@@ -582,6 +857,11 @@ nominal acceptance. Callback, owned, recursive and dependent Subtype
 combinations, plus generic Subtypes beyond the closed `GenericNat` alias, need their own checks.
 
 The [hosted generic-Subtype matrix](evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
+
+For the separate [synchronous IO package profile](#synchronous-lean-io), see
+the [ordinary and reviewed npm install checks](evidence/javascript-wasm-sync-io-20261123.md).
+They cover Node and Chromium; the cross-profile table below does not include
+these local IO results.
 
 ### Type conversions
 
@@ -1181,6 +1461,15 @@ export function LeanSum() {
 
 React development StrictMode runs an extra effect setup and cleanup. ESM shares the import across those effects; the retired effect skips its update. The cleanup flag does not cancel initialization or a synchronous Lean call. The runtime remains available to other consumers in the page.
 
+For a threaded package, a task *can* be canceled. Keep its original return
+value in a ref before awaiting it; the promise returned by `.then()` is not
+the cancelable handle. If the component owns the work, call `cancel()` from
+effect cleanup and handle the task's `operation-cancelled` rejection. Other
+components can keep using the shared runtime. Breaking out of `for await`
+closes that async iterator, not the whole binding.
+The [mounted Workshop example](../tests/fixtures/javascript-threaded-host/react-delivery.mjs)
+exercises both operations through button clicks and unmount.
+
 For editable inputs, validate the [numeric range](#validate-numeric-inputs) and include submitted input in the effect's dependency list. Keep browser-only computation in the effect instead of importing it from a server-rendered module.
 
 #### Configure the React build
@@ -1252,6 +1541,8 @@ worker.onmessage = event => {
 worker.onerror = event => console.error(event.message);
 worker.postMessage({ left: "20", right: "22", text: "" });
 ```
+
+This example installs the message listener *before* loading Lean, so the page can post immediately. If you use static imports that await runtime startup, have the worker send a `ready` message after installing its listener; send the first request in response. A worker's constructor returning does not mean the application handler is ready.
 
 #### Terminate the worker with its owner
 

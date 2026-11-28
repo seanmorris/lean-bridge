@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { generateOwnedWitPackage } from "../src/backends/wit/owned-package.mjs";
+import { generateOwnedCValues } from "../src/backends/c/owned-values.mjs";
+import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { guardOwnedWitHostSource, ownedWitHostDependencies } from "../src/backends/wit/owned-host-evidence.mjs";
 
 const identity = { bytes: 10, sha256: "a".repeat(64) };
@@ -28,6 +30,24 @@ test("owned WIT dependencies embed GMP instead of a separate public C adapter", 
 	}
 	assert.throws(() => ownedWitHostDependencies(evidence(), {}, gmp), /exact/u);
 	assert.throws(() => ownedWitHostDependencies(evidence(), wasmtime, {}), /exact/u);
+});
+
+test("WIT guards every declared host-field entry and scoped comparison, without inventing result anchors", () => {
+	const p = "tariff_quotes_wasmtime";
+	const values = generateOwnedCValues(leasedClosureFieldReviewedIr({ mixed: true, exchange: true }), { publicPrefix: p, hostCallbacks: true });
+	assert.ok(values.hostFieldCalls.length >= 2 && values.callbackArgumentViews && !values.anchoredResults);
+	// Exercise the guard against the independent public header, not a list copied from its implementation.
+	const source = values.header.split("\n").filter(line => line.startsWith(p + "_status ")).map(line => line.replace(/;$/u, " {}")).join("\n");
+	const apply = text => guardOwnedWitHostSource({ values, source: text, model: { functions: [] } }, []);
+	const guarded = apply(source);
+	for(const name of [...values.hostFieldCalls.map(fn => fn.cName), ...values.nodes.filter(n => n.identity).map(n => n.cName + "_equal")])
+	{
+		const signature = source.split("\n").find(s => s.startsWith(p + "_status " + name + "("));
+		assert.ok(signature && guarded.includes(signature.slice(0, -1) + "\n  if (getpid() != lb_package_pid)"));
+		assert.throws(() => apply(source.replace(signature, "")), /missing/u);
+		assert.throws(() => apply(source + "\n" + signature), /Unexpected/u);
+	}
+	assert.throws(() => apply(source + "\n" + p + "_status " + p + "_result_validate(void) {}"), /Unexpected/u);
 });
 
 test("every owned WIT export, callback, copy, retain and cleanup entry checks loaded libraries", async () => {

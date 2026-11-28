@@ -64,6 +64,17 @@ const checkReview = document => {
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const isCallback = type => type.kind === "named"
 		&& definitions.get(type.id)?.kind === "callback";
+	const carriesCallable = (ref, seen) => {
+		if(isCallback(ref)) return true;
+		if(!document.aggregatePolicy.closureFields) return false;
+		if(ref.kind === "apply") return ref.arguments.some(child => carriesCallable(child, seen));
+		if(ref.kind !== "named" || seen.has(ref.id)) return false;
+		seen.add(ref.id);
+		const type = definitions.get(ref.id);
+		if(type.kind === "alias") return carriesCallable(type.target, seen);
+		const fields = type.kind === "variant" ? type.cases.flatMap(branch => branch.fields) : type.fields;
+		return fields.some(field => carriesCallable(field.type, seen));
+	};
 	const copied = type => type.kind === "primitive" || (type.kind === "named"
 		? definitions.get(type.id).representation === "copied" : type.arguments.every(copied));
 	const callbacks = new Map(document.types.filter(type => type.kind === "callback")
@@ -123,6 +134,17 @@ const checkReview = document => {
 		reject(type.kind !== "apply" || !arity || type.arguments.length !== arity, path);
 		type.arguments.forEach((item, index) => reference(item, `${path}.arguments[${index}]`, true));
 	};
+	const callbackDirection = (type, path, expected) => {
+		if(!isCallback(type)) return;
+		const definition = callbacks.get(type.id);
+		const refinements = callbackDefinitionRefinement(definition, document.types, { ownedStructural: true });
+		if(refinements === null) return;
+		const direction = callbackSubtypeDirection({
+			parameters: definition.callable.parameters.map(parameter => parameter.type)
+			, result: definition.callable.result.type
+		}, refinements, document.types, { ownedStructural: true });
+		reject(direction !== null && direction !== expected, path);
+	};
 	const site = (value, path, result = false, transfers = false, anchors = false) => {
 		reference(value.type, `${path}.type`);
 		const copy = copied(value.type);
@@ -131,22 +153,7 @@ const checkReview = document => {
 		if(anchors && !copy && result && value.ownership === "borrow" && ["parameter", "receiver"].includes(value.lifetime?.scope)) return;
 		reject(value.ownership !== (copy ? "copy" : result ? "lease" : "borrow")
 			|| !same(value.lifetime, copy ? null : { scope: result ? "explicit" : "call", anchor: null }), path);
-		if(isCallback(value.type))
-		{
-			const definition = callbacks.get(value.type.id);
-			const refinement = callbackDefinitionRefinement(
-				definition, document.types, { ownedStructural: true }
-			);
-			if(refinement !== null)
-			{
-				const direction = callbackSubtypeDirection({
-					parameters: definition.callable.parameters.map(parameter => parameter.type)
-					, result: definition.callable.result.type
-				}, refinement, document.types, { ownedStructural: true });
-				reject(direction !== null && direction !== (result ? "closure" : "host")
-					, `${path}.type`);
-			}
-		}
+		callbackDirection(value.type, `${path}.type`, result ? "closure" : "host");
 	};
 	const parameter = (value, path, transfers = false) => {
 		reject(value.optional || value.default !== null || value.mutability !== "immutable", path);
@@ -179,7 +186,11 @@ const checkReview = document => {
 		for(const field of fields)
 		{
 			reject(field.mutability !== "immutable", `${definition.id}.${field.name}.mutability`);
-			reference(field.type, `${definition.id}.${field.name}.type`, true);
+			const path = `${definition.id}.${field.name}.type`;
+			const leased = definition.kind === "record" && isCallback(field.type)
+				&& document.aggregatePolicy.closureFields?.includes(`${definition.source.declaration}.${field.name}`);
+			reference(field.type, path, !leased);
+			if(leased) callbackDirection(field.type, path, "closure");
 		}
 	}
 	// Every consumed occurrence of a checked record, copied or owned, names its exact
@@ -268,7 +279,7 @@ const checkReview = document => {
 	{
 		source(declaration, undefined, true);
 		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
-		const hasCallback = declaration.parameters.some(value => isCallback(value.type));
+		const hasCallback = inputs.some(value => carriesCallable(value.type, new Set()));
 		const effects = [...(hasCallback ? ["fails", "host-call"] : [])
 			, ...(inputs.some(value => !copied(value.type)) ? ["reads-resource"] : [])
 			, ...(!copied(declaration.result.type) ? ["allocates"] : [])].sort();
@@ -319,29 +330,31 @@ export const reviewedOwnedSourceSelection = review => {
 			, ...callable ? { callable } : {}
 			, ...(selected === null ? {} : { refinement: selected }) };
 	};
-	const callableDecision = type => {
+	const callableDecision = (type, signature = false) => {
 		if(type.kind !== "named" || !callbacks.has(type.id)) return undefined;
-		if(selected.has(type.id)) return selected.get(type.id);
+		const key = `${type.id}:${signature ? "signature" : "policy"}`;
+		if(selected.has(key)) return selected.get(key);
 		if(active.has(type.id)) unsupported("Recursive callable signatures require a finite compiler signature", { type: type.id });
 		active.add(type.id);
 		const callable = types.get(type.id).callable;
 		const refinements = types.get(type.id).source.extensions["lean-lang.org/refinements"];
 		const parameters = callable.parameters.map(value => callableDecision(value.type));
-		const result = callableDecision(callable.result.type);
-		const value = parameters.some(Boolean) || result
+		const staged = callable.result.type.kind === "named" && callbacks.has(callable.result.type.id);
+		const result = callableDecision(callable.result.type, staged);
+		const value = signature || parameters.some(Boolean) || result
 			|| callable.result.ownership === "borrow" || refinements ? {
-				...parameters.some(Boolean) || refinements ? {
+				...signature || staged || parameters.some(Boolean) || refinements ? {
 					parameters: callable.parameters.map((value, index) => decision(
 						value, callable.parameters, parameters[index]
 						, refinements?.parameters[index]
 					))
 				} : {}
-				, ...result || callable.result.ownership === "borrow" || refinements ? {
+				, ...signature || result || callable.result.ownership === "borrow" || refinements ? {
 					result: decision(callable.result, callable.parameters, result
 						, refinements?.result)
 				} : {}
 			} : undefined;
-		active.delete(type.id); selected.set(type.id, value); return value;
+		active.delete(type.id); selected.set(key, value); return value;
 	};
 	const contracts = Object.fromEntries(document.declarations
 		.map(item => {
@@ -401,6 +414,8 @@ export const readReviewedOwnedSource = async (projectRoot, inventory, signal) =>
  * @param ownedGraphs - Whether this caller implements the owned transport.
  */
 export const readNativeReviewedSource = async (projectRoot, inventory, signal, ownedGraphs = false) => {
+	if(inventory.configurationRecord?.configuration?.hostImports)
+		fail("invalid-host-project", "A host import contract describes application members, not the application's reviewed exports; build it with the single package target that supplies those members (pypi, rubygems, maven, nuget, or cpan)");
 	try
 	{ return await readReviewedSource(projectRoot, inventory, signal); }
 	catch(error)

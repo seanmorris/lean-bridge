@@ -33,7 +33,14 @@ export const validateKotlinCompilation = (evidence, namespace, { copiedGraph = f
 		throw new Error("Compiled Kotlin projection differs from the compiler contract");
 };
 
-const executable = async (command, environment, root) => {
+/**
+ * Locate the actual executable, not a symlink outside the JDK installation.
+ *
+ * @param command - Explicit path or executable name.
+ * @param environment - Author tool search path.
+ * @param root - Directory for relative names.
+ */
+export const resolveJvmTool = async (command, environment, root) => {
 	const candidates = isAbsolute(command) || command.includes("/") ? [resolve(root, command)]
 		: String(environment.PATH ?? "").split(delimiter).filter(Boolean).map(directory => resolve(root, directory, command));
 	for(const path of candidates)
@@ -62,8 +69,8 @@ const executable = async (command, environment, root) => {
 export const compileJvmSources = async ({ root, files, environment, signal }) => {
 	const env = { ...environment };
 	for(const key of ["CLASSPATH", "JAVA_TOOL_OPTIONS", "JDK_JAVA_OPTIONS", "JDK_JAVAC_OPTIONS", "_JAVA_OPTIONS", "JAVA_OPTS", "KOTLIN_OPTS", "KOTLIN_RUNNER"]) delete env[key];
-	const javac = await executable(environment.LEAN_BRIDGE_JAVAC ?? "javac", env, root);
-	const java = await executable(environment.LEAN_BRIDGE_JAVA ?? join(dirname(javac), "java"), env, root);
+	const javac = await resolveJvmTool(environment.LEAN_BRIDGE_JAVAC ?? "javac", env, root);
+	const java = await resolveJvmTool(environment.LEAN_BRIDGE_JAVA ?? join(dirname(javac), "java"), env, root);
 	const jdk = dirname(dirname(java));
 	if(dirname(dirname(javac)) !== jdk) throw new Error("Java and javac must use the same Java 22 installation");
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env, signal });
@@ -75,7 +82,7 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 	let classpath = "empty-classpath", kotlin;
 	if(kotlinSources.length)
 	{
-		const kotlinc = await executable(environment.LEAN_BRIDGE_KOTLINC ?? "kotlinc", env, root);
+		const kotlinc = await resolveJvmTool(environment.LEAN_BRIDGE_KOTLINC ?? "kotlinc", env, root);
 		const home = environment.LEAN_BRIDGE_KOTLIN_HOME ? resolve(root, environment.LEAN_BRIDGE_KOTLIN_HOME) : dirname(dirname(kotlinc));
 		const lib = join(home, "lib"), compilerFiles = {};
 		for(const name of (await readdir(lib)).filter(name => name.endsWith(".jar")).sort()) compilerFiles[name] = sha256(await readFile(join(lib, name)));
@@ -92,7 +99,15 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 			, "jvm-owned-values-v3", "jvm-owned-values-v4"
 			, "jvm-owned-values-v5"].includes(metadata.generator);
 		const options = kotlinOptions(module, copiedGraph || ownedValues);
-		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
+		const dependencies = [join(lib, "kotlin-stdlib.jar"), join(lib, "annotations-13.0.jar")];
+		if(["jvm-tasks-v1", "jvm-host-tasks-v1"].includes(metadata.generator))
+		{
+			const name = "kotlinx-coroutines-core-jvm.jar";
+			if(compilerFiles[name] !== "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5")
+				throw new Error("JVM tasks require the kotlinx-coroutines-core-jvm 1.8.0 artifact shipped with Kotlin 2.2.0");
+			dependencies.push(join(lib, name));
+		}
+		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", dependencies.join(delimiter), "-d", "classes", ...kotlinSources, ...javaSources]);
 		classpath = ["classes", join(lib, "kotlin-stdlib.jar")
 			, join(lib, "annotations-13.0.jar")].join(delimiter);
 		kotlin = { version, module, options, compilerFiles, namespace: metadata.kotlin.namespace, standardLibraryVersion: "2.2.0" };

@@ -6,6 +6,15 @@
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
 const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
+/**
+ * Name the managed assembly independently of feed ID overrides.
+ *
+ * @param component - Canonical, versioned Lean component identity.
+ */
+export const dotnetComponentAssembly = component => {
+	const stem = component.id.slice(0, component.id.lastIndexOf("@")).split("/").at(-1);
+	return "LeanBridge." + pascal(stem);
+};
 const reserved = new Set(["Api", "Unit", "LeanBridgeException", "LeanClosure", "Interop", "Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"]);
 const recordMembers = ["Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "MemberwiseClone", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"];
 const runtimeNames = new Set(("Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison").split(" "));

@@ -51,7 +51,7 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 			|| /^Owned(?:Identity|Raw|Union|Case|Callback)/u.test(name)) throw new TypeError(`Owned Rust name is reserved or duplicated: ${name}`);
 		occupied.add(name); return name;
 	};
-	for(const item of c.functions) claim(item.cName.slice(c.prefix.length + 1));
+	for(const item of [...c.functions, ...c.hostFieldCalls]) claim(item.cName.slice(c.prefix.length + 1));
 	const names = new Map(), containers = new Map(), identities = new Map();
 	for(const node of nodes.values())
 	{
@@ -95,10 +95,25 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 		return [node.id, { fields: members(node.id, node.fields), cases }];
 	}));
 	const bigint = c.nodes.some(node => node.integer);
-	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors, receiverExports: receivers })
+	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors, callbackArgumentViews: c.callbackArgumentViews, receiverExports: receivers })
 		, ...wholeOwners ? [ownedRustAnchoredValues({ inputOwners: anchors || c.functions.some(item => item.transfers?.length) })] : []
 		, ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
 	const fieldType = field => field.boxed ? `Box<${type(field.type)}>` : type(field.type);
+	const inputs = new Map();
+	for(const fn of c.hostFieldCalls) for(const slot of fn.hostRecordSlots)
+	{
+		const id = slot.node.id;
+		if(inputs.has(id)) continue;
+		let name = names.get(id) + "Input";
+		while(occupied.has(name)) name += "Input";
+		const fields = models.get(id).fields.map((f, index) => {
+			const child = nodes.get(f.type), host = slot.fields.some(member => member.name === f.name);
+			const borrowed = !host && !child.scalar;
+			const value = child.element ? `[${type(child.element)}]` : child.name === "string" ? "str" : child.name === "bytes" ? "[u8]" : type(f.type);
+			return { ...f, index, host, borrowed, rustType: host ? `OwnedCallbackArg${index}` : borrowed ? "&'a " + value : value };
+		});
+		inputs.set(id, {name: claim(name), fields, lifetime: fields.some(f => f.borrowed)});
+	}
 	for(const id of layout.order)
 	{
 		const node = nodes.get(id), model = models.get(id), name = names.get(id);
@@ -111,6 +126,22 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 			, ...model.cases.map(branch => `    ${branch.publicName}${branch.fields.length ? ` { ${branch.fields.map(field => `${field.publicName}: ${fieldType(field)}`).join(", ")} }` : ""},`), "}", "");
 	}
 	for(const alias of c.native.aliases) lines.push(`pub type ${definitions.get(alias.id).name} = ${type(alias.target)};`);
+	for(const [id, input] of inputs)
+	{
+		const {name, fields, lifetime} = input, selected = fields.filter(f => f.host);
+		const args = [...lifetime ? ["'a"] : [], ...selected.map(f => f.rustType)];
+		const borrowed = [...lifetime ? ["'a"] : [], ...selected.map(f => "&'a " + type(f.type))];
+		lines.push("/// Call-scoped input. Unselected non-scalar fields borrow their source storage.",
+			`pub struct ${name}<${args.join(", ")}> {`, ...fields.map(f => `    pub ${f.publicName}: ${f.rustType},`), "}",
+			`impl<'a> From<&'a ${type(id)}> for ${name}<${borrowed.join(", ")}> {`,
+			`    fn from(source: &'a ${type(id)}) -> Self {`, "        Self {",
+			...fields.map(f => {
+				const borrow = f.host || f.borrowed, source = "source." + f.publicName;
+				const value = f.boxed ? (borrow ? "" : "*") + source + ".as_ref()" : (borrow ? "&" : "") + source;
+				return `            ${f.publicName}: ${value},`;
+			}),
+			"        }", "    }", "}");
+	}
 	const canonical = id => {
 		const node = nodes.get(id);
 		if(names.has(id) || node.kind === "primitive") return type(id);
@@ -120,6 +151,7 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 	};
 	return { c, layout, source: lines.join("\n") + "\n", bigint
 		, types: [...nodes.values()].map(node => ({ ...node, hostName: type(node.id)
+			, ...inputs.has(node.id) ? { hostInput: inputs.get(node.id) } : {}
 			, identityTag: identities.get(node.id), ...models.get(node.id)
 			, ...wholeOwners ? { canonicalHostName: canonical(node.id) } : {} })) };
 };

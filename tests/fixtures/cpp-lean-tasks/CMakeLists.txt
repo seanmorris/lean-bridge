@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+project(installed_cpp_task LANGUAGES CXX)
+find_package(LeanBridgeLbcPulse CONFIG REQUIRED)
+add_executable(consumer consumer.cpp)
+target_link_libraries(consumer PRIVATE LeanBridge::lbc_pulse)

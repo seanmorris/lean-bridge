@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "hostImports": "lean-bridge.hosts.json",
+  "exports": ["Workshop.work", "Workshop.start", "Workshop.either", "Workshop.checked", "Workshop.openCursor", "Workshop.identity"],
+  "taskExports": ["Workshop.work", "Workshop.start", "Workshop.either", "Workshop.checked"],
+  "taskIOErrors": ["Workshop.work"],
+  "asyncIterators": [{"open": "Workshop.openCursor", "next": "Workshop.pull", "close": "Workshop.close"}],
+  "targets": {"npm": {"name": "@lean-bridge/workshop-host-example", "version": "1.0.0"}}
+}

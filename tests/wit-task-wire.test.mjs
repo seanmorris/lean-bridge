@@ -1,0 +1,115 @@
+/** @file Guard the private Wasmtime task delivery ABI independently of other schedulers. */
+import assert from "node:assert/strict";
+import test from "node:test";
+import { generateCTaskExports } from "../src/backends/c/task-exports.mjs";
+import { generateSyncWire } from "../src/backends/c/sync-wire.mjs";
+import { renderWitTaskImports } from "../src/backends/wit/task-host.mjs";
+import {canonicalValue,canonicalResult} from "../src/backends/wit/canonical-values.mjs";
+
+const value={kind: "primitive",name: "uint32"};
+const entry={name: "job",declaration: "Jobs.job",effect: "IO",delivery: "task"
+	, parameters: [{name: "n",type: value}],result: value,taskIO: true};
+const options={name: "jobs",modules: ["Jobs"],entries: [entry],componentIdentity: "a".repeat(64),integerMode: "words"};
+
+test("canonical result storage respects the alignment and ownership of either branch",()=>{
+	const primitive=name=>canonicalValue({kind: "primitive",name});
+	const text=primitive("string"),number=primitive("uint64");
+	assert.deepEqual(text.flat,["i32","i32"]);
+	const nested=canonicalResult(canonicalResult(primitive("uint16"),text),number);
+	assert.equal(nested.wit,"result<result<u16, string>, u64>");
+	assert.deepEqual([nested.size,nested.align,nested.dynamic],[24,8,true]);
+	const scalar=canonicalResult(primitive("bool"),primitive("uint8"));
+	assert.deepEqual([scalar.size,scalar.align,Boolean(scalar.dynamic)],[2,1,false]);
+	assert.throws(()=>primitive("int"),/Unsupported copied canonical value/u);
+});
+
+test("WIT task errors use native readiness and stay distinct on the start and take wires",()=>{
+	const generated=generateCTaskExports({...options,witDelivery: true});
+	const wire=generateSyncWire(generated.prefix,options.entries,{tasks: true});
+	const [method]=wire.methods;
+	assert.equal(method.error,"string");assert.equal(method.terminal,"string");
+	assert.equal(method.result,"uint32");assert.ok(method.names.poll);assert.ok(wire.wait.open);
+	assert.equal(method.names.listen,undefined);assert.notEqual(method.names.start,method.names.take);
+});
+
+test("a cursor IO failure carries text but is not a declared String step error",async ()=>{
+	const stream={name: "feed"
+		, declaration: "Jobs.feed"
+		, effect: "BaseIO"
+		, delivery: "async-iterator"
+		, parameters: []
+		, result: value
+		, protocol: {open: "Jobs.feed",next: "Jobs.advance",close: "Jobs.finish"}};
+	const method={declaration: "Jobs.feed",resource: "feed-cursor",start: "open-feed",request: "request-feed",poll: "poll-feed",cancel: "cancel-feed"};
+	for(const stepIO of [true,false])
+	{
+		const entries=[{...stream,...stepIO?{stepIO}:{stepError: {kind: "primitive",name: "string"}}}];
+		const gen=generateCTaskExports({...options,entries,witDelivery: true});
+		const wire=generateSyncWire(gen.prefix,entries,{tasks: true}), [m]=wire.methods;
+		assert.equal(m.terminal,"string");assert.equal(m.stepIO,stepIO || undefined);
+		const model={prefix: gen.prefix,wire,methods: [{...method,stepIO}]};
+		const src=await renderWitTaskImports(model);
+		assert.ok(src.includes(stepIO?'_IO_ERROR,"io-failed"':'_TYPED_ERROR,"failed"'));
+		await assert.rejects(renderWitTaskImports({...model,methods: [{...method,stepIO: !stepIO}]}),/method and native task wire disagree/u);
+		await assert.rejects(renderWitTaskImports({...model,methods: []}),/method and native task wire disagree/u);
+		await assert.rejects(renderWitTaskImports({...model,methods: [{...method,stepIO: "true"}]
+			, wire: {...wire,methods: [{...m,stepIO: "true"}]}}),/method and native task wire disagree/u);
+	}
+	const both=[{...stream,stepIO: true,stepError: value}];
+	assert.throws(()=>generateCTaskExports({...options,entries: both,witDelivery: true}),/cursor IO failure/u);
+	assert.throws(()=>generateSyncWire("lbc_jobs",both,{tasks: true}),/cursor IO failure/u);
+});
+
+test("the WIT task and cursor wire cannot exchange demand, value, or failure channels",async ()=>{
+	const primitive=name=>({kind: "primitive",name});
+	const feed={name: "feed",declaration: "Jobs.feed",effect: "EIO"
+		, delivery: "async-iterator",parameters: []
+		, protocol: {open: "Jobs.feed",next: "Jobs.advance",close: "Jobs.finish"}
+		, error: value,stepError: primitive("uint16")
+		, result: {kind: "apply",constructor: "result",arguments: [primitive("int64"),primitive("string")]}};
+	const entries=[entry,feed], generated=generateCTaskExports({...options,entries,witDelivery: true});
+	const wire=generateSyncWire(generated.prefix,entries,{tasks: true});
+	const [task,cursor]=wire.methods;
+	assert.equal(task.names.pull,undefined); assert.ok(cursor.names.pull); assert.ok(cursor.names.poll);
+	assert.equal(cursor.stepDeclaration,"Jobs.advance"); assert.equal(cursor.error,"uint32");
+	assert.equal(cursor.terminal,"uint16"); assert.deepEqual(cursor.result,["int64","string"]);
+	const methods=entries.map(e=>({declaration: e.declaration}));
+	await assert.rejects(renderWitTaskImports({prefix: generated.prefix,wire,methods}),/method and native task wire disagree/u);
+});
+
+test("selecting WIT task delivery cannot also select a worker callback or a different scheduler",()=>{
+	const withCallback={...entry,parameters: [{name: "f",type: {kind: "io-callback",argument: value,reply: value}}]};
+	for(const override of [
+		{entries: [withCallback]}, {integerMode: "gmp"}, {wasmTasks: true}
+		, {cCallbacks: true}
+		, {rustCallbacks: true}
+		, {cppCallbacks: true}
+		, {rubyDelivery: true}
+		, {dotnetDelivery: true}
+		, {jvmDelivery: true}
+		, {perlDelivery: true}
+		, {phpDelivery: true}
+	]) assert.throws(()=>generateCTaskExports({...options,witDelivery: true,...override}),/WIT task delivery requires/u);
+	assert.throws(()=>generateCTaskExports(options),/select exactly one host/u);
+});
+
+test("heap imports refuse missing, reordered or mistagged native lease kinds",async ()=>{
+	const ticket="a".repeat(64), badge="b".repeat(64);
+	const heap=[{hash: ticket},{hash: badge}];
+	for(const leases of [[],[{hash: badge,tag: 3},{hash: ticket,tag: 4}],[{hash: ticket,tag: 3},{hash: badge,tag: 3}]])
+		await assert.rejects(renderWitTaskImports({heap,wire: {leases}}),/heap identities and native leases disagree/u);
+});
+
+test("a retained WIT callback uses native readiness and preserves the failure phase without changing other hosts",()=>{
+	const cb={kind: "io-callback",argument: value,reply: value}, entries=[{...entry,parameters: [{name: "transform",type: cb}]}];
+	const gen=generateCTaskExports({...options,entries,witDelivery: true,witCallbacks: true});
+	const native=generateSyncWire(gen.prefix,entries,{tasks: true}),wit=generateSyncWire(gen.prefix,entries,{tasks: true,witCallbacks: true});
+	const [m]=wit.methods; assert.deepEqual(m.callbacks,[[0,"uint32","uint32"]]);
+	assert.equal(m.error,"string");assert.equal(m.terminal,"string");assert.ok(m.names.callbacks && wit.wait.open);
+	assert.equal(native.methods[0].terminal,undefined);assert.equal(native.methods[0].error,null);
+	assert.doesNotMatch(native.source,/tags\[0\] = phase/u);assert.match(wit.source,/tags\[0\] = phase/u);
+	for(const incompatible of [{witDelivery: false},{cppCallbacks: true},{integerMode: "gmp"},{wasmTasks: true},{wasmCallbacks: true}])
+		assert.throws(()=>generateCTaskExports({...options,entries,witCallbacks: true,witDelivery: true,...incompatible}),/WIT task delivery requires/u);
+	for(const incompatible of [{tasks: false},{wasmTasks: true},{wasm32: true},{phpWasm: true},{wasmCallbacks: true}])
+		assert.throws(()=>generateSyncWire(gen.prefix,entries,{tasks: true,witCallbacks: true,...incompatible}),/Wasmtime callbacks require/u);
+});

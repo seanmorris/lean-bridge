@@ -12,7 +12,7 @@ import { generateOwnedRustPackage } from "../backends/rust/owned-package.mjs";
 import { projectOwnedRust } from "./owned-rust-projection.mjs";
 import { generateOwnedPythonPackage } from "../backends/python/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { taskGmpKit } from "./task-gmp.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOwnedNativeC } from "../release/owned-c-package.mjs";
 import { packageOwnedPython } from "../release/owned-pypi.mjs";
@@ -60,7 +60,9 @@ export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRo
 		await writeFile(join(root, path), source, { flag: "wx" });
 	}
 	const gmpRoot = join(root, "gmp");
-	await buildNativeGmp({ root: gmpRoot, environment, signal });
+	// The public C/Python adapter and the task adapter ship the same public GMP
+	// ABI. Reuse only an explicitly pinned kit, with its checked source and licenses.
+	await taskGmpKit({ root: gmpRoot, environment, signal });
 	await mkdir(join(root, "lib"));
 	const library = `lib${p}.so`;
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env: environment, signal });

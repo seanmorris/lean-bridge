@@ -49,7 +49,7 @@ export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredR
 		let size = start, alignment = 1;
 		for(const field of members)
 		{
-			const child = table.get(field.type);
+			const child = field.descriptor ?? table.get(field.type);
 			const boundary = field.pointer ? 8 : child.alignment;
 			const width = field.pointer ? 8 : child.size;
 			if(!boundary || !width) throw new TypeError("Owned JVM has an unresolved inline layout dependency");
@@ -58,7 +58,7 @@ export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredR
 		}
 		return { size: Math.max(1, align(size, alignment)), alignment };
 	};
-	const members = items => items.map(field => `${field.pointer ? value + ".ADDRESS" : table.get(field.type).layoutName}.withName("${field.name}")`);
+	const members = items => items.map(field => `${field.pointer ? value + ".ADDRESS" : (field.descriptor ?? table.get(field.type)).layoutName}.withName("${field.name}")`);
 	const declarations = [];
 	for(const node of [...types].sort((a, b) => Number(b.leaf) - Number(a.leaf)))
 	{
@@ -110,6 +110,20 @@ export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredR
 	}));
 	for(const callback of callbackLayouts)
 		declarations.push(`    static final ${memory} ${callback.layoutName} = struct(${callback.fields.map(field => `${value}.ADDRESS.withName("${field.name}")`).join(", ")});`);
+	// An input-only record inlines the whole callback descriptor. The normal
+	// record still stores a single pointer to a leased Lean closure.
+	const hostInputs = new Map(), descriptors = new Map(callbackLayouts.map(d => [d.id,d]));
+	for(const fn of c.hostFieldCalls) for(const slot of fn.hostRecordSlots)
+	{
+		if(hostInputs.has(slot.node.id)) continue;
+		const node = table.get(slot.node.id), selected = new Set(slot.fields.map(f => f.name));
+		const inputFields = node.fields.map(f => selected.has(f.name)
+			? {...f, descriptor: descriptors.get(f.type)} : {...f});
+		const input = {id: node.id, name: slot.inputType, layoutName: `R${node.index}`
+			, fields: inputFields, ...fields(inputFields)};
+		hostInputs.set(node.id,input);
+		declarations.push(`    static final ${memory} ${input.layoutName} = struct(${members(inputFields).join(", ")});`);
+	}
 	declarations.push(`    static final ${memory} MPZ = struct(${value}.JAVA_INT.withName("allocated"), ${value}.JAVA_INT.withName("length"), ${value}.ADDRESS.withName("data"));`);
 	const namespace = `org.leanbridge.${c.prefix}`;
 	const layoutSource = `package ${namespace};
@@ -133,5 +147,6 @@ ${declarations.join("\n")}
 }
 `;
 	return { c, types, namespace, layoutSource, callbackLayouts
+		, hostInputLayouts: [...hostInputs.values()]
 		, mpz: { size: 16, alignment: 8, allocated: 0, length: 4, data: 8 } };
 };

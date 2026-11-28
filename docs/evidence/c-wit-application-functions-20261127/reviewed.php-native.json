@@ -1,0 +1,90 @@
+{
+  "archive": {
+    "bytes": 53952745,
+    "path": "archives/example-tariff-quotes-1.0.0-linux-x86_64.zip",
+    "sha256": "8fbcbd033695b0cf6dfa9f896bd37993099703f1513c7ef81344328d63445839"
+  },
+  "artifacts": [
+    {
+      "bytes": 53952745,
+      "path": "archives/example-tariff-quotes-1.0.0-linux-x86_64.zip",
+      "sha256": "8fbcbd033695b0cf6dfa9f896bd37993099703f1513c7ef81344328d63445839"
+    }
+  ],
+  "bindingIrSha256": "ff73021df159f031112af8995936a76bdce18d1b6e060682c328f2cbc84501f0",
+  "cArchive": {
+    "bytes": 53878263,
+    "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+    "sha256": "b19a4b3e85646486667e0a9304047a4ff6cde49ade9c8d8a2c295508e1735cf4"
+  },
+  "cReceiptSha256": "66cc611fcb93279c10178229a4013798506bbd431847ddddccfab9a2b8d9b0ce",
+  "componentSha256": "6f603cd6ecec1288163f7038f0dbad6f2f0e9c4325dbd950934cf3cf36cef124",
+  "composerVersion": "Composer version 2.5.5 2023-03-21 11:50:05",
+  "leanSourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "lockSha256": "9ad64158c5cfac75105c51baf8e62c919e4d76dbb8dea361abfcb0a0eaab48b8",
+  "observations": [
+    {
+      "counts": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "expired": 1,
+        "forward": 1,
+        "held": 9,
+        "nested": 1,
+        "ticket42": 1,
+        "ticket71": 1
+      },
+      "interpreterSha256": "6235d84f7020b7dcf3dd3b035afcc277955353f7c463f9283fba26f06da2a098",
+      "php": "8.2.35",
+      "values": {
+        "after": 43,
+        "forwarded": 42,
+        "replies": [
+          43,
+          72
+        ],
+        "trace": [
+          0,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "counts": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "expired": 1,
+        "forward": 1,
+        "held": 9,
+        "nested": 1,
+        "ticket42": 1,
+        "ticket71": 1
+      },
+      "interpreterSha256": "12989a0efe078564045ed6e38232bb6cea04064db1d31ee2f4d99985daabfc66",
+      "php": "8.5.10",
+      "values": {
+        "after": 43,
+        "forwarded": 42,
+        "replies": [
+          43,
+          72
+        ],
+        "trace": [
+          0,
+          2,
+          3
+        ]
+      }
+    }
+  ],
+  "receiptSha256": "d2991560f38cbdcd2979c7bdd70f3283e2850f01305f2ed6af59bec873c0b5ac",
+  "reviewedSourceSha256": "6f85cf29080b2ce46d183ca925194ff296f5376b40cf623639c778ac0f43c341",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "sources": {
+    "tariff-application-observer.php": "7c3ba663d709cc2d262511e921d722f40f83f21c4895fcb93375855c147c77a8",
+    "tariff-application.php": "d3f92232b8163578b96b260f68a36933eca33d76db4d3cffd59e9de298097f96"
+  }
+}

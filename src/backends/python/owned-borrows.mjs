@@ -198,7 +198,8 @@ export const ownedPythonAnchoredCall = (model, all, c) => {
 	const host = parameters.map((_, i) => c.hostArgument?.(signature, i));
 	const input = (node, i, checking) => host[i]
 		? `_owned_host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})`
-		: `_owned_input${node.index}(${wraps(i) ? `arg${i}.get()` : `arg${i}`}, ${checking ? "checked" : "scope"})`;
+		: model.recordInputs.includes(i)?`_owned_host_record${node.index}(arg${i}, ${checking?"checked":"scope, frame"})`
+			: `_owned_input${node.index}(${wraps(i) ? `arg${i}.get()` : `arg${i}`}, ${checking ? "checked" : "scope"})`;
 	const helper = ["copy", "retain"].includes(model.group);
 	const copy = all.find(item => (item.copy || item.retain) && item.id === result.id);
 	const copied = result.representation === "copied";

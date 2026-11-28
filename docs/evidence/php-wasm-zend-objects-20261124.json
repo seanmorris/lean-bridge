@@ -1,0 +1,134 @@
+{
+  "kind": "private-php-wasm-zend-object-transport",
+  "compiledWorkerProfile": "javascript-wasm-threaded-task-v1",
+  "interpreter": {
+    "name": "php-wasm",
+    "version": "0.1.0"
+  },
+  "browser": "Chromium 156.0.8078.79 built on Debian GNU/Linux 12 (bookworm)",
+  "sourceSha256": {
+    "src/runtime/wasm-task-bindings.mjs": "dfb82217f2666e796d0cab4286424a87d4d323f91b81129ee04aebe975536e51",
+    "src/backends/php/php-wasm-task-objects.php": "5b82716460d325e0edf0c6956c4be20fb7ae2a3401f2af51a01efebbecb9096f",
+    "src/backends/php/php-wasm-task-objects.mjs": "6966b2134811264d651e9ec9edb2456289909e8d037b47d08df7b4ddaee51fbe",
+    "src/backends/php/php-wasm-task-callbacks.php": "ba8c75f19ff7dffd62a5b8db4c17958c19dcd6512fde8064ededbb111d33edc0",
+    "src/backends/php/php-wasm-task-delivery.php": "db7b9c146758b382b8b1ecfc1dd5a1e05519e0cedb13c3d8f98f188b15eaff30",
+    "src/backends/php/php-wasm-task-port.php": "2d73ff91dc6a16ecb29ce07aef8c4bee5120950c8b6dc558a80665de6125a19f",
+    "src/backends/php/php-wasm-task-mailbox.mjs": "5c5094fc0e27cf6511a49288305b28777c9ca58374fa80c399f226d5bce0a18c",
+    "src/backends/php/php-wasm-task-owner.mjs": "04b6e046b028763d099cc35f15361616f1b48e06b48830936bfd636df000e853",
+    "tests/fixtures/php-wasm-task-owner/zend-objects.php": "89f6275170b6806bb285263584380a9bf1d582e3a8adbf09633e3e5e9b8d05d1"
+  },
+  "executions": [
+    {
+      "route": "ordinary",
+      "archive": "0f28fe2a63cebd98fdf930440fa1e61c0280eccd80a8116533301cab5f997778",
+      "peerArchive": "abbe6c1efb4f35e89e5a5d78017c8cdc92641339cb5a8a44c5cca5becd230049",
+      "host": "node",
+      "php": "8.4.1",
+      "checks": 25,
+      "components": [
+        {
+          "componentIdentity": "c03e1644afb18e40f359a06adb62cbaa89f2a7ab413767f04bc571c0911277a7",
+          "integrity": "2ae93cddc08528cc6080182a78dc330d95b87b2c2926aa445d3aa8dccac3dc86"
+        },
+        {
+          "componentIdentity": "4a98cef313d1fb43050af52a9688b8424065508324f6c2ef519a42a0d508138b",
+          "integrity": "1f0dbe64e7fb07c0737bd4ed809e21a7229670946b661d4242563f47fa0db4e0"
+        }
+      ],
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    },
+    {
+      "route": "ordinary",
+      "archive": "0f28fe2a63cebd98fdf930440fa1e61c0280eccd80a8116533301cab5f997778",
+      "peerArchive": "abbe6c1efb4f35e89e5a5d78017c8cdc92641339cb5a8a44c5cca5becd230049",
+      "host": "chromium",
+      "php": "8.4.1",
+      "checks": 25,
+      "components": [
+        {
+          "componentIdentity": "c03e1644afb18e40f359a06adb62cbaa89f2a7ab413767f04bc571c0911277a7",
+          "integrity": "2ae93cddc08528cc6080182a78dc330d95b87b2c2926aa445d3aa8dccac3dc86"
+        },
+        {
+          "componentIdentity": "4a98cef313d1fb43050af52a9688b8424065508324f6c2ef519a42a0d508138b",
+          "integrity": "1f0dbe64e7fb07c0737bd4ed809e21a7229670946b661d4242563f47fa0db4e0"
+        }
+      ],
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    },
+    {
+      "route": "reviewed",
+      "archive": "527f4221102716e04cf4d412f8dac7c23d5cebf09a8e04d3f8620d9d6399b37d",
+      "peerArchive": "abbe6c1efb4f35e89e5a5d78017c8cdc92641339cb5a8a44c5cca5becd230049",
+      "host": "node",
+      "php": "8.4.1",
+      "checks": 25,
+      "components": [
+        {
+          "componentIdentity": "b4f63c6e3e04ee148c9595e1106a326d20838d6060615da1f37677687ebb5c91",
+          "integrity": "28f6d01d758f88effd1a769682c584e04c3996f997f67045d089cb29d42d14be"
+        },
+        {
+          "componentIdentity": "4a98cef313d1fb43050af52a9688b8424065508324f6c2ef519a42a0d508138b",
+          "integrity": "1f0dbe64e7fb07c0737bd4ed809e21a7229670946b661d4242563f47fa0db4e0"
+        }
+      ],
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    },
+    {
+      "route": "reviewed",
+      "archive": "527f4221102716e04cf4d412f8dac7c23d5cebf09a8e04d3f8620d9d6399b37d",
+      "peerArchive": "abbe6c1efb4f35e89e5a5d78017c8cdc92641339cb5a8a44c5cca5becd230049",
+      "host": "chromium",
+      "php": "8.4.1",
+      "checks": 25,
+      "components": [
+        {
+          "componentIdentity": "b4f63c6e3e04ee148c9595e1106a326d20838d6060615da1f37677687ebb5c91",
+          "integrity": "28f6d01d758f88effd1a769682c584e04c3996f997f67045d089cb29d42d14be"
+        },
+        {
+          "componentIdentity": "4a98cef313d1fb43050af52a9688b8424065508324f6c2ef519a42a0d508138b",
+          "integrity": "1f0dbe64e7fb07c0737bd4ed809e21a7229670946b661d4242563f47fa0db4e0"
+        }
+      ],
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    }
+  ]
+}

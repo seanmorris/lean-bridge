@@ -1,0 +1,35 @@
+{
+  "archives": [
+    {
+      "bytes": 198919,
+      "path": "@example-receiver-lifetime-1.0.0.tgz",
+      "sha256": "87475683b6fa6ceab6552018a148aee5b9a6809da02e330b5922708308f6833d"
+    },
+    {
+      "bytes": 1676803,
+      "path": "lean-bridge-runtime-0.0.0-abi2.ae3b114c3563244686b64caebef7e5b9deff056c12907a18fb35220e9ec1edf7.tgz",
+      "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+    }
+  ],
+  "bindingIrSha256": "ed8a0698720ce39acdae014fd04dd61c50e52a22b404ea6db1e215b19133e677",
+  "clientSha256": "0dab3a55610619bccede35b9d1c6735328fc475b7551edc39f6e496739e1d0f7",
+  "emittedSha256": "4e40d5ea1db520455bb3f1fcf849c3e266e3012f8499ad4f90e4f3cd9346de3e",
+  "observed": {
+    "closed": true,
+    "counts": {
+      "baseline": 0,
+      "held": 1,
+      "released": 0,
+      "stopped": 0
+    },
+    "expiredViews": 6,
+    "parameter": "73",
+    "retained": "41",
+    "transferred": "99"
+  },
+  "observerSha256": "aa0116bad442b8d501c54c68a089e4873381b0b9309f1c2f691e4d6f464f0997",
+  "receiptSha256": "0275ace7a931ce6e633613e949e6dc2c1e61838dd369e02d0efc6ff9e22ed75f",
+  "reviewedSourceSha256": "c2d88760c1e9ce3624693fda80869604a59150018fc459645df31858923442f6",
+  "route": "reviewed",
+  "typescript": "5.9.3"
+}

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Latches"],
+  "exports": ["Latches.parked", "Latches.release"],
+  "taskExports": ["Latches.parked"],
+  "targets": {"c": {"name": "latches", "version": "1.0.0"}}
+}

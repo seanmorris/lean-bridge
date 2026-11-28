@@ -22,11 +22,17 @@ const contentTypes = {
  * @param {object} options Server paths.
  * @param {string} options.root Artifact root directory.
  * @param {string} options.base Deployment path prefix.
+ * @param {boolean} [options.isolated] Serve a deployment configured for a shared Wasm heap.
  */
-export const startSiteServer = async ({ root, base }) => {
+export const startSiteServer = async ({ root, base, isolated = false }) => {
 	root = resolve(root);
 	base = normalizeBase(base);
 	const server = createServer(async (request, response) => {
+		if(isolated)
+		{
+			response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+			response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+		}
 		try
 		{
 			const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);

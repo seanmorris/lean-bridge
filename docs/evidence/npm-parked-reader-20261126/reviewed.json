@@ -1,0 +1,127 @@
+{
+  "archives": [
+    {
+      "bytes": 15459,
+      "path": "@example-parked-reader-1.0.0.tgz",
+      "sha256": "a61165ddb93e11db7d3588065690a988c7cf98e24ebe9c787430689419137bc0"
+    },
+    {
+      "bytes": 783013,
+      "path": "lean-bridge-runtime-0.0.0-task1.rfea95025a5fb2b75cff824352de1acd0d45b63ffdd2ba9c66c52c1114bdf6153.tgz",
+      "sha256": "f175b99d5127a28c28d81a1c934d5862250855ef1f819042f2e8d5915947f918"
+    }
+  ],
+  "browser": {
+    "page": {
+      "failures": 1,
+      "finalizers": 1,
+      "late": 73,
+      "live": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "successes": 0,
+      "whileParked": {
+        "closes": 0,
+        "drained": false,
+        "nativeOwners": 1,
+        "pulls": 1
+      }
+    },
+    "react": {
+      "failures": 1,
+      "finalizers": 1,
+      "late": 73,
+      "live": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "successes": 0,
+      "whileParked": {
+        "closes": 0,
+        "drained": false,
+        "nativeOwners": 1,
+        "pulls": 1
+      }
+    },
+    "worker": {
+      "failures": 1,
+      "finalizers": 1,
+      "late": 73,
+      "live": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "successes": 0,
+      "whileParked": {
+        "closes": 0,
+        "drained": false,
+        "nativeOwners": 1,
+        "pulls": 1
+      }
+    }
+  },
+  "installedBytes": [
+    "54fb3f8055357cc3bef654a96837b831d8937dc366e5ba9d108f614e33f5276e",
+    "971235299302e2f7a7bb7e1b1009878f06a27ad988b28aaaeb9f919eff4468aa"
+  ],
+  "node": {
+    "failures": 1,
+    "finalizers": 1,
+    "late": 73,
+    "live": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "successes": 0,
+    "whileParked": {
+      "closes": 0,
+      "drained": false,
+      "nativeOwners": 1,
+      "pulls": 1
+    }
+  },
+  "receiptSha256": "abfc3adb07e80369ada3f0f687d49b7d5e5aef5d7066144d72c2e6f8fb6a33d2",
+  "reviewedSourceSha256": "965446dec547907366cd1cb537308e929c5953e97c04d227056cf5b25b089995",
+  "route": "reviewed",
+  "sources": {
+    "calls.d.mts": "4db5a0a1147ad324f05653c43095fe74af791a95be810996b4a1f69a5d6b9e4a",
+    "calls.mjs": "d94abe132bddfcbba16952218097b66d19e797f43439f3b37254fbbbc446070a",
+    "node.mjs": "12ff6a56f6ee2524d7996c5aa38ca475feb3274c3f18afc00ef8e75b91a9935b",
+    "page.mjs": "a06d61989bdbb15138a24c090ee5393650244066527436a35bc12be0d0c27124",
+    "public.mjs": "01a69ab073496029ba4b40ea74b663a0119beb4a987a52c07f98343f2de74ae6",
+    "typed.mts": "576eaac2e24238de2577170fcd99031a6bd97f5c14a25db6c6203b95fd0b7bb7",
+    "worker.mjs": "defe90add3872a5a035048c431dbdbf2cdafd236030613e3bc3c8d9d0db7bec3"
+  },
+  "typescript": {
+    "failures": 1,
+    "finalizers": 1,
+    "late": 73,
+    "live": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "successes": 0,
+    "whileParked": {
+      "closes": 0,
+      "drained": false,
+      "nativeOwners": 1,
+      "pulls": 1
+    }
+  }
+}

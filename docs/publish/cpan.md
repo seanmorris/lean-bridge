@@ -47,9 +47,208 @@ The Nix entry point supplies the pinned upstream toolchain:
 nix run .#perl-build-engine -- --project /path/to/project --output /path/to/new-release
 ```
 
-The output contains `native/runtime`, `native/component`, prepared distributions under `packages`, and the two `.tar.gz` files and checksum receipts under `archives`. `native-release.json` records the component, runtime, Binding IR and archive identities. The native profile is `native-library-v1`; it does not alter the WebAssembly side-module ABI.
+The ordinary native-library build contains `native/runtime`, `native/component`, prepared distributions under `packages`, and two `.tar.gz` files under `archives`. Its profile is `native-library-v1`. [Synchronous IO](#export-synchronous-io) uses `native-perl-io-v1`; [tasks and streams](#export-tasks-and-streams) use `native-perl-task-v1`. All three produce the same two-distribution handoff. Read `package-set-receipt.json` for the profile, exact archives and runtime dependency.
 
 For APIs that also fit npm's primitive profile, [select npm and CPAN together](npm.md#build-npm-and-cpan-together). The combined build uses one captured source tree and exposes both package sets only after their source APIs agree. Its CPAN archives live under `profiles/native/archives/`. Keep a CPAN-only build for native records, arrays, resources and callbacks.
+
+### Export synchronous IO
+
+Select your Lean functions and declare the OS access they need. For the [Journal source](../../tests/fixtures/native-sync-io/Journal.lean), use:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.bump", "Journal.choose", "Journal.store", "Journal.read"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"cpan": {"module": "LeanBridge::Journal", "version": "0.001"}}
+}
+```
+
+`Journal.store` and `Journal.read` need the filesystem grant. Select `nativeEffects: []` for an in-memory-only API. Ordinary selection and reviewed Binding IR both pass through the same Lean compiler and effect checks. Build into a new directory with `lean-bridge build --project . --target cpan --output release`. The release contains a component distribution and an exact dependency on the shared runtime; publish both using the [CPAN instructions](#publish-to-cpan).
+
+The synchronous profile supports the 19 copied scalar types and nested returned or thrown `Except` values. `IO` failures carry the Lean error message; `EIO` failures retain the type of their payload. It does not turn tasks, streams, or direct resource parameters into synchronous copied values. See the [installed Perl example](../consume/perl.md#call-synchronous-io-and-handle-errors) and the [four-ABI acceptance record](../evidence/perl-sync-io-20261123.json).
+
+### Call a Perl object from Lean
+
+Use a host import when the Perl application owns the object and Lean needs to call its methods. The [Workshop project](../../tests/fixtures/perl-host-project/Workshop.lean) imports `LeanBridge.Host.Perl`. Its [host contract](../../tests/fixtures/perl-host-project/lean-bridge.hosts.json) declares a `Box` constructor, a mutable `level` property, a read method and an identity method. Lean Bridge generates the imported module; do not add a source module with that name.
+
+A selected IO factory can return a unary Lean function over the imported
+class. For example:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    return captured
+```
+
+Select the factory in `exports`. A [Perl consumer](../consume/perl.md#call-a-returned-lean-function-on-a-perl-object)
+gets a code reference scoped to its `with_hosts` block. Returning a function
+doesn't make either the factory or its calls asynchronous. Declare OS access
+used inside the returned function just as you would for an ordinary IO call.
+
+The [export configuration](../../tests/fixtures/perl-host-project/lean-bridge.exports.json) names the contract in `hostImports` and selects the application functions under `exports`. To build that example from the repository root:
+
+```sh
+lean-bridge build --project tests/fixtures/perl-host-project --target cpan --output release
+```
+
+This produces a `native-perl-host-v1` component and its exact shared runtime distribution. Publish the two archives as described [below](#publish-to-cpan). The application [binds its own Perl class](../consume/perl.md#supply-a-perl-class-to-lean). Calls to the object's members run on the initiating interpreter thread.
+
+### Export a record that holds Perl objects
+
+Use a flat Lean structure containing at least one imported host object in a
+synchronous `IO` argument or result. Its other fields may be copied scalars:
+
+```lean
+structure Pair where
+  lead : Box
+  sample : ByteArray
+  sequence : Nat
+  spare : Box
+
+def flip (pair : Pair) : IO Pair := do
+  let n ← pair.lead.read
+  return ⟨pair.spare, pair.sample.push n.toUInt8, pair.sequence + 1, pair.lead⟩
+```
+
+Select the function by its qualified name in `exports`. Lean supplies the
+constructor and projections; the Perl author does not declare memory
+offsets. A reviewed API must preserve the field names, order and ownership.
+The consumer receives a [generated Perl record class](../consume/perl.md#pass-a-record-containing-perl-objects).
+
+### Export an immediate iterator
+
+For a synchronous pull, select the constructor under `exports` and its
+open, next and close declarations under `iterators`. For example, the
+[Dials source](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+returns an immediate `Option UInt32` and writes a file when closed:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Dials"],
+  "exports": ["Dials.sequence"],
+  "iterators": [{"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"cpan": {"module": "LeanBridge::Dials", "version": "0.001"}}
+}
+```
+
+The pull may also return `IO (Option α)` or `EIO ε (Option α)`. A
+constructor failure identifies the constructor; a pull failure names the
+pull. Publish this as a standalone synchronous package. Select
+`asyncIterators` for a pull backed by a Lean `Task` instead.
+See the [list-context Perl loop](../consume/perl.md#read-an-immediate-iterator).
+
+### Export tasks and streams
+
+Use `taskExports` for functions returning an actual Lean `Task` (directly or inside `BaseIO`, `IO` or `EIO`). Use `asyncIterators` for a demand-driven stream: select its open, next and close declarations together. For the [Pulse source](../../tests/fixtures/c-lean-tasks/Pulse.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": ["Pulse.checked", "Pulse.late", "Pulse.release", "Pulse.series"],
+  "taskExports": ["Pulse.checked", "Pulse.late"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"cpan": {"module": "LeanBridge::Pulse", "version": "0.001"}}
+}
+```
+
+Build and publish the same two CPAN distributions as above. The `native-perl-task-v1` component adds `Future` and `IO::Async::Loop` to its runtime prerequisites; the shared runtime archive does not change. A synchronous companion such as `Pulse.release` stays synchronous. The [Perl consumer example](../consume/perl.md#wait-for-a-task-or-read-a-stream) calls the installed package.
+
+The compiler checks the task result and cursor protocol against the Lean source on both ordinary and reviewed builds. An `EIO` factory error, an `IO` factory error, a step failure and a returned `Except` occupy different stages. Use `taskIOErrors` only for a selected task that returns `Except IO.Error α` and should fail the future on a terminal IO error. For a worker that needs to call Perl, [export its callback](#export-a-task-that-calls-perl). For a worker or stream that passes a Lean object by identity, select its resource type as shown below.
+
+### Carry a Perl object through a worker
+
+Keep the Workshop host contract when your task takes or returns an application
+object. A Lean worker can carry the object by identity. It cannot call its
+Perl methods, even indirectly through another Lean function. If you need to
+read or change the object in Perl, pass a callback that runs on the owner's
+event loop:
+
+```lean
+import Workshop
+
+namespace Jobs
+open LeanBridge.Host.Perl
+
+def relay (box : Box) (visit : Box → IO Box) : BaseIO (Task (Except IO.Error Box)) :=
+  IO.asTask (visit box)
+
+end Jobs
+```
+
+Add `Jobs` to the Lake libraries and the configuration's `modules`. Add
+`Jobs.relay` to `exports`, `taskExports` and `taskIOErrors`. Keep
+`hostImports` and the existing CPAN coordinates. Build with the same
+`lean-bridge build --target cpan` command. The resulting component uses the
+task profile; its synchronous companions remain synchronous. See the
+[complete task and cursor source](../../tests/fixtures/perl-host-workers/Jobs.lean)
+and the [Perl caller](../consume/perl.md#pass-a-perl-object-through-a-worker).
+
+### Export a task that calls Perl
+
+In `Retained.lean`, declare a worker that requests the same callback twice:
+
+```lean
+namespace Retained
+
+def repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String)) :=
+  IO.asTask do f (← f s)
+
+end Retained
+```
+
+Select the worker and its terminal `IO.Error` in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "exports": ["Retained.repeatCall"],
+  "taskExports": ["Retained.repeatCall"],
+  "taskIOErrors": ["Retained.repeatCall"],
+  "targets": {"cpan": {"module": "LeanBridge::Retained", "version": "0.001"}}
+}
+```
+
+The callback must take one copied primitive and return one copied primitive in `IO`. The compiler checks the argument and reply types; the installed API supplies the worker's callback queue and wakes the Perl loop. The [consumer example](../consume/perl.md#pass-a-callback-to-a-lean-worker) needs neither a polling loop nor an XS wrapper.
+
+For a standalone task, add a named entry to `taskCallbackPolicies` to
+allow at most one invocation of a parameter:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Retained.repeatCall", "parameter": "f", "invocation": "once"}
+]
+```
+
+In this example the second attempt would be refused before Perl ran the
+sub. Concurrent workers for the same task share the allowance. The ordinary
+and reviewed routes check the original Lean binder name. Omit the policy
+to allow repeated calls; it is not a setting for `hostImports` packages.
+
+### Export resource-bearing tasks and streams
+
+In the [Depot source](../../tests/fixtures/resource-tasks/Depot.lean), `checked` returns `EIO Ticket (Task Ticket)`. Both a successful result and a declared failure carry a ticket. Identify the [shared type](../../tests/fixtures/resource-tasks/Shared.lean) by its full Lean name:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Depot.make", "Depot.count", "Depot.checked", "Depot.tickets"],
+  "taskExports": ["Depot.checked"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"cpan": {"module": "LeanBridge::Depot", "version": "0.001"}}
+}
+```
+
+`Depot.make` opens a file, hence the filesystem grant. `make` and `count` stay synchronous, `checked` returns a future, and `tickets` returns a demand-driven cursor. To share tickets with another component, import the same `Shared` definition and select `Shared.Ticket` there too. The declaring module, its application dependencies and the Lean compiler must agree. Build and publish the two CPAN distributions as usual; the [Perl consumer](../consume/perl.md#receive-a-resource-from-a-task-or-stream) needs no separate resource runtime. The [four-ABI build record](../evidence/perl-lease-delivery-20261123.json) includes a byte-for-byte rebuild by an offline-installed CLI.
 
 ### Export a specialized closure
 
@@ -409,6 +608,8 @@ records independent builds, source-free installations, failure cleanup and
 execution of the exact author and consumer examples.
 
 ## Export resource-containing values
+
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
 
 Select resource types and their aggregate ownership contract explicitly. In a
 Lake package named `owned-aggregates`, add `Owned.lean`:

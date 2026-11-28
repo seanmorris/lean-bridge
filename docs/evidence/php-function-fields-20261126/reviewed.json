@@ -1,0 +1,43 @@
+{
+  "archives": [
+    {
+      "bytes": 53922525,
+      "path": "archives/example-tariff-quotes-1.0.0-linux-x86_64.zip",
+      "sha256": "871ffdf7be2e52094c0d594f0356a1c57c95ebfd06b3981625f690c9a5fd1d03"
+    }
+  ],
+  "bindingIrSha256": "aac640d8337f65807ca70222af8b35bce7cd0f69cfd2a3ebeb62bc3ae186205c",
+  "composerVersion": "Composer version 2.5.5 2023-03-21 11:50:05",
+  "lockSha256": "8fc503f13c4785bdfa5ad610535c18bd91ff089256472e0215a8a519a7aaec82",
+  "observations": [
+    {
+      "after": 1,
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 9,
+      "interpreterSha256": "6235d84f7020b7dcf3dd3b035afcc277955353f7c463f9283fba26f06da2a098",
+      "php": "8.2.35",
+      "result": 42,
+      "stageCalls": 1,
+      "visits": 0
+    },
+    {
+      "after": 1,
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 9,
+      "interpreterSha256": "12989a0efe078564045ed6e38232bb6cea04064db1d31ee2f4d99985daabfc66",
+      "php": "8.5.10",
+      "result": 42,
+      "stageCalls": 1,
+      "visits": 0
+    }
+  ],
+  "receiptSha256": "2b64f136304c44b57ee05e534ee5677d319cbe5a90a4fa65ad5c47d7f28d2b87",
+  "reviewedSourceSha256": "06e3bca440b81160b0c06e47c953e2e26cd438766e1ce1b50e8273bac4226aae",
+  "route": "reviewed",
+  "sources": {
+    "tariff-fields.php": "837b3f339d3372c6259b6c96bfe67b9eedbc08c898ce04157513e87e0a9d0969",
+    "tariff-observer.php": "799b17061f11ab5589c07c9b689e6c76b3e33bf6604cb396d80ba3e1a71e8765"
+  }
+}

@@ -112,6 +112,96 @@ export const ownedAggregateReviewedIr = () => {
 	return ir;
 };
 
+/**
+ * Independently state the stored-closure interface, without reading the ordinary build.
+ *
+ * @param options - Optional declarations for a selected consumer fixture.
+ * @param options.exchange - Include the callback that exchanges function-bearing records.
+ * @param options.staged - Include two equal Lean types with different callback call boundaries.
+ * @param options.mixed - Include a mixed record and a two-record export.
+ * @param options.incoming - Pass a captured Lean function directly into the host callback.
+ * @param options.hostFunctions - Forward a caller's function through an export or a second callback.
+ * @param options.ticketExchange - Let a callback replace a borrowed Ticket with a different Ticket.
+ */
+export const leasedClosureFieldReviewedIr = ({ exchange = false, staged = false, mixed = false, incoming = false, hostFunctions = false, ticketExchange = false } = {}) => {
+	const ir = ownedAggregateReviewedIr();
+	ir.component = { id: "tariff-quotes@1.0.0", name: "tariff-quotes", version: "1.0.0" };
+	ir.aggregatePolicy = { ...policy(), closureFields: ["Owned.Tariff.quote"] };
+	const scalar = primitive("uint32"), tariff = named("Tariff"), ticket = named("Ticket");
+	const callbackName = `Callback${sha256(canonicalJson({ parameters: [scalar], result: scalar })).slice(0, 20)}`;
+	const callback = { kind: "named", id: `bridge:${callbackName}` };
+	const site = (type, result = false) => ({ type
+		, ownership: type === scalar ? "copy" : result ? "lease" : "borrow"
+		, lifetime: type === scalar ? null : { scope: result ? "explicit" : "call", anchor: null } });
+	const parameter = (type, index) => ({ ...site(type), name: `arg${index}`, mutability: "immutable", optional: false, default: null });
+	const callable = ir.types.find(type => type.kind === "callback").callable;
+	ir.types = [
+		ir.types.find(type => type.id === ticket.id)
+		, definition("Tariff", "record", "owned", { fields: [field("quote", callback)] })
+		, { ...definition(callbackName, "callback", "identity")
+			, id: callback.id, source: source(callbackName)
+			, callable: { ...callable, parameters: [parameter(scalar, 0)], result: site(scalar, true) } }
+	];
+	const template = ir.declarations.find(decl => decl.name === "newTicket");
+	const signature = (parameters, result) => {
+		const name = `Callback${sha256(canonicalJson({ parameters, result })).slice(0, 20)}`;
+		const ref = { kind: "named", id: `bridge:${name}` };
+		ir.types.push({ ...definition(name, "callback", "identity")
+			, id: ref.id, source: source(name)
+			, callable: { ...callable, parameters: parameters.map(parameter), result: site(result, true) } });
+		return ref;
+	};
+	const transform = exchange && signature([tariff], tariff);
+	const card=named("PriceCard");
+	if(mixed)
+	{
+		ir.types.push(definition("PriceCard","record","owned",{fields: [
+			field("quote",callback)
+			, field("rebate",callback)
+			, field("label",primitive("string"))
+			, field("base",scalar)
+		]}));
+		ir.aggregatePolicy.closureFields.push("Owned.PriceCard.quote","Owned.PriceCard.rebate");
+	}
+	const choose = staged && signature([scalar], callback), flat = staged && signature([scalar, scalar], scalar);
+	const visit = (incoming || hostFunctions) && signature([callback, scalar], scalar);
+	const replaceTicket = ticketExchange && signature([ticket],ticket);
+	ir.declarations = [
+		["newTicket", [scalar], ticket], ["makeTariff", [scalar], tariff]
+		, ["applyTariff", [tariff, scalar], scalar], ["echoTariff", [tariff], tariff]
+		, ["unpackQuote", [tariff], callback], ["packQuote", [callback], tariff]
+		, ...exchange ? [["exchangeTariff", [transform, scalar, scalar], scalar]] : []
+		, ...mixed ? [["compareCards", [card, card], scalar]] : []
+		, ...incoming ? [["visitQuote", [scalar, visit, scalar], scalar]] : []
+		, ...hostFunctions ? [["passApplicationQuote",[callback],callback]
+			, ["visitApplicationQuote",[callback,visit,scalar],scalar]] : []
+		, ...ticketExchange ? [["ticketSerial",[ticket],scalar],["exchangeTicket",[ticket,replaceTicket],scalar]] : []
+		, ...staged ? [["stagedQuote", [choose, scalar, scalar], scalar], ["flatQuote", [flat, scalar, scalar], scalar]] : []
+	].map(([name, inputs, output]) => {
+		const canInvoke = inputs.some(input => [tariff, callback, transform, choose, flat, card, visit, replaceTicket].includes(input));
+		return { ...template, name, id: `lean:Owned.${name}`
+			, overloadKey: `Owned.${name}`, source: source(`Owned.${name}`)
+			, parameters: inputs.map(parameter), result: site(output, true)
+			, effects: [...canInvoke ? ["reads-resource", "host-call", "fails"] : inputs.includes(ticket) ? ["reads-resource"] : [], ...output === scalar ? [] : ["allocates"]]
+			, failure: canInvoke ? callable.failure : template.failure };
+	});
+	return ir;
+};
+
+/** Two arguments, each with two distinct callable slots plus text and a scalar. */
+export const mixedFunctionFieldsIr = () => {
+	const ir = leasedClosureFieldReviewedIr({exchange: true});
+	const row = ir.types.find(n => n.name === "Tariff");
+	const fn = ir.declarations.find(f => f.name === "applyTariff");
+	const field = (name,type) => ({...row.fields[0],name,type});
+	row.fields.push(field("rebate",row.fields[0].type)
+		, field("label",{kind: "primitive",name: "string"})
+		, field("base",{kind: "primitive",name: "uint32"}));
+	ir.aggregatePolicy.closureFields.push("Owned.Tariff.rebate");
+	fn.parameters[1] = {...fn.parameters[0],name: "other"};
+	return ir;
+};
+
 /** Add one per-use checked Subtype decision inside an owned aggregate. */
 export const ownedSubtypeReviewedIr = () => {
 	const ir = ownedAggregateReviewedIr();

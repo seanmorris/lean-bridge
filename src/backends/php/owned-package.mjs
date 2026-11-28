@@ -53,7 +53,12 @@ export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs
 	if(["gmp", "leanshared", "lean_bridge_native"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned PHP component name collides with a dependency or exceeds its name limit");
 	const contract = { schemaVersion: callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+		, ...model.hostRecords.views.size ? {hostInputRecords: [...model.hostRecords.views].map(([type,v]) => ({
+			type,input: v.name,lifetime: "call"
+			, fields: v.fields.filter(f => f.host).map(f => f.publicName)
+		}))} : {}
 		, language: "php-8.2-nts-cli"
+		, ...model.c.callbackArgumentViews ? { callbackArgumentIdentity: "canonical-while-live" } : {}
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
@@ -152,7 +157,7 @@ same generated validation without scalar coercion.
 ${hostCallbacks ? "Resource and returned Lean closure wrappers" : "Resource wrappers"} support close() and retain(). Close
 them in a finally block. Destruction provides fallback cleanup. Calls from
 Fibers reject; cleanup deferred by Fiber destruction runs in the main context.
-Resource identities cannot be cloned or serialized.
+Resource identities cannot be cloned or serialized.${model.c.callbackArgumentViews ? " A callback may receive a borrowed Lean function. Use sameIdentity() while both functions are live. After the callback returns or throws, the borrow refuses calls and comparisons even if a separately retained lease stays live." : ""}
 
 ${receivers.length ? `Methods use camelCase names; properties use read-only PHP property syntax.
 Resources and named aggregates have nominal owners such as TicketValue and
@@ -244,6 +249,8 @@ and invalid calls reject before loading native code.
 		, ...model.types.flatMap(node => node.ownerType ? [node.ownerType] : [])
 		, ...model.types.filter(node => node.identity || node.kind === "variant").map(node => node.publicType)
 		, ...model.records.map(record => record.name)
+		, ...[...model.hostRecords.views.values()].map(v => v.name)
+		, ...model.hostRecords.functions.map(fn => fn.publicName)
 		, ...model.functions.map(fn => fn.publicName)].map(name => `${namespace}\\${name}`);
 	files["binding-manifest.json"] = canonicalJson({ schemaVersion: callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : 1
 		, generator: { id: "lean-wasm/php-owned", version: 1 }

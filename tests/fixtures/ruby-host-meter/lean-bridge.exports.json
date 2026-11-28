@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "hostImports": "lean-bridge.hosts.json",
+  "modules": ["Workshop"],
+  "exports": ["Workshop.make", "Workshop.read", "Workshop.update", "Workshop.identity", "Workshop.mapped"],
+  "targets": { "rubygems": { "name": "workshop", "version": "1.0.0" } }
+}

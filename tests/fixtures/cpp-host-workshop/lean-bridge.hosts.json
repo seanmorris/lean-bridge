@@ -1,0 +1,567 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "meter-host@1.0.0",
+    "name": "meter-host",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Read the current unsigned 32-bit value."
+      },
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.read",
+      "kind": "method",
+      "mutability": "read",
+      "name": "read",
+      "overloadKey": "Box.read()",
+      "owner": "host:meter.Box",
+      "parameters": [],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "read",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.read",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Construct a box."
+      },
+      "effects": [
+        "allocates",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.create",
+      "kind": "constructor",
+      "mutability": "immutable",
+      "name": "create",
+      "overloadKey": "Box.create",
+      "owner": "host:meter.Box",
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "uint32"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.create",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Read the level."
+      },
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.getLevel",
+      "kind": "property",
+      "mutability": "read",
+      "name": "level",
+      "overloadKey": "Box.getLevel",
+      "owner": "host:meter.Box",
+      "parameters": [],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "read",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.getLevel",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Set the level."
+      },
+      "effects": [
+        "writes-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.setLevel",
+      "kind": "property",
+      "mutability": "write",
+      "name": "level",
+      "overloadKey": "Box.setLevel",
+      "owner": "host:meter.Box",
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "uint32"
+          }
+        }
+      ],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "write",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "unit"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.setLevel",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Return the same host object."
+      },
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.identity",
+      "kind": "method",
+      "mutability": "read",
+      "name": "identity",
+      "overloadKey": "Box.identity",
+      "owner": "host:meter.Box",
+      "parameters": [],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "read",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.identity",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call the application's echoText member."
+      },
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.echoText",
+      "kind": "method",
+      "mutability": "read",
+      "name": "echoText",
+      "overloadKey": "Box.echoText",
+      "owner": "host:meter.Box",
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "string"
+          }
+        }
+      ],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "read",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "string"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.echoText",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call the application's echoBytes member."
+      },
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.echoBytes",
+      "kind": "method",
+      "mutability": "read",
+      "name": "echoBytes",
+      "overloadKey": "Box.echoBytes",
+      "owner": "host:meter.Box",
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "bytes"
+          }
+        }
+      ],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "read",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "bytes"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.echoBytes",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call the application's shift member."
+      },
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "errors": [
+          "error:host"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "host:meter.Box.shift",
+      "kind": "method",
+      "mutability": "read",
+      "name": "shift",
+      "overloadKey": "Box.shift",
+      "owner": "host:meter.Box",
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "int"
+          }
+        }
+      ],
+      "receiver": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "call"
+        },
+        "mutability": "read",
+        "ownership": "borrow",
+        "type": {
+          "id": "host:meter.Box",
+          "kind": "named"
+        }
+      },
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "int"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Box.shift",
+        "extensions": {},
+        "producer": "host"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Members supplied by an application-owned C++ meter."
+  },
+  "errors": [
+    {
+      "category": "domain",
+      "documentation": {
+        "details": "",
+        "summary": "The C++ member threw an exception."
+      },
+      "id": "error:host",
+      "name": "HostError",
+      "payload": null
+    }
+  ],
+  "producers": [
+    {
+      "adapter": "application",
+      "adapterVersion": 1,
+      "extensions": {},
+      "id": "host",
+      "tool": "Meter host contract",
+      "toolVersion": "1.0.0"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "An application-owned C++ object with a read method."
+      },
+      "fields": [],
+      "host": {
+        "dynamic": false,
+        "identity": "weak-canonical",
+        "targets": [
+          "cpp"
+        ]
+      },
+      "id": "host:meter.Box",
+      "kind": "resource",
+      "mutability": "write",
+      "name": "Box",
+      "representation": "identity",
+      "resource": {
+        "cycles": "explicit-cut",
+        "disposal": "required",
+        "fallback": "queued-finalizer",
+        "kindId": "resource:meter.Box"
+      },
+      "source": {
+        "declaration": "Box",
+        "extensions": {},
+        "producer": "host"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

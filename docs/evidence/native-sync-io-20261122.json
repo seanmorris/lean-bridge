@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-standalone-native-io-acceptance",
+  "node": 1222,
+  "platform": "Linux x86-64, glibc 2.36",
+  "toolchains": {
+    "lean": "4.32.2",
+    "c": "GCC 12.2.0",
+    "python": "CPython 3.11.16",
+    "sharedRuntimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+  },
+  "acceptanceSha256": "6e2934ea142bd87540f445db510de03635e37021862b9f844e8ad8a5cdec4fcd",
+  "sourceFixture": "tests/fixtures/native-sync-io",
+  "consumers": "tests/fixtures/native-sync-io-clients",
+  "checks": [
+    "Ordinary and reviewed packages expose the same six immediate-value declarations and one compiler-discovered filesystem capability; no selected task, iterator or host import.",
+    "Both clients demonstrate ordered BaseIO reference mutation, real filesystem IO, invalid-input refusal, a subsequent successful call, and four combinations of returned versus thrown structured Except values. The owned UTF-8 payload survives disposal of the Lean result.",
+    "A cold invalid argument does not run the component initializer. A valid call runs it once and the broker's live identity count returns to baseline. C exports no start/poll for the checked entry. Python imports no asyncio, takes no binding context, and refuses worker-thread and post-initialization fork calls without poisoning the parent.",
+    "The C executable uses the relocated archive and pkg-config with the build tree removed. CPython installs offline from the handoff's two wheels. Neither deployed caller has Lean tools on PATH."
+  ],
+  "boundary": "These two synchronous profiles do not add structured transport for the internal IO.Error constructors; ordinary IO carries a message (plus the declaration in Python), while EIO retains its declared payload. The shared native runtime still performs its normal startup. No adapter-created task or host event loop delivers these calls. These receipts do not cover other targets or close VO #1222.",
+  "controls": [
+    "With freshly compiled source, omitting the required filesystem grant, selecting only a pure companion, or returning an unselected Task each fails for its own diagnostic before a handoff exists.",
+    "An in-memory BaseIO/EIO selection builds with nativeEffects: [] and no capability in the IR even when the module defines unrelated file IO.",
+    "The existing host-object-installed regression also built and pip-installed two components with the same shared runtime. Both routes retained their 19 scalar/typed-result conversions, original exceptions, reentry and cleanup. This is a mixed-profile regression, not additional standalone-target evidence."
+  ],
+  "reproduce": {
+    "build": "LEAN_BRIDGE_NATIVE_SYNC_TEST=1 LEAN_BRIDGE_NATIVE_SYNC_EVIDENCE=/absolute/path/to/new-releases node --test --test-concurrency=1 tests/helpers/native-sync-io.mjs",
+    "replay": "LEAN_BRIDGE_NATIVE_SYNC_REPLAY=/absolute/path/to/original-releases LEAN_BRIDGE_NATIVE_SYNC_EXPECTED=docs/evidence/native-sync-io-20261122.json node --test --test-concurrency=1 tests/helpers/native-sync-io.mjs",
+    "mixedProfileRegression": "LEAN_BRIDGE_HOST_OBJECT_TEST=1 LEAN_BRIDGE_HOST_PYTHON=/absolute/path/to/python3 node --test --test-concurrency=1 tests/helpers/host-object-installed.mjs",
+    "tools": "For builds, point LEAN_BRIDGE_LEAN_PREFIX and LEAN_BRIDGE_PYTHON at the pinned toolchains and provide a C compiler, CMake, pkg-config and CPython headers. Installed replay only needs the consumer tools and the original handoffs."
+  },
+  "routes": [
+    {
+      "archives": [
+        {
+          "bytes": 51316110,
+          "path": "archives/journal-1.0.0-c.tar.gz",
+          "sha256": "42464a20f9fb7398926fcaacffb7ab896a2d9060e401cded75f61784129bc45e"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "15bbb0c9f1a7a7a1b1d407f3eb3e691a3acb794e53fdf736efc39859645b2969",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-c-io-v1",
+      "receiptSha256": "3e8330409285ed500debda7c5ce8f08293ab44713910301b9094e087e4dfc6cb",
+      "route": "ordinary",
+      "sourceTreeSha256": "b92c422740344a737b2b0dfcc757b0dfcfdd3d251e06cef6520a2aaa96b26407",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51316146,
+          "path": "archives/journal-1.0.0-c.tar.gz",
+          "sha256": "530be144b6c9276d337194953e0e117890fb284801bf6dd10f2ceaec254d5cd2"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "15bbb0c9f1a7a7a1b1d407f3eb3e691a3acb794e53fdf736efc39859645b2969",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-c-io-v1",
+      "receiptSha256": "8d832c2797c10fe49f3dc72eb70989149a9478ddc244fa1a2c65f7f1ad4d28d6",
+      "route": "reviewed",
+      "sourceTreeSha256": "05f3a9e4bec130fe0d52a82ff8a4aa5f0d472c3fb6f32750beb9e89cd98509c1",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 19708,
+          "path": "archives/lean_journal-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "c1bc7b08828bb1331c860e94a18f12899ca67618b6727ce1b179e658c2af8900"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "24e2400c59d7f1f9f0b1f22f74a087a75369796f6aab57c8f7f005a4b81a9d0b",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-python-io-v1",
+      "receiptSha256": "d91f6c2a88b69cb0366d530cea7ae3054533e87853f4eaa231c01f61c6eabe7f",
+      "route": "ordinary",
+      "sourceTreeSha256": "b92c422740344a737b2b0dfcc757b0dfcfdd3d251e06cef6520a2aaa96b26407",
+      "target": "pypi"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 19755,
+          "path": "archives/lean_journal-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "c06b09ce042e6ba7ad6a6cd25862f593669bb9b43d677f73dc19276d8d08e6dd"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "24e2400c59d7f1f9f0b1f22f74a087a75369796f6aab57c8f7f005a4b81a9d0b",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-python-io-v1",
+      "receiptSha256": "e47dd1e71c6b93c70efe223db38eaa3a8dc3f9ac07c227b6067bdda1e68a54d8",
+      "route": "reviewed",
+      "sourceTreeSha256": "05f3a9e4bec130fe0d52a82ff8a4aa5f0d472c3fb6f32750beb9e89cd98509c1",
+      "target": "pypi"
+    }
+  ]
+}

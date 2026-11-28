@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "tariff-quotes@1.0.0",
+    "name": "tariff-quotes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53864142,
+          "path": "archives/tariff-quotes-1.0.0-cpp.tar.gz",
+          "sha256": "6d01217c46ad8c3f01ba58275fe038d69ee063199dc176984ff717ac75c906a8"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "tariff-quotes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e4be10f7e9fa7749304fd26b26247d0f5dc7c33debe3e55e1d52f82acc165533",
+      "id": "native-library-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "f261d1f250d642cc4f4f5f7aca619fab5c9fb14224befdbf2d5751576336d333"
+  }
+}

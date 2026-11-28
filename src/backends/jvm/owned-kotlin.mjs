@@ -38,6 +38,7 @@ export const generateOwnedKotlinValues = (ir, options = {}) => {
 	const anchors = [...model.c.functions, ...model.c.callbacks].some(fn => fn.anchor !== undefined);
 	const callbackReplies = Boolean(model.c.hostArgument) && model.c.callbacks.some(fn => fn.anchor !== undefined);
 	const wholeOwners = anchors || model.c.functions.some(fn => fn.receiver === 0);
+	const {canonicalEquality} = model;
 	const nodes = new Map(model.types.map(node => [node.id, node])), names = new Map();
 	const type = id => {
 		if(names.has(id)) return names.get(id);
@@ -168,11 +169,11 @@ ${equality}
 class ${name} private constructor(
 ${node.ownerType ? "    private val bindings: _OwnedBindings,\n" : ""}\
     handle: _OwnedRuntime.Handle,
-    private val retainValue: (_OwnedRuntime.Handle) -> ${name}${callback ? invocations.map((invocation, index) => `,\n    private val invocation${invocation.suffix}: ${functionTypes[index]}`).join("") : ""}${anchors ? ",\n    equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>" : ""}${rawFunction ? `,\n    private val rawInvocation: ${rawFunction}` : ""}
-) : _OwnedKotlinValue(handle${anchors ? ", equal" : ""}) {
+    private val retainValue: (_OwnedRuntime.Handle) -> ${name}${callback ? invocations.map((invocation, index) => `,\n    private val invocation${invocation.suffix}: ${functionTypes[index]}`).join("") : ""}${canonicalEquality ? ",\n    equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>" : ""}${rawFunction ? `,\n    private val rawInvocation: ${rawFunction}` : ""}
+) : _OwnedKotlinValue(handle${canonicalEquality ? ", equal" : ""}) {
     fun retain(): ${name} = try { retainValue(handle) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }
-${anchors ? `    fun sameIdentity(other: ${name}): kotlin.Boolean = equals(other)\n` : ""}\
+${canonicalEquality ? `    fun sameIdentity(other: ${name}): kotlin.Boolean = equals(other)\n` : ""}\
 ${callback ? `${invocations.map(invocation => `    fun invoke(${invocation.parameters.map((type, index) => `arg${index}: ${type}`).join(", ")}): ${publicReturn} = try { invocation${invocation.suffix}(${invocation.parameters.map((_, i) => `arg${i}`).join(", ")}) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }`).join("\n")}
 ${callback.anchor === undefined ? `    fun asCallback(): ${quoted(`${namespace}.${node.delegateType}`)} =
@@ -182,8 +183,8 @@ ${callback.anchor === undefined ? `    fun asCallback(): ${quoted(`${namespace}.
         @kotlin.jvm.JvmSynthetic internal fun create(
 ${node.ownerType ? "            bindings: _OwnedBindings,\n" : ""}\
             handle: _OwnedRuntime.Handle,
-            retain: (_OwnedRuntime.Handle) -> ${name}${callback ? invocations.map((invocation, index) => `,\n            invoke${invocation.suffix}: ${functionTypes[index]}`).join("") : ""}${anchors ? ",\n            equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>" : ""}${rawFunction ? `,\n            invokeRaw: ${rawFunction}` : ""}
-        ): ${name} = ${name}(${node.ownerType ? "bindings, " : ""}handle, retain${callback ? invocations.map(invocation => `, invoke${invocation.suffix}`).join("") : ""}${anchors ? ", equal" : ""}${rawFunction ? ", invokeRaw" : ""})
+            retain: (_OwnedRuntime.Handle) -> ${name}${callback ? invocations.map((invocation, index) => `,\n            invoke${invocation.suffix}: ${functionTypes[index]}`).join("") : ""}${canonicalEquality ? ",\n            equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>" : ""}${rawFunction ? `,\n            invokeRaw: ${rawFunction}` : ""}
+        ): ${name} = ${name}(${node.ownerType ? "bindings, " : ""}handle, retain${callback ? invocations.map(invocation => `, invoke${invocation.suffix}`).join("") : ""}${canonicalEquality ? ", equal" : ""}${rawFunction ? ", invokeRaw" : ""})
     }
 }
 `;
@@ -204,13 +205,13 @@ fun interface ${quoted(callback.delegateType)} {
 
 /** Shared lifetime behavior. Construction and handle access remain package-private. */
 public abstract class _OwnedKotlinValue implements AutoCloseable, _OwnedValue {
-    final _OwnedRuntime.Handle handle;${anchors ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
-    _OwnedKotlinValue(_OwnedRuntime.Handle handle${anchors ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}) {
-        this.handle = java.util.Objects.requireNonNull(handle);${anchors ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}
+    final _OwnedRuntime.Handle handle;${canonicalEquality ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
+    _OwnedKotlinValue(_OwnedRuntime.Handle handle${canonicalEquality ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}) {
+        this.handle = java.util.Objects.requireNonNull(handle);${canonicalEquality ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}
     }
     public final boolean isClosed() { return handle.isClosed(); }
     @Override public final void close() { handle.close(); }
-${anchors ? `    @Override public final boolean equals(Object other) {
+${canonicalEquality ? `    @Override public final boolean equals(Object other) {
         try {
             handle.raw(handle.lease.state);
             return other != null && getClass() == other.getClass() && equal.test(handle, ((_OwnedKotlinValue)other).handle);
@@ -224,7 +225,7 @@ ${anchors ? `    @Override public final boolean equals(Object other) {
 	internalFiles.push(`${java}/_OwnedKotlinValue.java`);
 	let ownedEquality = jvmGraphEquality(model.records, namespace, { className: "_KotlinOwnedValues", compoundsNamespace: namespace, accessors: true })
 		.replace("if (value == null || value instanceof Unit", "if (value instanceof _OwnedValue || value == null || value instanceof Unit");
-	if(anchors) ownedEquality = ownedEquality.replace("else equal &= java.util.Objects.equals(x.value(), y.value());", "else if (x.value() instanceof _OwnedValue resource) equal &= resource.equals(y.value());\n            else equal &= java.util.Objects.equals(x.value(), y.value());");
+	if(canonicalEquality) ownedEquality = ownedEquality.replace("else equal &= java.util.Objects.equals(x.value(), y.value());", "else if (x.value() instanceof _OwnedValue resource) equal &= resource.equals(y.value());\n            else equal &= java.util.Objects.equals(x.value(), y.value());");
 	files[`${java}/_KotlinOwnedValues.java`] = `package ${model.namespace};\n\n${ownedEquality}`;
 	files[`${java}/_KotlinOwnedTypes.java`] = kotlinOwnedDescriptors(model);
 	files[`${kotlin}/_KotlinOwnedValueOps.kt`] = `package ${quoted(model.namespace)}

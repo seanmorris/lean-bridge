@@ -34,7 +34,7 @@ export const compileOwnedRubyLayout = (ir, options = {}) => {
 		for(const field of members)
 		{
 			const child = table.get(field.type);
-			const boundary = field.pointer ? 8 : child.alignment, width = field.pointer ? 8 : child.size;
+			const boundary = field.pointer || field.host ? 8 : child.alignment, width = field.pointer ? 8 : field.host ? 32 : child.size;
 			if(!boundary || !width) throw new TypeError("Owned Ruby has an unresolved inline dependency");
 			field.offset = align(size, boundary); size = field.offset + width;
 			alignment = Math.max(alignment, boundary);
@@ -64,6 +64,7 @@ export const compileOwnedRubyLayout = (ir, options = {}) => {
 			const flagged = ["option", "result"].includes(node.kind);
 			if(flagged) node.flagOffset = 0;
 			Object.assign(node, fields(node.fields, flagged ? 1 : 0));
+			if(node.hostInput) Object.assign(node.hostInput, fields(node.hostInput.fields));
 		}
 	}
 	const callbackLayouts = (values.c.hostArgument ? values.c.callbacks : []).map(callback => ({

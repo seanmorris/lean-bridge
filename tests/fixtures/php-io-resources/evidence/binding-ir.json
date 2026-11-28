@@ -1,0 +1,311 @@
+{
+  "assurance": [],
+  "capabilities": [
+    {
+      "category": "runtime",
+      "documentation": {
+        "details": "",
+        "summary": "Read or change files, directories, or their metadata."
+      },
+      "id": "capability:native.filesystem",
+      "requirement": "required"
+    }
+  ],
+  "component": {
+    "id": "counter@1.0.0",
+    "name": "counter",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Synchronous IO entry Counter.bump."
+      },
+      "effects": [
+        "allocates",
+        "fails",
+        "nondeterministic",
+        "reads-resource",
+        "writes-resource"
+      ],
+      "failure": {
+        "errors": [
+          "error:IO.Error"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Counter.bump",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "bump",
+      "overloadKey": "Counter.bump",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "write",
+          "name": "t",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "lean:Shared.Ticket",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "lean:Shared.Ticket",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Counter.bump",
+        "extensions": {
+          "lean-bridge.dev/host-members": [],
+          "lean-lang.org/effect": "IO"
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [
+        "capability:native.filesystem"
+      ],
+      "documentation": {
+        "details": "",
+        "summary": "Synchronous IO entry Counter.issue."
+      },
+      "effects": [
+        "allocates",
+        "fails",
+        "nondeterministic"
+      ],
+      "failure": {
+        "errors": [
+          "error:IO.Error"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Counter.issue",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "issue",
+      "overloadKey": "Counter.issue",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "n",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "uint32"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "lean:Shared.Ticket",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Counter.issue",
+        "extensions": {
+          "lean-bridge.dev/host-members": [],
+          "lean-bridge.dev/native-effects-v1": {
+            "call": [
+              "capability:native.filesystem"
+            ]
+          },
+          "lean-lang.org/effect": "IO"
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Synchronous IO entry Counter.readBadge."
+      },
+      "effects": [
+        "fails",
+        "nondeterministic",
+        "reads-resource",
+        "writes-resource"
+      ],
+      "failure": {
+        "errors": [
+          "error:IO.Error"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:Counter.readBadge",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "read_badge",
+      "overloadKey": "Counter.readBadge",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "write",
+          "name": "b",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "lean:Shared.Badge",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "Counter.readBadge",
+        "extensions": {
+          "lean-bridge.dev/host-members": [],
+          "lean-lang.org/effect": "IO"
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Compiled synchronous IO API for counter."
+  },
+  "errors": [
+    {
+      "category": "domain",
+      "documentation": {
+        "details": "",
+        "summary": "A synchronous Lean IO failure."
+      },
+      "id": "error:IO.Error",
+      "name": "IOError",
+      "payload": null
+    }
+  ],
+  "producers": [
+    {
+      "adapter": "lean-bridge-host-exports",
+      "adapterVersion": 1,
+      "extensions": {},
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "An independently disposable lease of Shared.Badge."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:Shared.Badge",
+      "kind": "resource",
+      "mutability": "write",
+      "name": "Badge",
+      "representation": "identity",
+      "resource": {
+        "cycles": "explicit-cut",
+        "disposal": "required",
+        "fallback": "none",
+        "kindId": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61"
+      },
+      "source": {
+        "declaration": "Shared.Badge",
+        "extensions": {
+          "lean-bridge.dev/resource-identity": "62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61"
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "An independently disposable lease of Shared.Ticket."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:Shared.Ticket",
+      "kind": "resource",
+      "mutability": "write",
+      "name": "Ticket",
+      "representation": "identity",
+      "resource": {
+        "cycles": "explicit-cut",
+        "disposal": "required",
+        "fallback": "none",
+        "kindId": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4"
+      },
+      "source": {
+        "declaration": "Shared.Ticket",
+        "extensions": {
+          "lean-bridge.dev/resource-identity": "3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4"
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

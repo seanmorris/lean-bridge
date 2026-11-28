@@ -1,0 +1,8 @@
+;; This separately built client imports the *same* resource type. Unlike the
+;; defining guest, it receives a borrowed table handle, not the guest's rep.
+(module
+  (import "cm32p2|@IFACE@" "retain-box" (func $retain (param i32) (result i32)))
+  (import "cm32p2|@IFACE@" "box_drop" (func $end-borrow (param i32)))
+  (func (export "cm32p2||relay-box") (param $borrowed i32) (result i32)
+    (call $retain (local.get $borrowed))
+    (call $end-borrow (local.get $borrowed))))

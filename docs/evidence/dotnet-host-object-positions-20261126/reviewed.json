@@ -1,0 +1,30 @@
+{
+  "clientSha256": "4bb58774589bdda1c793c23c2efd43741f536afe8d6326eb3f6fce337f127fd1",
+  "consumers": [
+    "ab: retired native drain: 1 -> 0",
+    "ab: worker identity, callbacks, errors, cursors, cancellation, binding isolation and shared retirement",
+    "ba: retired native drain: 1 -> 0",
+    "ba: worker identity, callbacks, errors, cursors, cancellation, binding isolation and shared retirement",
+    "owner shutdown cancelled outstanding work; both bindings survived"
+  ],
+  "packages": [
+    {
+      "archive": "b8d5b11b4519a4487a3c50e1270cfedb7a60eb828ca8a3aead735d87e261bd0e",
+      "receipt": "d291a2661d385b8030759b5ecccc92b81fdb153a51fd9b1738a444e865b27067",
+      "route": "reviewed"
+    },
+    {
+      "archive": "012d303141ac43957c485a28c826c0dfe9796f56b87690796b23ba5bb849408a",
+      "receipt": "017cb109af2f06e6240b615462e07689f7b110569deca1f5264d64873fd05f77",
+      "route": "peer"
+    }
+  ],
+  "positions": [
+    "parameter",
+    "result",
+    "callback-parameter",
+    "callback-result"
+  ],
+  "publicIrSha256": "8f6794cb191b952a2f573e511cd4e41f140c2db56e2dbac55db4b40cf29379d8",
+  "route": "reviewed"
+}

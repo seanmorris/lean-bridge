@@ -6,6 +6,21 @@ The [complete checked-record value-index matrix](checked-record-value-index-matr
 binds closed Bool, String, and Nat parameter/result acceptance to retained
 hosted packages across all 17 consumer profiles and both author routes.
 
+[PHP-authored Zend object workers](php-wasm-zend-author-20261124.md) records
+compiled ordinary and reviewed workers running on PHP-Wasm in Node and Chromium.
+The [synchronous Zend member checks](php-wasm-zend-members-20261124.md)
+exercise PHP constructors, properties, overrides, exception identity, and trap handling.
+The [installed npm and Composer checks](php-wasm-zend-packages-20261124.md)
+run two independently built PHP class bindings and check disposal and interpreter isolation.
+
+The [Python worker contract check](python-worker-object-contract-20261124.md) distinguishes opaque Python objects on a Lean worker from Python methods, which execute only on the interpreter owner.
+
+The [Wasm guest callback and future check](wit-host-objects-20261125.md#the-wasm-caller-starts-the-lean-task) follows an application-owned box and exception through compiled Lean and back into an independently compiled Wasm caller.
+The [object stream check](wit-host-objects-20261125.md#a-wasm-reader-pulls-guest-owned-objects-from-a-lean-cursor) follows the same ownership across demand, a typed final error, cancellation, and shutdown with unread items.
+The [installed synchronous WIT check](wit-host-objects-20261125.md#run-the-installed-synchronous-object-package) runs ordinary and reviewed releases with independently compiled guests and counts destructor calls in the defining guest.
+The [async Wasm cursor reader](wit-host-objects-20261125.md#canonical-streams-read-by-an-async-guest) distinguishes a typed terminal error from EOF and cancels a real parked Lean pull without stalling another reader.
+The [stream-to-callback application](wit-host-objects-20261125.md#a-stream-feeds-a-retained-callback) gets its original box back through a canonical future after the callback re-enters Lean and changes its value from 42 to 73.
+
 [Zero-payload checked records in C and C++](zero-payload-checked-record-native-20261021.md)
 record four hosted native package selections for proof-only `Witness`,
 Unit-bearing `Token`, plain empty `Marker`, Option, Array and variant values.

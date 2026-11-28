@@ -139,6 +139,360 @@ See the [installed library-isolation checks](../evidence/wit-host-isolation-2026
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
 
+### Run an async application with guest-owned objects
+
+If your receipt lists `native-wit-object-task-v1`, extract the whole archive. Build your object provider against the `owner` world in `wit/deps/objects.wit` and your application against the `application` world in `wit/`. Its `run: async func() -> s64` can await Lean futures, read streams, and call synchronous operations on the same objects.
+
+If the package includes a `registrations` world, build a third component for it. That component defines the application’s callback resources and can call back into the synchronous Lean API. For example:
+
+```sh
+./bin/workshop-run objects.wasm callbacks.wasm application.wasm
+```
+
+Without a callback provider, pass just `objects.wasm application.wasm`. For a package that exports only an object task, your application imports the object interface and the task interface; it needs no synchronous Lean functions. The archive README and launcher usage text give the input order. The launcher prints the signed result. There is no event loop for you to run and no SDK dependency on the deployment machine.
+
+In this launcher, malformed values in a synchronous call are boundary errors, not Lean `IO` or `EIO` results. For example, passing an `Int` with a trailing zero limb to `shift` stops the command with `invalid WIT argument or conversion limit: shift`. If the defining guest itself traps while releasing the staged argument, the command reports that trap instead.
+
+The same application can hold a byte-array future while awaiting an object future. The installed `wit/object-tasks.wit` gives each result type. An `own<box>` result retains the guest object's identity. A `list<u8>` value is a copy: you can reuse the input buffer as soon as the factory returns, even if the worker is still pending.
+
+### Use two worker packages in one application
+
+Set `WORKSHOP` and `GAUGE` to the extracted directories of two compatible `native-wit-object-task-v1` releases. Each contains `lib/lean-bridge-wit-async-peer.so` and a `bin/lean-bridge-wit-run` executable. Use the executable from either package:
+
+```sh
+"$WORKSHOP/bin/lean-bridge-wit-run" "$WORKSHOP" "$GAUGE" -- objects.wasm workshop-callbacks.wasm application.wasm
+```
+
+If both packages declare a callback interface, supply both providers. For
+example, with Gauge first:
+
+```sh
+"$GAUGE/bin/lean-bridge-wit-run" "$GAUGE" "$WORKSHOP" -- \
+  objects.wasm gauge-callbacks.wasm workshop-callbacks.wasm application.wasm
+```
+
+Each callback resource belongs to its defining provider. Canceling a Gauge
+reader does not revoke Workshop’s registration for the same object.
+
+After `--`, pass the shared object provider first, one callback provider for each package that needs one (in package argument order), and your application last. In the first command only Workshop needs a callback provider. Your application imports each package’s public WIT interfaces and exports one `run: async func() -> s64`. The runner services their futures and streams together. You don’t supply a scheduler.
+
+When building the application, put the defining `objects.wit` in your WIT dependencies **once**. Keep each release’s public interfaces in its own dependency directory. The [example application world](../../tests/fixtures/static-host-workers/async-peer-world.wit) includes Workshop’s application world and imports Gauge’s API and task interface. The original `box` type comes from the same defining instance on both sides.
+
+Use matching host contracts, runtime identities and worker-adapter versions. Install only trusted native packages. A synchronous-only object archive uses a [different runner protocol](#share-a-guest-owned-object-between-synchronous-packages); it cannot substitute for a worker package in this command.
+
+### Call synchronous IO
+
+If the receipt lists `native-wit-object-io-v1`, the application supplies the objects. Build one Wasm component for the `owner` world in `wit/deps/objects.wit`, and a separate component for the `application` world in `wit/`. The first component defines the resources and their methods. The second imports those same resource types and the compiled Lean API, and exports `run: func() -> s64`.
+
+For a package named `workshop`, extract the whole archive and run:
+
+```sh
+./bin/workshop-run objects.wasm application.wasm
+```
+
+The command prints the signed result of `run`. It loads its own adjacent libraries; the deployment machine needs neither the Wasmtime SDK nor Lean. An owned error resource can be inspected through its defining interface just like an owned success value. The `api.wit` result types specify which operations return an ordinary value and which can fail.
+
+If a Lean function captures one of your objects and returns a callable, the
+factory returns an **owned WIT resource**. For example, `remember(box)` produces
+a `remember-function`. Call its `invoke(other-box)` method to get an owned
+reference to the original box. Your component bindings manage the handle;
+there is no integer to pass around. Drop the function when finished, or call
+`close()` to revoke it while you still hold it. A later `invoke` then returns
+`err(closed)`; a failure inside a live function returns `err(failed(...))`.
+The [independent guest example](../../tests/fixtures/static-host-workers/installed-functions.wat.in)
+exercises both cases through the public WIT interface.
+
+The following instructions describe the separate package profile for synchronous IO **without** application-defined host objects.
+
+A `native-wit-io-v1` package uses the same extraction and `pkg-config` workflow
+as the ordinary package above. Calls run synchronously. A `BaseIO` export
+returns its WIT value directly. A fallible `IO` or `EIO` export returns a WIT
+`result`: the outer error is an `IO.Error` message or the declared `EIO` payload.
+If the function itself returns an `Except`, that value has a separate inner
+result. For example, `ok(err(37))` means Lean returned `Except.error 37`;
+`err(err(37))` means Lean threw `Except.error 37`. Neither case is a Wasmtime trap.
+
+The generated `*_wasmtime_call` checks arguments before entering Lean.
+Delete successful results with `wasmtime_component_val_delete`; they can
+outlive the session. A boundary error leaves the result slot unchanged and
+returns a `wasmtime_error_t *` to delete. A guest trap can occur **after** an
+effect already took place. The host retires an invalid shared runtime; do not
+retry the call automatically.
+
+If you own the Wasmtime store, use `*_wasmtime_link` to register the native
+imports and `*_wasmtime_call_instance` to invoke exports. Pass the store and
+its matching instance, and initialize `bool discard_store = true`. Dispose
+of the store if the call reports that it trapped. A raw Wasmtime call that
+bypasses this guard cannot run the native effect. The component uses its
+native host's OS permissions, not a standalone WASI filesystem.
+
+### Pull a synchronous sequence
+
+In the installed WIT, a synchronous factory returns its own cursor resource.
+For example, `sequence(1)` opens a cursor without asking Lean for an item.
+Call `next-sequence` with a borrow of that cursor: the first call yields
+`some(0)`, the second yields `none`. There is no poll handle or event loop.
+A fallible factory or pull returns a WIT `result`; a failure is not exhaustion.
+A yielded `Unit` is `some(unit)`, not `none`.
+
+Use your generated component bindings to drop the owner on early exit. In the
+supplied C embedding, call the package's `_wasmtime_drop` on the returned
+resource **before** deleting its C value. Wasmtime's value destructor alone
+frees the box, not the resource. Closing the session finalizes any remaining
+cursors. Keep each cursor in the store that opened it; wrong-kind and
+foreign-store pulls are rejected without advancing Lean. The [C consumer](../../tests/fixtures/wit-sync-io/cursor.c)
+shows both a private session and one attached to an application-owned store.
+
+### Share a guest-owned object between synchronous packages
+
+If the published interface includes a structure containing guest objects, use
+its WIT resource constructor and getters. For example, `pair` borrows the two
+boxes supplied to its constructor and keeps its own leases. Its byte and
+natural-number fields are copied. A box returned by `pair.spare()` is a new
+owner of the *same* guest box: you can drop the pair and pass the box to a
+second package that imports its defining interface. Drop the box when done.
+The [installed guest example](../evidence/wit-host-record-fields-20261126.md)
+exercises this sequence against the two archives below.
+
+Extract both verified `native-wit-object-io-v1` archives. Each must contain `lib/lean-bridge-wit-peer.so`. Use the `bin/lean-bridge-wit-run` supplied by either release. For example, Workshop can return a box, Gauge can change it, and Workshop can read the new value through the same box:
+
+```sh
+"$WORKSHOP/bin/lean-bridge-wit-run" "$WORKSHOP" "$GAUGE" -- objects.wasm application.wasm
+```
+
+Pass **installed directories**, not archives. Package order does not change resource identity. The runner accepts up to 16 distinct synchronous APIs with the same defining object contract and compatible runtimes. Load only trusted packages: their adapters contain native code. The two Wasm guests receive the public interfaces, not access to the native adapters.
+
+For the application build, place the shared `objects.wit` once in `wit/deps/`. Copy Workshop's `api.wit` and `application.wit` into `wit/deps/workshop/` and Gauge's `api.wit` into `wit/deps/gauge/`. Include their published worlds in `wit/world.wit`:
+
+```wit
+package example:meters;
+
+world meters {
+  include lean-bridge:workshop/application@1.0.0;
+  include lean-bridge:gauge/consumer@1.0.0;
+}
+```
+
+Workshop's application world already imports the defining guest and exports `run: func() -> s64`. Gauge contributes its public operations. Build with your usual component bindings, then check the resulting binary with `wasm-tools component targets wit --world meters application.wasm`. Deployment needs neither wasm-tools nor Lean. For futures and streams, use the [async package launcher](#run-an-async-application-with-guest-owned-objects).
+
+### Await a Lean task
+
+A release marked `native-wit-task-v1` bundles a Wasmtime component, its native Lean runtime, and a typed C header. Extract the archive and put its `lib/pkgconfig` directory on `PKG_CONFIG_PATH`. The following program calls `Meter.immediate` from the example package; it does not need Lean, an engine installation, or a Wasmtime value converter.
+
+```c
+#include <meter_wasmtime.h>
+
+int main(void) {
+    meter_wit_session *session = NULL;
+    meter_wit_task_immediate task = {0};
+    meter_wit_state state;
+    uint32_t answer = 0;
+    if (meter_wit_open(&session) != meter_wit_OK) return 1;
+    int ok = meter_wit_start_immediate(session, 41, &task) == meter_wit_OK
+          && meter_wit_await_immediate(session, task, &state, &answer) == meter_wit_OK
+          && state == meter_wit_READY && answer == 42;
+    meter_wit_close(&session);
+    return ok ? 0 : 1;
+}
+```
+
+Build with `cc main.c $(pkg-config --cflags --libs meter-wit) -o main`. Open and use the session on the process main thread. `await` blocks that thread; if another task or a UI needs to run there, use the generated `poll` function instead. A pending poll returns a descriptor to register with your event loop. Do not read or close it. When it becomes readable, poll the task again.
+
+Each task delivers at most one value. Cancel stops delivery and returns whether this request won; it need not stop the Lean worker immediately. Drop a task to free its slot, or close the session to release all outstanding tasks. A session has 256 resource slots, including completed tasks not yet dropped. Packages that pass Lean objects reserve space for delivery; a borrow temporarily uses a slot. If a start returns `LIMIT`, drop owners you no longer need before retrying. A copied task refers to the same resource; it becomes stale on drop and cannot be used in another session. Returned strings are independent of the task and session; dispose them with the generated `string_dispose` function.
+
+For a Lean `ByteArray`, pass a generated `byte_view`: a pointer to `const uint8_t` plus a byte count. You can reuse your input as soon as start returns. Initialize a returned `bytes` or a result containing bytes to `{0}`, read its `.data` and `.size`, then call its generated dispose function. The bytes remain yours if you drop the task or close the session. Use the state or result tag to distinguish an empty byte array from an error or the end of a cursor; never use `strlen`.
+
+The generated signature tells you where a failure can occur:
+
+| What Lean did | What the installed caller receives |
+| --- | --- |
+| An `IO` or `EIO` factory threw before returning a task | `start` returns `START_ERROR` and writes the message or typed error to its failure output. No task was created. |
+| A task returned `Except.error e` as its value | `await` returns `OK` with state `READY`. Its value has `ok == false` and contains `e` in its `error` field. |
+| A worker reported a declared terminal `IO.Error` | `await` or `poll` returns `OK` with state `FAILED` and writes the message to its failure output, leaving the value untouched. The next observation is `CLOSED`. |
+
+Zero-initialize outputs that can own strings. Dispose them with the generated function before reusing the slot. A declared failure does not retire the session. The [installed consumer](../../tests/fixtures/wit-task-package/effects.c) exercises all three cases.
+
+The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
+
+### Await a canonical future from a Wasm application
+
+If the release receipt says `native-wit-canonical-task-v1`, use the WIT world and launcher in the archive. This profile is for a Wasm guest; `native-wit-task-v1` above is for a host using the typed task-resource API.
+
+Check the worlds in `wit/application.wit`. If it declares a `callback-provider`
+world, follow the [two-component callback instructions](#use-a-guest-owned-callback-with-a-canonical-future).
+For a package that takes copied values, use one application component:
+
+1. Extract the whole archive. Use `wit/application.wit` as your guest’s world. Implement its `run: async func() -> s64` export and compile your application to a Component Model binary.
+2. Call the imported Lean functions by their WIT names. An infallible factory returns `future<T>`. An `IO` or `EIO` factory returns `result<future<T>, E>`: handle the error or await the future. Other tasks can complete while it is pending.
+3. Run the included executable. For the `latches` package:
+
+```sh
+./bin/latches-run /path/to/application.wasm
+```
+
+Read nested results from the outside in. For the [`phase` example](../../tests/fixtures/wit-task-package/effects.lean), the type is `result<future<result<u32, string>>, string>`. An outer error means **no task started**. An inner error means **the worker failed**. The two errors can carry exactly the same message. A Lean function that returns an ordinary `Except` instead gives you that tagged value; its error branch is not a runner failure.
+
+Cancel a pending **read** if you want to stop waiting but might read the same future later. Drop the **reader** if you no longer want its result. If the Lean task is still pending, the launcher releases it and asks its worker to cancel. A worker that ignores cancellation may still finish or perform a side effect; its late result cannot reach the discarded reader. The [installed example](../evidence/wit-canonical-async-20261124.md#drop-a-standalone-future-while-its-worker-is-parked) exercises all three cases.
+
+The command prints the signed 64-bit result of `run`. A trap or incompatible component exits nonzero. Keep `bin/` and `lib/` together when moving the package. You do not need Lean, a Wasmtime installation, or a custom host adapter. This is a Linux x86-64 runner, not a browser or standalone WASI command. See the [application and installed-package checks](../evidence/wit-canonical-async-20261124.md#run-a-prepared-wit-package).
+
+### Read a canonical stream from a Wasm application
+
+Lean `ByteArray` appears as `list<u8>` in a canonical world. Pass and receive bytes directly, including empty lists, NULs and non-UTF-8 data. Once a factory returns, you can reuse the input buffer: a pending future or stream retains its own bytes. In `stream<result<list<u8>, list<u8>>>`, the tag distinguishes a binary item from a binary step error. An empty item is not end-of-stream.
+
+Use the same `bin/<name>-run` launcher. Call the factory and check its outer result, if it has one. Opening a stream creates a cursor; it does not request the first item. Read with your guest’s Component Model stream API. The launcher calls Lean’s `next` on demand, with at most one outstanding pull per reader.
+
+For example, `feed` returns `result<stream<result<result<s64, string>, u16>>, u32>`:
+
+| Outcome | Meaning |
+| --- | --- |
+| Factory error (`u32`) | No stream was opened. |
+| Item (`result<s64, string>`) | Lean returned an ordinary item. Its string error variant does not end the stream. |
+| Step error (`u16`) | The cursor failed while advancing. This is the last element. |
+| End without an element | The cursor was exhausted normally. |
+
+When both the item and the terminal error can carry text, check the tags,
+not the message. In `stream<result<result<u32, string>, string>>`,
+`ok(err("boom"))` is an ordinary item: read again. `err("boom")` is the
+last element. The [installed guest](../../tests/fixtures/wit-cursor-io/application.wat)
+receives both from the same cursor.
+
+Cancel a pending **read** to stop waiting; you can read again later. Drop the **reader** to close the cursor on early exit and discard outstanding delivery. A read that already reached Lean may have started work; cancelling the read does not roll it back. The [installed stream checks](../evidence/wit-canonical-async-20261124.md#consume-a-compiled-pull-cursor-as-a-stream) exercise both cases.
+
+Dropping the reader also requests cancellation of a pending Lean pull.
+That request is cooperative: the cursor can close before the worker
+stops. A worker that ignores cancellation can finish a side effect, but
+its late item is not delivered. The [worker-side observations](../evidence/wit-canonical-async-20261124.md#observe-cancellation-inside-the-lean-worker)
+show both outcomes. Unlike a standalone future, a stream also runs the
+cursor's close operation when the reader is dropped.
+
+### Use a guest-owned callback with a canonical future
+
+If the extracted archive's `wit/application.wit` has both a
+`callback-provider` world and an `application` world, build two guest
+components. The provider owns the captured application state and implements
+the generated retain and invoke operations. The application gives a task a
+borrow of that callback and reads the returned future. Run them in this order:
+
+```sh
+./bin/budget-run provider.wasm application.wasm
+```
+
+You can drop your own callback reference as soon as the task starts. Starting
+two tasks with the same callback gives each its own allowance. Dropping one
+reader does not revoke the callback for the other task. When the result is an
+error, match the generated variant: `callback-already-invoked` has no payload;
+a guest or Lean error with that same message is a different case. The launcher
+handles dispatch on the Wasmtime store owner; the application does not poll a
+native descriptor or supply a scheduler.
+
+The [example provider](../../tests/fixtures/native-callback-budget/canonical-provider.wat)
+exports a constructor for its own captures; the [sibling-task application](../../tests/fixtures/native-callback-budget/canonical-siblings.wat)
+uses one registration for three tasks and drops the middle reader.
+
+### Give a task a host callback
+
+For a `ByteArray → IO ByteArray` callback, the argument is a borrowed `byte_view` valid during that invocation. You may return the argument or a subspan as the reply: the adapter copies it before releasing the argument. Do not retain its pointer. The [binary callback example](../../tests/fixtures/wit-pollable-bytes/consumer.c) also shows how a rejected factory callback differs from a rejected worker callback.
+
+[Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean) takes a Lean function of type `UInt32 → IO UInt32`. In the installed C package, register a function with that signature and pass its handle to the task. The function runs on the store's main thread, during `poll` or `await`. The Lean worker never calls into your C context from a worker thread.
+
+```c
+#include <meter_wasmtime.h>
+
+static bool add_one(void *context, uint32_t argument, uint32_t *reply,
+                    meter_wit_text *error) {
+    (void)context; (void)error;
+    *reply = argument + 1;
+    return true;
+}
+
+int main(void) {
+    meter_wit_session *session = NULL;
+    meter_wit_callback_uint32_to_uint32 fn = {0};
+    meter_wit_task_through task = {0};
+    meter_wit_through_errors errors = {0};
+    meter_wit_state state;
+    uint32_t value = 0;
+    if (meter_wit_open(&session) != meter_wit_OK) return 1;
+    int ok = meter_wit_make_callback_uint32_to_uint32(session, add_one, NULL, NULL, &fn) == meter_wit_OK
+          && meter_wit_start_through(session, false, false, fn, &task) == meter_wit_OK
+          && meter_wit_drop_callback_uint32_to_uint32(session, &fn) == meter_wit_OK
+          && meter_wit_await_through(session, task, &state, &value, &errors) == meter_wit_OK
+          && state == meter_wit_READY && value == 12;
+    meter_wit_through_errors_dispose(&errors);
+    meter_wit_close(&session);
+    return ok ? 0 : 1;
+}
+```
+
+Dropping your registration after start is safe: the task holds its own reference. To refuse **future invocations**, use `revoke_callback_…` instead. If you supply a context destructor, it runs after the last reference and after any active invocation returns. Registrations belong to one session. A callback may drive a different task on that session; waiting on its own task returns `BUSY`.
+
+To reject a call, set the error byte span and return `false`. The host copies text replies and errors before releasing the callback context; an input span can be returned directly. For a callback-bearing task, start returns the task before running the Lean factory. Observe `FACTORY_FAILED` for a Lean factory error, `FAILED` for a declared worker failure, or `FACTORY_CALLBACK_FAILED` / `WORKER_CALLBACK_FAILED` for a host rejection. A returned Lean `Except.error` is still a `READY` value. Inspect the state, not the message.
+
+If a pollable package declares a one-call callback, the second attempt does
+not enter your callback. Observe `CALLBACK_ALREADY_INVOKED`; it carries no
+error payload. The allowance is per parameter of each task, not per callback
+registration. Reusing the same registration in a new task starts a fresh
+allowance.
+
+### Pull an asynchronous sequence
+
+The [Meter example](../../tests/fixtures/wit-task-package/cursors.lean) exposes a feed that produces one item per request. Pass an open main-thread session to this function. It prints each integer, skips items that carry a text error, and drops the cursor on exit.
+
+```c
+#include <meter_wasmtime.h>
+#include <inttypes.h>
+#include <stdio.h>
+
+int print_feed(meter_wit_session *s, uint8_t mode, uint32_t limit) {
+    meter_wit_cursor_feed cursor = {0};
+    uint32_t start_error = 0;
+    meter_wit_status rc = meter_wit_open_feed(s, mode, limit, &cursor, &start_error);
+    if (rc == meter_wit_START_ERROR) fprintf(stderr, "open: %" PRIu32 "\n", start_error);
+    if (rc != meter_wit_OK) return 1;
+
+    int result = 1;
+    meter_wit_feed_value item = {0};
+    for (;;) {
+        meter_wit_state state;
+        uint16_t failure = 0;
+        rc = meter_wit_next_feed(s, cursor, &state, &item, &failure);
+        if (rc != meter_wit_OK) break;
+        if (state == meter_wit_END) { result = 0; break; }
+        if (state == meter_wit_FAILED) fprintf(stderr, "pull: %u\n", (unsigned)failure);
+        if (state != meter_wit_ITEM) break;
+        if (item.ok) printf("%" PRId64 "\n", item.value);
+        meter_wit_feed_value_dispose(&item);
+    }
+    return meter_wit_drop_feed(s, &cursor) == meter_wit_OK ? result : 1;
+}
+```
+
+`next` blocks the calling thread. In an event loop, call `request_feed`, then `poll_feed`. A `PENDING` observation supplies a borrowed readiness descriptor. When it becomes readable, poll again. Neither opening the cursor nor polling an idle cursor starts work. If a pull already owns the next delivery, another `request` or `next` returns `BUSY` without consuming it.
+
+If the Lean pull can throw an `IO.Error`, the generated native header adds
+`STEP_IO_FAILED`. This state delivers an owned error message, not an item
+or an end-of-stream signal. Read it once and dispose it with the package's
+`string_dispose`; the next request returns `FINISHED`. A domain-specific
+step failure uses `FAILED`, even if its payload is also a string. See the
+[native caller](../../tests/fixtures/wit-cursor-io/consumer.c) for both cases.
+
+`ITEM` can carry either arm of a returned Lean `Except`; you can request another item after either. `END` means the cursor was exhausted normally. After exhaustion or a terminal failure, another request returns `FINISHED`. Drop the cursor if you break early. Closing the session also releases pending and never-requested cursors. A borrowed descriptor expires on delivery, cancellation, drop or session close.
+
+An unexpected runtime failure wakes a parked `await` with `UNAVAILABLE`. Close the session to release its owners. A Lean worker that ignores cancellation can keep the runtime alive until that worker finishes; it cannot publish another item to the closed session.
+
+### Pass a Lean object between task packages
+
+If two packages use the same Lean resource declaration and runtime, their generated headers accept each other's values. For example, Depot issues a `depot_wit_lease_ticket`. Pass it directly to `peer_wit_start_bump` to update that Ticket in Peer. Depot will see the new count. The sessions remain separate; a task or cursor from one session cannot be polled in another.
+
+Put both packages' `lib/pkgconfig` directories on `PKG_CONFIG_PATH` and build the [two-package example](../../tests/fixtures/wit-task-package/leases.c) with `cc leases.c $(pkg-config --cflags --libs depot-wit peer-wit) -o leases`. The headers and shared libraries come from the releases. The consumer needs no Lean compiler or Wasmtime SDK.
+
+A task input is a borrow. Its result, an iterator item, and a typed failure can each hand back a separately owned Ticket. Initialize each output to zero; call `drop_lease_ticket` once for every owner you receive. To keep another owner, call `retain_lease_ticket`; assigning the C struct only copies the same lease. An owned Ticket outlives its session. `same_lease_ticket` compares object identity, not field values.
+
+Once `start` succeeds, you can drop your Ticket even if the worker is still waiting. Lean keeps the object it needs. Cancelling the task stops delivery to the caller; it does not undo mutations or guarantee that the worker has stopped. Closing the session invalidates its borrowed readiness descriptors.
+
+If the shared runtime retires, every package returns `UNAVAILABLE` for new work, even from a session that was idle when the failure occurred. A callback already on the stack can return, but its reply will not reach the worker. Drop the callback, task and Ticket owners you hold, then close their sessions. If a store trapped, close that session directly. Opening another session in the same process does not restart the runtime.
+
 ### Packages containing resources
 
 An ownership-aware package ships named C records, variants, sequences and opaque
@@ -1134,6 +1488,8 @@ Profiles: WIT/WASI. Installed checks apply only to the named positions and packa
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
+Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [typed task resources](#await-a-lean-task), [canonical futures](#await-a-canonical-future-from-a-wasm-application), [canonical streams](#read-a-canonical-stream-from-a-wasm-application), [native pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows do not describe these async profiles.
+
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 
 [Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.
@@ -1242,6 +1598,12 @@ wasm-tools validate --features component-model \
 - **An import cannot be resolved in another runtime:** use the packaged host, which supplies `lean-read-box` with the required type and native Lean implementation.
 
 ## Owned checked records
+
+A function field belongs to its result owner. Retain the function before
+releasing that owner if you need it later. A host callback supplied for one
+call does not acquire a longer lifetime just because Lean returns it inside
+a record. See the [installed Wasmtime example](../evidence/wit-function-fields-20261126.md)
+for the difference and the generated retain and release calls.
 
 [Hosted owned checked-record acceptance](../evidence/owned-checked-record-promotion-20261026-aligned.md) covers WIT/WASI on ordinary Lean-source and independently reviewed package routes. The tested forms are `Booking`, whose `Window` field is copied and checked, and `Claim`, whose `Ticket` resource stays owned while its quota is checked. Proof fields do not cross the boundary.
 

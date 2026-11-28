@@ -6,9 +6,9 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build an ordinary Lean project
 
-Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. Select `--target c --target cpp` to produce both archives from one native compilation. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
+Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. For pure exports, select `--target c --target cpp` to produce both archives from one native compilation. For standalone IO, tasks, or streams, select `cpp` alone. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
 
-The generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
+For pure exports, the generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
 
 Packages using `Nat` or `Int` include pinned Boost.Multiprecision and Boost.Config 1.90.0 headers and their Boost Software License. Builds and downstream installs need no Boost download. CMake and pkg-config supply `BOOST_MP_STANDALONE`; use the packaged include path and this same mode throughout your application. The package records dependency sources and file hashes in `share/lean-bridge/boost.json`.
 
@@ -34,6 +34,137 @@ name collisions fail before packaging. See
 C++ results own their data. Scoped input views keep nested buffers alive through the call. Generated wrappers free intermediate C results on success and exceptions, including allocation failures partway through a nested result. Invalid UTF-8 or an exceeded copy budget raises the generated `Error` with the underlying status and code. C++ allocation failures propagate as `std::bad_alloc`. The [type conversion table](../consume/cpp.md#type-conversions) records installed coverage by position.
 
 Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` to choose archive coordinates. The package includes the C API, native libraries, matching runtime, CMake and pkg-config metadata. C++ does not require a separately installed C package or Lean runtime.
+
+## Export synchronous IO
+
+Select your Lean functions in `exports`, [declare their native OS access](../lean/export-decisions.md#declare-native-os-access),
+and build with `--target cpp`. Use `nativeEffects: []` for in-memory state.
+The `native-cpp-io-v1` archive exposes ordinary C++20 functions. A package
+using copied values has no coroutine or dispatcher header. If it returns
+nominal resources, it includes the ownership support needed to share leases
+with task packages and handle off-thread destruction. See [calling synchronous IO](../consume/cpp.md#call-synchronous-io).
+
+For a synchronous C++ range, declare the factory, the immediate pull and
+the `BaseIO Unit` finalizer under `iterators`. Export the factory; the cursor
+type and helper declarations stay private. The C++ package includes the
+range and owner-thread cleanup support. Use `asyncIterators` for a pull
+that returns a real Lean task. See [the C++ range example](../consume/cpp.md#iterate-without-a-dispatcher).
+
+## Call C++ objects from Lean
+
+The [meter project](../../tests/fixtures/cpp-host-workshop/Workshop.lean)
+imports `LeanBridge.Host.Cpp` and calls real C++ methods. Its
+[host contract](../../tests/fixtures/cpp-host-workshop/lean-bridge.hosts.json)
+describes the nominal type, mutable property, methods, and ownership of
+their results. The [export configuration](../../tests/fixtures/cpp-host-workshop/lean-bridge.exports.json)
+selects that contract with `hostImports` and names the functions to publish.
+
+Build the package with `lean-bridge build --project . --target cpp --output release-cpp`.
+The `native-cpp-host-v1` archive includes a C++20 header, the compiled
+libraries, CMake and pkg-config metadata. Distribute the archive and its
+receipt. The consumer uses the actual class as a template argument: a
+constructor uses `std::make_shared`, a method calls the declared member, and
+a property calls its named getter or setter. See [the consumer example](../consume/cpp.md#pass-application-objects-to-lean).
+The archive records the producing libstdc++ ABI and its header checks
+compatibility at compile time. A plain `IO` entry does not return a future.
+A synchronous `IO` function can also take or return a flat public Lean
+structure with imported application objects and copied scalar fields. The
+generated binding provides a C++ value type with typed getters. The compiler
+checks the Lean constructor, projections, field order, and host identities on
+both the ordinary and reviewed routes. See the [C++ record example](../consume/cpp.md#keep-c-objects-in-a-lean-record).
+To return a task or cursor on the same binding, select it in `taskExports` or
+`asyncIterators`. The generated C++20 member returns a future or a pull stream
+and the archive includes the dispatcher headers. A Lean worker may carry an
+imported object; call its C++ operations in an owner-thread callback, not from
+the Lean worker thread. See [awaiting work on an application object](../consume/cpp.md#await-work-on-an-application-object).
+
+When a member returns a borrowed object, set its result ownership to
+`borrow` and name the owner: `{ "scope": "receiver", "anchor": "receiver" }`
+or `{ "scope": "parameter", "anchor": "dial" }` for an argument named
+`dial`. The generated C++ binding checks that the result shares that
+owner's control block. Use a lease for a result with an independent owner.
+See the [borrowed member example](../../tests/fixtures/cpp-host-anchors/Workshop.lean).
+
+A synchronous factory can return a unary Lean IO function over imported C++
+classes or copied scalars. For example, with `Box` from `LeanBridge.Host.Cpp`:
+
+```lean
+def reader (meter : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun offset => do return (← meter.read) + offset
+```
+
+Select the factory in `exports`. The consumer receives a move-only object
+with `operator()` and `close()`; no function pointer or scheduler is part
+of the interface. A grant for filesystem access is still required if the
+returned function reads a file when invoked.
+
+## Export tasks and streams
+
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
+Declare a real Lean `Task` in `taskExports`. For a stream, put its factory,
+pull and close functions in `asyncIterators`. The compiler checks the same
+[Lean signatures as the C task profile](c.md#export-tasks-and-pull-streams).
+A synchronous `IO` function stays synchronous. Use `targets.cpp.name` and
+`targets.cpp.version` for the archive coordinates and build one C++ release:
+
+```sh
+lean-bridge build --project ./pulse --target cpp --output ./release-cpp
+lean-bridge verify --receipt ./release-cpp/package-set-receipt.json
+```
+
+The `native-cpp-task-v1` archive contains a C++20 header, the compiled component
+and its shared runtime. The producer typechecks the public header before
+packaging. Supplying a reviewed `.binding-ir.json` does not replace fresh
+elaboration. The manifest names the C++ namespace, CMake target and pkg-config
+package. The receipt’s archive digest covers the C++ headers, build metadata
+and native libraries. Packages sharing a coroutine dispatcher should have the
+same `cppTaskSupportAbi` in their manifests. ABI 2 keeps its headers and C++
+types separate from the older completion-only dispatcher. An archive that
+omits the field uses ABI 1. The two can link into the same application, but
+their futures run on separate dispatchers.
+The [C++ consumer](../consume/cpp.md#await-a-task-or-pull-a-stream)
+uses owning C++ values; no application code passes C handles or Lean pointers.
+
+Task and stream payloads can use exact `Nat` and `Int`, fixed-width and
+machine-word integers, `Char`, `Bool`, both float widths, `Unit`, strings,
+byte arrays and nested returned `Except`. For exact integers the archive
+includes pinned Boost.Multiprecision 1.90.0 headers and their license. It
+does not require a GMP installation. Declare a heap resource in `resources`
+to expose its move-only C++ class as a direct argument, result, item or typed
+error. Independently built components share that class when the declaring
+Lean module, its transitive application imports and the compiler match.
+Host callbacks and resources nested inside copied sums are not supported on
+this path. The [resource release receipts](../evidence/resource-tasks-20261122.json)
+cover cross-package identity, cancellation and disposal. The [exact-integer receipts](../evidence/exact-task-integers-20261122.json)
+cover results, stream items and typed errors. The [task lifecycle evidence](../evidence/cpp-task-streams-20261122.json)
+records which archives, compilers and consumer builds were tested. It also shows
+how to repeat the checks from those archives without rebuilding Lean.
+
+### Export a callback-taking task
+
+A standalone C++ task package accepts the same per-parameter
+[`taskCallbackPolicies` setting as C](c.md#export-a-callback-taking-task).
+The worker checks the allowance before it queues a host call. A propagated
+denial becomes `CallbackAlreadyInvoked` on the future; a new registration of
+the same C++ callable has its own allowance. Host-import packages do not
+accept this setting.
+
+Select the factory in `taskExports`. A parameter of type `α → IO β` becomes
+a synchronous C++ callable retained by the task. Both `α` and `β` must be
+copied primitives. `Unit` maps to an empty argument list or a `void` reply;
+`Nat` and `Int` use the archive's exact integer type.
+
+For example, an export with type
+`(String → IO String) → IO (Task (Except IO.Error String))` can also appear
+in `taskIOErrors`. Then an outer `.error` rejects the future; an ordinary
+returned `Except` remains a value. The compiler checks that exact shape on
+both source routes. A callback-taking factory runs off the owner thread so it
+can ask the caller for a value before it returns. Its failures arrive on
+await. A factory without callbacks still reports a start failure at the call.
+See the [C++ example](../consume/cpp.md#pass-a-callback-to-a-lean-task).
 
 ## Copied tagged variants
 

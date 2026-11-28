@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "bytes": 51440418,
+      "path": "archives/callback-budget-1.0.0.jar",
+      "sha256": "b0fe37de21720bc3b803efc9ce0119048fb167e061987fed63be5baa5503e73e"
+    },
+    {
+      "bytes": 766,
+      "path": "archives/callback-budget-1.0.0.pom",
+      "sha256": "c755f35dbe145e5ea4383faa28523cadfbeb65b40239958396dff70fd8f0a2a8"
+    }
+  ],
+  "bindingIrSha256": "21373f3316cac6e85a489a6b49b5581035f48e6f88631d0ab4fecb1bf9cadb05",
+  "deployed": {
+    "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+    "callback-budget-1.0.0.jar": "b0fe37de21720bc3b803efc9ce0119048fb167e061987fed63be5baa5503e73e",
+    "kotlin-stdlib-2.2.0.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+    "kotlinx-coroutines-core-jvm-1.8.0.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+  },
+  "executables": {
+    "Java": "767cbd8d60e2f86263ecc4cc4c5518dd76be8d40fca2d1c45b3cec27e38f9860",
+    "Kotlin": "492f07fa2e1635b75383e240d39c6e7113cc6d0d7acc2a9b6507dbfc1d3c306d"
+  },
+  "modules": "java.base@22.0.2",
+  "receiptSha256": "f6d62732a00528ee525ad5e0fcda6e291b536dc4e3f4733b1c915fc45d8a46c4",
+  "results": {
+    "Java": "Java: 16 worker races; original, factory, terminal and typed failures distinct; capture released; zero leases",
+    "Kotlin": "Kotlin: 16 worker races; original, factory, terminal and typed failures distinct; capture released; zero leases"
+  },
+  "reviewedSourceSha256": "b1e5496d57e64677e377280a0288760eba8ff9a293778fc11949d8ffc7232b9e",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "runtimeLibraries": {
+    "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+    "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+    "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+  },
+  "sourceTreeSha256": "2b5a7f972cfc3811a72008e506484219a566656c6a68260eaf98ec135a33a86b",
+  "sources": {
+    "JavaBudget.java": "c277a74c724c69392b46cac2119d1366b0d66de6c661b26f6593cd693f968c6e",
+    "KotlinBudget.kt": "be61345d27298709bdec998ce48a5b6025631d1bce7a22537875c46c13532ece",
+    "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75"
+  }
+}

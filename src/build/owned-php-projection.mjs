@@ -10,7 +10,7 @@ import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
 import { generateOwnedPhpPackage } from "../backends/php/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { ownedPhpAdapterSources } from "./owned-php-artifacts.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { privateGmpKit } from "./task-gmp.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOwnedPhp } from "../release/owned-composer.mjs";
 
@@ -46,7 +46,7 @@ export const projectOwnedPhp = async options => {
 		await mkdir(dirname(join(root, path)), { recursive: true });
 		await writeFile(join(root, path), source, { flag: "wx" });
 	}
-	await buildNativeGmp({ root: gmpRoot, environment, signal, privateSoname: true });
+	await privateGmpKit({ root: gmpRoot, environment, signal });
 	await mkdir(join(root, "lib"));
 	const library = `lib${prefix}_php.so`, gmpLibrary = "libgmp-lean-bridge.so.10";
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env: environment, signal });

@@ -1,0 +1,406 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-cpan-lean-futures-and-cursors",
+  "planNode": 1223,
+  "profile": "native-perl-task-v1",
+  "date": "2026-11-23",
+  "scope": "Local x86-64 Linux, Lean 4.32.2. Perl 5.36.3 and 5.38.2, threaded and unthreaded. The local test glibc floor is 2.36; the production default is 2.38. No hosted CI, registry publication or cross-platform result is claimed.",
+  "acceptanceSha256": "c156383a37fd794f862e4b2b8bd823cac545a014dfe0dbb3d5a1093e55e1cd8c",
+  "reproductionSha256": "5b1b175b80eac6bfd8959c1b6a16c190292702c046c4c77ae057fccd6a0d1b9e",
+  "prebuiltTAP": {
+    "passed": 1380,
+    "skipped": 28,
+    "planned": 1408
+  },
+  "fallbackTAP": {
+    "passed": 130,
+    "skipped": 0,
+    "planned": 130
+  },
+  "sharedRuntime": {
+    "bytes": 51394992,
+    "path": "archives/LeanBridge-Runtime-0.0020276624700658970660393113293618122178994814009577038764491667816735790235240581.tar.gz",
+    "sha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+  },
+  "packages": [
+    {
+      "route": "ordinary",
+      "profile": {
+        "bindingIrSha256": "6d11a7484c425ef5bb020e3ddb45b9109db3a91873b6628fc7225c587ed7f755",
+        "id": "native-perl-task-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "receiptSha256": "5e6f53ada4cf2a00df163de2eab9308603717f25879acc4a5505eaa4b6b049d2",
+      "component": {
+        "bytes": 234947,
+        "path": "archives/LeanBridge-Pulse-0.001.tar.gz",
+        "sha256": "4366dcc43bc4746b10235157d0ebe0777bc7a950812a1728e60fe90807eeba33"
+      },
+      "runtimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731",
+      "modules": {
+        "Extra": "6125d45714485d0420bf4b1b8828977ab8400293f8e03d1d968a2b6eb4d4c442",
+        "PerlTasks": "7e0f14e35db09e046f374d08c7aeec2e455aeb2f0864f988fdccb64f27efefbc",
+        "Pulse": "ba309e3bc182abd9d6f63c0a6f39ebfd00c2b9b1070c2b7486cde5ae20f1e86c"
+      },
+      "sourceTreeSha256": "31ba3c0ee4c4b73e34e17b0c348292c437599f06aeff0d0eb7ef0944256e5604",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "reviewedSourceSha256": null,
+      "abiKeys": [
+        "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77"
+      ]
+    },
+    {
+      "route": "reviewed",
+      "profile": {
+        "bindingIrSha256": "6d11a7484c425ef5bb020e3ddb45b9109db3a91873b6628fc7225c587ed7f755",
+        "id": "native-perl-task-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "receiptSha256": "11fd5f071b8d2708ac72fc60de4b0abdf989ffc567a8f68cd46e998a8e8f6bc1",
+      "component": {
+        "bytes": 234927,
+        "path": "archives/LeanBridge-Pulse-0.001.tar.gz",
+        "sha256": "8ab47d7b760033ba2a18f06b7c456bccd1b393b461893f69288e27e45d271e49"
+      },
+      "runtimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731",
+      "modules": {
+        "Extra": "6125d45714485d0420bf4b1b8828977ab8400293f8e03d1d968a2b6eb4d4c442",
+        "PerlTasks": "7e0f14e35db09e046f374d08c7aeec2e455aeb2f0864f988fdccb64f27efefbc",
+        "Pulse": "ba309e3bc182abd9d6f63c0a6f39ebfd00c2b9b1070c2b7486cde5ae20f1e86c"
+      },
+      "sourceTreeSha256": "0cdc80dd8f27c9d7352e4ee01aacc54aaaa63c5b83967dcfaa2a576bd83d24d8",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "reviewedSourceSha256": "f61bbbe726f8006de9d1832d130612e112a63638f40c1b7fced3ef125f2dcbb3",
+      "abiKeys": [
+        "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77"
+      ]
+    },
+    {
+      "route": "peer",
+      "profile": {
+        "bindingIrSha256": "ce66b86265d0b79607527dedacb605ff60e85df75087e4f59727e49ba3e5aecd",
+        "id": "native-perl-task-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "receiptSha256": "d71ad370ac8a344d7de5042454e57d901236eb716301fa671a101dfc12497825",
+      "component": {
+        "bytes": 114894,
+        "path": "archives/LeanBridge-Signals-0.001.tar.gz",
+        "sha256": "5202fc1d7d27fd081fe528eb66dfaa8559291ce5af5f69c38cced2185cea1bc0"
+      },
+      "runtimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731",
+      "modules": {
+        "Signals": "f8d3656cece6232f091b4bb813d3eecd54fc14008ab0ae370e04bbf4c6a75283",
+        "Timers": "683a3bace19c7995a7423e76f7aa96d2f2f8d02267f07098316198107b6dea16"
+      },
+      "sourceTreeSha256": "4f5dd727bc1694194d0bc5dc489e5b999250217bc4e10700f5aee2dfff3ed548",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "reviewedSourceSha256": null,
+      "abiKeys": [
+        "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77"
+      ]
+    }
+  ],
+  "sources": {
+    "Observe.xs": "24029e29f2faa3fa70d89598ad8de8752feeb12c5eb8de202bdfab8c5b58efd2",
+    "affinity.t": "421cf01281284114d9d59a1aef3452e6d9715dad822bbb97fc5007fe77f8a2f8",
+    "build-observer.pl": "2081ccf5c50cf0435c11bd888bd450e2f338a4373244f7974b9482336ea8e7d9",
+    "example.pl": "c8c56a0a96fa60d801a3b79c1cb5bb38cc6451c25b499dd084bd28aca99b91db",
+    "installed.t": "8b68fb0e1c7c603926d3d1d1a3a4c15a3eb333199dc38260f720090cc4506fd2",
+    "peer.t": "4ae0930936617d73d0ec2e9595f417cc11a205476984a2185b61c86aacfd3bd9",
+    "retired.t": "eb8167b7ddc25ea47cf2d1a2a81b7f8941d48a38167434e1168b9ff8b967e42e",
+    "verify.py": "14d2ff3a41c6adbcbbbd39be5e621efdd7150187329050d0d0d77322ff99912d"
+  },
+  "rows": [
+    {
+      "installedXsSha256": "b97f797c92008cc891891407a225a62200d222a09e72b3ee10c5ce916e6e91f5",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "observations": {
+        "affinity": {
+          "tapSha256": "be92427eeba646cd649854a48e972baf86b05bc9952df8563db519e01168aaa2",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "b1ca6198014f5a41fe31343f48dfeed151987fd2736f3c8258f7ae1ffd66ea92",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "ordinary",
+      "threaded": 1,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "b97f797c92008cc891891407a225a62200d222a09e72b3ee10c5ce916e6e91f5",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "observations": {
+        "affinity": {
+          "tapSha256": "be92427eeba646cd649854a48e972baf86b05bc9952df8563db519e01168aaa2",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "b1ca6198014f5a41fe31343f48dfeed151987fd2736f3c8258f7ae1ffd66ea92",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "reviewed",
+      "threaded": 1,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "48590d548d1c8543586c90367e9b3369b01739ca564d896df7f3cd46344d830f",
+      "key": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "observations": {
+        "affinity": {
+          "tapSha256": "65ce98fa1cc318474c45e665e603cbe4509d7e7cdc04465e204abc4236687671",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "97c44adcddc551ef0bc6a42f84c3677410e3d96a9cec0c28e428c1b67d3600f5",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "ordinary",
+      "threaded": 0,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "48590d548d1c8543586c90367e9b3369b01739ca564d896df7f3cd46344d830f",
+      "key": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "observations": {
+        "affinity": {
+          "tapSha256": "65ce98fa1cc318474c45e665e603cbe4509d7e7cdc04465e204abc4236687671",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "97c44adcddc551ef0bc6a42f84c3677410e3d96a9cec0c28e428c1b67d3600f5",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "reviewed",
+      "threaded": 0,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "7149132a5132909e7f36d50c351e5514a4c8626903c057283f6ff9818236dce0",
+      "key": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "observations": {
+        "affinity": {
+          "tapSha256": "be92427eeba646cd649854a48e972baf86b05bc9952df8563db519e01168aaa2",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "b1ca6198014f5a41fe31343f48dfeed151987fd2736f3c8258f7ae1ffd66ea92",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "ordinary",
+      "threaded": 1,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "7149132a5132909e7f36d50c351e5514a4c8626903c057283f6ff9818236dce0",
+      "key": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "observations": {
+        "affinity": {
+          "tapSha256": "be92427eeba646cd649854a48e972baf86b05bc9952df8563db519e01168aaa2",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "b1ca6198014f5a41fe31343f48dfeed151987fd2736f3c8258f7ae1ffd66ea92",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "reviewed",
+      "threaded": 1,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "4223967f3eb575a8c014ff897a0ef62da8c97330bc393315ba6937948074637d",
+      "key": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "observations": {
+        "affinity": {
+          "tapSha256": "65ce98fa1cc318474c45e665e603cbe4509d7e7cdc04465e204abc4236687671",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "97c44adcddc551ef0bc6a42f84c3677410e3d96a9cec0c28e428c1b67d3600f5",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "ordinary",
+      "threaded": 0,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "4223967f3eb575a8c014ff897a0ef62da8c97330bc393315ba6937948074637d",
+      "key": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "observations": {
+        "affinity": {
+          "tapSha256": "65ce98fa1cc318474c45e665e603cbe4509d7e7cdc04465e204abc4236687671",
+          "tests": 12
+        },
+        "peer-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "public": {
+          "tapSha256": "97c44adcddc551ef0bc6a42f84c3677410e3d96a9cec0c28e428c1b67d3600f5",
+          "tests": 130
+        },
+        "pulse-first": {
+          "tapSha256": "363862e9bcb73bfa25e7adc3e9925d0c6639274edb1021ffe5ab313a0f8efcc5",
+          "tests": 13
+        },
+        "retirement": {
+          "tapSha256": "c068ec66be8d2b5533c275d210b1eea0cfa23c36f77d4598f451808bf4b08c4d",
+          "tests": 8
+        }
+      },
+      "route": "reviewed",
+      "threaded": 0,
+      "version": "5.38.2"
+    }
+  ],
+  "fallback": [
+    {
+      "installedXsSha256": "d3e431d9e8c84234a71778b44b6e0202fdabe420570440b91eb6d7beab329a75",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "sourceSha256": "15bc69bdc0e918bcc52ac089f7b354c35ca5e00326a304af15cbed5cd5fc72d5",
+      "tapSha256": "b1ca6198014f5a41fe31343f48dfeed151987fd2736f3c8258f7ae1ffd66ea92",
+      "tests": 130
+    }
+  ],
+  "offlineCLI": {
+    "artifacts": [
+      {
+        "bytes": 234947,
+        "path": "archives/LeanBridge-Pulse-0.001.tar.gz",
+        "sha256": "4366dcc43bc4746b10235157d0ebe0777bc7a950812a1728e60fe90807eeba33"
+      },
+      {
+        "bytes": 51394992,
+        "path": "archives/LeanBridge-Runtime-0.0020276624700658970660393113293618122178994814009577038764491667816735790235240581.tar.gz",
+        "sha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+      }
+    ],
+    "cliArchiveSha256": "fbfe338f9c1a91995f2a130a7cac2aeba3557aa8ac7b62ced2bf219a4466adff",
+    "receiptSha256": "5e6f53ada4cf2a00df163de2eab9308603717f25879acc4a5505eaa4b6b049d2"
+  },
+  "upstreamDistributions": {
+    "Future-0.54": "9af138ff632292bfc45c11906e3c39739fae07be729ff2f89f44d092319c5967",
+    "IO-Async-0.805": "77f997b74953dbdf63a750fcff4338d1bfacd89100e1fb27c3473f0a222a9a0c",
+    "Struct-Dumb-0.16": "ebc9032640777a5bf900a30de0e554356af9cd95101e512a34fe15535c682508",
+    "Module-Build-0.4234": "66aeac6127418be5e471ead3744648c766bd01482825c5b66652675f2bc86a8f"
+  },
+  "checks": [
+    "Inspected original tar members, exact package inventory, each prebuilt ELF and compiler receipt; compared elaborated source hashes to the ordinary, reviewed and stream-only producer inputs.",
+    "Installed and relocated the original archives, verified the selected XS digest, then ran the public example and TAP clients with no compiler on PATH. Both independently built packages were exercised in both orders. Repeated the public checks on an XS-only installation.",
+    "Real Future objects on IO::Async deliver all nineteen scalars, typed factory and terminal IO failures, and returned Except data. Separate checks exercise two pending workers, an unrelated timer, cooperative and ignoring cancellation, abandoned futures, fork/thread affinity, false-valued host exception identity, and cancellation inside result conversion.",
+    "Lazy stream factory and one pull per demand, exact typed step errors, Unit versus exhaustion, early close, overlapping demand rejection and native retirement. Real interpreter threads clone a live cursor and a cursor with a pending pull; the owner remains usable after thread teardown. Shared runtime initializes once; identities and descriptors return to baseline.",
+    "The offline-installed CLI reproduces both ordinary archives and their package-set receipt byte for byte."
+  ],
+  "limits": [
+    "Copied scalar task inputs/results and nested Except result/error payloads only. This record does not cover retained host callbacks, nominal resource transport, or a separately constructed application event loop.",
+    "Only the default IO::Async loop and the pure-Perl Future implementation from the named distributions were exercised."
+  ],
+  "reproduce": {
+    "instructions": "docs/contributing/testing.md#perl-futures-and-demand-driven-streams",
+    "producer": "tests/helpers/perl-tasks-installed.mjs",
+    "consumer": "tests/helpers/perl-task-consumers.mjs",
+    "independentInspector": "tests/fixtures/perl-sync-io/verify.py",
+    "offlineInstalledCLI": "tests/helpers/perl-io-repro.mjs"
+  }
+}

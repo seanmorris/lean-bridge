@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "inspector@1.0.0",
+    "name": "inspector",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 12365,
+          "path": "@example-record-peer-1.0.0.tgz",
+          "sha256": "fd624ca1c3646bffd46fdc10d4b97b6b8c405f07d75f5e3fcb38ced4fd8d4011"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@example/record-peer",
+      "profile": "javascript-wasm-host-io-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/runtime",
+          "version": "0.0.0-abi2.3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c",
+      "target": "npm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1676818,
+          "path": "lean-bridge-runtime-0.0.0-abi2.3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c.tgz",
+          "sha256": "1bdf0f05538372c0cf3fb30b630355082d0973e034d67a4a406f4ded8f78c5eb"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/runtime",
+      "profile": "javascript-wasm-host-io-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c",
+      "target": "npm",
+      "version": "0.0.0-abi2.3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "c5d4018b02b23e62161455eb2962ca546ab8142ed46333a2e37e0c2c6b74d93a",
+      "id": "javascript-wasm-host-io-v1",
+      "runtimeIdentity": "3ecc40e723c3924d7100ca980fd25ec934237aded3d5547d2b6c3aaebf17162c"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7e057389f4908cdcc205b7281693974096e963eab0f1df41adc327521b871d95"
+  }
+}

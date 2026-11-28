@@ -4,11 +4,24 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion"],
+  "dependentRequired": {"hostImports": ["modules"], "taskExports": ["modules"], "taskIOErrors": ["taskExports"], "taskCallbackPolicies": ["taskExports"], "iterators": ["modules"], "asyncIterators": ["modules"], "nativeEffects": ["modules"]},
   "properties": {
     "schemaVersion": {"const": 1},
     "package": {"$ref": "#/$defs/metadata"},
     "modules": {"$ref": "#/$defs/selection"},
     "exports": {"$ref": "#/$defs/selection"},
+    "hostImports": {"const": "lean-bridge.hosts.json"},
+    "nativeEffects": {"description":"Allowed native OS capabilities checked against compiled code. On standalone synchronous IO packages, specify [] when no grant is needed.","type":"array","uniqueItems":true,"items":{"enum":["clock","environment","filesystem","process-info","random","stdio"]}},
+    "taskExports": {"type": "array", "items": {"$ref": "#/$defs/specializationName"}, "uniqueItems": true, "minItems": 1, "maxItems": 128},
+    "taskIOErrors": {"type": "array", "items": {"$ref": "#/$defs/specializationName"}, "uniqueItems": true, "minItems": 1, "maxItems": 128},
+    "taskCallbackPolicies": {
+      "description": "Invocation allowance of a named callback parameter for each task registration. Unspecified parameters allow repeated calls.",
+      "type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true,
+      "items": {"type": "object", "additionalProperties": false, "required": ["declaration", "parameter", "invocation"],
+        "properties": {"declaration": {"$ref": "#/$defs/specializationName"}, "parameter": {"type": "string", "minLength": 1, "maxLength": 256}, "invocation": {"enum": ["once", "many"]}}}
+    },
+    "iterators": {"$ref": "#/$defs/pullProtocols"},
+    "asyncIterators": {"$ref": "#/$defs/pullProtocols"},
     "resources": {"$ref": "#/$defs/names"},
     "ownedAggregates": {"$ref": "#/$defs/ownedAggregates"},
     "arities": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 32}},
@@ -74,11 +87,23 @@
             }
           }
         },
-        "wit-wasi": {"$ref": "#/$defs/package"}
+        "wit-wasi": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "name": {"$ref": "#/$defs/identifier"},
+            "version": {"$ref": "#/$defs/identifier"},
+            "hostCallbacks": {"type": "boolean"},
+            "asyncAbi": {"const": "canonical"}
+          }
+        }
       }
     }
   },
   "$defs": {
+    "pullProtocols": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {
+      "type": "object", "additionalProperties": false, "required": ["open", "next", "close"],
+      "properties": {"open": {"$ref": "#/$defs/specializationName"}, "next": {"$ref": "#/$defs/specializationName"}, "close": {"$ref": "#/$defs/specializationName"}}
+    }},
     "hostProjections": {
       "type": "array", "maxItems": 32, "uniqueItems": true,
       "items": {
@@ -98,7 +123,11 @@
         "ownership": {"const": "lease"},
         "disposal": {"const": "required"},
         "fallback": {"enum": ["none", "queued-finalizer"]},
-        "cycles": {"const": "reject"}
+        "cycles": {"const": "reject"},
+        "closureFields": {
+          "type": "array", "minItems": 1, "maxItems": 1024, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)+$(?![\\s\\S])"}
+        }
       }
     },
     "metadata": {

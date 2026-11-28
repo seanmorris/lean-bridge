@@ -2,6 +2,16 @@
 
 Status: the generated plan, shared-runtime state machine, and public Lean Promise settlement pass. Callback re-entry remains open.
 
+The registry claims an outcome before invoking native cancellation, cleanup,
+or diagnostic observers. A hook that tries to resolve the same token gets a
+stale-operation error; it cannot replace the first result, repeat cleanup,
+or consume a second slot generation. A hook can still settle a different
+operation. Shutdown skips already-settled siblings and runs only once, even
+when a cancellation hook calls shutdown again. These are registry guarantees;
+they do not imply support for asynchronous Lean-to-host callbacks.
+
+The [threaded task experiment](threaded-task-probe.md) checks a different boundary: a genuinely pending Lean worker task, notification of the host and cancellation while the worker still owns its inputs. It is not a generated npm task export.
+
 ## Generated contract
 
 `compilePendingOperationV1` accepts a validated Binding IR declaration whose result mode is `promise`. It emits a closed plan with:

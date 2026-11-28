@@ -123,6 +123,287 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Call synchronous IO
+
+With a `native-c-io-v1` package, call the generated `_call` function on the
+process main thread and inspect its return status. `OK` writes the result
+(including either arm of a returned `Except`). `TYPED_ERROR` writes the
+declared `EIO` error into its own output slot. `IO_ERROR` can supply an owned
+UTF-8 message. Argument-validation failures do not run the selected Lean
+function. Zero-initialize owned aggregate outputs; dispose of buffers and
+owned results with the functions named in the installed header. There is no
+task handle to wait on. The [installed C example](../../tests/fixtures/native-sync-io-clients/consumer.c)
+exercises each outcome and makes another call after both kinds of Lean failure.
+
+If a declared error carries a resource, the error output owns a lease. You may
+release the original input and pass the error payload to a separately installed
+component that shares the resource type. Release that payload when you are done.
+Copying the C struct does **not** retain it: a copy of an already released lease
+is stale. The [two-package C11 client](../../tests/fixtures/native-sync-resource/last-owner.c)
+shows the success, declared-error and stale-input branches side by side.
+
+### Read a synchronous iterator
+
+The [Dials client](../../tests/fixtures/native-immediate-cursor/consumer.c)
+uses the installed header. Open the cursor on the main thread; each call
+to `next` performs one Lean pull on that thread.
+
+```c
+#include <lbc_dials.h>
+
+int first_dial(uint32_t *value) {
+    lbc_dials_sequence_handle cursor = {0};
+    lbc_dials_status status = lbc_dials_sequence_open(3, &cursor);
+    if (status != lbc_dials_OK) return 0;
+    status = lbc_dials_sequence_next(&cursor, value);
+    lbc_dials_sequence_close(&cursor);  /* Early exit. */
+    return status == lbc_dials_OK;
+}
+```
+
+`OK` means the output is an item, even if it is zero. `END` means there is
+no item. End-of-sequence and a Lean step failure close the cursor; closing
+the same zeroed handle again is harmless. A copy of a closed handle cannot
+be reused. Use the separate error output on a checked factory or step and
+dispose of its payload using the generated header. There is no poll/take
+pair or file descriptor for an immediate pull.
+
+## Supply C objects to Lean
+
+In a `native-c-host-v1` package the payload belongs to your application.
+For example, Lean can read and update your existing meter without copying it.
+The installed header declares one function pointer for each member the Lean
+package uses. Fill in that table and pass it, plus your application context,
+to `workshop_with_hosts`. Those names come from the example package; use the
+names in your installed header.
+
+```c
+static uint32_t read_meter(void *context, workshop_box meter, uint32_t *out) {
+    (void)context;
+    void *payload = NULL;
+    if (workshop_box_data(meter, &payload) != workshop_OK) return 37;
+    *out = ((struct meter *)payload)->level;
+    return 0;
+}
+```
+
+Adopt a payload with `workshop_box_adopt(payload, destructor, &box)`.
+Zero-initialize owners and diagnostic outputs. A struct assignment aliases the
+same owner; use `workshop_box_clone` for an independent owner. Drop each owner
+when finished. Close the binding before freeing its context. Calls, including
+cleanup, belong on the process main thread. No Lean installation is needed.
+
+If a factory returns a Lean function, its handle belongs to the binding that
+created it. For a package exporting the [reader factory](../../tests/fixtures/c-host-closures/Closures.lean):
+
+```c
+workshop_status read_plus_two(workshop_binding binding, workshop_box box,
+                              uint32_t *out, workshop_diagnostic *diag) {
+    workshop_reader_closure read_plus = {0};
+    workshop_status s = workshop_reader(binding, box, &read_plus, diag);
+    if (s != workshop_OK) return s;
+    s = workshop_reader_call(&read_plus, 2, out, diag);
+    workshop_status cleanup = workshop_reader_drop(&read_plus);
+    return s == workshop_OK ? cleanup : s;
+}
+```
+
+Assigning the handle to a second variable creates an alias, not a second
+owner. Dropping either alias revokes future calls. Closing the binding
+revokes its remaining functions without closing a sibling binding. Calling
+a stale handle doesn't run Lean.
+
+A member's nonzero return code reaches `diagnostic.host_code` if it escapes
+Lean unchanged. A Lean `IO.Error` carries a message; a thrown `EIO` writes its
+declared payload to a separate output; a returned `Except` is an ordinary
+value. The [complete C application](../../tests/fixtures/c-host-members/consumer.c)
+registers both member tables, uses the same object from two packages, and
+releases the final owner after closing the bindings.
+
+### Keep application objects in a Lean record
+
+When a record contains one of your objects, the generated header gives the
+record a typed owner. In the Gauge example, `workshop_pair_make` borrows
+the two meters, retains a lease on each and copies the byte and integer
+fields. `workshop_flip` takes the record by value without consuming it:
+
+```c
+workshop_pair input = {0}, output = {0};
+workshop_box lead = {0};
+workshop_diagnostic diagnostic = {0};
+assert(workshop_pair_make(left, sample, sequence, right, &input) == workshop_OK);
+assert(workshop_flip(binding, input, &output, &diagnostic) == workshop_OK);
+assert(workshop_pair_drop(&input) == workshop_OK);
+assert(workshop_pair_get_lead(output, &lead) == workshop_OK);
+assert(workshop_pair_drop(&output) == workshop_OK);
+/* lead still refers to the original right-hand meter. */
+assert(workshop_box_drop(&lead) == workshop_OK);
+```
+
+A struct assignment aliases the same owner. Use `workshop_pair_clone` if
+both variables need to outlive each other. Getters for byte buffers and
+wide integers return independent copies; use the header's clear function
+when done. The [complete C client](../../tests/fixtures/c-host-record/consumer.c)
+also handles an application error and checks that a stale record cannot
+trigger a meter read. See the [installed C11 record results](../evidence/c-host-record-fields-20261126.md).
+
+### Use an application object in a task or stream
+
+When a package exports workers on its host binding, pass the same object handle
+to the generated `_start` function. A successful start keeps its own reference;
+you can drop yours. Call `_poll` on the main thread. On `PENDING`, watch its
+borrowed file descriptor for readability, then poll again. Never read or close
+that descriptor. On `OK`, call `_take` with zero-initialized output slots.
+For a stream, call `_pull` before each item. `END` or a step error finishes the
+stream; `_close` stops it early. Closing the binding cancels its outstanding
+work, not work on another binding.
+
+A task that needs a C operation on an object takes a typed callback. For
+example, `workshop_callback_box_to_box_new` wraps your function, context and
+optional destructor. The function runs during `_poll` on the binding thread.
+It borrows the input; to return the same object, clone it into the reply
+slot. Drop the callback handle after starting the task, or call its `_close`
+to revoke future calls. An invocation that closes itself may finish.
+
+A returned `Except` is a value. A thrown declared error has its own output;
+factory, task and stream-step I/O failures have distinct statuses. A callback
+can return `CALLBACK_ERROR` with a diagnostic containing its application code,
+UTF-8 message and optional owned payload. Supply malloc-compatible storage for
+the message and a destructor for the payload. Call `_diagnostic_clear` before
+reusing it. The [complete C consumer](../../tests/fixtures/static-host-workers/consumer.c)
+shows what to release on each branch. The [installed C worker checks](../evidence/static-host-workers-20261125.md#installed-c11-workers-on-application-objects) record both package routes.
+
+## Wait for a task or pull a stream
+
+A C archive marked `native-c-task-v1` bundles the Lean runtime. Include the
+public header and link the pkg-config package or CMake target named in its
+manifest. No Lean installation or worker thread is needed in the application.
+
+Start a task on the process main thread with a zero-initialized handle. For the
+example package, `lbc_pulse_late_poll(handle, &fd)` returns `lbc_pulse_OK` if
+the result is ready, or `lbc_pulse_PENDING` and a descriptor otherwise.
+Watch that descriptor for readability in your event loop. Do not read or
+close it: `lbc_pulse_late_take(&handle, &value)` collects the result and
+releases the descriptor. Call `lbc_pulse_late_close(&handle)` if you stop
+waiting. Cancellation requests cooperation from Lean; it doesn't block the
+event loop waiting for the task to finish. The component library stays loaded
+for the process lifetime so a late Lean completion cannot call unloaded code.
+
+For a stream, `_start` opens the cursor without requesting an item. Call
+`_pull` once, wait for readiness if needed, then call `_take`. An item leaves
+the cursor idle until your next request. `END` and a typed pull failure close
+it automatically; call `_close` when you stop early. A Lean `Except.error`
+returned **as an item** is still an item, not a failed pull. Typed errors have
+their own output slot; `IO_ERROR` can carry an owned UTF-8 message. Use the
+generated disposal functions for owned buffers and results before reusing
+their output slots. An alias of a consumed handle returns `CLOSED`.
+
+For a declared resource, zero-initialize the output slot. A successful call
+returns one lease; use the generated `_retain` operation for a second lease,
+`_same` to test object identity, and `_release` when done. Assigning the C
+struct copies a reference to the *same lease*. Once a task starts, you can
+release your input immediately: Lean keeps its own reference for as long as
+the task needs it. A typed start or step error may itself return an owned
+resource. The [two-package consumer](../../tests/fixtures/resource-tasks/consumer.c)
+shows the same object being mutated, returned, and released by different packages.
+
+Pass `Nat` and `Int` as ordinary GMP `mpz_t` values. Initialize a direct
+integer result or typed-error slot with `mpz_init` and clear it once with
+`mpz_clear`. A pending or failed take does not overwrite the integer result.
+For an `Except` result, zero-initialize the outer struct and use its generated
+disposer; the package manages its active union member. Inputs are copied
+before the start call returns. You can change or clear the original while
+the task is pending. A negative `Nat` returns `INVALID`. Integer magnitudes
+count in 64-bit words toward the 16 MiB input copy budget shared by the
+call’s arguments; a result over 16 MiB also returns `LIMIT`.
+The [installed C example](../../tests/fixtures/exact-task-integers/consumer.c)
+shows both direct and nested integer results.
+
+The [complete C program](../../tests/fixtures/c-lean-tasks/consumer.c) uses
+`poll(2)` with the prepared package, including cancellation, failed starts,
+typed stream failures, early exits and normal completion.
+
+### Pass a callback to a Lean task
+
+For a task that takes `UInt32 → IO UInt32`, create a typed C callback and
+pass it to the generated start function. The task keeps its own reference.
+On the process main thread, `_poll` and `_take` service waiting callbacks. A
+single borrowed descriptor becomes readable for callback work, completion,
+or runtime retirement. Wait for readability; do not read or close it.
+
+For a standalone task package that marks a callback parameter `once`, a
+second invocation does not enter your C function. If the failure escapes
+Lean, the task's `_take` returns the component's `CALLBACK_ALREADY_INVOKED`
+status, not `CALLBACK_ERROR`. Passing the same handle to another slot or
+starting a new task gives it a separate allowance.
+
+```c
+#include <lbc_c_retained.h>
+#include <errno.h>
+#include <poll.h>
+
+static lbc_c_retained_status twice(void *ctx, uint32_t n, uint32_t *reply,
+                                   lbc_c_retained_callback_error *error) {
+    (void)ctx; (void)error;
+    *reply = 2 * n;
+    return lbc_c_retained_OK;
+}
+
+lbc_c_retained_status call_factory(uint32_t *value, lbc_c_retained_callback_error *error) {
+    lbc_c_retained_callback_uint32_to_uint32 callback = {0};
+    lbc_c_retained_factory_handle task = {0};
+    lbc_c_retained_status s =
+        lbc_c_retained_callback_uint32_to_uint32_make(twice, NULL, NULL, &callback);
+    if (s != lbc_c_retained_OK) return s;
+    s = lbc_c_retained_factory_start(callback, false, &task);
+    lbc_c_retained_callback_uint32_to_uint32_release(&callback);
+    if (s != lbc_c_retained_OK) return s;
+
+    int fd;
+    while ((s = lbc_c_retained_factory_poll(task, &fd)) == lbc_c_retained_PENDING) {
+        struct pollfd wait = {.fd = fd, .events = POLLIN};
+        int n;
+        do { n = poll(&wait, 1, -1); } while (n < 0 && errno == EINTR);
+        if (n < 0) { s = lbc_c_retained_UNAVAILABLE; break; }
+    }
+    if (s == lbc_c_retained_OK) s = lbc_c_retained_factory_take(&task, value, error);
+    if (task.id) lbc_c_retained_factory_close(&task);
+    return s;
+}
+```
+
+Zero-initialize the error output. A callback can return `callback_error_set`
+with a numeric code, a UTF-8 diagnostic, and an optional payload and
+destructor. The setter copies the diagnostic and takes ownership of the
+payload only when it returns `CALLBACK_ERROR`. If the same error escapes Lean, `_take` returns `CALLBACK_ERROR`
+and transfers that payload to you. Dispose the error with
+`callback_error_dispose`. If Lean catches the error or throws a new one
+with the same text, the bridge disposes the original payload. A factory
+failure is `IO_ERROR`; a selected terminal task failure is `TASK_IO_ERROR`.
+An ordinary returned `Except` is still a value.
+
+The callback borrows its input for the duration of the call. Write a scalar
+reply through the output pointer. For a string or byte reply, use the
+generated `buffer_set` to copy your bytes; do not assign a stack pointer to
+the output buffer. A `Nat` or `Int` reply is an already initialized
+`mpz_ptr`: set its value, but do not initialize or clear it yourself.
+
+`_make` takes responsibility for the context and its destructor only on
+success. `_retain` creates another independent callback handle. `_release` drops
+one handle; `_close` also revokes future calls, including calls from
+already-started tasks. A callback may close itself: its current call can
+finish, and its context destructor runs after it returns. Reentering a
+different task is supported; trying to drive the same task recursively
+returns `BUSY`. Callbacks must return normally. Use `CALLBACK_TRAP` to
+retire the shared runtime; do not throw or `longjmp` across the C interface.
+
+When mixing archive generations, load the newer bundled runtime. The old
+runtime still runs completion-only APIs, but a retained task returns
+`UNAVAILABLE` from `_start` without invoking a callback.
+
+The [installed callback checks](../evidence/c-retained-tasks-20261122.json)
+identify the archives, consumer sources and commands for an offline replay.
+
 ## Values and cleanup
 
 Ordinary-source arrays use typed spans; records use generated structs. Both can nest. Inputs borrow your storage for one call. Packages exposing `Nat` or `Int` provide generated `_init` functions for their aggregate structs. Call `_init` before first use, then `_clear` to release the complete value, including nested integers, arrays and record fields. `_clear` resets fields to initialized empty values. Successful calls replace initialized copied outputs; failed conversions leave them unchanged. Packages without arbitrary integers, including Alpha above, use zero-initialized outputs and require clearing before reuse. Do not shallow-copy an owned output and clear both copies.
@@ -328,6 +609,96 @@ shows records, all variant constructors, nested containers, bounded recursive tr
 retained children, captured closures and cleanup. The
 [author recipe](../publish/c.md#resource-containing-c-values) explains the explicit
 resource and aggregate policy.
+
+### Keep a function stored in a record
+
+In the [Tariff package](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean),
+`quote` is a Lean function that captures a base price. Copying the C struct
+copies its handle, not its ownership. Use the generated copy function if a
+record needs to outlive its owner:
+
+```c
+tariff_quotes_status price_for_two(tariff_quotes_session *session, uint32_t *price) {
+    tariff_quotes_tariff_t tariff = {0}, copy = {0};
+    tariff_quotes_result *original = NULL, *kept = NULL, *answer = NULL;
+    tariff_quotes_status status = tariff_quotes_make_tariff(session, 40, &tariff, &original);
+    if (status == TARIFF_QUOTES_OK)
+        status = tariff_quotes_tariff_t_copy(session, &tariff, &copy, &kept);
+    tariff_quotes_result_release(&original);
+    if (status == TARIFF_QUOTES_OK)
+        status = tariff_quotes_apply_tariff(session, &copy, 2, price, &answer); /* 42 */
+    tariff_quotes_result_release(&answer);
+    tariff_quotes_result_release(&kept);
+    return status;
+}
+```
+
+The handle belongs to its session. After its last lease is released, using
+it returns `TARIFF_QUOTES_INVALID_ARGUMENT`. A C callback passed by function
+pointer is different: its context is borrowed for the call. Putting it into a
+returned record does not extend that borrow. See the [complete C client](../../tests/fixtures/structured-types/leased-closure-fields.c).
+
+### Return a function-bearing record from a callback
+
+The same package can export `exchangeTariff`. Lean constructs a tariff, asks
+your callback for a replacement, then calls the returned tariff's `quote`
+field. To return the incoming tariff unchanged, assign `*out = *incoming`
+and leave `*owner` null. The bridge reads the reply before the borrow ends.
+To return a newly constructed tariff, supply its result owner with the reply:
+
+```c
+static tariff_quotes_status replace_price(
+    void *context, tariff_quotes_session *session,
+    const tariff_quotes_tariff_t *incoming,
+    tariff_quotes_tariff_t *out, tariff_quotes_result **owner
+) {
+    (void)incoming;
+    uint32_t new_base = *(const uint32_t *)context;
+    return tariff_quotes_make_tariff(session, new_base, out, owner);
+}
+```
+
+The bridge releases a supplied reply owner on success **and on failure**.
+Do not release it a second time. If your application needs the incoming
+function after returning from the callback, use its generated `_retain`
+operation while the borrow is live. Keep that separate owner until you have
+finished using the function. After return, call the **retained handle**: the
+original callback argument has expired, even if the retained owner is still
+alive. To compare the two while both are live, use the type's generated
+`_equal` function. C pointer equality compares handles, not Lean identities.
+The [complete callback client](../../tests/fixtures/structured-types/tariff-exchange.c)
+also shows reentry, invalid replies, and recovery from a nested callback failure.
+
+### Return a Lean function directly from a callback
+
+`flatQuote` calls your C callback with `base` and `units` and expects a number.
+`stagedQuote` calls it with just `base` and expects a Lean function. Lean then
+calls that function with `units`. The reply is a typed function handle from
+the same session, not a C function pointer.
+
+For example, a pricing callback can create a tariff and hand its function
+and result owner back together:
+
+```c
+static tariff_quotes_status choose_quote(void *context, tariff_quotes_session *s,
+        uint32_t base, tariff_quotes_pack_quote_argument0_t *out,
+        tariff_quotes_result **owner) {
+    (void)context;
+    tariff_quotes_tariff_t tariff = {0};
+    tariff_quotes_status status = tariff_quotes_make_tariff(s, base, &tariff, owner);
+    if (status == TARIFF_QUOTES_OK) *out = tariff.quote;
+    return status;
+}
+```
+
+The bridge releases that owner after consuming the reply, even when the
+callback fails. To return a function your application already owns, keep
+its independent owner alive through the call, assign the handle to `*out`
+and leave `*owner` null. Set the host callback's `recovery` pointer to a
+live function of the same type before calling `stagedQuote`. Missing recovery
+prevents the callback from running; on failure, the caller gets an error and
+its output stays unchanged. See the [complete C client](../../tests/fixtures/structured-types/tariff-staged.c)
+for construction, cleanup, and both reply forms.
 
 ### Transferred inputs
 

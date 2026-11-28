@@ -1,0 +1,67 @@
+{
+  "browser": {
+    "page": {
+      "drained": true,
+      "levels": [
+        8,
+        8
+      ],
+      "visits": 2
+    },
+    "react": {
+      "drained": true,
+      "levels": [
+        8,
+        8
+      ],
+      "visits": 2
+    },
+    "text": "8:8",
+    "worker": {
+      "drained": true,
+      "levels": [
+        8,
+        8
+      ],
+      "visits": 2
+    }
+  },
+  "deployed": [
+    "2ae93cddc08528cc6080182a78dc330d95b87b2c2926aa445d3aa8dccac3dc86",
+    "85e4a698a88a64f0f6cc7b336aa6e421cbef7235cdd568146468c8b6dcbc96b3"
+  ],
+  "frameworkVersions": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "scheduler": "0.27.0"
+  },
+  "node": {
+    "drained": true,
+    "levels": [
+      8,
+      8
+    ],
+    "visits": 2
+  },
+  "publicIr": "6d39499182b4e34d831009767fb401500a9f0156f45c03ac4481e30788d59803",
+  "receiptSha256": "ce2201dae1be497dcbd57b3d53df19caab511ae725479d86907c79ef5e16efd1",
+  "reviewed": null,
+  "route": "ordinary",
+  "source": "ca34b6232617025c0fdcdf33a71094d1948cfb7339394d7e1baaae52d74d518f",
+  "sources": {
+    "object-node.mjs": "b47419a31199085115de0de20dcd192d27a18bbef7030c50221fc69ce74ea617",
+    "object-positions.mjs": "ce43d47e7a95727edcbdc11fddca1a65dfd5e389fd10183348b6b2bf69e3a363",
+    "object-positions.mts": "f82033017d928171d4db68e805d2d628e77abd225a19bff1bd20dfb9e8d40a09",
+    "object-react.mjs": "e997329f5967b37410b4a627cfb0157582095208f1741ddff79cff01a6805ba1",
+    "object-worker.mjs": "33ebf79a9dd61176bd6c8eeab73856b4feb1aa5ef217fb15f0f52065ad68cbd1"
+  },
+  "typescript": {
+    "drained": true,
+    "levels": [
+      8,
+      8
+    ],
+    "visits": 2
+  },
+  "typescriptVersion": "5.9.3"
+}

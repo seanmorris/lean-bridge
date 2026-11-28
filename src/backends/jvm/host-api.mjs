@@ -1,0 +1,282 @@
+/** @file The scoped Java/Kotlin API for application-supplied classes. */
+import { readFileSync } from "node:fs";
+import { copiedJvmAssets } from "./copied-assets.mjs";
+import { jvmHostCarrier } from "./host-native-members.mjs";
+import { jvmHostWorkerApi } from "./host-worker-api.mjs";
+import {jvmHostRecords} from "./host-records.mjs";
+import { jvmIOScalarTypes, jvmIOIdentifier, jvmIOReserved } from "./sync-io.mjs";
+
+const box = { int: "Integer", long: "Long", boolean: "Boolean", float: "Float", double: "Double", short: "Short", byte: "Byte" };
+const fail = why => { throw new TypeError("Invalid JVM host API: " + why); };
+const ident = /^[A-Za-z][A-Za-z0-9_]*$/u;
+/**
+ * Describe the exact Java members the installed package will bind.
+ *
+ * @param host - The import contract and the member model used by the compiled binder.
+ */
+export const jvmHostReadme = host => {
+	const name = s => s.index !== undefined ? host.ir.types[s.index].name : s.kind === "unit" ? "void" : jvmIOScalarTypes[s.kind][0];
+	const members = host.model.members.map(m => {
+		const owner = host.ir.types[m.owner].name, params = m.params.filter(p => p.kind !== "unit").map(name).join(", ");
+		return m.mode === "new" ? "new " + owner + "(" + params + ")" : (m.mode === "static" ? "static " : "") + name(m.out) + " " + owner + "." + m.name + "(" + params + ")";
+	});
+	return "\nBind your public classes with Api.bindHosts(" + host.ir.types.map(t => t.name+".class").join(", ") + "). Use the returned binding in try-with-resources (Kotlin: use). Its required members are:\n\n"
+		+ members.map(m => "- `"+m+"`").join("\n") + "\n\nA returned host reference is your original object. For a declared error containing one, catch the generated error for the declaration and pass its host class token(s) to payload. The payload remains valid after the binding closes.\n"
+		+ (host.entries.some(e=>[e.result,...e.parameters.map(p=>p.type)].some(r=>r.kind==="host-record")) ? "\nPublic records retain your original host objects. Byte-array properties return copies. Close a record to release its references, not its application objects.\n" : "")
+		+ (host.entries.some(e=>e.result.kind==="io-closure")?"\nCall a returned Lean function with invoke. It also implements the matching Java Function, Supplier, Consumer or Runnable, and can be passed directly to a compatible callback. Close the function to release its capture; close its binding to revoke all its functions.\n":"");
+};
+/**
+ * Return the same package name used for JNI symbol generation and public sources.
+ *
+ * @param component - Elaborated application component.
+ */
+export const jvmHostNamespace = component => {
+	const slug = component.name.toLowerCase().replaceAll(/[^a-z0-9]+/gu, "_");
+	if(!ident.test(slug) || jvmIOReserved(slug)) fail("component namespace");
+	return "org.leanbridge." + slug;
+};
+const port = (veneer, hash, workers) => `final class NativePort {
+    private NativePort() {}
+    static { load(); }
+    private static void load() {
+        try {
+            var root = java.nio.file.Files.createTempDirectory("lean-bridge-jni-"); root.toFile().deleteOnExit();
+            var file = root.resolve("${veneer}"); file.toFile().deleteOnExit();
+            try (var input = NativePort.class.getResourceAsStream("/META-INF/lean-bridge/jni/${veneer}");
+                 var out = java.nio.file.Files.newOutputStream(file,java.nio.file.StandardOpenOption.CREATE_NEW)) {
+                if (input == null) throw new java.io.IOException("Missing JNI entry library");
+                input.transferTo(out);
+            }
+            var sha=java.security.MessageDigest.getInstance("SHA-256");
+            try (var input=java.nio.file.Files.newInputStream(file,java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
+                byte[] b=new byte[16384]; for (int n;(n=input.read(b))!=-1;) sha.update(b,0,n);
+            }
+            if (!java.util.HexFormat.of().formatHex(sha.digest()).equals("${hash}"))
+                throw new java.io.IOException("JNI entry library differs from verified component");
+            NativeAssets.lookup();
+            System.load(file.toAbsolutePath().toString());
+        } catch (java.io.IOException | java.security.NoSuchAlgorithmException e) { throw new IllegalStateException("Cannot load prepared JVM host component", e); }
+    }
+    static native Object[] invoke(HostMembers binding,int operation,Object[] args) throws Exception;${workers ? "\n    static native Object work(HostMembers binding,Object[] classes,int method,int op,java.nio.ByteBuffer args,java.nio.ByteBuffer handle,java.nio.ByteBuffer output,java.nio.ByteBuffer tags,java.nio.ByteBuffer control);" : ""}
+}\n`;
+/**
+ * Emit normal host-language methods. Only the per-classloader JNI veneer
+ * is private-loaded; all mutable native state lives in authenticated peers.
+ *
+ * @param o - Compiler entries, validated imports, native evidence and verified veneer.
+ */
+export const generateJvmHostApi = o => {
+	const { api, ir, entries, model, evidence, veneer } = o, ns = jvmHostNamespace(api.component);
+	if(!/^liblb_jni_[a-f0-9]{64}\.so$/u.test(veneer.name) || !/^[a-f0-9]{64}$/u.test(veneer.sha256)) fail("JNI entry identity");
+	const files = {}, dir = ns.replaceAll(".", "/"), java = (name, source) => { files["src/main/java/" + dir + "/" + name + ".java"] = "package " + ns + ";\n" + source; };
+	const gens = ir.types.map((_, i) => "T" + i), g = "<" + gens.join(",") + ">", cls = i => "type" + i;
+	const leaf = (r, inner = false) => {
+		const c = jvmHostCarrier(ir.types, r); if(c.kind === "nominal") return gens[c.index];
+		const s = jvmIOScalarTypes[c.kind][0]; return inner ? box[s] ?? s : s;
+	};
+	const classes = new Set(["NativePort", "HostWire", "HostContract", "HostMembers", "Unit", "Api", "Result", "LeanIOException", "LeanEIOError", "NativeAssets"]);
+	const records = jvmHostRecords(api, g, leaf, java, classes);
+	const record = r => r.kind === "host-record" ? records.get(r.declaration) : null;
+	const type = (r, inner = false) => r.kind === "apply" && r.constructor === "result"
+		? "Result<" + r.arguments.map(x => type(x, true)).join(",") + ">" : record(r)?.pub ?? leaf(r, inner);
+	const token = r => r.kind === "named" ? cls(jvmHostCarrier(ir.types, r).index) : type(r) + ".class";
+	const makeInput = (r, v) => "encode(" + JSON.stringify(r.kind === "named" ? "nominal" : r.name) + "," + token(r) + "," + v + ")";
+	const get = (r, v) => {
+		if(record(r)) return record(r).read + "(" + v + ")";
+		if(r.kind === "apply") return "(tag(" + v + ")==0 ? new Result.Ok<>(" + get(r.arguments[0], "payload(" + v + ")") + ") : new Result.Err<>(" + get(r.arguments[1], "payload(" + v + ")") + "))";
+		if(r.kind === "named") return token(r) + ".cast(" + v + ")";
+		return "(" + type(r, true) + ")HostWire.decode(" + JSON.stringify(r.name) + "," + token(r) + "," + v + ")";
+	};
+	// A Throwable cannot have type parameters. Capture the already-decoded Java
+	// value, not a JNI pair or a live binding. A method can introduce fresh type
+	// parameters and check the active leaves with caller-supplied Class tokens.
+	const faultPayload = r => {
+		const kinds = new Set();
+		const project = (t, v, depth = 0) => {
+			if(t.kind === "apply")
+			{
+				const it = "part" + depth;
+				return "switch ((Result<?,?>)" + v + ") { case Result.Ok<?,?> " + it + " -> new Result.Ok<>(" + project(t.arguments[0], it + ".value()", depth+1)
+					+ "); case Result.Err<?,?> " + it + " -> new Result.Err<>(" + project(t.arguments[1], it + ".error()", depth+1) + "); }";
+			}
+			if(t.kind === "named")
+			{
+				const i = jvmHostCarrier(ir.types, t).index; kinds.add(i);
+				return cls(i) + ".cast(" + v + ")";
+			}
+			return "(" + type(t, true) + ")" + v;
+		};
+		const jt = type(r, true), expr = project(r, "value");
+		if(!kinds.size) return { jt, accessor: "" };
+		const ids = [...kinds].sort((a,b) => a-b);
+		const accessor = "    public <" + ids.map(i => gens[i]).join(",") + "> " + jt + " payload("
+			+ ids.map(i => "Class<" + gens[i] + "> " + cls(i)).join(",") + ") { "
+			+ ids.map(i => "java.util.Objects.requireNonNull(" + cls(i) + ");").join(" ") + " return " + expr + "; }\n";
+		return { jt: r.kind === "named" ? "Object" : "Result<?,?>", accessor };
+	};
+	const names = new Set(["close", "bindHosts", "encode", "tag", "payload", "nativeLive"]), methods = [], returned=[];
+	for(const rec of records.values())
+	{
+		names.add(rec.read);
+		methods.push(`        private ${rec.pub} ${rec.read}(Object raw) {
+            if(!(raw instanceof Object[] row) || row.length!=${rec.fields.length}) throw new IllegalStateException("invalid native record");
+            return ${rec.name}.fromNative(${rec.fields.map((f,i)=>get(f.ref,"row["+i+"]")).join(",")});
+        }`);
+	}
+	const hasFunctions=entries.some(e=>e.result.kind==="io-closure");
+	const params = gens.map((t, i) => "Class<" + t + "> " + cls(i)), values = gens.map((_, i) => cls(i)).join(",");
+	const tokens=params.map(p=>"private final "+p+";").join(" "), setTokens=gens.map((_,i)=>"this."+cls(i)+"="+cls(i)+";").join(" ");
+	const ktSync = [], ktType = r => {
+		if(r.kind==="apply") return ns+".Result<"+r.arguments.map(ktType).join(",")+">";
+		if(r.kind==="named") return gens[jvmHostCarrier(ir.types,r).index];
+		return r.name==="unit" ? ns+".Unit" : jvmIOScalarTypes[r.name][1];
+	};
+	const errorClass = (ex,r,d) => {
+		if(classes.has(ex)) fail("duplicate error class"); classes.add(ex);
+		const { jt, accessor } = faultPayload(r);
+		java(ex, `public final class ${ex} extends LeanEIOError {
+    private final ${jt} value;
+    ${ex}(${jt} v) { super(${d}); value=v; }
+    @Override public ${jt} payload() { return value; }
+${accessor}}\n`);
+	};
+	for(const [index, e] of entries.entries())
+	{
+		const name = jvmIOIdentifier(e.name), d = JSON.stringify(e.declaration);
+		if(!ident.test(name) || names.has(name)) fail("duplicate or reserved export " + name); names.add(name);
+		const unit = e.result.kind === "primitive" && e.result.name === "unit";
+		const args = e.parameters.map((p, i) => type(p.type) + " a" + i), input = [], snapshots = [];
+		for(const [i,p] of e.parameters.entries())
+		{
+			const rec=record(p.type);
+			if(!rec)
+			{
+				input.push(makeInput(p.type, "a"+i)); continue;
+			}
+			snapshots.push("var row"+i+"=a"+i+".snapshot();");
+			for(const f of rec.fields) input.push(makeInput(f.ref,"row"+i+"."+f.slot));
+		}
+		const setup=snapshots.length?snapshots.join("\n            ")+"\n            ":"";
+		let err = "";
+		if(e.effect === "EIO")
+		{
+			const ex = name[0].toUpperCase() + name.slice(1) + "Error"; errorClass(ex,e.error,d);
+			err = "if (status==1) throw new " + ex + "(" + get(e.error, "answer[1]") + ");";
+		}
+		const factory=e.result.kind==="io-closure",fn="Returned"+name[0].toUpperCase()+name.slice(1);
+		if(o.workerWire)
+		{
+			const esc=s=>"\u0060"+s+"\u0060", params=e.parameters.map(p=>esc(p.name)+": "+ktType(p.type));
+			ktSync.push(`    fun ${esc(name)}(${params.join(",")}): ${factory?ns+".Api."+fn+g:unit?"kotlin.Unit":ktType(e.result)} = binding.${esc(name)}(${e.parameters.map(p=>esc(p.name)).join(",")})`);
+		}
+		if(factory)
+		{
+			if(e.effect!=="IO" || e.delivery || classes.has(fn)) fail("invalid returned-function site "+name); classes.add(fn);
+			const {argument,reply}=e.result,voidReply=reply.kind==="primitive" && reply.name==="unit";
+			const voidArg=argument.kind==="primitive" && argument.name==="unit",a=type(argument,true),b=type(reply,true);
+			const functional=voidArg?(voidReply?"Runnable":"java.util.function.Supplier<"+b+">")
+				:voidReply?"java.util.function.Consumer<"+a+">":"java.util.function.Function<"+a+","+b+">";
+			const bridge=voidArg?(voidReply?"void run()":b+" get()"):voidReply?"void accept("+a+" value)":b+" apply("+a+" value)";
+			returned.push(`    public static final class ${fn}${g} implements AutoCloseable, ${functional} {
+        private final HostFunctions.Lease lease;
+        ${tokens}
+        private ${fn}(HostFunctions.Group group,${params.join(",")}) {
+            ${setTokens}
+            lease=new HostFunctions.Lease(this,group,${entries.length+index},${entries.length*2+index});
+        }
+        public ${voidReply?"void":type(reply)} invoke(${type(argument)} value) throws Exception {
+            try {
+                Object[] answer=lease.invoke(${makeInput(argument,"value")}); checkFunction(answer,${d});
+                ${voidReply?'HostWire.decode("unit",void.class,answer[1]);':"return "+get(reply,"answer[1]")+";"}
+            } finally { java.lang.ref.Reference.reachabilityFence(this); }
+        }
+        @Override public void close() throws Exception { lease.close(); }
+        @Override public ${bridge} {
+            try { ${voidReply?"":"return "}invoke(${voidArg?"Unit.INSTANCE":"value"}); }
+            catch (Exception error) { throw HostFunctions.unchecked(error); }
+        }
+    }`);
+			methods.push(`        public ${fn}${g} ${name}(${args.join(",")}) throws Exception {
+            ${setup}var fn=new ${fn}<>(functions,${values});
+            try {
+                Object[] answer=functions.invoke(${index},new Object[]{${[...input,"fn.lease.cell"].join(",")}});
+                checkFunction(answer,${d}); fn.lease.ticket(); return fn;
+            } catch (Throwable error) {
+                try { fn.close(); } catch (Throwable cleanup) { if(cleanup!=error) error.addSuppressed(cleanup); }
+                throw error;
+            } finally { java.lang.ref.Reference.reachabilityFence(this); }
+        }`);
+			continue;
+		}
+		methods.push(`        public ${unit ? "void" : type(e.result)} ${name}(${args.join(",")}) throws Exception {
+            ${setup}Object[] answer=${hasFunctions?"functions.invokeOn(this,":o.workerWire?"scope.invoke(":"NativePort.invoke(port,"}${index},new Object[]{${input.join(",")}});
+            long status=tag(answer);
+            if(status==2) throw new LeanIOException(${d},(String)HostWire.decode("string",String.class,answer[1]));
+            ${err}
+            if(status!=0) throw new IllegalStateException("Invalid native result");
+            ${unit ? 'HostWire.decode("unit",void.class,answer[1]);' : "return " + get(e.result, "answer[1]") + ";"}
+        }`);
+	}
+	const workers = o.workerWire && jvmHostWorkerApi({ api, ir, ns, wire: o.workerWire, evidence, names, errorClass });
+	if(hasFunctions) java("HostFunctions",readFileSync(new URL("./host-functions.java",import.meta.url),"utf8"));
+	java("Unit", "public enum Unit { INSTANCE }\n");
+	java("Result", "public sealed interface Result<V,E> { record Ok<V,E>(V value) implements Result<V,E> {} record Err<V,E>(E error) implements Result<V,E> {} }\n");
+	java("LeanIOException", "public final class LeanIOException extends java.io.UncheckedIOException { private final String decl; LeanIOException(String d,String msg) { super(d+\": \"+msg,new java.io.IOException(msg)); decl=d; } public String declaration(){return decl;} }\n");
+	java("LeanEIOError", "public abstract class LeanEIOError extends RuntimeException { private final String decl; LeanEIOError(String d){super(d+\" failed\"); decl=d;} public String declaration(){return decl;} public abstract Object payload(); }\n");
+	java("Api", `public final class Api {
+    private Api(){}${workers?"\n"+workers.direct.join("\n"):""}${hasFunctions?`
+    private static void checkFunction(Object[] answer,String declaration) {
+        long status=tag(answer);
+        if(status==2) throw new LeanIOException(declaration,(String)HostWire.decode("string",String.class,answer[1]));
+        if(status!=0) throw new IllegalStateException("Invalid native function result");
+    }
+${returned.join("\n")}`:""}
+    public static ${g} Bound${g} bindHosts(${params.join(",")}) throws Exception {
+        Bound${g} bound=new Bound<>(${values});
+        NativePort.invoke(bound.port,-2,null); return bound;
+    }
+    private static Object encode(String kind,Class<?> cls,Object value) {
+        return HostWire.encode(kind,new HostMembers.Site(kind,cls).checked(value,false));
+    }
+    private static long tag(Object r) { return (Long)((Object[])r)[0]; }
+    private static Object payload(Object r) { return ((Object[])r)[1]; }
+    public static final class Bound${g} implements AutoCloseable {
+        private final HostMembers port;${workers?"\n        private final HostTaskScope scope;":""}${hasFunctions?"\n        private final HostFunctions.Group functions;":""}
+        ${params.map(p => "private final " + p + ";").join(" ")}
+        private Bound(${params.join(",")}) {
+            ${gens.map((_, i) => "this." + cls(i) + "=" + cls(i) + ";").join(" ")}
+            port=HostContract.bind(Unit.class,${values});${workers?" scope=new HostTaskScope(port);":""}${hasFunctions?" functions=new HostFunctions.Group(this,port,"+(workers?"scope":"null")+");":""}
+        }
+        @Override public void close() throws Exception { ${hasFunctions?"try { functions.close(); } finally { java.lang.ref.Reference.reachabilityFence(this); }":workers?"scope.close();":"NativePort.invoke(port,-1,null);"} }
+${[...methods,...workers?.bound??[]].join("\n")}
+    }
+}\n`);
+	java("NativePort", port(veneer.name, veneer.sha256, workers)); java("HostMembers", model.implementation); java("HostContract", model.contract);
+	files["src/main/java/" + dir + "/NativeAssets.java"] = copiedJvmAssets({ namespace: ns }, evidence);
+	files["src/main/kotlin/" + dir + "/kotlin/Api.kt"] = `package ${ns}.kotlin
+object Api {
+    @JvmStatic fun <${gens.map(t => t + ": Any").join(",")}> bindHosts(${gens.map((t, i) => cls(i) + ": kotlin.reflect.KClass<" + t + ">").join(",")}): ${ns}.Api.Bound${g} =
+        ${ns}.Api.bindHosts(${gens.map((_, i) => cls(i) + ".java").join(",")})
+}
+`;
+	if(workers)
+	{
+		const types = "<"+gens.map(t=>t+": Any").join(",")+">";
+		const params=gens.map((t,i)=>cls(i)+": kotlin.reflect.KClass<"+t+">").join(",");
+		files["src/main/kotlin/" + dir + "/kotlin/Api.kt"] = `package ${ns}.kotlin
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.flow.map
+object Api {
+    @JvmStatic fun ${types} bindHosts(${params}): Bound${g} =
+        Bound(${ns}.Api.bindHosts(${gens.map((_,i)=>cls(i)+".java").join(",")}))
+${workers.ktDirect.join("\n")}
+}
+class Bound${types} internal constructor(private val binding: ${ns}.Api.Bound${g}): AutoCloseable {
+    override fun close() = binding.close()
+${[...ktSync,...workers.ktBound].join("\n")}
+}
+`;
+	}
+	files["binding-manifest.json"] = JSON.stringify({ generator: workers ? "jvm-host-tasks-v1" : "jvm-host-v1", namespace: ns, kotlin: { namespace: ns + ".kotlin" } });
+	return { namespace: ns, files };
+};

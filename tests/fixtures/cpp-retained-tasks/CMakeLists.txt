@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(retained_consumer LANGUAGES CXX)
+find_package(LeanBridgeLbcCppRetained CONFIG REQUIRED)
+find_package(LeanBridgeLbcCppPeer CONFIG REQUIRED)
+add_executable(consumer consumer.cpp)
+target_compile_options(consumer PRIVATE -Wall -Wextra -Werror)
+target_link_libraries(consumer PRIVATE LeanBridge::lbc_cpp_retained LeanBridge::lbc_cpp_peer ${CMAKE_DL_LIBS})

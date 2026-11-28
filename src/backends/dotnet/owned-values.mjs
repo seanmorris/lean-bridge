@@ -36,6 +36,7 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
 	const callbackReplies = Boolean(c.hostArgument) && c.callbacks.some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.some(fn => fn.receiver === 0), wholeOwners = anchored || receivers;
+	const canonicalEquality = anchored || c.callbackArgumentViews === true;
 	const component = pascal(c.prefix), names = new Map();
 	const occupied = new Set(reserved), fail = message => { throw new TypeError(`Invalid owned C# values: ${message}`); };
 	if(wholeOwners) occupied.add("Value");
@@ -97,8 +98,46 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 			return { ...branch, publicName, fields: fields(branch.fields, publicName, true) };
 		})
 	}));
+	const inputs = [], byId = new Map(types.map(node => [node.id, node]));
+	const inputName = base => {
+		let name = base + "Input";
+		while(occupied.has(name)) name += "Input";
+		return claim(name);
+	};
+	for(const node of types.filter(n => n.hostInput))
+	{
+		const view = node.hostInput;
+		view.publicType = inputName(node.publicType);
+		view.fields = fields(view.fields,view.publicType);
+		for(const f of view.fields.filter(f => f.host))
+		{
+			const child = byId.get(f.type);
+			if(child.fieldSlot) continue;
+			const slot = child.fieldSlot = inputName(child.publicType);
+			inputs.push(`/// <summary>A borrowed delegate or leased function for an input record field.</summary>
+public readonly struct ${slot}
+{
+    internal readonly ${child.publicType}? Lease;
+    internal readonly ${child.delegateType}? Callback;
+    private ${slot}(${child.publicType}? lease, ${child.delegateType}? callback) { Lease = lease; Callback = callback; }
+    public static implicit operator ${slot}(${child.publicType} lease) => new(lease, null);
+    public static implicit operator ${slot}(${child.delegateType} callback) => new(null, callback);
+}`);
+		}
+		const params = delegatesOnly => view.fields.map(f => `${f.host ? byId.get(f.type)[delegatesOnly ? "delegateType" : "fieldSlot"] : type(f.type)} ${f.publicName}`).join(", ");
+		inputs.push(`/// <summary>An input-only record; delegate fields are borrowed until the enclosing call returns.</summary>
+public sealed record ${view.publicType}(${params(false)})
+{
+    public ${view.publicType}(${params(true)}) : this(${view.fields.map(f => (f.host ? "("+byId.get(f.type).fieldSlot+")" : "")+f.publicName).join(", ")}) { }
+    public static implicit operator ${view.publicType}(${node.publicType} source)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(source);
+        return new(${view.fields.map(f => "source."+f.publicName).join(", ")});
+    }
+}`);
+	}
 	const methods = new Set([...members, "Api"]);
-	const functions = c.functions.map(fn => {
+	const functions = [...c.functions,...c.hostFieldCalls].map(fn => {
 		const publicName = pascal(fn.cName.slice(c.prefix.length + 1));
 		if(methods.has(publicName)) fail(`reserved or duplicate function: ${publicName}`);
 		methods.add(publicName); return { ...fn, publicName
@@ -106,7 +145,7 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 	});
 	if(receivers) for(const node of types)
 		if(functions.some(fn => fn.receiver === 0 && fn.parameters[0] === node.id)) node.ownerType = claim(node.publicType + "Value");
-	const receiverDeclarations = ownedDotnetReceiverDeclarations({ c, types, functions });
+	const receiverDeclarations = ownedDotnetReceiverDeclarations({ c, types, functions: functions.filter(fn => !fn.hostRecordSlots) });
 	const definitions = new Map(ir.types.map(node => [node.id, node]));
 	const contract = ref => ref.kind === "primitive" ? ref.name : ref.kind === "named"
 		? definitions.get(ref.id).name : `${ref.constructor}<${ref.arguments.map(contract).join(", ")}>`;
@@ -161,17 +200,17 @@ ${values.map((field, index) => `        ${index} => ${field.publicName},`).join(
 public sealed class ${name} : global::System.IDisposable, IOwnedValue
 {
     internal readonly Interop.OwnedHandle Handle;
-    private readonly global::System.Func<Interop.OwnedHandle, ${name}> retain;${anchored ? "\n    private readonly global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal;" : ""}
+    private readonly global::System.Func<Interop.OwnedHandle, ${name}> retain;${canonicalEquality ? "\n    private readonly global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal;" : ""}
 ${fn ? `${fn.invocations.map(invocation => `    internal delegate ${fn.invokeReturnType ?? fn.returnType} Invocation${invocation.suffix}(${invocation.parameters.map((type, index) => `${type} arg${index}`).join(", ")});
     private readonly Invocation${invocation.suffix} invoke${invocation.suffix};
 `).join("")}${rawBridge ? `    internal delegate ${fn.returnType} RawInvocation(${rawParams});
     private readonly RawInvocation rawInvoke;
-` : ""}` : ""}    internal ${name}(Interop.OwnedHandle handle, global::System.Func<Interop.OwnedHandle, ${name}> retain${fn ? fn.invocations.map(invocation => `, Invocation${invocation.suffix} invoke${invocation.suffix}`).join("") : ""}${anchored ? ", global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal" : ""}${rawBridge ? ", RawInvocation rawInvoke" : ""})
-    { Handle = handle; this.retain = retain;${fn ? fn.invocations.map(invocation => ` this.invoke${invocation.suffix} = invoke${invocation.suffix};`).join("") : ""}${anchored ? " this.equal = equal;" : ""}${rawBridge ? " this.rawInvoke = rawInvoke;" : ""} }
+` : ""}` : ""}    internal ${name}(Interop.OwnedHandle handle, global::System.Func<Interop.OwnedHandle, ${name}> retain${fn ? fn.invocations.map(invocation => `, Invocation${invocation.suffix} invoke${invocation.suffix}`).join("") : ""}${canonicalEquality ? ", global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal" : ""}${rawBridge ? ", RawInvocation rawInvoke" : ""})
+    { Handle = handle; this.retain = retain;${fn ? fn.invocations.map(invocation => ` this.invoke${invocation.suffix} = invoke${invocation.suffix};`).join("") : ""}${canonicalEquality ? " this.equal = equal;" : ""}${rawBridge ? " this.rawInvoke = rawInvoke;" : ""} }
     public bool IsClosed => Handle.IsClosed;
     public void Dispose() => Handle.Dispose();
     public ${name} Retain() => retain(Handle);
-${anchored ? `    public bool SameIdentity(${name} other)
+${canonicalEquality ? `    public bool SameIdentity(${name} other)
     {
         global::System.ArgumentNullException.ThrowIfNull(other);
         return equal(Handle, other.Handle);
@@ -204,24 +243,24 @@ ${fn.anchor === undefined ? `\
 }
 ${node.cases.map(branch => record(branch.publicName, branch.fields, name)).join("\n")}`;
 	});
-	// Resource leaves compare wrapper identity, including after disposal. Value
-	// equality never calls native code or silently creates a retained resource.
+	// Compare live native identities when the adapter supplies a comparator.
+	// Other leaves use wrapper identity. Neither comparison retains a resource.
 	let equality = dotnetGraphEquality.replace("value is not (null or Unit", "value is not (IOwnedValue or null or Unit");
-	if(anchored) equality = equality.replace("else equal &= global::System.Object.Equals(x.Value, y.Value);", "else if (x.Value is IOwnedValue resource) equal &= resource.OwnedEquals(y.Value);\n            else equal &= global::System.Object.Equals(x.Value, y.Value);");
+	if(canonicalEquality) equality = equality.replace("else equal &= global::System.Object.Equals(x.Value, y.Value);", "else if (x.Value is IOwnedValue resource) equal &= resource.OwnedEquals(y.Value);\n            else equal &= global::System.Object.Equals(x.Value, y.Value);");
 	const source = `namespace LeanBridge.${component};
 
 public readonly record struct Unit;
-internal interface IOwnedValue {${anchored ? " bool OwnedEquals(object? other); " : " "}}
+internal interface IOwnedValue {${canonicalEquality ? " bool OwnedEquals(object? other); " : " "}}
 ${wholeOwners ? receivers ? ownedDotnetWholeValues.replace("public sealed class Value<T>", "public class Value<T>").replaceAll("public Value<T>", "public virtual Value<T>") : ownedDotnetWholeValues : ""}\
 ${callbackReplies ? ownedDotnetCallbackResult : ""}\
 ${dotnetGraphCompoundTypes}
 ${callbacks.map(fn => `public delegate ${fn.hostReturnType} ${fn.delegateType}(${fn.hostParameters.map((type, index) => `${type} arg${index}`).join(", ")});`).join("\n")}
-${declarations.join("\n\n")}
+${[...declarations,...inputs].join("\n\n")}
 ${receivers ? receiverDeclarations.source + "\n" : ""}\
 ${aliases.map(alias => `// Lean alias ${alias.name} = ${alias.contractType}; C#: ${alias.managedType}`).join("\n")}
 ${equality}`;
 	if(source.length > 4 * 1024 * 1024) fail("generated declarations exceed 4 MiB");
 	return { layout, c, types, functions, callbacks, aliases, source
-		, wholeOwners
+		, wholeOwners, canonicalEquality
 		, namespace: `LeanBridge.${component}`, assembly: `LeanBridge.${component}` };
 };

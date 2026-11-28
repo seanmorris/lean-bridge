@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Packet"],
+  "exports": ["Packet.packet", "Packet.release", "Packet.chunks", "Packet.closed"],
+  "taskExports": ["Packet.packet"],
+  "asyncIterators": [{"open": "Packet.chunks", "next": "Packet.next", "close": "Packet.finish"}],
+  "targets": {"wit-wasi": {"name": "packet", "version": "1.0.0", "asyncAbi": "canonical"}}
+}

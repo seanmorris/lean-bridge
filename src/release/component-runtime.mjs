@@ -17,6 +17,16 @@ import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/
 import { componentStructuredCallableAbi, assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
 import { componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi, assertComponentOwnedWasmBindings } from "../abi/component-owned-wasm.mjs";
 import { createOwnedWasmComponentRuntime } from "./owned-wasm-component-runtime.mjs";
+import { assertJavaScriptIOAbi, componentImmediateIOAbi, componentSyncIOAbi } from "../abi/component-sync-io.mjs";
+import { abandonImmediateCursors } from "./component-immediate-cursors.mjs";
+import { validateJavaScriptWasmControl } from "../abi/component-wasm-control.mjs";
+import { bindJavaScriptIO } from "./component-sync-io-runtime.mjs";
+import { componentHostIOAbi, componentHostRecordIOAbi, javaScriptHostIOAbi, validateJavaScriptHostModules } from "../abi/component-host-io.mjs";
+import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
+import { javaScriptHostMembers } from "../backends/javascript/host-members.mjs";
+import { installWasmHostDomain } from "../runtime/wasm-host-loader.mjs";
+import { bindJavaScriptHostExports } from "../runtime/wasm-host-exports.mjs";
+import {phpWasmHostMembers} from "../backends/php/host-members.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -122,8 +132,8 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 	if(!module.FS || !module._bridge_scalar_frame_clear) throw new Error("Shared runtime does not implement scalar ABI 2");
 	const loaded = new Map();
 	const callables = module._bridge_callable_abi ? createComponentCallableRuntime(module) : null;
-	let poisoned = false;
-	const poison = () => { poisoned = true; callables?.poison(); };
+	let poisoned = false,hostDomain;
+	const poison = () => { poisoned = true; abandonImmediateCursors(module); hostDomain?.abandon();callables?.poison(); };
 	const assertOpen = () => {
 		if(poisoned) throw new Error("Component runtime is poisoned");
 		if(module._bridge_lean_runtime_status && module._bridge_lean_runtime_status() !== 2)
@@ -174,10 +184,21 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		};
 	};
 	let linkQueue = Promise.resolve();
+	let hostBrokerIntegrity = null;
 	const loadComponent = descriptor => {
 		assertOpen();
 		descriptor = { ...descriptor, sideModule: new URL(descriptor.sideModule.href), privateAbi: structuredClone(descriptor.privateAbi), bindingIr: structuredClone(descriptor.bindingIr) };
-		const fingerprint = JSON.stringify([descriptor.buildHash, descriptor.integrity, descriptor.initializer, descriptor.privateAbi, descriptor.bindingIr]);
+		const host = [componentHostIOAbi, componentHostRecordIOAbi].includes(descriptor.privateAbi.version);
+		if(host)
+		{
+			const {url,integrity} = descriptor.broker;
+			descriptor.broker = { url: new URL(url.href), integrity };
+			descriptor.hostImports = structuredClone(descriptor.hostImports);
+		}
+		const fingerprint = JSON.stringify([descriptor.buildHash
+			, descriptor.integrity, descriptor.initializer
+			, descriptor.privateAbi, descriptor.bindingIr
+			, host ? [descriptor.hostImports, descriptor.broker.integrity] : null]);
 		const existing = loaded.get(descriptor.id);
 		if(existing) return existing.fingerprint === fingerprint ? existing.promise : Promise.reject(new Error(`Lean component identity conflict for ${descriptor.id}`));
 		const record = { fingerprint, promise: null, linking: false };
@@ -186,7 +207,27 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			const owned = [componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi].includes(descriptor.privateAbi.version);
 			const structured = descriptor.privateAbi.version === componentStructuredCallableAbi;
 			const callable = structured || descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
-			if(owned)
+			const io = [componentSyncIOAbi,componentImmediateIOAbi].includes(descriptor.privateAbi.version);
+			let model, broker;
+			if(host)
+			{
+				const zend=descriptor.privateAbi.owner==="php-wasm-zend";
+				if(descriptor.id !== descriptor.bindingIr.component.id || descriptor.initializer !== null
+					|| !/^[a-f0-9]{64}$/u.test(descriptor.broker.integrity)
+					|| canonicalizeJsonValue(descriptor.privateAbi) !== canonicalizeJsonValue(javaScriptHostIOAbi(descriptor.bindingIr, descriptor.hostImports, descriptor.buildHash,zend)))
+					throw new Error("JavaScript host component descriptor mismatch");
+				if(module._bridge_owned_runtime_abi?.() !== 1 || !module._bridge_lean_runtime_status)
+					throw new Error("Shared runtime lacks the JavaScript host initialization broker");
+				model = zend?phpWasmHostMembers(descriptor.hostImports):javaScriptHostMembers(descriptor.hostImports);
+			}
+			else if(io)
+			{
+				assertJavaScriptIOAbi(descriptor.privateAbi, descriptor.bindingIr);
+				if(descriptor.id !== descriptor.bindingIr.component.id || descriptor.buildHash !== descriptor.privateAbi.componentIdentity
+					|| descriptor.initializer !== null) throw new Error("Synchronous IO component identity mismatch");
+				if(module._bridge_owned_runtime_abi?.() !== 1) throw new Error("Shared runtime lacks the component initialization broker");
+			}
+			else if(owned)
 			{
 				if(!module._bridge_owned_runtime_abi || module._bridge_owned_runtime_abi() !== 1)
 					throw new Error("Shared runtime lacks the owned component ABI; rebuild it");
@@ -232,8 +273,8 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			}
 			const symbols = new Set();
 			const bindings = new Set();
-			if(!owned && descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
-			for(const declaration of owned ? [] : descriptor.bindingIr.declarations)
+			if(!owned && !io && !host && descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
+			for(const declaration of owned || io || host ? [] : descriptor.bindingIr.declarations)
 			{
 				if(!callable && !copied) assertComponentSignature(declaration);
 				const abi = descriptor.privateAbi.exports.find(item => item.bindingId === declaration.id);
@@ -245,15 +286,46 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			}
 			const bytes = await readArtifact(descriptor.sideModule);
 			if(await digest(bytes) !== descriptor.integrity) throw new Error(`Lean component integrity mismatch for ${descriptor.id}`);
+			if(io) await validateJavaScriptWasmControl(bytes, descriptor.privateAbi.controlSymbol, false);
+			if(host)
+			{
+				broker = await readArtifact(descriptor.broker.url);
+				if(await digest(broker) !== descriptor.broker.integrity) throw new Error("JavaScript host broker integrity mismatch");
+				await validateJavaScriptHostModules(bytes, broker, descriptor.privateAbi);
+			}
 			const link = async () => {
 				assertOpen();
+				if(host && hostBrokerIntegrity !== null && hostBrokerIntegrity !== descriptor.broker.integrity)
+					throw new Error("Conflicting JavaScript host broker on the shared runtime");
 				record.linking = true;
+				let domain;
+				if(host)
+				{
+					hostBrokerIntegrity = descriptor.broker.integrity;
+					try
+					{ hostDomain=domain = await installWasmHostDomain(module, broker, { assertOpen, poison }); assertOpen(); }
+					catch(error)
+					{ poison(); throw error; }
+				}
 				const filename = `/lean-component-${descriptor.integrity}.wasm`;
 				module.FS.writeFile(filename, bytes);
 				try
 { await module.loadDynamicLibrary(filename, { global: true, loadAsync: true, nodelete: true }); }
+				catch(error)
+				{
+					// Linking can run Wasm constructors before failing. A partially
+					// initialized IO component must not share later calls' heap.
+					if(io || host) poison();
+					throw error;
+				}
 				finally
 { module.FS.unlink(filename); }
+				if(host) return bindJavaScriptHostExports({ wasm: module, domain
+					, abi: descriptor.privateAbi, model
+					, operation: operationFor(descriptor.privateAbi.controlSymbol, null)
+					, assertOpen
+					, poison });
+				if(io) return bindJavaScriptIO(module, descriptor.privateAbi, operationFor(descriptor.privateAbi.controlSymbol, 11), { assertOpen, poison });
 				if(owned) return createOwnedWasmComponentRuntime(module, descriptor
 					, operationFor(descriptor.privateAbi.controlSymbol, 3), { assertOpen, poison });
 				const symbolBytes = encoder.encode(`${descriptor.initializer}\0`);

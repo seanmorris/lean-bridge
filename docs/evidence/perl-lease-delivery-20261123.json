@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-cpan-shared-heap-resources",
+  "planNodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "acceptanceSha256": "c3bb3fc9e9fbdbb4b7f3cfdb3d280631c79936ca97d0b2179edbc37be78239ac",
+  "reproductionSha256": "8bcc52ca2dd543b34e19189bc997ac012e3ac9ba07517e03803b83419c2372ac",
+  "runtime": {
+    "name": "LeanBridge-Runtime",
+    "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+    "sha256": "b17843234c110ab8c367d87d52fc8161e191ab38005db870b8310ec1cc0e2f61",
+    "version": "0.0020056765500921373140337678370776147463249757714828482571779524855605367273970181"
+  },
+  "ledger": {
+    "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+    "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+    "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+  },
+  "sources": {
+    "Observe.xs": "24029e29f2faa3fa70d89598ad8de8752feeb12c5eb8de202bdfab8c5b58efd2",
+    "bad-ledger.t": "304558a9baa52f291dc3cfaf21bf1106c59b272ea09efd0d742392d998d4ed3d",
+    "build-observer.pl": "2081ccf5c50cf0435c11bd888bd450e2f338a4373244f7974b9482336ea8e7d9",
+    "example.pl": "5aa42899f51ae5cbf3baeff319606c955fdd1fffca9dc02c8e15b8741cdd5ee8",
+    "foreign.t": "c658b4397226ef27279c8c280f8de094f2c59c711b7f1f94d53316d7676b6bf8",
+    "interop.t": "8f6079bae0da9f2f99e28de622b232ee097f292ccdf581d442a77b397db721a4",
+    "retire.t": "f939d8ceb77bc19bbe87e1425cfa22e67b7055f86bceb0d42d2f44f091a018de",
+    "verify.py": "770d593e65374850d6b14c7785befb3bd26675f580a6284fd033338b7c5a8ec2"
+  },
+  "packages": [
+    {
+      "route": "ordinary",
+      "profile": "native-perl-task-v1",
+      "bindingIrSha256": "ae59eb210c43bba5fbc99d5f4390a155164dd442bbeb9ce567ac31d085fda7df",
+      "receiptSha256": "00c9e9777cbffe6c79888c0d4e8d973040b0d4ae7f140dfd3b1393591df0f8fe",
+      "component": {
+        "bytes": 160655,
+        "path": "archives/LeanBridge-Depot-0.001.tar.gz",
+        "sha256": "17e74c0fb4f8da455bc37ac22797fbaae20e005ba4fff5e8f328b1549ef778e7"
+      },
+      "modules": {
+        "Depot": "b9201cb214a539acf282781d551dda24a1257da0196cee0e13db262ca171d437",
+        "Exchange": "84f94d9e544cf71c2aab09e41f0a22b0572c3fa412a175daf7818639c1a5d69e",
+        "Shared": "94946b12080174617ce30604f781dcb29ff751bd37cb563bf1acfe40f286d20b"
+      }
+    },
+    {
+      "route": "reviewed",
+      "profile": "native-perl-task-v1",
+      "bindingIrSha256": "ae59eb210c43bba5fbc99d5f4390a155164dd442bbeb9ce567ac31d085fda7df",
+      "receiptSha256": "2606ec34b1adb565cc4a35875949444d504eff51001a3e2bcbed7279b6ab941a",
+      "component": {
+        "bytes": 160640,
+        "path": "archives/LeanBridge-Depot-0.001.tar.gz",
+        "sha256": "c2a4d11af9569e4ebd65b9413b9b2032608834ed1feaae18d1020d4675500d50"
+      },
+      "modules": {
+        "Depot": "b9201cb214a539acf282781d551dda24a1257da0196cee0e13db262ca171d437",
+        "Exchange": "84f94d9e544cf71c2aab09e41f0a22b0572c3fa412a175daf7818639c1a5d69e",
+        "Shared": "94946b12080174617ce30604f781dcb29ff751bd37cb563bf1acfe40f286d20b"
+      }
+    },
+    {
+      "route": "counter",
+      "profile": "native-perl-io-v1",
+      "bindingIrSha256": "ddf2b390a997f105b0a488e0e5792d94c93b2483beb83563cbf3fd4111097256",
+      "receiptSha256": "397518567fdfb64266d8a9ba20f2f0d74aca3b090460036e66a40c306e7b5d2f",
+      "component": {
+        "bytes": 70099,
+        "path": "archives/LeanBridge-Counter-0.001.tar.gz",
+        "sha256": "1acfb09a54a708c60519379ae8b072fd60a72a06fe77d3583ac8a2cc0f5c2ec2"
+      },
+      "modules": {
+        "Counter": "44ba8f7d00603ac49c826decf08e46682b78b4094c2c303b007ddf79a805bf75",
+        "Shared": "94946b12080174617ce30604f781dcb29ff751bd37cb563bf1acfe40f286d20b"
+      }
+    },
+    {
+      "route": "peer",
+      "profile": "native-library-v1",
+      "bindingIrSha256": "49fa299f7369a250edda756948524806358c516cd0d3602f41b865fb064b302a",
+      "receiptSha256": "4d79746ec246cbac6a7d009ab22b443771839e4eb55a3324b49ac2777b16957d",
+      "component": {
+        "bytes": 55687,
+        "path": "archives/LeanBridge-ResourcePeer-0.001.tar.gz",
+        "sha256": "81e802d94adb7d77fc182fe1e57804158e2b942848416be63f394c2ed37e08b6"
+      },
+      "modules": {
+        "ResourcePeer": "92680b1f940b78679d928de78f02f74c8f29fd8e5a50d63c85d3c4711ce01a09",
+        "Shared": "94946b12080174617ce30604f781dcb29ff751bd37cb563bf1acfe40f286d20b"
+      }
+    },
+    {
+      "route": "foreign",
+      "profile": "native-library-v1",
+      "bindingIrSha256": "26643eba74a966b67675d70157553cba3d0f5270f486723085041e18ec840229",
+      "receiptSha256": "a3e337ddf4257ea2b17e231c16e3406ca1fffdc85fd57d66daeda022119c4f2c",
+      "component": {
+        "bytes": 55881,
+        "path": "archives/LeanBridge-ForeignPeer-0.001.tar.gz",
+        "sha256": "689326140c00a0e1acc719da0d5c47540570150b3ce0bad8969c2aa67ef1adba"
+      },
+      "modules": {
+        "ForeignPeer": "a778264150eb6aa58011caf907ff4e53199e953697ff7a3140c2b1930bbfc405",
+        "Shared": "c1482b0eba1b28ccb37e0a0d23e02ccf2f70e5e98eab87352c64611f6bcc84d0"
+      }
+    }
+  ],
+  "rows": 8,
+  "cases": [
+    "ordinary-first",
+    "task-first",
+    "retirement",
+    "bad-ledger",
+    "foreign-first",
+    "foreign-last"
+  ],
+  "prebuilt": {
+    "passed": 824,
+    "skipped": 16,
+    "planned": 840
+  },
+  "sourceBuild": {
+    "passed": 44,
+    "skipped": 0,
+    "planned": 44
+  },
+  "offlineCLI": {
+    "artifacts": [
+      {
+        "bytes": 160655,
+        "path": "archives/LeanBridge-Depot-0.001.tar.gz",
+        "sha256": "17e74c0fb4f8da455bc37ac22797fbaae20e005ba4fff5e8f328b1549ef778e7"
+      },
+      {
+        "bytes": 51403305,
+        "path": "archives/LeanBridge-Runtime-0.0020056765500921373140337678370776147463249757714828482571779524855605367273970181.tar.gz",
+        "sha256": "b17843234c110ab8c367d87d52fc8161e191ab38005db870b8310ec1cc0e2f61"
+      }
+    ],
+    "cliArchiveSha256": "90777c0fbb80eba2e83d1371cd159b2fdae3dac1475178ce3bf219acd0cc6a6c",
+    "receiptSha256": "00c9e9777cbffe6c79888c0d4e8d973040b0d4ae7f140dfd3b1393591df0f8fe"
+  }
+}

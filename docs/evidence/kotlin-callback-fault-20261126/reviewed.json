@@ -1,0 +1,104 @@
+{
+  "kotlin": {
+    "clientSha256": "37c0b0ac95086c57f19d5f1d47acb0bd002fb299938d84d74d16340550e5dfc5",
+    "observations": [
+      {
+        "mode": "active",
+        "order": "feedback-first",
+        "output": "Kotlin active feedback-first: one callback, both packages retired, zero live identities, descriptor delta zero"
+      },
+      {
+        "mode": "active",
+        "order": "peer-first",
+        "output": "Kotlin active peer-first: one callback, both packages retired, zero live identities, descriptor delta zero"
+      },
+      {
+        "mode": "after-cancel",
+        "order": "feedback-first",
+        "output": "Kotlin after-cancel feedback-first: one callback, both packages retired, zero live identities, descriptor delta zero"
+      },
+      {
+        "mode": "after-cancel",
+        "order": "peer-first",
+        "output": "Kotlin after-cancel peer-first: one callback, both packages retired, zero live identities, descriptor delta zero"
+      }
+    ],
+    "observerSha256": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75"
+  },
+  "peer": {
+    "artifacts": [
+      {
+        "bytes": 51407274,
+        "path": "archives/relay-1.0.0.jar",
+        "sha256": "c92ebe121b8811748c9b6b46926b956e6c4800d107f88250e58d2c6dd415b057"
+      },
+      {
+        "bytes": 750,
+        "path": "archives/relay-1.0.0.pom",
+        "sha256": "a35134c57503b61c2786642c4c2b1e1a5c759a82f5320decca248ad2c0a8b124"
+      }
+    ],
+    "detail": {
+      "bindingIrSha256": "96fc9df5be9e661e54c6fee223091eb8ca7eca4ddb4ce5eb5a0c81d9f572fc31",
+      "componentIdentity": "4a2f7208fb664287d4173feb8bc2762cbc9c7fbae61cbcc7e93fb3f50fe5820b",
+      "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "java": "javac 22.0.2",
+      "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+      "libraries": {
+        "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+        "liblbc_jvm_08aafcb24920a6c0ace3734c429e056eacb772e939b10f1dd7fb5e4e2bb3be53.so": "107748a5168ac2e17419cf53561f83977281da4e9100827c7d9a53d627e52a1b",
+        "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "owner": {
+        "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+        "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+      },
+      "payloads": 64,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "name": "com.acme:relay",
+    "receiptSha256": "afec5b81343940c57de4e85f036cfd1f4a1fd7aa1cd9bf049fa1c9d6c82d14f4",
+    "reviewedSourceSha256": null,
+    "route": "peer",
+    "sourceTreeSha256": "fc871f8bd43ff213a8a690966ec732072bbd997e2137fe3937407e950fcf2b85"
+  },
+  "source": {
+    "artifacts": [
+      {
+        "bytes": 51480778,
+        "path": "archives/feedback-1.0.0.jar",
+        "sha256": "1b4182cd276d6be1d5c879846ea2137c95943c1471ff765ff222f849f6101060"
+      },
+      {
+        "bytes": 753,
+        "path": "archives/feedback-1.0.0.pom",
+        "sha256": "4aa2954ce45f0ed3e96c59967fe5c1e9026ef5a294e551ab7fee795a696efdf1"
+      }
+    ],
+    "detail": {
+      "bindingIrSha256": "d550ffdb03c6fe36239c2e55cdb282b301e0af1fa6697fef6f0aa149609ccfd6",
+      "componentIdentity": "28495b79ba1431d1831f60bf942a1f1ff50a5e07484ed28a12bbe1883ada1553",
+      "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "java": "javac 22.0.2",
+      "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+      "libraries": {
+        "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+        "liblbc_jvm_76e1abaa1352ef48e800394c21c6ec6ef528c91f33222c91ceb29e27baef7e74.so": "9078e2b219535d577f213fd52c07802a8075ee5707b48c5a0a95023a544811ec",
+        "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "owner": {
+        "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+        "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+      },
+      "payloads": 76,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "name": "com.acme:feedback",
+    "receiptSha256": "2751e4929be345a7c89069f3c33b1d11c7de1d873feed4e7566e84e84cdd2b26",
+    "reviewedSourceSha256": "1bd87b463171a1f584734d5dc1042b12ca3ffcccf47de659975812b87d7b43e7",
+    "route": "reviewed",
+    "sourceTreeSha256": "b5353b2fe1deaa96d168d7cd6953d0adbee4d0c9fe5afa88af94304b904bb642"
+  }
+}

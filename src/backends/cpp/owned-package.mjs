@@ -36,6 +36,8 @@ export const generateOwnedCppPackage = (ir, { transferredInputs = false, anchore
 		, language: "c++20"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "rethrow-after-cleanup"
+		, ...generated.c.hostFieldCalls.length ? { hostInputRecords: generated.types.filter(node => node.hostInput)
+			.map(node => ({ type: node.id, input: node.hostInput.name, fields: node.hostInput.fields, lifetime: "call" })) } : {}
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
 			, values: "checked-whole-result", anchor: "original-argument-owner"
 			, parameterNumbering: "callback-local"

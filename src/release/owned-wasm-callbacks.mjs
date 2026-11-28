@@ -41,6 +41,17 @@ export const createOwnedWasmCallbacks = (module, layout, bindings, controls) => 
 		if(frame && !frame.callbackFailed)
 		{ frame.callbackFailed = true; frame.callbackError = error; }
 	};
+	// Returning status 10 resumes the compiled callback adapter's recovery
+	// and cleanup. A sibling may have retired the shared heap during re-entry
+	// without this component having made another native call yet.
+	const recover = error => {
+		if(isPoisoned()) throw error;
+		try
+		{ controls.bindings.assertOpen(); }
+		catch
+		{ controls.poison(); throw error; }
+		return 10;
+	};
 	const finished = state => {
 		let failed = false, failure;
 		const cleanup = operation => {
@@ -128,8 +139,7 @@ export const createOwnedWasmCallbacks = (module, layout, bindings, controls) => 
 		catch(error)
 		{
 			record(frame, error); record(callback?.frame, error);
-			if(isPoisoned()) throw error;
-			return 10;
+			return recover(error);
 		}
 		finally
 		{
@@ -147,8 +157,7 @@ export const createOwnedWasmCallbacks = (module, layout, bindings, controls) => 
 		catch(error)
 		{
 			record(state.frame, error); record(state.callback.frame, error);
-			if(isPoisoned()) throw error;
-			return 10;
+			return recover(error);
 		}
 	};
 	const uninstall = bindings.install(Object.freeze({ dispatch, finish }));

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Immediate", "Latches"],
+  "exports": ["Immediate.ready", "Latches.parked", "Latches.release"],
+  "taskExports": ["Immediate.ready", "Latches.parked"],
+  "targets": {"wit-wasi": {"name": "latches", "version": "1.0.0", "asyncAbi": "canonical"}}
+}

@@ -1,0 +1,107 @@
+{
+  "abi": "5.38.2-threaded",
+  "archive": {
+    "bytes": 3195484,
+    "path": "archives/LeanBridge-TariffQuotes-0.001.tar.gz",
+    "sha256": "b7892ef631ea05ad3714ce33130f6c7ed4581522f49051d1b8979b461eeae3ae"
+  },
+  "bindingIrSha256": "ff73021df159f031112af8995936a76bdce18d1b6e060682c328f2cbc84501f0",
+  "cArchive": {
+    "bytes": 53878263,
+    "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+    "sha256": "b19a4b3e85646486667e0a9304047a4ff6cde49ade9c8d8a2c295508e1735cf4"
+  },
+  "cReceiptSha256": "66cc611fcb93279c10178229a4013798506bbd431847ddddccfab9a2b8d9b0ce",
+  "componentSha256": "6f603cd6ecec1288163f7038f0dbad6f2f0e9c4325dbd950934cf3cf36cef124",
+  "mode": "build-xs",
+  "observation": {
+    "after": 1,
+    "application": {
+      "samples": [
+        [
+          "baseline",
+          1
+        ],
+        [
+          "expired",
+          1
+        ],
+        [
+          "held",
+          9
+        ],
+        [
+          "forward",
+          1
+        ],
+        [
+          "nested",
+          1
+        ],
+        [
+          "ticket42",
+          1
+        ],
+        [
+          "ticket71",
+          1
+        ],
+        [
+          "fresh",
+          1
+        ],
+        [
+          "afterShutdown",
+          0
+        ]
+      ],
+      "sources": {
+        "tariff-application.pl": "ccd34a6dc536c0fdf893af6e93d4627fcb9d7350aa46d7d39dffcf156eed9ca4",
+        "tariff-incoming-observer.pl": "c401c9bab981353379f87d7ba8ff93d5f83ea274d68961a4f42c4a0e44c674b3"
+      }
+    },
+    "arch": "x86_64-linux-thread-multi",
+    "baseline": 1,
+    "held": 9,
+    "hostInputs": {
+      "afterShutdown": 0,
+      "baseline": 1,
+      "held": 4,
+      "hostCalls": 3,
+      "reentries": 1,
+      "settled": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "installReceiptSha256": "505a2d0e2e554e5f16492921c4a822af6ca0554fceff6946fe84167a9c179f93",
+    "installXs": {
+      "generatedCSha256": "5a21f2efcc832f1dbf5b055a29751a0faa5b2d5e1e558dbf7b00bd9229917e91",
+      "mode": "build-xs",
+      "operation": "generated-xs-only",
+      "outputSha256": "aab74b39d7035a17768d8778223d788da25df5a7e028e367db04466953cdd3ee",
+      "sourceSha256": "d1c2962a7270bb202da0c668c2bb7401f1af2e2672ab22eb6fcf5e3328604433"
+    },
+    "recovered": 42,
+    "shutdown": 0,
+    "stageCalls": 1,
+    "staged": 44,
+    "staleVisits": 0,
+    "threads": "threaded",
+    "version": "5.38.2"
+  },
+  "receiptSha256": "667a7e6726e17efcf00dc2847c77ac8548b31c89d026f2924c36688b61a80b26",
+  "reviewedSourceSha256": "6f85cf29080b2ce46d183ca925194ff296f5376b40cf623639c778ac0f43c341",
+  "route": "reviewed",
+  "runtimeArchive": {
+    "bytes": 51422277,
+    "path": "archives/LeanBridge-Runtime-0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471.tar.gz",
+    "sha256": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+  },
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb"
+}

@@ -29,6 +29,52 @@ const workspace = async t => {
 const configure = (directory, value) => writeFile(join(directory, exportConfigurationFile), JSON.stringify(value));
 const copySite = { ownership: "copy", lifetime: null };
 
+test("a task callback policy names one parameter of a selected task", async () => {
+	const declaration="Jobs.submit", base={schemaVersion:1,modules:["Jobs"],taskExports:[declaration]};
+	const once={declaration,parameter:"visit",invocation:"once"};
+	const valid={...base,taskCallbackPolicies:[once,{...once,parameter:"report",invocation:"many"}]};
+	assert.equal(validateExportConfiguration(valid),valid);
+	await assertJsonSchema("lean-export-configuration",valid);
+	for(const rows of [[],[once,once],[{...once,invocation:"sometimes"}],[{...once,parameter:""}],[{...once,declaration:"Jobs.other"}]])
+		assert.throws(()=>validateExportConfiguration({...base,taskCallbackPolicies:rows}),{code:"invalid-export-configuration"});
+});
+
+test("immediate and scheduled pulls require an unambiguous selected factory", async () => {
+	const direct = { open: "Counting.open", next: "Counting.next", close: "Counting.finish" };
+	const scheduled = { ...direct, open: "Counting.watch", next: "Counting.poll" };
+	const base = { schemaVersion: 1, modules: ["Counting"], exports: [direct.open, scheduled.open] };
+	const valid = { ...base, iterators: [direct], asyncIterators: [scheduled] };
+	assert.equal(validateExportConfiguration(valid), valid);
+	await assertJsonSchema("lean-export-configuration", valid);
+	for(const invalid of [
+		{ ...valid, asyncIterators: [direct] }
+		, { ...base, taskExports: [direct.open], iterators: [direct] }
+		, { ...base, iterators: [direct, direct] }
+		, { ...base, iterators: [{ ...direct, close: direct.next }] }
+		, { ...base, exports: [scheduled.open], iterators: [direct] }
+	]) assert.throws(() => validateExportConfiguration(invalid), { code: "invalid-export-configuration" });
+	for(const iterators of [[], [{}], [{ open: direct.open, next: direct.next }], [{ ...direct, unchecked: true }]]) {
+		const invalid = { ...base, iterators };
+		assert.throws(() => validateExportConfiguration(invalid), { code: "invalid-export-configuration" });
+		await assert.rejects(() => assertJsonSchema("lean-export-configuration", invalid));
+	}
+});
+
+test("host imports require an exact file, explicit modules and compiler-backed export checking", async t => {
+	const directory = await workspace(t);
+	const hostImports = "lean-bridge.hosts.json";
+	const valid = { schemaVersion: 1, modules: ["First"], hostImports };
+	assert.equal(validateExportConfiguration(valid), valid);
+	await assertJsonSchema("lean-export-configuration", valid);
+	for(const value of [{ schemaVersion: 1, hostImports }, { ...valid, hostImports: "../host.json" }, { ...valid, modules: [] }])
+	{
+		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
+		await assert.rejects(assertJsonSchema("lean-export-configuration", value));
+	}
+	await configure(directory, valid);
+	await assert.rejects(analyzeLeanProject(directory), { code: "host-imports-require-elaboration" });
+});
+
 test("export contracts and their schema agree on closed ownership, lifetime, refinement and effect choices", async () => {
 	const wrap = contract => ({ schemaVersion: 1, contracts: { "Library.run": contract } });
 	const borrowed = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };

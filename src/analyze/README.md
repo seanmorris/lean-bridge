@@ -12,11 +12,16 @@ Both profiles accept [configured finite specializations](../../docs/lean/existin
 
 Optional [export contracts](../../docs/lean/existing-package.md#declare-export-contracts) constrain the selected adapter's ownership, lifetime, refinement policy and boundary effects. Lean checks them against structural signatures after specialization and arity selection. Metadata validation repeats those checks. `compilerExportSelection` carries canonical contracts into the invocation identity; Binding IR retains them under `lean-lang.org/export-contract`. Unsupported choices fail before linking. Contracts supply neither types nor assurance claims, and the internal source scanner cannot authorize them.
 
-The development-stage `ownedAggregates` policy has a separate compiler and
-version-4 semantic path for resource-bearing values. It preserves copied-value
-rejection and does not enable installed packages. The [ownership metadata
-record](../../docs/evidence/owned-aggregate-metadata-20260926.md) describes the
-explicit policy, independent fixture checks and remaining transport work.
+The `ownedAggregates` policy selects a separate version-4 semantic path;
+copied-value adapters still refuse retained identities. For a direct
+function-valued record field, `closureFields` names the exact Lean
+projection (for example, `["Owned.Tariff.quote"]`). The field carries a
+lease to a Lean function in both directions. It does not turn an application
+callback borrowed for one call into a durable callback. A retained resource
+field alone does not authorize callable fields. See the [original ownership
+metadata record](../../docs/evidence/owned-aggregate-metadata-20260926.md)
+for the resource policy and the [callable-field fixture](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean)
+for the distinction between a stored function and a callback parameter.
 
 ## Output
 

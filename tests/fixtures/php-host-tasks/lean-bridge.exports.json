@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "hostImports": "lean-bridge.hosts.json",
+  "exports": ["Workshop.read", "Workshop.relay", "Workshop.project", "Workshop.select", "Workshop.either", "Workshop.checked", "Workshop.openCursor", "Workshop.openBroken", "Workshop.faulty", "Workshop.prepare"],
+  "taskExports": ["Workshop.relay", "Workshop.project", "Workshop.select", "Workshop.either", "Workshop.checked", "Workshop.faulty", "Workshop.prepare"],
+  "taskIOErrors": ["Workshop.relay", "Workshop.project", "Workshop.select", "Workshop.faulty", "Workshop.prepare"],
+  "asyncIterators": [{"open": "Workshop.openCursor", "next": "Workshop.pull", "close": "Workshop.close"}, {"open": "Workshop.openBroken", "next": "Workshop.pullBroken", "close": "Workshop.closeBroken"}],
+  "targets": {"php-native": {"name": "lean-bridge/workshop", "version": "1.0.0"}}
+}

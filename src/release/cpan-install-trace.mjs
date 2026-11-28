@@ -7,6 +7,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { sha256 } from "../capsule/node.mjs";
 
+const xsSeal = Buffer.from("__LEAN_BRIDGE_OWNED_XS_SHA256__");
+
 /**
  * Trace installed payload and XS to an exact prepared distribution.
  *
@@ -26,7 +28,24 @@ export async function traceCpanInstall({ packageRoot, installRoot })
 		if(!path.startsWith("lib/")) continue;
 		if(path.split("/").some(part => !part || part === "." || part === "..")) throw new Error("invalid installed CPAN path");
 		const installed = path.slice(4);
-		if(sha256(await readFile(join(installRoot, installed))) !== hash) throw new Error(`untraceable installed native payload: ${installed}`);
+		const bytes=await readFile(join(installRoot, installed)), actual=sha256(bytes);
+		if(manifest.ownedValues && installed===relative+".pm")
+		{
+			// Build.pm seals the loader for this particular interpreter's XS.
+			// Reproduce that one substitution from authenticated original bytes.
+			const source=await readFile(join(packageRoot,path)), at=source.indexOf(xsSeal);
+			if(sha256(source)!==hash) throw new Error("untraceable packaged Perl loader");
+			if(at!==-1)
+			{
+				if(source.lastIndexOf(xsSeal)!==at || typeof receipt.outputSha256!=="string" || !/^[0-9a-f]{64}$(?![\s\S])/u.test(receipt.outputSha256))
+					throw new Error("invalid owned Perl loader seal");
+				const sealed=Buffer.concat([source.subarray(0,at),Buffer.from(receipt.outputSha256),source.subarray(at+xsSeal.length)]);
+				if(!sealed.equals(bytes)) throw new Error("installed owned Perl loader differs from its sealed source");
+				sources.push({path: installed,sha256: actual,origin: "sealed-xs-loader",sourceSha256: hash});
+				continue;
+			}
+		}
+		if(actual !== hash) throw new Error(`untraceable installed native payload: ${installed}`);
 		sources.push({ path: installed, sha256: hash, origin: "prepared-payload" });
 	}
 	const xs = `auto/${relative}/${stem}.so`;

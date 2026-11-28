@@ -11,11 +11,24 @@ import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedPhpValues } from "../src/backends/php/owned-values.mjs";
+import { generateOwnedPhpPackage } from "../src/backends/php/owned-package.mjs";
+import "./helpers/php-function-fields-mixed.mjs";
 import { bundledBrickMath } from "../src/backends/php/brick-math.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
+import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+
+test("native PHP direct callback views compare live native functions without whole-result owners",()=>{
+	const ir=leasedClosureFieldReviewedIr({staged: true,incoming: true}),pkg=generateOwnedPhpPackage(ir);
+	assert.ok(pkg.c.callbackArgumentViews && pkg.canonicalEquality && !pkg.wholeOwners);
+	assert.equal(pkg.contract.callbackArgumentIdentity,"canonical-while-live");
+	assert.equal(pkg.contract.resultAnchors,undefined);
+	assert.match(pkg.files["src/Internal/Values.php"],/function sameIdentity\(/u);
+	assert.match(pkg.files["src/Internal/OwnedCallTypes.php"],/public const EQUALITY =/u);
+	assert.doesNotMatch(pkg.files["src/Api.php"],/function copy_value\(/u);
+});
 
 const sources = options => {
 	const scalars = ownedPythonScalarsReviewedIr(); scalars.component.id = `example/owned-scalars@${scalars.component.version}`;

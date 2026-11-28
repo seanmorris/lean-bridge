@@ -64,6 +64,13 @@ Native CPAN uses the same [compiler report](../architecture/elaborated-export-me
 
 The npm builder accepts shared module/export selection, `arities`, `specializations`, `hostProjections`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, exact `hostProjections`, package metadata, generators and target settings can accompany it.
 
+If the package uses native tasks, pull iterators, host imports, or standalone synchronous IO,
+[declare the OS access its Lean code needs](export-decisions.md#declare-native-os-access).
+For standalone IO, specify `nativeEffects: []` if no OS access is needed. Use
+ordinary `exports` for those functions; there is nothing to await. For Java
+and Kotlin, [publish synchronous IO in a Maven package](../publish/maven.md#export-synchronous-io).
+For a Component Model consumer, [publish synchronous IO with a native Wasmtime host](../publish/wit-wasi.md#export-synchronous-io).
+
 ### Select an explicit host-null projection
 
 `hostProjections` authorizes an exact Lean wrapper and its two constructors; it
@@ -107,7 +114,7 @@ its nested-null consumer example.
 
 ### Compile a reviewed contract
 
-Keep exactly one `.binding-ir.json` file in the source project: schema 3 for copied values, or schema 4 for explicit aggregate ownership. Select its source entry modules explicitly in `lean-bridge.exports.json`:
+Keep exactly one `.binding-ir.json` file in the source project. Schema 3 covers copied values, synchronous callables and standalone native resources; schema 4 adds explicit ownership inside aggregates. Select the source entry modules in `lean-bridge.exports.json`:
 
 ```json
 {
@@ -124,6 +131,10 @@ lean-bridge build --project . --target pypi --output ./build/reviewed-release
 ```
 
 The review selects exact Lean declarations through `source.declaration` and `lean:<declaration>` IDs. A finite specialization instead uses `lean:<specialization-name>` and keeps the generic declaration in `source.declaration`. Lake resolves the selected modules and their dependencies; a declaration's namespace does not determine its source module. Lean compiles fresh interfaces, and the builder compares the review with the resulting API before generating adapters. Component identity, declaration names, parameter and result types, nominal record identities, field order, ownership, effects and failure behavior must agree.
+
+For a standalone resource in a CPAN build, name the Lean type in the review. For example, `Workshop.Counter` has type ID `lean:Workshop.Counter`, kind `resource`, representation `identity`, and resource kind ID `resource:Workshop.Counter`. A function borrows the handle for the call; a returned handle is a lease with an explicit lifetime. Do not repeat `resources` in the export configuration. The native builder sends the reviewed names to Lean and checks the resulting signatures. A resource inside a record or collection needs an ownership-aware contract, not a copied field.
+
+Direct arguments and results of synchronous callables can likewise name the resource. In a reviewed callback signature, use a call-scoped borrow for a resource argument and an explicit lease for a resource result. For a host callback with no same-type argument to use during failure cleanup, the [Perl API takes a typed recovery object](../consume/perl.md#ownership-and-failures). Returning a Lean closure does not impose that requirement on its caller.
 
 For a schema-3 finite specialization, put the closed choice in the declaration's `source.extensions["lean-lang.org/specialization"]`:
 
@@ -159,7 +170,47 @@ All seventeen consumer profiles also compile reviewed synchronous callbacks and 
 
 Targets `c`, `cpp`, `cargo`, `pypi`, `rubygems`, `nuget`, `maven`, `cpan`, `php-native`, `php-wasm` and `wit-wasi` also compile structured callback and closure payloads: arrays, Lists, options, results, products, acyclic records, variants and transparent aliases. [C](../publish/c.md#export-callbacks-and-closures) uses typed views and cleanup functions; [C++](../publish/cpp.md#export-copied-callback-payloads) and [Rust](../publish/cargo.md#structured-callback-values) use owned value types and scoped cleanup. [Python](../publish/pypi.md#structured-callback-values) uses owned tuples and generated value classes, with precise callback and closure annotations. [Ruby](../publish/rubygems.md#structured-callback-values) uses copied Arrays and generated frozen value classes, with blocks or callable objects. [C#](../publish/nuget.md#structured-callback-values) uses typed arrays, records, `Option`/`Result` values and `Func` delegates. [Java and Kotlin](../publish/maven.md#structured-callback-values) use typed functional interfaces and their own copied value classes, with `AutoCloseable` returned closures. [Perl](../publish/cpan.md#export-structured-callbacks) uses CODE references, plain array references and generated constructor classes, with copied callback values and closable returned functions. Host callbacks remain call-scoped borrows and returned closures remain explicit leases. npm accepts those copied payloads and finite recursive values, with plain objects and arrays plus generated TypeScript types. Native PHP, PHP-Wasm and WIT/WASI also accept these acyclic copied payloads. All seventeen profiles also accept finite recursive callback values, including [WIT/WASI](../publish/wit-wasi.md#export-recursive-callbacks).
 
-Schema-3 reviewed builds reject resources and callbacks inside copied containers. Resource-containing values require a schema-4 contract and an ownership-aware target. Both versions accept compiler-authenticated optional copied parameters whose typed defaults reconcile with fresh Lean metadata. They reject asynchronous operations, author-supplied compiler evidence and assurance claims. Do not combine a review with `exports`, `resources`, `ownedAggregates`, `arities`, `specializations` or `contracts` in the configuration.
+Schema-3 reviewed builds reject resources and callbacks inside copied containers. Resource-containing values require a schema-4 contract and an ownership-aware target. Both versions accept compiler-authenticated optional copied parameters whose typed defaults reconcile with fresh Lean metadata. These copied and ownership profiles reject asynchronous operations, author-supplied compiler evidence and assurance claims. Do not combine a review with `exports`, `resources`, `ownedAggregates`, `arities`, `specializations` or `contracts` in the configuration.
+
+A task release is a separate profile. Select actual Lean `Task` factories with `taskExports`; add `taskIOErrors` only for an outer `Except IO.Error` that should reject the task. A task can retain a unary `α → IO β` callback over copied scalars on [C's main-thread polling loop](../publish/c.md#export-a-callback-taking-task), [C++'s main-thread dispatcher](../publish/cpp.md#export-a-callback-taking-task), [Rust's owning executor](../publish/cargo.md#export-a-callback-taking-task), or [Python's owning event loop](../publish/pypi.md#let-a-lean-task-call-python). The usual borrowed, synchronous callback profile is unchanged.
+
+For a [native PHP worker callback](../publish/php.md#export-a-task-that-calls-php),
+declare the callable in the task's Lean signature. The generated Composer package
+dispatches requests on PHP's event loop and preserves the identity of a PHP
+exception when Lean propagates it.
+
+Independently built Python IO and asyncio wheels can also
+[share a Lean-owned resource](../publish/pypi.md#export-a-shared-lean-resource)
+as a direct input, output, typed error, or stream item. Use `hostImports`
+instead when Lean needs to call an object supplied by
+[Python](../publish/pypi.md#call-python-objects-from-lean),
+[Ruby](../publish/rubygems.md#call-ruby-objects-from-lean),
+[Java/Kotlin](../publish/maven.md#import-an-application-owned-jvm-class),
+[C#](../publish/nuget.md#import-an-application-owned-c-class),
+[Perl](../publish/cpan.md#call-a-perl-object-from-lean), or
+[JavaScript](../publish/npm.md#export-functions-that-call-javascript-objects).
+
+The [Maven task profile](../publish/maven.md#export-tasks-and-streams) turns
+selected Lean tasks into Java `CompletableFuture` or Kotlin suspend functions.
+Select a cursor protocol for Java `Flow.Publisher` or Kotlin `Flow`.
+An explicit unary `α → IO β` task parameter lets Lean [call back into
+Java or Kotlin](../publish/maven.md#export-a-retained-task-callback) with copied scalar values.
+Consumption requires neither a Lean compiler nor a manual scheduler.
+
+The [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams)
+turns actual Lean tasks into C# `Task` or `Task<T>` and pull protocols into
+`IAsyncEnumerable<T>`. Independent NuGet packages share the application's
+owner loop. Task factories can also [retain C# delegates over copied
+scalars](../publish/nuget.md#export-a-callback-taking-task). Select a common
+Lean heap type in both packages to [share resources across IO, tasks, streams and typed errors](../publish/nuget.md#export-a-shared-lean-resource).
+
+The [Ruby task profile](../publish/rubygems.md#export-a-task-or-pull-stream)
+delivers copied results or [explicit resource leases](../publish/rubygems.md#export-a-shared-lean-resource) to a waiting fiber and exposes pull streams as
+`Enumerable`. A task can [retain Ruby blocks or callable objects](../publish/rubygems.md#export-a-callback-taking-task)
+over copied scalars. In standalone task
+packages, list any direct functions alongside the task factories in `exports`.
+Only the selected task declarations go in `taskExports`. A neighboring
+pure, `BaseIO`, or synchronous `IO` function returns directly.
 
 ### Export optional parameters
 

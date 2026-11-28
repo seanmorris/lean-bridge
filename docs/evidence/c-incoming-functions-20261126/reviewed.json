@@ -1,0 +1,57 @@
+{
+  "archive": {
+    "bytes": 53866752,
+    "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+    "sha256": "101dca024bd959a6ae8392bf3245a8faee3bb0748535afc1331cb90eecb48294"
+  },
+  "bindingIrSha256": "0958e16132c51cc15df867ba8908dac748f15cd75ca250bb9ba6cc3a21249b29",
+  "cmake": {
+    "checks": 6,
+    "identities": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+    ],
+    "scenarios": [
+      "borrow expires after success",
+      "borrow expires after failure",
+      "lease survives successful callback",
+      "lease survives failed callback",
+      "inner failure leaves outer borrow valid",
+      "foreign session rejects live borrow"
+    ]
+  },
+  "executableSha256": "7907d843178ccbf04f08d6fa35a55d8a7b8d544b6e65e5f28178068d068d8694",
+  "pkgConfig": {
+    "checks": 6,
+    "identities": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+    ],
+    "scenarios": [
+      "borrow expires after success",
+      "borrow expires after failure",
+      "lease survives successful callback",
+      "lease survives failed callback",
+      "inner failure leaves outer borrow valid",
+      "foreign session rejects live borrow"
+    ]
+  },
+  "receiptSha256": "36ac3f807944f866df614df5ccb033495b697b0ad565c493774507ea1ac96f88",
+  "reviewedSourceSha256": "27e336bc168cd27d5780da31ff76836c8807ee179097833cc89e4b5f5299f8fb",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sources": {
+    "tariff-exchange-probe.c": "dfd767e8d3810eec46d127acd780ba3c549e81fab7799efab638b6f4c4fe1e64",
+    "tariff-incoming.c": "e73007c18bd6630e38acfc7bd9065844c999396f6394e6709707da0ca4def723"
+  }
+}

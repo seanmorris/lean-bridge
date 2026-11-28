@@ -21,7 +21,7 @@ impl<T> Value<T> {
 ${inputOwners ? `    pub(crate) fn lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
         let storage = self.storage.as_ref().ok_or(Error::Closed)?;
         storage.lease.require()?;
-        if !std::rc::Rc::ptr_eq(&storage.lease.state, state) { return Err(Error::InvalidArgument); }
+        if !storage.lease.belongs_to(state) { return Err(Error::InvalidArgument); }
         Ok(std::rc::Rc::clone(&storage.lease))
     }
 ` : ""}    pub fn get(&self) -> Result<&T, Error> {
@@ -97,7 +97,7 @@ impl OwnedInputTransfers {
     }
     fn add(&mut self, lease: Rc<Lease>, group: usize) -> Result<(), Error> {
         lease.transfer_ready()?;
-        if !Rc::ptr_eq(&lease.state, &self.state) || group >= self.groups.len() || self.groups[group].is_some() {
+        if !lease.belongs_to(&self.state) || group >= self.groups.len() || self.groups[group].is_some() {
             return Err(Error::InvalidArgument);
         }
         if self.groups.iter().flatten().any(|(previous, _)| Rc::ptr_eq(previous, &lease)) { return Err(Error::InvalidArgument); }

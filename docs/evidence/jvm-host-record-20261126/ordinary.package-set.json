@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51402712,
+          "path": "archives/workshop-1.0.0.jar",
+          "sha256": "cb9332ef9efb1a3b155148f622e9fff16b46c225f7118110d15e89585ebc6f1e"
+        },
+        {
+          "bytes": 618,
+          "path": "archives/workshop-1.0.0.pom",
+          "sha256": "8228f87088f2850f3526e526bd3bfce592cac7d1d1c52d64a7a319743997e833"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:workshop",
+      "profile": "native-jvm-io-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5ab0ae40c0252782024e1d19b5f0567203b47579deea39b73c91c94c719f4814",
+      "id": "native-jvm-io-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "a91695af65658f89ca8a8c8eca7651ecf33f2fd474db53dcf7507decf9fc0d9c"
+  }
+}

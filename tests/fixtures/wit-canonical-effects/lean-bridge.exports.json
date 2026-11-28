@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Meter", "Direct"],
+  "exports": ["Meter.checked", "Meter.phase", "Meter.branch", "Direct.inspect", "Direct.scalar", "Direct.returned"],
+  "taskExports": ["Meter.checked", "Meter.phase", "Meter.branch", "Direct.scalar", "Direct.returned"],
+  "taskIOErrors": ["Meter.phase"],
+  "targets": {"wit-wasi": {"name": "meter", "version": "1.0.0", "asyncAbi": "canonical"}}
+}

@@ -8,8 +8,9 @@
  * Embed the compiled native artifacts and coordinate independently generated crates.
  *
  * @param evidence - Verified native library hashes, or null for source-only generation.
+ * @param options - Task crates receive the common runtime bytes from their exact Cargo dependency.
  */
-export const copiedRustAssets = evidence => !evidence ? `pub(super) fn load() -> Result<usize, crate::Error> { Err(crate::Error::Load("Build a compiled Cargo release before calling this API".into())) }\n` : String.raw`use crate::Error;
+export const copiedRustAssets = (evidence, options = {}) => !evidence ? `pub(super) fn load() -> Result<usize, crate::Error> { Err(crate::Error::Load("Build a compiled Cargo release before calling this API".into())) }\n` : String.raw`use crate::${options.task ? "Fault as Error" : "Error"};
 use sha2::Digest;
 use std::collections::BTreeMap;
 use std::ffi::{c_char, c_int, c_void, CStr, CString};
@@ -79,7 +80,7 @@ fn save(file: &mut File, entries: &BTreeMap<String, String>) -> Result<(), Error
 struct Directory(PathBuf);
 impl Directory {
     fn new() -> Result<Self, Error> {
-        let mut template = b"/tmp/lean-bridge-rust-assets-XXXXXX\0".to_vec();
+        let mut template = ${options.task ? 'CString::new(std::env::temp_dir().join("lean-bridge-rust-assets-XXXXXX").as_os_str().as_bytes()).map_err(|_| failure("Invalid temporary directory"))?.into_bytes_with_nul()' : 'b"/tmp/lean-bridge-rust-assets-XXXXXX\\0".to_vec()'};
         let result = unsafe { mkdtemp(template.as_mut_ptr().cast()) };
         if result.is_null() { return Err(io(std::io::Error::last_os_error())); }
         Ok(Self(PathBuf::from(std::ffi::OsStr::from_bytes(unsafe { CStr::from_ptr(result) }.to_bytes()))))
@@ -108,7 +109,11 @@ pub(super) fn load() -> Result<usize, Error> {
     let identity = ${JSON.stringify(evidence.runtimeIdentity)};
     if entries.get("runtime").is_some_and(|previous| previous != identity) { return Err(failure("Incompatible Lean runtime identities")); }
     let assets: &[(&str, &str, &[u8])] = &[
-${["libleanshared.so", "liblean_bridge_native.so", ...Object.keys(evidence.libraries).filter(name => ![evidence.library, "libleanshared.so", "liblean_bridge_native.so"].includes(name)), evidence.library].map(name => `        (${JSON.stringify(name)}, ${JSON.stringify(evidence.libraries[name])}, include_bytes!("../native/linux-x64/${name}")),`).join("\n")}
+${["libleanshared.so", "liblean_bridge_native.so", ...Object.keys(evidence.libraries).filter(name => ![evidence.library, "libleanshared.so", "liblean_bridge_native.so"].includes(name)), evidence.library].map(name => {
+	const shared = options.task && { "libleanshared.so": "LEAN", "liblean_bridge_native.so": "BROKER" }[name];
+	const bytes = shared ? "lean_bridge_task_runtime::__assets::" + shared : `include_bytes!("../native/linux-x64/${name}")`;
+	return `        (${JSON.stringify(name)}, ${JSON.stringify(evidence.libraries[name])}, ${bytes}),`;
+}).join("\n")}
     ];
     for (name, expected, bytes) in assets {
         if format!("{:x}", sha2::Sha256::digest(bytes)) != *expected { return Err(failure("Native library differs from compiled evidence")); }

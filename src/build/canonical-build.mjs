@@ -48,6 +48,8 @@ import { buildNativeProject } from "./native-project.mjs";
 import { buildMultiProfileProject } from "./multi-profile-project.mjs";
 import { buildPhpWasmProject } from "./php-wasm-project.mjs";
 import { buildOwnedJavaScriptProject, usesOwnedJavaScript } from "./javascript-wasm-owned-project.mjs";
+import { readExportConfiguration } from "../analyze/export-configuration.mjs";
+import { buildJavaScriptIOProject } from "./javascript-wasm-io-project.mjs";
 import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
@@ -990,13 +992,35 @@ export const buildCanonicalProject = async ({
 	const mixed = phpWasm || sourceC || targets.includes("cpan") || targets.includes("perl");
 	if(mixed && normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 		fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
-	const ownedNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm")) && await usesOwnedJavaScript(root, signal);
+	const selectsNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm"));
+	if(selectsNpm)
+	{
+		const record = await readExportConfiguration(root, {signal}).catch(error => {
+			signal?.throwIfAborted(); throw new CanonicalBuildError(error.code ?? "invalid-export-configuration", error.message);
+		});
+		const threaded=Boolean(record.configuration.taskExports?.length || record.configuration.asyncIterators?.length);
+		if(threaded || record.configuration.hostImports || Object.hasOwn(record.configuration, "nativeEffects"))
+		{
+			if(mixed || normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Build JavaScript effects as a separate npm handoff");
+			return buildJavaScriptIOProject({projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot, record,threaded});
+		}
+	}
+	const ownedNpm = selectsNpm && await usesOwnedJavaScript(root, signal);
 	if(mixed)
 	{
+		// Both PHP-Wasm frontends check the review against their own source
+		// contract. A synchronous effectful review is not a pure copied API.
+		if(normalized.length === 1 && phpWasm)
+		{
+			const record=await readExportConfiguration(root,{signal});
+			if(record.configuration.taskExports?.length || record.configuration.asyncIterators?.length)
+				return buildJavaScriptIOProject({projectRoot: root,engineRoot: engine,outputRoot,environment,runner,cache,signal,onProgress,lakeSnapshot,record,threaded: true,phpWasm: true});
+			if(record.configuration.hostImports)
+				return buildJavaScriptIOProject({projectRoot: root,engineRoot: engine,outputRoot,environment,runner,cache,signal,onProgress,lakeSnapshot,record,threaded: false,phpWasm: true});
+			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
+		}
 		if(normalized.includes("npm") || phpWasm)
 			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", "wit-wasi", ...(ownedNpm ? ["npm"] : [])].includes(target)));
-		if(normalized.length === 1 && phpWasm)
-			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)
 			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: normalized, signal, onProgress, lakeSnapshot });
 		return buildMultiProfileProject({ projectRoot: root, engineRoot: engine

@@ -1,0 +1,23 @@
+{
+  "archiveBytes": 59184931,
+  "archiveSha256": "b72223bd7701a177a39d502b9576772d134be9fd16b3ccffdec44f838ed40a3b",
+  "bindingIrSha256": "a21ba2bbd7d8338febbb5909c7230da8dc014f9739024dc0825517b4a8fe98ba",
+  "clientSha256": {
+    "consumer.c": "9e5952b268761aa17e199de0f2784a474a8c2d501c6354fc78bcf59a4a1eccad",
+    "custom.c": "daaac4a7ee84be7296230dfd4491bdf983baf554b426876733dfdeb38455be07",
+    "scalars.h": "7aecc149256d3511802432fd26ab576fd5864fde1a953d2074abc67c24d9b5ee"
+  },
+  "nativeEffects": [
+    "filesystem"
+  ],
+  "receiptSha256": "9d3a0a29611e8b97f11b1c65644d572be5e2655093a2ea450ce7c58255bc0016",
+  "reviewedSourceSha256": "0f02b5a0de26d38481bfa9cfb5d164581e5b5d3174ee3a521a7fc877a77e5bd0",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "session": "wasmtime-io:27",
+  "sourceTreeSha256": "ab3d8aa0b91fb3ab884e3c7f7ec6ff6a2558be6e1a5ecbceac027a5282413f40",
+  "stores": {
+    "success": "custom-store:ready:peer-count:2",
+    "trap": "custom-store:trap:discard:peer-retired"
+  }
+}

@@ -43,6 +43,14 @@ test("standalone CLI imports its installed build modules and rejects each omitte
 	await rm(candidate.output, { recursive: true });
 	const check = () => execute(process.execPath, ["--input-type=module", "-e", imports], { cwd: installed, env: { PATH: "/unavailable" } });
 	assert.deepEqual(await check(), { stdout: "cli-imports-ok\n", stderr: "" });
+	// These private WIT compiler inputs are read at generation time, so the
+	// module import closure alone cannot tell us whether a tarball shipped them.
+	for(const file of ["application-exchange.h", "application-operation-scratch.wat", "callback-readiness.h", "canonical-future-reactor.h"])
+	{
+		const path = join("src/backends/wit", file);
+		assert.deepEqual(await readFile(join(installed, path)), await readFile(path), path);
+	}
+	await execute(process.execPath, ["--input-type=module", "-e", "const m = await import('./src/build/c-host-component.mjs'); if (typeof m.compileCHostComponent !== 'function') throw Error('Missing WIT host builder');"], { cwd: installed, env: { PATH: "/unavailable" } });
 	for(const name of ["component-fin-guards", "component-refinement-mirrors", "refinement-mirrors"])
 	{
 		const path = join(installed, "src/build", name + ".mjs"); await rename(path, path + ".omitted");

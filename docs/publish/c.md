@@ -8,11 +8,11 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Install Node 22, Lean 4.32.2, a C11 compiler, Make, m4, tar, xz, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resource-containing C values require the [explicit ownership policy](#resource-containing-c-values) below. Asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The synchronous C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Both adapters accept synchronous primitive callbacks and returned closures. Resource-containing C values require the [explicit ownership policy](#resource-containing-c-values). For real Lean tasks and pull streams, select the [C11 task profile](#export-tasks-and-pull-streams) separately.
 
 `Option`, `Except`, binary products and `List` also compile through both ordinary-source and reviewed-IR builds. They may contain supported primitives, arrays, records and each other, but not callbacks or resources. All seventeen consumer profiles have installed acceptance for these copied constructors. Check each target's guide for its host representation and toolchain requirements before selecting a combined release.
 
-For a Lake project named `sample` at version `1.0.0`, select both native targets:
+For a Lake project named `sample` at version `1.0.0`, select both synchronous native targets:
 
 ```sh
 lean-bridge build --project /path/to/sample \
@@ -40,6 +40,202 @@ Package names do not rename the API. The source component determines `sample.h`,
 Each archive includes its component library, C adapter and matching Lean runtime. Loading the C library initializes Lean automatically; pkg-config and CMake locate the libraries. The tested public profile is Linux x86-64 with glibc 2.38 or newer. The builder rejects binaries requiring a newer glibc version than the declared floor. Lean and Lean Bridge license notices accompany the binaries; supply your library's license with the release as well.
 
 Add `--target cpan` to produce Perl archives from that same native compilation. Add `--target npm` to also compile one Wasm component from the same captured source tree when the API fits [npm's supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records. Selecting npm for unsupported signatures rejects the combined build without partial output. Combined builds check source API agreement across profiles and put the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
+
+## Export synchronous IO to C11
+
+Select the Lean declarations in `exports` and [declare native OS access](../lean/export-decisions.md#declare-native-os-access).
+Use `nativeEffects: []` for an in-memory API. Build with `--target c`; the
+`native-c-io-v1` receipt identifies the synchronous profile. A function
+returning `IO α` or `EIO ε α` generates one `_call` entry, not a polling
+handle. See [how an installed caller handles the result](../consume/c.md#call-synchronous-io).
+
+### Export an immediate cursor
+
+See the [Dials source and export configuration](../../tests/fixtures/native-immediate-cursor/lean-bridge.exports.json).
+Select the factory as a public export. In `iterators`, name its `open`,
+`next` and `close` Lean declarations. The factory returns a private cursor.
+The pull returns an immediate `Option α` in `BaseIO`, `IO` or `EIO ε`; the
+finalizer takes that cursor and returns `BaseIO Unit`. These names and
+effects must agree with the compiled module on the reviewed route too.
+
+Dials declares `nativeEffects: ["filesystem"]` because its finalizer writes
+a file. The generated public header exposes open, next and close without
+generating a task. Use `asyncIterators` instead if the Lean pull returns
+a task. See [the installed C API](../consume/c.md#read-a-synchronous-iterator).
+
+## Call application-owned C objects from Lean
+
+Select the C host contract with `hostImports` and list the Lean entry points
+that use it. For example, a package that reads and updates a meter declares:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "exports": ["Workshop.read", "Workshop.update"],
+  "hostImports": "lean-bridge.hosts.json",
+  "targets": { "c": { "name": "workshop", "version": "1.0.0" } }
+}
+```
+
+The [complete meter contract](../../tests/fixtures/c-host-members/lean-bridge.hosts.json)
+describes the nominal `Box` type, its methods and lifetime rules, and selects
+`c` in `host.targets`. Save it beside the export configuration. Lean Bridge generates the import;
+don't add an implementation of that module to the project.
+
+```lean
+import LeanBridge.Host.C
+
+namespace Workshop
+open LeanBridge.Host.C
+
+def read (box : Box) : IO UInt32 := box.read
+
+def update (box : Box) (value : UInt32) : IO UInt32 := do
+  box.setLevel value
+  box.getLevel
+
+end Workshop
+```
+
+Build with `lean-bridge build --project . --target c --output release-c`.
+The `native-c-host-v1` receipt identifies the application-owned host profile.
+An immediate `IO` export can take or return a public Lean structure containing
+imported application objects and copied scalar fields. Select the declaration
+the same way as a scalar export. The compiler checks the structure's actual
+constructor and projections, and the CLI emits a typed record owner, getters,
+clone and drop functions in the installed header. See the [C consumer example](../consume/c.md#keep-application-objects-in-a-lean-record).
+This binding supports up to 64 flattened argument fields per call; it does
+not turn the record into a task or a retained host callback.
+Distribute the verified archive: it contains the generated public header,
+native component, shared reference registry, and Lean runtime. Downstream
+users [register their C implementations](../consume/c.md#supply-c-objects-to-lean);
+they don't need your Lake project or a Lean compiler.
+
+A synchronous factory can capture an imported C object and return a Lean
+function of type `IO (α → IO β)`. Both `α` and `β` can be copied scalars or
+declared host classes. For example:
+
+```lean
+def reader (captured : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun n => do return (← captured.read) + n
+```
+
+List the factory in `exports`, not `taskExports`. The header provides a
+typed callable for that factory, a call function and a drop function. Any
+filesystem or environment effects in the returned body need the same grants
+they would need in a direct export.
+
+To carry those same objects through a task or cursor, select its declaration in
+`taskExports` or `asyncIterators` on this host package. The archive includes
+the extra shared lease library and the compiled worker adapters. A worker can
+carry an imported object or send it to a retained C callback; it cannot invoke
+a C member on its worker thread. Use `taskIOErrors` to mark a returned
+`Except IO.Error` as a task failure when it isn't ordinary result data.
+See [using a bound C worker](../consume/c.md#use-an-application-object-in-a-task-or-stream).
+The separate task-only profile below does not require a host member table.
+
+## Export tasks and pull streams
+
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
+Use `--target c` on its own for a Linux C11 package whose consumers drive work
+from an event loop. Select a Lean declaration returning `Task α` in
+`taskExports`. It may be pure or start in `BaseIO`, `IO`, or `EIO ε`.
+Ordinary `IO` functions remain synchronous. To export a stream, name the
+factory and its two operations in `asyncIterators`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "taskExports": ["Pulse.late"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"c": {"name": "pulse", "version": "1.0.0"}}
+}
+```
+
+The compiler checks the actual cursor type. Its pull must return
+`BaseIO (Task (Option α))` or `BaseIO (Task (Except ε (Option α)))`; its close
+must return `BaseIO Unit`. The consumer never sees the cursor. If you supply
+`exports`, include every selected task and factory. For a reviewed release,
+keep those selections and add the emitted public `.binding-ir.json` to the
+project. Each build checks the signatures against fresh Lean interfaces.
+
+The `native-c-task-v1` archive accepts exact `Nat` and `Int`, fixed-width and
+machine-word integers, floats, `Bool`, `Char`, `Unit`, UTF-8 strings and byte
+arrays. A result or typed error may also contain nested `Except` values. If
+the signatures use `Nat` or `Int`, the archive includes GMP 6.3.0, its header,
+licenses and complete corresponding source. Packages with only fixed-width
+integers do not require GMP. For an application-owned resource, add its qualified
+Lean type to `resources`, for example `"resources": ["Shared.Ticket"]`.
+The compiler checks that the type has stable heap identity. It can appear as
+a direct argument, result, stream item, or typed start/step error. The input
+borrows the caller’s lease only during entry; the Lean task may retain its own
+reference. Resource-bearing copied sums and host callbacks are not supported
+by this profile. The binding conservatively marks effectful calls with resource
+inputs as potentially writing through them; borrowing a lease does not make
+the object immutable. See the [resource task fixture](../../tests/fixtures/resource-tasks/Depot.lean)
+and the [original release receipts and replay instructions](../evidence/resource-tasks-20261122.json).
+Select `cpp` separately
+for [C++20 futures and streams](cpp.md#export-tasks-and-streams).
+The [Lean source](../../tests/fixtures/c-lean-tasks/Pulse.lean) and
+[installed C consumer](../consume/c.md#wait-for-a-task-or-pull-a-stream) show
+the producer and consumer sides of the same package. The
+[installed release evidence](../evidence/c-task-streams-20261122.json) lists the
+two archive receipts, checked behaviors and replay command.
+
+By default the producer builds the pinned GMP source and runs its upstream
+checks. To reuse a previously verified kit, set `LEAN_BRIDGE_TASK_GMP_ROOT`
+to the absolute path of its installed tree and `LEAN_BRIDGE_TASK_GMP_SHA256`
+to the trusted digest of `share/lean-bridge/gmp.json` from the original
+release. Both settings are required together. The producer checks the header,
+shared library, notices and corresponding source and copies them into the
+new archive. Consumers do not set either variable. The
+[exact-integer release evidence](../evidence/exact-task-integers-20261122.json)
+records the package receipts and the dependency digests for both C and C++.
+
+### Export a callback-taking task
+
+Standalone task packages allow repeated callbacks by default. To limit a
+parameter to one call, set `taskCallbackPolicies` in `lean-bridge.exports.json`:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Budget.probe", "parameter": "f", "invocation": "once"}
+]
+```
+
+Use the original Lean binder name. The allowance belongs to that parameter
+on one task start and applies even when worker tasks race or Lean catches
+the first failure. Leave the same policy in the configuration when building
+a reviewed interface. This setting does not apply to C host-import packages.
+
+Select a declaration returning a real Lean `Task` in `taskExports`. A
+parameter of type `α → IO β` becomes a retained C callback when both
+types are copied primitives. For example, the
+[fixture](../../tests/fixtures/cpp-retained-tasks/CppTasks.lean) accepts
+`UInt32 → IO UInt32`; the generated C header gives it a typed function
+pointer, a context pointer and an optional destructor. No application
+function runs on a Lean worker, including callbacks made before the
+factory returns its task.
+
+Add the declaration to `taskIOErrors` to expose the outer
+`Task (Except IO.Error α)` as a terminal failure channel. In a reviewed
+API, the callback has explicit lease lifetime and the declared host error
+is `error:CCallbackError`. The builder checks both against freshly compiled
+Lean interfaces. Do not substitute a borrowed callback or a different
+language's exception policy. The [C consumer example](../consume/c.md#pass-a-callback-to-a-lean-task)
+shows the complete polling loop and who owns each value.
+
+Callback arguments and replies use the same copied scalar representations as
+ordinary C task values, including GMP for exact integers. Each task can have
+256 waiting callback requests. It can preserve up to 4,096 C failures and
+16 MiB of copied failure text; exceeding the capture budget returns `LIMIT`.
+The [installed callback checks](../evidence/c-retained-tasks-20261122.json)
+record both source routes, the consumer and the release hashes.
 
 ## Resource-containing C values
 

@@ -1,0 +1,106 @@
+{
+  "peers": [
+    {
+      "consumerSha256": "1723c6105c132919c7a6387443e071b7b74bbc1a98cc1bd20e5d18bebe6be146",
+      "nominal": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sync": {
+        "archives": [
+          {
+            "bytes": 51326920,
+            "path": "archives/lease-sync-1.0.0-cpp.tar.gz",
+            "sha256": "7158a1a0094f962e743996e390bb4dde4118a63e6279ec2884a8e9864df3f683"
+          }
+        ],
+        "bindingIrSha256": "0dde9c75f9f50d9d7d22bb9b4df2d1c6e001a1706a4466658794bcef186d5c42",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+        "profile": "native-cpp-io-v1",
+        "receiptSha256": "4739e454e1633a75a5aaf8b6f4ac050be71af5bc7ee330618dfe415d71522cc1",
+        "reviewedSourceSha256": null,
+        "sourceTreeSha256": "f7d9f219655deadd9beb8074c49c5d2939c2e122cf5d2696f2e01531adbd4e51"
+      },
+      "target": "cpp",
+      "task": {
+        "archives": [
+          {
+            "bytes": 51330296,
+            "path": "archives/lease-task-1.0.0-cpp.tar.gz",
+            "sha256": "c01a76712cdc920ae83968b51a730289ecde2e62dbcf63df1e502a423e696137"
+          }
+        ],
+        "bindingIrSha256": "b2227b4b0a97a9b1132028f48a366a211911955736d5cbacf7e89887157a5843",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+        "profile": "native-cpp-task-v1",
+        "receiptSha256": "82d6ae1d876184f446200921b364d934427f31399fdd92c6b5b0c958cb46e0d4",
+        "reviewedSourceSha256": null,
+        "sourceTreeSha256": "5be749ee57d1479d6fa12f37e8dc38cdb74aa3007d5af7e1f53a13f212fd56d6"
+      }
+    },
+    {
+      "consumerSha256": "b7680da025d2fe0cff882f60a97cf7fedf006a22cd5ed0320c2b4dbdc1c9c05f",
+      "hostProbe": {
+        "entrySha256": "7ddeb37d0dfedf497d183e506b3cb4f941c36160736c648fe12906d2feb90b31",
+        "fixtureSha256": "6001912c45c2b9374392a44b5285aa3c80c11b413bccf4d3cd12bbe4809a7fc4",
+        "receipts": [
+          "22e9fafa47c923f6892c00b5cbfd29b3f034f72743fd092c2cd884ec507a881d",
+          "de8f716f243ef805b27dd222c08d0382ed985ba2dd9bc1e11ace6513bd3359a2"
+        ]
+      },
+      "nominal": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+      "route": "reviewed",
+      "runtimeFeatures": [
+        "async",
+        "default",
+        "host-objects"
+      ],
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sync": {
+        "archives": [
+          {
+            "bytes": 51318171,
+            "path": "archives/lean-bridge-task-runtime-1.0.0-r34eab7924354669a04f22827fefefac1beacbf18d97abcb94bf1874c5f3f2afd.crate",
+            "sha256": "1c93129be10447d4711595921c52362165be2a0488e65c0b091b49b1957e0bee"
+          },
+          {
+            "bytes": 24654,
+            "path": "archives/lease-sync-1.0.0.crate",
+            "sha256": "fbd649cc07b37c9ee139c4eb76b3f2de2fbf36a8fe95854ebb158bb0a75ba1e4"
+          }
+        ],
+        "bindingIrSha256": "0dde9c75f9f50d9d7d22bb9b4df2d1c6e001a1706a4466658794bcef186d5c42",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "d2374847c7e826cc1a3526d067ced7d29da4ad51e2594f1831b92fe02630aff4",
+        "profile": "native-rust-io-v1",
+        "receiptSha256": "f11712c91b791624ae55a8f45bf9190b6351559c30776ac7a7201c30aa226028",
+        "reviewedSourceSha256": "d7af0b0de42c19c2f0fdc524134817d250d94571c5a5f1d4622aa4635477e801",
+        "sourceTreeSha256": "dc8f5980a86ed57d391ed4b83efac32396b2a32cf71c6c677179a89c9e008778"
+      },
+      "target": "cargo",
+      "task": {
+        "archives": [
+          {
+            "bytes": 51318171,
+            "path": "archives/lean-bridge-task-runtime-1.0.0-r34eab7924354669a04f22827fefefac1beacbf18d97abcb94bf1874c5f3f2afd.crate",
+            "sha256": "1c93129be10447d4711595921c52362165be2a0488e65c0b091b49b1957e0bee"
+          },
+          {
+            "bytes": 26252,
+            "path": "archives/lease-task-1.0.0.crate",
+            "sha256": "18c6c5b27f2bfb76ddb5ede028fdcee38bc654774ce1f8a4618a84bc301737fd"
+          }
+        ],
+        "bindingIrSha256": "b2227b4b0a97a9b1132028f48a366a211911955736d5cbacf7e89887157a5843",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "d2374847c7e826cc1a3526d067ced7d29da4ad51e2594f1831b92fe02630aff4",
+        "profile": "native-rust-task-v1",
+        "receiptSha256": "793659ed5da4fac1e70e3b89addfdb6a132f3e9d590e7db63e398e9dc5c184ef",
+        "reviewedSourceSha256": "46f304a138ac96d9d84f5af1c1c050ef5b1ab5ba8200f5f2d19ba6f512b4ac19",
+        "sourceTreeSha256": "eb6ee10d77f100758b71eddbb86d65a7c15e0c03b3052bf024503bad27399a26"
+      }
+    }
+  ],
+  "schemaVersion": 1
+}

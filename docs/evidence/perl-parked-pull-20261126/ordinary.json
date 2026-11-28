@@ -1,0 +1,61 @@
+{
+  "clientSha256": "21c39bec68eeb8714c36173a39068dc87413ec92b56e2e2399fecd2dc76d2f12",
+  "interpreters": [
+    {
+      "arch": "x86_64-linux-thread-multi",
+      "checks": {
+        "peer-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta",
+        "pulse-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta"
+      },
+      "version": "5.36.3",
+      "xs": {
+        "pulse": "b97f797c92008cc891891407a225a62200d222a09e72b3ee10c5ce916e6e91f5",
+        "runtime": "bff3c1c7356572bb1aa724bfe8f147ad375e0b86090543a5cf03ac345e63e7d1",
+        "signals": "f9dcf136430d63b32748344500fd96fcc5969f21070d0f24be1134ecafcff2c9"
+      }
+    },
+    {
+      "arch": "x86_64-linux",
+      "checks": {
+        "peer-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta",
+        "pulse-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta"
+      },
+      "version": "5.36.3",
+      "xs": {
+        "pulse": "48590d548d1c8543586c90367e9b3369b01739ca564d896df7f3cd46344d830f",
+        "runtime": "4c4c1b39f958b09e861b5456c419ab4e9b214afc2be25399c4256c0ffb28144b",
+        "signals": "3b0139682585bff6b913e684efcdbc3a140759efadf697ae892f227ed64afa58"
+      }
+    },
+    {
+      "arch": "x86_64-linux-thread-multi",
+      "checks": {
+        "peer-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta",
+        "pulse-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta"
+      },
+      "version": "5.38.2",
+      "xs": {
+        "pulse": "7149132a5132909e7f36d50c351e5514a4c8626903c057283f6ff9818236dce0",
+        "runtime": "7d8b98f17370847fe954385a0988d99e2196a2cd729c019d3748d97fa3a3a7f8",
+        "signals": "bf2eb314c5f24c71a5f76b62b500cdc236bd8be5c31d3ad3f4e9528fd958e132"
+      }
+    },
+    {
+      "arch": "x86_64-linux",
+      "checks": {
+        "peer-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta",
+        "pulse-first": "blocked pull: reader cancel and cursor close each finalized once; usable peer, no late value, zero live owners and descriptor delta"
+      },
+      "version": "5.38.2",
+      "xs": {
+        "pulse": "4223967f3eb575a8c014ff897a0ef62da8c97330bc393315ba6937948074637d",
+        "runtime": "11ab7406da75c73b9df329497045c7c7c51e8739b5511b6695c145134fa61d51",
+        "signals": "93d37870c70af3c45ddca3a8f3ea54210e44ebcdb34421155e86b2354e94b162"
+      }
+    }
+  ],
+  "packageSetSha256": "5e6f53ada4cf2a00df163de2eab9308603717f25879acc4a5505eaa4b6b049d2",
+  "peerPackageSetSha256": "d71ad370ac8a344d7de5042454e57d901236eb716301fa671a101dfc12497825",
+  "route": "ordinary",
+  "sharedRuntimeSha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+}

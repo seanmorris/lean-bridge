@@ -9,7 +9,7 @@ import { ownedDotnetRuntime } from "./owned-runtime.mjs";
 import { dotnetGraphException } from "./copied-graph-runtime.mjs";
 import { ownedDotnetTransfers } from "./owned-transfers.mjs";
 import { ownedDotnetAnchoredCall, ownedDotnetOriginalTransfers, ownedDotnetWholeGuard } from "./owned-borrows.mjs";
-import { ownedDotnetCallbackArguments } from "./owned-callback-arguments.mjs";
+import { dotnetHostFieldWriter, ownedDotnetCallbackArguments } from "./owned-callback-arguments.mjs";
 
 /**
  * Library authentication is supplied by OwnedLoader. These bindings only accept
@@ -22,7 +22,7 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 	const model = generateOwnedDotnetConversions(ir, options), { c } = model;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
 	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
-	const wholeOwners = model.wholeOwners;
+	const {wholeOwners, canonicalEquality} = model;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const names = new Map(model.nativeTypes.map(node => [node.id, node.publicType]));
 	const exportCalls = model.functions.flatMap((fn, index) => ownedDotnetCallbackArguments(c, fn)
@@ -42,8 +42,9 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 				.map(fn => ({ ...fn, method: `CopyWhole${nodes.get(fn.id).index}`, wholeCopy: true }))
 		] : []
 	];
-	const symbols = [...calls.map(fn => fn.cName), ...anchored ? model.types.filter(node => node.identity).map(node => `${node.cName}_equal`) : []];
-	const parameterType = (fn, index) => fn.handle && index === 0 ? "OwnedHandle"
+	const symbols = [...calls.map(fn => fn.cName), ...canonicalEquality ? model.types.filter(node => node.identity).map(node => `${node.cName}_equal`) : []];
+	const hostField = (fn, index) => fn.hostRecordSlots?.some(s => s.index === index);
+	const parameterType = (fn, index) => hostField(fn,index) ? `_V.${nodes.get(fn.parameters[index]).hostInput.publicType}` : fn.handle && index === 0 ? "OwnedHandle"
 		: c.hostArgument?.(fn, index) && !fn.nativeCallbacks?.includes(index) ? `_V.${nodes.get(fn.parameters[index]).delegateType}`
 			: wholeOwners && (fn.anchor === index || fn.transfers?.includes(index)) ? `_V.Value<${names.get(fn.parameters[index])}>` : names.get(fn.parameters[index]);
 	const ownerType = id => nodes.get(id).ownerType ? `_V.${nodes.get(id).ownerType}` : `_V.Value<${names.get(id)}>`;
@@ -58,13 +59,14 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 	}
 	const callback = ownedDotnetCallables(model, symbols);
 	const methods = calls.map(fn => {
-		if(wholeOwners) return ownedDotnetAnchoredCall({ c, nodes, names, calls, symbols, parameterType, returnType }, fn);
+		if(wholeOwners) return ownedDotnetAnchoredCall({ c, nodes, names, calls, symbols, parameterType, returnType, hostField }, fn);
 		const result = nodes.get(fn.result), parameters = fn.parameters.map(id => nodes.get(id));
 		const moving = fn.transfers ?? [];
 		const write = (node, index, scope, checking) => fn.handle && index === 0 ? `${scope}.Root(arg${index})`
+			: hostField(fn,index) ? `Input${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
 			: c.hostArgument?.(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
 				: `OwnedConvert.Write${node.index}(arg${index}, ${scope})`;
-		const nativeTypes = parameters.flatMap((node, index) => [c.hostArgument?.(fn, index)
+		const nativeTypes = parameters.flatMap((node, index) => [hostField(fn,index) ? node.hostInput.raw+"*" : c.hostArgument?.(fn, index)
 			? `OwnedCallback${node.index}*` : node.raw + (node.leaf ? "" : "*")
 			, ...moving.includes(index) ? ["nint*"] : []]);
 		const pointer = `delegate* unmanaged[Cdecl]<${["nint", ...nativeTypes, `${result.raw}*`, "nint*", "uint"].join(", ")}>`;
@@ -130,11 +132,12 @@ ${invoke}
         }
     }`;
 	});
+	methods.push(...model.types.filter(n => n.hostInput).map(n => dotnetHostFieldWriter(n,nodes)));
 	const identities = model.types.filter(node => node.identity), factories = identities.map(node => {
 		const fn = model.callbacks.find(fn => fn.id === node.id);
-		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? fn.invocations.map(invocation => `, (${invocation.parameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}${invocation.suffix}(handle${invocation.parameters.map((_, j) => `, arg${j}`).join("")})`).join("") : ""}${anchored ? `, Equal${node.index}` : ""}${wholeOwners && fn && fn.anchor === undefined ? `, (${fn.invocations.at(-1).parameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invocations.at(-1).parameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
+		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? fn.invocations.map(invocation => `, (${invocation.parameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}${invocation.suffix}(handle${invocation.parameters.map((_, j) => `, arg${j}`).join("")})`).join("") : ""}${canonicalEquality ? `, Equal${node.index}` : ""}${wholeOwners && fn && fn.anchor === undefined ? `, (${fn.invocations.at(-1).parameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invocations.at(-1).parameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
 	});
-	if(anchored) for(const node of identities) methods.push(`    private bool Equal${node.index}(OwnedHandle left, OwnedHandle right)
+	if(canonicalEquality) for(const node of identities) methods.push(`    private bool Equal${node.index}(OwnedHandle left, OwnedHandle right)
     {
         var state = Runtime.Current; state.Require(); Ready();
         using var inputs = new OwnedValueScope(state, Factories);
@@ -185,7 +188,7 @@ ${callback.methods}
 			const fn = calls.find(item => item.wholeCopy && item.id === id);
 			copies.push(`    public static ${ownerType(id)} ${name}(${names.get(id)} value) => Interop.OwnedLoader.Bindings.${fn.method}(value);`);
 		};
-		for(const fn of model.functions)
+		for(const fn of model.functions.filter(f => !f.hostRecordSlots))
 		{
 			if(nodes.get(fn.result).representation !== "copied") add(`Copy${fn.publicName}Result`, fn.result);
 			for(const [index, id] of fn.parameters.entries())

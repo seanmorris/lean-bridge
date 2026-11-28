@@ -1,0 +1,48 @@
+{
+  "failedAssertion": "ref($error) && refaddr($error)==refaddr($marker)",
+  "outcomes": [
+    {
+      "abi": "5.36.3-threaded",
+      "failureSha256": "05863d35c37220ea59379a90cb7f3ecb7ed984765d8f1285901192d45a609c70",
+      "mode": "prebuilt-only"
+    },
+    {
+      "abi": "5.36.3-threaded",
+      "failureSha256": "aca961050af9c7418456d6309dcb65bdc86eb91a6118d77a4322c547c06848f2",
+      "mode": "build-xs"
+    },
+    {
+      "abi": "5.36.3-unthreaded",
+      "failureSha256": "144479c42160ee3dbe18c73ba8d3a8dbc74ec6d8f4a5f9bb81c6cf61df4cd53c",
+      "mode": "prebuilt-only"
+    },
+    {
+      "abi": "5.36.3-unthreaded",
+      "failureSha256": "9d012ba509f79ee6022e8de1206e1cc78b18d1be23da151b33d6398f15f8c58b",
+      "mode": "build-xs"
+    },
+    {
+      "abi": "5.38.2-threaded",
+      "failureSha256": "6b671646e785f5899fb98ee381ac83fe8cb5435b60b9f8420dfa08e068333d00",
+      "mode": "prebuilt-only"
+    },
+    {
+      "abi": "5.38.2-threaded",
+      "failureSha256": "d3977fb64db36639834b3c2a47b53a529440a83dcdf8b3a0994f195f4408193e",
+      "mode": "build-xs"
+    },
+    {
+      "abi": "5.38.2-unthreaded",
+      "failureSha256": "7b9567694dc268730ffdfc4f9da76c39cdf3d854e39c846c530f908725ade90e",
+      "mode": "prebuilt-only"
+    },
+    {
+      "abi": "5.38.2-unthreaded",
+      "failureSha256": "639ad55560cec461281b826a29cfd0b2c370f220900b57ca16446035a83c42cd",
+      "mode": "build-xs"
+    }
+  ],
+  "receiptSha256": "62fd231fbe0116074ddd8558c2391fa7371cedd7561299b890493dc4ace76730",
+  "route": "ordinary",
+  "sourceFile": "tests/fixtures/structured-types/tariff-application.pl"
+}

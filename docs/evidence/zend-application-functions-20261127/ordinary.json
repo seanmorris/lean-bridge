@@ -1,0 +1,329 @@
+{
+  "archives": [
+    {
+      "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.944dc1e6fa2af18616b52267d72194dfd2775665f361baf0a4a29f4acbd0fd64.tgz",
+      "bytes": 1661058,
+      "directory": "runtime/package",
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "role": "runtime",
+      "sha256": "72321f9a848238fb13908072aea393e867cb37c97a00706d1b5515c522fb173b",
+      "version": "0.0.0-copied1.944dc1e6fa2af18616b52267d72194dfd2775665f361baf0a4a29f4acbd0fd64"
+    },
+    {
+      "archive": "example-tariff-quotes-1.0.0.tgz",
+      "bytes": 168840,
+      "directory": "component/package",
+      "ecosystem": "npm",
+      "name": "@example/tariff-quotes",
+      "role": "component",
+      "sha256": "8754480d60291bafe509c3f15257c40bee9c456258d792fb0f057bc6a5c59299",
+      "version": "1.0.0"
+    },
+    {
+      "archive": "example-tariff-quotes-1.0.0-php-wasm.zip",
+      "bytes": 85810,
+      "directory": "composer",
+      "ecosystem": "composer",
+      "name": "example/tariff-quotes",
+      "role": "api",
+      "sha256": "fd3f09e1cf7ab8e0134fbb7a399ab14758346e89a969421633b24db4e7963f7e",
+      "version": "1.0.0"
+    }
+  ],
+  "bindingIrSha256": "f86a90310920dac098f50324d93bdc57132a96242a8445be6abbace391552d33",
+  "installed": {
+    "component": "22ca4dd99689b8ffd736fd0414ea11d04f7812bb788fd57b25f47d735084403f",
+    "composer": "08850b4fd1fbf37bb51a6caaf1c08b2b04f092b57410bb7a459b7ea4391f106a",
+    "host": "96cf2f53b47f2890d6b1046bec811d74500fee6a74611a2c4d8a9114e7664250"
+  },
+  "observations": [
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "composer",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "composer",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": {
+        "application": [
+          "42",
+          "43",
+          "47",
+          [
+            "0",
+            "2",
+            "3",
+            "7"
+          ]
+        ],
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "expired": 0,
+          "forward": 0,
+          "fresh": 0,
+          "held": 4,
+          "nested": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    }
+  ],
+  "observer": {
+    "binarySha256": "acfc27f0ced118f50894d84d150aaffabec8dc2c33ce9e2e0bd948114d705aba",
+    "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+    "sourceSha256": "31ca8d7f5f5fccd834e592b6adfd460843a902f08f2c4c3dd65bb6289c13c163",
+    "testOnly": true
+  },
+  "receiptSha256": "9fd32e353129361dfaddb7df54efc97ee69059d163291a8239d053b44836b112",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtime": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "sources": {
+    "php-wasm-sync-io-probe/installed-node.mjs": "53e707c60e849803a4edfdebed16befaebdf7cf24365dc874dafb1d86940c1e6",
+    "structured-types/tariff-zend-application.php": "e2bb75de9e4ef5c11c34979698573a4a791892574ca62fa6f310e9df1c71edfb",
+    "structured-types/tariff-zend-host.mjs": "27293d4bc7a3538d8d32a7b5c693d8d5f98598fefe4e8cef0b1e893c1c025db4"
+  }
+}

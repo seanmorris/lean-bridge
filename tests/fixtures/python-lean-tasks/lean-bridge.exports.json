@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Timers"],
+  "exports": ["Timers.immediate", "Timers.compute", "Timers.later", "Timers.openTask", "Timers.startChecked", "Timers.startIO", "Timers.reset", "Timers.release", "Timers.state", "Timers.series", "Timers.units", "Timers.opens", "Timers.pulls", "Timers.closes"],
+  "taskExports": ["Timers.immediate", "Timers.compute", "Timers.later", "Timers.openTask", "Timers.startChecked", "Timers.startIO"],
+  "asyncIterators": [
+    {"open": "Timers.series", "next": "Timers.nextSeries", "close": "Timers.closeSeries"},
+    {"open": "Timers.units", "next": "Timers.nextUnit", "close": "Timers.closeUnits"}
+  ],
+  "targets": { "pypi": { "name": "lean-timers", "version": "1.0.0" } }
+}

@@ -1,0 +1,33 @@
+{
+  "compileRejected": [
+    "missing_recovery",
+    "scalar_reply"
+  ],
+  "consumerSha256": "c635450e32cfe67ae0c6d364c1c2c450588c549b2679d416dc64de2ba132328e",
+  "dependenciesSha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd",
+  "held": 3,
+  "identities": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "lockSha256": "b583ebe2075055f282ff2706f1636a552cacccb3d4350839cc74ab50c2582a0e",
+  "packageSetSha256": "7c3015ab9b49878393fdc368af42398a6135bcce27ec9ea663262b91a7a05b85",
+  "probeSha256": "e8bbcebe1eb5606fc4b5e25232928e953fe56b0d2502471c1c5192e257ddb82a",
+  "relocated": [
+    "flat scalar reply",
+    "fresh Lean function reply",
+    "independent caller still owns reply",
+    "closed recovery refused before host entry",
+    "original Rust error after allocation",
+    "original panic resumes in Rust",
+    "closed reply refused and binding reusable"
+  ],
+  "route": "ordinary",
+  "schemaVersion": 1
+}

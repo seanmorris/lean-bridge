@@ -1,0 +1,34 @@
+{
+  "consumerSha256": "8dc3f7f7cba257ca418f225093418ba2077e97a3bf577034dca7230b64ddc180",
+  "executions": [
+    {
+      "mode": "policy-forward",
+      "observation": "error policy: sole owner 23->42; drops 1; caught nested panic; reads 1,1"
+    },
+    {
+      "mode": "policy-reverse",
+      "observation": "error policy: sole owner 23->42; drops 1; caught nested panic; reads 1,1"
+    }
+  ],
+  "releases": [
+    {
+      "bindingIr": "a34b73951a5516463b4d6301b1d6ac27b1800a4927355f4f7a86879499e363ca",
+      "component": "3e897c392afe2a919608fa35d0f6161d6ffd5a87bcf1e2c221ea9b5bb67dcace",
+      "name": "reviewed",
+      "receipt": "ca1e3a110cc493b21c72c37084fc64c502b3106d5ce22965c9add550af46ccc2",
+      "reviewed": "9c55961db54034745cdd77d6e2d944c318558e0b77f6b4d490993bcac1f21b26",
+      "runtime": "1c93129be10447d4711595921c52362165be2a0488e65c0b091b49b1957e0bee",
+      "source": "2e643df3949832bb68dd8dd57fb769850a5a3f54f8a31fcc51cd5871e5aad8b6"
+    },
+    {
+      "bindingIr": "fe9c912264e4f2ecb2aad8996a64680e547b00d1f53f237725c2c1e812693738",
+      "component": "ada5c3bc17fcf20cbbac424637a6d447cc4fa0a7a66ec9f521de9da1269a5631",
+      "name": "peer",
+      "receipt": "de8f716f243ef805b27dd222c08d0382ed985ba2dd9bc1e11ace6513bd3359a2",
+      "reviewed": null,
+      "runtime": "1c93129be10447d4711595921c52362165be2a0488e65c0b091b49b1957e0bee",
+      "source": "88bfb7e96a6e59d29d85fc124c6d84cd20ea561fd457cefe31fe8a3fc7d593f2"
+    }
+  ],
+  "route": "reviewed"
+}

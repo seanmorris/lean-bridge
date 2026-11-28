@@ -156,6 +156,11 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		// The direction bit, not the site label, decides coverage: inside a directional
 		// callback the site is cleared while subtypeResult carries who produces the value.
 		if(!erasedTransport) assertOwnedCheckedRecordCoverage(type, !subtypeResult);
+		if(policy.closureFields) for(const record of type.types)
+			for(const field of record.fields ?? [])
+				if(field.type.kind === "callback")
+					for(const parameter of field.type.parameters)
+						assertOwnedCheckedRecordCoverage({ root: parameter, types: type.types }, true);
 		return type;
 	}
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
@@ -327,6 +332,12 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				if(field.type.base.kind !== "primitive" || field.type.base.name !== "nat"
 					|| ["cType", "box", "unbox", "heap"].some(name => field.type.abi[name] !== field.type.base.abi[name]))
 					fail("dependent Fin fields require a Nat transport");
+			}
+			else if(owned && policy.closureFields?.includes(field.projection))
+			{
+				if(field.projection !== `${type.lean}.${field.name}` || field.type.kind !== "callback")
+					fail("closureFields requires the declared record function projection");
+				validate(field.type, depth + 1, false, references, policy, owned, true, "result", true, true, false);
 			}
 			else recurse(field.type, true, !generic, subtypeStructural && refinable
 				, subtypeResult && refinable);

@@ -24,8 +24,8 @@ ${phpValueMethods}
 
 `;
 
-/** Private PHP helpers. Integer arithmetic stays below signed 64-bit overflow. */
-export const copiedPhpHelpers = String.raw`
+/** Shared per-call conversion budget; works with either PHP integer width. */
+export const phpConversionBudget = String.raw`
 final class Budget
 {
     private int $remaining = 16 * 1024 * 1024;
@@ -35,8 +35,9 @@ final class Budget
         }
         $this->remaining -= $count * $width;
     }
-}
+}`;
 
+const scope = String.raw`
 final class Scope
 {
     public array $owners = [];
@@ -62,8 +63,10 @@ final class Scope
         return \FFI::string($data, $length);
     }
     public function close(): void { $this->owners = []; }
-}
+}`;
 
+/** Encode and decode one validated Unicode scalar without mbstring. */
+export const phpScalarCodec = String.raw`
 final class ScalarCodec
 {
     public static function point(string $text): int {
@@ -79,7 +82,12 @@ final class ScalarCodec
         if ($value < 0x10000) return chr(0xe0 | ($value >> 12)) . chr(0x80 | (($value >> 6) & 63)) . chr(0x80 | ($value & 63));
         return chr(0xf0 | ($value >> 18)) . chr(0x80 | (($value >> 12) & 63)) . chr(0x80 | (($value >> 6) & 63)) . chr(0x80 | ($value & 63));
     }
-}
+}`;
+
+/** Private native PHP helpers. Limb arithmetic requires 64-bit PHP. */
+export const copiedPhpHelpers = String.raw`${phpConversionBudget}
+${scope}
+${phpScalarCodec}
 
 final class IntegerCodec
 {

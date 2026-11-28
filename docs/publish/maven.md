@@ -32,9 +32,295 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes Java 22 classes, the companion `.kotlin` API with Kotlin type metadata, native libraries, generated sources, compiler evidence and dependency license notices. Its POM declares `kotlin-stdlib:2.2.0`; downstream Maven and Gradle projects resolve it automatically. Its README names both generated APIs. Changing the Maven coordinate does not rename their Lean-derived packages.
 
-Calls accept concrete copied values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. [Recursive callback values](#recursive-callback-values) use the same bounded graph conversion. Resource-containing aggregates and asynchronous effects remain unsupported. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+This copied-value profile accepts concrete values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. [Recursive callback values](#recursive-callback-values) use the same bounded graph conversion.
+
+For aggregates containing a resource, see [owned resources and aggregates](#owned-resources-and-aggregates). For asynchronous delivery, select [tasks and streams](#export-tasks-and-streams); their results can also be [direct resource leases](#export-resource-bearing-tasks-and-streams).
+
+Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Import an application-owned JVM class
+
+Use a host import when the application implements a class and Lean needs to
+call its constructor, methods or properties. This is the reverse of exporting
+a Lean-owned resource. The publisher needs the **contract**, not the application's
+class files. The consumer supplies the class when it opens a binding.
+
+For example, a host contract can declare a nominal `Box` with a
+`UInt32 → IO Box` constructor and a `Box → IO UInt32` read method. Set the
+nominal type's `host.targets` to `["jvm"]`. In the Lean library:
+
+```lean
+import LeanBridge.Host.Jvm
+
+namespace Workshop
+open LeanBridge.Host.Jvm
+
+def make (n : UInt32) : IO Box := Box.create n
+def read (box : Box) : IO UInt32 := box.read
+end Workshop
+```
+
+Set `hostImports` in `lean-bridge.exports.json` to the import-contract filename,
+select `Workshop.make` and `Workshop.read` in `exports`, and configure a single
+`maven` target. Use the ordinary build and receipt-verification commands above.
+The build checks the generated host module and the selected declarations against
+fresh Lean compiler output; a reviewed public binding IR must agree with that
+output. The JAR supplies the native runtime and binding code to both
+[Java](../consume/java.md#bind-an-application-owned-class) and
+[Kotlin](../consume/kotlin.md#bind-an-application-owned-class). Ordinary
+exports stay synchronous. To pass an application class through a Lean worker,
+also select its task or cursor as described under [tasks and streams](#export-tasks-and-streams).
+The worker may carry the object or send it to a retained callback; it cannot
+invoke a JVM member from an arbitrary Lean scheduler thread. Calls to those
+members belong on the JVM owner. Imported classes and Lean-owned resources
+remain distinct; this author profile does not combine their declarations.
+
+A synchronous `IO` export may accept or return a flat public Lean structure
+containing an imported JVM class and scalar fields. Select the functions
+normally. Lean checks the constructor and field projections; both Java and
+Kotlin get typed record classes. Host objects retain identity, mutable byte
+arrays are copied, and one returned record has a shared 16 MiB copy budget.
+Review may change field documentation, but not field order or ownership.
+This record support does not select asynchronous delivery or declare an EIO
+record payload.
+
+A synchronous export can return an imported class in either branch of
+`Except`, or throw it in a declared `EIO` error. Nested `Except` values
+are supported. The compiler records a lease, not a copy, on a result or
+error site containing an imported class. Callers receive their application
+object through the generated API; they do not close the error payload.
+
+A synchronous IO factory can also return a function that closes over an
+imported object. For example, select this declaration in `exports`:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    return captured
+```
+
+The generated Java and Kotlin APIs return an `AutoCloseable` callable. Its
+argument and reply use the declared JVM types, and its lifetime is bounded
+by the binding that created it. Select the factory itself, not its function
+body, in `exports`. An OS effect inside the returned function still needs
+the corresponding grant.
+
+## Export synchronous IO
+
+Select the Lean declarations by name and declare their OS access. For
+example, `Journal.store : String → String → IO Unit` and
+`Journal.read : String → IO String` need the filesystem grant:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "com.acme:journal-io", "version": "1.2.0-rc.1"}}
+}
+```
+
+Use `nativeEffects: []` for in-memory-only I/O. Both ordinary selection
+and a reviewed Binding IR are checked against the current Lean source.
+Build with `lean-bridge build --project . --target maven --output release`.
+Publish the resulting JAR **and its POM** using the Maven instructions below.
+The POM declares the Kotlin standard library; the JAR contains both compiled
+language APIs and the verified native libraries.
+
+Select ordinary `exports` for these synchronous calls, not `taskExports`.
+The `native-jvm-io-v1` profile supports the nineteen scalar types and nested
+returned or thrown `Except` values. It does not turn a Lean task, iterator,
+or resource into a synchronous copied value. See the installed
+[Java](../consume/java.md#call-synchronous-io) and
+[Kotlin](../consume/kotlin.md#call-synchronous-io) examples, the
+[original package receipts](../evidence/jvm-sync-io-20261123.json), and the
+[native OS grant reference](../lean/export-decisions.md#declare-native-os-access).
+
+### Export synchronous resource parameters and results
+
+Select a resource by its Lean declaration. For example, Desk allocates an
+open file inside `Shared.Ticket`, so its build needs the filesystem grant:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "com.acme:desk", "version": "1.0.0"}}
+}
+```
+
+A second package can import the same Lean module and select the same resource.
+The compiler and the source of the resource and its imports determine its
+identity, not the Maven coordinates or the spelling `Ticket`. Each JAR ships
+the same Java class for a compatible kind and verifies its native ledger at
+load time. Install the packages on the same application classpath. In a plugin
+host, the shared type needs a common defining classloader.
+
+A direct resource parameter is borrowed for the call. A direct result or
+declared `EIO` error carries its own lease. See the compiled
+[Java](../consume/java.md#share-a-lean-resource-between-packages) and
+[Kotlin](../consume/kotlin.md#share-a-lean-resource-between-packages) examples.
+This selection exports synchronous IO. For tasks and streams, select their
+delivery protocols as described below. The [synchronous installed-package evidence](../evidence/jvm-sync-resources-20261123.json)
+records both load orders, the incompatible lookalike package, and cleanup
+after a typed error or runtime retirement.
+
+## Export an immediate iterator
+
+Select the constructor as an export and name its pull and finalizer under
+`iterators`. For example, the [Dials module](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+opens a counter, pulls a `BaseIO (Option UInt32)`, and closes with
+`BaseIO Unit`. Its finalizer writes a file, so the package needs the
+filesystem grant.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Dials"],
+  "exports": ["Dials.sequence"],
+  "iterators": [{"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "org.example:dials", "version": "1.0.0"}}
+}
+```
+
+Use `IO` or `EIO` for a pull that can fail. Its exception identifies the
+pull declaration, separately from any constructor error. Use a standalone
+synchronous package for this protocol; a pull that returns a Lean `Task`
+belongs under `asyncIterators`. See the [Java](../consume/java.md#iterate-without-a-scheduler)
+and [Kotlin](../consume/kotlin.md#iterate-without-a-scheduler) loop examples.
+
+## Export tasks and streams
+
+Select declarations returning a real Lean `Task` in `taskExports`. For a pull
+cursor, name the factory, next operation and close operation. List ordinary
+synchronous companions only in `exports`. For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Timers"],
+  "exports": ["Timers.immediate", "Timers.units", "Timers.pulls"],
+  "taskExports": ["Timers.immediate"],
+  "asyncIterators": [
+    {"open": "Timers.units", "next": "Timers.nextUnit", "close": "Timers.closeUnits"}
+  ],
+  "targets": {"maven": {"name": "com.acme:timers", "version": "1.0.0"}}
+}
+```
+
+Use the ordinary Maven build and verification commands above. A reviewed
+Binding IR uses the same task and cursor selections; the compiler checks
+them against the current Lean declarations. The `native-jvm-task-v1` JAR
+contains both Java and Kotlin APIs. Its POM supplies Kotlin 2.2.0 and
+`kotlinx-coroutines-core-jvm:1.8.0`. Real tasks become Java futures and
+Kotlin suspend functions; cursors become demand-driven Java publishers and
+cold Kotlin flows. An ordinary `IO` method still returns directly.
+For a copied-only `IO (Task α)`, the factory runs on the native owner before the Java
+method hands back its future. Put long-running work inside the Lean task
+if it should continue after that point. A stream factory, in contrast,
+does not run until a subscriber requests its first item.
+
+For a task returning `Except IO.Error α`, select its declaration in
+`taskIOErrors` to surface terminal IO failure separately from a factory
+failure. An ordinary returned `Except` remains data. Scalar arguments,
+copied results and nested returned or thrown `Except` values are supported.
+See the [Java](../consume/java.md#await-tasks-and-consume-streams) and
+[Kotlin](../consume/kotlin.md#await-tasks-and-consume-streams) examples.
+
+### Export resource-bearing tasks and streams
+
+List the direct resource kinds in `resources`, alongside the usual task and
+cursor selections. A task may return a resource or fail with a declared
+resource payload; a cursor may emit one or fail with one at its next step.
+The same nominal type can also occur as a companion parameter or result.
+Here Depot uses the same Lean definition of `Shared.Ticket` as Desk:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Depot.checked", "Depot.tickets"],
+  "taskExports": ["Depot.checked"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "com.acme:depot", "version": "1.0.0"}}
+}
+```
+
+The [Lean fixture](../../tests/fixtures/resource-tasks/Depot.lean) shows the
+factory and step signatures. A task can also borrow a resource while it
+calls a retained host function; the callback's own arguments and replies
+remain copied scalars. See the installed
+[Java](../consume/java.md#receive-resources-from-tasks-and-streams) and
+[Kotlin](../consume/kotlin.md#receive-resources-from-tasks-and-streams)
+examples and [package evidence](../evidence/jvm-lease-tasks-20261123.json).
+
+### Export a retained task callback
+
+By default, Lean may call a registered parameter more than once. To enforce
+one invocation for `f` on the standalone task below, add this field to
+`lean-bridge.exports.json` (shown in isolation):
+
+```json
+{
+  "taskCallbackPolicies": [{"declaration": "Feedback.once", "parameter": "f", "invocation": "once"}]
+}
+```
+
+Use the Lean parameter name. The first call spends the allowance before
+Java or Kotlin runs, even if the callback throws. Other tasks and parameters
+get independent registrations. Both authoring routes check this policy;
+the option does not apply to packages with JVM host imports.
+
+In `Feedback.lean`, write an ordinary Lean function:
+
+```lean
+namespace Feedback
+
+def once (n : UInt32) (f : UInt32 → IO UInt32) : BaseIO (Task (Except IO.Error UInt32)) :=
+  IO.asTask (f n)
+
+end Feedback
+```
+
+Select it in `lean-bridge.exports.json`. The `taskExports` entry exposes the
+task. The `taskIOErrors` entry makes a terminal `IO.Error` an exception
+instead of a returned value:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Feedback"],
+  "exports": ["Feedback.once"],
+  "taskExports": ["Feedback.once"],
+  "taskIOErrors": ["Feedback.once"],
+  "targets": { "maven": { "name": "com.acme:feedback", "version": "1.0.0" } }
+}
+```
+
+The parameter `f` becomes a Java function or a Kotlin lambda. Inputs and
+replies are copied; the host does not receive a native pointer or a Lean closure.
+
+Unlike a copied-only task factory, a factory that accepts a callback runs
+asynchronously: it can request a callback *before* returning its inner task.
+Lean may catch a callback error. If the same error escapes, the JVM caller
+receives its original throwable; a new Lean error with the same text is
+still a different failure. A JVM virtual-machine, linkage or thread-death
+error retires the shared native runtime. Cross-language marshalling and
+callback scheduling require no consumer-supplied event loop.
+
+See the installed [Java](../consume/java.md#pass-a-callback-to-a-lean-task)
+and [Kotlin](../consume/kotlin.md#pass-a-callback-to-a-lean-task) examples
+and the [JVM callback receipts and replay instructions](../evidence/jvm-retained-tasks-20261123.json).
 
 ## Export options, results and products
 
@@ -163,7 +449,7 @@ and [Kotlin](../consume/kotlin.md#structured-callback-values) examples use the s
 This acyclic profile uses copied callback payloads. See the [recursive callback profile](#recursive-callback-values) for recursive types. Host callbacks borrow the
 enclosing synchronous call, and returned closures own explicit leases.
 Callback identities or resources inside copied
-aggregates, retained host callbacks and asynchronous delivery remain unsupported.
+aggregates, retained host callbacks and asynchronous delivery are not part of this callable profile.
 
 ## Recursive callback values
 
@@ -217,6 +503,8 @@ inside copied aggregates, retained host callbacks and asynchronous delivery
 remain unsupported.
 
 ## Owned resources and aggregates
+
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
 
 Select the owned-value profile when records or other containers carry resources.
 For a Lean package named `owned-aggregates`, put these declarations in `Owned.lean`:

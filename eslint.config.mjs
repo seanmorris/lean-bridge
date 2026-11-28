@@ -31,6 +31,8 @@ const browserFiles = [
 	, 'demos/lean-sweep-and-prune/{app,runtime}.mjs'
 	, 'scripts/test-browser-package-consumer.mjs'
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
+	, 'tests/fixtures/javascript-ledger/{react,worker}.mjs'
+	, 'tests/fixtures/javascript-wasm-callback-io/react.mjs'
 	, 'tests/fixtures/documentation/consumers/browser/main.js'
 	, 'tests/fixtures/type-corpus/consumers/browser/*.mjs'
 	, 'tests/fixtures/browser-refinements/*.mjs'
@@ -233,7 +235,7 @@ export default [
 		}
 	}
 	, {
-		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}', 'tests/fixtures/documentation/consumers/**/*.{ts,tsx}']
+		files: ['site/**/*.{ts,tsx}', 'site/**/*.d.mts', 'demos/**/*.d.mts', 'tests/fixtures/component-consumer/**/*.{ts,tsx}', 'tests/fixtures/documentation/consumers/**/*.{ts,tsx}', 'tests/fixtures/javascript-{ledger,threaded-host,wasm-callback-io}/*.mts']
 		, languageOptions: {
 			parser: tseslint.parser
 			, globals: { ...globals.browser }

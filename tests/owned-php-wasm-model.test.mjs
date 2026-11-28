@@ -11,8 +11,32 @@ import { createOwnedCompiledNativeModel, generateOwnedNativeLeanAdapters } from 
 import { createOwnedPhpWasmModel, generateOwnedPhpWasmLeanAdapters } from "../src/build/php-wasm-owned-model.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../src/build/php-wasm-graph-model.mjs";
 import { generateCompiledPhpWasmOwned } from "../src/build/php-wasm-owned-component.mjs";
+import { compileOwnedPhpZendModel } from "../src/backends/php/owned-zend-model.mjs";
+import { generateOwnedPhpZendPhp } from "../src/backends/php/owned-zend-php.mjs";
+import { ownedZendRecordCalls } from "../src/backends/php/owned-zend-host-records.mjs";
+import { mixedFunctionFieldsIr } from "./helpers/owned-aggregate-fixture.mjs";
 
 const inputs = async () => JSON.parse(await readFile("docs/evidence/owned-aggregate-execution-20260926.json", "utf8")).inputs;
+
+test("wasm32 Zend stages selected functions only in borrowed record arguments", () => {
+	const ir=mixedFunctionFieldsIr(), model=compileOwnedPhpZendModel(ir);
+	const originals=model.functions.map(f=>f.publicName);
+	const alternate=model.recordInputs.functions.find(f=>f.publicName==="apply_tariff_with_host_fields");
+	assert.ok(originals.includes("apply_tariff") && !originals.includes(alternate.publicName));
+	assert.deepEqual(Object.keys(alternate.records),["0","1"]);
+	assert.deepEqual(model.recordInputs.contract,[{type: "lean:Owned.Tariff",input: "TariffInput",lifetime: "call",fields: ["quote","rebate"]}]);
+	assert.deepEqual(alternate.records[0],alternate.records[1]);
+	assert.deepEqual(alternate.records[0].fields.map(f=>[f.key,f.host]),[["quote",true],["rebate",true],["label",false],["base",false]]);
+	const calls=ownedZendRecordCalls(model), files=generateOwnedPhpZendPhp(model);
+	assert.equal([...calls.matchAll(/lgo_host\d+_begin\(/gu)].length,2);
+	assert.equal([...calls.matchAll(/lg_to_at\(/gu)].length,2);
+	assert.match(files["src/Api.php"],/class TariffInput\b/u);
+	assert.match(files["src/Internal/Native.php"],/private static function prepareRecord\(/u);
+	const legacy=compileOwnedPhpZendModel(ir,{hostInputRecords: false});
+	assert.equal(legacy.recordInputs,undefined);
+	assert.doesNotMatch(generateOwnedPhpZendPhp(legacy)["src/Api.php"],/class TariffInput\b/u);
+	assert.equal(compileOwnedPhpZendModel(ir,{hostCallbacks: false}).recordInputs,undefined);
+});
 
 test("owned PHP-Wasm models bind compiler-selected signatures to exact wasm32 layouts", async () => {
 	for(const input of Object.values(await inputs()))

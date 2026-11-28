@@ -13,6 +13,7 @@ import { canonicalJson } from "../capsule/node.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { readVerifiedPhpWasmCompilerInputs } from "./php-wasm-compiler-inputs.mjs";
 import { readVerifiedJavaScriptWasmCompilerInputs } from "./javascript-wasm-compiler-inputs.mjs";
+import { readTaskInputs } from "./javascript-wasm-task-inputs.mjs";
 
 const installedRoot = fileURLToPath(new URL("../../", import.meta.url));
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
@@ -62,7 +63,7 @@ const readManifest = async root => {
 	return config;
 };
 
-const packageReadme = (config, runtimeIncluded, phpWasmInputsIncluded, javascriptWasmInputsIncluded) => `# Lean Bridge
+const packageReadme = (config, runtimeIncluded, phpWasmInputsIncluded, javascriptWasmInputsIncluded, taskInputsIncluded) => `# Lean Bridge
 
 Compile Lean libraries into packages with generated native-language APIs.
 
@@ -83,6 +84,8 @@ ${javascriptWasmInputsIncluded ? "It includes the pinned JavaScript-Wasm Lean he
 ${phpWasmInputsIncluded ? "It includes the PHP-Wasm runtime and configured headers. PHP-Wasm authors need Lean 4.32.2 and the pinned Emscripten 3.1.68 SDK, but no Lean Bridge checkout or PHP configure tools." : "It does not include PHP-Wasm compiler inputs. Supply a prepared bundle through LEAN_BRIDGE_PHP_INPUTS to build that target."}
 
 ## Documentation
+
+${taskInputsIncluded ? "This CLI includes the threaded npm author SDK. With pinned host Lean and Emscripten it builds task and iterator packages without a target runtime checkout." : "To build threaded npm exports, supply a prepared pthread SDK through LEAN_BRIDGE_JS_TASK_INPUTS."} Consumers install the generated dependency; they do not need the author SDK.
 
 - [Author guide](https://seanmorris.github.io/lean-bridge/docs/lean/)
 - [Verify a prepared release](https://seanmorris.github.io/lean-bridge/docs/consume/receive-package/)
@@ -106,8 +109,9 @@ Lean Bridge source is distributed under the MIT license in LICENSE. Upstream run
  * @param root0.runtimeRoot - Optional prepared directory containing main.mjs and main.wasm.
  * @param root0.phpWasmInputsRoot - Optional verified PHP-Wasm compiler-input directory.
  * @param root0.javascriptWasmInputsRoot - Optional verified JavaScript-Wasm header bundle.
+ * @param root0.javascriptTaskInputsRoot - Optional standalone pthread owner and matching compiler headers.
  */
-export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRoot, runtimeRoot = null, phpWasmInputsRoot = null, javascriptWasmInputsRoot = null }) => {
+export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRoot, runtimeRoot = null, phpWasmInputsRoot = null, javascriptWasmInputsRoot = null, javascriptTaskInputsRoot = null }) => {
 	const root = await realpath(projectRoot);
 	if(typeof outputRoot !== "string" || outputRoot === "") fail("cli-package-output-required", "A new CLI package output directory is required");
 	const output = resolve(outputRoot);
@@ -134,7 +138,12 @@ export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRo
 		const inputs = await readVerifiedJavaScriptWasmCompilerInputs(javascriptWasmInputsRoot);
 		for(const [path, bytes] of inputs.files) files.set(`runtime/javascript-wasm/${path}`, bytes);
 	}
-	files.set("README.md", Buffer.from(packageReadme(config, runtimeRoot !== null, phpWasmInputsRoot !== null, javascriptWasmInputsRoot !== null)));
+	if(javascriptTaskInputsRoot !== null)
+	{
+		const inputs = await readTaskInputs(javascriptTaskInputsRoot);
+		for(const [path, bytes] of inputs.files) files.set("runtime/javascript-task/" + path, bytes);
+	}
+	files.set("README.md", Buffer.from(packageReadme(config, runtimeRoot !== null, phpWasmInputsRoot !== null, javascriptWasmInputsRoot !== null, javascriptTaskInputsRoot !== null)));
 	const manifest = {
 		name: config.name
 		, version: config.version
@@ -164,6 +173,7 @@ export const buildCliNpmPackage = async ({ projectRoot = installedRoot, outputRo
 		, runtimeIncluded: runtimeRoot !== null
 		, phpWasmInputsIncluded: phpWasmInputsRoot !== null
 		, javascriptWasmInputsIncluded: javascriptWasmInputsRoot !== null
+		, ...(javascriptTaskInputsRoot !== null ? {javascriptTaskInputsIncluded: true} : {})
 		, productionApproved: false
 		, files: inventory
 	};

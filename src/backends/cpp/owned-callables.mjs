@@ -8,6 +8,7 @@ import { generateOwnedCppConversions } from "./owned-conversions.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
 import { ownedCppInputTransfers } from "./owned-transfers.mjs";
 import { ownedCppAnchoredTransfers, ownedCppValueCopies } from "./owned-borrows.mjs";
+import { ownedCppHostRecords } from "./owned-host-records.mjs";
 
 /**
  * Generate ordinary exports, callable resource operations and host adapters.
@@ -94,21 +95,25 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, "    if constexpr (owned_has_recovery<std::remove_cvref_t<F>>)"
 			, `      owned_check${result.index}(${recovery}, 0, call.budget, call.state);`, "  }", "}");
 	}
-	const all = [...c.functions, ...c.callbacks, ...c.retains];
+	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.hostFieldCalls];
 	const signature = (item, offset = 0, qualified = "") => {
 		const params = item.parameters.map(id => nodes.get(id));
 		const wrapped = params.map((_, index) => wholeOwners && (item.anchor === index || item.transfers?.includes(index)));
 		const descriptors = params.map((_, index) => index >= offset && Boolean(c.hostArgument?.(item, index)));
 		const host = descriptors.map((yes, index) => yes && !wrapped[index]);
-		const templates = host.flatMap((yes, index) => yes ? [index] : []);
-		return { params, host, wrapped, descriptors
+		const records = params.map((_, i) => item.hostRecordSlots?.some(slot => slot.index === i));
+		const templates = host.flatMap((yes, index) => yes || records[index] ? [index] : []);
+		const constraints = templates.map(i => `${qualified}Owned${records[i] ? "Record" : "Callback"}${params[i].index}<F${i}>`);
+		if(item.hostRecordSlots) constraints.push("(" + item.hostRecordSlots.map(({index: i}) =>
+			`!std::same_as<std::remove_cvref_t<F${i}>, ${params[i].hostName}>`).join(" || ") + ")");
+		return { params, host, wrapped, descriptors, records
 			, prefix: templates.length ? [`template<${templates.map(index => `class F${index}`).join(", ")}>`
-				, `requires (${templates.map(index => `${qualified}OwnedCallback${params[index].index}<F${index}>`).join(" && ")})`] : []
+				, `requires (${constraints.join(" && ")})`] : []
 			, parameters: params.slice(offset).map((node, index) => {
 				const hostType = wrapped[index + offset] ? `Value<${node.hostName}>` : node.hostName;
-				return `${host[index + offset] ? `F${index + offset}&&` : item.transfers?.includes(index + offset) ? `${hostType}&&` : `const ${hostType}&`} a${index + offset}`;
+				return `${host[index + offset] || records[index + offset] ? `F${index + offset}&&` : item.transfers?.includes(index + offset) ? `${hostType}&&` : `const ${hostType}&`} a${index + offset}`;
 			}).join(", ")
-			, arguments: params.slice(offset).map((_, index) => host[index + offset] ? `std::forward<F${index + offset}>(a${index + offset})` : item.transfers?.includes(index + offset) ? `std::move(a${index + offset})` : `a${index + offset}`).join(", ") };
+			, arguments: params.slice(offset).map((_, index) => host[index + offset] || records[index + offset] ? `std::forward<F${index + offset}>(a${index + offset})` : item.transfers?.includes(index + offset) ? `std::move(a${index + offset})` : `a${index + offset}`).join(", ") };
 	};
 	all.forEach((item, index) => {
 		const result = nodes.get(item.result), sig = signature(item);
@@ -126,23 +131,26 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, "  auto *session = call.state->require();", "  moves.arm();"] : [];
 		calls.push(...sig.prefix, `inline ${callResult(item)} owned_invoke${index}(${sig.parameters}) {`
 			, "  OwnedCall call(current_state());"
-			, ...sig.params.map((param, i) => `  ${sig.descriptors[i] ? `owned_check_callback${param.index}(${argument(i)}, call);` : `owned_check${param.index}(${argument(i)}, 0, call.budget, call.state);`}`)
-			, ...sig.params.map((param, i) => `  ${sig.descriptors[i] ? `OwnedCallbackView${param.index}<${sig.wrapped[i] ? `const ${param.hostName}` : `std::remove_reference_t<F${i}>`}> view${i}(${argument(i)}, call);` : `OwnedView${param.index} view${i}(${argument(i)}, call.state);`}`)
+			, ...sig.params.map((param, i) => sig.records[i] ? `  OwnedRecordView${param.index}<std::remove_reference_t<F${i}>>::check(a${i}, call);`
+				: `  ${sig.descriptors[i] ? `owned_check_callback${param.index}(${argument(i)}, call);` : `owned_check${param.index}(${argument(i)}, 0, call.budget, call.state);`}`)
+			, ...sig.params.map((param, i) => sig.records[i] ? `  auto view${i} = std::make_unique<OwnedRecordView${param.index}<std::remove_reference_t<F${i}>>>(a${i}, call);`
+				: `  ${sig.descriptors[i] ? `OwnedCallbackView${param.index}<${sig.wrapped[i] ? `const ${param.hostName}` : `std::remove_reference_t<F${i}>`}> view${i}(${argument(i)}, call);` : `OwnedView${param.index} view${i}(${argument(i)}, call.state);`}`)
 			, `  ${result.cName} returned{}; OwnedOutput output(call.state);`
 			, ...item.anchor !== undefined ? [`  auto *anchor = ValueAccess::lease(a${item.anchor}, call.state)->owner(call.state);`, "  output.anchored_result = true;"] : []
 			, ...prepare
 			, `  const auto status = ${item.cName}(${moving.length ? "session" : "call.state->require()"}${sig.params.map((param, i) => moving.includes(i)
 				? `, ${param.leaf ? "" : "&"}${wholeOwners ? `view${i}.value` : `moved${i}`}, moves.owner(${moving.indexOf(i)})`
-				: `, ${sig.descriptors[i] || !param.leaf ? "&" : ""}view${i}.value${item.anchor === i ? ", anchor" : ""}`).join("")}, &returned, &output.owner.value);`
+				: `, ${sig.descriptors[i] || !param.leaf ? "&" : ""}view${i}${sig.records[i] ? "->" : "."}value${item.anchor === i ? ", anchor" : ""}`).join("")}, &returned, &output.owner.value);`
 			, ...moving.length ? ["  moves.finish();"] : []
 			, "  if (call.error) std::rethrow_exception(call.error);", "  checked(status);"
 			, ...wrappedResult(item) ? [`  auto converted = owned_from${result.index}(returned, 0, call.budget, output);`
 				, "  return ValueAccess::make(output.hold(), std::move(converted));"]
 				: [`  ${unit(result) ? "(void)" : "return "}owned_from${result.index}(returned, 0, call.budget, output);`], "}");
-		if(c.functions.includes(item))
+		if(c.functions.includes(item) || item.hostRecordSlots)
 		{
 			const pub = signature(item, 0, "detail::").prefix;
-			exports.push(...pub, `inline ${callResult(item)} ${item.cName.slice(p.length + 1)}(${sig.parameters}) {`
+			const entry = item.hostRecordSlots ? c.functions.find(fn => fn.id === item.id) : item;
+			exports.push(...pub, `inline ${callResult(item)} ${entry.cName.slice(p.length + 1)}(${sig.parameters}) {`
 				, `  return detail::owned_invoke${index}(${sig.arguments});`, "}");
 		}
 	});
@@ -166,10 +174,11 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		operations.push("};");
 	}
 	const receiverGroups = new Map();
-	for(const item of c.functions.filter(item => item.receiver === 0))
+	for(const item of [...c.functions, ...c.hostFieldCalls].filter(item => item.receiver === 0))
 	{
 		const sig = signature(item, 1), node = sig.params[0];
-		const name = item.cName.slice(p.length + 1), moving = item.transfers?.includes(0);
+		const entry = item.hostRecordSlots ? c.functions.find(fn => fn.id === item.id) : item;
+		const name = entry.cName.slice(p.length + 1), moving = item.transfers?.includes(0);
 		const owners = [{ type: `Value<${node.hostName}>`, wrapped: true }];
 		if(node.identity && !sig.wrapped[0]) owners.push({ type: node.hostName, wrapped: false });
 		for(const owner of owners)
@@ -209,7 +218,9 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, "template<class F, class R, class Expected> constexpr bool owned_callback_recovery_matches<RecoveredCallback<F, R>, Expected> = OwnedCallbackReply<R, Expected>;"
 		] : []
 		, ...transfers ? [wholeOwners ? ownedCppAnchoredTransfers(p) : ownedCppInputTransfers(conversions)] : []
-		, ...callbacks, ...calls, ...operations
+		, ...callbacks
+		, ...ownedCppHostRecords(nodes, c.hostFieldCalls, m + "_INVALID_ARGUMENT")
+		, ...calls, ...operations
 		, ...wholeOwners ? [ownedCppValueCopies(conversions)] : []
 		, ...receiverOperations, "}"
 		, "// Recovery supplies a typed failure-path value for Lean cleanup, never a successful host result."

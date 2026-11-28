@@ -35,6 +35,105 @@ This path supports pure copied primitives, nested arrays and Lists, copied recor
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
+## Export synchronous IO
+
+Select your `IO`, `EIO` or `BaseIO` functions in `exports` and [declare their native OS access](../lean/export-decisions.md#declare-native-os-access).
+Build with `--target cargo`. The `native-rust-io-v1` component depends on
+the exact shared runtime **without its async feature**. Cargo installs the
+runtime automatically; a synchronous-only consumer does not compile the
+reactor. Publish the exact runtime archive once even if multiple components
+need it. A real task component enables async on that same version. See
+[calling synchronous IO](../consume/rust.md#call-synchronous-io).
+
+To publish a synchronous iterator, select its Lean factory and name
+`open`, `next` and `close` under `iterators`. The [Dials example](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+returns an immediate `Option` from the pull function and writes a file
+in its `BaseIO Unit` finalizer, so it needs the filesystem grant.
+Set your Cargo coordinates under `targets.cargo`. The generated cursor uses
+the standard `Iterator` trait without the runtime's async feature.
+
+## Import application-owned Rust objects
+
+Point `hostImports` in `lean-bridge.exports.json` at the host declarations. For each imported type, include `rust` in its host targets and declare how object identity works. For a borrowed member result, name its receiver or parameter anchor. Import `LeanBridge.Host.Rust` in Lean and use the generated types and members directly:
+
+```lean
+import LeanBridge.Host.Rust
+open LeanBridge.Host.Rust
+
+def readMeter (box : Box) : IO UInt32 := box.read
+```
+
+Select the Lean wrapper functions to export and build with `--target cargo`. You can also supply a reviewed binding IR instead of an export list. The build checks it against the compiled declarations before it writes a package-set receipt. See the [example publisher](../../tests/helpers/rust-host-publish.mjs) for both routes.
+
+Distribute both archives in the receipt: the component and its exact `lean-bridge-task-runtime` dependency. Compatible components share the runtime; the `host-objects` feature does not enable async. A worker may carry an imported object, or pass it to a retained callback on the binding thread. Calling a Rust member directly from worker code is rejected at build time. The downstream application [binds its own Rust types](../consume/rust.md#let-lean-call-your-rust-objects). The [installed-package evidence](../evidence/rust-host-packages-20261125.md) records the releases and consumer checks. To expose a task or pull stream on the same binding, select its Lean declaration in `taskExports` or `asyncIterators`. The generated crate enables async delivery automatically. The [installed worker test](../evidence/static-host-workers-20261125.md#installed-rust-futures-and-streams) covers both source routes. Use `taskIOErrors` when a terminal `Except IO.Error` is a task failure rather than a returned value.
+
+### Export a record containing an imported object
+
+Use an ordinary Lean structure in the signature of a synchronous `IO` export.
+For example, a structure can have fields of types `Box`, `ByteArray`, `Nat`,
+and another `Box`. No Rust layout or field offsets belong in your Lean source.
+The build uses the elaborated constructor and projections on both author
+routes. A reviewed contract with a different field order is rejected.
+This covers flat records of imported objects and primitives as arguments and
+results; it does not enable record-shaped `EIO` failures or task results.
+See [how a Rust application constructs the record](../consume/rust.md#pass-a-record-containing-your-rust-objects).
+
+### Export a returned function on an object binding
+
+Export a synchronous factory with a type such as
+`Box → IO (UInt32 → IO UInt32)` through the normal `exports` list.
+The inner function can capture an imported Rust object and call its members
+on later invocations. Its argument and result must each be a supported
+primitive or a declared host object. Do not put the factory in `taskExports`:
+calling the returned function runs its Lean IO body synchronously.
+Declare any required native effects, including those used only inside that
+body. See [how callers use the lease](../consume/rust.md#call-a-function-returned-by-lean).
+
+## Export a task or pull stream
+
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
+For a Linux x86-64 task release, select Lean declarations by name in `lean-bridge.exports.json`, then run your normal `--target cargo` build:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"cargo": {"name": "pulse", "version": "1.0.0"}}
+}
+```
+
+The build checks the exports against fresh Lean interfaces. `taskExports` must return real Lean tasks. A cursor's next operation must produce a task with explicit exhaustion; its close operation must accept that cursor and return `BaseIO Unit`. To carry application-owned heap resources directly in arguments, results or typed failures, also list their fully qualified Lean names in `resources`. The independent reviewed route uses the same checks.
+
+The `native-rust-task-v1` receipt names **two crates**. The component contains its compiled adapter and public Rust functions. The runtime contains the shared Lean libraries and executor integration; its exact version identifies those bytes and the Rust support code. Verify the full receipt and check the registry's crate-size limit before uploading the runtime. Publish the runtime before the component.
+
+The generated dependency uses Cargo's default registry. If you repackage for a private registry, set the runtime dependency's `registry` explicitly and verify the resulting archives and dependency resolution. An offline [Cargo directory source](https://doc.rust-lang.org/cargo/reference/source-replacement.html#directory-sources) can instead supply the two original checked archives and their ordinary dependencies. The [consumer walkthrough](../consume/rust.md#await-a-task-or-pull-a-stream) shows the resulting API.
+
+If Cargo repackages the runtime, its registry checksum can differ from the prepared archive's checksum. Verify the downloaded runtime against the separately approved publication archive first. In a **separate publishing directory**, resolve the component lockfile against that registry runtime and review the lockfile diff before packaging the component. Keep the original handoff and its receipt unchanged.
+
+### Export a callback-taking task
+
+For a standalone task, use `taskCallbackPolicies` to allow a parameter
+one invocation instead of the default repeated calls:
+
+```json
+{"taskCallbackPolicies":[{"declaration":"Budget.probe","parameter":"f","invocation":"once"}]}
+```
+
+Use the Lean parameter name. The first invocation spends the allowance even
+if the callback returns an error. The ordinary and reviewed source routes
+check the same policy. Host-object bindings do not yet accept this option.
+
+Select a declaration such as `Retained.repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String))` in `taskExports`. To treat that particular task's outer `Except IO.Error` as a terminal failure, also list the declaration in `taskIOErrors`. A normal returned `Except ε α` is a value; the build does not infer an exception convention from its name. Callback parameters must have the actual Lean type `α → IO β` with supported copied scalar arguments and replies.
+
+The installed component generates the Rust closure signature, schedules the factory off the owner thread, and delivers the result through the executor. Neither the publisher nor the consumer supplies FFI or polling glue. See [the Rust callback example](../consume/rust.md#pass-a-callback-to-a-lean-task).
+
+Selecting `taskIOErrors` on a declaration **without** a callback only changes how the terminal result is decoded. Its factory still runs at the call site, its normal Rust `Task<T>` is unchanged, and it allocates no callback queue.
+
 ## Export arrays and records
 
 Select concrete exports using `Array T` and acyclic Lean structures in the shared

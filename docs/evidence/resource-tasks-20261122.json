@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "profiles": [
+    "native-c-task-v1",
+    "native-cpp-task-v1"
+  ],
+  "platform": "Local Linux x86-64, glibc 2.36; archive floor 2.38. Lean 4.32.2, GCC/G++ 12.2.0, pkg-config 1.8.1 and CMake 3.31.6.",
+  "fixture": "tests/fixtures/resource-tasks",
+  "test": "tests/helpers/resource-task-installed.mjs",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "bindingIrSha256": "2a1f51f0d849c2abebf9c514656a917b9bea2269d26fdb7c587d78049e704565",
+  "resourceLedger": {
+    "path": "lib/liblb_task_resources_9e93ff33ff4c012494273e8a9d6b1694b4e5556939e58a97c5ca2ebce1393592.so",
+    "sha256": "6b603a0505a7d7aeeb8228ca837a086f1150a4be1973e97c735846affeb328f7"
+  },
+  "nominal": [
+    {
+      "declaration": "Shared.Badge",
+      "kindId": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61"
+    },
+    {
+      "declaration": "Shared.Ticket",
+      "kindId": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4"
+    }
+  ],
+  "observations": [
+    "Two separately built components per target: the first from ordinary Lean sources and the peer from those same nominal definitions plus an independently checked public Binding IR. Each consumer linked both relocated installs, first with pkg-config and then with CMake; neither consumer build used Lean or the producer sources.",
+    "Independent replay reinstalled the four retained archives without rebuilding their producers. Both clients passed again through pkg-config and CMake. The same unmodified C client also passed against the ordinary C package and the reviewed C++ peer. For each executable the loader resolved its component libraries to the intended relocated installs and loaded a single copy of each shared runtime library. The release CLI independently verified all four receipts.",
+    "Both components mutate and return the same Lean object. Retaining creates a separate, independently closeable lease; equal-valued objects remain distinct. A real, gated Lean Task keeps its input even after the last host lease is released. C reports stale, wrong-kind, wrong-domain, wrong-thread and post-fork uses without consuming a valid owner.",
+    "Typed EIO factory rejection and a terminal typed pull failure each deliver an owned resource. A successful task/item delivers an independent lease. The consumers distinguish exhaustion, early close, cooperative cancellation and a non-cooperative late return; an occupied C output is rejected without consuming the pending result.",
+    "Each real Ticket owns a /dev/null file descriptor. The runtime's live-identity count and independently observed OS descriptors return to baseline. Retirement rejects further calls but releases live resources and cursors without invoking a new application close effect.",
+    "C++ co_await, typed exceptions, move-only ownership, explicit clone, identity comparison across different generated namespaces, deferred worker-thread destruction and dispatcher shutdown are exercised by the installed consumer.",
+    "Fresh compilation rejects scalar-erased identities and resources hidden inside copied Except payloads. Changing a transitive input to the declaring module rejects the previous review; changing an unrelated application function preserves the nominal identity."
+  ],
+  "releases": [
+    {
+      "target": "c",
+      "route": "ordinary",
+      "sourceTreeSha256": "9f20c45e1fe3c1bbe133538ecdf078b527eef83d773f445981fbc7ca37cc2b45",
+      "reviewedSourceSha256": null,
+      "componentIdentity": "ce09487afb56c79cf63406b04ba9b567267253fcc924bbeab96e82886d124f8a",
+      "receiptSha256": "35230d868410e9b571ee9fab8f6e2a0f488412251b3c0358c7c40627502b836d",
+      "archive": {
+        "bytes": 51335132,
+        "path": "archives/depot-1.0.0-c.tar.gz",
+        "sha256": "7400dc704374529f838d2fc1c76dd7f0978400e05f6bc4a7ce6238f3477b3299"
+      }
+    },
+    {
+      "target": "c",
+      "route": "reviewed",
+      "sourceTreeSha256": "b849a98bf0fa10066639034f08ff6c602121db1063f4f5b9097aa966f7bfeae6",
+      "reviewedSourceSha256": "803e4d4e22bf1ea1abfe18c782007ff4692833466681e2348e10ce47f961e9bd",
+      "componentIdentity": "174bcdec55d402099c7eacb9c6d49e7d2dcb64d758e7a762ae3580352e3fc324",
+      "receiptSha256": "c663bf7838f991d4f6a860b5168c48a667ba016c70f96e23eb3f70fb7d48f5fd",
+      "archive": {
+        "bytes": 51335293,
+        "path": "archives/depot-peer-1.0.0-c.tar.gz",
+        "sha256": "7a0b26b0056e5cc49af7779c511362c4bf5ae4ec29282be3e801b2142c3442a4"
+      }
+    },
+    {
+      "target": "cpp",
+      "route": "ordinary",
+      "sourceTreeSha256": "9f20c45e1fe3c1bbe133538ecdf078b527eef83d773f445981fbc7ca37cc2b45",
+      "reviewedSourceSha256": null,
+      "componentIdentity": "ce09487afb56c79cf63406b04ba9b567267253fcc924bbeab96e82886d124f8a",
+      "receiptSha256": "bcb2731994bee3a6471ed0863bef3951a3459f428a728d87fbed3307dc1c4fa7",
+      "archive": {
+        "bytes": 51343285,
+        "path": "archives/depot-1.0.0-cpp.tar.gz",
+        "sha256": "f0b89a8f2472046419de6f4b6921c6f2560a9dea86cbe22a906c39ebfdd6c7ed"
+      }
+    },
+    {
+      "target": "cpp",
+      "route": "reviewed",
+      "sourceTreeSha256": "b849a98bf0fa10066639034f08ff6c602121db1063f4f5b9097aa966f7bfeae6",
+      "reviewedSourceSha256": "803e4d4e22bf1ea1abfe18c782007ff4692833466681e2348e10ce47f961e9bd",
+      "componentIdentity": "174bcdec55d402099c7eacb9c6d49e7d2dcb64d758e7a762ae3580352e3fc324",
+      "receiptSha256": "5bd184a7e78c94bdc5846cb47694ae92be27530dc25caa15871d7f38c9f37c67",
+      "archive": {
+        "bytes": 51343436,
+        "path": "archives/depot-peer-1.0.0-cpp.tar.gz",
+        "sha256": "80d8c3c841d03857f26baf293528edbd405e3a79a749c579e7c705b2d3d137e3"
+      }
+    }
+  ],
+  "consumers": [
+    {
+      "target": "c",
+      "files": {
+        "CMakeLists.txt": "15deab71e900cba87f74249698211f4c42341c7a8da5efc13f7c499f4b3435db",
+        "audit.h": "8e46b02c7045f73a8609794ca3b0d57089af7eb5389cf7f1fd265005be903d60",
+        "consumer.c": "8e5e6ad821bf67cea557e8ef9c31bd511c7b03d26ac3cb5bdcc6e39c1d26c63c"
+      },
+      "output": "C leases: identity across packages, typed failures, cancellation and cleanup passed"
+    },
+    {
+      "target": "cpp",
+      "files": {
+        "CMakeLists.txt": "15deab71e900cba87f74249698211f4c42341c7a8da5efc13f7c499f4b3435db",
+        "audit.h": "8e46b02c7045f73a8609794ca3b0d57089af7eb5389cf7f1fd265005be903d60",
+        "consumer.cpp": "a50c97b794668c8cb1fa5ace2383009db2f39ab37507d5f101769c62aa40ab42"
+      },
+      "output": "C++ leases: shared nominal types, typed errors, co_await and owner-thread cleanup passed"
+    }
+  ],
+  "replay": "With the original handoffs and c-client/ and cpp-client/ directories, set LEAN_BRIDGE_TASK_RESOURCE_REPLAY to their absolute parent and run node --test --test-concurrency=1 tests/helpers/resource-task-installed.mjs. This mode verifies and installs the existing archives, with no Lean compiler or producer build.",
+  "scope": "Compiler-verified, direct application-owned heap resources in the Linux C/C++ task profiles. This does not establish arbitrary resource-bearing sums, host callbacks on Lean workers, all-profile async or trap handling, or a hosted CI run."
+}

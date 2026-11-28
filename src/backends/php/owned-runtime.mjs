@@ -15,8 +15,9 @@ import { ownedPhpBorrowLease, ownedPhpBorrowTransfers } from "./owned-borrows.mj
  * @param options.transferredInputs - Observe native consumption through shared leases.
  * @param options.anchoredResults - Preserve whole roots and original owner slots.
  * @param options.wholeOwners - Keep receiver owners without requiring result anchors.
+ * @param options.canonicalEquality - Admit typed comparisons on live native bindings.
  */
-export const ownedPhpRuntime = (prefix, { transferredInputs = false, anchoredResults = false, wholeOwners = anchoredResults } = {}) => {
+export const ownedPhpRuntime = (prefix, { transferredInputs = false, anchoredResults = false, wholeOwners = anchoredResults, canonicalEquality = wholeOwners } = {}) => {
 	if(typeof prefix !== "string" || !/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned PHP prefix");
 	const namespace = "Lean" + prefix.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (prefix.match(/_+$/u)?.[0] ?? "");
 	let source = String.raw`
@@ -201,7 +202,7 @@ final class OwnedBorrowFrame
 final class NativeBinding implements ResourceBinding
 {
     public function __construct(private ?OwnedLease $lease, private ?\FFI\CData $handle,
-        private ?\Closure $retainCall, private ?\Closure $invokeCall = null${wholeOwners ? String.raw`, private ?\Closure $equalCall = null` : ""}) {
+        private ?\Closure $retainCall, private ?\Closure $invokeCall = null${canonicalEquality ? String.raw`, private ?\Closure $equalCall = null` : ""}) {
         $this->check(); $this->lease->state->runtime->checkpoint();
     }
     public function check(): void {
@@ -225,7 +226,7 @@ final class NativeBinding implements ResourceBinding
         if ($this->invokeCall === null) throw new \TypeError('This Lean identity is not callable');
         return ($this->invokeCall)($this, $arguments);
     }
-${wholeOwners ? String.raw`    public function sameIdentity(NativeBinding $other): bool {
+${canonicalEquality ? String.raw`    public function sameIdentity(NativeBinding $other): bool {
         $this->check(); $other->check();
         if ($this->lease->state !== $other->lease->state) OwnedRuntime::checked(1);
         if ($this->equalCall === null) throw new \LogicException('Missing native identity comparison');
@@ -234,7 +235,7 @@ ${wholeOwners ? String.raw`    public function sameIdentity(NativeBinding $other
 ` : ""}    public function close(): void {
         if ($this->lease === null) return;
         $this->lease->state->runtime->affinity();
-        $this->handle = null; $this->lease = null; $this->retainCall = null; $this->invokeCall = null;${wholeOwners ? " $this->equalCall = null;" : ""}
+        $this->handle = null; $this->lease = null; $this->retainCall = null; $this->invokeCall = null;${canonicalEquality ? " $this->equalCall = null;" : ""}
     }
 }
 ${wholeOwners ? ownedPhpBorrowTransfers : transferredInputs ? ownedPhpInputTransfers : ""}`;

@@ -1,0 +1,54 @@
+{
+  "baseClientSha256": "f50231f1a6b6b7cae15194cb03b1a3fba930d36a585d8fdaa413acf1d5b3a440",
+  "clientSha256": "8f2566e65953015af7fd0d02d30c7c651f45b90265b0276ea8f607bcd4968b1c",
+  "executions": {
+    "chromium": "Chromium (no cross-origin isolation): Standalone Zend: synchronous identity, failures, reentry and cleanup passed; Zend record and EIO ownership passed",
+    "composer": "composer: Standalone Zend: synchronous identity, failures, reentry and cleanup passed; Zend record and EIO ownership passed",
+    "embedded": "embedded: Standalone Zend: synchronous identity, failures, reentry and cleanup passed; Zend record and EIO ownership passed"
+  },
+  "packages": [
+    {
+      "packages": [
+        {
+          "name": "example/php-sidekick",
+          "role": "api",
+          "sha256": "ca36eec8adc088da5704d9398c658f46a687dbe2ca8a46d7e1c104cd900f7db5"
+        },
+        {
+          "name": "@example/php-sidekick",
+          "role": "component",
+          "sha256": "55fdca0956d79fbd0fdced823c6d719be9ba5897d2b97be8ffc0ea9c0f2b7830"
+        },
+        {
+          "name": "@lean-bridge/runtime",
+          "role": "runtime",
+          "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+        }
+      ],
+      "receipt": "fd31bdff2232ece23a5907dfa5e1c459656c4a7edd84797e442c2f22b51f99ab",
+      "route": "peer"
+    },
+    {
+      "packages": [
+        {
+          "name": "example/php-workshop",
+          "role": "api",
+          "sha256": "320aff8e8b76446d84b229bc6080fa6b5aa3f263c9bfe84a8699736e7e92561e"
+        },
+        {
+          "name": "@example/php-workshop",
+          "role": "component",
+          "sha256": "eb128694cbefa7f96ae4bc6f8b9cf383c977293fc5e17dc6c1e0a59eb3407ec9"
+        },
+        {
+          "name": "@lean-bridge/runtime",
+          "role": "runtime",
+          "sha256": "f63c256445107d7cc9bc92672adef14f6d3c06291f815e3860dd8a180ae80139"
+        }
+      ],
+      "receipt": "b9cb9ce537c14899fd2efc8b3ffbadea1216b516e7f3983b3e2ae551036ca575",
+      "route": "reviewed"
+    }
+  ],
+  "route": "reviewed"
+}

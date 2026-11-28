@@ -1,0 +1,56 @@
+{
+  "archiveSha256": "ad5bf26a9c751b8d71154ec280c8094af9cb70eb8cd01c7d84c3bc69d93844fe",
+  "componentSha256": "0e7bdfa7729208cf92e10cec024d12b7e55f635c665d39353d1d65599c9f6be1",
+  "receiptSha256": "2d1766281c7b1807e60e719609f10edf5dca89e34f02156e06c5da84d79c6ff5",
+  "reports": [
+    {
+      "abi": "5.36.3-threaded",
+      "arch": "x86_64-linux-thread-multi",
+      "compiledSha256": "e31218d6fb2105491adfd059b9d6d8fa41055a9b79d722a8682f8463f3237979",
+      "samples": [
+        [
+          "baseline",
+          1
+        ],
+        [
+          "expired",
+          1
+        ],
+        [
+          "held",
+          9
+        ],
+        [
+          "forward",
+          1
+        ],
+        [
+          "nested",
+          1
+        ],
+        [
+          "ticket42",
+          1
+        ],
+        [
+          "ticket71",
+          1
+        ],
+        [
+          "fresh",
+          1
+        ],
+        [
+          "afterShutdown",
+          0
+        ]
+      ],
+      "sources": {
+        "tariff-application.pl": "ccd34a6dc536c0fdf893af6e93d4627fcb9d7350aa46d7d39dffcf156eed9ca4",
+        "tariff-incoming-observer.pl": "c401c9bab981353379f87d7ba8ff93d5f83ea274d68961a4f42c4a0e44c674b3"
+      },
+      "xsSha256": "4202349f16a98ce55609a86fd349e3e10f8f9a9a6e4b41fb55487f1fbac3c270"
+    }
+  ],
+  "route": "ordinary"
+}

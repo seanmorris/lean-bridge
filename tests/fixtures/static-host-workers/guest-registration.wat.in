@@ -1,0 +1,15 @@
+;; Independently authored producer: construct an actual guest registration
+;; and move it to the generated typed exchange without showing C its handle.
+(component
+  (import "registration" (type $r (sub resource)))
+  (import "make" (func $make (param "mode" u32) (result (own $r))))
+  (import "put" (func $put (param "value" (own $r))))
+  (core func $make (canon lower (func $make)))
+  (core func $put (canon lower (func $put)))
+  (core module $m
+    (import "" "make" (func $make (param i32) (result i32)))
+    (import "" "put" (func $put (param i32)))
+    (func (export "create") (param i32) (call $put (call $make (local.get 0)))))
+  (core instance $i (instantiate $m (with "" (instance
+    (export "make" (func $make)) (export "put" (func $put))))))
+  (func (export "create") (param "mode" u32) (canon lift (core func $i "create"))))

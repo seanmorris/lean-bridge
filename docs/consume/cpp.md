@@ -86,6 +86,242 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Call synchronous IO
+
+A `native-cpp-io-v1` function runs on the process main thread and finishes
+before it returns. For example, `auto text = api::read(path);` returns a
+`std::string` or throws `api::IOError` with a declaration and message.
+An `EIO ε` failure throws `api::DeclaredError<E>` with an owned `payload`.
+If the function *returns* an `Except`, inspect the `Ok<T>` or `Err<E>` arm
+of its `Result<T,E>` variant instead. There is nothing to wait on. A bad
+argument or a call from the wrong thread is a boundary error, not a Lean
+failure. See the [installed C++ caller](../../tests/fixtures/native-sync-io-clients/consumer.cpp).
+
+A package that only copies values does not open a dispatcher or require a
+thread library. A package that returns a Lean resource uses the same resource
+type as a task package built for that runtime. You can pass the resource to
+either package. If a worker thread drops a lease, the next call into the
+resource package on the owner thread drains the pending release.
+
+### Iterate without a dispatcher
+
+The [Dials client](../../tests/fixtures/native-immediate-cursor/consumer.cpp)
+uses a move-only, single-pass C++20 range. The factory opens a Lean cursor;
+incrementing the iterator requests the next item on the main thread.
+
+```cpp
+for (auto value : lean_bridge::lbc_dials::sequence(10)) {
+    if (value == 2) break;
+}
+```
+
+The temporary range closes at loop exit. If you keep the range in a
+variable, you can resume it or call `close()`. Its `next()` returns
+`std::optional<T>`; an empty optional means exhaustion. Factory and step
+failures carry the declaration that threw, and an unsuccessful step closes
+the range. Pull and close on the main thread. If another thread destroys
+the range, the next main-thread call into the cursor API drains the pending
+close. Normal main-thread process exit drains outstanding deferred closes
+after workers have joined. No event loop is involved.
+
+## Pass application objects to Lean
+
+A `native-cpp-host-v1` archive calls your existing C++ classes. Include the
+installed header and instantiate its `Binding` with those classes, in the
+order listed in the header. You don't inherit from a bridge class, implement
+a dispatch table, or install Lean.
+
+For the [meter example](../../tests/fixtures/c-host-members/consumer.cpp),
+`M` is the application's meter type:
+
+```cpp
+lean_bridge::workshop::Binding<M> workshop;
+auto meter = std::make_shared<M>(12);
+workshop.update(meter, 41);
+auto same = workshop.identity(meter);
+assert(same.get() == meter.get() && workshop.read(same) == 41);
+```
+
+An independently built package using the same host contract can use that
+same `shared_ptr`. A returned object preserves its control block as well as
+its address. A member exception that Lean lets escape is rethrown as the
+original C++ exception. If Lean maps it to `EIO String`, catch
+`lean_bridge::sync_v1::DeclaredError<std::string>` instead. A returned
+`Except` remains a value.
+
+If an export returns a Lean function, use it as a move-only C++ callable:
+
+```cpp
+auto meter = api.make(40);
+auto read_plus = api.reader(meter);
+auto answer = read_plus(2);  // 42; reads the captured meter now
+read_plus.close();           // destruction also releases the callable
+```
+
+Call it on the original process’s main thread. It does not keep its binding
+open. After the binding closes, invoking a saved callable throws
+`lean_bridge::sync_v1::Closed`. If the last owner is destroyed from
+another thread, release runs through the owner queue, not on that thread.
+
+For a borrowed member result, use an aliasing `shared_ptr` when returning a
+subobject: `std::shared_ptr<Dial>(parent, &parent->dial)`. It points at the
+field but keeps the original parent alive. If the contract says the result
+borrows from a parameter, use that parameter's owner, not the receiver's.
+Creating another control block for the same address is not equivalent; that
+invalid reply makes further Lean calls unavailable. The [two-class
+client](../../tests/fixtures/cpp-host-anchors/client.cpp) exercises both cases.
+
+Call or explicitly close the binding on the process main thread. Destroying
+a synchronous-only binding on another thread queues its cleanup for the next owner-thread
+entry; call `lean_bridge::sync_v1::drain_host_closes()` there if no more
+calls are expected. Link the package's CMake target or pkg-config name;
+both include the matching reference registry and Lean runtime.
+
+### Keep C++ objects in a Lean record
+
+A record holding application objects is a value type nested in the binding.
+In the Gauge package, `Binding<Meter>::Pair` holds two `std::shared_ptr<Meter>`
+values, a byte vector and a multiprecision integer:
+
+```cpp
+using Api = lean_bridge::workshop::Binding<Meter>;
+Api api;
+auto left = std::make_shared<Meter>(23), right = std::make_shared<Meter>(19);
+Api::Pair input{left, {9, 8}, 42, right};
+auto flipped = api.flip(input);
+assert(flipped.lead() == right);
+assert(flipped.sequence() == 43);
+```
+
+Copying a record shares ownership of the original meters and copies its byte
+and integer values. The getters work after the binding closes. Let the record
+go out of scope to release its references; a shared pointer obtained from a
+getter can live longer than the record. This differs from a returned Lean
+function, which needs its binding to remain open.
+See the [complete C++ client and installed results](../evidence/cpp-host-record-fields-20261126.md).
+
+### Await work on an application object
+
+When the package exports a task on its binding, pass your `shared_ptr` as
+usual. Await the result in a coroutine, or call `.get()` on the main thread.
+In the [two-package example](../../tests/fixtures/static-host-workers/consumer.cpp),
+`auto same = co_await workshop.echo(meter);` returns the same meter and control
+block. A retained callback takes and returns ordinary C++ values. It runs on
+the binding thread and may call a peer binding. If Lean propagates a callback's
+`std::exception`, the future rethrows the original exception, not a copy of its
+message. A nonstandard thrown object retires the runtime.
+
+Call `.next()` on a stream to request one item. It returns a future of
+`std::optional<T>`; an empty optional means normal completion. Stop early with
+`.close()`. Closing the binding cancels its outstanding operations without
+closing other bindings. Dropping a worker-enabled binding on another thread
+queues its cleanup on the coroutine dispatcher; `.get()` pumps it, or your main
+loop can call `lean_bridge::async_v2::run_one(0)`. See the [installed C++ worker checks](../evidence/static-host-workers-20261125.md#installed-c20-futures-and-streams-on-application-objects).
+
+## Await a task or pull a stream
+
+For a package marked `native-cpp-task-v1`, include the C++ header and link
+the CMake target or pkg-config package in its manifest. The prepared archive
+includes Lean's runtime. In the `pulse` example:
+
+```cpp
+#include <lbc_pulse.hpp>
+namespace pulse = lean_bridge::lbc_pulse;
+
+pulse::Routine<unsigned> count_items() {
+    auto stream = pulse::series(false, false, "example");
+    unsigned count = 0;
+    while (auto item = co_await stream.next()) ++count;
+    co_return count;
+}
+
+int main() { return count_items().get() == 2 ? 0 : 1; }
+```
+
+A task starts at the call. Await its `Future<T>`, or call `.get()` if a blocking
+wait is appropriate. A stream waits for `.next()` before requesting an item;
+only one pull can be outstanding. `std::nullopt` means exhaustion. A returned
+`Result<T,E>` is a variant of `Ok<T>` and `Err<E>`: either branch can be a
+stream item. Catch `IOError` for a Lean IO failure, `StartError<E>` for a typed
+factory failure and `StepError<E>` for a typed pull failure. Each carries the
+Lean declaration and its payload or message.
+
+Tasks and streams are move-only. Scope exit or explicit `.cancel()` / `.close()`
+requests cleanup without waiting for non-cooperative work. A pending waiter
+receives `Cancelled`; a second waiter on the same operation receives `Busy`.
+Start, await and resume on the process main thread. Dropping an owner on a
+worker sends cleanup to the main thread; it runs when the dispatcher pumps or
+the application next enters a generated function. `Routine<T>::get()` drives bridge waits with
+`poll(2)`, not a timer or one thread per task. A host with its own coroutine
+type may drive the dispatcher with `run_one(timeout_ms)`: zero checks without
+blocking, and a positive timeout is in milliseconds. Resume and destroy
+its suspended frames on that thread. `shutdown()` cancels active owners and
+rejects new work. Pump existing waiters to receive `Cancelled`.
+
+The [installed example](../../tests/fixtures/cpp-lean-tasks/consumer.cpp) also
+exercises nested coroutines, cancellation while a pull is pending, and cleanup
+when a suspended coroutine is abandoned. This is a separate package profile
+from the general [type conversion matrix](#type-conversions). Its installed
+tests cover the [listed task payloads](../publish/cpp.md#export-tasks-and-streams).
+
+A declared resource such as `Ticket` is move-only. Use `ticket.clone()` for a
+second independently owned lease, and `==` to compare Lean object identity.
+A started task keeps its own reference: moving or closing the input cannot
+invalidate the pending operation. A `StartError<Ticket>` or `StepError<Ticket>`
+owns its payload too. Scope exit releases a lease; destroying it on a worker
+queues release for the main dispatcher. See the [installed C++ example](../../tests/fixtures/resource-tasks/consumer.cpp).
+
+In packages that export `Nat` or `Int`, the namespace defines `Nat` and
+`Int` as `boost::multiprecision::cpp_int`. Pass an integer by const reference;
+the call copies it before returning. Task results, stream items and typed
+exceptions own their values. A negative `Nat` throws `std::invalid_argument`.
+Magnitudes count in 64-bit words toward the 16 MiB input copy budget shared
+by the call’s arguments; an oversized input or result throws `std::length_error`.
+The [installed C++ example](../../tests/fixtures/exact-task-integers/consumer.cpp)
+uses `co_await` with the same integer type in values and errors.
+
+### Pass a callback to a Lean task
+
+Pass a lambda to the generated function. In this example Lean calls the lambda
+twice. The call starts the task; `.get()` or `co_await` lets its callbacks run
+on the process main thread, even if Lean needs an answer before its factory
+returns. No worker calls your C++ code.
+
+In a standalone task package, a parameter declared `once` runs at most
+once per registration. If Lean retries that slot and propagates the
+failure, awaiting the future throws the component's `CallbackAlreadyInvoked`.
+Your own exception with the same message is still your original exception.
+
+If your application drives the dispatcher with `run_one()`, the callbacks
+also run before anyone awaits the future. On completion the dispatcher
+releases the callable and saves the result or exception for the first waiter.
+
+```cpp
+#include <lbc_cpp_retained.hpp>
+
+inline std::string guide_example() {
+    using lean_bridge::lbc_cpp_retained::repeat_call;
+    return repeat_call("hello", [](std::string s) { return s + "!"; }).get();
+}
+```
+
+The future owns the callable, including a move-only capture. For early
+revocation, pass a `RetainedCallback<R(A)>` and call its `.close()`. A call
+already executing can finish; the next one throws `CallbackClosed`. Cancelling
+the future releases its copy without invoking a queued callback.
+
+If Lean propagates a callback's original `std::exception`, the future rethrows
+that exception with its C++ payload. If Lean catches it or throws a new error
+with the same message, it does not become the original exception.
+`TaskIOError` denotes a declared terminal Lean IO failure; `IOError` denotes a
+factory IO failure. A non-standard C++ exception from the callback retires the
+shared native runtime and reports `CallbackTrap`. The dispatcher wakes its
+other pending waiters with `Unavailable`; they do not have to wait for their
+Lean tasks to finish.
+
+The [installed callback checks](../evidence/cpp-retained-tasks-20261122.json)
+identify both archives and the client that exercised these behaviors.
+
 ## Values and cleanup
 
 Ordinary-source arrays become `std::vector<T>`, and records become generated structs with owned fields. Both can nest; `Array Bool` uses `std::vector<bool>`. The wrapper keeps input views alive through the call and releases the intermediate C result even if copying a nested result throws. Returned C++ values are independent of the inputs and need no explicit cleanup.
@@ -676,6 +912,10 @@ generic Subtypes beyond the closed `GenericNat` alias, remain pending.
 The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
 
 The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) retains ordinary-source and reviewed C++ packages for closed `Bool`, `String`, and `Nat` indexed records. Indices remain metadata; callers pass only the generated proof-free multiprecision payload fields.
+
+For Linux C++20 task packages, see [Await a task or pull a stream](#await-a-task-or-pull-a-stream).
+The table below records general C++ conversion coverage; its unaudited async
+row does not describe the separate `native-cpp-task-v1` package.
 
 ### Type conversions
 

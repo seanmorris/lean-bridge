@@ -70,11 +70,233 @@ die $error unless $ok;
 
 Run `perl consumer.pl`. Expected output is `42`, `42`, `42`, then `41`, each on its own line. Imports and calls use the generated public API only.
 
+### Call synchronous IO and handle errors
+
+Call a synchronous Lean `BaseIO`, `IO` or `EIO` export as a normal Perl function. It finishes before the next statement. With the [Journal author example](../publish/cpan.md#export-synchronous-io), save this as `journal.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Journal;
+
+say LeanBridge::Journal::bump(42);
+my $returned = LeanBridge::Journal::choose(!!0, !!0, 'not used');
+say $returned->value;  # An Err returned as data.
+
+my $ok = eval { LeanBridge::Journal::choose(!!1, !!1, 'out of stock'); 1 };
+unless ($ok) {
+    my $error = $@;
+    die $error unless ref($error) && $error->isa('LeanBridge::Journal::Error::choose');
+    say $error->payload->value;
+}
+```
+
+Run `perl journal.pl`. It prints `42`, `37`, and `out of stock`. A function returning `Except` gives you an `Ok` or `Err` object. A thrown `EIO` error is a declaration-specific exception: `->declaration` names the Lean function and `->payload` preserves the value, including a nested `Except`. A failed `IO` operation throws `LeanBridge::Journal::IOError`; use `->message` for the Lean error text.
+
+The package loads the shared runtime. Use it from the process and interpreter thread that loaded it. Invalid inputs fail before the Lean function runs. The [installed acceptance checks](../evidence/perl-sync-io-20261123.json) exercise both threaded and unthreaded Perl.
+
+If the declared error carries your Perl object, its payload refers to the original
+object, not a copy. Save `$@` before another `eval` overwrites it. The
+[two-package example](../evidence/perl-error-owner-20261126.md) shows a second
+binding updating that object after the binding that threw has closed.
+
+### Supply a Perl class to Lean
+
+If the package declares a host object, bind the requested name to a class for the duration of a block. This [meter.pl example](../../tests/fixtures/perl-host-meter/meter.pl) uses the [host-import Workshop package](../publish/cpan.md#call-a-perl-object-from-lean):
+
+```perl
+use strict;
+use warnings;
+use LeanBridge::Workshop;
+
+{
+    package App::Meter;
+    sub new      { bless {level => $_[1]}, $_[0] }
+    sub level    { $_[0]->{level} = $_[1] if @_ == 2; return $_[0]->{level} }
+    sub read     { $_[0]->{level} }
+    sub identity { $_[0] }
+}
+
+my $meter = LeanBridge::Workshop::with_hosts({Box => 'App::Meter'}, sub {
+    my $m = LeanBridge::Workshop::make(18);
+    LeanBridge::Workshop::update($m, 42);
+    return LeanBridge::Workshop::identity($m);
+});
+print $meter->read, "\n";  # 42
+```
+
+`$meter` is the original blessed Perl object, not a handle. The binding closes on return or exception. A new call into these Lean functions needs a new block. If a Perl method dies and Lean propagates that IO error unchanged, the caller receives the original exception. If Lean maps it to a declared `EIO` error, the caller receives the generated exception and its payload.
+
+### Pass a record containing Perl objects
+
+A package can export a record class such as `LeanBridge::Gauge::Pair`. Its
+constructor takes the fields in declaration order. Using the `App::Meter`
+class above:
+
+```perl
+use Math::BigInt;
+use LeanBridge::Gauge;
+
+my ($left, $right) = (App::Meter->new(7), App::Meter->new(4));
+my $output = LeanBridge::Gauge::with_hosts({Box => 'App::Meter'}, sub {
+    my $row = LeanBridge::Gauge::Pair->new($left, pack('C', 1), Math::BigInt->new(42), $right);
+    return LeanBridge::Gauge::flip($row);
+});
+my $meter = $output->lead;       # the original $right object
+$output->close;
+print $meter->read, "\n";        # 4
+```
+
+The record holds ordinary Perl references. It can outlive the block, and
+closing it does not close an object you already retrieved. Byte strings
+and `Math::BigInt` fields are copied: changing a getter result does not
+change the stored value. Use a fresh `with_hosts` block to pass a retrieved
+meter to another component.
+
+### Call a returned Lean function on a Perl object
+
+If your package exports a function factory such as
+`remember : Box → IO (Box → IO Box)`, its result is a Perl code reference.
+Use it inside the same `with_hosts` block:
+
+```perl
+LeanBridge::Workshop::with_hosts({Box => 'App::Meter'}, sub {
+    my $captured = LeanBridge::Workshop::make(18);
+    my $remember = LeanBridge::Workshop::remember($captured);
+    my $result = $remember->(LeanBridge::Workshop::make(24));
+    $remember->close;
+    return $result;  # the original $captured object
+});
+```
+
+You can pass the code reference directly to a worker that expects a
+compatible callback. Leaving the block revokes every function created in
+it, even on exception. A later block, fork or interpreter thread cannot
+invoke that function.
+
+### Pass a Perl object through a worker
+
+In the [worker version of Workshop](../publish/cpan.md#carry-a-perl-object-through-a-worker),
+`relay` returns a future. Using the same `App::Meter` class as above:
+
+```perl
+use v5.36;
+use LeanBridge::Workshop;
+
+my $meter = LeanBridge::Workshop::with_hosts({Box => 'App::Meter'}, sub {
+    my $original = LeanBridge::Workshop::make(18);
+    return LeanBridge::Workshop::relay($original, sub ($m) {
+        $m->level(42);
+        return $m;
+    })->get;
+});
+say $meter->read;  # 42; this is the object that the callback updated
+```
+
+The callback runs on the Perl event loop, where it can call other exports. Wait for work
+that needs the object **inside** the binding: leaving the block cancels its
+pending futures and closes its cursors, even if the block throws. A different
+component’s binding stays usable. An object already delivered to Perl is an
+ordinary blessed reference and remains usable after the block.
+
+### Read an immediate iterator
+
+Call `$cursor->next` in list context. The list has one element for an item
+(even when that item is `undef` or zero), and no elements at exhaustion.
+Unlike a task-backed stream, this loop needs neither `Future` nor `IO::Async`:
+
+```perl
+use v5.36;
+use LeanBridge::Dials;
+
+my $cursor = LeanBridge::Dials::sequence(4);
+while (my ($value) = $cursor->next) {
+    say $value;
+    last if $value == 1;
+}
+$cursor->close;
+```
+
+Exhaustion closes the cursor. Close it explicitly when you exit early
+and intend to keep its Perl object alive. If a pull yields or throws a
+Lean resource, that value has its own independently closeable lease.
+
+### Wait for a task or read a stream
+
+A task export returns a `Future` attached to the default loop returned by `IO::Async::Loop->new`. If your application already uses that loop, its timers and I/O continue to run while `get` waits for a result. In event-driven code, register `on_done` and `on_fail` callbacks instead. The component declares its CPAN dependencies; synchronous-only packages do not require an event loop.
+
+With the [Pulse author example](../publish/cpan.md#export-tasks-and-streams), save this as `pulse.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Pulse;
+
+my $answer = LeanBridge::Pulse::checked(!!0, !!0, '')->get;
+say $answer->value;
+my $cursor = LeanBridge::Pulse::series(!!0, !!0, 'first');
+while (my @item = $cursor->next->get) {
+    say $item[0]->value;
+}
+$cursor->close;
+```
+
+Run `perl pulse.pl`. It prints `42`, `first`, then `73`. The stream opens on first demand. Each `next` returns a future for one item; read it in list context so a single `undef` (Lean `Unit`) is distinct from an empty list (end of stream). Finish the pending pull before asking for another. If you break early, call `close` to release the cursor immediately.
+
+Invalid task arguments throw at the call. A declared failure starting the task or pulling an item fails the future and `get` throws. A returned `Except` is still ordinary `Ok`/`Err` data. Call `cancel` to stop waiting and request Lean cancellation. A worker that ignores cancellation can finish, but its result is not delivered. Keep futures and cursors in the process and interpreter that created them.
+
+The [installed task and cursor checks](../evidence/perl-tasks-20261123.json) cover both package routes on four Perl ABIs, including what happens when an interpreter thread is created while a native pull is pending.
+
+### Pass a callback to a Lean worker
+
+An installed [task that calls Perl](../publish/cpan.md#export-a-task-that-calls-perl) accepts a normal code reference. The Lean worker sends each request to the Perl event loop; it never enters the interpreter itself. Save this as `retained.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Retained;
+
+my $task = LeanBridge::Retained::repeat_call('go', sub ($s) { $s . '!' });
+say $task->get;  # go!!
+```
+
+The callback returns **one scalar**, including `undef` for Lean `Unit`. It may call another export or wait for a different task. Waiting for its own task throws an error. If a callback throws and Lean propagates that error, `get` throws the original Perl exception. Lean can also catch it and return an ordinary value.
+
+A standalone package can allow just one call to a callback parameter.
+The first attempt spends that allowance, even if your sub dies. A second
+attempt never enters Perl. If Lean propagates the refusal, `get` throws
+the package's `CallbackAlreadyInvoked` object; `->declaration` identifies
+the export. You can reuse the same sub in another parameter or a new task.
+The [installed example](../evidence/native-once-callback-20261126.md#perl)
+shows what happens when two Lean workers try to call that sub at once.
+
+An ordinary exception does not disable the runtime. If the bridge cannot match a native callback failure to the Perl exception that produced it, it retires the shared runtime instead. Catching that diagnostic inside a host method does not let the enclosing call return a value. Further calls through either component require a fresh process.
+
+To stop accepting calls before a task settles, create a `LeanBridge::Retained::RetainedCallback` with `->new($code)` and pass `$registration->callback` to the task. Calling `$registration->close` revokes that code reference for every consumer, including a second component. An invocation already underway may finish. Cancelling a future revokes that task's access; it does not revoke other tasks' use of the same registration.
+
+The [installed worker-callback checks](../evidence/perl-retained-workers-20261123.json) cover both package load orders, callback failures, cancellation during a reply, and runtime shutdown with a queued request. They run on threaded and unthreaded Perl 5.36.3 and 5.38.2.
+
+### Receive a resource from a task or stream
+
+The [Depot package](../publish/cpan.md#export-resource-bearing-tasks-and-streams) returns a ticket that owns a Lean object. A task can return another handle to that same object. Save this as `ticket.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Depot;
+
+my $ticket = LeanBridge::Depot::make(42, 'delivery');
+my $item = LeanBridge::Depot::checked(!!0, $ticket)->get;
+$ticket->close;
+say LeanBridge::Depot::count($item);  # 42
+$item->close;
+```
+
+Run `perl ticket.pl`. It prints `42` because closing the input releases only that handle. Use `$item->same_resource($other)` to compare two live handles of the same kind. To release an item from a cursor, close the item itself; closing the cursor ends the stream but leaves items already delivered to you usable. A typed `EIO` or stream-step error can also own a resource: use `$error->payload` and close that handle when you're done.
+
+Keep handles on their original process and Perl interpreter thread. Compatible packages load the shared runtime themselves; pass the object directly without converting it to a pointer or ID. The [installed resource checks](../evidence/perl-lease-delivery-20261123.json) pass tickets through three independently built packages, reject a fourth with a different layout, and check that the file behind a ticket closes after the last owner releases it.
+
 ### Options, results and products
 
 `Option` uses `undef` for None and the generated `Some->new($value)` for Some. Unit also uses `undef`: `Some->new(undef)` preserves a present Unit or an outer Some containing an inner None, according to the declared type. Nested options keep every layer.
 
-`Except` uses distinct `Ok->new($value)` and `Err->new($error)` classes. Both expose `->value`. Domain errors return `Err`; invalid host values and bridge failures throw exceptions.
+`Except` uses distinct `Ok->new($value)` and `Err->new($error)` classes. Both expose `->value`. A returned `Err` is data; a declared `EIO` failure, an invalid host value, or a bridge failure throws.
 
 For the package in the [author example](../publish/cpan.md#export-options-results-and-products), save `compounds.pl`:
 
@@ -265,6 +487,22 @@ Synchronous callbacks and returned Lean closures use the same arrays, Lists,
 options, results, products, records, variants and aliases as ordinary calls.
 Pass a host function as a CODE reference. A returned Lean closure provides
 `call`, `close` and `closed`.
+
+A package can also accept a code reference *inside* a record. For example,
+the Tariff API generates a separate input class:
+
+```perl
+use LeanBridge::TariffQuotes;
+my $fee = 40;
+my $rule = LeanBridge::TariffQuotes::TariffInput->new(quote => sub { $_[0] + $fee });
+my $price = LeanBridge::TariffQuotes::apply_tariff_with_host_fields($rule, 2); # 42
+```
+
+You can pass `$rule` again. Each call borrows its code reference anew;
+returning the record from Lean does not extend that borrow. If the
+returned function must remain callable later, pass a leased Lean function
+in the input instead. The [Perl field checks](../evidence/host-callback-input-records-20261126.md#perl-callers)
+exercise both cases.
 
 For the package in the [author example](../publish/cpan.md#export-structured-callbacks),
 save `structured-example.pl`:
@@ -808,6 +1046,8 @@ constructor/source entry counts and memory measurement, remain separate work.
 
 The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
 
+For the standalone effect profiles, see [synchronous IO and errors](#call-synchronous-io-and-handle-errors) and [tasks and streams](#wait-for-a-task-or-read-a-stream). These packages have their own installed checks, separate from the cross-language inventory below.
+
 ### Type conversions
 
 Profiles: Perl. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -939,7 +1179,45 @@ Float parameters accept integer or floating-point scalars. Native boolean scalar
 
 Arrays, records, options, results, products and finite recursive values are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
 
-Callbacks may reenter the generated API. A callback can close the resource or closure involved in its own call; the active call retains what it needs until it returns. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a host callback beyond that call. An expired callback fails safely when invoked later.
+For example, if two installed packages share the `Workshop.Counter` type, pass the object itself between them. When the second package returns the same Lean object, you get the original Perl wrapper back. Closing either reference closes both.
+
+```perl
+use LeanBridge::Workshop;
+use LeanBridge::Other;
+
+my $counter = LeanBridge::Workshop::new_counter(42);
+my $alias = LeanBridge::Other::same($counter);
+print LeanBridge::Other::value($alias), "\n";  # 42
+$counter->close;
+```
+
+Callbacks may reenter the generated API. A resource first seen as a callback argument is borrowed: saving its Perl reference alone does not keep it open after the callback. If you already hold a lease, or a generated API returns that same resource as a leased result during the callback, the canonical wrapper stays open. A callback can close a resource used in its own call; the active Lean frame retains what it needs to finish. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a call-scoped host callback beyond that call. An expired callback fails safely when invoked later.
+
+When a callback receives a Lean function directly, `my $saved = $fn->retain`
+keeps an independent lease. Inside the callback, `$fn->same_identity($saved)`
+compares the underlying function, not the Perl references. After the callback
+returns or throws, only `$saved` remains callable; comparing or calling the
+expired borrow fails. Call `$saved->close` when finished.
+
+A generated record can hold a Lean function. To keep a field function after
+closing the original, call `my $saved = $record->quote->retain`, invoke it
+with `$saved->call(3)`, then `$saved->close`. Returning that function from
+a synchronous callback passes the function itself back to Lean. Putting a
+call-scoped Perl callback in a returned record does **not** keep the Perl
+callback alive. The [installed CPAN example](../evidence/perl-function-fields-20261126.md)
+exercises both lifetimes.
+
+A synchronous callback that returns a standalone resource normally takes a Perl coderef. If any argument has the same resource type as the result, Lean can use that argument while unwinding a failed call. If there is no matching argument, supply a live recovery object when registering the callback:
+
+```perl
+my $choose = LeanBridge::Workshop::Runtime::Callback->new(
+    code     => sub { LeanBridge::Workshop::new_counter($_[0]) },
+    recovery => $counter,
+);
+my $value = LeanBridge::Workshop::choose_with(42, $choose);
+```
+
+The adapter checks the recovery object's type and lifetime before calling Lean. A recovery object lets Lean finish evaluating the current call safely; it does not turn an exception into a successful result. Calling a **returned Lean closure** with `->call(...)` needs no recovery descriptor.
 
 Keep calls and handles in the creating process, Perl interpreter and thread.
 Calls and fresh imports reject inherited runtime state after a fork. Automatic

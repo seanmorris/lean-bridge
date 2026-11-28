@@ -30,6 +30,10 @@ lean_object *lbp_keep(lbp_scope *scope, lean_object *value);
 void lbp_budget(lbp_scope *scope, size_t bytes);
 void lbp_finish(pTHX_ lbp_scope *scope);
 SV *lbp_resource(pTHX_ lean_object *object, const char *kind, const char *package);
+/* A transferred word-wire result owns an independent lease, even when the
+   ordinary Perl projection already interns the same Lean object. */
+SV *lbp_independent_resource(pTHX_ lean_object *object, const char *kind, const char *package);
+SV *lbp_borrowed_resource(pTHX_ lean_object *object, const char *kind, const char *package);
 lean_object *lbp_borrow(pTHX_ lbp_scope *scope, SV *value, const char *kind);
 uint64_t lbp_callback_new(pTHX_ lbp_scope *scope, SV *code, CV *invoker, void (*invoke)(void));
 int lbp_callback_invoke(lbp_callback *callback, void *frame);

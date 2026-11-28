@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(resource_consumer LANGUAGES C CXX)
+find_package(LeanBridgeLbcDepot CONFIG REQUIRED)
+find_package(LeanBridgeLbcDepotPeer CONFIG REQUIRED)
+find_package(Threads REQUIRED)
+add_executable(consumer consumer.${RESOURCE_TARGET})
+target_link_libraries(consumer PRIVATE LeanBridge::lbc_depot LeanBridge::lbc_depot_peer Threads::Threads ${CMAKE_DL_LIBS})

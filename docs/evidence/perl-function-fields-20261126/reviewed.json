@@ -1,0 +1,69 @@
+{
+  "archives": {
+    "LeanBridge-Runtime": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9",
+    "LeanBridge-TariffQuotes": "c841e895ff7f339ec44e21b283e5bac46531e36dd38ff508ab2536923b617ba7"
+  },
+  "bindingIrSha256": "e98cbccc94911bdabe0cb86ea2d8498e0add5211bfc77cece865fdff40f0c610",
+  "clientSha256": "590c3d40923a79ebc9e64a89c8084ed8826f7c2f679f43a3e89312f2aaebcbad",
+  "observations": [
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "d7452c6d743e86d7c604531991d6c4d864da041270eb144f320b26e69c399034",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "e473e301360fa8837d9b25ad825b2e146092431e479e10fa15f84059e8262d8c",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "f39fd5962250f4ca6b339d9467edec5f640a8fc53227089f844e62f6d8388e9f",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.38.2"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "installReceiptSha256": "62f3a46d57762a8a7d1995cdd61e59a6a0cef255c28d5fe51bce7e14ebefc978",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.38.2"
+    }
+  ],
+  "receiptSha256": "1104f3f8be021c44e06ed21b35eea82153a7dad705a3558840b26aca5d332a0c",
+  "reviewedSourceSha256": "06e3bca440b81160b0c06e47c953e2e26cd438766e1ce1b50e8273bac4226aae",
+  "route": "reviewed"
+}

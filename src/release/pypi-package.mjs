@@ -19,6 +19,9 @@ import { validatePackagingBackendPlan } from "./backend-policy.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
+import { writeWheelRecord } from "./wheel-record.mjs";
+
+export { writeWheelRecord } from "./wheel-record.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -77,34 +80,6 @@ Description-Content-Type: text/markdown
 
 ${readme}`;
 
-const collectFiles = async root => {
-	const files = [];
-	const visit = async (directory, prefix = "") => {
-		const entries = await readdir(directory, { withFileTypes: true });
-		entries.sort((left, right) => left.name.localeCompare(right.name));
-		for(const entry of entries)
-		{
-			const path = prefix ? `${prefix}/${entry.name}` : entry.name;
-			const absolute = join(directory, entry.name);
-			if(entry.isDirectory()) await visit(absolute, path);
-			if(entry.isFile()) files.push({ path, bytes: await readFile(absolute) });
-		}
-	};
-	await visit(root);
-	return files;
-};
-
-const recordHash = bytes => createHash("sha256").update(bytes).digest("base64url");
-
-const writeWheelRecord = async (wheelRoot, distInfo) => {
-	const lines = [];
-	for(const file of await collectFiles(wheelRoot))
-	{
-		lines.push(`${file.path},sha256=${recordHash(file.bytes)},${file.bytes.length}`);
-	}
-	lines.push(`${distInfo}/RECORD,,`);
-	await writeFile(join(wheelRoot, distInfo, "RECORD"), `${lines.join("\n")}\n`);
-};
 
 /**
  * Builds py pi package from validated inputs with deterministic output suitable for the deterministic release and independent-verification pipeline.

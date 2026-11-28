@@ -527,11 +527,24 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		document, profiles, reference);
 	return [
 		"### Type conversions"
+		, ...(profiles.length === 1 && profiles[0] === "rust" ? [""
+			, "The general audit table below describes the ordinary native projection. A"
+			, "separate [task release](#await-a-task-or-pull-a-stream) maps real Lean tasks to"
+			, "Rust [futures](https://doc.rust-lang.org/std/future/trait.Future.html), demand-driven"
+			, "cursors to [streams](https://docs.rs/futures-core/0.3.31/futures_core/stream/trait.Stream.html),"
+			, "and direct application-owned resources to typed leases."
+		] : [])
 		, ""
 		, `Profiles: ${profiles.map(profile => names[profile]).join(", ")}. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.`
 		, ""
 		, `The [conversion rules](${reference}#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](${reference.replace(/reference\/types\.md$/u, "type-surface.v1.json")}) records commands, source hashes, limitations and implementation owners.`
+		, ...(profiles.length === 1 && profiles[0] === "ruby"
+			? ["", "The package receipt identifies the native Ruby profile: `native-ruby-host-v1` lets [Lean call Ruby-owned objects](#supply-a-ruby-object-to-lean), `native-ruby-io-v1` exposes [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` exposes [tasks and pull streams](#await-a-task-or-read-a-stream). These profiles have their own installed checks, separate from the general audit rows below."] : [])
+		, ...(profiles.length === 1 && profiles[0] === "python" ? ["", "For native Python wheels, the [IO](#call-synchronous-io) and [asyncio](#await-a-lean-task) profiles also support [shared Lean resources](#share-a-lean-resource-across-packages). The general audit rows below are separate from those installed profiles."] : [])
+		, ...(profiles.length === 1 && ["java", "kotlin"].includes(profiles[0]) ? ["", "The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows. Tasks can [call back into the JVM](#pass-a-callback-to-a-lean-task) using copied scalar arguments and replies."] : [])
+		, ...(profiles.length === 1 && profiles[0] === "wit-wasi" ? ["", "Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [typed task resources](#await-a-lean-task), [canonical futures](#await-a-canonical-future-from-a-wasm-application), [canonical streams](#read-a-canonical-stream-from-a-wasm-application), [native pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows do not describe these async profiles."] : [])
 		, ...(zeroPayloadMatrix ? ["", zeroPayloadMatrix] : [])
+		, ...(profiles.length === 1 && profiles[0] === "dotnet" ? ["", "For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [tasks and streams](#await-tasks-and-pull-streams), [retained C# callbacks](#let-a-lean-task-call-c), and [shared resources](#share-a-lean-resource-across-packages). These profiles are separate from the general audit rows below."] : [])
 		, ...(dependentCheckedRecordMatrix
 			? ["", dependentCheckedRecordMatrix] : [])
 		, ...(dependentSignatureComplete

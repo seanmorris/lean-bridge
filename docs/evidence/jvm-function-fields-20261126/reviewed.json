@@ -1,0 +1,58 @@
+{
+  "archives": [
+    {
+      "bytes": 54103733,
+      "path": "archives/tariff-quotes-1.0.0.jar",
+      "sha256": "30f9283be90ab947b29f140a0b4bf200ffda31e04196a8c81587ad570d3ad833"
+    },
+    {
+      "bytes": 623,
+      "path": "archives/tariff-quotes-1.0.0.pom",
+      "sha256": "2e53c4de856b3c7082abb8ba04417dc8a2344ed262377b6c62ce1939e4443826"
+    }
+  ],
+  "bindingIrSha256": "7d53bdfa6b92fc0b51f681760f1e3220ea9c634e2f4c6ffb6e6391bc58e4818c",
+  "compiled": {
+    "java": "26e6c0b22e7227ef156629e6fa3e6749c2fbb95e138c1d18e9bc70c4dcf9b9cc",
+    "kotlin": "4aba27dcdf23f09afa615e84319494988a71b38cd31d8c30ed7cbaea44efb0da"
+  },
+  "deployed": {
+    "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+    "kotlin-stdlib-2.2.0.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+    "tariff-quotes-1.0.0.jar": "30f9283be90ab947b29f140a0b4bf200ffda31e04196a8c81587ad570d3ad833"
+  },
+  "modules": "java.base@22.0.2",
+  "receiptSha256": "aad74a005267692a1647c4dc2f4d290f34494e0aaf4987dee613abf12146da90",
+  "results": {
+    "java": {
+      "afterCallbackFailure": 1,
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "closed": 1,
+      "echo": 1,
+      "expired": 1,
+      "held": 4,
+      "repack": 1,
+      "retain": 1
+    },
+    "kotlin": {
+      "afterCallbackFailure": 1,
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "closed": 1,
+      "echo": 1,
+      "expired": 1,
+      "held": 4,
+      "repack": 1,
+      "retain": 1
+    }
+  },
+  "reviewedSourceSha256": "06e3bca440b81160b0c06e47c953e2e26cd438766e1ce1b50e8273bac4226aae",
+  "route": "reviewed",
+  "sources": {
+    "JavaTariff.java": "066b62b070d1e78600533a5b80c1c655d9a3d121c6d34e1a11d0d505c5c5aee6",
+    "KotlinTariff.kt": "af699553f07cbce25b81a3cee8046c08f46c894988beed748c423e4249e47733",
+    "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+    "Ownership.java": "c0acc0469c467f2f2ab8445abddebb592fc4c9bef281e168c487369cc147f924"
+  }
+}

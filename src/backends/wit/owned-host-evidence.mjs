@@ -39,9 +39,11 @@ export const guardOwnedWitHostSource = (generated, dependencies) => {
 	if(!/^[a-z][a-z0-9_]*_wasmtime$/u.test(p)) throw new TypeError("Invalid owned WIT host namespace");
 	const expected = new Set([`${p}_session_open`, `${p}_session_close`
 		, `${p}_result_release`
-		, ...values.anchoredResults ? [`${p}_result_validate`, ...values.nodes.filter(node => node.identity).map(node => `${node.cName}_equal`)] : []
+		, ...values.anchoredResults ? [`${p}_result_validate`] : []
+		, ...values.anchoredResults || values.callbackArgumentViews ? values.nodes.filter(node => node.identity).map(node => `${node.cName}_equal`) : []
 		, ...[...values.functions, ...values.callbacks, ...values.retains
-			, ...values.copies ?? []].map(item => item.cName)]);
+			, ...values.copies ?? []
+			, ...values.hostFieldCalls ?? []].map(item => item.cName)]);
 	const seen = new Set();
 	let guarded = source.replace(new RegExp(`(${p}_status (${p}_[a-z0-9_]+)\\([^;{}]*\\) \\{)`, "gu"), (match, signature, name) => {
 		if(!expected.has(name) || seen.has(name)) throw new Error(`Unexpected owned WIT public entry: ${name}`);

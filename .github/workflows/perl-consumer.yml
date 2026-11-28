@@ -3,6 +3,14 @@ name: Perl native packages
 on:
   workflow_call:
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Acceptance suite to run
+        type: choice
+        default: full
+        options:
+          - full
+          - standalone-resources
 
 permissions:
   contents: read
@@ -37,7 +45,58 @@ env:
     /docs/evidence/*/index.json
 
 jobs:
+  standalone-resources:
+    name: Installed standalone resources and callables on four Perl ABIs
+    if: github.event_name == 'workflow_dispatch' && inputs.suite == 'standalone-resources'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - uses: ./.github/actions/bounded-apt
+      - run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - uses: actions/cache@v4
+        with:
+          path: .toolchains/perl
+          key: perl-checked-record-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Verify the four pinned interpreters
+        run: |
+          for version in 5.36.3 5.38.2; do
+            for mode in threaded unthreaded; do
+              node scripts/build-perl-toolchains.mjs "$version" "$mode"
+            done
+          done
+      - name: Build once per component and execute the same archives on every ABI
+        env:
+          LEAN_BRIDGE_PERL_NATIVE_TEST: "1"
+          LEAN_BRIDGE_RESOURCE_MATRIX: "1"
+          LEAN_BRIDGE_RECORD_RESOURCE_EVIDENCE: "1"
+          LEAN_NUM_THREADS: "2"
+        run: node --test --test-concurrency=1 tests/helpers/reviewed-perl-resource-identity.mjs
+      - name: Retain exact packages, receipts and per-interpreter TAP
+        uses: actions/upload-artifact@v7
+        with:
+          name: standalone-resource-callables-perl-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/standalone-resource-acceptance/
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 14
+
   checked-records:
+    if: inputs.suite != 'standalone-resources'
     name: Checked records across all four Perl ABIs
     runs-on: ubuntu-24.04
     timeout-minutes: 120
@@ -122,6 +181,7 @@ jobs:
           retention-days: 30
 
   nix-engine:
+    if: inputs.suite != 'standalone-resources'
     name: Pinned Nix Perl engine and installed consumer
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -164,6 +224,7 @@ jobs:
           '
 
   compiler-checks:
+    if: inputs.suite != 'standalone-resources'
     name: Shared compiler and Lake acceptance
     runs-on: ubuntu-24.04
     timeout-minutes: 90
@@ -235,6 +296,7 @@ jobs:
         run: node --test --test-name-pattern='generated native' tests/lake-generated-packages.test.mjs
 
   perl:
+    if: inputs.suite != 'standalone-resources'
     name: Perl XS (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
     env:
@@ -540,6 +602,7 @@ jobs:
         run: exit 1
 
   perl-receivers:
+    if: inputs.suite != 'standalone-resources'
     name: Perl receiver packages (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
     timeout-minutes: 90
@@ -627,7 +690,7 @@ jobs:
 
   perl-summary:
     name: Combined Perl consumer observation
-    if: always()
+    if: always() && inputs.suite != 'standalone-resources'
     needs:
       - checked-records
       - compiler-checks

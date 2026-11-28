@@ -17,6 +17,7 @@
 export const ownedCRuntime = (values, carriers, transport = null) => {
 	const p = values.prefix, limits = values.native.model.limits;
 	const anchored = values.anchoredResults === true;
+	const views = anchored || values.callbackArgumentViews === true;
 	const component = JSON.stringify(values.native.model.component.id);
 	const sessionKind = JSON.stringify(`owned-c-session:${values.native.model.component.id}`);
 	const resultKind = JSON.stringify(`owned-c-result:${values.native.model.component.id}`);
@@ -29,9 +30,9 @@ typedef struct oc_block {
   max_align_t alignment;
   unsigned char data[];
 } oc_block;
-${anchored ? "typedef struct oc_session oc_session;\ntypedef struct oc_view oc_view;\n" : ""}\
-typedef struct { oc_block *head; ov_budget *budget;${anchored ? " oc_session *session; lb_owned_batch *view_batch; oc_view **views;" : ""} } oc_arena;
-${anchored ? "" : "typedef struct oc_session oc_session;\n"}\
+${views ? "typedef struct oc_session oc_session;\ntypedef struct oc_view oc_view;\n" : ""}\
+typedef struct { oc_block *head; ov_budget *budget;${views ? " oc_session *session; lb_owned_batch *view_batch; oc_view **views;" : ""} } oc_arena;
+${views ? "" : "typedef struct oc_session oc_session;\n"}\
 typedef struct oc_result {
   struct oc_result *next;
   uint64_t key;
@@ -209,6 +210,7 @@ static inline int oc_outputs(const void *out, size_t bytes, size_t alignment, co
  */
 export const ownedCBorrowRuntime = values => {
 	const p = values.prefix;
+	const anchors = values.anchoredResults === true;
 	const viewKind = JSON.stringify(`owned-c-borrow:${values.native.model.component.id}`);
 	return `
 struct oc_view {
@@ -216,7 +218,7 @@ struct oc_view {
   oc_session *session;
   const lb_owned_batch *batch;
   const char *kind;
-  uint64_t key, token, generation;
+  uint64_t key, token${anchors ? ", generation" : ""};
 };
 static _Thread_local oc_view *oc_views;
 static inline int oc_views_clear(oc_view **views) {
@@ -231,7 +233,7 @@ static inline int oc_views_clear(oc_view **views) {
   }
   return status;
 }
-static inline int oc_anchor_prepare(oc_session *session, const ${p}_result *key, ov_input_anchor *anchor) {
+${anchors ? `static inline int oc_anchor_prepare(oc_session *session, const ${p}_result *key, ov_input_anchor *anchor) {
   oc_result *owner = oc_results;
   while (owner && owner->key != (uint64_t)(uintptr_t)key) owner = owner->next;
   if (!owner || owner->session != session) return LB_OWNED_INVALID;
@@ -244,7 +246,13 @@ ${p}_status ${p}_result_validate(${p}_session *key, ${p}_result *owner) {
   ov_input_anchor anchor = {0};
   if (!status) status = oc_anchor_prepare(session, owner, &anchor);
   return (${p}_status)status;
-}
+}` : `/* These views live inside one synchronous callback frame. No result anchors
+ * or generation fields are needed in the native lease ABI. */
+static inline lb_owned_batch *oc_live_frame_batch(oc_session *session, const lb_owned_batch *key) {
+  for (lb_owned_batch *batch=session->native.batches; batch; batch=batch->next)
+    if (batch==key) return batch;
+  return NULL;
+}`}
 static inline int oc_identity_to(oc_arena *arena, const char *kind, uint64_t key, uint64_t *out) {
   if (!arena->session) return LB_OWNED_INVALID;
   int status = lb_owned_ready(&arena->session->native);
@@ -252,7 +260,7 @@ static inline int oc_identity_to(oc_arena *arena, const char *kind, uint64_t key
   for (oc_view *view = oc_views; view; view = view->next) {
     if (view->key != key) continue;
     if (view->session != arena->session || strcmp(view->kind, kind)) return LB_OWNED_INVALID;
-    lb_owned_batch *batch = lb_owned_batch_find(&arena->session->native, view->batch, view->generation);
+    lb_owned_batch *batch = ${anchors ? "lb_owned_batch_find(&arena->session->native, view->batch, view->generation)" : "oc_live_frame_batch(arena->session, view->batch)"};
     if (!batch) return LB_OWNED_CLOSED;
     for (lb_owned_entry *entry = batch->entries; entry; entry = entry->next)
       if (entry->owner->token == view->token && !strcmp(entry->owner->kind, kind)) {
@@ -266,14 +274,14 @@ static inline int oc_identity_to(oc_arena *arena, const char *kind, uint64_t key
 static inline int oc_identity_from(oc_arena *arena, const char *kind, uint64_t token, uint64_t *out) {
   if (!arena->view_batch) { *out = token; return LB_OWNED_OK; }
   if (!arena->session || !arena->views) return OV_RESULT;
-  if (!lb_owned_batch_find(&arena->session->native, arena->view_batch, arena->view_batch->generation)) return LB_OWNED_CLOSED;
+  if (!${anchors ? "lb_owned_batch_find(&arena->session->native, arena->view_batch, arena->view_batch->generation)" : "oc_live_frame_batch(arena->session, arena->view_batch)"}) return LB_OWNED_CLOSED;
   for (oc_view *view = *arena->views; view; view = view->owned_next)
     if (view->token == token && !strcmp(view->kind, kind)) { *out = view->key; return LB_OWNED_OK; }
   void *storage = NULL; int status = oc_allocate(arena, 1, sizeof(oc_view), &storage);
   if (status) return status;
   oc_view *view = storage;
   view->session = arena->session; view->batch = arena->view_batch;
-  view->generation = arena->view_batch->generation; view->kind = kind; view->token = token;
+  ${anchors ? "view->generation = arena->view_batch->generation; " : ""}view->kind = kind; view->token = token;
   view->key = lean_bridge_native_identity_acquire(${viewKind}, view);
   if (!view->key) return LB_OWNED_LIMIT;
   view->next = oc_views; oc_views = view;

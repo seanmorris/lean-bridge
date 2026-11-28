@@ -1,0 +1,257 @@
+{
+  "archives": [
+    {
+      "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.944dc1e6fa2af18616b52267d72194dfd2775665f361baf0a4a29f4acbd0fd64.tgz",
+      "bytes": 1661058,
+      "directory": "runtime/package",
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "role": "runtime",
+      "sha256": "72321f9a848238fb13908072aea393e867cb37c97a00706d1b5515c522fb173b",
+      "version": "0.0.0-copied1.944dc1e6fa2af18616b52267d72194dfd2775665f361baf0a4a29f4acbd0fd64"
+    },
+    {
+      "archive": "example-tariff-quotes-1.0.0.tgz",
+      "bytes": 170977,
+      "directory": "component/package",
+      "ecosystem": "npm",
+      "name": "@example/tariff-quotes",
+      "role": "component",
+      "sha256": "8f673362fe64a00bb38ed1245b181755f75d7686c944396511d996f16cc2fc98",
+      "version": "1.0.0"
+    },
+    {
+      "archive": "example-tariff-quotes-1.0.0-php-wasm.zip",
+      "bytes": 86888,
+      "directory": "composer",
+      "ecosystem": "composer",
+      "name": "example/tariff-quotes",
+      "role": "api",
+      "sha256": "8f543c22f948d152e816d5ecefc7271ee30ca51dec0b15fa614cc6ebfea6bd4b",
+      "version": "1.0.0"
+    }
+  ],
+  "bindingIrSha256": "380c5eac95f54183d98d7425aae646b374b89fbfa5f3952cee8a931cddfc3757",
+  "installed": {
+    "component": "a14a861d9dd0d15c595bcd216acce95170be29a10862533a7f9ed1060a9b2dc9",
+    "composer": "f860d2f28e07485418094cc12b08120570ebfdffbd6c7ff05898bf4abd35ddf1",
+    "host": "96cf2f53b47f2890d6b1046bec811d74500fee6a74611a2c4d8a9114e7664250"
+  },
+  "observations": [
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "composer",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "composer",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": {
+        "bindingShutdown": [
+          1,
+          0
+        ],
+        "direct": {
+          "baseline": 0,
+          "error": 0,
+          "errorLease": 0,
+          "fresh": 0,
+          "held": 1,
+          "lease": 0,
+          "nested": 0,
+          "success": 0
+        },
+        "refreshed": [
+          "42",
+          0
+        ]
+      }
+    }
+  ],
+  "observer": {
+    "binarySha256": "acfc27f0ced118f50894d84d150aaffabec8dc2c33ce9e2e0bd948114d705aba",
+    "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+    "sourceSha256": "31ca8d7f5f5fccd834e592b6adfd460843a902f08f2c4c3dd65bb6289c13c163",
+    "testOnly": true
+  },
+  "receiptSha256": "e1c823f934f3ff9ce75fee2b89c57d6e8bfe7e2fb7127994e7dd1962946a1385",
+  "reviewedSourceSha256": "27e336bc168cd27d5780da31ff76836c8807ee179097833cc89e4b5f5299f8fb",
+  "route": "reviewed",
+  "runtime": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "sources": {
+    "php-wasm-sync-io-probe/installed-node.mjs": "53e707c60e849803a4edfdebed16befaebdf7cf24365dc874dafb1d86940c1e6",
+    "structured-types/tariff-zend-direct.php": "37066c6a23587122aef56e5ab32d97d70d53e67bc740eab859287c01ec028dae",
+    "structured-types/tariff-zend-host.mjs": "27293d4bc7a3538d8d32a7b5c693d8d5f98598fefe4e8cef0b1e893c1c025db4"
+  }
+}

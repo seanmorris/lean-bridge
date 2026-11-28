@@ -18,8 +18,12 @@ method references. Twelve parsed or compiled semantic mutations must fail
 their named assertions; the restored implementation must pass again.
 
 Installed CLI builds produce source-free offline npm releases. Node,
-TypeScript, Chromium, Firefox and WebKit execute the generated APIs, including
-pages, React and workers. Resource-only packages with and without transfers,
+Chromium, Firefox and WebKit execute the generated APIs, including pages,
+React and workers. The strict TypeScript client checks the installed member
+declarations with `tsc --noEmit`; it does not execute those calls. See the
+[later installed TypeScript client](host-lifetime-acceptance-20261127.md#running-the-typescript-receiver-client)
+for runtime behavior of receiver- and argument-anchored results.
+Resource-only packages with and without transfers,
 and callback packages without result anchors, have separate installed checks.
 Independent builds and reassembly must reproduce both archives. The full
 package test executes the exact consumer documentation example.

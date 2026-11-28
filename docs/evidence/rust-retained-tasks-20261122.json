@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "profile": "native-rust-task-v1",
+  "platform": "Linux x86-64; Lean 4.32.2, Rust/Cargo 1.90.0, glibc 2.36 locally; package floor 2.38.",
+  "fixture": "tests/fixtures/rust-task-lab",
+  "callbackSource": "tests/fixtures/python-retained-tasks/Retained.lean",
+  "test": "tests/helpers/rust-task-installed.mjs",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "extractorSha256": "64435fe67552a9282b42271f13a4a0e00cc92955ad4044ac5f8041fb241aae7e",
+  "bindingIrSha256": "47e65538333957b036b300713c75e35d2cecd597f47c2404944ded2d2da531e1",
+  "sharedRuntime": {
+    "version": "1.0.0-r75697d07265e829989aad7f96731238024eec63b534a54bd0073e99678f1f885",
+    "bytes": 51311303,
+    "path": "archives/lean-bridge-task-runtime-1.0.0-r75697d07265e829989aad7f96731238024eec63b534a54bd0073e99678f1f885.crate",
+    "sha256": "4c742d8e2561b0512b69bfbfa4b8c161c9f63defa5c03110ba9ed3db0bf57ccd"
+  },
+  "releases": [
+    {
+      "route": "ordinary",
+      "sourceTreeSha256": "7bb9d59c92fd26803d3403aae863eff1c5762dba0502df78b1956804787db564",
+      "receiptSha256": "947ad85787041147742a00dd241a7fd549c9e98cb5e9cad4fceca2e26a602b57",
+      "componentIdentity": "277c80a2281e962c6d43fd42eafc9e43acde4ac5989216ea1aa65f93579d1e6d",
+      "componentArchive": {
+        "bytes": 124677,
+        "path": "archives/task-lab-1.0.0.crate",
+        "sha256": "775c4c8d2e503aa68d8e9676b5ba95b2efc7228486e627b46ae54f890f89abbc"
+      }
+    },
+    {
+      "route": "reviewed",
+      "sourceTreeSha256": "1eb7b76c98396f2a3aa2496f433dde17d1c417ca6caff06658512a3971dc37f2",
+      "receiptSha256": "8fda19e0568cf66afa75026dc894310c0486b9c5ea2be31d5c79be34400fd63c",
+      "componentIdentity": "cd6d20c0f9eab7b1dad21201efbe9d50b55f5b5f6bce5beef27a256ed420539b",
+      "componentArchive": {
+        "bytes": 124921,
+        "path": "archives/task-lab-peer-1.0.0.crate",
+        "sha256": "8160269717d12de53b501da86b221c8b246ed21405a51967bb241eb07fd443fa"
+      }
+    }
+  ],
+  "consumer": {
+    "mainSha256": "1d2619a90f34378a5a28cead3ceec5991839350141f8aee73b4913b98f093245",
+    "wakeupChecksSha256": "80430f603c37ba0eca879cc1138ed411122a8c6139c5f9077ecf09f6a55bda9c",
+    "callbackChecksSha256": "fce52c7187107344a8407c94d67dfd34969834f6d0372eba62eb2c02546fb5ca",
+    "guideExampleSha256": "70ec368569740a936c612cc0704ad6c716837b63ebb36f3a62951f9c90c4dfed",
+    "output": "Rust: retained callback checks passed\nRust: parked executor, waker replacement, cancellation, fused streams, typed errors, exact integers and cross-crate resource cleanup passed"
+  },
+  "observations": [
+    "The ordinary source and the reviewed API produced independently compiled native components. An offline Cargo directory registry resolved both and one exact shared runtime; the relocated client ran after removing the registry, client source and build tree, with neither Lean nor Cargo on PATH. The Rust example captured from the consumer guide ran in that client.",
+    "A Lean IO factory called its host before returning, waited on another worker that called the host, and returned a task that called it again. Closures ran on the process main thread, could reenter an independently packaged component, and required no user FFI, manual callback pump or polling timer. The reviewed crate exercised all 19 copied scalars as both callback input and reply, including 4096-bit integers, Unicode, NUL, raw bytes and signed zero.",
+    "An error propagated through the original Lean IO.Error retained the Rust object's identity and downcastable payload, including owner-local Rc state. Equal text did not impersonate the original error. A caught failure remained a normal returned Except value; typed factory rejection, immediate IO, terminal IO and cancellation stayed separate. Callback-free Task errors retain Send/Sync when their payloads do. A dedicated callback-free factory reported early IO at the call site and yielded a normal Task<u32> on success, without generating a callback queue.",
+    "A callback could explicitly close itself and finish; its next invocation failed. Settlement dropped the Rust captures even when Lean kept the closure. A real callback-descriptor wake was observed on the replacement waker before cancellation; the queued closure was not invoked. Dropping an uncooperative factory cancelled the task it returned late. Eventfd and broker identity counts returned to baseline.",
+    "Independent child processes retired the runtime with a callback already queued and panicked in an executing Rust callback. Retirement prevented dispatch; an unwinding panic never crossed a native frame, reported the declaring export and retired the shared runtime. Further calls were refused and live lease counts returned to zero.",
+    "The previous Rust task, stream, integer, fork and cross-crate resource checks also ran. Rust compile-fail checks rejected wrong nominal types and Send bounds on main-thread owners. A focused native probe reproduced and corrected the BaseIO ABI error: the factory returns the Task directly, unlike an IO success/error wrapper.",
+    "A second archive-only run verified both original receipts and source trees, installed both crates in a new offline registry, and reproduced the consumer output and all saved hashes without re-running Lean. The release CLI independently verified both receipts. Regenerating the archived Lean entry, native ABI header, Rust source files, and content-addressed shared runtime identity matched the shipped bytes."
+  ],
+  "sharedQueueRegression": {
+    "interpreters": [
+      {
+        "interpreter": "cpython-311",
+        "routes": {
+          "ordinary": {
+            "componentSha256": "fde5e209211dce01e726ed98de24becb609e04ab8c15ee67413464e98acd4d69",
+            "receiptSha256": "c03dd7c11239ada9e5afa03b68d95733813afe39ae11cb1f345dcafbd3eb6bbd"
+          },
+          "reviewed": {
+            "componentSha256": "5a9e2073c9e93743857100c207fe65b4edc081a9751e94f5acf5d8673ec2c388",
+            "receiptSha256": "0ec62f3fe19f3723874ec2717af4cc4e938627c22c78956d71aa2ab40e310279"
+          }
+        }
+      },
+      {
+        "interpreter": "cpython-312",
+        "routes": {
+          "ordinary": {
+            "componentSha256": "6b60f84b0e6bb511f7ae627e44229d25f4b3b8d6e31f4bfb69a16c61e0f367c8",
+            "receiptSha256": "8f17e204b5f702f700615d147a7bf283100e069e3bd61e8672ad1749dd488b8b"
+          },
+          "reviewed": {
+            "componentSha256": "48fdb93ccc9022ac9fb256970c0109826688340d70ab2f814f6e236d6e80a357",
+            "receiptSha256": "acbc971db8bd03f7c87df96f8b47b3d503466d8f613921a3df8dd4bd94b46dbb"
+          }
+        }
+      }
+    ],
+    "runtimeArchive": "a3a2cf70d7b200c731c9f9a128a524a5efd5797da48bf342bf4e9e8ac3267a00",
+    "validation": "Ordinary and reviewed wheel pairs rebuilt and installed offline on CPython 3.11 and 3.12. The relocated callback client, runtime retirement and shutdown checks passed on both. The five Lean compiler rejection cases also ran on 3.11."
+  },
+  "boundaries": [
+    "Local installed evidence, not a hosted run or registry publication.",
+    "Retained unary synchronous host functions over copied primitive values only. This does not establish callback-capable cursor pulls, asynchronous host replies, once-only contracts, arbitrary host objects or aggregate/resource callback payloads.",
+    "The Rust task, closure dispatch and native disposal are main-thread-only. This covers unwinding callback panics, not panic=abort, arbitrary native traps or proactive notification of every idle future on global retirement."
+  ]
+}

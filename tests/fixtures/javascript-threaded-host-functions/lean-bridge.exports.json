@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "hostImports": "lean-bridge.hosts.json",
+  "exports": ["Workshop.identity", "Workshop.start", "Workshop.remember", "Workshop.reader", "Workshop.mapBox"],
+  "taskExports": ["Workshop.start", "Workshop.mapBox"],
+  "taskIOErrors": ["Workshop.mapBox"],
+  "targets": {"npm": {"name": "@lean-bridge/workshop-host-example", "version": "1.0.0"}}
+}

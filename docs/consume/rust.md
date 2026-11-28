@@ -55,6 +55,174 @@ Rust conversion and native copying each use a 16 MiB accounting budget. Non-recu
 
 Compiled libraries are embedded in your executable. The first call verifies their hashes and loads them through a private temporary directory; compatible crates share one runtime. You can move the executable without retaining the Cargo source tree. Each crate embeds its assets, so multi-crate executable size can grow even when loading is shared. Loading needs Linux `/proc` and writable `/tmp` that permits shared-library loading, not a `noexec` mount. Temporary library files are removed after loading, and a small process registry is removed at normal exit. The libraries stay loaded until process exit. Calls from multiple threads are supported; reuse after `fork` and composition with foreign runtime loaders are rejected. See the [installed-crate evidence](../evidence/native-rust-20260915.md).
 
+### Call synchronous IO
+
+Call a `native-rust-io-v1` export directly on the process main thread:
+`let text = journal::read(path)?;`. No executor or `.await` is involved.
+A thrown `EIO` is `Err(CallError::Declared { declaration, payload })`.
+A Lean `IO.Error` is `Err(CallError::Io { declaration, message })`. A rejected
+host argument or a call on the wrong thread is `Err(CallError::Boundary(fault))`.
+If Lean returns an `Except`, its error arm is ordinary data: `Ok(Err(value))`.
+Cargo selects the runtime automatically. Installing a real task package
+alongside a synchronous package can enable async support but does not change
+the synchronous function's return type. See the [installed Rust caller](../../tests/fixtures/native-sync-io-clients/consumer.rs).
+
+Two compatible packages use the same Rust type for the same Lean resource.
+An `EIO` error whose payload is a resource owns that lease; it can be passed
+to the other package just like a successful return value.
+
+### Iterate without an executor
+
+The Dials package returns a standard Rust `Iterator`. Opening can fail;
+once it succeeds, each `next()` runs one Lean step. For example:
+
+```rust
+fn first_two() -> Result<Vec<u32>, dials::CallError> {
+    dials::sequence(10)?.take(2).collect()
+}
+```
+
+`None` means exhaustion. `Some(Ok(()))` is a real item. A throwing step
+yields one `Some(Err(...))` and ends the iterator; the error names the
+Lean pull declaration, not the factory. Dropping the cursor closes it,
+including after early exit. A cursor is neither `Send` nor `Sync`.
+The [client](../../tests/fixtures/native-immediate-cursor/consumer.rs)
+shows the typed and IO error cases.
+
+### Let Lean call your Rust objects
+
+A `native-rust-host-v1` release lets a Lean function call inherent methods on your application's Rust types. Add the component crate as a normal Cargo dependency. Cargo selects its exact runtime; you do not need to enable async, pass native handles or install Lean.
+
+For example, the Workshop package declares two imported types, `Box` and `Dial`. After implementing their members on your own types, bind their names once:
+
+```rust
+workshop::bind_objects!(MeterHost { Box = Meter, Dial = Dial });
+
+fn check_identity() -> Result<(), Box<dyn std::error::Error>> {
+    let api = workshop::Binding::<MeterHost>::new()?;
+    let meter = api.make(15)?;
+    let same = api.identity(&meter)?;
+    assert!(same.ptr_eq(&meter));
+    api.close()?;
+    Ok(())
+}
+```
+
+Call the binding on the process main thread. Pass an `Rc<T>` you already own or a returned `HostRef<T>`. Both refer to the original object. If a member returns a child borrowed from its receiver or another argument, return `Borrowed::new(&parent, child_rc)` for the parent named in the contract. The returned `HostRef` keeps that parent alive. Keep the handle, not just a clone of the inner `Rc`, when the parent must stay alive.
+
+A fallible member can return `MemberResult<T>`. A host error propagated through Lean comes back as `HostCallError::Host` with the original error object. A Lean `IO.Error`, a declared `EIO` error and a bridge failure have separate variants; a returned `Except` is a value. The [complete Rust application](../../tests/fixtures/rust-host-members/archives.rs) implements both classes and uses them from two packages.
+
+### Call a function returned by Lean
+
+When a factory returns a Lean function, the installed crate gives you a
+typed value with `call` and `close` methods. For example, given a Workshop
+package exporting `Closures.remember`:
+
+```rust
+let first = api.make(15)?;
+let second = api.make(30)?;
+let remember = api.remember(&first)?;
+let result = remember.call(&second)?;
+assert!(result.ptr_eq(&first));
+remember.close()?;
+```
+
+The function can be called repeatedly on the binding thread. Dropping it
+releases its capture; call `close()` to release it earlier. Closing or dropping
+the binding revokes its functions. A call already inside a member can finish,
+but a later call returns `HostCallError::Boundary(Fault::Closed)`.
+The function is not `Send` and does not keep a discarded binding alive.
+
+### Pass a record containing your Rust objects
+
+The generated record constructor takes your original objects by reference.
+For example, the Gauge package accepts two application-owned meters, a byte
+vector, and a natural number:
+
+```rust
+let pair = workshop::Pair::<App>::new(&left, vec![9, 8], 42u8.into(), &right);
+let flipped = api.flip(&pair)?;
+assert!(std::rc::Rc::ptr_eq(flipped.lead().as_rc(), &right));
+assert_eq!(flipped.sequence(), workshop::BigUint::from(43u8));
+```
+
+An object getter returns a new owner of the **same** object. Keep that handle
+to use the object after dropping the record or closing the binding. A byte
+getter instead returns an independent vector: editing it does not change the
+record. A function returned by `api.choose(&pair)` can outlive the input
+record, but closing its binding revokes the function. See the
+[complete application](../../tests/fixtures/rust-host-record/consumer.rs)
+for both lifetimes and a call through a second installed crate.
+
+### Await a task or pull a stream
+
+An object binding can expose tasks and streams alongside ordinary methods. Pass the same `Rc<T>` or `HostRef<T>` you use for synchronous calls. For example, given the Workshop binding and meter above:
+
+```rust
+let same = api.echo(&meter)?.await?;
+assert!(same.ptr_eq(&meter));
+
+let same = api.relay(&meter, |object| Ok(object))?.await?;
+let mut items = api.series(&same)?;
+if let Some(item) = items.next().await {
+    let first = item?;
+    assert!(first.ptr_eq(&same));
+}
+items.close()?; // No further pulls.
+```
+
+Run this code on the process main thread using a current-thread executor. Lean workers carry the object; they do not call its Rust methods on worker threads. A retained callback runs on the binding thread and can call another bound method. A factory failure, a task failure and an ordinary returned `Result` stay distinct. A terminal stream error arrives once.
+
+Drop a task or call `cancel()` to stop receiving its result. Closing or dropping the binding cancels its outstanding tasks and streams; a peer binding stays usable. An explicit close during an active call or callback returns `Fault::Busy`. A Rust callback panic retires the shared native runtime and wakes pending work on peer bindings. See the [installed worker checks](../evidence/static-host-workers-20261125.md#installed-rust-futures-and-streams).
+
+If the release receipt says `native-rust-task-v1`, add only the component crate to your Cargo dependencies. Cargo resolves its exact `lean-bridge-task-runtime` dependency. Run these functions on a current-thread executor **on the process main thread**. Tasks and resource owners are not `Send`; there is no Lean scheduler for your application to drive.
+
+This example uses the task lab's API:
+
+```rust
+async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    let value = task_lab::checked(false, false, "item")?.await?;
+    assert_eq!(value, Ok(42)); // Lean returned an Except value.
+
+    let mut items = task_lab::series(false, false, "first")?;
+    assert_eq!(items.next().await.transpose()?, Some(Err("first".to_owned())));
+    Ok(()) // Dropping the stream closes the cursor.
+}
+```
+
+A factory may reject before returning a task (`Error::Start(payload)`). A stream starts a pull only when polled. A terminal `Error::Step(payload)` arrives once; subsequent pulls return `None`.
+
+If a timeout drops only the future returned by `next()`, polling the stream again waits for the **same item**. To abandon the cursor, close or drop the stream itself. After `close()`, `next().await` returns `None`. The [installed two-crate example](../evidence/async-delivery-crosswalk-20261125.md#replacing-the-rust-waiter-versus-closing-its-owner) shows both operations while Lean is still working. Dropping a task also requests cancellation without waiting for an uncooperative worker. An ordinary synchronous `IO` function returns its result immediately.
+
+When the API includes a named resource, pass it by reference. A returned resource owns its own lease. Use `try_clone()` to keep a second lease and `same_object()` to compare Lean identity, even between compatible crates. Dropping an owner releases its lease; an already-started Lean task keeps its own reference.
+
+The [installed Rust task evidence](../evidence/rust-tasks-20261122.json) records both source routes, the exact archives, and the checks made by a consumer using both crates.
+
+### Pass a callback to a Lean task
+
+A standalone task can declare a callback parameter single-use. Awaiting an
+uncaught second call returns `Error::Boundary(Fault::CallbackAlreadyInvoked { declaration })`.
+The denied call never enters your Rust closure. Each task and parameter has
+its own allowance, even when you pass the same callable twice.
+
+Pass a Rust closure to a callback-taking task. Its argument is owned; it returns `Ok(reply)` or `Err(CallbackError)`. Captures can use `Rc` and need not be `Send`. In the task lab, Lean calls the closure twice:
+
+```rust
+async fn repeat() -> Result<(), task_lab::CallbackTaskError> {
+    let task = task_lab::cb_repeat_call("hello", |s| Ok(s + "!"))?;
+    assert_eq!(task.await?, "hello!!");
+    Ok(())
+}
+```
+
+The closure runs on the executor's owning thread, including when Lean calls it *before its factory returns*. Starting this kind of task doesn't wait for user code. Initialization errors come from the function call; declared factory rejection (`Error::Start`), factory IO failure (`Fault::Io`) and declared terminal IO failure (`Fault::TaskIo`) arrive on await. A returned Lean `Except` is still a normal Rust `Result` inside the successful task result.
+
+Return `CallbackError::new(my_error)` to signal a declared host failure. If Lean propagates that error through the same task, match `Error::Callback { declaration, error }` and use `error.downcast_ref::<MyError>()` to recover the original payload. The payload can contain owner-local values. Errors from callback-free APIs keep their ordinary `Send` and `Sync` bounds. Lean can catch a callback error; a newly created error with identical text doesn't acquire its identity. A Rust panic is different: the bridge catches an unwinding panic, retires the shared native runtime, and reports `Fault::CallbackPanic`. A binary built with `panic = "abort"` terminates as usual.
+
+Settlement, cancellation or dropping the task releases its reference to the Rust closure, even if Lean saved the function for later. For earlier explicit disposal, use `RetainedCallback::new(f)`, pass `handle.function()` and call `handle.close()`. An invocation that closes itself can finish; later calls fail. Free-standing task callbacks exchange the 19 copied scalar types, including strings, bytes and exact integers. Methods on a host-object binding can also pass the application's declared object types to and from a callback. Neither form accepts arbitrary aggregates.
+
+The [installed callback evidence](../evidence/rust-retained-tasks-20261122.json) identifies the original crates, the consumer that exercised both, and the scope of the checks.
+
 ### Arrays and records
 
 Lean `Array T` inputs borrow `&[T]`; results and record fields use owned `Vec<T>`
@@ -289,6 +457,24 @@ A returned `LeanClosure<fn(...) -> T>` provides typed `.call(...)`, idempotent `
 A callback can call another Lean export or an owned closure on the same thread. Its first `Err` stops further callback execution and returns the original error. With unwinding enabled, a panic is caught inside the callback, then resumed on the Rust side after the native call returns. `panic=abort`, out-of-memory aborts and a panic hook that terminates the process cannot be recovered. Rust's normal panic-hook and destructor behavior still applies. Conversion limits cover all callbacks in one call, including retained result buffers. A callback that Lean stores beyond the call becomes invalid; later invocation returns an error instead of accessing expired Rust state.
 
 The [Rust callable acceptance record](../evidence/rust-callables-20260919.md) covers both package paths, compile-time rejections, error and panic cleanup, exhausted closure registries, nested calls and source-free execution. Recursive callback values use the graph adapter described below. Resource-containing values use the explicit ownership profile described further down. Asynchronous callbacks remain unsupported.
+
+#### Borrow a Lean function inside a Rust callback
+
+In the Tariff example, Lean passes a function to your Rust callback. Call it
+with `.call()`. The generated `visit_quote_with` entry lets Rust infer the
+function's type:
+
+```rust
+let total = tariff_quotes::visit_quote_with(40, |quote, units| quote.call(units), 2)?;
+assert_eq!(total, 42);
+```
+
+The function is borrowed for that invocation only. To use it after your
+callback returns, call `quote.retain()?` **inside** the callback and keep the
+returned lease. Keeping the original wrapper does not keep the borrow alive,
+even when a lease exists. The generated crate README lists the closure entry
+for each eligible export. The [qualification record](../evidence/npm-incoming-functions-20261126.md#native-callbacks)
+distinguishes the compiled-adapter checks from installed-package checks.
 
 ### Structured callback values
 
@@ -862,6 +1048,12 @@ separate work.
 The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
 
 ### Type conversions
+
+The general audit table below describes the ordinary native projection. A
+separate [task release](#await-a-task-or-pull-a-stream) maps real Lean tasks to
+Rust [futures](https://doc.rust-lang.org/std/future/trait.Future.html), demand-driven
+cursors to [streams](https://docs.rs/futures-core/0.3.31/futures_core/stream/trait.Stream.html),
+and direct application-owned resources to typed leases.
 
 Profiles: Rust. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 

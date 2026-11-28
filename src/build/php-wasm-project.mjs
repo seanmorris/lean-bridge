@@ -14,6 +14,7 @@ import { buildPhpWasmCopiedPackages, readVerifiedPhpWasmCopiedPackageSet } from 
 import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
+import { assertPhpWasmIOConfiguration, buildPhpWasmIOProjectComponent } from "./php-wasm-io-project.mjs";
 import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { writePhpWasmPackageSet } from "../release/package-set-assembly.mjs";
 import { readVerifiedPhpWasmCompilerInputs } from "../release/php-wasm-compiler-inputs.mjs";
@@ -44,10 +45,12 @@ export const buildPhpWasmProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "PHP-Wasm output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
-	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "hostProjections", "contracts", "generators"], targetFields: ["npm", "composer", "hostCallbacks"] });
+	const io = record.configuration.nativeEffects !== undefined;
+	if(io) assertPhpWasmIOConfiguration(record.configuration);
+	else assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "hostProjections", "contracts", "generators"], targetFields: ["npm", "composer", "hostCallbacks"] });
 	const config = record.configuration.targets?.["php-wasm"] ?? {};
 	// Source-only capture admits declarations; the wasm32 compiler admits types.
-	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis", ownedGraphs: true });
+	const intent = io ? null : await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis", ownedGraphs: true });
 	const emsdkRoot = await directory(environment.LEAN_BRIDGE_PHP_EMSDK ?? join(engineRoot, ".toolchains/emsdk-php-wasm"), "LEAN_BRIDGE_PHP_EMSDK");
 	const rawInputs = ["LEAN_BRIDGE_PHP_SOURCE", "LEAN_BRIDGE_PHP_COPIED_RUNTIME", "LEAN_BRIDGE_PHP_LEAN_RUNTIME"].some(name => environment[name] !== undefined);
 	if(environment.LEAN_BRIDGE_PHP_INPUTS !== undefined && rawInputs)
@@ -89,10 +92,11 @@ export const buildPhpWasmProject = async options => {
 			if((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity !== expected.identity) throw new Error("Prepared PHP-Wasm runtime changed while copying");
 		} else await buildPhpWasmCopiedRuntime({ outputRoot: runtimeRoot, leanRuntimeRoot, emsdkRoot, signal });
 		onProgress?.({ phase: "build", state: "info", message: "Compiling checked PHP-Wasm Lean exports" });
-		const built = await buildPhpWasmCopiedComponent({ projectRoot: project
+		const compile = io ? buildPhpWasmIOProjectComponent : buildPhpWasmCopiedComponent;
+		const built = await compile({ projectRoot: project
 			, outputRoot: componentRoot, runtimeRoot, leanPrefix
 			, emsdkRoot, phpSource, configurationSha256: record.sha256
-			, lakeSnapshot: intent.lakeSnapshot, signal
+			, lakeSnapshot: io ? lakeSnapshot : intent.lakeSnapshot, environment, signal
 			, hostCallbacks: config.hostCallbacks });
 		if(inputs)
 		{
@@ -102,16 +106,17 @@ export const buildPhpWasmProject = async options => {
 		signal?.throwIfAborted();
 		const packages = await buildPhpWasmCopiedPackages({ componentRoot, runtimeRoot, outputRoot: join(staging, "packages/php-wasm"), leanPrefix, npmSettings: config.npm, composerSettings: config.composer });
 		await readVerifiedPhpWasmCopiedPackageSet(packages.output);
-		await verifyLakeSnapshotSourceTree({ snapshot: intent.lakeSnapshot, projectRoot: project, signal });
+		const snapshot = io ? built.snapshot : intent.lakeSnapshot;
+		await verifyLakeSnapshotSourceTree({ snapshot, projectRoot: project, signal });
 		if((await readExportConfiguration(project, { signal })).sha256 !== record.sha256) throw new Error("Export configuration changed during PHP-Wasm packaging");
 		const manifest = {
-			schemaVersion: 1, profile: "php-wasm-copied-v1"
+			schemaVersion: 1, profile: io ? "php-wasm-sync-io-v1" : "php-wasm-copied-v1"
 			, component: built.model.component
 			, runtimeIdentity: built.receipt.runtimeIdentity
 			, bindingIrSha256: built.model.bindingIrSha256
 			, ...(built.model.sourceIdentity.reviewedBindingIr ? { reviewedBindingIrSha256: built.model.sourceIdentity.reviewedBindingIr.semanticSha256 } : {})
 			, configurationSha256: record.sha256
-			, source: { treeSha256: intent.document.source.treeSha256, lakeSnapshotSha256: intent.lakeSnapshot.sha256, toolchain: intent.document.source.toolchain }
+			, source: { treeSha256: built.model.sourceIdentity.sourceTreeSha256, lakeSnapshotSha256: snapshot.sha256, toolchain: snapshot.document.toolchain }
 			, packageSet: "packages/php-wasm/php-wasm-package-set.json"
 			, packages: packages.report.archives.map(archive => ({ ecosystem: archive.ecosystem, role: archive.role, name: archive.name, version: archive.version, archive: archive.archive, bytes: archive.bytes, sha256: archive.sha256, path: `packages/php-wasm/archives/${archive.archive}` })) };
 		await writeFile(join(staging, "php-wasm-release.json"), canonicalJson(manifest), { flag: "wx" });

@@ -16,7 +16,7 @@ import { installCpanArchive } from "../scripts/test-perl-package-consumer.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileLakeNativeInputs } from "../src/build/lake-native-inputs.mjs";
-import { writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
+import { prepareLakeDependencySnapshot, writeLakeDependencySnapshot } from "../src/build/lake-dependency-snapshot.mjs";
 import { customLakeRoot, elaboratedLakeApi, lakeGit, lakeInputState, lakeWorkspaceFixture, nativeLakeInput, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 
@@ -35,6 +35,16 @@ const resolve = async (t, snapshot, modules) => {
 	t.after(result.dispose);
 	return result;
 };
+
+test("Lake reserves the generated Python module only for an explicit host build", { skip: !enabled }, async t => {
+	const snapshot = await prepareLakeDependencySnapshot({ projectRoot: join(process.cwd(), "tests/fixtures/python-host-meter"), includeProject: true, allowMissingLock: true });
+	const options = { snapshot, modules: ["Workshop"], leanPrefix };
+	await assert.rejects(resolveLockedLakeWorkspace(options), e => /LeanBridge/u.test(e.details?.stderr ?? ""));
+	const host = await resolveLockedLakeWorkspace({ ...options, generatedHostModule: "LeanBridge.Host.Python" });
+	t.after(host.dispose);
+	assert.deepEqual(host.document.generatedImports, ["LeanBridge.Host.Python"]);
+	assert.deepEqual(host.document.modules.map(m => m.module), ["Workshop.Internal", "Workshop"]);
+});
 
 for(const variant of ["shop", "telemetry"])
 	test(`Lake resolves ${variant}'s locked transitive imports offline and without source writes`, { skip: !enabled }, async t => {

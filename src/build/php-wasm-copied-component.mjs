@@ -49,7 +49,14 @@ const verifyCapture = async (root, expected) => {
 	if(!same(expected, await capture(root, Object.keys(expected)))) throw new Error("PHP-Wasm compiler or build inputs changed during compilation");
 };
 
-const toolchain = async (emsdkRoot, runner, signal) => {
+/**
+ * Identify the pinned PHP compiler and recheck its executable bytes after use.
+ *
+ * @param emsdkRoot - Installed PHP-Wasm Emscripten SDK.
+ * @param runner - Build process runner.
+ * @param signal - Optional cancellation signal.
+ */
+export const phpWasmToolchain = async (emsdkRoot, runner, signal) => {
 	const root = resolve(emsdkRoot), emcc = join(root, "upstream/emscripten/emcc"), emxx = join(root, "upstream/emscripten/em++");
 	const env = { ...process.env, EM_CONFIG: join(root, ".emscripten"), EMSDK: root };
 	const run = (command, args, options = {}) => runner.capture({ command, args, cwd: root, env, signal, ...options });
@@ -76,7 +83,7 @@ export const buildPhpWasmCopiedRuntime = async ({ outputRoot, leanRuntimeRoot, e
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-php-wasm-runtime-"));
 	try
 	{
-		const compiler = await toolchain(emsdkRoot, runner, signal);
+		const compiler = await phpWasmToolchain(emsdkRoot, runner, signal);
 		const stamp = (await readFile(join(target, "source/.lean-wasm-patched"), "utf8")).trim();
 		if(stamp !== `${pins.leanCommit} ${pins.patchSetSha256} browser`) throw new Error("PHP-Wasm target Lean runtime identity mismatch");
 		const headerPaths = ["lean.h", "lean_gmp.h", "lean_libuv.h", "config.h", "version.h"].map(path => `cmake/include/lean/${path}`);
@@ -125,7 +132,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 	const { runtimeRoot, emsdkRoot, phpSource, signal, runner = processBuildRunner } = options;
 	const runtime = resolve(runtimeRoot), php = resolve(phpSource);
 	const verifiedRuntime = await readVerifiedPhpWasmCopiedRuntime(runtime);
-	const compiler = await toolchain(emsdkRoot, runner, signal);
+	const compiler = await phpWasmToolchain(emsdkRoot, runner, signal);
 	if(!same(verifiedRuntime.manifest.compiler, compiler.compiler)) throw new Error("PHP-Wasm runtime/component compiler identity mismatch");
 	const phpHeaders = await capture(php, await phpWasmHeaderPaths(php));
 	return buildElaboratedComponent({ ...options
@@ -141,6 +148,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 		, validateModel: model => {
 			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr, {
 				hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
+				, callbackViewEquality: model.ownedGraph.callbackArgumentIdentity !== undefined
 				, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 				, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 				, receiverExports: Boolean(model.ownedGraph.receiverExports)

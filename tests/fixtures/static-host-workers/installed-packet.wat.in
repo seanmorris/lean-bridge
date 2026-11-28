@@ -1,0 +1,17 @@
+(component
+  ;; Adapt the independent Packet conformance guest to the published interfaces.
+  ;; All checks, including post-call mutation of its input memory, are the same.
+  (type $bytes (list u8))
+  (type $item (result $bytes (error $bytes)))
+  (type $task (future $item)) (type $cursor (stream $item))
+  (import "lean-bridge:workshop/api@1.0.0" (instance $api
+    (export "release" (func (param "slot" u32) (result bool))) (export "closed" (func (result u32)))))
+  (import "lean-bridge:workshop/object-tasks@1.0.0" (instance $tasks
+    (export "packet" (func (param "slot" u32) (param "mode" u8) (param "left" $bytes) (param "right" $bytes)
+      (result (result $task (error $bytes)))))
+    (export "chunks" (func (param "value" $bytes) (result $cursor)))))
+  @CLIENT@
+  (instance $app (instantiate $client
+    (with "release" (func $api "release")) (with "closed" (func $api "closed"))
+    (with "packet" (func $tasks "packet")) (with "chunks" (func $tasks "chunks"))))
+  (export "run" (func $app "run")))

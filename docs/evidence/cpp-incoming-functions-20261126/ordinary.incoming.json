@@ -1,0 +1,24 @@
+{
+  "archive": {
+    "bytes": 53875727,
+    "path": "archives/tariff-quotes-1.0.0-cpp.tar.gz",
+    "sha256": "f0196028f687284363033401716eecb47a51da42ae38947c89e5cbc91484eaa5"
+  },
+  "bindingIrSha256": "ad26a49d5e655d412349fd2e5a7ec8f2e895909b2279aa861ccb92837e3ee885",
+  "clientSha256": "b2dbce796818a2a6e420253df90663a55484a60e032a91db8fbd02634e00f8c1",
+  "executableSha256": "19d7186fb98e404b931bd19f2efe2a948e8967aeda9a9bf32a4ddc71855bfc77",
+  "outcomes": [
+    "borrow expires after success",
+    "borrow expires after failure",
+    "lease survives success",
+    "lease survives failure",
+    "inner failure leaves outer borrow valid",
+    "fresh calls use their own captures",
+    "identities:1,1,1,1,1,1,0"
+  ],
+  "probeSha256": "a3b8242370c8225e4e760f9f6eee302959deb097aa481a76df2df3da9cb9625f",
+  "receiptSha256": "f316df2559f25bff3c6e46f514927945ad5cd48626a953de36ca0a55674d6a93",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+}

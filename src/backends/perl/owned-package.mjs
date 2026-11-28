@@ -87,7 +87,7 @@ ${moduleName} - Generated owned Lean values${hostCallbacks ? " and synchronous c
 =head1 API
 
 ${generated.functions.map(fn => `=head2 ${fn.publicName}\n\nCalls C<${declarations.get(fn.id)}> in the compiled Lean component.\n${fn.transfers?.length ? `\nConsumes resource leases in ${fn.transfers.map(index => `C<${parameters.get(fn.id)[index]}>`).join(", ")} at the Lean call boundary.\n` : ""}`).join("\n")}
-=head1 VALUES AND OWNERSHIP
+${generated.c.hostFieldCalls.length ? "The C<_with_host_fields> calls accept an input record containing code references or live Lean functions. Code references are borrowed for that call only. A returned record never extends their lifetime.\n\n" : ""}=head1 VALUES AND OWNERSHIP
 
 Records and variants use generated named-field classes. Arrays, Lists and
 products use array references. None and Unit use undef; Some->new(undef) keeps
@@ -97,7 +97,7 @@ Nat and Int use Math::BigInt. Text retains Unicode and NUL; ByteArray uses octet
 Resources${hostCallbacks || callbackResultAnchors ? " and Lean closures" : ""} provide close, closed and retain. Retained results
 own independent native references. Close is idempotent; finalization releases
 unclosed owners. Closing an input during a call does not invalidate its active
-borrow.${hostCallbacks ? " Callback arguments expire on return unless explicitly retained." : ""}
+borrow.${hostCallbacks ? " Callback arguments expire on return unless explicitly retained." : ""}${generated.c.callbackArgumentViews ? "\nUse same_identity on two live views to compare the underlying identity. A retained view remains callable when the callback returns; calling or comparing an expired borrow fails." : ""}
 
 ${callbackResultAnchors ? `Anchored callback results borrow their selected original argument owner, using
 callback-local parameter numbers. Empty containers and recursive descendants
@@ -167,6 +167,11 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 `;
 	const owned = { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, prefix, gmpLibrary
+		, ...generated.c.callbackArgumentViews ? {callbackArgumentIdentity: "canonical-while-live"} : {}
+		, ...generated.c.hostFieldCalls.length ? {hostInputRecords: generated.types.filter(n => n.hostInput).map(n => ({
+			type: n.id, input: n.hostInput.publicType, lifetime: "call"
+			, fields: n.fields.filter(f => n.hostInput.fields.includes(f.name)).map(f => f.publicName)
+		}))} : {}
 		, ...callbackResultAnchors ? { callbackResultAnchors: { ...model.ownedGraph.callbackResultAnchors
 			, arguments: "whole-values", results: "checked-whole-values"
 			, emptyValues: "owner-scoped", independentRetains: "preserved"

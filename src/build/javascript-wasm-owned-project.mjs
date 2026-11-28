@@ -93,7 +93,7 @@ export const buildOwnedJavaScriptProject = async options => {
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "owned-javascript", ownedGraphs: true });
 	const engineIdentity = await identifyBuildEngine(engineRoot);
 	const compilerOptions = { project, engineRoot, environment, runner, intent, cache, signal };
-	const compiler = await (isolated ? prepareIsolatedOwnedJavaScriptCompiler(compilerOptions) : prepareHostCompiler(compilerOptions));
+	const compiler = await (isolated ? prepareIsolatedOwnedJavaScriptCompiler(compilerOptions) : prepareHostJavaScriptCompiler(compilerOptions));
 	const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot, environment });
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-owned-javascript-project-"));
@@ -140,8 +140,37 @@ export const buildOwnedJavaScriptProject = async options => {
 	}
 };
 
-const prepareHostCompiler = async ({ project, engineRoot, environment, runner, intent, signal }) => {
+/**
+ * Resolve pinned host tools and optionally stage a verified target header package.
+ *
+ * @param options - Author environment, source root and immutable Lake capture.
+ * @param buildComponent - Compiler for the selected JavaScript profile.
+ */
+export const prepareHostJavaScriptCompiler = async (options, buildComponent = buildOwnedJavaScriptWasmComponent) => {
+	const { project, engineRoot, environment, runner, intent, signal } = options;
 	const emsdkRoot = await directory(environment.LEAN_BRIDGE_JS_EMSDK ?? join(engineRoot, ".toolchains/emsdk"), "LEAN_BRIDGE_JS_EMSDK");
+	const hostPrefix = async () => {
+		let prefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
+		if(!prefix)
+		{
+			try
+			{ prefix = (await runner.capture({ command: "lean", args: ["--print-prefix"], cwd: project, env: environment, signal })).stdout.trim(); }
+			catch(error)
+			{ signal?.throwIfAborted(); throw new CanonicalBuildError("javascript-wasm-toolchain-unavailable", "The pinned host Lean compiler is unavailable", { hint: "Set LEAN_BRIDGE_LEAN_PREFIX to Lean 4.32.2.", details: error.details }); }
+		}
+		return directory(prefix, "LEAN_BRIDGE_LEAN_PREFIX");
+	};
+	// A verified pthread kit supplies both headers and owner. Never substitute
+	// a raw or bundled single-threaded browser target for either of them.
+	if(options.taskInputs)
+	{
+		const leanPrefix = await hostPrefix();
+		const compile = ({configurationSha256}) => buildComponent({projectRoot: project
+			, leanPrefix, emsdkRoot, environment, runner, signal, configurationSha256
+			, lakeSnapshot: intent.lakeSnapshot
+			, taskInputs: options.taskInputs});
+		return {backend: "pinned-author-sdk", compile};
+	}
 	if(environment.LEAN_BRIDGE_JS_INPUTS !== undefined && environment.LEAN_BRIDGE_JS_TARGET_RUNTIME !== undefined)
 		throw new CanonicalBuildError("conflicting-javascript-wasm-inputs", "Select prepared JavaScript compiler inputs or a raw target tree, not both");
 	const bundled = join(engineRoot, "runtime/javascript-wasm");
@@ -150,15 +179,7 @@ const prepareHostCompiler = async ({ project, engineRoot, environment, runner, i
 	const inputs = inputRoot === null ? null : await readVerifiedJavaScriptWasmCompilerInputs(await directory(inputRoot, "LEAN_BRIDGE_JS_INPUTS"), { signal });
 	const rawTarget = inputs ? null : await directory(environment.LEAN_BRIDGE_JS_TARGET_RUNTIME
 		?? join(engineRoot, `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser`), "LEAN_BRIDGE_JS_TARGET_RUNTIME");
-	let leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
-	if(!leanPrefix)
-	{
-		try
-		{ leanPrefix = (await runner.capture({ command: "lean", args: ["--print-prefix"], cwd: project, env: environment, signal })).stdout.trim(); }
-		catch(error)
-		{ signal?.throwIfAborted(); throw new CanonicalBuildError("javascript-wasm-toolchain-unavailable", "The pinned host Lean compiler is unavailable", { hint: "Set LEAN_BRIDGE_LEAN_PREFIX to Lean 4.32.2.", details: error.details }); }
-	}
-	await directory(leanPrefix, "LEAN_BRIDGE_LEAN_PREFIX");
+	const leanPrefix = await hostPrefix();
 	const compile = async ({ staging, componentRoot, configurationSha256 }) => {
 		const target = inputs ? join(staging, ".compiler-inputs") : rawTarget;
 		if(inputs)
@@ -170,7 +191,7 @@ const prepareHostCompiler = async ({ project, engineRoot, environment, runner, i
 			}
 			if((await readVerifiedJavaScriptWasmCompilerInputs(target, { signal })).identity !== inputs.identity) throw new Error("JavaScript compiler inputs changed while staging");
 		}
-		const built = await buildOwnedJavaScriptWasmComponent({ projectRoot: project
+		const built = await buildComponent({ projectRoot: project
 			, outputRoot: componentRoot
 			, leanPrefix, leanRuntimeRoot: target, emsdkRoot
 			, environment, runner, signal

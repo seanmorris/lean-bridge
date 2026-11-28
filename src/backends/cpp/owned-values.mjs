@@ -67,6 +67,15 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 			.map(part => part ? part[0].toUpperCase() + part.slice(1) : "_").join(""))));
 	const definitions = new Map(c.native.model.types.map(node => [node.id, node]));
 	for(const alias of c.native.aliases) claim(definitions.get(alias.id).name);
+	const hostInputs = new Map();
+	for(const call of c.hostFieldCalls) for(const slot of call.hostRecordSlots)
+	{
+		const id = slot.node.id;
+		if(hostInputs.has(id)) continue;
+		let name = names.get(id) + "Input";
+		while(occupied.has(name)) name += "Input";
+		hostInputs.set(id, { name: claim(name), fields: slot.fields.map(f => f.name) });
+	}
 	const groups = new Map(layout.boxedGroups.flatMap((group, index) => group.map(id => [id, index])));
 	const boxed = (parent, field) => field.storage === "pointer" && !(containers.has(field.type)
 		&& groups.has(parent) && groups.get(parent) === groups.get(field.type));
@@ -92,7 +101,7 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 		, ...bigint ? ["#ifndef BOOST_MP_STANDALONE", "#define BOOST_MP_STANDALONE", "#endif", "#include <boost/multiprecision/cpp_int.hpp>"] : []
 		, `namespace lean_bridge::${c.prefix} {`
 		, ownedCppRuntime(c.prefix, { transferredInputs: transfers
-			, anchoredResults: anchors
+			, anchoredResults: anchors, callbackArgumentViews: c.callbackArgumentViews
 			, ...receivers ? { receiverMembers: ownedCppReceiverMembers(c) } : {} })
 		, cppValueBox
 		, ...wholeOwners ? [ownedCppAnchoredValues(c.prefix, { receiverExports: receivers })] : []
@@ -102,8 +111,13 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 		, ...bigint ? ["using Nat = boost::multiprecision::cpp_int;", "using Int = boost::multiprecision::cpp_int;"] : []];
 	for(const node of nodes.values())
 	{
-		if(node.identity) lines.push(`namespace detail { struct ${identities.get(node.id)}; }`
-			, `using ${names.get(node.id)} = Resource<detail::${identities.get(node.id)}>;`);
+		if(node.identity)
+		{
+			const tag = identities.get(node.id);
+			const definition = c.callbackArgumentViews ? ` { using Native = ${node.cName}; static constexpr auto equal = &${node.cName}_equal; }` : "";
+			lines.push(`namespace detail { struct ${tag}${definition}; }`
+				, `using ${names.get(node.id)} = Resource<detail::${tag}>;`);
+		}
 		else if(names.has(node.id)) lines.push(`struct ${names.get(node.id)};`);
 	}
 	for(const [id, branches] of alternatives)
@@ -136,6 +150,16 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 		}
 	}
 	for(const alias of c.native.aliases) lines.push(`using ${definitions.get(alias.id).name} = ${type(alias.target)};`);
+	for(const [id, input] of hostInputs)
+	{
+		lines.push(`template<${input.fields.map((_, i) => "class F" + i).join(", ")}> struct ${input.name} {`);
+		for(const member of nodes.get(id).fields)
+		{
+			const i = input.fields.indexOf(member.name);
+			lines.push(i < 0 ? field(id, member) : `  F${i} ${member.name};`);
+		}
+		lines.push("};");
+	}
 	lines.push(...equalities, "}", "");
 	const members = (id, fields) => fields.map(field => ({ ...field, boxed: boxed(id, field) }));
 	const canonical = id => {
@@ -147,6 +171,7 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 	return { c, layout, header: lines.join("\n")
 		, types: [...nodes.values()].map(node => ({ ...node
 			, hostName: type(node.id), identityTag: identities.get(node.id)
+			, ...hostInputs.has(node.id) ? { hostInput: hostInputs.get(node.id) } : {}
 			, ...wholeOwners ? { canonicalHostName: canonical(node.id) } : {}
 			, fields: members(node.id, node.fields)
 			, cases: node.cases.map((branch, index) => ({ ...branch, hostName: alternatives.get(node.id)[index], fields: members(node.id, branch.fields) })) })) };

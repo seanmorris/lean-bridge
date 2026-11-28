@@ -4,7 +4,60 @@ Build an ordinary Lean project with `--target rubygems` to produce an installabl
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
+An unversioned local Lean project builds as gem version `0.0.0` so a normal
+`require` can load it. Set `targets.rubygems.version` to your intended
+release version before publishing.
+
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
+
+## Call Ruby objects from Lean
+
+Use a host import when the application owns an object and Lean needs to call
+its methods. Declare `"hostImports": "lean-bridge.hosts.json"` alongside
+`modules`, `exports` and `targets.rubygems` in your export configuration.
+The [box contract](../../tests/fixtures/ruby-host-meter/lean-bridge.hosts.json)
+declares a Ruby class with a constructor, methods and a read/write property.
+Lean Bridge supplies the module; do not add a copy to your Lake package.
+
+```lean
+import LeanBridge.Host.Ruby
+open LeanBridge.Host.Ruby
+
+def update (box : Box) (value : UInt32) : IO UInt32 := do
+  box.setLevel value
+  box.getLevel
+```
+
+Build with `lean-bridge build --project . --target rubygems --output release`.
+The publisher needs Ruby 3.3 development headers; the consumer only needs the
+matching Ruby runtime. For a reviewed build, keep the import contract and Lean
+sources: the build checks the review against freshly compiled members.
+You can select a `taskExports` or `asyncIterators` entry that carries the class.
+For example, the [worker fixture](../../tests/fixtures/ruby-host-workers/Workers.lean)
+takes a `Box → IO Box` callback and passes its original box to it. The Ruby
+consumer services the callback when it awaits the task. Calling a Ruby member
+from the Lean worker, even through a helper function, fails the build.
+Use an imported class in `Except` results or `EIO` errors when callers need
+the original Ruby object. The generated contract records a lease on the
+result or error payload, including when the object is nested in another
+`Except`. This does not change the copied-value or task profiles.
+See [how the Ruby application supplies the class](../consume/ruby.md#supply-a-ruby-object-to-lean).
+
+To return a function that captures a Ruby instance, export a synchronous
+factory of type `IO (α → IO β)`. The argument and reply can be copied scalars
+or imported Ruby classes. For example:
+
+```lean
+def reader (captured : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun extra => do return (← captured.read) + extra
+```
+
+The generated callable belongs to the creating `bind_hosts` block. Its
+signature and required capabilities appear in the reviewed interface. An IO
+effect inside the function body needs the same grant as an immediate export.
+This is distinct from accepting a Ruby block as a task argument.
+The [worker qualification](../evidence/ruby-worker-gems-20261124.md) includes
+the ordinary and reviewed gem receipts and the checks run after installation.
 
 ## Build an ordinary Lean project
 
@@ -35,6 +88,118 @@ The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `nati
 The acyclic copied profile supports up to 32 type levels. Packages with recursive types use the [recursive limits](#export-recursive-values). Native input/output conversion shares a 16 MiB budget; Ruby conversion scratch has a separate 16 MiB budget. Resource-containing aggregates use the [explicit ownership profile](#export-resource-containing-values). Asynchronous effects remain unsupported. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export synchronous IO
+
+Select `IO`, `EIO`, or `BaseIO` functions by name. Declare the [native OS
+access](../lean/export-decisions.md#declare-native-os-access) they need, or
+use `nativeEffects: []` for an in-memory API. Build with `--target rubygems`.
+For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.read", "Journal.store"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"rubygems": {"name": "journal-ruby", "version": "1.0.0"}}
+}
+```
+
+The `native-ruby-io-v1` receipt identifies one MRI 3.3 Linux x86-64 gem
+with its matching runtime. It supports copied primitive inputs and outputs,
+including exact integers, and nested `Except` values in results and typed
+errors. Add [explicit resource types](#export-a-shared-lean-resource) for
+identity-bearing inputs or results. For an immediate iterator, list the
+three declarations under `iterators`, for example
+`{"open":"Dials.sequence","next":"Dials.next","close":"Dials.finish"}`.
+The pull must return an immediate `Option` inside its declared Lean effect.
+Build the synchronous gem normally; Ruby consumes it with
+[`each` or `next`](../consume/ruby.md#read-a-synchronous-iterator).
+Tasks and task-backed iterators use the task profile below. Distribute
+the original archive using the same RubyGems workflow as the pure package.
+See [calling synchronous IO](../consume/ruby.md#call-synchronous-io).
+
+## Export a task or pull stream
+
+Select the real Lean factory in `taskExports`. To expose a cursor, list its
+factory, one-item pull, and close declarations under `asyncIterators`. A
+stream-only package needs no `taskExports`. For the
+[Pulse source](../../tests/fixtures/c-lean-tasks/Pulse.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"rubygems": {"name": "ruby-pulse", "version": "1.0.0"}}
+}
+```
+
+Build with `lean-bridge build --project . --target rubygems --output release`.
+Distribute the original `native-ruby-task-v1` gem; it embeds the matching
+runtime. See the [tested source and reviewed-IR handoffs](../evidence/ruby-fiber-tasks-20261122.json)
+for the package and client hashes. Use `taskIOErrors` only for a selected `Task (Except IO.Error α)`
+whose error should raise from `await`. A normal returned `Except` remains
+data. The task profile accepts copied primitive arguments, copied primitive
+or nested `Except` results, and explicitly selected top-level resources.
+See [the Ruby consumer flow](../consume/ruby.md#await-a-task-or-read-a-stream).
+
+### Export a callback-taking task
+
+For a standalone task, use the Lean parameter name in `taskCallbackPolicies`:
+
+```json
+{"taskCallbackPolicies":[{"declaration":"Budget.probe","parameter":"f","invocation":"once"}]}
+```
+
+Omitted parameters allow repeated calls. Lean workers compete for one
+allowance per registration before Ruby dispatch; a failed first call still
+uses it. The ordinary and reviewed package routes check the same policy.
+Bindings with imported Ruby objects do not yet accept this option.
+
+Give the selected task a unary parameter of type `α → IO β`, where both
+types are copied primitives. No additional callback manifest is required.
+For example, `Feedback.once : UInt32 → (UInt32 → IO UInt32) → BaseIO (Task (Except IO.Error UInt32))`
+uses both `taskExports: ["Feedback.once"]` and `taskIOErrors: ["Feedback.once"]`.
+The second selection makes terminal IO failures raise instead of returning
+an `Except` value. Lean workers send requests; the Ruby thread running
+`await` calls the block and supplies its reply. See [calling it from Ruby](../consume/ruby.md#pass-a-callback-to-a-lean-task)
+and the [ordinary and reviewed gem receipts](../evidence/ruby-retained-tasks-20261122.json).
+
+### Export a shared Lean resource
+
+List an application-owned heap type in `resources` by its full Lean name,
+and select the functions that use it. For the
+[Desk example](../../tests/fixtures/ruby-task-resources/Desk.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"rubygems": {"name": "ruby-lease-desk", "version": "1.0.0"}}
+}
+```
+
+Here `Desk.issue` opens a file, so the filesystem grant is necessary.
+To share the type with a task gem, build both with the same pinned Lean
+toolchain and the same declaring module and imports. Each gem includes the
+verified native resource library and loads it automatically. A same-named
+type from a different module revision does not become interchangeable.
+The [installed gem results](../evidence/ruby-resource-leases-20261122.json)
+include a separately built gem with the same type name and layout that the
+other two correctly refuse.
+
+Direct arguments are borrowed. A resource returned by a synchronous call,
+task, stream pull, or typed error is a separate lease. A scalar callback
+can operate alongside a leased argument, as in
+[Exchange.revisit](../../tests/fixtures/ruby-task-resources/Exchange.lean).
+This contract does not put resources inside copied sums or make them
+arguments or replies of the callback itself. See [sharing resources from Ruby](../consume/ruby.md#share-a-lean-resource-between-gems).
 
 ## Export arrays and records
 
@@ -299,6 +464,8 @@ RubyGems-only builds need no extra C package target. A combined native build can
 also select C, C++, PyPI and Cargo when each accepts the complete contract.
 
 ## Export resource-containing values
+
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
 
 Select resource types and the aggregate ownership contract explicitly. In a
 Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:

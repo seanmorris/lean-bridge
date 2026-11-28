@@ -1,0 +1,70 @@
+{
+  "archives": {
+    "@lean-bridge/php-wasm-copied-runtime": "6d2ed5a1b38b056bff932f85d6ba1cb3c93b32147b58baa5a8fa301df81e5a7a",
+    "lean-bridge/ledger": "274f1c3aaa35cb3d199cf335636431ceba6fda614b9f135f985122cddd4da1c7",
+    "php-wasm-ledger": "05ca055c413a22ec3eacb8b5a9b8031a39b2bd99ab1dba7ce994280e4643397f"
+  },
+  "bindingIrSha256": "131e44b4b481919473b8c86be08a9de1fdcb2686c10737df21f5590feb56e2da",
+  "clientSha256": {
+    "consumer.php": "fb14e3dad916f6c19a0e9651e300ad1e49d41660972ee52370aca95e2a867650",
+    "installed-node.mjs": "53e707c60e849803a4edfdebed16befaebdf7cf24365dc874dafb1d86940c1e6",
+    "installed.mjs": "fab21cac97b30544ee1435b2e9c42a507b3dcc32e17fbeee3b2ee8680a2a9bdf"
+  },
+  "ledgerSha256": "0a2211c53b6963ea373a6d2b9e0c27f0f58836e039e6e7fc9dcc1efbee1dec62",
+  "observations": [
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": "php-api:30"
+    }
+  ],
+  "phpWasmVersion": "0.1.0",
+  "receiptSha256": "adac088c874890a95a0d7a47a0dd66c66340ad4320ecc4a53ef6af2b4314c0b1",
+  "reviewSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "sourceTreeSha256": "a1761a35c2bbd26ec535a3d1c0b1bee06d0ddbc0dc0e430ff5035b0b1f42e947"
+}

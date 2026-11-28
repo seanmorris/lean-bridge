@@ -8,6 +8,7 @@ import { ownedPythonCallbacks } from "./owned-callables.mjs";
 import { ownedPythonTransfers } from "./owned-transfers.mjs";
 import { ownedPythonAnchoredCall, ownedPythonAnchoredTransfers, ownedPythonValueCopies } from "./owned-borrows.mjs";
 import { ownedPythonReceiverMembers } from "./owned-receivers.mjs";
+import { ownedPythonHostRecords } from "./owned-host-records.mjs";
 
 const primitive = {
 	unit: "c_uint8", bool: "c_uint8", char: "c_uint32"
@@ -368,13 +369,16 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const moving = fn.transfers ?? [];
 		const host = parameters.map((_, i) => c.hostArgument?.(fn, i));
+		const alternate=group==="call" && c.hostFieldCalls.find(f=>f.id===fn.id);
+		const recordInputs=alternate?alternate.hostRecordSlots.map(s=>s.index):[];
 		const input = (node, i, checking) => host[i]
 			? `_owned_host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})`
-			: `_owned_input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
+			: recordInputs.includes(i)?`_owned_host_record${node.index}(arg${i}, ${checking?"checked":"scope, frame"})`
+				: `_owned_input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
 		const name = `_${group}${group === "call" ? index : nodes.get(fn.id).index}`, native = `_fn${models.length}`;
-		models.push({ ...fn, group, name, native, parameters, result });
-		bindings.push(`    ${native} = runtime.library[${JSON.stringify(fn.cName)}]`
-			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.flatMap((node, i) => [host[i] ? `_c.POINTER(_OwnedHost${node.index})` : node.leaf ? node.raw : `_c.POINTER(${node.raw})`, ...moving.includes(i) ? ["_c.POINTER(_c.c_void_p)"] : [], ...fn.anchor === i ? ["_c.c_void_p"] : []]).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
+		models.push({ ...fn, group, name, native, parameters, result, recordInputs });
+		bindings.push(`    ${native} = runtime.library[${JSON.stringify(alternate?.cName??fn.cName)}]`
+			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.flatMap((node, i) => [host[i] ? `_c.POINTER(_OwnedHost${node.index})` : recordInputs.includes(i)?`_c.POINTER(_OwnedHostRecord${node.index})`:node.leaf ? node.raw : `_c.POINTER(${node.raw})`, ...moving.includes(i) ? ["_c.POINTER(_c.c_void_p)"] : [], ...fn.anchor === i ? ["_c.c_void_p"] : []]).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
 			, `    ${native}.restype = _c.c_uint32`);
 		if(wholeOwners) calls.push(...ownedPythonAnchoredCall(models.at(-1), all, c));
 		else calls.push(`def ${name}(${parameters.map((_, i) => `arg${i}`).join(", ")}):`, "    if _runtime is None: raise RuntimeError('Build the native adapter before calling this API')"
@@ -404,8 +408,9 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 			, "        frame.close()", "        scope.close()", "");
 	}
 	const callbacks = ownedPythonCallbacks(c, nodes, models);
+	const records=ownedPythonHostRecords(values.hostRecords,nodes);
 	const equalityNames = [];
-	if(anchors) for(const node of nodes.values()) if(node.identity)
+	if(anchors || c.callbackArgumentViews) for(const node of nodes.values()) if(node.identity)
 	{
 		const native = `_equal_native${node.index}`; equalityNames.push(native);
 		bindings.push(`    ${native} = runtime.library["${node.cName}_equal"]`
@@ -425,7 +430,7 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		, source: [support(c.native.model.limits, transfers, wholeOwners)
 			, ...transfers ? [wholeOwners ? ownedPythonAnchoredTransfers : ownedPythonTransfers] : []
 			, ...raw, ...conversions
-			, callbacks.source
+			, callbacks.source, ...records.layouts.length?[records.source]:[]
 			, "_runtime = None", "", "def _bind(runtime):"
 			, `    global _runtime${models.map(model => `, ${model.native}`).join("")}${equalityNames.map(name => `, ${name}`).join("")}`
 			, "    if _runtime is not None: raise RuntimeError('Native adapter is already bound')"

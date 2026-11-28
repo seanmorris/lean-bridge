@@ -649,6 +649,94 @@ The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share
 
 ## Python packages
 
+### Lean calling a host-owned Python object
+
+Run the host-import checks with the pinned Lean compiler, a C compiler, and
+CPython 3.11 or 3.12 with pip, headers, and its shared library:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_HOST_OBJECT_TEST=1 LEAN_BRIDGE_HOST_PYTHON="$(command -v python3)" \
+  node --test tests/host-object-generator.test.mjs
+```
+
+Lean checks the exact types of all nineteen primitives, nested collections and
+results, and a member returning another host type. A second test compiles a Lean
+application, links an independently written CPython provider and removes its
+build tree. The relocated executable calls an ordinary Python class: a setter
+changes the value seen through a second reference, a rejected write preserves
+the old value, and all instances leave the class's weak set after the call.
+The installed-package test uses a separate, **generated** provider. The public
+CLI builds two different Lake applications (ordinary exports and a reviewed
+API) without a hand-written application signature list. It verifies each component's
+two-archive package-set receipt, and installs both components using offline
+pip. The consumer uses keyword arguments and ordinary Python classes:
+
+```python
+import lean_workshop as workshop
+from host_app import Box
+
+with workshop.bind_hosts(Box=Box):
+    box = workshop.make(7)
+    workshop.set_level(box=box, value=81)
+    assert workshop.alias(box) is box
+    assert workshop.read(box) == 81
+```
+
+The test removes the producer and archives, relocates the installation, and
+takes Lean, C, and pip off the consumer's executable search path. It exercises
+all nineteen scalar conversions in host methods and in each success, returned
+error and thrown `EIO` payload, mutation, identity across two components,
+reentry, the original Python exception, a translated typed `EIO` failure,
+a returned nested `Except`, a replacement Lean IO error, stale
+objects, fork/thread rejection, cleanup, and an altered binary. The runtime is
+a pinned wheel dependency that pip resolves; the application never loads it by
+hand. The generated functions accept keywords and ship typing declarations.
+
+The native Python CI shard runs both interpreters sequentially. Its
+[meter project](../../tests/fixtures/python-host-meter/Workshop.lean) also
+builds both ways through an offline-installed CLI: directly from source,
+then from a reviewed public API and a Lake lock. The tests verify both
+receipts, remove the tools, source and archives, and call each relocated
+installation. Negative cases cover unsupported exports, a mismatched public type,
+an unimplemented axiom and an undeclared foreign call. See the
+[authoring steps](../publish/pypi.md#call-python-objects-from-lean).
+Dynamic members and compound or callable host-member values are not part
+of this installed profile. A separate [Timers fixture](../../tests/fixtures/python-lean-tasks/Timers.lean)
+builds standalone async wheels from both source routes with the installed CLI.
+The source-free consumer checks real task wakeup, typed startup failures,
+returned errors, cancellation before scheduling and during execution, late
+completion, loop shutdown, fork rejection and return to its file-descriptor
+baseline. It uses one Lean worker. Setting `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR`
+retains these original wheels and receipts under `tasks/<tag>/<route>/`, with
+the shared runtime under `wheels/`. The installed [stream consumer](../../tests/fixtures/python-lean-tasks/streams.py)
+checks one pull per demand, scoped early exit, cancellation during a pull,
+typed failures, and loop shutdown using Lean-side counters. The independent
+broker audit checks cursor and task leases separately, including non-cooperative
+late completion. Each route retains the exact consumer and audit scripts.
+
+The wheel build compiles the extension's C declarations alongside Lean's
+generated entry definitions. Successful linking alone cannot check that two
+C translation units agree on function arguments. The cursor regression also
+checks a deliberately mismatched polymorphic signature at compile time;
+it never calls it.
+
+The separate [Signals fixture](../../tests/fixtures/python-lean-stream-only/Signals.lean)
+exports only streams. It installs two factories sharing one private pull/close
+pair and checks that a retired runtime rejects new work but releases an open
+cursor. Its handoff and test output are retained under `stream-only/<tag>/`.
+
+The shard's `python-host-imports-<attempt>` artifact contains the original wheels in
+`wheels/` (one copy of the shared runtime); each CPython tag contains the consumer
+and a directory per Workshop component with its exact source, API, compiler
+metadata and two-archive receipt. To retain the
+same files locally, set `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR` to a fresh
+directory outside the source tree before running the checks for both versions.
+The CLI cases retain their source, review, compiler metadata, component wheel,
+receipt and consumer check in `projects/<tag>/<route>/`. To verify a retained
+receipt, place its component wheel and its matching runtime wheel from
+`wheels/` in an adjacent `archives/` directory, then run `lean-bridge verify`.
+
 ### Ordinary-source Python packages
 
 Use the pinned Lean compiler, a native C compiler and Python 3.11 or newer with pip and venv. Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if it is not available as `python3`:
@@ -2540,6 +2628,82 @@ CI runs these four configurations in parallel, with separate toolchain caches an
 For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` lowers only the test package's declared floor. Do not publish those development packages as the production profile. `LEAN_BRIDGE_KEEP_PERL_TEST=1` preserves a suite's task-local build directory for inspection; otherwise it is removed after the run.
 
 The native target accepts ordinary local Lean modules. Tests cover all sixteen scalars, copied records and arrays, shared resource identity, callbacks, returned closures, invalid inputs, runtime mismatch, compiler-free installation, and independent build reproducibility. Additional checks reject partial implementations, admitted definitions, dependent or generic signatures, unreviewed foreign code and scalar values incorrectly declared as identity resources.
+
+### Synchronous Perl IO
+
+Use the four Perl builds listed above and the pinned Lean toolchain. Set `LEAN_BRIDGE_PERLS` to a JSON array of their absolute interpreter paths and `LEAN_BRIDGE_LEAN_PREFIX` to the compiler prefix. Choose a fresh directory for the release archives:
+
+```sh
+export EVIDENCE="$PWD/build/acceptance/perl-io"
+LEAN_BRIDGE_PERL_IO_BUILD="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-io-installed.mjs
+LEAN_BRIDGE_PERL_IO_CAPTURE="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-io-consumers.mjs
+LEAN_BRIDGE_PERL_IO_POLICY="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-io-installed.mjs
+```
+
+The build produces an ordinary Journal, a reviewed Journal and an independent companion. Capture installs those original archives, moves the installations, then runs the public Perl example, conversion, cross-package and retirement checks. It writes the TAP and `acceptance.json` only after all rows pass. To repeat those calls without rebuilding Lean, replace `LEAN_BRIDGE_PERL_IO_CAPTURE` with `LEAN_BRIDGE_PERL_IO_REPLAY`. For the [retained release](../evidence/perl-sync-io-20261123.json), also set `LEAN_BRIDGE_PERL_IO_EXPECTED=docs/evidence/perl-sync-io-20261123.json` to check the pinned digest before running the clients. Both operations require Perl build tools for the XS-only fallback and test observer; the installed applications run with no compiler on their path.
+
+To test the producer a second time, set `LEAN_BRIDGE_PERL_IO_ORIGINAL` to the same directory and `LEAN_BRIDGE_PERL_IO_REPRO` to a new directory, then run `node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs`. It installs the CLI offline and compares both archives and their receipts byte for byte.
+
+### Perl host objects
+
+Set `LEAN_BRIDGE_PERLS` to the four interpreter paths above and
+`LEAN_BRIDGE_LEAN_PREFIX` to the pinned compiler. Run:
+
+```sh
+npm run test:perl-host-packages
+```
+
+This test installs the packed CLI offline and uses it to build two independent
+CPAN components, first from ordinary Lean source, then from a reviewed API.
+They must all depend on the same runtime archive. For each interpreter, the
+consumer installs the ordinary pair from prebuilt XS and compiles only XS for
+the reviewed pair. It moves the installed prefix and runs the same Perl
+application twice, reversing the order in which the components load. No Lean
+or C compiler is on the application's path.
+
+The [publisher example](../publish/cpan.md#call-a-perl-object-from-lean)
+uses one host class. The test adds a second class so it can distinguish
+weak objects from objects pinned by overlapping bindings.
+
+### Perl futures and demand-driven streams
+
+Use the same four `LEAN_BRIDGE_PERLS` interpreters and compiler as for the synchronous suite. Install the upstream `Future` (0.54) and `IO::Async` (0.805) distributions and their prerequisites in a local Perl prefix. Set `LEAN_BRIDGE_PERL_TASK_DEPS` to that prefix's `lib/perl5` directory and include it in `PERL5LIB`. The installed-client suite uses the real event loop, not a mocked scheduler.
+
+```sh
+export EVIDENCE="$PWD/build/acceptance/perl-tasks"
+export PERL5LIB="$LEAN_BRIDGE_PERL_TASK_DEPS${PERL5LIB:+:$PERL5LIB}"
+LEAN_BRIDGE_PERL_TASK_BUILD="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-tasks-installed.mjs
+LEAN_BRIDGE_PERL_TASK_CAPTURE="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-task-consumers.mjs
+```
+
+The producer builds Pulse from source, Pulse from the reviewed Binding IR, and a separate stream-only component. Capture installs the original archives and relocates them. Each application runs without a compiler on its path. The checks exercise two pending workers on the application event loop, cancellation, dropped futures, exact errors, lazy pull and early close, an emitted `Unit` versus exhaustion, shared-runtime retirement, and loading both packages in either order. The archive inspector reads the tar files, XS receipts, ABI fingerprints and ELF libraries without running the packages.
+
+Use `LEAN_BRIDGE_PERL_TASK_REPLAY` in place of `LEAN_BRIDGE_PERL_TASK_CAPTURE` to rerun the retained Perl clients using the same archives and compare their TAP. To reproduce the producer side, set `LEAN_BRIDGE_PERL_TASK_ORIGINAL` to the evidence directory and `LEAN_BRIDGE_PERL_TASK_REPRO` to a fresh output directory, then run `node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs`.
+
+For the [recorded task release](../evidence/perl-tasks-20261123.json), set `LEAN_BRIDGE_PERL_TASK_EXPECTED=docs/evidence/perl-tasks-20261123.json` when replaying. This checks the acceptance digest before installing. To audit the saved source files, TAP and offline rebuild without compiling or rerunning the packages:
+
+```sh
+LEAN_BRIDGE_PERL_TASK_AUDIT="$EVIDENCE" LEAN_BRIDGE_PERL_TASK_REPRODUCED="$REPRO" \
+  node --test --test-concurrency=1 tests/helpers/perl-task-consumers.mjs
+```
+
+Set `REPRO` to the completed reproduction directory. Unthreaded builds skip the thread-specific checks. On threaded builds, the owner must still work after a child interpreter tries to read a live cursor or settle a pending future.
+
+### Perl workers that call the application
+
+Use the same four Perl interpreters and upstream event-loop modules as in the futures suite above. Set `WORKERS` and `WORKER_REPRO` to new directories. Run the steps in order:
+
+```sh
+LEAN_BRIDGE_PERL_CALLBACK_BUILD="$WORKERS" node --test --test-concurrency=1 tests/helpers/perl-retained-packages.mjs
+LEAN_BRIDGE_PERL_CALLBACK_CAPTURE="$WORKERS" node --test --test-concurrency=1 tests/helpers/perl-retained-consumers.mjs
+LEAN_BRIDGE_PERL_TASK_ORIGINAL="$WORKERS" LEAN_BRIDGE_PERL_TASK_REPRO="$WORKER_REPRO" \
+  node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs
+node scripts/audit-perl-worker-evidence.mjs "$WORKERS" "$WORKER_REPRO"
+```
+
+The first step builds the ordinary Retained package, its reviewed counterpart and an independent Relay. The second installs and relocates the actual archives, checks both component load orders and retires a runtime with an outstanding callback request. The third rebuilds the ordinary package with a separately installed CLI. The audit reads the saved packages, receipts, fixtures and TAP; it prints a release summary and does not run Lean or update files.
+
+To repeat the installed calls without rebuilding, use `LEAN_BRIDGE_PERL_CALLBACK_REPLAY` instead of `LEAN_BRIDGE_PERL_CALLBACK_CAPTURE`. For the [recorded worker release](../evidence/perl-retained-workers-20261123.json), set `LEAN_BRIDGE_PERL_CALLBACK_EXPECTED=docs/evidence/perl-retained-workers-20261123.json`. Pass the same file as the audit's third argument to compare every row, receipt and transcript against it.
 
 ### Recursive Perl conversion
 

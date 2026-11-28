@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "profile": "javascript-wasm-threaded-task-v1",
+  "command": "npm run test:javascript-threaded-host-callbacks",
+  "sdkManifestSha256": "9f9b2c252f457e4f77b1efb81a85cbd47eddee4ddfa312f68f8f8afc019ef2c1",
+  "runtimeIdentity": "ae19974c67bbc2bac0382f22177ad3597ccc23bd77b1cd9a88222032df22a8ba",
+  "rejectedBeforePackaging": "Workshop.blocked reaches Task.get",
+  "packages": {
+    "ordinary": {
+      "componentIdentity": "c03e1644afb18e40f359a06adb62cbaa89f2a7ab413767f04bc571c0911277a7",
+      "bindingIrSha256": "fdaebbdde78dc72551cdca59e133aa256366c879a6bd5e5bc38f5ad5dc0c2b25",
+      "sourceTreeSha256": "ca34b6232617025c0fdcdf33a71094d1948cfb7339394d7e1baaae52d74d518f",
+      "receiptSha256": "ce2201dae1be497dcbd57b3d53df19caab511ae725479d86907c79ef5e16efd1",
+      "artifacts": [
+        {
+          "role": "runtime",
+          "name": "@lean-bridge/runtime",
+          "bytes": 792734,
+          "path": "lean-bridge-runtime-0.0.0-task1.rae19974c67bbc2bac0382f22177ad3597ccc23bd77b1cd9a88222032df22a8ba.tgz",
+          "sha256": "527f2ea179b230dd5b3077c83bcd59795bc86ab088d415f8535565434c944649"
+        },
+        {
+          "role": "component",
+          "name": "@lean-bridge/workshop-host-example",
+          "bytes": 18704,
+          "path": "@lean-bridge-workshop-host-example-1.0.0.tgz",
+          "sha256": "0f28fe2a63cebd98fdf930440fa1e61c0280eccd80a8116533301cab5f997778"
+        }
+      ]
+    },
+    "reviewed": {
+      "componentIdentity": "b4f63c6e3e04ee148c9595e1106a326d20838d6060615da1f37677687ebb5c91",
+      "bindingIrSha256": "bfc2970a69095918daae9c32b952458264b66e3130c7232de755624f2a6659db",
+      "sourceTreeSha256": "1121d33d05b0cc68d80a3bd867e672ba993813bd5b6c108ad55b2938cc366fdb",
+      "receiptSha256": "b510f300f91f642adc889b7c27329ee66e49e63108d487e15aac11e77c6ea88e",
+      "artifacts": [
+        {
+          "role": "runtime",
+          "name": "@lean-bridge/runtime",
+          "bytes": 792734,
+          "path": "lean-bridge-runtime-0.0.0-task1.rae19974c67bbc2bac0382f22177ad3597ccc23bd77b1cd9a88222032df22a8ba.tgz",
+          "sha256": "527f2ea179b230dd5b3077c83bcd59795bc86ab088d415f8535565434c944649"
+        },
+        {
+          "role": "component",
+          "name": "@lean-bridge/workshop-host-example",
+          "bytes": 20567,
+          "path": "@lean-bridge-workshop-host-example-1.0.0.tgz",
+          "sha256": "527f4221102716e04cf4d412f8dac7c23d5cebf09a8e04d3f8620d9d6399b37d"
+        }
+      ]
+    },
+    "peer-release": {
+      "componentIdentity": "4a98cef313d1fb43050af52a9688b8424065508324f6c2ef519a42a0d508138b",
+      "bindingIrSha256": "1b2dd5411928dceb9330726a72c306d86551f5da2d83b509bdbf392a4129a4e5",
+      "sourceTreeSha256": "f9890f2f37ef1bf917dc593aa1bd20ea71f2edcd7c44b21259d12aa9bd525fe0",
+      "receiptSha256": "ef690eab1556d0cb27d20a011380546f75a87dcd97b7b5f407ab85fd104a5d84",
+      "artifacts": [
+        {
+          "role": "runtime",
+          "name": "@lean-bridge/runtime",
+          "bytes": 792734,
+          "path": "lean-bridge-runtime-0.0.0-task1.rae19974c67bbc2bac0382f22177ad3597ccc23bd77b1cd9a88222032df22a8ba.tgz",
+          "sha256": "527f2ea179b230dd5b3077c83bcd59795bc86ab088d415f8535565434c944649"
+        },
+        {
+          "role": "component",
+          "name": "@example/threaded-host-peer",
+          "bytes": 18686,
+          "path": "@example-threaded-host-peer-1.0.0.tgz",
+          "sha256": "abbe6c1efb4f35e89e5a5d78017c8cdc92641339cb5a8a44c5cca5becd230049"
+        }
+      ]
+    }
+  },
+  "runs": {
+    "ordinary": {
+      "node": {
+        "checks": 25
+      },
+      "nodeModuleWorker": {
+        "checks": 25
+      },
+      "chromium": {
+        "checks": 25
+      },
+      "chromiumDeployment": {
+        "worker": {
+          "checks": 25
+        },
+        "page": {
+          "checks": 25
+        },
+        "state": "closed",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "nativeOwners": 0,
+        "notifications": 0
+      }
+    },
+    "reviewed": {
+      "node": {
+        "checks": 25
+      },
+      "nodeModuleWorker": {
+        "checks": 25
+      },
+      "chromium": {
+        "checks": 25
+      },
+      "chromiumDeployment": {
+        "worker": {
+          "checks": 25
+        },
+        "page": {
+          "checks": 25
+        },
+        "state": "closed",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "nativeOwners": 0,
+        "notifications": 0
+      }
+    }
+  }
+}

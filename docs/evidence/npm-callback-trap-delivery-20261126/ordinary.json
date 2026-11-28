@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "route": "ordinary",
+  "reviewedSourceSha256": null,
+  "io": "bc42f8e7525c23825380e164c6795beb23a1dfa49ad69893cabe2ba9d4827cc6",
+  "callbacks": "54d01e57e0192602dd61707013a8691ff128664de35a477aecdc510bb09ce0bd",
+  "sources": {
+    "consumer.mts": "fb3725c62c5f9cd913b443095fcf25ba1ddb970696e5a8edf97e11616cdd55a1",
+    "react.mjs": "fa3e62f08df51db430c96216755e4357df618ada922e4f9370231710952d457a",
+    "loaders.mjs": "0ba919bdb3d4f2bbab9a30012fad34cf0da6f99db95399ea4712c1d41c396ad4",
+    "calls.mjs": "0ae48ea97c29518cf2e2230855411bb86f33b45fa67fd974e5d7f0ef42e3b524"
+  },
+  "deployed": [
+    "13ff90868ddcb9a22825ebe19bca7ba32dc23817cabc50d06090719342d77c85",
+    "463ba7a4b8202fa87b93e4334d1f5a692c9779c990eba5e1414cf47dc84c04cc",
+    "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+    "f8d868164b2be876618fbf977a25ffa9365953b1d68f67ec0095461e781fedfb"
+  ],
+  "diagnostic": "13ff90868ddcb9a22825ebe19bca7ba32dc23817cabc50d06090719342d77c85",
+  "node": "v22.23.5",
+  "compiler": "5.9.3",
+  "frameworks": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "scheduler": "0.27.0"
+  },
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "typescript": [
+    {
+      "common": {
+        "order": "io-first",
+        "propagate": false,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "entries": 1,
+      "rejected": true
+    },
+    {
+      "common": {
+        "order": "io-first",
+        "propagate": true,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "entries": 1,
+      "rejected": true
+    },
+    {
+      "common": {
+        "order": "owned-first",
+        "propagate": false,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "entries": 1,
+      "rejected": true
+    },
+    {
+      "common": {
+        "order": "owned-first",
+        "propagate": true,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "entries": 1,
+      "rejected": true
+    }
+  ],
+  "react": [
+    {
+      "common": {
+        "order": "io-first",
+        "propagate": false,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "labels": [
+        "Run",
+        "Runtime retired",
+        "Peer update refused"
+      ]
+    },
+    {
+      "common": {
+        "order": "io-first",
+        "propagate": true,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "labels": [
+        "Run",
+        "Runtime retired",
+        "Peer update refused"
+      ]
+    },
+    {
+      "common": {
+        "order": "owned-first",
+        "propagate": false,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "labels": [
+        "Run",
+        "Runtime retired",
+        "Peer update refused"
+      ]
+    },
+    {
+      "common": {
+        "order": "owned-first",
+        "propagate": true,
+        "checks": 23,
+        "counterBeforeTrap": 4,
+        "healthyFinishes": 8,
+        "finishesAfterTrap": 0
+      },
+      "labels": [
+        "Run",
+        "Runtime retired",
+        "Peer update refused"
+      ]
+    }
+  ]
+}

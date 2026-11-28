@@ -19,6 +19,50 @@ import {
 
 const clone = value => structuredClone(value);
 
+test("cancel wins even when native cancellation, cleanup and an observer re-enter settlement", async () => {
+	const {ir, declaration} = promiseFixture();
+	const plan = compilePendingOperationV1(ir, declaration.id);
+	const attempts = [], entered = new Set();
+	let registry, token;
+	const retry = from => {
+		if(entered.has(from)) return;
+		entered.add(from);
+		try
+		{ registry.resolve(token, from); }
+		catch(error)
+		{ attempts.push([from, error.code]); }
+	};
+	registry = new PendingOperationRegistry({capacity: 1
+		, onTransition: e => { if(e.event === "cancel") retry("observer"); }});
+	const op = registry.begin(plan, {cancel: () => retry("native"), cleanup: [() => retry("cleanup")]});
+	token = op.token;
+	const rejection = assert.rejects(op.promise, {code: "operation-cancelled"});
+	assert.equal(registry.cancel(token), true); await rejection;
+	assert.deepEqual(attempts, ["native", "cleanup", "observer"].map(from => [from, "stale-pending-operation"]));
+	const {live, resolved, cancelled, cleanupRuns, late} = registry.snapshot();
+	assert.deepEqual([live, resolved, cancelled, cleanupRuns, late], [0, 0, 1, 1, 3]);
+	const replacement = registry.begin(plan);
+	assert.notEqual(replacement.token, token);
+	registry.resolve(replacement.token, 7); assert.equal(await replacement.promise, 7);
+});
+
+test("shutdown tolerates a cancellation hook settling its sibling or calling shutdown again", async () => {
+	const {ir, declaration} = promiseFixture();
+	const plan = compilePendingOperationV1(ir, declaration.id), registry = new PendingOperationRegistry();
+	let second, nested;
+	const first = registry.begin(plan, {cancel: () => {
+		if(nested !== undefined) return;
+		nested = true; nested = registry.shutdown(); registry.resolve(second.token, 17);
+	}});
+	second = registry.begin(plan);
+	const cancellation = assert.rejects(first.promise, {code: "operation-cancelled"});
+	assert.equal(registry.shutdown(), true); await cancellation;
+	assert.equal(await second.promise, 17); assert.equal(nested, false);
+	assert.equal(registry.shutdown(), false);
+	const {live, epoch, cancelled, resolved} = registry.snapshot();
+	assert.deepEqual([live, epoch, cancelled, resolved], [0, 2, 1, 1]);
+});
+
 const promiseFixture = () => {
 	const ir = clone(alpha.bindingIr);
 	const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");

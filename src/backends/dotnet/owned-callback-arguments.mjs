@@ -55,3 +55,31 @@ public readonly struct CallbackResult<T>
     }
 }
 `;
+
+/**
+ * Emit a borrowed record in the native alternate layout, never in the leased result layout.
+ *
+ * @param node - Input record with CLR field names and its native layout.
+ * @param nodes - Catalog of checked field types.
+ */
+export const dotnetHostFieldWriter = (node,nodes) => {
+	const view=node.hostInput;
+	const writes=view.fields.map(f => {
+		const child=nodes.get(f.type), prop="value."+f.publicName;
+		if(f.host) return `raw.${f.rawName} = ${prop}.Lease is {} lease${child.index}_${f.rawName} ? Host${child.index}(lease${child.index}_${f.rawName},scope,frame) : Host${child.index}(${prop}.Callback!,scope,frame);`;
+		const encoded=`OwnedConvert.Write${child.index}(${prop},scope,1,${f.pointer?"true":"false"})`;
+		return `raw.${f.rawName} = ${f.pointer?`scope.Store(${encoded})`:encoded};`;
+	});
+	return `    private ${view.raw} Input${node.index}(_V.${view.publicType} value, OwnedValueScope scope, OwnedCallFrame? frame = null)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(value);
+        scope.Enter(value,0,sizeof(${view.raw}),true);
+        try
+        {
+            var raw = default(${view.raw});
+${writes.map(line=>"            "+line).join("\n")}
+            return raw;
+        }
+        finally { scope.Leave(value); }
+    }`;
+};

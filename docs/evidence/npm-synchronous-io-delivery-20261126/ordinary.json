@@ -1,0 +1,56 @@
+{
+  "node": {
+    "checks": 45,
+    "scalarKinds": 19,
+    "counter": 3
+  },
+  "chromium": {
+    "checks": 45,
+    "scalarKinds": 19,
+    "counter": 3
+  },
+  "packageSetSha256": "bc42f8e7525c23825380e164c6795beb23a1dfa49ad69893cabe2ba9d4827cc6",
+  "route": "ordinary",
+  "reviewedSourceSha256": null,
+  "sources": {
+    "consumer.mts": "c7785075b26c8811cdecd38af8ff2e715a1dcc51c06a927f43ff640b0aa9c167",
+    "react.mjs": "b32643142b032c6cbdfd007d7fa33e3a10edf6a1f617394d03af48b401d98b4f",
+    "worker.mjs": "d5f03b3451abbd1317fd31a439ee7108b647f70bd7dac02b62b4d16f22335319",
+    "calls.mjs": "d73de4c2f6471c18f5fd13f83de45ec9c9ec85e2db07e944d8455ee1c7525854"
+  },
+  "deployed": [
+    "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+    "f8d868164b2be876618fbf977a25ffa9365953b1d68f67ec0095461e781fedfb"
+  ],
+  "typescriptVersion": "5.9.3",
+  "nodeVersion": "v22.23.5",
+  "frameworks": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "scheduler": "0.27.0"
+  },
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "typescript": {
+    "common": {
+      "checks": 45,
+      "scalarKinds": 19,
+      "counter": 3
+    },
+    "branch": 4000000000,
+    "after": 4
+  },
+  "ui": {
+    "react": {
+      "checks": 45,
+      "scalarKinds": 19,
+      "counter": 3
+    },
+    "text": "Total: 3",
+    "worker": {
+      "checks": 45,
+      "scalarKinds": 19,
+      "counter": 3
+    },
+    "parentAfterWorker": 4
+  }
+}

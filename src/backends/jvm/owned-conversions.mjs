@@ -157,7 +157,7 @@ export const generateOwnedJvmConversions = (ir, options = {}) => {
 	const wholeOwners = anchoredResults || model.c.functions.some(fn => fn.receiver === 0);
 	const prefix = `src/main/java/${model.namespace.replaceAll(".", "/")}`;
 	const internal = { _OwnedLayouts: model.layoutSource, _OwnedTypes: typesSource
-		, _OwnedConvert: `package ${model.namespace};\n\n${ownedJvmConversionSupport({ transferredInputs, anchoredResults: wholeOwners })}`
+		, _OwnedConvert: `package ${model.namespace};\n\n${ownedJvmConversionSupport({ transferredInputs, anchoredResults: wholeOwners, hostRecords: model.hostInputLayouts.length > 0 })}`
 		, _OwnedScalars: `package ${model.namespace};\n\n${ownedJvmScalars}`
 		, _OwnedRuntime: `package ${model.namespace};\n\n${ownedJvmRuntime(model.c.prefix, { transferredInputs, anchoredResults, wholeOwners })}` };
 	const exceptionPath = `${prefix}/LeanBridgeException.java`;

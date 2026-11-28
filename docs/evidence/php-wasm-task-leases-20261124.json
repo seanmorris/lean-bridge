@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "profile": "php-wasm-threaded-task-v1",
+  "command": "npm run test:php-wasm-task-leases",
+  "sdkManifestSha256": "337dfdbd5bec8bfada345c6a4c83016bff96e72298ae69af6b53770b044d006f",
+  "sdkWorkerWasmSha256": "54fb3f8055357cc3bef654a96837b831d8937dc366e5ba9d108f614e33f5276e",
+  "releases": {
+    "ordinary": {
+      "receiptSha256": "6bb7f0933fa4976035c4694e8715e3f2bacfb7ea38859ab4e677d19495dbf960",
+      "sourceTreeSha256": "a4a4deb22db1b82d7ff51e0e6dc4eedf12eddb73931205e8bb302029ddf8c792",
+      "bindingIrSha256": "22cbaf5a1ed6a94ddf6ff40def75c3e1da73569a05464d5150b04511dd290352",
+      "wasmSha256": "bfe747913702c03c4c5291ea863d5fef418893496854322184886a649f8937c0",
+      "host": {
+        "name": "@example/depot-php",
+        "version": "1.0.0",
+        "path": "@example-depot-php-1.0.0.tgz",
+        "bytes": 76152,
+        "sha256": "17bb626c84ed2eb96865270cd428ac64b5a5e12f948b196a0150b92425597e3c"
+      },
+      "composer": {
+        "name": "example/lean-depot",
+        "version": "1.0.0",
+        "path": "example-lean-depot-1.0.0.zip",
+        "bytes": 13651,
+        "sha256": "4bf5b785c58098679947548732ee673c5a0421a994ad09d895cbc129453c677b"
+      }
+    },
+    "reviewed": {
+      "receiptSha256": "30162816132eb8e1ffb67e4cc8c6e63e5ded7eb208cb4f2489c21d850ca1bd9e",
+      "sourceTreeSha256": "bab476fcbc940ff0cee46129060ebf6af456b3cd2df94ad3e227bc3059ae8339",
+      "bindingIrSha256": "155ea50e00f5e599cdce4a45ba9ebd1ff15dab5ba6c9a8dc2b5213c66051ce08",
+      "wasmSha256": "525729f201144c2bb09c84587986b1880cac6f19fb08e878ac163133478af81f",
+      "host": {
+        "name": "@example/depot-php",
+        "version": "1.0.0",
+        "path": "@example-depot-php-1.0.0.tgz",
+        "bytes": 77518,
+        "sha256": "f470b5ca20b7510c7ee0b69efcc3f897c760972d327bb7594f3289295d176adc"
+      },
+      "composer": {
+        "name": "example/lean-depot",
+        "version": "1.0.0",
+        "path": "example-lean-depot-1.0.0.zip",
+        "bytes": 13680,
+        "sha256": "f715f2f390478b5519101f14fee2eb85bee33add068b8d29b07eb0717cd89e73"
+      }
+    },
+    "peer": {
+      "receiptSha256": "a7c4e75cc2d177a28a372b04c4f7ff866d61f6bd4881bbfc942470a8a54fb874",
+      "sourceTreeSha256": "e2c9f6fd32df7715ce224266028dd7f8c71a8cd9c66e5e8ac687c3871e01d7b6",
+      "bindingIrSha256": "07be3516aedbfbe3e25f16ee0597d5b8326914c3e69e69378e8bf6b8ad92a916",
+      "wasmSha256": "7531e78d2289e7ff0f1e376180ce40772d5d82147f525d2ad65c02146d305f79",
+      "host": {
+        "name": "@example/peer-php",
+        "version": "1.0.0",
+        "path": "@example-peer-php-1.0.0.tgz",
+        "bytes": 63477,
+        "sha256": "3ec35dd766335162b7d124e38b2150539a6ab0bafac09bc1f17147f1c3878547"
+      },
+      "composer": {
+        "name": "example/lean-peer",
+        "version": "1.0.0",
+        "path": "example-lean-peer-1.0.0.zip",
+        "bytes": 11234,
+        "sha256": "a70709b1c4fb793e524bc4fd6070cb422f695260924b1accfea2af5750788dc6"
+      }
+    }
+  },
+  "runtime": {
+    "name": "@lean-bridge/runtime",
+    "version": "0.0.0-task1.ree8ab31c9261f753d806edfa1be978a2fc71d7e52c9d31709eabc7b52ce5ba89",
+    "path": "lean-bridge-runtime-0.0.0-task1.ree8ab31c9261f753d806edfa1be978a2fc71d7e52c9d31709eabc7b52ce5ba89.tgz",
+    "bytes": 764523,
+    "sha256": "9044c83b3dd1842fad8ba1dcf0581884b217a987adaa106af6924e057a41819f"
+  },
+  "sharedTicketKind": "resource:Shared.Ticket/552d91582ffe8f1eae4f005addd6d79dc8d0e82411e2f2710d9d2dc8c746d940"
+}

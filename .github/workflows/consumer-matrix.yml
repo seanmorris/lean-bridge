@@ -310,6 +310,19 @@ jobs:
           test -s build/lean-link-spike/lazy/main.wasm
           test -s build/lean-link-spike/startup/main.wasm
           test -s build/lean-link-spike/final-static/main.wasm
+      - name: Exercise application-owned record fields in five installed npm clients
+        shell: bash
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          source scripts/lean-runtime-config.sh
+          LEAN_BRIDGE_LEAN_PREFIX="$(lean --print-prefix)"
+          export LEAN_BRIDGE_LEAN_PREFIX
+          export LEAN_BRIDGE_JS_EMSDK="$LEAN_WASM_EMSDK"
+          export LEAN_BRIDGE_JS_TARGET_RUNTIME="$PWD/build/lean-runtime/$LEAN_WASM_RUNTIME_BUILD_ID"
+          export LEAN_BRIDGE_RUNTIME_ROOT="$PWD/build/lean-link-spike/lazy"
+          npm run test:javascript-host-records
       - name: Execute owned JavaScript values and generated public APIs
         shell: bash
         run: |
@@ -463,6 +476,7 @@ jobs:
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
+            build/javascript-host-record/
             build/owned-subtype-javascript-packaging/
             build/owned-checked-record-javascript-packaging/
             build/owned-javascript-wasm/transfers.log
@@ -868,6 +882,16 @@ jobs:
           rg '^# fail 0$' build/owned-perl-callback-evidence.log
           rg '^# cancelled 0$' build/owned-perl-callback-evidence.log
           rg '^# skipped 0$' build/owned-perl-callback-evidence.log
+      - name: Exercise application-owned record fields in four installed Perl ABIs
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          LEAN_BRIDGE_LEAN_PREFIX="$(lean --print-prefix)"
+          LEAN_BRIDGE_PERLS="$(jq -cn --args '$ARGS.positional' -- "$PWD"/.toolchains/perl/{5.36.3,5.38.2}-{threaded,unthreaded}/bin/perl)"
+          export LEAN_BRIDGE_LEAN_PREFIX LEAN_BRIDGE_PERLS
+          npm run test:perl-host-records
       - name: Preserve Perl callback-result acceptance
         if: always()
         uses: actions/upload-artifact@v7
@@ -883,6 +907,7 @@ jobs:
             build/owned-perl-callback-results.log
             build/owned-perl-callback-evidence.log
             build/owned-perl-callback-result-runtime.log
+            build/perl-host-record/
           if-no-files-found: error
           retention-days: 30
 
@@ -2577,7 +2602,10 @@ jobs:
         run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
-          node --test tests/php-brick-math.test.mjs tests/native-php.test.mjs
+          status=0
+          node --test tests/php-brick-math.test.mjs tests/native-php.test.mjs || status=1
+          LEAN_BRIDGE_PHP_HOST_INTERPRETERS="$(command -v php)" npm run test:php-host-records || status=1
+          exit "$status"
       - name: Compare weak and strict installed Composer callers with fresh Lean
         id: type_corpus_php_native
         continue-on-error: true
@@ -2725,6 +2753,7 @@ jobs:
         with:
           name: type-corpus-php-native-${{ github.sha }}
           path: |
+            build/php-host-record/*.json
             build/recursive/php-values.json
             build/owned/php-values.json
             build/owned-php-runtime/
@@ -2813,7 +2842,7 @@ jobs:
             native_result=failed
             native_executed=false
           fi
-          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-native LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs && node scripts/check-host-null-php-reports.mjs --profile php-native --report build/host-null/php-native.json --packages build/host-null/packages/php-native && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-native LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-native node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh php-native && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && bash scripts/run-structural-subtype-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows && bash scripts/run-nominal-subtype-php-ci.sh \"/usr/bin/php\" \"/usr/bin/composer\""
+          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:php-host-records && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-native LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs && node scripts/check-host-null-php-reports.mjs --profile php-native --report build/host-null/php-native.json --packages build/host-null/packages/php-native && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-native LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-native node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh php-native && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && bash scripts/run-structural-subtype-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows && bash scripts/run-nominal-subtype-php-ci.sh \"/usr/bin/php\" \"/usr/bin/composer\""
       - name: Upload PHP observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -3622,6 +3651,15 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs
           test -s build/owned-c-packaging/ordinary.json
           test -s build/owned-c-packaging/reviewed.json
+          npm run test:c-leased-closure-fields
+          test -s build/leased-closure-fields-c/ordinary.package-set.json
+          test -s build/leased-closure-fields-c/reviewed.package-set.json
+          test -s build/leased-closure-fields-c/ordinary.execution.json
+          test -s build/leased-closure-fields-c/reviewed.execution.json
+          test -s build/leased-closure-fields-c/ordinary.exchange.json
+          test -s build/leased-closure-fields-c/reviewed.exchange.json
+          test -s build/leased-closure-fields-c/ordinary.staged.json
+          test -s build/leased-closure-fields-c/reviewed.staged.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-callbacks.test.mjs
           test -s build/owned-host-callbacks/ordinary.json
           test -s build/owned-host-callbacks/reviewed.json
@@ -3633,6 +3671,11 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-packaging.test.mjs
           test -s build/owned-cpp-packaging/ordinary.json
           test -s build/owned-cpp-packaging/reviewed.json
+          npm run test:cpp-staged-callbacks
+          test -s build/staged-cpp-callback/ordinary.package-set.json
+          test -s build/staged-cpp-callback/ordinary.execution.json
+          test -s build/staged-cpp-callback/reviewed.package-set.json
+          test -s build/staged-cpp-callback/reviewed.execution.json
           npm run test:owned-cpp-transfers
           npm run test:owned-cpp-borrows > build/owned-cpp-borrows.log 2>&1
           cat build/owned-cpp-borrows.log
@@ -3702,6 +3745,7 @@ jobs:
             build/owned-receivers.log
             build/owned-aggregate-native/reviewed-public-c.json
             build/owned-c-packaging/
+            build/leased-closure-fields-c/
             build/owned-host-callbacks/ordinary.json
             build/owned-host-callbacks/reviewed.json
             build/owned-host-packaging/ordinary.json
@@ -3710,6 +3754,7 @@ jobs:
             build/owned-cpp-callables/
             build/owned-cpp-packaging/ordinary.json
             build/owned-cpp-packaging/reviewed.json
+            build/staged-cpp-callback/
             build/owned-cpp-transfers/
             build/owned-cpp-borrows/
             build/owned-cpp-borrow-packaging/
@@ -3800,6 +3845,96 @@ jobs:
       - name: Prepare native compiler for this shard
         run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Exercise installed Lean tasks and pull streams through C11
+        id: c_tasks
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        timeout-minutes: 12
+        env:
+          LEAN_BRIDGE_C_TASK_TEST: "1"
+          LEAN_BRIDGE_C_TASK_EVIDENCE_DIR: build/consumer-ci/c-tasks
+          LEAN_NUM_THREADS: "1"
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/helpers/c-task-installed.mjs
+      - name: Preserve verified C task archives and installed results
+        if: ${{ !cancelled() && steps.c_tasks.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: c-task-releases-${{ github.run_attempt }}
+          path: build/consumer-ci/c-tasks/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+      - name: Exercise installed Lean tasks and pull streams through C++20
+        id: cpp_tasks
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        timeout-minutes: 15
+        env:
+          LEAN_BRIDGE_CPP_TASK_TEST: "1"
+          LEAN_BRIDGE_CPP_TASK_EVIDENCE_DIR: build/consumer-ci/cpp-tasks
+          LEAN_NUM_THREADS: "1"
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/helpers/cpp-task-installed.mjs
+      - name: Preserve verified C++ task archives and installed results
+        if: ${{ !cancelled() && steps.cpp_tasks.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpp-task-releases-${{ github.run_attempt }}
+          path: build/consumer-ci/cpp-tasks/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+      - name: Exercise exact integer task and stream releases in C and C++
+        id: task_integers
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        timeout-minutes: 35
+        env:
+          LEAN_BRIDGE_TASK_INTEGER_TEST: "1"
+          LEAN_BRIDGE_TASK_INTEGER_EVIDENCE: build/consumer-ci/task-integers
+          LEAN_NUM_THREADS: "1"
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/helpers/task-integer-installed.mjs
+      - name: Preserve exact-integer archives and installed results
+        if: ${{ !cancelled() && steps.task_integers.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: exact-integer-task-releases-${{ github.run_attempt }}
+          path: build/consumer-ci/task-integers/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+      - name: Exercise resource identity across installed task components and synchronous C errors
+        id: task_resources
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        timeout-minutes: 35
+        env:
+          LEAN_BRIDGE_TASK_RESOURCE_TEST: "1"
+          LEAN_BRIDGE_TASK_RESOURCE_EVIDENCE: build/consumer-ci/task-resources
+          LEAN_BRIDGE_C_ERROR_OWNER_OUTPUT: build/consumer-ci/task-resources/c11-sync-error
+          LEAN_BRIDGE_C_HOST_RECORD_OUTPUT: build/consumer-ci/task-resources/c11-host-record
+          LEAN_BRIDGE_CPP_HOST_RECORD_OUTPUT: build/consumer-ci/task-resources/cpp-host-record
+          LEAN_NUM_THREADS: "1"
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/helpers/resource-task-installed.mjs
+          npm run test:c-resource-error-owner
+          npm run test:c-host-records
+          npm run test:cpp-host-records
+      - name: Preserve installed task resource releases
+        if: ${{ !cancelled() && steps.task_resources.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: task-resource-releases-${{ github.run_attempt }}
+          path: build/consumer-ci/task-resources/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
       - name: Execute direct proof erasure through prepared C and C++ packages
         id: direct_proof_native
         if: matrix.profile == 'c-family'
@@ -4099,6 +4234,11 @@ jobs:
           export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs
+          LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' npm run test:leased-closure-fields
+          test -s build/leased-closure-fields-python/ordinary.package-set.json
+          test -s build/leased-closure-fields-python/reviewed.package-set.json
+          test -s build/leased-closure-fields-python/ordinary.staged.json
+          test -s build/leased-closure-fields-python/reviewed.staged.json
           npm run test:owned-python-transfers
           test -s build/owned-python-transfers/ordinary.json
           test -s build/owned-python-transfers/reviewed.json
@@ -4221,6 +4361,7 @@ jobs:
             build/owned-python-runtime/
             build/owned-python-values/
             build/owned-python-transfers/
+            build/leased-closure-fields-python/
             build/owned-python-transfer-packaging/
             build/owned-python-borrows/
             build/owned-python-borrow-packaging/
@@ -4243,6 +4384,34 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
           node --test tests/native-rust.test.mjs
+      - name: Exercise installed Rust tasks, pull streams, and host-object records offline
+        id: rust_tasks
+        if: matrix.profile == 'rust'
+        continue-on-error: true
+        timeout-minutes: 35
+        env:
+          LEAN_BRIDGE_RUST_TASK_TEST: "1"
+          LEAN_BRIDGE_RUST_TASK_EVIDENCE: build/consumer-ci/rust-tasks
+          LEAN_BRIDGE_RUST_HOST_RECORD_OUTPUT: build/consumer-ci/rust-tasks/host-record
+          LEAN_NUM_THREADS: "1"
+          CARGO_BUILD_JOBS: "1"
+        run: |
+          bash scripts/bootstrap-rust-ci.sh
+          source scripts/env.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          node scripts/warm-rust-task-deps.mjs
+          CARGO_NET_OFFLINE=true node --test --test-concurrency=1 tests/helpers/rust-task-installed.mjs
+          CARGO_NET_OFFLINE=true npm run test:rust-host-records
+      - name: Retain the installed Rust task release and receipts
+        if: ${{ !cancelled() && steps.rust_tasks.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: rust-task-crates-${{ github.run_attempt }}
+          path: build/consumer-ci/rust-tasks/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
       - name: Compare isolated Cargo corpus consumers with fresh Lean
         id: type_corpus_rust
         if: matrix.profile == 'rust'
@@ -4266,6 +4435,11 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs
           test -s build/owned-rust-packaging/ordinary.json
           test -s build/owned-rust-packaging/reviewed.json
+          npm run test:rust-staged-callbacks
+          test -s build/staged-rust-callback/ordinary.package-set.json
+          test -s build/staged-rust-callback/ordinary.execution.json
+          test -s build/staged-rust-callback/reviewed.package-set.json
+          test -s build/staged-rust-callback/reviewed.execution.json
           npm run test:owned-rust-transfers
           test -s build/owned-rust-transfers/ordinary.json
           test -s build/owned-rust-transfers/reviewed.json
@@ -4397,6 +4571,7 @@ jobs:
             build/owned-rust-receivers.log
             build/owned-rust-packaging/ordinary.json
             build/owned-rust-packaging/reviewed.json
+            build/staged-rust-callback/
             build/compounds/rust.json
             build/lists/rust.json
             build/aliases/rust.json
@@ -4571,7 +4746,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh rust && bash scripts/run-optional-parameter-language-ci.sh rust"
-              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
+              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.rust_tasks.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -4589,6 +4764,59 @@ jobs:
           retention-days: 30
       - name: Enforce native consumer support
         if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success' || steps.optional_parameters_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))
+        run: exit 1
+
+      - name: Install and exercise compiled Lean host objects and asyncio tasks
+        id: python_host_imports
+        if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
+        timeout-minutes: 25
+        env:
+          LEAN_BRIDGE_HOST_OBJECT_TEST: "1"
+          LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR: build/consumer-ci/python-host-imports
+          HOST_PYTHON_311: ${{ steps.collection_python311.outputs.python-path }}
+          HOST_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
+        run: |
+          status=0
+          compiler_checked=0
+          for interpreter in "$HOST_PYTHON_311" "$HOST_PYTHON_312"; do
+            # The Lean-only negative controls are ABI independent. Both Python
+            # interpreters must still build and execute both installed wheels.
+            if LEAN_BRIDGE_CALLBACK_COMPILER_CHECKED="$compiler_checked" LEAN_BRIDGE_HOST_PYTHON="$interpreter" node --test --test-concurrency=1 tests/host-object-generator.test.mjs; then
+              compiler_checked=1
+            else
+              status=1
+            fi
+          done
+          exit "$status"
+      - name: Verify installed Python worker bindings and host-object record fields
+        if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
+        timeout-minutes: 20
+        env:
+          HOST_PYTHON_311: ${{ steps.collection_python311.outputs.python-path }}
+          HOST_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
+        run: |
+          status=0
+          for interpreter in "$HOST_PYTHON_311" "$HOST_PYTHON_312"; do
+            LEAN_BRIDGE_PYTHON="$interpreter" npm run test:python-host-workers || status=1
+            abi=$("$interpreter" -I -c 'import sys; print(sys.implementation.cache_tag)')
+            LEAN_BRIDGE_PYTHON="$interpreter" LEAN_BRIDGE_PYTHON_HOST_RECORD_EVIDENCE="build/consumer-ci/python-host-imports/record-fields/$abi" npm run test:python-host-records || status=1
+          done
+          exit "$status"
+      - name: Retain Python host-object and task receipts with the original wheels
+        if: ${{ !cancelled() && steps.python_host_imports.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-host-imports-${{ github.run_attempt }}
+          path: build/consumer-ci/python-host-imports/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+
+      - name: Enforce installed Rust task results
+        if: ${{ !cancelled() && matrix.profile == 'rust' && steps.rust_tasks.outcome != 'success' }}
+        run: exit 1
+      - name: Enforce installed C and C++ task results
+        if: ${{ !cancelled() && matrix.profile == 'c-family' && (steps.c_tasks.outcome != 'success' || steps.cpp_tasks.outcome != 'success' || steps.task_integers.outcome != 'success' || steps.task_resources.outcome != 'success') }}
         run: exit 1
 
   managed-consumers:
@@ -4676,7 +4904,10 @@ jobs:
           LEAN_BRIDGE_NATIVE_DOTNET_TEST: "1"
         run: |
           source scripts/env.sh
-          node --test tests/native-dotnet.test.mjs
+          status=0
+          node --test tests/native-dotnet.test.mjs || status=1
+          npm run test:dotnet-host-records || status=1
+          exit "$status"
       - name: Install dependencies for type_corpus_dotnet
         timeout-minutes: 20
         if: matrix.profile == 'dotnet'
@@ -4850,6 +5081,7 @@ jobs:
         with:
           name: type-corpus-dotnet-${{ github.sha }}
           path: |
+            build/dotnet-host-record/*.json
             build/type-corpus/dotnet.json
             build/type-corpus/reviewed-native-dotnet.json
             build/char-native/dotnet.json
@@ -4950,6 +5182,12 @@ jobs:
           export LEAN_BRIDGE_KOTLIN="$PWD/build/kotlin-tools/kotlinc/bin/kotlin"
           source scripts/env.sh
           node --test tests/native-jvm.test.mjs
+          export LEAN_BRIDGE_KOTLIN_HOME="$PWD/build/kotlin-tools/kotlinc"
+          export LEAN_BRIDGE_JVM_IO_M2_SEED="$RUNNER_TEMP/jvm-record-m2"
+          mvn -B -s tests/fixtures/jvm-sync-io/settings.xml -f tests/fixtures/jvm-sync-io/prerequisites.xml \
+            "-Dmaven.repo.local=$LEAN_BRIDGE_JVM_IO_M2_SEED" org.apache.maven.plugins:maven-install-plugin:3.1.4:help \
+            org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath
+          npm run test:jvm-host-records
       - name: Install dependencies for type_corpus_jvm
         timeout-minutes: 20
         if: matrix.profile == 'jvm'
@@ -5083,6 +5321,7 @@ jobs:
         with:
           name: type-corpus-jvm-${{ github.sha }}
           path: |
+            build/jvm-host-record/*.json
             build/type-corpus/java-kotlin.json
             build/type-corpus/reviewed-native-java-kotlin.json
             build/char-native/java-kotlin.json
@@ -5151,6 +5390,18 @@ jobs:
           export LEAN_BRIDGE_GEM
           source scripts/env.sh
           node --test tests/native-ruby.test.mjs
+      - name: Verify installed Ruby worker bindings and host-object record fields
+        if: ${{ !cancelled() && matrix.profile == 'ruby' && steps.ordinary_ruby.outcome == 'success' }}
+        timeout-minutes: 25
+        run: |
+          LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          LEAN_BRIDGE_GEM="$(command -v gem)"
+          export LEAN_BRIDGE_RUBY LEAN_BRIDGE_GEM
+          source scripts/env.sh
+          status=0
+          npm run test:ruby-host-workers || status=1
+          npm run test:ruby-host-records || status=1
+          exit "$status"
       - name: Install dependencies for type_corpus_ruby
         timeout-minutes: 20
         if: matrix.profile == 'ruby'
@@ -5303,6 +5554,7 @@ jobs:
           name: type-corpus-ruby-${{ github.sha }}
           path: |
             build/type-corpus/ruby.json
+            build/ruby-host-record/*.json
             build/type-corpus/reviewed-native-ruby.json
             build/char-native/ruby.json
             build/word-native/ruby.json
@@ -5443,7 +5695,7 @@ jobs:
             test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
             executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
             if [ "$consumer" = dotnet ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:dotnet-host-records && npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_STRUCTURED_CALLABLE_TEST=1 node --test tests/dotnet-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs"
@@ -5482,7 +5734,7 @@ jobs:
               fi
             fi
             if [ "$consumer" = jvm ]; then
-              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_JVM_TEST=1 node --test tests/native-jvm.test.mjs && npm run test:jvm-host-records && npm run test:type-corpus:jvm && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=java,kotlin node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs"

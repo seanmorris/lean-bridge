@@ -1,0 +1,116 @@
+{
+  "scope": "Private PHP author compiler and Zend worker owner; not installed Composer/npm packages",
+  "sdkSha256": "9f9b2c252f457e4f77b1efb81a85cbd47eddee4ddfa312f68f8f8afc019ef2c1",
+  "sourceSha256": {
+    "src/analyze/HostExports.lean": "89e4758f90e323b85ff30117d63819e3460847ddb13185cb863b24efe40de21a",
+    "src/build/javascript-wasm-task-component.mjs": "cd2c8857e4789d6dbf309bce1eb1a8251b30670ced6712a8a8d327d17d33683b",
+    "tests/fixtures/php-host-tasks/Workshop.lean": "b843b44a696fbcf30a973daff41f37984b9f4e7998c44ccbd7d1679422af346a",
+    "tests/helpers/php-wasm-zend-author.mjs": "6f6749ab1322fb1d909c566244aa57f8a535c31f33363247f7c5b03accf7ffd8",
+    "tests/fixtures/php-wasm-task-owner/zend-author.php": "d43637c0704036ffd449ccf7a335c4f1557e133f46cf47a98a467bc07e1e3b5d",
+    "tests/fixtures/php-wasm-task-owner/zend-author-driver.mjs": "95e13b9c2233c443de57de96494b58b28b232770762e4601a5149eb3079ab829",
+    "tests/fixtures/php-wasm-task-owner/zend-author-run.mjs": "52c67f645d5c9b1dcb08b76a9cf549545857c3ea01d7eeb55a74d51de2f94827"
+  },
+  "builds": [
+    {
+      "route": "ordinary",
+      "componentIdentity": "c6dffd50c2b36eb49bf3a76ac9ae069f6ed5fbf5356c5598bff4ab858aa2de6a",
+      "integrity": "b44a1dc9d55b7eb665e7216e64cad15214d94553c210c7c54b0efd0516f9c2da",
+      "api": "93eadf7c3a72c0cb3504fe3007844b72e1aba0881454f9e9cfcc34ea0fd22422"
+    },
+    {
+      "route": "reviewed",
+      "componentIdentity": "004b6b4318fb70979a8a007ec77666cd7a973fafc43b6070325b631f76cd696f",
+      "integrity": "692a2fab80b0177d23f63098f7cb66e38c2ee545f0130a97e5c5450fc51d6ef0",
+      "api": "93eadf7c3a72c0cb3504fe3007844b72e1aba0881454f9e9cfcc34ea0fd22422"
+    }
+  ],
+  "checks": [
+    "incoming Zend identity",
+    "reentrant callback with exact UInt32",
+    "replacement keeps subclass",
+    "repeat await shares result",
+    "returned Except.error is data",
+    "typed EIO fails before delivery",
+    "callback-capable factory does not block Zend",
+    "IO factory error",
+    "nested callback exception identity",
+    "nested callback exception identity",
+    "worker IO error",
+    "one Zend object yielded",
+    "typed cursor failure",
+    "cursor IO error",
+    "live iterator roots input: break",
+    "released iterator root: break",
+    "live iterator roots input: abandon",
+    "released iterator root: abandon",
+    "reject invalid argument before entry",
+    "cancel during callback",
+    "late reply ignored"
+  ],
+  "runs": [
+    {
+      "route": "ordinary",
+      "host": "node",
+      "php": "8.4.1",
+      "wasmSha256": "b44a1dc9d55b7eb665e7216e64cad15214d94553c210c7c54b0efd0516f9c2da",
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    },
+    {
+      "route": "ordinary",
+      "host": "chromium",
+      "php": "8.4.1",
+      "wasmSha256": "b44a1dc9d55b7eb665e7216e64cad15214d94553c210c7c54b0efd0516f9c2da",
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    },
+    {
+      "route": "reviewed",
+      "host": "node",
+      "php": "8.4.1",
+      "wasmSha256": "692a2fab80b0177d23f63098f7cb66e38c2ee545f0130a97e5c5450fc51d6ef0",
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    },
+    {
+      "route": "reviewed",
+      "host": "chromium",
+      "php": "8.4.1",
+      "wasmSha256": "692a2fab80b0177d23f63098f7cb66e38c2ee545f0130a97e5c5450fc51d6ef0",
+      "stats": {
+        "state": "open",
+        "frames": 0,
+        "allocations": 0,
+        "pending": 0,
+        "hostPins": 0,
+        "hostErrors": 0,
+        "notifications": 0,
+        "nativeOwners": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "budget@1.0.0",
+    "name": "budget",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 60969137,
+          "path": "archives/budget-1.0.0-wit-wasi.tar.gz",
+          "sha256": "4c1801ab163d5653f4691dda9e436b7e7f72c7e951c0c1bfe4e7213dfd046e37"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "budget",
+      "profile": "native-wit-canonical-task-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "25c840ff408ced1ad8da7358abcc2dc60eb3a79ec46d596122d230598778b76c",
+      "id": "native-wit-canonical-task-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7ae2dabba03b1d6345a264818214477d5d843bacdd731773cbabc75f173edc28"
+  }
+}

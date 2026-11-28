@@ -1,0 +1,6 @@
+package example:meters;
+
+world meters {
+  include lean-bridge:workshop/application@1.0.0;
+  include lean-bridge:gauge/consumer@1.0.0;
+}

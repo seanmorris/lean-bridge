@@ -1,0 +1,285 @@
+{
+  "offlineCLI": {
+    "archive": {
+      "bytes": 51364677,
+      "path": "archives/lean-bridge-depot-1.0.0-linux-x86_64.zip",
+      "sha256": "47294c08a10812111e012dd4a00defecb4fd94c296880aaf7286eb5e57443aad"
+    },
+    "cliArchiveSha256": "7d39ecc779230898093ccc417f814a6fde7c76bfa13da9dfbafd094581b35703",
+    "receiptSha256": "140b45d0cada2623845d5d6afc66978a5800821c075e00d93f412b8d8c5d8de2"
+  },
+  "releases": {
+    "foreign": {
+      "archive": {
+        "bytes": 51337640,
+        "path": "archives/lean-bridge-foreignpeer-1.0.0-linux-x86_64.zip",
+        "sha256": "5f11cf785c8ed9ab58092502429d1b594da947675a0630d567fd586be6575fe7"
+      },
+      "bindingIrSha256": "262971926a061f413db9b565f3820322c598cff479bc5beffc6eb010404d75c9",
+      "keys": {
+        "Badge": "resource:Shared.Badge/d7a7f7f73198f45fcc586694bf184513cf7de8c70cdf2435a8cedb67af16b055",
+        "Ticket": "resource:Shared.Ticket/9e2ec4c19ad204c86702090a9451c180ee0ce67c4fa550e87dc2aacfd95bf170"
+      },
+      "ledger": {
+        "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+        "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+        "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "receiptSha256": "b77c551a22d96208de12dab5b79605e95a55912d2d2dc69806b4b1a819be730d",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "ordinary": {
+      "archive": {
+        "bytes": 51364677,
+        "path": "archives/lean-bridge-depot-1.0.0-linux-x86_64.zip",
+        "sha256": "47294c08a10812111e012dd4a00defecb4fd94c296880aaf7286eb5e57443aad"
+      },
+      "bindingIrSha256": "cc904119dd77623fc1f15c1d9aadddeba7f7a3b2af7b670feaef19af80997c33",
+      "keys": {
+        "Badge": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+        "Ticket": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4"
+      },
+      "ledger": {
+        "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+        "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+        "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "receiptSha256": "140b45d0cada2623845d5d6afc66978a5800821c075e00d93f412b8d8c5d8de2",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "peer": {
+      "archive": {
+        "bytes": 51338869,
+        "path": "archives/lean-bridge-counter-1.0.0-linux-x86_64.zip",
+        "sha256": "2238a01f35bca233c057e7a0984e89b1e07181593eff3df960ebce82cb37ed93"
+      },
+      "bindingIrSha256": "ddf2b390a997f105b0a488e0e5792d94c93b2483beb83563cbf3fd4111097256",
+      "keys": {
+        "Badge": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+        "Ticket": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4"
+      },
+      "ledger": {
+        "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+        "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+        "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "receiptSha256": "3b88fcfe080cf4da4926face56d105b8e0adff1d5ee331681e204dc2026afc47",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "reviewed": {
+      "archive": {
+        "bytes": 51364716,
+        "path": "archives/lean-bridge-depot-1.0.0-linux-x86_64.zip",
+        "sha256": "c108fe68e85df61d1bc449a769cd98594b46453f1e16a9ad4e9f64e2a4e3bdd3"
+      },
+      "bindingIrSha256": "cc904119dd77623fc1f15c1d9aadddeba7f7a3b2af7b670feaef19af80997c33",
+      "keys": {
+        "Badge": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+        "Ticket": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4"
+      },
+      "ledger": {
+        "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+        "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+        "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+      },
+      "receiptSha256": "952da0e9c8641d5f078f0979417b66b7ee2414872adac3683a75c13229975ba9",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  },
+  "reports": [
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "depot-first",
+      "php": "8.2.35",
+      "route": "ordinary",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "peer-first",
+      "php": "8.2.35",
+      "route": "ordinary",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "depot-first",
+      "php": "8.5.10",
+      "route": "ordinary",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "peer-first",
+      "php": "8.5.10",
+      "route": "ordinary",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "depot-first",
+      "php": "8.2.35",
+      "route": "reviewed",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "peer-first",
+      "php": "8.2.35",
+      "route": "reviewed",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "depot-first",
+      "php": "8.5.10",
+      "route": "reviewed",
+      "shutdown": true
+    },
+    {
+      "checks": 59,
+      "descriptorDelta": 0,
+      "final": [
+        3,
+        1,
+        3,
+        0
+      ],
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "modifiedLedgerRefused": true,
+      "order": "peer-first",
+      "php": "8.5.10",
+      "route": "reviewed",
+      "shutdown": true
+    }
+  ],
+  "scheduler": [
+    [
+      "amphp/amp",
+      "v3.1.3",
+      "6b9051b59037d5a763a43bed0c44571671ce8dc8d45be4cd256c9afa1fe3cd51"
+    ],
+    [
+      "revolt/event-loop",
+      "v1.1.0",
+      "a316f5d942d896aeae5826db5331738585fe4d8ebb603cbefc01ae4f6e18e4cf"
+    ]
+  ],
+  "sources": {
+    "example.php": "f503605ed27ae08fb7499d806997f67efac7ad6f0a9319455c4d35f82f03dc31",
+    "installed.php": "f725911a94de1c864cd47d33f1e9be1b13454a662255436c084478eec03f359f",
+    "integrity.php": "c6a873ae90bcc1e66ba110868b038d1cb472ac9ccfa7424b0b839597822b7a62",
+    "shutdown.php": "0c53a28d7ddcad3f60af89dfcb858c638d8897504cb4e715f74750ccfd15cc25"
+  }
+}

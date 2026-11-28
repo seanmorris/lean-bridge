@@ -1,0 +1,70 @@
+{
+  "archives": {
+    "@lean-bridge/php-wasm-copied-runtime": "6d2ed5a1b38b056bff932f85d6ba1cb3c93b32147b58baa5a8fa301df81e5a7a",
+    "lean-bridge/ledger": "14bcd7efb7e7774296b01ec8520d9c3526dc86357fb2d2e2eddc54fde3f8c848",
+    "php-wasm-ledger": "cec52ba7b0b4d9b0bd7db4347e06bab13068d81a72d742fbc5c399228534b9ca"
+  },
+  "bindingIrSha256": "131e44b4b481919473b8c86be08a9de1fdcb2686c10737df21f5590feb56e2da",
+  "clientSha256": {
+    "consumer.php": "fb14e3dad916f6c19a0e9651e300ad1e49d41660972ee52370aca95e2a867650",
+    "installed-node.mjs": "53e707c60e849803a4edfdebed16befaebdf7cf24365dc874dafb1d86940c1e6",
+    "installed.mjs": "fab21cac97b30544ee1435b2e9c42a507b3dcc32e17fbeee3b2ee8680a2a9bdf"
+  },
+  "ledgerSha256": "0a2211c53b6963ea373a6d2b9e0c27f0f58836e039e6e7fc9dcc1efbee1dec62",
+  "observations": [
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "startup",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Node",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "embedded",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "startup",
+      "mode": "composer",
+      "result": "php-api:30"
+    },
+    {
+      "host": "Chromium",
+      "loading": "lazy",
+      "mode": "composer",
+      "result": "php-api:30"
+    }
+  ],
+  "phpWasmVersion": "0.1.0",
+  "receiptSha256": "a45649728b030c8459ccd85980da3586f6589bc60207ba8b2c2b8973b5da2df9",
+  "reviewSha256": "c20d76cc847ec9084e1caf34e47f86257f13ee913f1829ad5be52b13785d9fa9",
+  "route": "reviewed",
+  "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "sourceTreeSha256": "466e01ab33815393cd9bd13a65f4c96ae0541bd8db0872ac8cf2b2bdd950966e"
+}

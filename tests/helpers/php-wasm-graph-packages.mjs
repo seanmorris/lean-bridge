@@ -160,8 +160,9 @@ export const bindPhpWasmReceiptArchives = async (handoff, report) => {
  * @param options.host - Pinned PHP-Wasm host package directory.
  * @param options.diagnostic - Progress reporter.
  * @param options.companions - Additional original releases sharing the runtime.
+ * @param options.reserveBytes - Optional free space to keep beyond the estimated install peak.
  */
-export const installPhpWasmGraphPackages = async ({ root, release, host, diagnostic, companions = [] }) => {
+export const installPhpWasmGraphPackages = async ({ root, release, host, diagnostic, companions = [], reserveBytes = 0 }) => {
 	const project = join(root, "install"), deployment = join(root, "deployed"), feed = join(root, "feed");
 	await saveLakeFile(project, "package.json", canonicalJson({ private: true, type: "module" })); await mkdir(feed);
 	const npm = [], archives = [];
@@ -183,8 +184,28 @@ export const installPhpWasmGraphPackages = async ({ root, release, host, diagnos
 	const hostManifest = JSON.parse(await readFile(join(host, "package.json")));
 	assert.equal(hostManifest.name, "php-wasm"); assert.equal(hostManifest.version, "0.1.0");
 	const hostFiles = await phpWasmInventory(host);
-	const hostArchive = await createDeterministicTarGz({ directory: host, archiveRoot: "package", sourceDateEpoch: 1 });
-	await saveLakeFile(feed, "host.tgz", hostArchive);
+	const packHost = async () => {
+		const archive = await createDeterministicTarGz({ directory: host, archiveRoot: "package", sourceDateEpoch: 1 });
+		assert.ok(Number.isSafeInteger(reserveBytes) && reserveBytes >= 0);
+		if(reserveBytes)
+		{
+			// Account for the installed payloads, tarball feed, fetch/cache copies
+			// and temporary package-manager files before starting npm.
+			const total = files => Object.values(files).reduce((sum,file)=>sum+file.bytes,0);
+			let expanded = total(hostFiles);
+			for(const entry of releases)
+			for(const dir of ["runtime/package","component/package","composer"])
+				expanded += total(await phpWasmInventory(join(entry.output,dir)));
+			const packed = archive.length + archives.reduce((sum,file)=>sum+file.bytes,0);
+			const scratch = expanded + 3*packed + 64*1024**2;
+			const space = await statfs(root), free = space.bavail*space.bsize;
+			diagnostic(`npm/Composer install: ${free} free bytes, ${scratch} estimated scratch, ${reserveBytes} reserved`);
+			assert.ok(free >= scratch+reserveBytes,"not enough disk for the installed payload and reserve");
+		}
+		await saveLakeFile(feed, "host.tgz", archive);
+		return sha256(archive);
+	};
+	const hostArchiveSha256 = await packHost();
 	const bin = join(root, "bin"), cache = join(root, "npm-cache");
 	for(const path of [bin, cache])
 	{ await mkdir(path); assert.deepEqual(await readdir(path), []); }
@@ -199,6 +220,10 @@ export const installPhpWasmGraphPackages = async ({ root, release, host, diagnos
 	assert.deepEqual(await phpWasmInventory(join(project, "node_modules/php-wasm")), hostFiles);
 	const npmLock = JSON.parse(await readFile(join(project, "package-lock.json")));
 	assert.deepEqual(Object.keys(npmLock.packages).sort(), ["", "node_modules/php-wasm", "node_modules/@lean-bridge/php-wasm-copied-runtime", ...releases.map(entry => `node_modules/${entry.report.npmSettings.name}`)].sort());
+	// These are private copies made by this install. Composer and the real VMs
+	// must use the installed npm packages, not the input tarballs or npm cache.
+	for(const input of [...npm,join(feed,"host.tgz")]) await rm(input);
+	await rm(bin, { recursive: true }); await rm(cache, { recursive: true });
 	const composerRecords = await Promise.all(releases.map(async entry => JSON.parse(await readFile(join(entry.output, "composer/composer.json")))));
 	const composerMetadata = composerRecords[0];
 	const composerHome = join(root, "composer-home"), composerCache = join(root, "composer-cache");
@@ -224,11 +249,10 @@ export const installPhpWasmGraphPackages = async ({ root, release, host, diagnos
 	}
 	await rename(project, deployment);
 	await rm(feed, { recursive: true }); await rm(composerHome, { recursive: true }); await rm(composerCache, { recursive: true });
-	await rm(bin, { recursive: true }); await rm(cache, { recursive: true });
 	return { deployment, installed, archives
 		, composer: composerMetadata.name, composerEvidence, npmLock
 		, host: { manifest: hostManifest, files: hostFiles
-			, archiveSha256: sha256(hostArchive) } };
+			, archiveSha256: hostArchiveSha256 } };
 };
 
 const hostSource = (name, composer, request) => `import assert from 'node:assert/strict';

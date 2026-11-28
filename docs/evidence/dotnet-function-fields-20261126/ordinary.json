@@ -1,0 +1,34 @@
+{
+  "archive": {
+    "bytes": 53936175,
+    "path": "archives/tariff-quotes.1.0.0.nupkg",
+    "sha256": "0fa8f936a2e7b2ececacc93b26c999c0492150346676505573c48e9174ed90f2"
+  },
+  "bindingIrSha256": "5330e49d8401375a15b711bde940982ec3b51908e0cb572430809157131b3d81",
+  "clientAssemblySha256": "b31798570b515627eb84c06f9782053e81a873ff2cd442724392331d42cb45e3",
+  "clientSha256": "fb2969e851ecca9597ba51694be81e813a920da972d902a71f25d9f013ce32f6",
+  "live": {
+    "afterCallbackFailure": 1,
+    "afterThreadExit": 0,
+    "baseline": 1,
+    "closed": 1,
+    "echo": 1,
+    "expired": 1,
+    "held": 4,
+    "repack": 1,
+    "retain": 1
+  },
+  "receiptSha256": "605877ec5707e554d633c6315ac5df1059cf7e6f62f86b355f9ddfb317284f99",
+  "relocated": [
+    "explicitly retained field survives source disposal",
+    "caller-built record crosses Lean",
+    "repacked function survives the input",
+    "ordinary delegate cannot escape through a field",
+    "closed field rejected",
+    "staged callback returns a native function",
+    "host exception retains identity",
+    "binding reusable"
+  ],
+  "reviewedSourceSha256": null,
+  "route": "ordinary"
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 3,
+  "component": { "id": "meter-host@1.0.0", "name": "meter-host", "version": "1.0.0" },
+  "producers": [
+    { "id": "host", "adapter": "application", "adapterVersion": 1, "tool": "Meter host contract", "toolVersion": "1.0.0", "extensions": {} }
+  ],
+  "types": [{
+    "id": "host:meter.Box", "name": "Box", "kind": "resource", "representation": "identity", "mutability": "read",
+    "typeParameters": [], "fields": [], "target": null, "callable": null, "cases": [],
+    "resource": { "kindId": "resource:meter.Box", "disposal": "required", "fallback": "queued-finalizer", "cycles": "explicit-cut" },
+    "host": { "targets": ["python"], "identity": "weak-canonical", "dynamic": false },
+    "documentation": { "summary": "A Python object with a read method.", "details": "" },
+    "source": { "producer": "host", "declaration": "Box", "extensions": {} },
+    "assurance": []
+  }],
+  "declarations": [{
+    "id": "host:meter.Box.read", "name": "read", "kind": "method", "owner": "host:meter.Box", "overloadKey": "Box.read()",
+    "typeParameters": [],
+    "receiver": { "type": { "kind": "named", "id": "host:meter.Box" }, "ownership": "borrow", "lifetime": { "scope": "call", "anchor": null }, "mutability": "read" },
+    "parameters": [],
+    "result": { "type": { "kind": "primitive", "name": "uint32" }, "ownership": "copy", "lifetime": null },
+    "mutability": "read", "effects": ["reads-resource", "host-call", "fails"],
+    "failure": { "mode": "declared", "errors": ["error:host"], "unexpected": "poison-runtime" },
+    "resultMode": "value", "capabilities": [], "assurance": [],
+    "documentation": { "summary": "Read the current unsigned 32-bit value.", "details": "" },
+    "source": { "producer": "host", "declaration": "Box.read", "extensions": {} }
+  }],
+  "errors": [{
+    "id": "error:host", "name": "HostError", "category": "domain", "payload": null,
+    "documentation": { "summary": "The Python method raised an exception.", "details": "" }
+  }],
+  "capabilities": [], "assurance": [],
+  "documentation": { "summary": "Members that a Python application supplies to the meter component.", "details": "" }
+}

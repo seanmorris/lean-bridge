@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Ledger"],
+  "exports": ["Ledger.add", "Ledger.readTotal", "Ledger.choose", "Ledger.signed", "Ledger.magnitude", "Ledger.wide", "Ledger.ioFailure"],
+  "nativeEffects": [],
+  "targets": { "php-wasm": { "composer": { "name": "lean-bridge/ledger", "version": "1.0.0" } } }
+}

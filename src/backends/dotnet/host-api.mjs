@@ -1,0 +1,180 @@
+/** @file Generate scoped, typed C# bindings for application-owned host classes. */
+import { readFile } from "node:fs/promises";
+import { copiedResultType } from "./copied-conversions.mjs";
+import { dotnetComponentAssembly } from "./copied-model.mjs";
+import { dotnetHostCarrier } from "./host-native-members.mjs";
+import { dotnetScalarArgument, dotnetScalarResult, dotnetScalarType } from "./sync-io.mjs";
+import { verifiedDotnetAssets } from "./verified-assets.mjs";
+import { dotnetHostWorkerApi } from "./host-worker-api.mjs";
+import {dotnetHostRecords} from "./host-records.mjs";
+
+/**
+ * List the C# signatures the consumer must supply, without private wire details.
+ *
+ * @param host - Validated nominal types and the same bound member model used by C#.
+ */
+export const dotnetHostSignatures = host => {
+	const name = s => s.index === undefined ? s.kind === "unit" ? "void" : dotnetScalarType(s.kind).replace("global::", "") : host.ir.types[s.index].name;
+	return host.model.members.map(m => {
+		const owner = host.ir.types[m.owner].name, params = m.params.filter(s => s.kind !== "unit").map(name).join(", ");
+		if(m.mode === "new") return "new " + owner + "(" + params + ")";
+		if(m.mode === "get" || m.mode === "set") return (m.mode === "get" ? name(m.out) : params) + " " + owner + "." + m.name + " { " + m.mode + "; }";
+		return (m.mode === "static" ? "static " : "") + name(m.out) + " " + owner + "." + m.name + "(" + params + ")";
+	});
+};
+
+/**
+ * No raw handles, Type arrays, marshaling code or scheduler in the consumer API.
+ *
+ * @param o - Compiler-reconciled exports, native model and authenticated library evidence.
+ */
+export const generateDotnetHostApi = async o => {
+	const { api, ir, entries, model, evidence, prefix } = o;
+	const assembly = dotnetComponentAssembly(api.component);
+	if(!/^LeanBridge\.[A-Z][A-Za-z0-9]*$/u.test(assembly) || !/^lb_dotnet_host_[a-f0-9]{64}$/u.test(prefix) || evidence.library !== "lib" + prefix + ".so")
+		throw new TypeError("Invalid generated CLR host identity");
+	const gens = ir.types.map((_, i) => "T" + i), g = "<" + gens.join(",") + ">", constraints = gens.map(t => "where " + t + " : class").join(" ");
+	const sum = t => t.kind === "apply" && t.constructor === "result" && t.arguments.length === 2;
+	const site = t => dotnetHostCarrier(ir.types, t);
+	const input = (p, j, value) => {
+		if(site(p.type).index !== undefined) return "input[" + 3*j + "]=call.Input(" + value + ");";
+		// dn_get checks the unused high bits. The general IO port accepts a
+		// sign-extended ulong, but these signed narrow carriers do not.
+		const width = ({ int8: "byte", int16: "ushort", int32: "uint" })[p.type.name];
+		return width ? "input[" + 3*j + "]=unchecked((" + width + ")" + value + ");" : dotnetScalarArgument(p.type.name, value, j);
+	};
+	const leaf=t=>site(t).index===undefined?dotnetScalarType(t.name):gens[site(t).index];
+	const records=dotnetHostRecords(api,g,constraints,leaf);
+	const record=t=>t.kind==="host-record"?records.entries.get(t.declaration):null;
+	const type = t => record(t)?.pub??(sum(t) ? "Result<" + t.arguments.map(type).join(",") + ">" : leaf(t));
+	const decode = (t, n = 0) => record(t)?.read??(sum(t) ? "(Tag(tags[" + n + "]) ? " + type(t) + ".Ok(" + decode(t.arguments[0], n+1) + ") : " + type(t) + ".Err(" + decode(t.arguments[1], n+1) + "))"
+		: site(t).index === undefined ? dotnetScalarResult(t.name) : "(" + type(t) + ")HostRefs.Read(output[0])!");
+	const impl = [], pub = [], methods = new Set([...gens, "Bound", "Binding", "Dispose", "GetType", "GetHashCode", "Equals", "ToString", "MemberwiseClone", "Finalize", "ReferenceEquals"]);
+	const hasFunctions=entries.some(e=>e.result.kind==="io-closure");
+	// Match the native table: each factory at i has apply at N+i and drop
+	// at 2N+i. Only the private apply method takes a ticket; its carriers
+	// and exception decoding otherwise follow the ordinary synchronous ABI.
+	const functions=entries.flatMap((e,j)=>{
+		if(e.result.kind!=="io-closure")return [];
+		const parameters=[{name: "ticket",type: {kind: "primitive",name: "uint64"}}
+			, {name: "arg",type: e.result.argument}];
+		return [{e: {...e,result: e.result.reply,parameters},i: entries.length+j,apply: true}];
+	});
+	for(const {i,e,apply} of [...entries.map((e,i)=>({e,i,apply: false})),...functions])
+	{
+		const method = e.name.split("_").map(n => n.charAt(0).toUpperCase() + n.slice(1)).join("");
+		const names = e.parameters.map(p => p.name);
+		if(!/^[A-Z][A-Za-z0-9]*$/u.test(method) || (!apply && methods.has(method)) || names.some(n => !/^[a-z][a-z0-9_]*$/u.test(n)) || new Set(names).size !== names.length)
+			throw new TypeError("Invalid or colliding CLR host export: " + e.name);
+		methods.add(method);
+		const factory=e.result.kind==="io-closure";
+		const result = factory?"ulong":type(e.result), unit = result === "Unit", ret = unit ? "void" : result;
+		const parameters = e.parameters.map((p, j) => type(p.type) + " @" + names[j]);
+		const invoke=`global::${assembly}.Wire.Call${i}${g}(${hasFunctions?"Host_":"this.Binding"}${names.map(n => ",@" + n).join("")})`;
+		if(factory)
+		{
+			const cls="Returned"+method,a=type(e.result.argument),r=type(e.result.reply);
+			if(methods.has(cls) || e.effect!=="IO")throw new TypeError("Invalid CLR returned-function factory: "+method);
+			methods.add(cls);
+			pub.push(`    public sealed class ${cls} : System.IDisposable {
+        internal readonly HostFunctionLease Lease;
+        internal ${cls}(HostFunctionOwner owner) { Lease=new(owner,${2*entries.length+i}); }
+        public ${r==="Unit"?"void":r} Invoke(${a} arg) => Lease.Invoke((b,id)=>global::${assembly}.Wire.Call${entries.length+i}${g}(b,id,arg));
+        public void Dispose() => Lease.Dispose();
+    }
+    public ${cls} ${method}(${parameters.join(",")}) {
+        var Result_=new ${cls}(this.owner);
+        Result_.Lease.Attach(this.owner.Invoke(Host_=>${invoke}));
+        return Result_;
+    }`);
+		}
+		else if(!apply)pub.push(`    public ${ret} ${method}(${parameters.join(",")}) => ${hasFunctions?`this.owner.Invoke(Host_=>${invoke})`:o.workerWire?`this.scope.Invoke(() => ${invoke})`:invoke};`);
+		const local = e.parameters.map((p, j) => type(p.type) + " v" + j);
+		const setup=[],flat=[];
+		for(const [j,p] of e.parameters.entries())
+		{
+			const rec=record(p.type);
+			if(!rec)
+			{
+				flat.push({type: p.type,value: "v"+j}); continue;
+			}
+			setup.push("var row"+j+"=(v"+j+" ?? throw new global::System.ArgumentNullException(nameof(v"+j+"))).Snapshot();");
+			for(const f of rec.fields) flat.push({type: f.ref,value: "row"+j+"."+f.property});
+		}
+		impl.push(`    internal static ${ret} Call${i}${g}(HostMembers binding${local.length ? "," + local.join(",") : ""}) ${constraints} {
+        using var call=new HostCall(binding); using var frame=new Frame();
+        ${setup.length?setup.join("\n        ")+"\n        ":""}ulong* input=stackalloc ulong[${Math.max(1,flat.length*3)}]; new System.Span<ulong>(input,${Math.max(1,flat.length*3)}).Clear();
+        ${flat.map((p,j)=>input(p,j,p.value)).join("\n        ")}
+        ulong* output=stackalloc ulong[4]; new System.Span<ulong>(output,4).Clear();
+        byte* tags=stackalloc byte[65]; uint fault=0;
+        var clear=Clear;
+        try {
+            int status=Entry(call.Id,HostCall.Entry,${i},input,${flat.length},output,tags,&fault); call.Check(fault);
+            if(status==0) ${unit ? "return;" : "return " + (factory?"output[0]":decode(e.result)) + ";"}
+            ${e.effect === "EIO" ? "if(status==3) throw new DeclaredError<" + type(e.error) + ">(" + JSON.stringify(e.declaration) + "," + decode(e.error) + ");" : ""}
+            if(status==4) throw new LeanIOException(${JSON.stringify(e.declaration)},${dotnetScalarResult("string")});
+            throw Status(status);
+        } finally { clear(output); }
+    }`);
+	}
+	const worker=o.workerWire?dotnetHostWorkerApi({...o,wire: o.workerWire,assembly,g,constraints,names: methods}):null;
+	const finish=worker?`if(binder is null) return; scope.CheckDisposal();
+        try { scope.Dispose(); } finally { global::${assembly}.Wire.Control(binder,-1); binder=null; }`:`if(binder is not null) { global::${assembly}.Wire.Control(binder,-1); binder=null; }`;
+	const files = { "Api.cs": `using LeanBridge.GeneratedHost;
+namespace ${assembly};
+public readonly record struct Unit;
+${copiedResultType}
+public sealed class DeclaredError<T>(string declaration,T payload):System.Exception("Lean EIO failed: "+declaration) {
+    public string Declaration { get; }=declaration;
+    public T Payload { get; }=payload;
+}
+public sealed class LeanIOException(string declaration,string message):System.IO.IOException(message) { public string Declaration { get; }=declaration; }
+public sealed class WrongContextException():System.InvalidOperationException("Lean IO requires the original process main thread") {}
+public sealed class RuntimeUnavailableException():System.InvalidOperationException("The Lean runtime is unavailable") {}
+${records.classes?records.classes+"\n":""}public static class Api {
+    public static Bound${g} BindHosts${g}() ${constraints} => new(HostContract.Bind(${gens.map(n => "typeof(" + n + ")").join(",")}));${hasFunctions?"\n    public static void DrainHostCloses() => HostFunctionReleases.Drain();":""}${worker?"\n"+worker.staticPub.join("\n"):""}
+}
+public sealed class Bound${g} : System.IDisposable ${constraints} {
+    ${hasFunctions?`private readonly HostFunctionOwner owner;${worker?"\n    private readonly HostTaskScope scope=new();":""}
+    private HostMembers Binding => owner.Binding;
+    internal Bound(HostMembers value) { owner=new(value${worker?",scope.CheckDisposal,scope.Dispose":""}); }
+    public void Dispose() => owner.Dispose();`:`private HostMembers? binder;${worker?"\n    private readonly HostTaskScope scope=new();":""}
+    private HostMembers Binding => binder ?? throw new System.ObjectDisposedException("CLR host binding");
+    internal Bound(HostMembers value) { global::${assembly}.Wire.Control(value,-2); binder=value; }
+    public void Dispose() { ${finish} }`}
+${[...pub,...worker?.boundPub??[]].join("\n")}
+}
+`
+	, "HostContract.cs": "namespace LeanBridge.GeneratedHost;\n" + model.contract
+	, "HostMembers.cs": model.implementation
+	, "Calls.cs": `using System;
+using LeanBridge.GeneratedHost;
+namespace ${assembly};
+internal static unsafe partial class Wire {
+${records.readers?records.readers+"\n":""}    private static class Assets {
+${verifiedDotnetAssets(evidence)}
+    }
+    private static nint Symbol(string name) => System.Runtime.InteropServices.NativeLibrary.GetExport(Assets.Handle,name);
+    private static delegate* unmanaged[Cdecl]<ulong,delegate* unmanaged[Cdecl]<ulong,int,ulong*,nuint,ulong*,uint*,int>,int,ulong*,nuint,ulong*,byte*,uint*,int> Entry =>
+        (delegate* unmanaged[Cdecl]<ulong,delegate* unmanaged[Cdecl]<ulong,int,ulong*,nuint,ulong*,uint*,int>,int,ulong*,nuint,ulong*,byte*,uint*,int>)Symbol("${prefix}_call");
+    private static delegate* unmanaged[Cdecl]<ulong*,void> Clear => (delegate* unmanaged[Cdecl]<ulong*,void>)Symbol("${prefix}_clear");
+    private static Exception Status(int status) => status==14 ? new InvalidOperationException("Stale, wrong-kind or active CLR binding") : Failure(status);
+    internal static void Control(HostMembers binding,int op) {
+        using var call=new HostCall(binding); ulong* output=stackalloc ulong[4]; byte tag=0; uint fault=0;
+        int status=Entry(call.Id,HostCall.Entry,op,null,0,output,&tag,&fault); call.Check(fault);
+        if(status!=0) throw Status(status);
+    }
+${hasFunctions?`    internal static void DropReturned(HostMembers binding,int op,ulong ticket) {
+        using var call=new HostCall(binding); ulong* input=stackalloc ulong[3]{ticket,0,0};
+        ulong* output=stackalloc ulong[4]; byte tag=0; uint fault=0;
+        int status=Entry(call.Id,HostCall.Entry,op,input,1,output,&tag,&fault); call.Check(fault);
+        if(status!=0) throw Status(status);
+    }
+`:""}${impl.join("\n")}${worker?"\n"+worker.impl:""}
+}
+` };
+	const taskFiles=worker?["task-delivery.cs","task-loop.cs","host-task-scope.cs","host-worker-frame.cs",...o.workerWire.methods.some(m=>m.callbacks?.length)?["task-callbacks.cs"]:[]]:[];
+	for(const name of ["host-frame.cs", "host-refs.cs", "host-wire.cs", "sync-wire.cs",...hasFunctions?["host-functions.cs"]:[],...taskFiles])
+		files[name] = (await readFile(new URL("./" + name, import.meta.url), "utf8")).replace("namespace LeanBridge.GeneratedIO;", "namespace " + assembly + ";");
+	return { files, assembly };
+};

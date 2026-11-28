@@ -35,7 +35,13 @@ structure OwnedAggregatePolicy where
   disposal : String
   fallback : String
   cycles : String
-  deriving FromJson, ToJson
+  closureFields : Option (Array String) := none
+  deriving FromJson
+
+instance : ToJson OwnedAggregatePolicy where
+  toJson p := Json.mkObj <| [("ownership", toJson p.ownership), ("disposal", toJson p.disposal),
+    ("fallback", toJson p.fallback), ("cycles", toJson p.cycles)] ++
+    (p.closureFields.toList.map fun names => ("closureFields", toJson names))
 
 structure Request where
   profile : Option String := none
@@ -867,8 +873,12 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               ("abi", ← abi (mkConst ``Nat))]
           | none =>
             let fieldSelection := selectedField checked "record" name field.toString
-            shapeTree request fieldType (name :: seen) 0 true fieldSelection containerFin true
-              (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite)
+            let leased := ((request.ownedAggregates.bind (·.closureFields)).getD #[]).contains projection.toString
+            if leased && !fieldType.isForall then reject fieldType "closureFields requires a direct function field"
+            -- The field owns a Lean function in either direction. On input this is
+            -- an existing closure lease, not permission to retain a borrowed host call.
+            shapeTree request fieldType (name :: seen) 0 (!leased) fieldSelection containerFin true
+              (callbackSite := if leased then some true else callbackSite) (hostReply := hostReply) (recordSite := recordSite)
               (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
               (subtypeResult := subtypeResult)
         fields := fields.push (obj [("name", str field.toString),
@@ -945,9 +955,18 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       (value.getObjValAs? (Array Json) "parameters").toOption
     let resultDecision := callableDecision.bind fun value =>
       (value.getObjVal? "result").toOption
+    let nextStage := resultDecision.bind fun site => (site.getObjVal? "callable").toOption
+    -- Lean's arrow associates to the right. Only an explicit callable result
+    -- splits off another callable; a parameter list alone never changes the ABI.
+    let stageArity ← if nextStage.isSome then do
+      let some args := decisions | reject e "a staged callback result requires its outer parameter list"
+      if args.isEmpty || args.size > 16 then reject e "a callback stage requires 1 to 16 parameters"
+      pure (some args.size)
+    else pure none
     let host := callbackSite == some false
     repeat
       result ← whnf result
+      if stageArity == some parameters.size then break
       match result with
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
@@ -955,8 +974,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         -- Arguments of a host callback come from Lean and therefore project their proof;
         -- arguments of a returned closure come from the host and require the selected
         -- checked constructor. Checked records inside a top-level callback follow the same
-        -- direction through `recordSite`. A callback nested in a callback stays unsupported.
+        -- direction through `recordSite`. A nested signature does not implicitly
+        -- inherit its parent's checked-refinement decisions.
         let decision := decisions.bind fun values => values[parameters.size]?
+        let nested := decision.bind fun site => (site.getObjVal? "callable").toOption
         let selection := decision.bind fun site => do
           let refinement ← (site.getObjVal? "refinement").toOption
           if refinement == str "reject" then none else some refinement
@@ -966,9 +987,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           (checked := if host then none else selection) (containerFin := containerFin)
           (structural := callbackSite.isSome) (subtypeStructural := callbackSite.isSome)
           (subtypeResult := host)
-          (recordSite := if callbackSite.isSome then some host else none))
+          (recordSite := if callbackSite.isSome then some host else none) (callableDecision := nested))
         result := rest
       | _ => break
+    if nextStage.isSome && (stageArity != some parameters.size || !result.isForall) then
+      reject e "declared callback stages do not match the remaining Lean function type"
     let resultSelection := resultDecision.bind fun site => do
       let refinement ← (site.getObjVal? "refinement").toOption
       if refinement == str "reject" then none else some refinement
@@ -981,7 +1004,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         (checked := if producedResult then none else resultSelection) (containerFin := containerFin)
         (structural := callbackSite.isSome) (hostReply := host)
         (subtypeStructural := callbackSite.isSome) (subtypeResult := producedResult)
-        (recordSite := if callbackSite.isSome then some producedResult else none)), ("abi", ← abi e)]
+        (recordSite := if callbackSite.isSome then some producedResult else none)
+        (callableDecision := nextStage)), ("abi", ← abi e)]
   let reduced ← whnf e
   if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult) (callableDecision := callableDecision)
   reject e "unsupported native export type"
@@ -1079,6 +1103,11 @@ mutual
       let arguments ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
       return value.setObjVal! "arguments"
         (toJson (← arguments.mapM fun child => closeCopiedGraphValue child (depth + 1)))
+    if kind == "callback" then
+      let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"
+      let result ← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "result") (depth + 1)
+      return value.setObjVal! "result" result |>.setObjVal! "parameters"
+        (toJson (← parameters.mapM fun child => closeCopiedGraphValue child (depth + 1)))
     return value
 
   partial def closeCopiedGraphDefinition (name : String) (inline : Option Json)
@@ -1136,12 +1165,12 @@ def closeCopiedGraph (types : Array Json) (value : Json) : MetaM (Array Json × 
   let (root, state) ← (closeCopiedGraphValue value).run { sources := types }
   return (state.types, root)
 
-partial def hasResource (value : Json) : Bool :=
+partial def hasRetainedIdentity (value : Json) : Bool :=
   match value with
   | .obj fields =>
-    (value.getObjValAs? String "kind").toOption == some "resource" ||
-      fields.toArray.any (fun (_, child) => hasResource child)
-  | .arr values => values.any hasResource
+    ["resource", "callback"].contains ((value.getObjValAs? String "kind").toOption.getD "") ||
+      fields.toArray.any (fun (_, child) => hasRetainedIdentity child)
+  | .arr values => values.any hasRetainedIdentity
   | _ => false
 
 partial def finiteCopiedGraph (types : Array Json) (value : Json)
@@ -1171,7 +1200,7 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
       selected := selected.push type
       pending := copiedReferenceNames type ++ pending
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
-  let owned := kind != "resource" && (hasResource value || selected.any hasResource)
+  let owned := kind != "resource" && (hasRetainedIdentity value || selected.any hasRetainedIdentity)
   if owned then
     let some ownership := policy | throwError "resource aggregates require an explicit ownership policy"
     return obj [("kind", str "owned-graph"), ("root", value),
@@ -1620,7 +1649,10 @@ partial def contractProblem (contract projection : Json) (owned : Bool := false)
       return some "a property must have only its receiver argument"
   if let .ok effects := contract.getObjValAs? (Array String) "effects" then
     let hasCallback := parameters.any fun parameter =>
-      ((parameter.getObjVal? "type" >>= fun type => type.getObjValAs? String "kind").toOption == some "callback")
+      let type := (parameter.getObjVal? "type").toOption.getD Json.null
+      (type.getObjValAs? String "kind").toOption == some "callback" ||
+        ((type.getObjValAs? String "kind").toOption == some "owned-graph" &&
+          containsKind #[] type "callback")
     let retained := fun (type : Json) =>
       ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
     let mut expected := if hasCallback then #["fails", "host-call"] else #[]

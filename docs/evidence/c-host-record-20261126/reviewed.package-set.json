@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51349446,
+          "path": "archives/workshop-1.0.0-c.tar.gz",
+          "sha256": "a34f7420a4f963e89bf2b151d68a88041106e1b13477eb9a19a88ea16c29348f"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "workshop",
+      "profile": "native-c-host-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "38e4373b4d419ac761daf80fe357215004ebbcfe59ca9f629b9c6c7149f1eda4",
+      "id": "native-c-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "13613122d968d0247e0195312e52aaec8f93b5b62a26724a1c07ab48dc767b49"
+  }
+}

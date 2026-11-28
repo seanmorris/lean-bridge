@@ -7,6 +7,7 @@
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOwnedJavaScriptPackageModel } from "./owned-package.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
+import { supportsJavaScriptIOPayload } from "../../abi/component-sync-io.mjs";
 import { supportsIteratorValue } from "../../abi/iterator.mjs";
 import {
 	OverloadGenerationError,
@@ -26,8 +27,18 @@ const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefine
  * Traverses Binding IR types, callbacks, errors, and declarations to report unsupported JavaScript projection features.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param taskMethods - Validated contracts for the opt-in compiled pthread profile.
+ * @param immediateMethods - Reconstructed standalone synchronous Wasm cursor contracts.
  */
-export const analyzeJavaScriptCoverage = ir => {
+export const analyzeJavaScriptCoverage = (ir, taskMethods = [], immediateMethods = []) => {
+	const taskContracts = new Map(taskMethods.map(m => [m.id,m]));
+	const immediate = new Map(immediateMethods.filter(m=>m.cursor).map(m=>[m.id,m]));
+	const retainedTypes=new Set();
+	for(const d of ir.declarations) for(const [slot] of taskContracts.get(d.id)?.callbacks ?? [])
+	{
+		const p=d.parameters[slot]; if(p?.type?.kind==="named") retainedTypes.add(p.type.id);
+	}
+	const retainedType=t => retainedTypes.has(t.id) && t.callable.resultMode==="promise" && t.source?.extensions?.["lean-bridge.dev/callback-scheduler"]==="javascript-owner-agent";
 	if(ir.schemaVersion === 4)
 	{
 		try
@@ -126,15 +137,19 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 	};
 
-	const inspectFailure = (failure, path, { errorEnvelope = false } = {}) => {
+	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null, taskMethod, cursor, retained=false } = {}) => {
 		if(failure.mode !== "declared") return;
 		for(const errorId of failure.errors)
 		{
 			const error = errorMap.get(errorId);
 			const boundaryOnly = error?.category === "boundary" && error.payload === null;
 			const envelopeSupported
-        = errorEnvelope && error && supportsErrorEnvelopeValue(error.payload);
-			if(!boundaryOnly && !envelopeSupported)
+        = errorEnvelope && error && (supportsErrorEnvelopeValue(error.payload)
+					|| (error.id === syncIOError && error.category === "domain" && supportsJavaScriptIOPayload(error.payload)));
+			const taskError = taskMethod && error?.category === "domain" && [taskMethod.startId,taskMethod.terminalId].includes(errorId);
+			const callbackError=(retained || taskMethod?.callbacks?.length) && errorId==="error:JavaScriptCallbackError" && error?.category==="domain" && error.payload===null;
+			const directError = cursor && error?.category === "domain" && [cursor.errorId,cursor.stepId].includes(errorId);
+			if(!boundaryOnly && !envelopeSupported && !taskError && !directError && !callbackError)
 			{
 				report(
 					"unsupported-error-envelope",
@@ -165,7 +180,7 @@ export const analyzeJavaScriptCoverage = ir => {
 				type: type.id
 			});
 		}
-		if(type.callable.resultMode !== "value")
+		if(type.callable.resultMode !== "value" && !retainedType(type))
 		{
 			report(
 				"unsupported-callback-delivery",
@@ -202,7 +217,7 @@ export const analyzeJavaScriptCoverage = ir => {
 			);
 		}
 		inspectTypeRef(type.callable.result.type, `${type.id}.result`);
-		inspectFailure(type.callable.failure, `${type.id}.failure`);
+		inspectFailure(type.callable.failure, `${type.id}.failure`,{retained: retainedType(type)});
 	}
 
 	for(const type of ir.types)
@@ -282,8 +297,8 @@ export const analyzeJavaScriptCoverage = ir => {
 			if(parameterType?.kind === "callback")
 			{
 				if(
-					parameter.ownership !== "borrow"
-          || parameter.lifetime?.scope !== "call"
+					!(taskContracts.get(declaration.id)?.callbacks?.some(([slot]) => slot===parameterIndex) && parameter.ownership==="lease" && parameter.lifetime?.scope==="explicit")
+					&& (parameter.ownership !== "borrow" || parameter.lifetime?.scope !== "call")
 				) {
 					report(
 						"unsupported-callback-lifecycle",
@@ -296,11 +311,11 @@ export const analyzeJavaScriptCoverage = ir => {
 				});
 			} else if(!genericPlan)
 			{
-				inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`);
+				inspectTypeRef(parameter.type, `${declaration.id}.${parameter.name}`, {allowResource: taskContracts.has(declaration.id)});
 			}
 			if(
 				new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
-        && !supportsIteratorValue(parameter.type)
+        && !taskContracts.has(declaration.id) && !immediate.has(declaration.id) && !supportsIteratorValue(parameter.type)
 			) {
 				report(
 					"unsupported-iterator-value",
@@ -314,7 +329,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		if(resultType?.kind === "resource")
 		{
 			inspectTypeRef(declaration.result.type, `${declaration.id}.result`, {
-				allowResource: declaration.kind === "constructor" || declaration.kind === "method"
+				allowResource: declaration.kind === "constructor" || declaration.kind === "method" || taskContracts.has(declaration.id)
 			});
 		} else if(resultType?.kind === "callback")
 		{
@@ -337,7 +352,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		if(
 			new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
-      && !supportsIteratorValue(declaration.result.type)
+      && !taskContracts.has(declaration.id) && !immediate.has(declaration.id) && !supportsIteratorValue(declaration.result.type)
 		) {
 			report(
 				"unsupported-iterator-value",
@@ -347,6 +362,10 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		inspectFailure(declaration.failure, `${declaration.id}.failure`, {
 			errorEnvelope: declaration.kind === "function" && declaration.resultMode === "value"
+			, taskMethod: taskContracts.get(declaration.id)
+			, cursor: immediate.get(declaration.id)
+			, syncIOError: declaration.source?.extensions?.["lean-lang.org/effect"] === "EIO"
+				? "error:EIO." + declaration.source.declaration : null
 		});
 	}
 

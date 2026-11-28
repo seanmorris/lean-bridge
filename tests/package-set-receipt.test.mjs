@@ -17,6 +17,109 @@ import {
 	copyPackageSetHandoff, createPackageSetHandoff, retainPackageSetEvidence
 } from "./helpers/package-set.mjs";
 
+test("synchronous PHP-Wasm receipts compose the runtime, npm adapter and Composer API", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const packages = receipt.packages.filter(p => p.target === "php-wasm");
+	assert.equal(packages.length,3);
+	const compiled = receipt.profiles.find(p => p.id === packages[0].profile);
+	const profile = { ...compiled, id: "php-wasm-sync-io-v1" };
+	const set = { ...receipt, profiles: [profile], packages: packages.map(p => ({...p,profile: profile.id})) };
+	await assertJsonSchema("package-set-receipt",set); assert.equal(validatePackageSetReceipt(set),true);
+	set.packages[0].target = "php-native";
+	assert.throws(()=>validatePackageSetReceipt(set),/target, ecosystem and profile disagree/u);
+});
+
+test("Python host components require their pinned runtime; existing native wheels remain embedded", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const previous = receipt.packages.find(p => p.target === "pypi"), id = "native-python-host-v1";
+	const profile = { ...receipt.profiles.find(p => p.id === previous.profile), id };
+	const runtime = {
+		...structuredClone(previous), name: "lean-bridge-host-runtime"
+		, version: `1+${profile.runtimeIdentity}.${"c".repeat(64)}`, profile: id
+		, role: "runtime", runtimeDelivery: "provided"
+		, artifacts: [{ ...previous.artifacts[0], path: "runtime.whl" }]
+	};
+	const app = { ...structuredClone(previous), profile: id, runtimeDelivery: "dependency", requires: [{ ecosystem: "pypi", name: runtime.name, version: runtime.version }] };
+	const host = { ...receipt, profiles: [profile], packages: [app, runtime] };
+	await assertJsonSchema("package-set-receipt", host);
+	assert.equal(validatePackageSetReceipt(host), true);
+	const tasks = structuredClone(host);
+	tasks.profiles[0].id = "native-python-task-v1";
+	for(const pkg of tasks.packages) pkg.profile = tasks.profiles[0].id;
+	await assertJsonSchema("package-set-receipt", tasks);
+	assert.equal(validatePackageSetReceipt(tasks), true);
+	const missingRuntime = structuredClone(tasks);
+	missingRuntime.packages.pop();
+	assert.throws(() => validatePackageSetReceipt(missingRuntime));
+	const combined = { ...receipt, profiles: [...receipt.profiles, profile], packages: [...receipt.packages.filter(p => p.target !== "pypi"), app, runtime] };
+	await assertJsonSchema("package-set-receipt", combined);
+	assert.equal(validatePackageSetReceipt(combined), true);
+	for(const edit of [
+		r => { r.packages[0].runtimeDelivery = "embedded"; }
+		, r => { r.packages[0].requires = []; }
+		, r => { r.packages[1].version = r.packages[0].requires[0].version = "0+wrong"; }
+		, r => { r.packages[1].name = r.packages[0].requires[0].name = "different-runtime"; }
+		, r => { r.profiles[0].id = r.packages[0].profile = r.packages[1].profile = "native-library-v1"; }
+	]) {
+		const changed = structuredClone(host); edit(changed);
+		assert.throws(() => validatePackageSetReceipt(changed));
+	}
+	assert.equal(validatePackageSetReceipt(receipt), true);
+});
+
+test("C task receipts require a C archive with an embedded runtime, not a Python dependency", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const c = structuredClone(receipt.packages.find(p => p.target === "c"));
+	const profile = { ...receipt.profiles.find(p => p.id === c.profile), id: "native-c-task-v1" };
+	c.profile = profile.id;
+	const tasks = { ...receipt, profiles: [profile], packages: [c] };
+	await assertJsonSchema("package-set-receipt", tasks); assert.equal(validatePackageSetReceipt(tasks), true);
+	for(const patch of [{ ecosystem: "cpp", target: "cpp" }, { role: "runtime", runtimeDelivery: "provided" }, { runtimeDelivery: "dependency" }])
+		assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...c, ...patch }] }));
+});
+
+for(const delivery of ["task", "io"]) test(`C++ ${delivery} receipts require a C++ component archive with an embedded runtime`, async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const cpp = structuredClone(receipt.packages.find(p => p.target === "cpp"));
+	const profile = { ...receipt.profiles.find(p => p.id === cpp.profile), id: `native-cpp-${delivery}-v1` };
+	cpp.profile = profile.id;
+	const tasks = { ...receipt, profiles: [profile], packages: [cpp] };
+	await assertJsonSchema("package-set-receipt", tasks);
+	assert.equal(validatePackageSetReceipt(tasks), true);
+	for(const patch of [
+		{ ecosystem: "c", target: "c" }
+		, { role: "runtime", runtimeDelivery: "provided" }
+		, { runtimeDelivery: "dependency" }
+	]) assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...cpp, ...patch }] }));
+});
+
+const rustProfiles = { tasks: "native-rust-task-v1", "synchronous IO packages": "native-rust-io-v1", "host-object packages": "native-rust-host-v1" };
+for(const [title, id] of Object.entries(rustProfiles)) test(`Rust ${title} require exactly the compatible Cargo runtime provider; ordinary Rust stays embedded`, async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const previous = receipt.packages.find(p => p.target === "cargo");
+	const profile = { ...receipt.profiles.find(p => p.id === previous.profile), id };
+	const runtime = { ...structuredClone(previous)
+		, name: "lean-bridge-task-runtime", version: "1.0.0-r" + "a".repeat(64)
+		, role: "runtime", profile: id, runtimeDelivery: "provided"
+		, artifacts: [{ ...previous.artifacts[0], path: "runtime.crate" }] };
+	const need = { ecosystem: "cargo", name: runtime.name, version: runtime.version };
+	const app = { ...structuredClone(previous), profile: id, runtimeDelivery: "dependency", requires: [need] };
+	const set = { ...receipt, profiles: [profile], packages: [app, runtime] };
+	await assertJsonSchema("package-set-receipt", set);
+	assert.equal(validatePackageSetReceipt(set), true);
+	for(const mutate of [
+		r => r.packages.pop(), r => { r.packages[0].requires = []; }
+		, r => { r.packages[0].runtimeDelivery = "embedded"; }
+		, r => { r.packages[1].name = "other"; }
+		, r => { r.packages[1].version = "1.0.0"; }
+		, r => { r.packages[0].requires[0].version = "1.0.0"; }
+		, r => { r.packages[1].runtimeIdentity = "e".repeat(64); }
+	]) {
+		const bad = structuredClone(set); mutate(bad); assert.throws(() => validatePackageSetReceipt(bad));
+	}
+	assert.equal(previous.runtimeDelivery, "embedded");
+});
+
 test("one closed receipt covers every ordinary package ecosystem and deterministically records its archives", async t => {
 	const handoff = await createPackageSetHandoff(t);
 	await assertJsonSchema("package-set-receipt", handoff.receipt);

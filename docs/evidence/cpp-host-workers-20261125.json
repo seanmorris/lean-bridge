@@ -1,0 +1,58 @@
+{
+  "profile": "native-cpp-host-v1",
+  "cppTaskSupportAbi": 2,
+  "command": "npm run test:cpp-host-worker-packages",
+  "environment": "local Linux x86-64 (glibc floor 2.36 for this test), C++20, one owner thread",
+  "producer": "Built ordinary, reviewed and peer releases with an offline-installed candidate CLI. A modified review was rejected without a package receipt.",
+  "installedExecutions": 8,
+  "passed": 8,
+  "links": [
+    "pkg-config",
+    "CMake"
+  ],
+  "orders": [
+    "workshop,peer",
+    "peer,workshop"
+  ],
+  "releases": [
+    {
+      "route": "ordinary",
+      "receiptSha256": "dc03bedc9de87378e2bfdaea3673329048d37f3fa4db6cb5d8086b821516b550",
+      "archive": {
+        "bytes": 51838741,
+        "path": "archives/workshop-1.0.0-cpp.tar.gz",
+        "sha256": "50adf87f0b277b9767ab8107e36e0750bea94d340093b5ee30a284cf0c0357cc"
+      },
+      "bindingIrSha256": "32e7476618891e5ad9c60227976f89e766ca7d8c7d0a38474d2f847ac8de0b29",
+      "reviewedSourceSha256": null,
+      "sourceTreeSha256": "a0472111d126e6d68cf9de4085d8376139e1248d2ac250e547578b98107113c5",
+      "staticTaskOwner": "cpp"
+    },
+    {
+      "route": "reviewed",
+      "receiptSha256": "3b55da7d2945d34d3e8e7c9946a029e15dbcf5c534bae25a52dc6182e590c8f5",
+      "archive": {
+        "bytes": 51838723,
+        "path": "archives/workshop-1.0.0-cpp.tar.gz",
+        "sha256": "e5c7a80e42705c7299cd1455ca3a2b21fa74a331f3ab0899c7926d276ee8ff8c"
+      },
+      "bindingIrSha256": "32e7476618891e5ad9c60227976f89e766ca7d8c7d0a38474d2f847ac8de0b29",
+      "reviewedSourceSha256": "066d9f0e40a4c179109676f5c3f11146dd4d3a918b44a212f21f3590cacce675",
+      "sourceTreeSha256": "91ce1d7e0930fe66409888e1fc81ea77f75e86aef48e58ed5c887e53f3f88669",
+      "staticTaskOwner": "cpp"
+    },
+    {
+      "route": "peer",
+      "receiptSha256": "8376880c22d8a316b06029ba92c5ba333f7084ee6a6d758bf8b476471ab3dce2",
+      "archive": {
+        "bytes": 51838692,
+        "path": "archives/peer-1.0.0-cpp.tar.gz",
+        "sha256": "b5ac152f55b04ff8f8add12d15001289be7f7727a52923d566979ee225224189"
+      },
+      "bindingIrSha256": "2f6e64687ebcc36f28e4d2a2d7f155a2795f4cba7f822e93ff832bc9d1e72812",
+      "reviewedSourceSha256": null,
+      "sourceTreeSha256": "9444d01922f21385b6ace97807a343016ea3889889e98d52280ddb109d00f183",
+      "staticTaskOwner": "cpp"
+    }
+  ]
+}

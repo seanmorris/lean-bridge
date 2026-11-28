@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-ruby-retained-tasks",
+  "nodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "profile": "native-ruby-task-v1",
+  "toolchain": "Lean 4.32.2, MRI 3.3.12, Linux x86-64, glibc 2.36. RubyGems installs prebuilt platform gems locally; the relocated consumers have no producer on PATH.",
+  "checks": [
+    "Two original gems built from ordinary Lean source and an independently reconciled reviewed interface expose the same API. A third Lean package supplies an independent callback-taking task, a plain task and a cursor.",
+    "Nineteen copied primitives cross in both callback directions. Tests cover multi-shot calls and nested dispatch; only an exact propagated IO.Error restores its Ruby exception. Caught errors, same-text replacement errors, EIO factory failures, terminal IO and successful Except values remain distinct.",
+    "Main-thread fibers share waiters. A callback may await a different task but not its own. Tests exercise revocation during an invocation, cancellation while a callback is parked, poisoned-runtime behavior, cleanup after non-local exits and collection of cycles through callables and exceptions.",
+    "Each ordinary/reviewed gem is independently installed and relocated. Its inner file digests are checked; changing one byte of a disposable installed library makes a subsequent require fail. Each primary gem is also co-installed with the peer, in both load orders, and exercises cross-component callbacks, rejection of a closed callback and unaffected task and stream operations. Observed live identities return to zero."
+  ],
+  "controls": [
+    "Fresh Lean analysis rejects a retained callback with a non-scalar reply and a taskIOErrors selection over Except String. Neither produces a handoff. An explicitly invalid gem version is not rewritten; an unversioned project installs as 0.0.0, loads with plain require, and returns 37."
+  ],
+  "callbackFreeRegression": {
+    "archive": {
+      "bytes": 50112512,
+      "path": "archives/ruby-pulse-1.0.0-x86_64-linux.gem",
+      "sha256": "256af225a03e6d0646fcd28384df9d31b320d08376b81edf189473ccf655ef9f"
+    },
+    "bindingIrSha256": "cd59d607d2962170ee4638e26e470ce751607c9f07d0a0fecc7c271d55fe9e64",
+    "sourceTreeSha256": "8d2c92e9d12acf22691da3a93405cb1877223f28b21a2a2569ff95e44dfd9695",
+    "receiptSha256": "3c4e69c72cd7f19d0225dd51443b9ef645d2d2f599098ce7c05f46c70834ead2",
+    "comparison": "The existing ordinary Ruby Pulse program was freshly rebuilt with this generator and reinstalled. Its public interface, unmodified consumer and scheduler digests, and installed stdout matched the ordinary route in ruby-fiber-tasks-20261122.json; a modified installed ELF was rejected. This separate regression is not part of the retained-callback replay."
+  },
+  "limits": [
+    "Local installed evidence only. This does not establish registry availability, hosted CI, other Ruby VMs or platforms, or the full language matrix.",
+    "Retained callback parameters have one copied scalar input and a synchronous copied scalar reply. This evidence does not establish nominal resource transfers, foreign host-object imports, general host futures, retained refined or aggregate callback carriers, or arbitrary IO authorization."
+  ],
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUBY_CALLBACK_BUILD=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/ruby-retained-task-installed.mjs",
+    "capture": "LEAN_BRIDGE_RUBY_CALLBACK_CAPTURE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/ruby-retained-task-installed.mjs",
+    "replay": "LEAN_BRIDGE_RUBY_CALLBACK_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_RUBY_CALLBACK_EXPECTED=docs/evidence/ruby-retained-tasks-20261122.json node --test --test-concurrency=1 tests/helpers/ruby-retained-task-installed.mjs",
+    "tools": "Set LEAN_BRIDGE_RUBY to MRI 3.3; builds also require the pinned Lean toolchain and native C compiler. Capture once after all three builds. Replay uses only the three original handoffs, consumer.rb, scheduler.rb, compose.rb, acceptance.json and composition.json; it does not rebuild them."
+  },
+  "acceptanceSha256": "02e18707fa6df14b0c7e92cac1c7828800ace418148d73da4926fd3d44a85390",
+  "coInstallationSha256": "921ff8275184f790c8cb41b2feed22791f384babe10909b32bb71e3a82f802e7",
+  "routes": [
+    {
+      "archive": {
+        "bytes": 50134016,
+        "path": "archives/ruby-feedback-1.0.0-x86_64-linux.gem",
+        "sha256": "44eb0fa8519c63edcf0dd0fda85acffe32753dda0950db225d846e54c0b09ec0"
+      },
+      "bindingIrSha256": "87551c1fe000ef97cc9195c62ca5c68e64180850acbe87b50b844eede74c44fb",
+      "clients": {
+        "consumer.rb": "1c2bf85e99cf8e41627ce35e059f95bdc5ba821f8846b985ee44b28281cb610b",
+        "scheduler.rb": "05297d2d873da0cbc66ed01c09365148aeb3b07d857b24424fb521b93e000e92"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "output": "Ruby retained callbacks: 19 scalars, nested dispatch, original exceptions, fibers, cancellation, retirement and cleanup passed",
+      "profile": "native-ruby-task-v1",
+      "receiptSha256": "766febdc08acc880a0691fb4204b9510a439c933fb0fc5be387cd3d09bc24872",
+      "reviewedSourceSha256": null,
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "d2b611eba088e7d63b5c50d768963d67c1a327b95fcab9bbc574821275b487b7"
+    },
+    {
+      "archive": {
+        "bytes": 50134016,
+        "path": "archives/ruby-feedback-1.0.0-x86_64-linux.gem",
+        "sha256": "2178b79e94726f745d28b0932d1031fcc223b58d5fa092d08d1a45868f5e2b37"
+      },
+      "bindingIrSha256": "87551c1fe000ef97cc9195c62ca5c68e64180850acbe87b50b844eede74c44fb",
+      "clients": {
+        "consumer.rb": "1c2bf85e99cf8e41627ce35e059f95bdc5ba821f8846b985ee44b28281cb610b",
+        "scheduler.rb": "05297d2d873da0cbc66ed01c09365148aeb3b07d857b24424fb521b93e000e92"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "output": "Ruby retained callbacks: 19 scalars, nested dispatch, original exceptions, fibers, cancellation, retirement and cleanup passed",
+      "profile": "native-ruby-task-v1",
+      "receiptSha256": "8b81fb70bca82649de7fa9be99646bd91f6aa137c4a916add8afdf24ec4e0e48",
+      "reviewedSourceSha256": "97be6b813784b1e505b814f1a215b316ded3e6ccca77ba759ab1ad0e61a948a0",
+      "route": "reviewed",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "029f956477ebbfa3ced50617277a835b926051f02d56734977b01822fc7f23cf"
+    }
+  ],
+  "coInstallation": {
+    "clientSha256": "610c473db563c9365498ac9e10dda98ee98445fe40ec0497ff6e1ee69b5a4a9b",
+    "peer": {
+      "archive": {
+        "bytes": 50085888,
+        "path": "archives/ruby-relay-1.0.0-x86_64-linux.gem",
+        "sha256": "a85dfbf2b208f9f05108b36c2cac67580d2c6a920b95450ee23926aae8d92931"
+      },
+      "bindingIrSha256": "ed24a7333834c5677bb2ffdca4a362e08794945e316aa635b5c97ffffe32f2ef",
+      "receiptSha256": "43a3215a3020cafc044a805db98ed3f4df555f3e4ed0a3c039acb1d0a98a3e63",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "f110863974cc26bc2164dd89d05dc6bb98280e2d4b4855da98d373f9393bc15b"
+    },
+    "reports": [
+      {
+        "orders": [
+          {
+            "attached": 2,
+            "componentInitializations": 2,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_feedback",
+              "ruby_relay"
+            ],
+            "runtimeInitializations": 1
+          },
+          {
+            "attached": 2,
+            "componentInitializations": 2,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_relay",
+              "ruby_feedback"
+            ],
+            "runtimeInitializations": 1
+          }
+        ],
+        "primaryArchiveSha256": "44eb0fa8519c63edcf0dd0fda85acffe32753dda0950db225d846e54c0b09ec0",
+        "primaryReceiptSha256": "766febdc08acc880a0691fb4204b9510a439c933fb0fc5be387cd3d09bc24872",
+        "route": "ordinary"
+      },
+      {
+        "orders": [
+          {
+            "attached": 2,
+            "componentInitializations": 2,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_feedback",
+              "ruby_relay"
+            ],
+            "runtimeInitializations": 1
+          },
+          {
+            "attached": 2,
+            "componentInitializations": 2,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_relay",
+              "ruby_feedback"
+            ],
+            "runtimeInitializations": 1
+          }
+        ],
+        "primaryArchiveSha256": "2178b79e94726f745d28b0932d1031fcc223b58d5fa092d08d1a45868f5e2b37",
+        "primaryReceiptSha256": "8b81fb70bca82649de7fa9be99646bd91f6aa137c4a916add8afdf24ec4e0e48",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

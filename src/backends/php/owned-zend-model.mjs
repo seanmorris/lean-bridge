@@ -7,6 +7,7 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
 import { compileOwnedNativeValueLayout } from "../native/owned-value-layout.mjs";
 import { generateOwnedPhpValues } from "./owned-values.mjs";
+import { phpHostRecords } from "./owned-host-records.mjs";
 
 /**
  * Keep the public PHP types separate from C's GMP and pointer-based projection.
@@ -20,9 +21,11 @@ import { generateOwnedPhpValues } from "./owned-values.mjs";
  * @param options.receiverExports - Admit typed receiver methods and properties.
  * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Admit synchronous PHP callback transport.
+ * @param options.hostInputRecords - Generate call-scoped record inputs; old packages omit this capability.
+ * @param options.callbackViewEquality - Compare direct callback borrows without adding whole-result owners.
  */
-export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
-	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
+export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true, hostInputRecords = true, callbackViewEquality = true } = {}) => {
+	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, callbackViewEquality: hostCallbacks && callbackViewEquality });
 	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	anchoredResults = values.c.anchoredResults;
 	receiverExports = values.receiverExports;
@@ -101,13 +104,34 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchor
 		, hostArguments: callback.parameters.map((id, position) => hostCallbacks && position > 0 && nodes.get(id).kind === "callback")
 		, automaticRecovery: ownedCallbackRecovery(layout.model, semantic.get(callback.id), id => id) !== null }));
 	const identity = layout.model.bindingIrSha256, stem = `lb_owned_${identity.slice(0, 20)}`;
+	const host = hostInputRecords && values.c.hostFieldCalls.length ? phpHostRecords(values) : null;
+	// Zend uses its 32-bit private carrier, not the 64-bit native PHP FFI layout.
+	// Share only the checked field selection, public input classes and names.
+	const recordInputs = host && {
+		classes: host.classes
+		, contract: [...host.views].map(([type,v]) => ({type, input: v.name
+			, lifetime: "call"
+			, fields: v.fields.filter(f=>f.host).map(f=>f.publicName)}))
+		, functions: host.functions.map((fn,i) => ({
+			...functions.find(f=>f.id===fn.id), publicName: fn.publicName
+			, index: functions.length+i
+			, records: Object.fromEntries(fn.hostRecordSlots.map(s=>{
+				const v=host.views.get(s.node.id);
+				return [s.index,{type: nodes.get(s.node.id).index
+					, input: qualify(v.name), lease: qualify(v.record)
+					, fields: v.fields.map(f=>({key: f.publicName,type: nodes.get(f.type).index,host: f.host}))}];
+			}))
+		}))
+	};
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
+		, ...!wholeOwners && values.canonicalEquality ? {callbackArgumentIdentity: "canonical-while-live"} : {}
 		, ...anchoredResults ? { anchoredResults: true } : {}
 		, ...callbackResultAnchors ? { callbackResultAnchors: true } : {}
 		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : callbackResultAnchors ? { wholeOwners: true, ...!hostCallbacks ? { hostCallbacks: false } : {} } : !hostCallbacks ? { hostCallbacks: false } : {}
 		, files: values.files, aliases: values.aliases
 		, publicFiles: values.publicFiles
 		, layout, types, descriptors, functions, callbacks
+		, ...recordInputs ? {recordInputs} : {}
 		, identity, layoutSha256: sha256(canonicalJson(layout)), stem
 		, library: `php8.4-${stem}.so`
 		, transport: `${values.namespace}\\Internal\\OwnedZend${identity.slice(0, 20)}` };

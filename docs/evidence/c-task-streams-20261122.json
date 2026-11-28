@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "profile": "native-c-task-v1",
+  "observed": "2026-11-22",
+  "platform": "Linux x86-64",
+  "lean": "4.32.2",
+  "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "cmake": "cmake version 3.31.6",
+  "producer": "tests/fixtures/c-lean-tasks/Pulse.lean",
+  "consumer": "tests/fixtures/c-lean-tasks/consumer.c",
+  "consumerSha256": "ac0e61bed8be139c15a4bcfe80bb9930dbdf128bc7de6b801e0414756a9bf36e",
+  "bindingIrSha256": "c3d949a9273dedc5f38155a919b55371792f4af784419876906e00be16d5a56d",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "observations": [
+    "Real Lean Task settlement with poll(2), including immediate completion without a descriptor.",
+    "Backpressure, stream exhaustion and early closure; a returned Except.error is an item and a typed pull failure is terminal.",
+    "Distinct IO start error and typed EIO start error; copied UTF-8 with embedded NUL, raw bytes and a signed 64-bit result.",
+    "Cooperative cancellation, non-cooperative late completion, stale/wrong-kind handles, main-thread/fork guards and runtime retirement."
+  ],
+  "releases": [
+    {
+      "route": "ordinary",
+      "sourceTreeSha256": "c8a71603c655ef959310228f51b7d098c0b0e4e368553028ac6b4fcb51a1b8db",
+      "componentIdentity": "248393f624e325482aa44d3c4d76adb87ffa08cd46fd5c8d9c085438352a2be0",
+      "packageSetReceiptSha256": "23e2141e44314c77e28d29e2dc36a8a9889aa41eea4214ef318e5a834a9dbf7e",
+      "archive": {
+        "bytes": 51330377,
+        "path": "archives/pulse-1.0.0-c.tar.gz",
+        "sha256": "d181b4c42c30d50c28d88ba97d549e60474bc6a3c39932a0a75f30a93c5104a0"
+      },
+      "consumerInstallations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    },
+    {
+      "route": "reviewed",
+      "sourceTreeSha256": "0337dc306a9d509f41fb4881c2833f8283031b0f899e4c2f40eec7317960e191",
+      "componentIdentity": "081bfd6483200584f8d52ea6b6a8a8e48b663a8c2571f8a252ce84a87312b748",
+      "packageSetReceiptSha256": "5b1aa602fec6016eb503325c3738a7a789dd8aaa87b3c1c103e915fd4410d19f",
+      "archive": {
+        "bytes": 51330425,
+        "path": "archives/pulse-1.0.0-c.tar.gz",
+        "sha256": "7f7271e21881a4901413069566171c37d9d8560d44264e28e58c543b8d947928"
+      },
+      "consumerInstallations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    }
+  ],
+  "reproduce": "LEAN_BRIDGE_C_TASK_TEST=1 node --test --test-concurrency=1 tests/helpers/c-task-installed.mjs",
+  "replay": "Set LEAN_BRIDGE_C_TASK_REPLAY_DIR to trusted ordinary/ and reviewed/ release evidence, then run the same test with LEAN_BRIDGE_C_TASK_TEST unset. This only verifies, extracts, links and runs the original archives."
+}

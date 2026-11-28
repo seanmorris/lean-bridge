@@ -30,8 +30,10 @@ implementation runs the same assertions before and after those mutations.
 
 The installed CLI builds original npm archives, reproduces them in an independent
 build, and verifies deterministic archive reassembly. Offline consumers install
-after producer removal. Node, strict TypeScript, Chromium, Firefox and WebKit run
-the same package. Every browser exercises a page, React StrictMode and a module
+after producer removal. Node, Chromium, Firefox and WebKit run JavaScript
+against the same package. The separate strict TypeScript client checks the
+installed declarations with `tsc --noEmit`; it does not run. Every browser
+exercises a page, React StrictMode and a module
 worker twice. The browser checks delete installed sources after bundling and block
 external network requests. The consumer documentation example prints `42n`,
 `expired`, `42n`. The reviewed build also emits a native C package from the same API.
@@ -48,3 +50,6 @@ CI enforces the enabled TAP totals and preserves all eleven execution reports.
 WIT/WASI owner anchors, receiver/callback-result anchors and the final
 cross-language Docker audit remain separate work. This receipt does not claim
 registry publication or promote unrelated support-table cells.
+
+For a later TypeScript client that reads a borrowed result before and after
+dropping its argument owner, see the [installed receiver check](host-lifetime-acceptance-20261127.md#running-the-typescript-receiver-client).

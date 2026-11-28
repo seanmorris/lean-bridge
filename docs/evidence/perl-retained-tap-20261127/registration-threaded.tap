@@ -1,0 +1,19 @@
+ok 1 - refuses an invalid host callable
+ok 2 - can close inside active call
+ok 3 - in-flight invocation completes after self-close
+ok 4 - registration closed
+ok 5 - close is idempotent
+ok 6 - borrowed CODE sees revocation
+ok 7 - registration preserves exception identity
+ok 8 - outstanding CODE retains callable after wrapper collection
+ok 9 - registration retains captured state
+ok 10 - closing releases captures even if CODE is retained
+ok 11 - child cannot enter an inherited callback
+ok 12 - foreign interpreter cannot invoke borrowed CODE
+ok 13 - foreign interpreter cannot close registration
+ok 14 - foreign interpreter cannot acquire callback
+ok 15 - foreign interpreter cannot inspect owner state
+ok 16 - owner still holds its live registration after clone
+ok 17 - owner still calls the same CODE
+ok 18 - all weak observers cleared after final release
+1..18

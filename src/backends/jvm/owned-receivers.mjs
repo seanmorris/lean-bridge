@@ -15,6 +15,7 @@ const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
  */
 export const ownedJvmKotlinParameterType = (model, fn, index) => {
 	const id = fn.parameters[index], node = model.types.find(node => node.id === id);
+	if(model.hostRecords?.slot(fn,index)) return quoted(model.kotlin.namespace+"."+model.hostRecords.slot(fn,index).publicName);
 	return model.c.hostArgument?.(fn, index) && !fn.nativeCallbacks?.includes(index) ? quoted(model.kotlin.namespace + "." + node.delegateType)
 		: model.wholeOwners && (fn.anchor === index || fn.transfers?.includes(index))
 			? `${quoted(model.namespace)}.Value<${model.kotlin.publicTypes[id]}>` : model.kotlin.publicTypes[id];

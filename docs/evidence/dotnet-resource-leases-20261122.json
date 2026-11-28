@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-dotnet-resource-leases",
+  "nodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "scope": "Direct opaque application-owned Lean resources in .NET 8 IO and task packages on Linux x86-64. Desk (synchronous IO) and Depot (IO tasks, a retained delegate and pull streams) share Shared.Ticket and Shared.Badge. OtherDesk is independently built from a deliberately different source definition.",
+  "checks": [
+    "The Lean compiler and the full declaring-module dependency closure determine each nominal identity. The ordinary and reviewed routes have the same public IR; changing a kind, an ownership site, or a resource-valued error contract is rejected.",
+    "Each producer runs in a different Git repository. Corresponding nominal CLR assemblies from independent packages are byte-identical under the tested SDK and contain no producer checkout revision. User code names LeanBridge.Resources.Shared.Ticket; raw lease tokens and native entry points are not public API.",
+    "An ordinary two-package C# client names Ticket, awaits its genuine Lean task, and catches DeclaredError<Ticket> with unsafe code disabled. A separate three-package client rejects both the wrong kind and a foreign definition at compile time and exercises both component load orders.",
+    "Offline NuGet restore and normal framework-dependent dotnet publish. Clients run from relocated output without a source project, package cache, feed, or development tools on PATH. Archive digests, all manifest file hashes, compiled libraries, shared contract DLLs, the ledger and installed client sources are checked. Modifying the ledger is rejected.",
+    "Independent Retain/Dispose, shared mutation, stale and unissued wrappers, wrong-thread use, cross-package aliases, synchronous and task EIO payloads, retained callbacks and original callback failures. Re-awaiting a task returns the same wrapper, not an additional lease.",
+    "Stream item ownership, typed step failure, exhaustion, early exit, cancellation after delivery and cleanup on disposal. Cooperative and noncooperative cancelled tasks keep the Lean reference alive while in flight and discard late results. An abandoned wrapper queues release for the owner thread. Retirement releases native identities without invoking the application's stream-close hook.",
+    "Native observer in each full client: one runtime, three initialized components, zero live native identities after cleanup, and no leaked /dev/null descriptors."
+  ],
+  "limits": [
+    "Local .NET SDK 8.0.424 / runtime 8.0.30 and Lean 4.32.2; Linux x86-64 with glibc 2.36. These are not hosted CI results or a registry publication.",
+    "Direct resource inputs, results, typed errors and stream items; asynchronous resource-containing compound values and host-imported objects are not inferred. Copying a C# wrapper reference does not retain a second lease."
+  ],
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_LEASE_BUILD=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-resource-installed.mjs",
+    "capture": "LEAN_BRIDGE_DOTNET_LEASE_CAPTURE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-resource-installed.mjs",
+    "replay": "LEAN_BRIDGE_DOTNET_LEASE_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_DOTNET_LEASE_EXPECTED=docs/evidence/dotnet-resource-leases-20261122.json node --test --test-concurrency=1 tests/helpers/dotnet-resource-installed.mjs",
+    "requirements": "Use the pinned Lean toolchain, C compiler, .NET 8 SDK and git for production. Replay uses the original handoffs (including producer-context.json), consumer sources and acceptance.json; it does not regenerate Lean or C# producer binaries."
+  },
+  "acceptanceSha256": "0980a67afeb637f6560f20743e077ba9776bc420ad3ef6a3e6d66d2fe0968308",
+  "installed": {
+    "clients": {
+      "Audit.cs": "aa5bb1391377472075d9ba816fdbf75f65973edac8ba7df44d80da38451a74f9",
+      "Pair.cs": "c42ada3fb004d9f88834376bb07374a3a8febbef0c11f3d8d934ec6768f7849e",
+      "Program.cs": "bf71b8180d64793c15dd1e649cc92d733d2360a871da5f29b1258f449df589a5"
+    },
+    "rows": [
+      {
+        "calls": [
+          "desk-first: shared nominal type, distinct foreign definition, typed errors, cancellation and stream cleanup; 3 components, 0 live identities, 0 leaked descriptors",
+          "depot-first: shared nominal type, distinct foreign definition, typed errors, cancellation and stream cleanup; 3 components, 0 live identities, 0 leaked descriptors"
+        ],
+        "namedPair": "Ticket, Task<Ticket> and DeclaredError<Ticket> compose across the two installed packages",
+        "packages": [
+          {
+            "archive": {
+              "bytes": 51356840,
+              "path": "archives/Acme.Desk.1.0.0.nupkg",
+              "sha256": "e539dab3a57f7d35cdc3543aa1c87b15c1b73503347fdf3354df066b8b395266"
+            },
+            "assembly": "LeanBridge.LeaseDesk",
+            "assemblySha256": "38332adfb7902232dfb51f2fa0d63d159f4f80519f5f1471681ace7ca1f54ab9",
+            "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+            "contracts": {
+              "LeanBridge.ResourceV1.H3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4": "b7eb3aa28f45ca07bd1e7be5d8e14232a07a1eed62bd8792cc99fdad859ba492",
+              "LeanBridge.ResourceV1.H62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61": "f22f6f09575d8dbf32769549a7dbfbdfd580ba56dbdcd727d9f0375f7c9c7643"
+            },
+            "ledger": {
+              "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "name": "Acme.Desk",
+            "nativeSha256": "6c8d44da630198d640e9db77170115e9407c5e3131fc4e2ef1a090ee8a0f4a1d",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "producerHead": "daea587f3a70c7bb3ae0780e338c1b40572f4a8d",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "b1f5bf323acdc76ed660f293e6d293e7c9c68114dd1a3fa2c08d2980c7d3799f",
+            "reviewedSourceSha256": null,
+            "role": "desk",
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "ab69e06017b7a77eeb5d8e241f1641629583b31a42eb2a2a861083f89101866d",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51404150,
+              "path": "archives/Acme.Depot.1.0.0.nupkg",
+              "sha256": "6729d3dadc8028e5aa633824bfb9b0f0e71fad2e94b3f13b451fb95f027ea071"
+            },
+            "assembly": "LeanBridge.LeaseDepot",
+            "assemblySha256": "6910ed2c76ce839ba9a4b7eeaab45800853c8ec0ea8149e6bdc4af4ba978263e",
+            "bindingIrSha256": "38317def6dd20ef9bde23b3e13485638a69cda884cfca3348dbfb63b3eba7c6a",
+            "contracts": {
+              "LeanBridge.ResourceV1.H3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4": "b7eb3aa28f45ca07bd1e7be5d8e14232a07a1eed62bd8792cc99fdad859ba492",
+              "LeanBridge.ResourceV1.H62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61": "f22f6f09575d8dbf32769549a7dbfbdfd580ba56dbdcd727d9f0375f7c9c7643"
+            },
+            "ledger": {
+              "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "name": "Acme.Depot",
+            "nativeSha256": "6a1a827c2ccb45abfd62cd0bf4d2cf0560a5cd232d7120c0be3726ea6fe4ab31",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "producerHead": "54433087d386843bf3d4706c0eba50a300738731",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "ce8c0eda811c967cd51d895d8a8b2012285e6de785b0019aee2afb7922eb0138",
+            "reviewedSourceSha256": null,
+            "role": "depot",
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "d7fb131c50a52d6a2d2405a3b3f83e50404af8bbdc3345e5dce00e742c7513d4",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51356982,
+              "path": "archives/Acme.OtherDesk.1.0.0.nupkg",
+              "sha256": "bb310fda78c9ea68e9f3edd2336900c7ddfa5c34b8d77e291710c1642af26f0f"
+            },
+            "assembly": "LeanBridge.OtherDesk",
+            "assemblySha256": "dd3228e8f3809e4b2cd20d02027099809e0e00eb7ee9550c3759afeaf65bbf2a",
+            "bindingIrSha256": "54855cebc0472a188983b0951f260f4fd8eedc09346de2313d1acb345d22714b",
+            "contracts": {
+              "LeanBridge.ResourceV1.H6c01355c2d13ffff713864290d91297c84d6478b6ab41d5909435059c31018e4": "46e5447c5b9947b88fbf92e1313fd3d090b0090c79cfbad18385b32a21ebb217",
+              "LeanBridge.ResourceV1.Hec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e": "73808225f8f8e63508e1071454f020936d82d56ab52c90d477fd80f2b94964be"
+            },
+            "ledger": {
+              "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "name": "Acme.OtherDesk",
+            "nativeSha256": "1931f023ca336dc70ac28a3cdd7461efb795a20fbb9f0ccf039a55e598ab6378",
+            "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+            "producerHead": "06ab48b593ade6d25a30ce49d399ed256ecc709a",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "b2cea37d2540a080da5ba64a64a61aab71af2b0c2f7aafeff58e5928b56fe286",
+            "reviewedSourceSha256": null,
+            "role": "desk",
+            "route": "lookalike",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "8bc5d3c502f81480e0428b9b0a72948da15fbd1157d161b45989608ac8f582eb",
+            "version": "1.0.0"
+          }
+        ],
+        "route": "ordinary"
+      },
+      {
+        "calls": [
+          "desk-first: shared nominal type, distinct foreign definition, typed errors, cancellation and stream cleanup; 3 components, 0 live identities, 0 leaked descriptors",
+          "depot-first: shared nominal type, distinct foreign definition, typed errors, cancellation and stream cleanup; 3 components, 0 live identities, 0 leaked descriptors"
+        ],
+        "namedPair": "Ticket, Task<Ticket> and DeclaredError<Ticket> compose across the two installed packages",
+        "packages": [
+          {
+            "archive": {
+              "bytes": 51356901,
+              "path": "archives/Acme.Desk.1.0.0.nupkg",
+              "sha256": "2a1ce53adc397915a0dd60563563f596716c6c85186a658f70884ada8ea82ca6"
+            },
+            "assembly": "LeanBridge.LeaseDesk",
+            "assemblySha256": "fab7349ecb65bbd41d4d6fd0c844d097acfd7370fe7ea156d25edace978e0ef8",
+            "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+            "contracts": {
+              "LeanBridge.ResourceV1.H3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4": "b7eb3aa28f45ca07bd1e7be5d8e14232a07a1eed62bd8792cc99fdad859ba492",
+              "LeanBridge.ResourceV1.H62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61": "f22f6f09575d8dbf32769549a7dbfbdfd580ba56dbdcd727d9f0375f7c9c7643"
+            },
+            "ledger": {
+              "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "name": "Acme.Desk",
+            "nativeSha256": "a1335fc4c7aba303ac86bf4971acf66e7fcce099741c0eff815e4a1121f65290",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "producerHead": "b8c4eeaaf39b123bf8fa5f1fd9887696edf677d5",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "04ea94072333e02e12a6adc8ab4dfdceb4afb0a3d533574d6c10c425bce7f04a",
+            "reviewedSourceSha256": "69d1715918cd541a3b9967c97a7c86fa19a258d8a3eb4cc957fb6ecb6b18b263",
+            "role": "desk",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "e9a8c8b7866b0e3911a0beb964d3cd71359db0853ac04912653e70f508d1b822",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51404207,
+              "path": "archives/Acme.Depot.1.0.0.nupkg",
+              "sha256": "f2ca301b68febc77156d0a3b08cfdebbbcecb4c87c110d476b532657ca7fcdf5"
+            },
+            "assembly": "LeanBridge.LeaseDepot",
+            "assemblySha256": "594713281e59ef799a936cd82250e7c91708e6244b0dadd8d23c23630db86ed8",
+            "bindingIrSha256": "38317def6dd20ef9bde23b3e13485638a69cda884cfca3348dbfb63b3eba7c6a",
+            "contracts": {
+              "LeanBridge.ResourceV1.H3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4": "b7eb3aa28f45ca07bd1e7be5d8e14232a07a1eed62bd8792cc99fdad859ba492",
+              "LeanBridge.ResourceV1.H62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61": "f22f6f09575d8dbf32769549a7dbfbdfd580ba56dbdcd727d9f0375f7c9c7643"
+            },
+            "ledger": {
+              "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "name": "Acme.Depot",
+            "nativeSha256": "94c415514d499a29540b11542ea1fd6ba9f8495293fbc3b98e3d1d8c0d614035",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "producerHead": "5dba29caa9d598b8bdbfd5c8efd1791bc7664ffb",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "762f88638370fa31fcdd6c526fcbe52778c491c9717af783807ae4ff7985b081",
+            "reviewedSourceSha256": "7b39bc12f5f18ccb8fbbca1e846a7e644785dafc52648a8fd7d2a2854dc4af09",
+            "role": "depot",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "f5b343ff257afa58c4929c0c010e745053e6e93c7bcdfc5a03ae79d431657bbf",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51356982,
+              "path": "archives/Acme.OtherDesk.1.0.0.nupkg",
+              "sha256": "bb310fda78c9ea68e9f3edd2336900c7ddfa5c34b8d77e291710c1642af26f0f"
+            },
+            "assembly": "LeanBridge.OtherDesk",
+            "assemblySha256": "dd3228e8f3809e4b2cd20d02027099809e0e00eb7ee9550c3759afeaf65bbf2a",
+            "bindingIrSha256": "54855cebc0472a188983b0951f260f4fd8eedc09346de2313d1acb345d22714b",
+            "contracts": {
+              "LeanBridge.ResourceV1.H6c01355c2d13ffff713864290d91297c84d6478b6ab41d5909435059c31018e4": "46e5447c5b9947b88fbf92e1313fd3d090b0090c79cfbad18385b32a21ebb217",
+              "LeanBridge.ResourceV1.Hec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e": "73808225f8f8e63508e1071454f020936d82d56ab52c90d477fd80f2b94964be"
+            },
+            "ledger": {
+              "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "name": "Acme.OtherDesk",
+            "nativeSha256": "1931f023ca336dc70ac28a3cdd7461efb795a20fbb9f0ccf039a55e598ab6378",
+            "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+            "producerHead": "06ab48b593ade6d25a30ce49d399ed256ecc709a",
+            "profile": "native-dotnet-io-v1",
+            "receiptSha256": "b2cea37d2540a080da5ba64a64a61aab71af2b0c2f7aafeff58e5928b56fe286",
+            "reviewedSourceSha256": null,
+            "role": "desk",
+            "route": "lookalike",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "8bc5d3c502f81480e0428b9b0a72948da15fbd1157d161b45989608ac8f582eb",
+            "version": "1.0.0"
+          }
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

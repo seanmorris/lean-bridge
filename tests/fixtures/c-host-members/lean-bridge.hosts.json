@@ -1,0 +1,333 @@
+{
+  "schemaVersion": 3,
+  "component": {
+    "id": "meter-host@1.0.0",
+    "name": "meter-host",
+    "version": "1.0.0"
+  },
+  "producers": [
+    {
+      "id": "host",
+      "adapter": "application",
+      "adapterVersion": 1,
+      "tool": "Meter host contract",
+      "toolVersion": "1.0.0",
+      "extensions": {}
+    }
+  ],
+  "types": [
+    {
+      "id": "host:meter.Box",
+      "name": "Box",
+      "kind": "resource",
+      "representation": "identity",
+      "mutability": "write",
+      "typeParameters": [],
+      "fields": [],
+      "target": null,
+      "callable": null,
+      "cases": [],
+      "resource": {
+        "kindId": "resource:meter.Box",
+        "disposal": "required",
+        "fallback": "queued-finalizer",
+        "cycles": "explicit-cut"
+      },
+      "host": {
+        "targets": [
+          "c"
+        ],
+        "identity": "weak-canonical",
+        "dynamic": false
+      },
+      "documentation": {
+        "summary": "An application-owned C object with a read method.",
+        "details": ""
+      },
+      "source": {
+        "producer": "host",
+        "declaration": "Box",
+        "extensions": {}
+      },
+      "assurance": []
+    }
+  ],
+  "declarations": [
+    {
+      "id": "host:meter.Box.read",
+      "name": "read",
+      "kind": "method",
+      "owner": "host:meter.Box",
+      "overloadKey": "Box.read()",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "host:meter.Box" },
+        "ownership": "borrow",
+        "lifetime": {
+          "scope": "call",
+          "anchor": null
+        },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "primitive", "name": "uint32" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "read",
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "mode": "declared",
+        "errors": [
+          "error:host"
+        ],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": [],
+      "assurance": [],
+      "documentation": {
+        "summary": "Read the current unsigned 32-bit value.",
+        "details": ""
+      },
+      "source": {
+        "producer": "host",
+        "declaration": "Box.read",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "host:meter.Box.create",
+      "name": "create",
+      "kind": "constructor",
+      "owner": "host:meter.Box",
+      "overloadKey": "Box.create",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "host:meter.Box" },
+        "ownership": "lease",
+        "lifetime": {
+          "scope": "explicit",
+          "anchor": null
+        }
+      },
+      "mutability": "immutable",
+      "effects": [
+        "allocates",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "mode": "declared",
+        "errors": [
+          "error:host"
+        ],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": [],
+      "assurance": [],
+      "documentation": {
+        "summary": "Construct a box.",
+        "details": ""
+      },
+      "source": {
+        "producer": "host",
+        "declaration": "Box.create",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "host:meter.Box.getLevel",
+      "name": "level",
+      "kind": "property",
+      "owner": "host:meter.Box",
+      "overloadKey": "Box.getLevel",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "host:meter.Box" },
+        "ownership": "borrow",
+        "lifetime": {
+          "scope": "call",
+          "anchor": null
+        },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "primitive", "name": "uint32" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "read",
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "mode": "declared",
+        "errors": [
+          "error:host"
+        ],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": [],
+      "assurance": [],
+      "documentation": {
+        "summary": "Read the level.",
+        "details": ""
+      },
+      "source": {
+        "producer": "host",
+        "declaration": "Box.getLevel",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "host:meter.Box.setLevel",
+      "name": "level",
+      "kind": "property",
+      "owner": "host:meter.Box",
+      "overloadKey": "Box.setLevel",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "host:meter.Box" },
+        "ownership": "borrow",
+        "lifetime": {
+          "scope": "call",
+          "anchor": null
+        },
+        "mutability": "write"
+      },
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "primitive", "name": "unit" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "write",
+      "effects": [
+        "writes-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "mode": "declared",
+        "errors": [
+          "error:host"
+        ],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": [],
+      "assurance": [],
+      "documentation": {
+        "summary": "Set the level.",
+        "details": ""
+      },
+      "source": {
+        "producer": "host",
+        "declaration": "Box.setLevel",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "host:meter.Box.identity",
+      "name": "identity",
+      "kind": "method",
+      "owner": "host:meter.Box",
+      "overloadKey": "Box.identity",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "host:meter.Box" },
+        "ownership": "borrow",
+        "lifetime": {
+          "scope": "call",
+          "anchor": null
+        },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "named", "id": "host:meter.Box" },
+        "ownership": "lease",
+        "lifetime": {
+          "scope": "explicit",
+          "anchor": null
+        }
+      },
+      "mutability": "read",
+      "effects": [
+        "reads-resource",
+        "host-call",
+        "fails"
+      ],
+      "failure": {
+        "mode": "declared",
+        "errors": [
+          "error:host"
+        ],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": [],
+      "assurance": [],
+      "documentation": {
+        "summary": "Return the same host object.",
+        "details": ""
+      },
+      "source": {
+        "producer": "host",
+        "declaration": "Box.identity",
+        "extensions": {}
+      }
+    }
+  ],
+  "errors": [
+    {
+      "id": "error:host",
+      "name": "HostError",
+      "category": "domain",
+      "payload": null,
+      "documentation": {
+        "summary": "The C member returned a nonzero application error code.",
+        "details": ""
+      }
+    }
+  ],
+  "capabilities": [],
+  "assurance": [],
+  "documentation": {
+    "summary": "Members that a C application supplies to the meter component.",
+    "details": ""
+  }
+}

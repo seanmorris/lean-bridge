@@ -4,16 +4,60 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { resolve } from "node:path";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileOwnedJvmLayout } from "../src/backends/jvm/owned-layout.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
+import { mixedFunctionFieldsIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { javaCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
+
+test("C and Java FFM distinguish borrowed callback records from leased result records", {
+	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1"
+}, async t => {
+	const layout = compileOwnedJvmLayout(mixedFunctionFieldsIr());
+	assert.equal(layout.hostInputLayouts.length,1);
+	const [input] = layout.hostInputLayouts;
+	const output = layout.types.find(type => type.id === input.id);
+	assert.deepEqual(input.fields.map(f=>f.offset),[0,32,64,80]);
+	assert.deepEqual(output.fields.map(f=>f.offset),[0,8,16,32]);
+	assert.equal(input.size,88); assert.equal(output.size,40);
+	const native=[], managed=[];
+	for(const row of [input,output])
+	{
+		const name=row.cName??row.name;
+		native.push(`_Static_assert(sizeof(${name}) == ${row.size}, "size");`
+			, `_Static_assert(_Alignof(${name}) == ${row.alignment}, "alignment");`);
+		managed.push(`check(_OwnedLayouts.${row.layoutName}.byteSize(),${row.size});`
+			, `check(_OwnedLayouts.${row.layoutName}.byteAlignment(),${row.alignment});`);
+		for(const f of row.fields)
+		{
+			native.push(`_Static_assert(offsetof(${name}, ${f.name}) == ${f.offset}, "offset");`);
+			managed.push(`check(_OwnedLayouts.${row.layoutName}.byteOffset(groupElement("${f.name}")),${f.offset});`);
+		}
+	}
+	const dir=await mkdtemp(join(tmpdir(),"jvm-borrowed-record-layout-"));
+	t.after(()=>rm(dir,{recursive: true,force: true}));
+	await saveLakeFile(dir,"owned.h",layout.c.header);
+	await saveLakeFile(dir,"probe.c",'#include <stddef.h>\n#include "owned.h"\n'+native.join("\n"));
+	await runCopied("/usr/bin/cc",["-std=c11","-Wall","-Werror","-fsyntax-only","probe.c"],dir);
+	await saveLakeFile(dir,"_OwnedLayouts.java",layout.layoutSource);
+	await saveLakeFile(dir,"Probe.java",`package ${layout.namespace};
+import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
+final class Probe {
+    static void check(long got,long want) { if (got != want) throw new AssertionError(got+" != "+want); }
+    public static void main(String[] args) { ${managed.join("\n        ")} }
+}`);
+	const env=nativeFixtureEnvironment(["java"]);
+	await runCopied(env.LEAN_BRIDGE_JAVAC,[...javaCompilerOptions,"-d","classes","Probe.java","_OwnedLayouts.java"],dir);
+	await runCopied(env.LEAN_BRIDGE_JAVA,["-cp","classes",layout.namespace+".Probe"],dir);
+});
 
 test("owned JVM layouts preserve finite recursion, scalar widths and opaque identities", () => {
 	const ir = ownedCppCompositionReviewedIr(), original = structuredClone(ir);

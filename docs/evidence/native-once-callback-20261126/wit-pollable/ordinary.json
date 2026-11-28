@@ -1,0 +1,26 @@
+{
+  "archive": {
+    "bytes": 59251614,
+    "path": "archives/budget-1.0.0-wit-wasi.tar.gz",
+    "sha256": "7b5cc36f7cac4d96a0a7ba6382f8a819efa36251fd332d88b7869623a2dd6e62"
+  },
+  "bindingIrSha256": "4bba03e6031e9dca7bcaee82af99d7ab40bdbd349ae5daf27150ac8d84a62517",
+  "componentSha256": "8b439539ec5a9334c65509f163e0e4c92f2e2e98da187c8161e3330cdcfb5722",
+  "executableSha256": "dd0717b810c886b59b3d3ebba140b92b6d13250f8c476bedb4615f24ca9842ae",
+  "observation": "WIT pollable: 16 worker races; once, guest, typed, factory and terminal failures distinct; both owners destroyed; zero leases",
+  "receiptSha256": "99c07bfeb6ba1bdc4f26efeae8e07bcc9f639d837432d5d0d830464d24c9824f",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "runtimeLibraries": {
+    "lib/liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+    "lib/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+    "lib/libwasmtime.so": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+  },
+  "sourceTreeSha256": "d85508f2ca3c776c850644de2c68285c0cef4e8f25426314c52413963b169c2b",
+  "sources": {
+    "observer.h": "9b9ae00dbb12ed9db474a8050c9674322062b2ce273cbc9de026ccf4f94220bb",
+    "wit-client.c": "cc1e8335f549ccd91e8e741e2af6c8e3d86a3c6496c129157f0bb4356d3d569e"
+  },
+  "worldSha256": "3a298f871948436e7e04b2dab6269477ab283d9dd01aef9c1e2c83bf3f48ef42"
+}

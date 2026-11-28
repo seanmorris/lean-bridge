@@ -1,0 +1,11 @@
+
+namespace Workshop
+open LeanBridge.Host.Rust
+
+def child (box : Box) : IO Dial := box.child
+def childFrom (box parent : Box) : IO Dial := box.childFrom parent
+def keepDial (box : Box) (d : Dial) : IO UInt32 := box.keepDial d
+def takeDial (box : Box) (d : Dial) : IO UInt32 := box.takeDial d
+def readDial (d : Dial) : IO UInt32 := d.read
+
+end Workshop

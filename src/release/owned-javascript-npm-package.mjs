@@ -19,7 +19,7 @@ import { compiledPackageMetadata, npmPackageMetadata } from "../analyze/package-
 import { assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
 
-const runtimeRequirement = Object.freeze({ kind: "content-addressed-peer"
+export const javascriptSharedRuntimeRequirement = Object.freeze({ kind: "content-addressed-peer"
 	, artifactIncluded: false, abiVersion: 1
 	, leanCommit: pins.leanCommit, patchSetSha256: pins.patchSetSha256
 	, profile: "side-lazy", shared: true
@@ -37,16 +37,39 @@ const archive = files => createDeterministicTarGzFromFiles({ sourceDateEpoch: 1
  * @param options.mainWasm - Prepared shared runtime WebAssembly bytes.
  * @param options.sideWasm - Verified ownership side module bytes.
  * @param options.privateAbi - Compiler-authenticated component descriptor.
+ * @param options.hostBroker - Optional previously checked host-domain side module.
  */
-export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, privateAbi }) => {
+export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, privateAbi, hostBroker }) => {
 	const main = new WebAssembly.Module(mainWasm), side = new WebAssembly.Module(sideWasm);
 	const exportsOf = module => new Set(WebAssembly.Module.exports(module).map(item => `${item.kind}:${item.name}`));
 	const runtimeExports = exportsOf(main), sideExports = exportsOf(side);
 	const required = [...generateOwnedWasmBroker().exports, "bridge_scalar_call", "bridge_scalar_frame_clear", "bridge_lean_runtime_status"];
 	for(const name of required)
 		if(!runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name))) throw new Error(`Prepared runtime lacks owned JavaScript support: ${name}`);
+	if(hostBroker)
+	{
+		const domain = new WebAssembly.Module(hostBroker), services = exportsOf(domain);
+		// Both export surfaces were checked against the source-derived ABI before
+		// this check. Embedded EM_JS hooks must be supplied by their own module.
+		const callbacksOf = exports => new Set([...exports].filter(s => s.startsWith("global:__em_js__")).map(s => s.slice("global:__em_js__".length)));
+		assertWasmSideImports({side: domain, runtimeExports, sideExports: services, callbacks: callbacksOf(services), profile: "host domain"});
+		assertWasmSideImports({side, runtimeExports: new Set([...runtimeExports,...[...services].filter(s=>s.startsWith("function:lb_jsh_domain_"))]), sideExports, callbacks: callbacksOf(sideExports), profile: "host component"});
+		return;
+	}
 	const suffix = privateAbi.controlSymbol.slice("lbjs_component_".length, -"_control".length);
 	const callbacks = new Set([`lbjs_${suffix}_dispatch_js`, `lbjs_${suffix}_finish_js`]);
+	assertWasmSideImports({side,runtimeExports,sideExports,callbacks,profile: "owned"});
+};
+
+/**
+ * Check every installed side-module import against the prepared owner, its
+ * own exports, or the specific symbols provided by the dynamic linker.
+ *
+ * @param options - Compiled side module, typed export sets and permitted embedded callbacks.
+ */
+export const assertWasmSideImports = options => {
+	const {side,runtimeExports,sideExports,callbacks=new Set(),profile}=options;
+	const missing=[];
 	for(const item of WebAssembly.Module.imports(side))
 	{
 		const provided = item.kind === "function" ? item.module === "env" && (runtimeExports.has(`function:${item.name}`)
@@ -56,8 +79,9 @@ export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, p
 					: item.module === "GOT.func" ? sideExports.has(`function:${item.name}`) || runtimeExports.has(`function:${item.name}`)
 						: item.module === "GOT.mem" ? sideExports.has(`global:${item.name}`) || runtimeExports.has(`global:${item.name}`)
 							: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
-		if(!provided) throw new Error(`Prepared runtime cannot resolve owned import ${item.module}.${item.name}`);
+		if(!provided) missing.push(`${item.module}.${item.name}`);
 	}
+	if(missing.length) throw new Error(`Prepared runtime cannot resolve ${profile} import ${missing.join(", ")}`);
 };
 
 /**
@@ -84,7 +108,7 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 		, readFile(join(root, receipt.library))
 	]);
 	assertOwnedJavaScriptRuntime({ mainModule, mainWasm, sideWasm, privateAbi });
-	const runtime = await assembleComponentNpmRuntime({ mainModule, mainWasm, runtimeRequirement });
+	const runtime = await assembleComponentNpmRuntime({ mainModule, mainWasm, runtimeRequirement: javascriptSharedRuntimeRequirement });
 	const generated = generateJavaScriptPackage(model.bindingIr), files = new Map(Object.entries(generated));
 	const metadata = compiledPackageMetadata(receipt.sourceIdentity), packageJson = JSON.parse(generated["package.json"]);
 	files.set("package.json", canonicalJson({ ...packageJson
@@ -110,6 +134,18 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 	for(const [path, bytes] of (await readVerifiedSourceNotices(root, receipt.sourceIdentity)).files) files.set(`notices/${path}`, bytes);
 	files.set("notices/lean-bridge.txt", await readFile(new URL("../../LICENSE", import.meta.url)));
 	if((await readVerifiedOwnedJavaScriptWasmComponent(root)).identity !== verified.identity) throw new Error("Owned JavaScript compilation changed during packaging");
+	const delivery = archiveSharedJavaScriptPackages({ runtime, files, coordinate, profile });
+	signal?.throwIfAborted();
+	return { verified, runtime, files, coordinate, ...delivery };
+};
+
+/**
+ * Pack the runtime and component together, binding the exact dependency to both receipts.
+ *
+ * @param options - Runtime build, component contents, exact npm coordinate and profile.
+ */
+export const archiveSharedJavaScriptPackages = options => {
+	const {runtime, files, coordinate, profile} = options;
 	const runtimeArchive = archive(runtime.files), componentArchive = archive(files);
 	const runtimeName = `lean-bridge-runtime-${runtime.version}.tgz`;
 	const archiveName = `${coordinate.name.replaceAll("/", "-")}-${coordinate.version}.tgz`;
@@ -122,8 +158,7 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 		, requires: role === "runtime" ? [] : [runtimeRef]
 		, artifacts: [{ path, bytes: bytes.length, sha256: sha256(bytes) }] });
 	const packages = [entry(runtimeRef, "runtime", runtimeName, runtimeArchive), entry(coordinate, "component", componentName, componentArchive)];
-	signal?.throwIfAborted();
-	return { verified, runtime, files, coordinate, runtimeName, runtimeArchive, componentName, componentArchive, packages };
+	return {runtimeName, runtimeArchive, componentName, componentArchive, packages};
 };
 
 /**

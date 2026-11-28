@@ -12,12 +12,13 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { canonicalizeJsonValue, parseBindingIr } from "../src/binding-ir/canonical.mjs";
 import { checkedRefinementSelection } from "../src/analyze/checked-refinement-selection.mjs";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { validateReviewedSource, assertReviewedSourceConfiguration } from "../src/analyze/reviewed-source.mjs";
 import { validateReviewedOwnedSource, reviewedOwnedSourceSelection, readReviewedOwnedSource
 	, verifyReviewedOwnedSourceInputs, reconcileReviewedOwnedSource } from "../src/analyze/reviewed-owned-source.mjs";
 import { generateOwnedAggregateCarriers } from "../src/build/owned-aggregate-carriers.mjs";
 import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
-import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { leasedClosureFieldReviewedIr, ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -60,6 +61,68 @@ const fixture = () => {
 		, request: { exportModules: ["Owned"], ...reviewedOwnedSourceSelection(review) } };
 	return { document, review, compiled, sourceIdentity };
 };
+
+test("reviewed closure fields select the real projection and preserve possible callback failure on record inputs", () => {
+	const document = leasedClosureFieldReviewedIr(), review = capture(document);
+	validateReviewedOwnedSource(review);
+	const selection = reviewedOwnedSourceSelection(review);
+	assert.deepEqual(selection.ownedAggregates.closureFields, ["Owned.Tariff.quote"]);
+	assert.deepEqual(selection.arities, [["Owned.unpackQuote", 1]]);
+	const apply = document.declarations.find(decl => decl.name === "applyTariff");
+	apply.effects = ["reads-resource"]; apply.failure = { mode: "none", errors: [], unexpected: "poison-runtime" };
+	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "reviewed-ir-build-unsupported" });
+});
+
+test("a callback exchanging function-bearing records borrows its input and leases its reply", () => {
+	const document = leasedClosureFieldReviewedIr({ exchange: true });
+	validateReviewedOwnedSource(capture(document));
+	const change = document.declarations.find(decl => decl.name === "exchangeTariff");
+	const transform = document.types.find(type => type.id === change.parameters[0].type.id).callable;
+	assert.deepEqual(transform.parameters[0].type, transform.result.type);
+	assert.equal(transform.result.type.id, "lean:Owned.Tariff");
+	assert.equal(transform.parameters[0].ownership, "borrow");
+	assert.deepEqual(transform.parameters[0].lifetime, { scope: "call", anchor: null });
+	assert.equal(transform.result.ownership, "lease");
+	assert.deepEqual(transform.result.lifetime, { scope: "explicit", anchor: null });
+	transform.result.ownership = "copy"; transform.result.lifetime = null;
+	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "aggregate-ownership" });
+});
+
+test("a closure passed directly to a host callback is borrowed, not a leased callback result", () => {
+	const document = leasedClosureFieldReviewedIr({ staged: true, incoming: true });
+	validateReviewedOwnedSource(capture(document));
+	const typeOf = site => document.types.find(type => type.id === site.type.id);
+	const decl = name => document.declarations.find(item => item.name === name);
+	const site = typeOf(decl("visitQuote").parameters[1]).callable.parameters[0];
+	const returned = typeOf(decl("stagedQuote").parameters[0]).callable.result;
+	assert.deepEqual(site.type, returned.type);
+	assert.equal(site.ownership, "borrow"); assert.equal(returned.ownership, "lease");
+	assert.deepEqual(site.lifetime, { scope: "call", anchor: null });
+	site.ownership = returned.ownership; site.lifetime = returned.lifetime;
+	assert.throws(() => validateReviewedOwnedSource(capture(document)), { code: "reviewed-ir-build-unsupported" });
+});
+
+test("reviewed higher-order results preserve their call boundary without splitting flat siblings", async () => {
+	const document = leasedClosureFieldReviewedIr({ exchange: true, staged: true });
+	const expected = JSON.parse(await readFile("tests/fixtures/structured-types/tariff-staged-contract.json"));
+	for(const reverse of [false, true])
+	{
+		if(reverse) document.declarations.reverse();
+		const selection = reviewedOwnedSourceSelection(capture(document));
+		assert.deepEqual(selection.contracts, { "Owned.stagedQuote": expected });
+		assert.deepEqual(selection.arities, [["Owned.unpackQuote", 1]]);
+	}
+	for(const boundary of [[], undefined])
+	{
+		const contract = structuredClone(expected);
+		if(boundary) contract.parameters[0].callable.parameters = boundary;
+		else delete contract.parameters[0].callable.parameters;
+		assert.throws(() => validateExportConfiguration({ schemaVersion: 1
+			, modules: ["Owned"], exports: ["Owned.stagedQuote"]
+			, ownedAggregates: document.aggregatePolicy
+			, contracts: { "Owned.stagedQuote": contract } }), /nonempty outer parameter list/);
+	}
+});
 
 test("owned review owns resource selection and policy without admitting v4 to v3", () => {
 	const document = annotated(), review = capture(document);

@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, readFile, symlink } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, symlink } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -166,6 +166,7 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 			await saveLakeFile(root, "NuGet.Config", '<configuration><packageSources><clear/><add key="prepared" value="feed"/></packageSources><fallbackPackageFolders><clear/></fallbackPackageFolders></configuration>');
 			env = { ...env, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(root, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", NUGET_PACKAGES: join(root, "packages") };
 			await runCopied(command, ["restore", "--configfile", "NuGet.Config"], root, env);
+			if(fixture.dropFeedAfterRestore) await rm(join(root,"feed",`${pkg.name}.${pkg.version}.nupkg`));
 			await runCopied(command, ["build", "--no-restore", "--disable-build-servers", "-p:UseSharedCompilation=false", "-o", "out"], root, env);
 		}
 		args = ["out/Consumer.dll"];

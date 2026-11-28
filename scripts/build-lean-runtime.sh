@@ -23,7 +23,17 @@ if [[ "$actual_lean_commit" != "$LEAN_WASM_LEAN_COMMIT" ]]; then
   exit 1
 fi
 
-BUILD_ROOT="$LEAN_WASM_PROJECT_ROOT/build/lean-runtime/$LEAN_WASM_RUNTIME_BUILD_ID"
+# A runtime-only consumer can link a small, separately compiled Lean program
+# without building the entire Init static facet. Keep the sparse source tree
+# out of the full runtime cache, even when the compiler pins are identical.
+facet=${LEAN_WASM_RUNTIME_FACET:-full}
+case "$facet" in
+  full) suffix= ;;
+  # '+' cannot occur in a variant, so no full build aliases this cache.
+  core) suffix=+core ;;
+  *) echo "Unknown LEAN_WASM_RUNTIME_FACET: $facet (expected full or core)" >&2; exit 1 ;;
+esac
+BUILD_ROOT="${LEAN_WASM_RUNTIME_CACHE:-$LEAN_WASM_PROJECT_ROOT/build/lean-runtime}/$LEAN_WASM_RUNTIME_BUILD_ID$suffix"
 PATCHED_SOURCE="$BUILD_ROOT/source"
 CMAKE_BUILD="$BUILD_ROOT/cmake"
 PREPARED_STAMP="$PATCHED_SOURCE/.lean-wasm-patched"
@@ -31,7 +41,12 @@ PREPARED_STAMP="$PATCHED_SOURCE/.lean-wasm-patched"
 if [[ ! -f "$PREPARED_STAMP" ]]; then
   mkdir -p "$PATCHED_SOURCE"
   if [[ -d "$LEAN_SOURCE/.git" ]]; then
-    git -C "$LEAN_SOURCE" archive "$LEAN_WASM_LEAN_COMMIT" | tar -x -C "$PATCHED_SOURCE"
+    paths=()
+    if [[ "$facet" == core ]]; then paths=(src tests LICENSE); fi
+    git -C "$LEAN_SOURCE" archive "$LEAN_WASM_LEAN_COMMIT" "${paths[@]}" | tar -x -C "$PATCHED_SOURCE"
+  elif [[ "$facet" == core ]]; then
+    cp -a "$LEAN_SOURCE/src" "$LEAN_SOURCE/tests" "$LEAN_SOURCE/LICENSE" "$PATCHED_SOURCE/"
+    chmod -R u+w "$PATCHED_SOURCE"
   else
     cp -a "$LEAN_SOURCE/." "$PATCHED_SOURCE/"
     chmod -R u+w "$PATCHED_SOURCE"
@@ -53,6 +68,7 @@ fi
 HOST_LEAN_PREFIX=${LEAN_WASM_HOST_LEAN_PREFIX:-$(lean --print-prefix)}
 
 LIBUV_SOURCE_ARGS=()
+if [[ "$facet" == core ]]; then LIBUV_SOURCE_ARGS+=("-DBUILD_TESTING=OFF"); fi
 if [[ -n "${LEAN_WASM_LIBUV_SOURCE:-}" ]]; then
   LIBUV_SOURCE_ARGS+=("-DLEAN_WASM_LIBUV_SOURCE=$LEAN_WASM_LIBUV_SOURCE")
 fi
@@ -78,12 +94,32 @@ emcmake cmake \
   -DINSTALL_LEANTAR=OFF \
   -DWFAIL=OFF
 
-cmake --build "$CMAKE_BUILD" --target leanrt --parallel "$(nproc)"
+cmake --build "$CMAKE_BUILD" --target leanrt --parallel "${CMAKE_BUILD_PARALLEL_LEVEL:-$(nproc)}"
 
 LEAN_RUNTIME_ARCHIVE="$CMAKE_BUILD/lib/lean/libleanrt.a"
 if [[ ! -f "$LEAN_RUNTIME_ARCHIVE" ]]; then
   echo "Lean runtime archive was not produced: $LEAN_RUNTIME_ARCHIVE" >&2
   exit 1
+fi
+
+if [[ -d "$CMAKE_BUILD/libuv/src/libuv/.git" ]]; then
+  actual_libuv_commit=$(git -C "$CMAKE_BUILD/libuv/src/libuv" rev-parse HEAD)
+elif [[ -f "$CMAKE_BUILD/libuv/src/libuv/.lean-wasm-source-commit" ]]; then
+  actual_libuv_commit=$(<"$CMAKE_BUILD/libuv/src/libuv/.lean-wasm-source-commit")
+else
+  echo "Missing libuv source identity." >&2
+  exit 1
+fi
+if [[ "$actual_libuv_commit" != "$LEAN_WASM_LIBUV_COMMIT" ]]; then
+  echo "libuv commit mismatch: expected $LEAN_WASM_LIBUV_COMMIT, got $actual_libuv_commit" >&2
+  exit 1
+fi
+
+if [[ "$facet" == core ]]; then
+  echo "lean_runtime_archive=$LEAN_RUNTIME_ARCHIVE"
+  echo "lean_runtime_profile=$LEAN_WASM_RUNTIME_PROFILE"
+  echo "libuv_commit=$actual_libuv_commit"
+  exit 0
 fi
 
 # Build only Init's target static facet. The generated stdlib makefile exports
@@ -98,19 +134,6 @@ make \
 LEAN_INIT_ARCHIVE="$CMAKE_BUILD/lib/lean/libInit.a"
 if [[ ! -f "$LEAN_INIT_ARCHIVE" ]]; then
   echo "Lean Init archive was not produced: $LEAN_INIT_ARCHIVE" >&2
-  exit 1
-fi
-
-if [[ -d "$CMAKE_BUILD/libuv/src/libuv/.git" ]]; then
-  actual_libuv_commit=$(git -C "$CMAKE_BUILD/libuv/src/libuv" rev-parse HEAD)
-elif [[ -f "$CMAKE_BUILD/libuv/src/libuv/.lean-wasm-source-commit" ]]; then
-  actual_libuv_commit=$(<"$CMAKE_BUILD/libuv/src/libuv/.lean-wasm-source-commit")
-else
-  echo "Missing libuv source identity." >&2
-  exit 1
-fi
-if [[ "$actual_libuv_commit" != "$LEAN_WASM_LIBUV_COMMIT" ]]; then
-  echo "libuv commit mismatch: expected $LEAN_WASM_LIBUV_COMMIT, got $actual_libuv_commit" >&2
   exit 1
 fi
 

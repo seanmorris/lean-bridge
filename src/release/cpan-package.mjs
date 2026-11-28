@@ -16,12 +16,18 @@ import { generateOwnedPerlPackage } from "../backends/perl/owned-package.mjs";
 import { renderOwnedPerlCallbackBuild } from "../backends/perl/owned-callback-build.mjs";
 import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
 import { verifyOwnedCpanTransfers } from "./owned-cpan-contract.mjs";
+import { preparePerlIOFiles, renderPerlIOBuild, verifyPerlIOFiles } from "../backends/perl/sync-io.mjs";
+import { perlTaskAssets } from "../backends/perl/task-xs.mjs";
+import {preparePerlHostFiles,verifyPerlHostFiles} from "./perl-host-payload.mjs";
+import { taskResourceLedger } from "../build/task-resource-ledger.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
 const runtimeModule = "LeanBridge::Runtime";
 const runtimeVersionPattern = /^0\.002[0-9]{78}1$/;
 const componentVersionPattern = /^\d+\.\d{3}(?:_\d{2})?$/;
+const makefilePL = "use strict;\nuse warnings;\nuse lib '.';\nuse LeanBridgeBuild;\nLeanBridgeBuild::configure();\n";
+const loadTest = name => `use strict;\nuse warnings;\nuse Test::More tests => 1;\nuse_ok('${name}');\n`;
 const save = async (path, value) => { await mkdir(dirname(path), { recursive: true }); await writeFile(path, value); };
 const copy = async (from, to) => { await mkdir(dirname(to), { recursive: true }); await copyFile(from, to); };
 const json = canonicalJson;
@@ -95,6 +101,26 @@ export const readVerifiedCpanPackage = async packageRoot => {
 	} else
 	{
 		verifyOwnedCpanTransfers(manifest, files);
+		const host = manifest.hostImports;
+		const hostPayload=files.has("host-imports.json") || files.has("host-scope.h") || files.has("ph-interface.h")
+			|| files.has("binding-manifest.json") && JSON.parse(files.get("binding-manifest.json")).profile==="native-perl-host-v1";
+		if(Boolean(host)!==hostPayload || (host && (manifest.syncIO || manifest.taskDelivery || manifest.ownedValues)))
+			throw new Error("CPAN host manifest and payload select different profiles");
+		if(host)
+		{
+			if(files.get("Makefile.PL")?.toString()!==makefilePL || files.get("t/00-load.t")?.toString()!==loadTest(manifest.module)
+				|| !files.get("inc/LeanBridge/Runtime/Platform.pm")?.equals(await readFile(join(templates,"Platform.pm"))))
+				throw new Error("CPAN host configuration or load test differs from its source");
+			await verifyPerlHostFiles(manifest,files,await readFile(join(templates,"Build.pm"),"utf8"));
+		}
+		const io = manifest.syncIO ?? manifest.taskDelivery;
+		const ioPayload = files.has("sync-wire.h") || (files.has("binding-manifest.json")
+			&& ["native-perl-io-v1","native-perl-task-v1"].includes(JSON.parse(files.get("binding-manifest.json")).profile));
+		if(Boolean(io || host) !== ioPayload || Boolean(manifest.taskDelivery || host?.profile==="native-perl-task-v1")!==files.has("task-wire.h") || (manifest.syncIO && manifest.taskDelivery))
+			throw new Error("CPAN IO manifest and payload select different profiles");
+		if(io) verifyPerlIOFiles(manifest, files, await readFile(join(templates, "Build.pm"), "utf8"), await readFile(join(templates, "sync-wire.h")),manifest.taskDelivery ? await perlTaskAssets() : null);
+		if(io?.resourceLedger && io.resourceLedger.id !== (await taskResourceLedger(manifest.nativeRuntimeIdentity)).id)
+			throw new Error("CPAN resource ledger identity differs from the native runtime and ledger sources");
 		if(manifest.ownedValues?.schemaVersion === 5)
 		{
 			const installer = renderOwnedPerlCallbackBuild(
@@ -105,6 +131,8 @@ export const readVerifiedCpanPackage = async packageRoot => {
 				throw new Error("Owned CPAN callback installer differs from its generated source");
 		}
 		const metadata = JSON.parse(files.get("META.json"));
+		if((manifest.taskDelivery || host?.profile==="native-perl-task-v1") && (metadata.prereqs?.runtime?.requires?.["IO::Async::Loop"] !== "0.805" || metadata.prereqs.runtime.requires.Future !== "0.54"))
+			throw new Error("CPAN task component lacks its event-loop dependencies");
 		const pin = `== ${manifest.runtimeVersion}`;
 		const pm = files.get(`lib/${manifest.module.replaceAll("::", "/")}.pm`)?.toString("utf8");
 		if(!runtimeVersionPattern.test(manifest.runtimeVersion)
@@ -153,6 +181,8 @@ export const refreshCpanInventory = async (directory, manifest) => {
  * @param root0.runtimePackageRoot - Completed shared CPAN runtime, including all selected XS variants.
  * @param root0.ownedGmpRoot - Verified private GMP root, or null for ordinary packages.
  * @param root0.ownedModuleName - Owned Perl namespace, separate from the native model.
+ * @param root0.syncIO - Standalone synchronous wire, verified library and compiler evidence.
+ * @param root0.hostImports - Compiler-selected host entries with their authored import contract.
  * @param root0.leanPrefix - Pinned Lean installation containing the compiler and matching headers.
  * @param root0.version - Pinned interpreter version or CPAN decimal release version.
  * @param root0.glibcMinimumVersion - Minimum documented Linux glibc version.
@@ -162,36 +192,53 @@ export const stageCpanPackage = async ({ outputRoot
 	, componentRoot = null
 	, runtimePackageRoot = null
 	, ownedGmpRoot = null, ownedModuleName = null
+	, syncIO = null, hostImports = null
 	, leanPrefix
 	, version = "0.001", glibcMinimumVersion = "2.38" }) => {
 	if(!componentVersionPattern.test(version)) throw new TypeError("CPAN version must use Perl decimal version syntax");
-	if(!componentRoot && version !== "0.001") throw new Error("CPAN runtime version is derived from its prepared payload");
+	const component = Boolean(componentRoot || syncIO || hostImports);
+	if((syncIO && hostImports) || (syncIO || hostImports) && (componentRoot || ownedGmpRoot || ownedModuleName)) throw new TypeError("Ambiguous CPAN component projection");
+	if(!component && version !== "0.001") throw new Error("CPAN runtime version is derived from its prepared payload");
 	if((ownedGmpRoot === null) !== (ownedModuleName === null) || ownedGmpRoot !== null && !componentRoot)
 		throw new TypeError("Owned CPAN staging requires a component, private GMP and module name");
 	if(!/^2\.\d+$/.test(glibcMinimumVersion)) throw new TypeError("invalid CPAN glibc floor");
 	const directory = resolve(outputRoot); await empty(directory);
 	const { manifest: runtime, identity: nativeRuntimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const bindingSources = {};
-	for(const name of ["Runtime.xs", "runtime.h", "Runtime.pm", "Platform.pm", "OwnedAssets.pm"])
+	for(const name of ["Runtime.xs", "runtime.h", "host-domain.h", "host-domain.inc", "Runtime.pm", "Platform.pm", "OwnedAssets.pm"])
 		bindingSources[name] = sha256(await readFile(join(templates, name)));
 	const binding = { schemaVersion: 1, nativeRuntimeIdentity, sources: bindingSources };
 	const runtimeIdentity = sha256(canonicalJson(binding));
 	void leanPrefix;
 	let moduleName = "LeanBridge::Runtime", xs = "Runtime.xs", include = "lib/LeanBridge/Runtime/include";
 	let packageMetadata = {}, runtimeVersion = version, ownedValues = null;
-	let callbackModel = null;
-	if(componentRoot)
+	let callbackModel = null, ioContract = null;
+	if(component)
+	{
+		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
+		const prepared = await readVerifiedCpanPackage(runtimePackageRoot);
+		if(prepared.manifest.module !== runtimeModule || prepared.manifest.runtimeIdentity !== runtimeIdentity
+			|| prepared.manifest.glibcMinimumVersion !== glibcMinimumVersion) throw new Error("Component and prepared CPAN runtime differ");
+		runtimeVersion = prepared.manifest.version;
+	}
+	if(syncIO || hostImports)
+	{
+		const input=hostImports??syncIO;
+		if(input.runtimeIdentity !== nativeRuntimeIdentity || hostImports && input.version!==version) throw new Error("Perl runtime or version differs from the compiled component");
+		moduleName = input.name; xs = "Component.xs"; include = ".";
+		packageMetadata = input.projectContract.metadata ?? {};
+		const projection = await (hostImports?preparePerlHostFiles:preparePerlIOFiles)(input, { version, runtimeVersion, runtimeIdentity });
+		ioContract = projection.contract;
+		for(const [path, bytes] of projection.files) await save(join(directory, path), bytes);
+		for(const [path, bytes] of Object.entries(input.projectContract.notices)) await save(join(directory, "notices", path), bytes);
+	}
+	else if(componentRoot)
 	{
 		const isOwned = ownedGmpRoot !== null;
 		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
 			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned, nativeRefinements: true, nativeCallbackRefinements: true, nativeCheckedRecords: true });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
-		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
-		const prepared = await readVerifiedCpanPackage(runtimePackageRoot);
-		if(prepared.manifest.module !== runtimeModule || prepared.manifest.runtimeIdentity !== runtimeIdentity
-			|| prepared.manifest.glibcMinimumVersion !== glibcMinimumVersion) throw new Error("Component and prepared CPAN runtime differ");
-		runtimeVersion = prepared.manifest.version;
 		for(const [path, bytes] of sourceNotices.files)
 			await save(join(directory, "notices", path), bytes);
 		moduleName = ownedModuleName ?? model.moduleName; xs = "Component.xs"; include = ".";
@@ -239,34 +286,39 @@ export const stageCpanPackage = async ({ outputRoot
       await copy(join(runtimeRoot, path), join(directory, include, path.slice("include/".length)));
 		await copy(join(runtimeRoot, "include/lean_bridge_native_runtime.h"), join(directory, include, "lean_bridge_native_runtime.h"));
 		await copy(join(templates, "runtime.h"), join(directory, include, "runtime.h"));
+		await copy(join(templates, "host-domain.h"), join(directory, include, "host-domain.h"));
+		await copy(join(templates, "host-domain.inc"), join(directory, "host-domain.inc"));
 	}
-	if(callbackModel)
+	const taskDelivery = ioContract?.profile === "native-perl-task-v1";
+	if(ioContract)
+		await save(join(directory, "LeanBridgeBuild.pm"), renderPerlIOBuild(await readFile(join(templates, "Build.pm"), "utf8"), moduleName, ioContract.library, taskDelivery, ioContract.resourceLedger, Boolean(hostImports)));
+	else if(callbackModel)
 		await save(join(directory, "LeanBridgeBuild.pm"), renderOwnedPerlCallbackBuild(
 			await readFile(join(templates, "Build.pm"), "utf8")
 			, await readFile(join(templates, "BuildCallbackResults.pm"), "utf8")
 			, { moduleName, model: callbackModel }));
 	else await copy(join(templates, "Build.pm"), join(directory, "LeanBridgeBuild.pm"));
 	await copy(join(templates, "Platform.pm"), join(directory, "inc/LeanBridge/Runtime/Platform.pm"));
-	await copy(join(root, "LICENSE"), join(directory, componentRoot ? "notices/LeanBridge-LICENSE" : "LICENSE"));
+	await copy(join(root, "LICENSE"), join(directory, component ? "notices/LeanBridge-LICENSE" : "LICENSE"));
 	for(const name of ["lean.txt", "lean-bundled.txt"]) await copy(join(root, "notices/runtime", name), join(directory, "notices", name));
-	await save(join(directory, "Makefile.PL"), "use strict;\nuse warnings;\nuse lib '.';\nuse LeanBridgeBuild;\nLeanBridgeBuild::configure();\n");
-	await save(join(directory, "t/00-load.t"), `use strict;\nuse warnings;\nuse Test::More tests => 1;\nuse_ok('${moduleName}');\n`);
+	await save(join(directory, "Makefile.PL"), makefilePL);
+	await save(join(directory, "t/00-load.t"), loadTest(moduleName));
 	const distribution = moduleName.replaceAll("::", "-");
 	await save(join(directory, "META.json"), json({ "meta-spec": { version: 2, url: "https://metacpan.org/pod/CPAN::Meta::Spec" }
 		, name: distribution
 		, version
 		, abstract: "Generated native Lean bindings"
-		, author: [componentRoot ? "Author not declared" : "Lean Bridge contributors"]
-		, license: [componentRoot ? "unknown" : "mit"]
+		, author: [component ? "Author not declared" : "Lean Bridge contributors"]
+		, license: [component ? "unknown" : "mit"]
 		, ...cpanPackageMetadata(packageMetadata)
 		, dynamic_config: true
 		, release_status: version.includes("_") ? "testing" : "stable"
 		, generated_by: "lean-bridge cpan-package-v1"
-		, prereqs: { configure: { requires: { "ExtUtils::MakeMaker": "6.64", "ExtUtils::CBuilder": "0", "ExtUtils::ParseXS": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(componentRoot ? { [runtimeModule]: `== ${runtimeVersion}` } : {}) } }
-			, runtime: { requires: { perl: "5.036", "Math::BigInt": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(componentRoot ? { [runtimeModule]: `== ${runtimeVersion}` } : {}) } }
+		, prereqs: { configure: { requires: { "ExtUtils::MakeMaker": "6.64", "ExtUtils::CBuilder": "0", "ExtUtils::ParseXS": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(component ? { [runtimeModule]: `== ${runtimeVersion}` } : {}) } }
+			, runtime: { requires: { perl: "5.036", "Math::BigInt": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(component ? { [runtimeModule]: `== ${runtimeVersion}` } : {}), ...taskDelivery ? { "IO::Async::Loop": "0.805", Future: "0.54" } : {} } }
 			, test: { requires: { "Test::More": "0" } } }
 		, provides: { [moduleName]: { file: `lib/${moduleName.replaceAll("::", "/")}.pm`, version } }
-		, ...(componentRoot ? {} : { resources: { repository: { type: "git", url: "https://github.com/seanmorris/lean-bridge.git" } } })
+		, ...(component ? {} : { resources: { repository: { type: "git", url: "https://github.com/seanmorris/lean-bridge.git" } } })
 		, no_index: { directory: ["inc", "prebuilt", "notices", "t"], file: ["LeanBridgeBuild.pm"], package: ["LeanBridge::Runtime::Platform"] } }));
 	const manifest = { schemaVersion: 1
 		, ecosystem: "cpan"
@@ -275,7 +327,7 @@ export const stageCpanPackage = async ({ outputRoot
 		, version
 		, distribution
 		, runtimeVersion
-		, ...(!componentRoot ? { runtimePacking: await runtimePacking() } : {})
+		, ...(!component ? { runtimePacking: await runtimePacking() } : {})
 		, runtimeIdentity
 		, nativeRuntimeIdentity
 		, glibcMinimumVersion
@@ -283,6 +335,7 @@ export const stageCpanPackage = async ({ outputRoot
 		, include
 		, prebuilt: []
 		, ...(ownedValues ? { ownedValues } : {})
+		, ...(ioContract ? { [hostImports ? "hostImports" : taskDelivery ? "taskDelivery" : "syncIO"]: ioContract } : {})
 		, files: {} };
 	await refreshCpanInventory(directory, manifest);
 	return { directory, manifest };

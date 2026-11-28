@@ -50,6 +50,292 @@ UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt
 
 Calls copy nested inputs and outputs. Null, negative Nat, out-of-range unsigned values and malformed UTF-16 throw. Native input and output conversions share a 16 MiB budget; the Java input scratch budget is also bounded. An oversized result throws after Lean returns. Scoped native memory and deep owned results are released on failure. The loader checks bundled native hashes, shares a compatible runtime and removes its private extracted files at normal JVM shutdown.
 
+### Bind an application-owned class
+
+If a prepared package imports a JVM class, pass the matching public class to
+its generated `Api.bindHosts`. For example, the Workshop fixture declares a
+constructor, a read method, a mutable level and an identity method. Its Java
+application can supply this class:
+
+```java
+public final class Meter {
+    private long level;
+    public Meter(long initial) { level = initial; }
+    public long read() { return level; }
+    public long getLevel() { return level; }
+    public void setLevel(long n) { level = n; }
+    public Meter identity() { return this; }
+}
+```
+
+In an application method that can throw `Exception`:
+
+```java
+try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
+    Meter meter = api.make(21);
+    api.update(meter, 34);
+    if (api.identity(meter) != meter || meter.read() != 34) throw new AssertionError();
+}
+```
+
+Binding checks the member signatures before returning. Lean `UInt32` uses
+Java `long` in the range 0–4,294,967,295. If a method throws and Lean
+propagates the original error, Java receives the same exception object.
+Three exceptions to recovery are `VirtualMachineError`, `LinkageError` and
+`ThreadDeath`. The throwing call preserves the original throwable and
+retires the shared Lean runtime. Catching it inside a host method cannot
+re-enable calls through this package or another package using that runtime.
+Closing the binding ends calls through that binding; it does not close
+your application object.
+
+When a synchronous export uses a record containing your class, the generated
+record has the same type parameter as the binding. For example, `Pair<Meter>`
+has typed getters: `pair.getLead()` returns the original meter, while
+`pair.getSample()` returns a copy of the byte array. Use try-with-resources for
+each record you receive. Closing the record ends access through its getters;
+it doesn't close its meters or revoke a Lean function that retained them.
+
+A factory can return a Lean function that remembers a particular meter.
+For a package exporting `remember : Box → IO (Box → IO Box)`:
+
+```java
+try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
+    Meter captured = api.make(12);
+    try (var remember = api.remember(captured)) {
+        if (remember.invoke(api.make(19)) != captured) throw new AssertionError();
+    }
+}
+```
+
+Keep the binding open while using the function. Closing just the function
+releases its capture; closing the binding revokes all functions it created.
+An invocation already executing can finish if its own function is closed
+from an application method. Later calls fail with `IllegalStateException`.
+The callable also implements the standard Java functional interface for its
+signature. For example, a worker that takes a `Function<Meter,Meter>` accepts
+`remember` directly. If a member throws, the worker receives the original
+exception, including a checked exception.
+
+If Lean returns `Except Meter Meter`, both branches of the generated
+`Result<Meter,Meter>` carry the original object. If Lean *throws* a meter
+through `EIO Meter Unit`, catch the error class for that declaration. For
+example, given the Workshop export `rejectBox`:
+
+```java
+try {
+    api.rejectBox(meter);
+} catch (org.leanbridge.workshop.RejectBoxError e) {
+    Meter original = e.payload(Meter.class);
+    if (original != meter) throw new AssertionError();
+}
+```
+
+The class argument checks the type; it does not look up a native handle.
+For a nested error, the same accessor returns a typed `Result` and checks
+the object in the active branch. The payload remains usable after closing
+the binding. A wrong class for that object throws `ClassCastException`.
+
+If the package also exports workers, call class-bearing tasks on the same
+binding. In the Workshop worker example:
+
+```java
+try (var api = org.leanbridge.workshop.Api.bindHosts(Meter.class)) {
+    Meter meter = api.make(21);
+    Meter returned = api.relay(meter, value -> value).get();
+    if (returned != meter) throw new AssertionError();
+}
+```
+
+The return type of `relay` here is `CompletableFuture<Meter>`. A cursor
+returns a `Flow.Publisher<Meter>`; subscription alone does not start the
+Lean cursor. Closing the binding cancels its pending tasks and ends its
+subscriptions. It does not close the meter or a second binding. A publisher
+kept after close cannot start against a new binding. Close is refused while
+a synchronous call is active or from inside the binding’s own retained
+callback; let that call return first. Workers with copied values only, such
+as `Api.scalar(10)`, need no binding.
+
+### Call synchronous IO
+
+An installed Maven package can expose Lean `BaseIO`, `IO` and `EIO` as
+ordinary Java methods. A write finishes before the method returns. You don't
+create a future, attach a native thread, or start a scheduler.
+
+The [Journal package](../publish/maven.md#export-synchronous-io) writes and
+reads a file. Its `choose` method can throw a Lean error containing a
+structured value. Run this example with a writable file path; it prints
+`ready` and then `37`:
+
+```java
+import org.leanbridge.journal.Api;
+import org.leanbridge.journal.ChooseError;
+import org.leanbridge.journal.Result;
+
+class Example {
+    public static void main(String[] args) {
+        Api.store(args[0], "ready");
+        System.out.println(Api.read(args[0]));
+        try {
+            Api.choose(true, false, "unused");
+        } catch (ChooseError e) {
+            Result<String, Long> payload = e.payload();
+            if (payload instanceof Result.Err<String, Long> err)
+                System.out.println(err.error());
+        }
+    }
+}
+```
+
+A returned `Except` is a `Result.Ok` or `Result.Err`; it does not throw.
+A thrown `EIO` raises the declaration's exception, such as `ChooseError`,
+with a typed `payload()`. A file I/O failure raises `LeanIOException`
+with the Lean declaration and an `IOException` cause. These failures leave
+the package usable. Invalid inputs are rejected before the call enters Lean.
+A malformed native result retires the shared runtime; later calls fail
+instead of reusing it.
+
+You can call from platform or virtual threads. Compatible packages serialize
+Lean work on one native thread. The [installed checks](../evidence/jvm-sync-io-20261123.json)
+cover both thread types, concurrent writes to a Lean counter, and both
+package load orders.
+
+### Share a Lean resource between packages
+
+Two installed Maven packages can work on the same Lean object. Here Desk
+creates a ticket; Counter increments its count. This prints `42`:
+
+```java
+import org.leanbridge.desk.Api;
+
+class Example {
+    public static void main(String[] args) {
+        try (var ticket = Api.issue(41); var updated = org.leanbridge.counter.Api.bump(ticket)) {
+            System.out.println(Api.count(updated));
+        }
+    }
+}
+```
+
+Each result is an independently closeable lease. Passing `ticket` borrows it;
+`bump` does not take it away. Use `sameResource` to compare Lean object identity
+and `retain()` when a second owner needs its own lifetime. A declared exception
+whose `payload()` is a resource also gives the catcher a lease to close.
+That lease [remains usable after the input closes](../evidence/jvm-error-owner-20261126.md);
+use try-with-resources on the payload even if no other handle is open.
+Packages built against different definitions of `Ticket` expose different
+Java types. The [Maven configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results)
+shows how authors select the shared type.
+
+### Iterate without a scheduler
+
+An immediate Lean iterator returns a single-pass, closeable Java iterator.
+Use try-with-resources when you might stop early:
+
+```java
+try (var values = org.leanbridge.dials.Api.sequence(4)) {
+    for (long value : values) {
+        System.out.println(value);
+        if (value == 1) break;
+    }
+}
+```
+
+Opening the cursor calls the Lean factory. The first `hasNext()` pulls one
+item; repeated calls do not advance it until `next()` takes the item.
+Exhaustion or a step failure closes the cursor. If an item is a resource,
+the caller owns it after `next()`; close it separately.
+
+### Await tasks and consume streams
+
+A selected Lean `Task α` returns a `CompletableFuture<T>`. A cursor returns a cold `Flow.Publisher<T>`: subscribing alone does not open the cursor, and Lean produces an item only when the subscriber requests one. This example prints `42` and then `2`.
+
+```java
+import java.math.BigInteger;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import org.leanbridge.timers.Api;
+import org.leanbridge.timers.Unit;
+
+class Example {
+    public static void main(String[] args) {
+        System.out.println(Api.immediate(BigInteger.valueOf(41)).join());
+        var count = new CompletableFuture<Integer>();
+        Api.units(BigInteger.TWO).subscribe(new Flow.Subscriber<Unit>() {
+            Flow.Subscription subscription;
+            int items;
+            public void onSubscribe(Flow.Subscription s) { subscription = s; s.request(1); }
+            public void onNext(Unit item) { items++; subscription.request(1); }
+            public void onError(Throwable error) { count.completeExceptionally(error); }
+            public void onComplete() { count.complete(items); }
+        });
+        System.out.println(count.join());
+    }
+}
+```
+
+Call `future.cancel(false)` to release your interest in a task and ask its Lean worker to stop. Non-cooperative work can finish later; it cannot change the cancelled future. Call `subscription.cancel()` to close a cursor early. A nonpositive request fails the subscription. A failed factory, a failed task or stream step, and a returned `Result.Err` remain distinct. A retired runtime wakes pending calls. Synchronous companions stay ordinary methods.
+
+Use `CompletionException.getCause()` when `join()` reports a Lean failure.
+A subscriber receives the original error in `onError`. A returned
+`Result.Err` is an ordinary value in either API.
+
+If a pull is already waiting, `cancel()` closes the Lean cursor without
+sending `onComplete` or `onError`. Requesting zero instead signals one
+`IllegalArgumentException`. Neither path delivers the worker's late item.
+See the [installed subscriber check](../evidence/async-delivery-crosswalk-20261125.md#the-same-blocked-pull-in-java-and-kotlin).
+
+The [JDK subscription contract](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/concurrent/Flow.Subscription.html) defines demand and cancellation. See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
+
+### Receive resources from tasks and streams
+
+An asynchronous result can own a Lean object. Here a task returns a new
+lease on the same ticket. Close the result and the input independently:
+
+```java
+import org.leanbridge.desk.Api;
+
+class Example {
+    public static void main(String[] args) {
+        try (var ticket = Api.issue(42); var completed = org.leanbridge.depot.Api.checked(false, ticket).join()) {
+            System.out.println(Api.count(completed));
+        }
+    }
+}
+```
+
+A task borrows its input when started. Once the call returns its future, you
+can close the input; the worker keeps the underlying Lean object alive. A
+cold publisher borrows its input on first demand, so keep that input open
+until the subscription actually starts. Each item passed to `onNext` belongs
+to the subscriber, even if it cancels immediately. A resource carried by a
+declared exception belongs to the catcher. Cancellation releases native
+results that never reach the future or subscriber.
+
+### Pass a callback to a Lean task
+
+If the package declares a callback parameter single-use, a second call
+never enters your lambda. If Lean propagates that refusal, the future completes
+exceptionally with the package's `CallbackAlreadyInvokedException`. With `join()`, inspect the
+`CompletionException` cause; its `declaration()` identifies the Lean
+operation. You can pass the same lambda to a separate task or parameter.
+
+Pass a lambda directly, or use a registration when you need to revoke future calls. This example uses the prepared `com.acme:feedback` package:
+
+```java
+import org.leanbridge.feedback.Api;
+import org.leanbridge.feedback.RetainedCallback;
+
+class Example {
+    public static void main(String[] args) {
+        try (var addTwo = RetainedCallback.function((Long n) -> n + 2)) {
+            System.out.println(Api.once(40, addTwo.callback()).join());
+        }
+    }
+}
+```
+
+`close()` is safe during a callback: that invocation may finish, but later invocations fail. Cancelling one future does not revoke a registration shared with another package. The callback runs on a virtual thread, outside the native owner. It may call Lean again, but it cannot wait on its own unfinished future. If its exception escapes through Lean unchanged, `join()` reports that same throwable as the cause. If Lean catches or replaces it, the caller sees the result or replacement instead.
+
 ### Arrays and records
 
 Lean `Array T` uses a typed Java array. Primitive elements use primitive arrays, such as `long[]` for `Array UInt32`. Named copied structures become Java records with typed component accessors. Arrays and records can nest; calls copy their contents into independent returned values.
@@ -265,9 +551,38 @@ Callbacks borrow one synchronous call. Their copied arguments remain valid after
 
 Call `invoke` on the closure's creating platform thread. Java virtual threads are rejected for callable operations because they can move between native threads. `close` is idempotent, may run on another thread, and defers native release while a call is active. All references and saved method references reject invocation after closing. `isClosed` reports explicit closure; a Cleaner releases abandoned leases as a fallback. Use try-with-resources for deterministic cleanup.
 
-Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions and retained host callbacks remain unsupported. Resource-containing payloads use the [owned profile](#owned-resources-and-aggregates); recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
+Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. This callable profile does not retain host callbacks or make them asynchronous. For top-level tasks and streams, use the Maven task profile. Resource-containing payloads use the [owned profile](#owned-resources-and-aggregates); recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
 
 ### Structured callback values
+
+When a callback receives a Lean function directly, use it for the duration of
+that callback. In the Tariff example,
+`Api.visitQuote(40, (quote, n) -> quote.invoke(n), 2)` returns 42. To keep
+the function, call `quote.retain()` before the callback returns and close the
+returned lease when finished. In packages that advertise canonical resource
+equality, `quote.sameIdentity(lease)` checks the live Lean identity. The
+original borrow cannot be called or compared after the callback returns.
+See the [Java and Kotlin checks](../evidence/jvm-function-fields-20261126.md#a-function-passed-into-a-callback).
+
+For an owned record with a leased function field, call `retain()` before
+closing the original if you need an independent lifetime. In the
+[installed Tariff client](../evidence/jvm-function-fields-20261126.md),
+`kept = tariff.quote().retain()` remains callable after `tariff.quote().close()`.
+Use try-with-resources for `kept`. A plain Java lambda borrowed by a call
+does not gain that lifetime when Lean puts it in a record.
+
+If the package manifest lists `hostInputRecords`, its input type also
+accepts Java lambdas. For the native Tariff example:
+
+```java
+var row = new TariffInput(units -> units + 40);
+long price = Api.applyTariffWithHostFields(row, 2);  // 42
+```
+
+To use an existing Lean function instead, pass the original record to
+`TariffInput.fromLeased(tariff)`, or set individual fields with
+`TariffInput.builder().quote(kept).build()`. A returned Lean lease owns
+its reference; an escaped Java lambda is refused before dispatch.
 
 Callbacks and returned closures accept arrays, Lists, options, results, nested
 binary products, copied records, variants and aliases with acyclic copied
@@ -367,7 +682,7 @@ Cycles, null values, negative Nat values and invalid branches reject. Callback
 exceptions preserve the original Throwable after cleanup. Malformed native
 results retire the runtime; conversion limits and allocation failures allow
 later calls. Resources or callable identities inside copied aggregates,
-retained host callbacks and asynchronous delivery remain unsupported.
+retained host callbacks and asynchronous delivery are not part of this callable profile.
 
 When a synchronous Java or Kotlin callback returns a selected `Subtype` or
 checked record, pass a generated `WithRecovery<SAM, Result>` containing the
@@ -957,6 +1272,8 @@ The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-pr
 Profiles: Java. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows. Tasks can [call back into the JVM](#pass-a-callback-to-a-lean-task) using copied scalar arguments and replies.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Java in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

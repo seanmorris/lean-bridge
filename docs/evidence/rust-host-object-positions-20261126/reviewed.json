@@ -1,0 +1,45 @@
+{
+  "executions": [
+    {
+      "mode": "workers",
+      "observations": [
+        "object positions: immediate Box identity; callback received Box and returned the original Dial",
+        "worker checks passed: exact identity, errors, reentry, cancellation, wake and cleanup"
+      ]
+    },
+    {
+      "mode": "panic-worker",
+      "observations": [
+        "worker checks passed: panic retirement and cleanup"
+      ]
+    }
+  ],
+  "releases": [
+    {
+      "bindingIr": "b6ef2b292ce7ef45081a007523cbb756cbb1ac2e43ae25eeea871e1565bd907c",
+      "component": "0b8cd2c3cac621b7b891a4d1736e8eb552e96e8199f86def953e2b068dbb6302",
+      "name": "reviewed",
+      "owner": "rust",
+      "receipt": "4a211619ed330a1434b88c4effd77e818edfb0643fd980374a75ff713ccc1e9d",
+      "reviewed": "c458f8475c13e9ac06563e8637700a40067d3b6546214371d84be0f19e6df288",
+      "runtime": "79fa0dda11a30cbc1b0071ec4562d02e9eec16eeef3b61a7e0ac246f347aef69",
+      "source": "71d9c80775900d093099801a845be2aab91ff550452165aaaec359f31e93e6d3"
+    },
+    {
+      "bindingIr": "d5fe3e9010e7350949bccdfd218c17b74b236ba636fc7f876b7f094e4d7a9151",
+      "component": "0def83656f06373cca82afe6eceb2001182f5eaaef6fb032861430d94062d24d",
+      "name": "peer",
+      "owner": "rust",
+      "receipt": "5e43103b493fb7b7666d7c60641a5af9abe3bdc7c779458471c6252fca3c5791",
+      "reviewed": null,
+      "runtime": "79fa0dda11a30cbc1b0071ec4562d02e9eec16eeef3b61a7e0ac246f347aef69",
+      "source": "83e53e16c12ebdbdc9840e1a7280559e8cd96e5903a125f49b8399fc8313b0d0"
+    }
+  ],
+  "route": "reviewed",
+  "sources": {
+    "effects.rs": "23f6876d593862df89af30f372297c0e8a3f2b05fd8aaf9e735998df376e343f",
+    "main.rs": "c4dd2a6a415ac6a4a689a06df32c373a279b3d38509ed1588b55d83e6a37709a",
+    "synchronous.rs": "8dc3f7f7cba257ca418f225093418ba2077e97a3bf577034dca7230b64ddc180"
+  }
+}

@@ -10,10 +10,23 @@ import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedDotnetValues } from "../src/backends/dotnet/owned-values.mjs";
+import { generateOwnedDotnetPackage } from "../src/backends/dotnet/owned-package.mjs";
 import { ownedDotnetRuntime } from "../src/backends/dotnet/owned-runtime.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
+import { leasedClosureFieldReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+
+test("C# callback views compare native identity without adding whole-result owners", () => {
+	const pkg=generateOwnedDotnetPackage(leasedClosureFieldReviewedIr({staged: true,incoming: true}));
+	assert.ok(pkg.c.callbackArgumentViews && pkg.canonicalEquality);
+	assert.equal(pkg.wholeOwners,false);assert.equal(pkg.contract.resultAnchors,undefined);
+	const features=JSON.parse(pkg.files["binding-manifest.json"]).supportedFeatures;
+	assert.ok(features.includes("canonical-resource-equality") && !features.includes("original-owner-results"));
+	assert.match(pkg.files["src/"+pkg.assembly+"/Values.cs"],/bool SameIdentity\(PackQuoteArgument0Closure other\)/u);
+	assert.match(pkg.files["src/"+pkg.assembly+"/Calls.cs"],/equal\(state.Require\(\), a, b, &result\)/u);
+	assert.doesNotMatch(pkg.files["README.md"],/compare wrapper identity/u);
+});
 
 test("owned C# consumer types stay safe, closed and typed across assembly boundaries", {
 	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 300000
@@ -89,13 +102,27 @@ public record ForgedChoice : Choice
 		, ["closed variant", "class External : Choice {}", /CS8865|CS1729|CS7036/u]
 		, ["sealed resource", "class External : Ticket {}", /CS0509/u]
 	];
-	for(const [name, body, diagnostic] of rejections)
+	// Invalid bases stop Roslyn before it checks method bodies. Compile the two
+	// phases separately and require the diagnostic from each individual source.
+	await saveLakeFile(directory, "consumer/Program.cs", "internal static class Program { static void Main() {} }\n");
+	for(const baseTypes of [true,false])
 	{
-		const external = body.startsWith("class ");
-		await saveLakeFile(directory, "consumer/Program.cs", `using LeanBridge.OwnedAggregates;\ninternal static class Program { static void Main() { ${external ? "" : body} } }\n${external ? body : ""}`);
+		const batch=[];
+		for(const [i,[name,body,diagnostic]] of rejections.entries())
+		{
+			if(body.startsWith("class ")!==baseTypes) continue;
+			const id="Rejected"+i,file=id+".cs";
+			const declaration=baseTypes?body.replace("class External","class "+id):`internal static class ${id} { static void Run() { ${body} } }`;
+			await saveLakeFile(directory,"consumer/"+file,"using LeanBridge.OwnedAggregates;\n"+declaration+"\n");
+			batch.push({file,name,diagnostic});
+		}
 		await assert.rejects(build, error => {
-			assert.match(JSON.stringify(error.details ?? error.message), diagnostic, name); return true;
+			const lines=(error.details?.stdout??error.message).split("\n");
+			for(const {file,name,diagnostic} of batch)
+				assert.ok(lines.some(l=>l.includes("/"+file+"(") && diagnostic.test(l)),name+": "+lines.join("\n"));
+			return true;
 		});
+		for(const {file} of batch) await rm(join(directory,"consumer",file));
 	}
 	await saveLakeFile(resolve("build/owned-dotnet-values"), "public.json", canonicalJson({
 		checks: 16, rejectedConsumers: rejections.length, nativeLibraryLoaded: false

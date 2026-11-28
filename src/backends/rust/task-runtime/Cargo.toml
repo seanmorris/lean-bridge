@@ -1,0 +1,16 @@
+[package]
+name = "lean-bridge-task-runtime"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.90"
+license = "MIT"
+description = "Shared native Lean resources and errors, with optional executor-independent task and stream delivery"
+
+[features]
+default = ["async"]
+async = ["dep:async-io", "dep:futures-core"]
+host-objects = []
+
+[dependencies]
+async-io = { version = "=2.6.0", optional = true }
+futures-core = { version = "=0.3.31", optional = true }

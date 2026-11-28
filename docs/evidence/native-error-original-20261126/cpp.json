@@ -1,0 +1,43 @@
+{
+  "consumerSha256": "1723c6105c132919c7a6387443e071b7b74bbc1a98cc1bd20e5d18bebe6be146",
+  "nominal": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+  "owner": {
+    "consumerSha256": "8cf98eb42e04e99a72a150c64aa3f6766e496fea9ac65686baec5e6509d6c3e2",
+    "observed": "typed synchronous failure owned the badge through the peer task; zero identities after payload release"
+  },
+  "route": "ordinary",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sync": {
+    "archives": [
+      {
+        "bytes": 51326920,
+        "path": "archives/lease-sync-1.0.0-cpp.tar.gz",
+        "sha256": "7158a1a0094f962e743996e390bb4dde4118a63e6279ec2884a8e9864df3f683"
+      }
+    ],
+    "bindingIrSha256": "0dde9c75f9f50d9d7d22bb9b4df2d1c6e001a1706a4466658794bcef186d5c42",
+    "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+    "profile": "native-cpp-io-v1",
+    "receiptSha256": "4739e454e1633a75a5aaf8b6f4ac050be71af5bc7ee330618dfe415d71522cc1",
+    "reviewedSourceSha256": null,
+    "sourceTreeSha256": "f7d9f219655deadd9beb8074c49c5d2939c2e122cf5d2696f2e01531adbd4e51"
+  },
+  "target": "cpp",
+  "task": {
+    "archives": [
+      {
+        "bytes": 51330296,
+        "path": "archives/lease-task-1.0.0-cpp.tar.gz",
+        "sha256": "c01a76712cdc920ae83968b51a730289ecde2e62dbcf63df1e502a423e696137"
+      }
+    ],
+    "bindingIrSha256": "b2227b4b0a97a9b1132028f48a366a211911955736d5cbacf7e89887157a5843",
+    "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+    "profile": "native-cpp-task-v1",
+    "receiptSha256": "82d6ae1d876184f446200921b364d934427f31399fdd92c6b5b0c958cb46e0d4",
+    "reviewedSourceSha256": null,
+    "sourceTreeSha256": "5be749ee57d1479d6fa12f37e8dc38cdb74aa3007d5af7e1f53a13f212fd56d6"
+  }
+}

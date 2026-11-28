@@ -1,0 +1,59 @@
+{
+  "executions": {
+    "chromium": "Chromium: PHP Zend API: installed class bindings, typed errors, scoped cancellation and cursors passed; zero live owners",
+    "composer": "composer: PHP Zend API: installed class bindings, typed errors, scoped cancellation and cursors passed; zero live owners",
+    "embedded": "embedded: PHP Zend API: installed class bindings, typed errors, scoped cancellation and cursors passed; zero live owners",
+    "trap": "callback trap preserved; peer refused; new work refused"
+  },
+  "packages": [
+    {
+      "packages": [
+        {
+          "name": "example/php-sidekick",
+          "role": "api",
+          "sha256": "51b80c1c11b1d0a6888c9c6f266f091568721434b8ccfc3245405a0abaef88a2"
+        },
+        {
+          "name": "@example/php-sidekick",
+          "role": "component",
+          "sha256": "f335dd1505300edd7fe2f85f3dbdaf351eb7317245c5625d6be085a2ff5f6cb5"
+        },
+        {
+          "name": "@lean-bridge/runtime",
+          "role": "runtime",
+          "sha256": "1f13d6d362a6d61785162879c148651254750f515eb6373c0fbe9f8669f6c4dc"
+        }
+      ],
+      "receipt": "5595d97bf5562d80e19bd642fd8507af3100707fcad0f0cf7755b311d80926a6",
+      "route": "peer"
+    },
+    {
+      "packages": [
+        {
+          "name": "example/php-workshop",
+          "role": "api",
+          "sha256": "efcbd848b2a3699d840657faa1f1cc037f5a586ee078a24250836cc5f7a38516"
+        },
+        {
+          "name": "@example/php-workshop",
+          "role": "component",
+          "sha256": "6fc237fb871bb60996a4302eb9a15b813107849a9ad844f799c058820a5d4571"
+        },
+        {
+          "name": "@lean-bridge/runtime",
+          "role": "runtime",
+          "sha256": "1f13d6d362a6d61785162879c148651254750f515eb6373c0fbe9f8669f6c4dc"
+        }
+      ],
+      "receipt": "ee87f27faf6a47bcdd59d76174d1c4c353c1df1e05f2e07559e93dd36d628701",
+      "route": "ordinary"
+    }
+  ],
+  "route": "ordinary",
+  "sources": {
+    "installed-realms.mjs": "2541dab75224e5b86c9be7c0bb84637d5bc5cdb3f218710388ea6636cbe9bb24",
+    "installed.mjs": "107b28c979947fc81d6c8b1484ec11c5b37d6bf4f37db15a6c9c96ed8b75bbc4",
+    "zend-functions.php": "5ec234c3fe10d43e3784fb297fde92a614f3412b9204d916420b34de15b786f2",
+    "zend-installed.php": "39495dd7bf4efe7c2998c3a24b36b3e5d122b3bcfa032ddd506d77a2ba3eb6a6"
+  }
+}

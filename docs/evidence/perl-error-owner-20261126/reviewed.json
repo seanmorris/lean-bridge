@@ -1,0 +1,142 @@
+{
+  "archives": {
+    "Peer": "c73ff419cfa8868a541349f68402a7aef4a21b1cf7e3afc27bbb580fdebec6f5",
+    "Workshop": "c73b2b0e47f9690a9c2d2a090816d6ffae8637f573d47fd411bd087605bad109",
+    "runtime": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+  },
+  "installed": [
+    {
+      "arch": "x86_64-linux-thread-multi",
+      "clientSha256": "0518a7ecebfd546ae21fc5280670ba4faa08a1d7c09f71639de151233b8e6771",
+      "componentMode": "build-xs",
+      "errorOwners": [
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Workshop",
+          "peerAfter": 37,
+          "thrower": "Peer",
+          "weakCleared": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Peer",
+          "peerAfter": 37,
+          "thrower": "Workshop",
+          "weakCleared": 1
+        }
+      ],
+      "installedXsDigests": {
+        "Peer": "35188673c3bb8e53d35d5be1dfe44a932526117af8ffaf329eb82ff59b5d6b09",
+        "Runtime": "85ccbb92aa56bcf79a3c1ba268e219e66eb13acbc601c5e554dd3b7aa04f22f0",
+        "Workshop": "21ff25231f9c11e24dd869c6c220151a23d890f07c3abaadf6db5e0a6a73e2d5"
+      },
+      "originalClientSha256": "398d3a7f4373743499267957522ef653cdf49e09c7b5f486dfa92a5bed10baa2",
+      "threads": "threaded",
+      "version": "5.36.3"
+    },
+    {
+      "arch": "x86_64-linux",
+      "clientSha256": "0518a7ecebfd546ae21fc5280670ba4faa08a1d7c09f71639de151233b8e6771",
+      "componentMode": "build-xs",
+      "errorOwners": [
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Workshop",
+          "peerAfter": 37,
+          "thrower": "Peer",
+          "weakCleared": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Peer",
+          "peerAfter": 37,
+          "thrower": "Workshop",
+          "weakCleared": 1
+        }
+      ],
+      "installedXsDigests": {
+        "Peer": "17bd8b85cab451e680b6dcbfeb48fbe778f3ba80b108c97285879eeb5dc1ad1a",
+        "Runtime": "30bcb000ce32ca8badc87710d2d40181dd1ca8166546c3eb4a6c71856a976324",
+        "Workshop": "b074608f7ca7a36e800fcf4cae52749a535c88b925745fcdb42c3cfbb4f8d833"
+      },
+      "originalClientSha256": "398d3a7f4373743499267957522ef653cdf49e09c7b5f486dfa92a5bed10baa2",
+      "threads": "unthreaded",
+      "version": "5.36.3"
+    },
+    {
+      "arch": "x86_64-linux-thread-multi",
+      "clientSha256": "0518a7ecebfd546ae21fc5280670ba4faa08a1d7c09f71639de151233b8e6771",
+      "componentMode": "build-xs",
+      "errorOwners": [
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Workshop",
+          "peerAfter": 37,
+          "thrower": "Peer",
+          "weakCleared": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Peer",
+          "peerAfter": 37,
+          "thrower": "Workshop",
+          "weakCleared": 1
+        }
+      ],
+      "installedXsDigests": {
+        "Peer": "e4ab1d3ea36a42fc4f824cfbdf5e88c240a350008890750e144a118861535565",
+        "Runtime": "670dd22696597d29db5b8f0df72786e960d9623212eb576da6b38f68e484a7a4",
+        "Workshop": "371693866e523caa03e89cbbefb0538d7cace93ebb95b045b1ac9074e90ca6f1"
+      },
+      "originalClientSha256": "398d3a7f4373743499267957522ef653cdf49e09c7b5f486dfa92a5bed10baa2",
+      "threads": "threaded",
+      "version": "5.38.2"
+    },
+    {
+      "arch": "x86_64-linux",
+      "clientSha256": "0518a7ecebfd546ae21fc5280670ba4faa08a1d7c09f71639de151233b8e6771",
+      "componentMode": "build-xs",
+      "errorOwners": [
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Workshop",
+          "peerAfter": 37,
+          "thrower": "Peer",
+          "weakCleared": 1
+        },
+        {
+          "after": 42,
+          "before": 23,
+          "destructions": 1,
+          "peer": "Peer",
+          "peerAfter": 37,
+          "thrower": "Workshop",
+          "weakCleared": 1
+        }
+      ],
+      "installedXsDigests": {
+        "Peer": "5e718e96b9301309ae375b9f189944878262f89d054ca98f2381117fdf25c374",
+        "Runtime": "89321f836fab00c33c95178d61832e89eab4559b1468ff4440de094d8f57f157",
+        "Workshop": "2499c1be3e3f63b5d76bdabea55d8604c569153740667d85493818bd9b716124"
+      },
+      "originalClientSha256": "398d3a7f4373743499267957522ef653cdf49e09c7b5f486dfa92a5bed10baa2",
+      "threads": "unthreaded",
+      "version": "5.38.2"
+    }
+  ],
+  "route": "reviewed"
+}

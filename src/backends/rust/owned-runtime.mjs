@@ -15,9 +15,10 @@ import { ownedRustAnchoredTransferRuntime } from "./owned-borrows.mjs";
  * @param options.dynamic - Resolve the authenticated embedded library table.
  * @param options.transferredInputs - Observe input consumption during callbacks.
  * @param options.anchoredResults - Validate whole-value result owners.
+ * @param options.callbackArgumentViews - Compare scope-distinct handles by their underlying identity.
  * @param options.receiverExports - Preserve whole owners for method receivers.
  */
-export const ownedRustRuntime = (prefix, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+export const ownedRustRuntime = (prefix, { dynamic = false, transferredInputs = false, anchoredResults = false, callbackArgumentViews = false, receiverExports = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Rust prefix");
 	const wholeOwners = anchoredResults || receiverExports;
 	return `
@@ -150,7 +151,7 @@ pub(crate) mod owned_runtime {
             owners.retain(|weak| weak.strong_count() != 0);
             owners.try_reserve(1).map_err(|_| Error::Allocation)?;
             let slot = Rc::new(Slot { owner: Cell::new(std::ptr::null_mut()), state: Rc::clone(self) });
-            let lease = Rc::new(Lease { state: Rc::clone(self), kind: LeaseKind::Owned(Rc::clone(&slot))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result" : ""} });
+            let lease = Rc::new(Lease { state: Rc::downgrade(self), kind: LeaseKind::Owned(Rc::clone(&slot))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result" : ""} });
             owners.push(Rc::downgrade(&slot));
             slot.owner.set(std::mem::replace(&mut owner.value, std::ptr::null_mut()));
             Ok(lease)
@@ -168,15 +169,21 @@ pub(crate) mod owned_runtime {
     }
 
     enum LeaseKind { Owned(Rc<Slot>), Borrowed(Rc<Cell<bool>>) }
-    pub(crate) struct Lease { pub(crate) state: Rc<State>, kind: LeaseKind${transferredInputs ? ", input_move: RefCell<Option<Rc<InputMoveSignal>>>" : ""}${wholeOwners ? ", borrowed_result: bool" : ""} }
+    // An owning slot pins the session. A callback view must not pin it after
+    // its frame returns, even if the application keeps that expired wrapper.
+    pub(crate) struct Lease { pub(crate) state: Weak<State>, kind: LeaseKind${transferredInputs ? ", input_move: RefCell<Option<Rc<InputMoveSignal>>>" : ""}${wholeOwners ? ", borrowed_result: bool" : ""} }
     impl Lease {
+        pub(crate) fn belongs_to(&self, state: &Rc<State>) -> bool {
+            self.state.as_ptr() == Rc::as_ptr(state)
+        }
         pub(crate) fn require(&self) -> Result<(), Error> {
-            self.state.require()?;${transferredInputs ? "\n            if self.input_move.borrow().as_ref().is_some_and(|signal| signal.consumed()) { return Err(Error::Closed); }" : ""}
+            let state = self.state.upgrade().ok_or(Error::Closed)?;
+            state.require()?;${transferredInputs ? "\n            if self.input_move.borrow().as_ref().is_some_and(|signal| signal.consumed()) { return Err(Error::Closed); }" : ""}
             let active = match &self.kind {
                 LeaseKind::Owned(slot) => ${anchoredResults ? `{
                     let owner = ${transferredInputs ? "self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get())" : "slot.owner.get()"};
                     if owner.is_null() { return Err(Error::Closed); }
-                    checked(unsafe { result_validate(self.state.require()?, owner) })?; true
+                    checked(unsafe { result_validate(state.require()?, owner) })?; true
                 }` : wholeOwners && transferredInputs ? "!self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get()).is_null()" : "!slot.owner.get().is_null()"},
                 LeaseKind::Borrowed(active) => active.get(),
             };
@@ -184,7 +191,7 @@ pub(crate) mod owned_runtime {
         }${wholeOwners ? `
         pub(crate) fn owner(&self, state: &Rc<State>) -> Result<*mut c_void, Error> {
             self.require()?;
-            if !Rc::ptr_eq(&self.state, state) { return Err(Error::InvalidArgument); }
+            if !self.belongs_to(state) { return Err(Error::InvalidArgument); }
             match &self.kind {
                 LeaseKind::Owned(slot) => Ok(${transferredInputs ? "self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get())" : "slot.owner.get()"}),
                 LeaseKind::Borrowed(_) => Err(Error::InvalidArgument),
@@ -196,7 +203,7 @@ ${transferredInputs ? wholeOwners ? ownedRustAnchoredTransferRuntime : ownedRust
         pub(crate) fn new(state: &Rc<State>) -> Result<Self, Error> {
             state.require()?;
             let active = Rc::new(Cell::new(true));
-            let lease = Rc::new(Lease { state: Rc::clone(state), kind: LeaseKind::Borrowed(Rc::clone(&active))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result: true" : ""} });
+            let lease = Rc::new(Lease { state: Rc::downgrade(state), kind: LeaseKind::Borrowed(Rc::clone(&active))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${wholeOwners ? ", borrowed_result: true" : ""} });
             Ok(Self { active, lease })
         }
     }
@@ -205,20 +212,20 @@ ${transferredInputs ? wholeOwners ? ownedRustAnchoredTransferRuntime : ownedRust
 
 pub struct Resource<Kind> {
     lease: Option<std::rc::Rc<owned_runtime::Lease>>,
-    handle: *mut std::ffi::c_void,
+    handle: *mut std::ffi::c_void,${callbackArgumentViews ? "\n    equal: Option<fn(&Self, &Self) -> Result<bool, Error>>," : ""}
     kind: std::marker::PhantomData<fn() -> Kind>,
 }
 impl<Kind> Resource<Kind> {
-    pub(crate) fn from_owned(lease: std::rc::Rc<owned_runtime::Lease>, handle: *mut std::ffi::c_void) -> Result<Self, Error> {
+    pub(crate) fn from_owned(lease: std::rc::Rc<owned_runtime::Lease>, handle: *mut std::ffi::c_void${callbackArgumentViews ? ", equal: fn(&Self, &Self) -> Result<bool, Error>" : ""}) -> Result<Self, Error> {
         lease.require()?;
         if handle.is_null() { return Err(Error::InvalidArgument); }
-        Ok(Self { lease: Some(lease), handle, kind: std::marker::PhantomData })
+        Ok(Self { lease: Some(lease), handle,${callbackArgumentViews ? " equal: Some(equal)," : ""} kind: std::marker::PhantomData })
     }
     pub(crate) fn raw(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<*mut std::ffi::c_void, Error> {
         let lease = self.lease.as_ref().ok_or(Error::Closed)?;
         lease.require()?;
         if self.handle.is_null() { return Err(Error::Closed); }
-        if !std::rc::Rc::ptr_eq(&lease.state, state) { return Err(Error::InvalidArgument); }
+        if !lease.belongs_to(state) { return Err(Error::InvalidArgument); }
         Ok(self.handle)
     }
 ${transferredInputs && !wholeOwners ? `    pub(crate) fn transfer_lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
@@ -231,16 +238,20 @@ ${transferredInputs && !wholeOwners ? `    pub(crate) fn transfer_lease(&self, s
     }
 }
 impl<Kind> Default for Resource<Kind> {
-    fn default() -> Self { Self { lease: None, handle: std::ptr::null_mut(), kind: std::marker::PhantomData } }
+    fn default() -> Self { Self { lease: None, handle: std::ptr::null_mut(),${callbackArgumentViews ? " equal: None," : ""} kind: std::marker::PhantomData } }
 }
 impl<Kind> Clone for Resource<Kind> {
-    fn clone(&self) -> Self { Self { lease: self.lease.clone(), handle: self.handle, kind: std::marker::PhantomData } }
+    fn clone(&self) -> Self { Self { lease: self.lease.clone(), handle: self.handle,${callbackArgumentViews ? " equal: self.equal," : ""} kind: std::marker::PhantomData } }
 }
 ${anchoredResults ? "" : `impl<Kind> PartialEq for Resource<Kind> {
     fn eq(&self, other: &Self) -> bool {
-        self.handle == other.handle && match (&self.lease, &other.lease) {
+        ${callbackArgumentViews ? `if self.handle != other.handle {
+            if self.is_closed() || other.is_closed() { return false; }
+            return self.equal.is_some_and(|equal| equal(self, other).unwrap_or(false));
+        }
+        match` : "self.handle == other.handle && match"} (&self.lease, &other.lease) {
             (None, None) => true,
-            (Some(a), Some(b)) => std::rc::Rc::ptr_eq(&a.state, &b.state),
+            (Some(a), Some(b)) => std::rc::Weak::ptr_eq(&a.state, &b.state),
             _ => false,
         }
     }

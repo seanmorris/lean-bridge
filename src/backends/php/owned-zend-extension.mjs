@@ -7,12 +7,13 @@ import { canonicalJson } from "../../capsule/node.mjs";
 import { compileOwnedPhpZendModel } from "./owned-zend-model.mjs";
 import { ownedZendWalkSource } from "./owned-zend-walk.mjs";
 import { ownedZendCallbacks } from "./owned-zend-callbacks.mjs";
-import { ownedZendBorrowCalls, ownedZendBorrowEntries, ownedZendBorrowHandles } from "./owned-zend-borrow-calls.mjs";
+import { ownedZendRecordCalls } from "./owned-zend-host-records.mjs";
+import { ownedZendBorrowCalls, ownedZendBorrowEntries, ownedZendBorrowHandles, ownedZendIdentityHandle } from "./owned-zend-borrow-calls.mjs";
 
 const calls = model => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const signatures = new Map(model.callbacks.map(callback => [callback.id, callback.index]));
-	const declarations = [...model.functions.map(fn => ({ ...fn, entry: `call${fn.index}` }))
+	const declarations = [...[...model.functions,...model.recordInputs?.functions ?? []].map(fn => ({ ...fn, entry: `call${fn.index}` }))
 		, ...model.callbacks.map(fn => ({ ...fn, entry: `invoke${fn.index}` }))];
 	return declarations.map(fn => {
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
@@ -34,7 +35,7 @@ static void lgo_${fn.entry}_execute(lgo_${fn.entry}_frame *frame, zval *argument
   for (size_t index = 0; index < ${transfers.length}; ++index) frame->input_owners[index] = &frame->moves[index].owner;
   frame->transfer = (ov_input_transfers){ .owners = frame->input_owners, .count = ${transfers.length},
     .consume = lgo_input_consume, .context = call };` : ""}
-${parameters.map((node, index) => `${transfers.includes(index) ? `  if (lgo_input_begin(call, ${transfers.indexOf(index)})) return;\n` : ""}  if (!${fn.hostArguments[index] ? `lgo_host${signatures.get(node.id)}_begin(call, &arguments[${index}], &frame->a${index})`
+${parameters.map((node, index) => `${transfers.includes(index) ? `  if (lgo_input_begin(call, ${transfers.indexOf(index)})) return;\n` : ""}  if (!${fn.records?.[index] ? `lgo_row${node.index}(call, &arguments[${index}], &frame->a${index})` : fn.hostArguments[index] ? `lgo_host${signatures.get(node.id)}_begin(call, &arguments[${index}], &frame->a${index})`
 		: `lgo_to(&call->walk, ${node.index}, &arguments[${index}], &frame->a${index})`}) return;${transfers.includes(index) ? "\n  if (lgo_input_commit(call)) return;" : ""}`).join("\n")}
   call->walk.status = ${fn.symbol}(&call->walk.state->native, ${[...parameters.map((_, index) => `&frame->a${index}`), ...transfers.length ? ["&frame->transfer"] : [], "&frame->output", "&call->walk.lease->owner"].join(", ")});
   if (!call->walk.status && !call->bailout && !EG(exception))
@@ -124,19 +125,22 @@ static ZEND_FUNCTION(lgo_retire) {
  * Package admission and archive verification are performed by the build layer.
  *
  * @param generated - Private native adapters generated with wordBits32 and hostCallbacks.
+ * @param options - Capabilities recorded by the compiled component.
+ * @param options.hostInputRecords - Enable caller-created functions in selected record fields.
+ * @param options.callbackViewEquality - Enable identity comparison for direct callback views.
  */
-export const generateOwnedPhpZendExtension = generated => {
+export const generateOwnedPhpZendExtension = (generated,{hostInputRecords = true,callbackViewEquality = true} = {}) => {
 	const transferredInputs = generated.layout.functions.some(fn => fn.transfers?.length);
 	const anchoredResults = generated.layout.functions.some(fn => fn.anchor !== undefined);
 	const receiverExports = generated.layout.functions.some(fn => fn.receiver === 0);
 	const callbackResultAnchors = generated.layout.callbacks.some(fn => fn.anchor !== undefined);
 	const hostCallbacks = Boolean(generated.carriers.callbackSource);
 	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
-	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
+	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks, hostInputRecords, callbackViewEquality });
 	if(canonicalJson(model.layout) !== canonicalJson(generated.layout)) throw new TypeError("Zend transport requires its exact wasm32 native layout");
 	if(hostCallbacks ? generated.carriers.hostCallbacks?.length !== model.callbacks.length : generated.carriers.hostCallbacks !== undefined)
 		throw new TypeError("Zend transport requires compiler-authenticated host callback carriers");
-	const registrations = wholeOwners ? ownedZendBorrowEntries(model) : [...model.functions.map(fn => [`call${fn.index}`, `call${fn.index}`])
+	const registrations = wholeOwners ? ownedZendBorrowEntries(model) : [...[...model.functions,...model.recordInputs?.functions ?? []].map(fn => [`call${fn.index}`, `call${fn.index}`])
 		, ...model.callbacks.map(cb => [`invoke${cb.index}`, `invoke${cb.index}`])];
 	const source = `#include <php.h>
 #include <stdbool.h>
@@ -151,10 +155,10 @@ static int lgo_initialize(void) {
   return lean_bridge_native_component_initialize(${JSON.stringify(model.layout.model.component.id)}, lgo_component_initialize)
     ? LB_OWNED_OK : LB_OWNED_RUNTIME;
 }
-${ownedZendCallbacks(model, generated.carriers)}
+${ownedZendCallbacks(model, generated.carriers)}${ownedZendRecordCalls(model)}
 ${wholeOwners ? ownedZendBorrowCalls(model) : calls(model)}
 ${handles}
-${wholeOwners ? ownedZendBorrowHandles(model) : ""}\
+${wholeOwners ? ownedZendBorrowHandles(model) : model.callbackArgumentIdentity ? ownedZendIdentityHandle : ""}\
 static PHP_MINIT_FUNCTION(${model.stem}) {
   lgo_resource_type = zend_register_list_destructors_ex(lgo_resource_destroy, NULL, ${JSON.stringify(model.namespace + " owned value")}, module_number);
 ${wholeOwners ? `  lgo_root_resource_type = zend_register_list_destructors_ex(lgo_root_destroy, NULL, ${JSON.stringify(model.namespace + " whole owner")}, module_number);\n` : ""}\
@@ -168,7 +172,8 @@ ${registrations.map(([entry, info]) => `  ZEND_NS_NAMED_FE(${JSON.stringify(mode
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, close, ZEND_FN(lgo_close), lgo_handle_args)
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, shutdown, ZEND_FN(lgo_shutdown_entry), lgo_no_args)
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, retire, ZEND_FN(lgo_retire), lgo_no_args)
-${wholeOwners ? ["check", "close", "share"].map(name => `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, owner_${name}, ZEND_FN(lgo_owner_${name}), lgo_handle_args)`).join("\n") + `\n  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, equal, ZEND_FN(lgo_equal), lgo_equal_args)\n` : ""}\
+${wholeOwners ? ["check", "close", "share"].map(name => `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, owner_${name}, ZEND_FN(lgo_owner_${name}), lgo_handle_args)`).join("\n") + "\n" : ""}\
+${wholeOwners || model.callbackArgumentIdentity ? `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, equal, ZEND_FN(lgo_equal), lgo_equal_args)\n` : ""}\
   PHP_FE_END
 };
 zend_module_entry ${model.stem}_module_entry = {

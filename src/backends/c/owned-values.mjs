@@ -8,6 +8,7 @@ import { compileOwnedNativeValueLayout } from "../native/owned-value-layout.mjs"
 import { cIdentifier, cRecordIdentifier, cVariantIdentifier, cVariantTag, cKeywords } from "./generate.mjs";
 import { sha256 } from "../../capsule/node.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
+import { ownedHostRecordInputs } from "./owned-host-records.mjs";
 
 const fail = message => { throw new TypeError(`Owned C values: ${message}`); };
 const safe = name => /^[a-z][a-z0-9_]*$/.test(name) && !name.includes("__") && !cKeywords.has(name);
@@ -51,7 +52,28 @@ export const ownedCProjectionRequiresValueCopies = values => {
 export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {
 	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const hasAnchors = [...native.functions, ...native.callbacks].some(item => item.anchor !== undefined);
-	const hasEquality = hasAnchors || identityEquality;
+	// Returned owners may share a canonical token. That token is not itself
+	// a call-scoped borrow. Only generate frame views if a callback can receive
+	// an identity, directly or through a record, sequence or variant.
+	const types = new Map(native.nodes.map(node => [node.id, node]));
+	const pending = hostCallbacks ? native.callbacks.flatMap(item => item.parameters.slice(1)) : [];
+	const visited = new Set();
+	let callbackViews = false;
+	while(pending.length && !callbackViews)
+	{
+		const id = pending.pop();
+		if(visited.has(id)) continue;
+		visited.add(id);
+		const node = types.get(id);
+		if(node.kind === "resource" || node.kind === "callback") callbackViews = true;
+		else
+		{
+			if(node.element) pending.push(node.element);
+			for(const field of node.fields) pending.push(field.type);
+			for(const branch of node.cases) for(const field of branch.fields) pending.push(field.type);
+		}
+	}
+	const hasEquality = hasAnchors || callbackViews || identityEquality;
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
 	const names = new Map();
@@ -220,6 +242,10 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = 
 			, "   Callback arguments expire on return. Replies may borrow those arguments"
 			, "   or context storage, or transfer an owning result (also released on error)."
 			, "   Use a generated copy function to snapshot callback-local storage."
+			, ...callbackViews && !hasAnchors ? [
+				"   A retained identity survives the callback; its original borrow does not."
+				, "   Compare live identities with the typed _equal function, not pointer equality."
+			] : []
 			, "   Do not let C++ exceptions or longjmp cross a callback boundary. */");
 		for(const node of nodes.filter(node => node.kind === "callback"))
 		{
@@ -240,15 +266,20 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = 
 		&& item.anchor !== index
 		&& table.get(item.parameters[index]).kind === "callback"
 		&& !(callbacks.some(callback => callback.id === item.id) && index === 0);
+	const hostFieldCalls=hostCallbacks?ownedHostRecordInputs({ir,functions,table,names,header}):[];
+	const paramInput=(item,i,id)=> {
+		const slot=item.hostRecordSlots?.find(s=>s.index===i);
+		return slot?slot.inputType+" const *":hostArgument(item,i)?table.get(id).cName+"_host const *":input(id);
+	};
 	const signature = item => `${p}_status ${item.cName}(${p}_session *session, ${[
 		...item.parameters.flatMap((id, i) => [
-			`${hostArgument(item, i) ? `${table.get(id).cName}_host const *` : input(id)} a${i}`
+			`${paramInput(item,i,id)} a${i}`
 			, ...item.transfers?.includes(i) ? [`${p}_result **a${i}_owner`] : []
 			, ...item.anchor === i ? [`${p}_result *a${i}_owner`] : []
 		])
 		, `${table.get(item.result).cName} *out`, `${p}_result **owner`
 	].join(", ")})`;
-	for(const item of [...functions, ...callbacks]) header.push(signature(item) + ";");
+	for(const item of [...functions, ...callbacks, ...hostFieldCalls]) header.push(signature(item) + ";");
 	const retains = nodes.filter(node => node.identity).map(node => ({
 		id: node.id, cName: `${node.cName}_retain`
 		, parameters: [node.id], result: node.id, retain: true
@@ -263,8 +294,10 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = 
 	})) : [];
 	for(const item of copies) header.push(signature(item) + ";");
 	header.push("#ifdef __cplusplus", "}", "#endif", "");
-	return { native, prefix: p, nodes, functions, callbacks, retains
+	return {
+		native, prefix: p, nodes, functions, callbacks, retains, hostFieldCalls
 		, ...hasAnchors ? { anchoredResults: true } : {}
+		, ...callbackViews && !hasAnchors ? { callbackArgumentViews: true } : {}
 		, ...(hostCallbacks ? { copies, hostArgument } : valueCopies ? { copies } : {})
 		, aliases: [...aliases].map(([name, id]) => ({ name, id }))
 		, signature, header: header.join("\n") };

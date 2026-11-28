@@ -12,6 +12,10 @@ LEAN_WASM_LEAN_PATCHES=(
   "$LEAN_WASM_THREADS_PATCH"
   "$LEAN_WASM_OFFLINE_LIBUV_PATCH"
 )
+LEAN_WASM_RUNTIME_PROFILE=${LEAN_WASM_RUNTIME_PROFILE:-browser}
+if [[ "$LEAN_WASM_RUNTIME_PROFILE" == threaded-task ]]; then
+  LEAN_WASM_LEAN_PATCHES+=("$LEAN_WASM_PROJECT_ROOT/patches/lean4-4.32.2-task-io-world.patch")
+fi
 
 LEAN_WASM_PATCH_SET_SHA=$(
   sha256sum "${LEAN_WASM_LEAN_PATCHES[@]}" \
@@ -19,7 +23,6 @@ LEAN_WASM_PATCH_SET_SHA=$(
     | sha256sum \
     | awk '{print $1}'
 )
-LEAN_WASM_RUNTIME_PROFILE=${LEAN_WASM_RUNTIME_PROFILE:-browser}
 LEAN_WASM_RUNTIME_VARIANT=${LEAN_WASM_RUNTIME_VARIANT:-}
 if [[ -n "$LEAN_WASM_RUNTIME_VARIANT" && ! "$LEAN_WASM_RUNTIME_VARIANT" =~ ^[a-z0-9][a-z0-9.-]*$ ]]; then
   echo "Invalid Lean Wasm runtime variant: $LEAN_WASM_RUNTIME_VARIANT" >&2
@@ -51,6 +54,11 @@ case "$LEAN_WASM_RUNTIME_PROFILE" in
     LEAN_WASM_MULTI_THREAD=ON
     LEAN_WASM_PROFILE_CC_FLAGS+=(-pthread)
     LEAN_WASM_LINK_SPIKE_DIR="$LEAN_WASM_PROJECT_ROOT/build/lean-link-spike-threaded"
+    ;;
+  threaded-task)
+    LEAN_WASM_MULTI_THREAD=ON
+    LEAN_WASM_PROFILE_CC_FLAGS+=(-pthread)
+    LEAN_WASM_LINK_SPIKE_DIR="$LEAN_WASM_PROJECT_ROOT/build/lean-link-spike-threaded-task"
     ;;
   *)
     echo "Unsupported Lean Wasm runtime profile: $LEAN_WASM_RUNTIME_PROFILE" >&2

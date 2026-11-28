@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "workshop@1.0.0",
+    "name": "workshop",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51380469,
+          "path": "archives/Workshop.Host.1.0.0.nupkg",
+          "sha256": "cd71787401f86fe19eed933f31214b03c4ba2283851b3868ce099badb22407df"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Workshop.Host",
+      "profile": "native-dotnet-io-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "d5751751ed5936408a0c908e63a8d4f46bb6d6258d3f348d31dff71e88fc71eb",
+      "id": "native-dotnet-io-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "d72fcacb0615c0857cc1d042e4ffe2ae52102d2f6764e8bb897f8c0c16aba946"
+  }
+}

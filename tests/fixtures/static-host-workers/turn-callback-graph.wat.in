@@ -1,0 +1,42 @@
+;; Probe only: the provider imports the public IO-shaped update. Delegate to
+;; the shared compiled Workshop.update probe, wrapping its member-error arm.
+  (alias export $obj "box" (type $box)) (alias export $obj "member-error" (type $err))
+  ;; @update-start@
+  (type $f (variant (case "member" (own $err)) (case "io" string)))
+  (component $api-adapter
+    (import "box" (type $b (sub resource))) (import "err" (type $e (sub resource)))
+    (type $shape (variant (case "member" (own $e)) (case "io" string))) (import "failure" (type $f (eq $shape)))
+    (import "update" (func $u (param "box" (borrow $b)) (param "value" u32) (result (result u32 (error (own $e))))))
+    (core module $mem (memory (export "m") 1)) (core instance $m (instantiate $mem))
+    (core func $u (canon lower (func $u) (memory $m "m"))) (core func $drop (canon resource.drop $b))
+    (core module $body (import "" "m" (memory 1)) (import "" "u" (func $u (param i32 i32 i32))) (import "" "drop" (func $drop (param i32)))
+      (func (export "run") (param i32 i32) (result i32)
+        (call $u (local.get 0) (local.get 1) (i32.const 0)) (call $drop (local.get 0))
+        (if (i32.load8_u (i32.const 0)) (then (i32.store (i32.const 8) (i32.load (i32.const 4))) (i32.store (i32.const 4) (i32.const 0)))) (i32.const 0)))
+    (core instance $i (instantiate $body (with "" (instance (export "m" (memory $m "m")) (export "u" (func $u)) (export "drop" (func $drop))))))
+    (func (export "update") (param "box" (borrow $b)) (param "value" u32) (result (result u32 (error $f)))
+      (canon lift (core func $i "run") (memory $m "m"))))
+  (instance $adapt (instantiate $api-adapter (with "box" (type $box)) (with "err" (type $err))
+    (with "failure" (type $f)) (with "update" (func $d "update"))))
+  (instance $api (export "box" (type $box)) (export "member-error" (type $err))
+    (export "io-failure" (type $f)) (export "update" (func $adapt "update")))
+  ;; @update-end@
+  (core module $no (func (export "inside"))) (core instance $no (instantiate $no))
+  (func $inside (canon lift (core func $no "inside")))
+  @PROVIDER@
+  (instance $c (instantiate $provider (with "@OBJECTS@" (instance $obj)) (with "@API@" (instance $api)) (with "inside-callback" (func $inside))))
+  (alias export $c "@CALLBACKS@" (instance $cb)) (alias export $cb "call-box-to-box" (type $registration))
+  @EXTENSION@
+  (instance $ext (instantiate $extension (with "@OBJECTS@" (instance $obj)) (with "@CALLBACKS@" (instance $cb))
+    (with "object-owners" (instance $vault))))
+  @RESPONDER@
+  (instance $i (instantiate $responder (with "r0" (type $box)) (with "r1" (type $err)) (with "r2" (type $registration))
+    (with "registration" (func $ext "copy-k2")) (with "argument" (func $ext "copy-k0"))
+    (with "value" (func $ext "hold-k0")) (with "error" (func $ext "hold-k1")) (with "invoke" (func $cb "[method]call-box-to-box.invoke"))))
+  (export "invoke" (func $i "invoke")) @LIFECYCLE@
+  (export "live-owners" (func $ext "count")) (export "release" (func $ext "release-lease")) (export "same" (func $ext "same-lease"))
+  (export "cb-drops" (func $c "callback-drops")) (export "visits" (func $c "callback-visits")) (export "drops" (func $o "drops"))
+  (export "objects" (instance $obj)) (export "callbacks" (instance $cb))
+  (export "hold-box" (func $ext "lease-k0")) (export "hold-cb" (func $ext "lease-k2"))
+  (export "copy-box" (func $ext "copy-k0")) (export "take-fault" (func $ext "take-k1"))
+)

@@ -10,7 +10,7 @@ This directory contains reviewed changes applied to the pinned Lean 4.32.2 sourc
 | [`lean4-4.32.2-emscripten-runtime-signatures.patch`](lean4-4.32.2-emscripten-runtime-signatures.patch) | Supplies the runtime signatures needed when Lean runtime objects cross the component compilation and linking path. |
 | [`lean4-4.32.2-offline-libuv-source.patch`](lean4-4.32.2-offline-libuv-source.patch) | Replaces an implicit libuv fetch with the pinned source supplied by the Nix derivation. |
 
-The exact patch order and source revision are defined in [`../nix/wasm-toolchain.nix`](../nix/wasm-toolchain.nix). File names include the targeted Lean version so an upstream update cannot silently reuse an unreviewed patch set.
+The exact patch order and source revision for these profiles are defined in [`../nix/wasm-toolchain.nix`](../nix/wasm-toolchain.nix). The experimental `threaded-task` profile in [the runtime configuration](../scripts/lean-runtime-config.sh) alone adds [the temporary-path ABI correction](lean4-4.32.2-task-io-world.patch). It is not an input to the Nix release graph. See the [strict-link experiment and removal criteria](../docs/evidence/threaded-task-probe.md).
 
 ## Why patches live here
 
@@ -25,7 +25,7 @@ When adding or revising a patch:
 1. Record the failing upstream command and source revision.
 2. Confirm that repository configuration or an existing upstream option cannot express the requirement.
 3. Create a focused diff against the pinned source.
-4. Add it to the Nix derivation in an explicit order.
+4. Add it in explicit order to the affected profile; update the Nix derivation when the profile enters the release graph.
 5. Rebuild the affected runtime, component, and clean-consumer paths.
 6. Record patch identity and test evidence in the toolchain inventory.
 

@@ -1,0 +1,30 @@
+{
+  "archive": {
+    "bytes": 51370928,
+    "path": "archives/example-callback-budget-1.0.0-linux-x86_64.zip",
+    "sha256": "a2d801567cb109f192d42a11ab319e53d2b1a5261bb4643e919318c81f3dcccd"
+  },
+  "bindingIrSha256": "7d9d935b3bb8b3c0f68766decba2e9d0f4e9672f284195f3437524ca03b0d1c0",
+  "clientSha256": "4f775dae7f3ddda8605d2830f4eda1bc03c35b683fecf6ba39ee862dba70ea93",
+  "observations": [
+    {
+      "live": 0,
+      "php": "8.2.35",
+      "races": 16
+    },
+    {
+      "live": 0,
+      "php": "8.5.10",
+      "races": 16
+    }
+  ],
+  "receiptSha256": "643096e3378858fb741086ccc27cf66c0ae3bd6a7821837869058f1287ec6768",
+  "reviewedSourceSha256": "6a71db219486568f2e5e034acf59fbdc60574715c8051f84f495d764ddf38e0f",
+  "route": "reviewed",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "runtimeLibraries": {
+    "native/linux-x64/liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+    "native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+  },
+  "sourceTreeSha256": "173e6ed206b30f6ef5010ac8e0127d4d7f7d57c0d33a785225fe5aca045be446"
+}

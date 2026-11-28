@@ -1,0 +1,90 @@
+{
+  "archive": {
+    "bytes": 54187819,
+    "path": "archives/tariff-quotes-1.0.0.jar",
+    "sha256": "f7564ff6dcce813e996334824ad69a6bee9101d15f6d8e34021412f2cedac5ff"
+  },
+  "archives": [
+    {
+      "bytes": 54187819,
+      "path": "archives/tariff-quotes-1.0.0.jar",
+      "sha256": "f7564ff6dcce813e996334824ad69a6bee9101d15f6d8e34021412f2cedac5ff"
+    },
+    {
+      "bytes": 623,
+      "path": "archives/tariff-quotes-1.0.0.pom",
+      "sha256": "2e53c4de856b3c7082abb8ba04417dc8a2344ed262377b6c62ce1939e4443826"
+    }
+  ],
+  "bindingIrSha256": "1831ab48bd450b8c58f3ad5b7c4e84b1364efbb6e3d00d7742cff990c30c29fb",
+  "cArchive": {
+    "bytes": 53873696,
+    "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+    "sha256": "ad5bf26a9c751b8d71154ec280c8094af9cb70eb8cd01c7d84c3bc69d93844fe"
+  },
+  "cReceiptSha256": "2d1766281c7b1807e60e719609f10edf5dca89e34f02156e06c5da84d79c6ff5",
+  "compiled": {
+    "javaApplication": "b4dcad6cdae0ed0b7409ba9b05e036b7f1327104548dfa419a7f82f58791f5d4",
+    "kotlinApplication": "25abc5979d227c677dcb79effe38ce56e4c046fd54b5f8db60019f41b817cb00"
+  },
+  "componentSha256": "0e7bdfa7729208cf92e10cec024d12b7e55f635c665d39353d1d65599c9f6be1",
+  "deployed": {
+    "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+    "kotlin-stdlib-2.2.0.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+    "tariff-quotes-1.0.0.jar": "f7564ff6dcce813e996334824ad69a6bee9101d15f6d8e34021412f2cedac5ff"
+  },
+  "leanSourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "modules": "java.base@22.0.2",
+  "pom": {
+    "bytes": 623,
+    "path": "archives/tariff-quotes-1.0.0.pom",
+    "sha256": "2e53c4de856b3c7082abb8ba04417dc8a2344ed262377b6c62ce1939e4443826"
+  },
+  "receiptSha256": "38fc1836561abb1f00f793621413dbd4726a800f0cea3ab0c0f60cb26737e995",
+  "results": {
+    "javaApplication": {
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "expired": 1,
+      "forward": 1,
+      "held": 9,
+      "nested": 1,
+      "ticket42to43": 1,
+      "ticket71to72": 1,
+      "values": {
+        "afterFailure": 43,
+        "calls": 3,
+        "firstTicket": 43,
+        "forwarded": 42,
+        "secondTicket": 72
+      }
+    },
+    "kotlinApplication": {
+      "afterThreadExit": 0,
+      "baseline": 1,
+      "expired": 1,
+      "forward": 1,
+      "held": 9,
+      "nested": 1,
+      "ticket42to43": 1,
+      "ticket71to72": 1,
+      "values": {
+        "afterFailure": 43,
+        "calls": 3,
+        "firstTicket": 43,
+        "forwarded": 42,
+        "secondTicket": 72
+      }
+    }
+  },
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "sources": {
+    "JavaApplication.java": "a30ec41e4dfd67484f44cb7c2ef9ef0ba908a09b168eeaea66b33f14074a194a",
+    "KotlinApplication.kt": "76d40cb1ebf673bdda951cfda8d4be1a12b59e15471ea12aaa5805ee7c11a7be",
+    "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+    "Ownership.java": "c0acc0469c467f2f2ab8445abddebb592fc4c9bef281e168c487369cc147f924"
+  }
+}

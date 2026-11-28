@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "exports": ["Owned.newTicket", "Owned.makeTariff", "Owned.echoTariff", "Owned.applyTariff", "Owned.unpackQuote", "Owned.packQuote"],
+  "arities": { "Owned.unpackQuote": 1 },
+  "ownedAggregates": {
+    "ownership": "lease", "disposal": "required", "fallback": "queued-finalizer", "cycles": "reject",
+    "closureFields": ["Owned.Tariff.quote"]
+  },
+  "targets": { "pypi": { "name": "tariff-quotes", "version": "1.0.0" } }
+}

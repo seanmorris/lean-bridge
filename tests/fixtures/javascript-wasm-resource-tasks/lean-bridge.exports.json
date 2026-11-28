@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Badge", "Shared.Ticket"],
+  "exports": ["Depot.make","Depot.badge","Depot.read","Depot.alias","Depot.checked","Depot.pending","Depot.release","Depot.stream","Depot.closes"],
+  "taskExports": ["Depot.checked","Depot.pending"],
+  "asyncIterators": [{"open":"Depot.stream","next":"Depot.next","close":"Depot.close"}],
+  "targets": {"npm":{"name":"@example/lean-depot","version":"1.0.0"}}
+}

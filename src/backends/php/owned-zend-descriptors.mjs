@@ -4,7 +4,7 @@
  * @file
  */
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
-import { graphZendCheckedWalk, graphZendDescriptors } from "./copied-graph-zend-runtime.mjs";
+import { graphZendCheckedWalk, graphZendRecordWalk, graphZendDescriptors } from "./copied-graph-zend-runtime.mjs";
 
 /**
  * The ownership runtime defines lgo_identity_input/output. They validate the
@@ -43,5 +43,5 @@ ${branch.fields.map(field => `  { ${field.type}, offsetof(${node.cName}, ${field
 	});
 	return [graphZendDescriptors, conversions, ...hooks, ...branches
 		, `static const lg_node lg_nodes[] = {\n${nodes.join("\n")}\n};`
-		, graphZendCheckedWalk].join("\n\n");
+		, model.recordInputs ? graphZendRecordWalk : graphZendCheckedWalk].join("\n\n");
 };

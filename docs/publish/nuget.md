@@ -38,6 +38,224 @@ Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation.
 
 NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Import an application-owned C# class
+
+Use a host contract when the C# application owns an object and Lean needs to
+call it. The publisher supplies the contract; no application DLL is needed at
+build time. Set the nominal type’s `host.targets` to `["dotnet"]`. For a
+`Box` with a constructor and a read method, the calling Lean code looks like:
+
+```lean
+import LeanBridge.Host.Dotnet
+
+namespace Workshop
+open LeanBridge.Host.Dotnet
+
+def make (n : UInt32) : IO Box := Box.create n
+def read (box : Box) : IO UInt32 := box.read
+end Workshop
+```
+
+Set `hostImports` in `lean-bridge.exports.json` to the import contract’s
+filename, list `Workshop.make` and `Workshop.read` in `exports`, and build
+with a single `--target nuget`. An optional reviewed `.binding-ir.json`
+describes the **public exports**; it does not replace the import contract.
+The prepared package exposes [ordinary typed C# methods](../consume/dotnet.md#let-lean-call-your-c-class)
+and includes the shared native library that tracks host-object identity.
+
+For a synchronous `IO` export, an application structure can contain both
+imported host classes and copied values. Export a function that takes or
+returns the structure; no C# layout annotation is needed. The
+[Gauge module](../../tests/fixtures/dotnet-host-record/Workshop.lean) uses two
+`Box` fields, a `ByteArray` and a `Nat`. Its generated NuGet API exposes
+`Pair<T>` with the application's class as `T`. A reviewed interface can edit
+field descriptions, but the constructor, field order and types must agree
+with the compiler.
+
+For a returned `Except` containing a bound class, the public IR marks the
+result as a lease. A declared `EIO` with such a payload records its ownership
+in `lean-bridge.dev/error-payload-site`. In either case, C# receives the
+application object from the active branch, not a serialized copy.
+Host members run on the CLR owner thread. A Lean worker can carry the
+class reference and request a C# callback on the owner; it cannot call a
+member directly from the worker. The build checks indirect calls too.
+
+A synchronous `IO` export can return a unary Lean function and capture
+an application object. For example, add this definition in `Workshop`
+and list `Workshop.remember` in `exports`:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    pure captured
+```
+
+The installed package generates a typed, disposable C# function with an
+`Invoke` method, scoped to the binding that created it. Keep this factory
+out of `taskExports`: both the factory and each invocation are synchronous.
+OS effects in the function body, not just the factory, need the corresponding
+`nativeEffects` grant. See [the C# caller](../consume/dotnet.md#let-lean-call-your-c-class).
+
+To export a worker alongside synchronous members, list its full Lean name
+in both `exports` and `taskExports`. For a reviewed package, supply the
+public Binding IR in place of `exports` and keep `taskExports`. For example,
+the [Workshop worker source](../../tests/fixtures/dotnet-host-workers/Workers.lean)
+declares `Workers.echo : Box → Task Box`. It becomes `Task<Meter>` when the
+application binds `Meter`; `Workers.identityBase : Box → BaseIO Box` remains
+synchronous. The same source shows a retained callback, two cursor step
+error types, and a returned `Except` that carries a class. See the
+[C# consumer example](../consume/dotnet.md#let-lean-call-your-c-class).
+
+## Export synchronous IO
+
+Select the functions and declare the OS access they use in
+`lean-bridge.exports.json`. This example uses the [Journal source](../../tests/fixtures/native-sync-io/Journal.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"],
+  "targets": { "nuget": { "name": "Acme.Journal", "version": "1.2.0-rc.1" } }
+}
+```
+
+Build with `lean-bridge build --project . --target nuget --output release`.
+Use `nativeEffects: []` for an in-memory IO API. The build checks transitive
+Lean calls and refuses undeclared OS access. The `native-dotnet-io-v1` package
+accepts primitive arguments, including `Nat`, `Int`, `String` and `ByteArray`;
+results and declared error payloads can also be nested `Except` values.
+Pure companions can share the assembly. A reviewed `.binding-ir.json` must
+match a fresh elaboration of the same project.
+
+The prepared archive includes the managed assembly, compiled component,
+runtime, licenses and package receipt. See [calling the installed package](../consume/dotnet.md#call-synchronous-io).
+The [offline install results](../evidence/dotnet-sync-io-20261122.json) identify the
+ordinary and reviewed archives and record the matching public interface digest.
+Use the task profile below for task factories and asynchronous iterators. Both profiles
+accept [explicit Lean resources](#export-a-shared-lean-resource).
+
+For a synchronous pull, select its factory in `exports` and register its
+three Lean declarations under `iterators`:
+
+```json
+"iterators": [{"open": "Dials.sequence", "next": "Dials.next", "close": "Dials.finish"}]
+```
+
+The [Dials source](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+returns an immediate optional item from each pull. Its close operation writes
+a file, so the fixture also declares `nativeEffects: ["filesystem"]`. Consumers
+use [ordinary C# iteration](../consume/dotnet.md#pull-items-synchronously).
+
+## Export tasks and pull streams
+
+Select functions that return actual Lean `Task` values and name the three
+operations of each pull stream. For example, this configuration builds the
+[Pulse module](../../tests/fixtures/c-lean-tasks/Pulse.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": ["Pulse.bytes", "Pulse.series"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"nuget": {"name": "Acme.Pulse", "version": "1.0.0"}}
+}
+```
+
+Build with `lean-bridge build --project . --target nuget --output release`.
+The `native-dotnet-task-v1` package exposes `Task` for `Task Unit`, `Task<T>`
+for other task results, and `IAsyncEnumerable<T>` for streams. A stream-only
+package does not need a dummy task export. Synchronous companions stay
+synchronous. For a `Task (Except IO.Error α)` whose error should fault the
+task, also select the declaration in `taskIOErrors`. Other supported returned
+`Except` values are data, not exceptions.
+
+This profile supports copied primitive arguments, primitive or nested result
+values, retained callbacks, and direct [resource arguments, results and errors](#export-a-shared-lean-resource).
+See [calling the installed package](../consume/dotnet.md#await-tasks-and-pull-streams)
+and the [ordinary, reviewed and stream-only package receipts](../evidence/dotnet-tasks-20261122.json).
+
+### Export a callback-taking task
+
+The task name does not limit how many times Lean may call a delegate.
+For a standalone task, add this field to the export configuration to enforce
+one call to that parameter per task:
+
+```json
+{
+  "taskCallbackPolicies": [{"declaration": "Feedback.once", "parameter": "f", "invocation": "once"}]
+}
+```
+
+Omitted parameters allow repeated calls. A thrown delegate exception still spends
+the allowance. Both authoring routes check the Lean parameter name and
+policy; packages with CLR host imports do not accept this option.
+
+A selected task can accept one or more unary functions of type `α → IO β`
+over copied scalars. Select the real factory in `taskExports`. Select it in
+`taskIOErrors` too if `Except IO.Error` should fault the task. For example,
+the [Feedback module](../../tests/fixtures/ruby-retained-tasks/Feedback.lean)
+imports the [shared Lean fixture](../../tests/fixtures/python-retained-tasks/Retained.lean)
+and defines:
+
+```lean
+def once (n : UInt32) (f : UInt32 → IO UInt32) : BaseIO (Task (Except IO.Error UInt32)) :=
+  IO.asTask (f n)
+```
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Feedback"],
+  "taskExports": ["Feedback.once"],
+  "taskIOErrors": ["Feedback.once"],
+  "targets": {"nuget": {"name": "Acme.Feedback", "version": "1.0.0"}}
+}
+```
+
+C# gets `Func<A,B>` (or `Action<A>` for a `Unit` reply). Its delegate can
+run during the factory as well as during the inner task. The generated
+adapter copies each argument and reply; a Lean worker never enters the CLR.
+A reviewed API must preserve the callback lease, reentry policy and declared
+.NET exception. See [using the delegate](../consume/dotnet.md#let-a-lean-task-call-c)
+and the [ordinary and reviewed package results](../evidence/dotnet-retained-tasks-20261122.json).
+
+### Export a shared Lean resource
+
+List the fully qualified name of a concrete Lean heap type under `resources`.
+Select the functions that borrow or return it. For example, an IO package can
+export [Desk](../../tests/fixtures/ruby-task-resources/Desk.lean) over the
+[shared Ticket definition](../../tests/fixtures/resource-tasks/Shared.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"nuget": {"name": "Acme.Desk", "version": "1.0.0"}}
+}
+```
+
+An independent [task and stream package](../../tests/fixtures/resource-tasks/Depot.lean)
+can import the same module and select the same resource. Build each with
+`lean-bridge build --project . --target nuget --output release`. Keep the
+module defining the type and its Lean dependencies identical in both builds:
+the compiler, declaration and source determine identity, not the NuGet name
+or the other functions each component exports. Each archive includes the
+matching managed type and native ledger. Consumers need no extra reference.
+
+An input borrows the caller's lease. A direct result, stream item or declared
+error carrying the resource gives the caller a new disposable lease. A reviewed
+API must preserve the compiled kind and ownership at each site. See
+[using both packages from C#](../consume/dotnet.md#share-a-lean-resource-across-packages)
+and the [ordinary and reviewed cross-package results](../evidence/dotnet-resource-leases-20261122.json).
+
 ## Export arrays and records
 
 Select concrete exports using `Array T` and acyclic Lean structures in the same
@@ -201,6 +419,8 @@ No constructor numbers, native pointers or handwritten marshalling appear in the
 consumer API.
 
 ## Export resource-containing values
+
+For repeated Linux builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
 
 Select resource types and the aggregate ownership contract explicitly. In a
 Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:

@@ -41,12 +41,19 @@ export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchor
 			, raw: `OwnedCase${node.index}_${index}`, rawName: `Case${index}`
 			, fields: branch.fields.map((field, index) => ({ ...field, rawName: `Field${index}` })) })) }));
 	const table = new Map(types.map(node => [node.id, node]));
+	for(const call of c.hostFieldCalls) for(const slot of call.hostRecordSlots)
+	{
+		const node = table.get(slot.node.id);
+		if(node.hostInput) continue;
+		const selected = new Set(slot.fields.map(field => field.name));
+		node.hostInput = {raw: `OwnedInput${node.index}`, fields: node.fields.map(field => ({...field, host: selected.has(field.name)}))};
+	}
 	const fields = (members, start = 0) => {
 		let size = start, alignment = 1;
 		for(const field of members)
 		{
 			const child = table.get(field.type);
-			const boundary = field.pointer ? 8 : child.alignment, width = field.pointer ? 8 : child.size;
+			const boundary = field.pointer || field.host ? 8 : child.alignment, width = field.pointer ? 8 : field.host ? 32 : child.size;
 			if(!boundary || !width) throw new TypeError("Owned C# has an unresolved inline layout dependency");
 			field.offset = align(size, boundary); size = field.offset + width;
 			alignment = Math.max(alignment, boundary);
@@ -76,6 +83,7 @@ export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchor
 			const flagged = ["option", "result"].includes(node.kind);
 			if(flagged) node.flagOffset = 0;
 			Object.assign(node, fields(node.fields, flagged ? 1 : 0));
+			if(node.hostInput) Object.assign(node.hostInput, fields(node.hostInput.fields));
 		}
 	}
 	const sequential = "[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Sequential)]";
@@ -101,6 +109,8 @@ export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchor
 			if(!node.fields.length) lines.push("    internal byte Empty;");
 		}
 		lines.push("}");
+		if(node.hostInput) lines.push(sequential, `internal struct ${node.hostInput.raw}`, "{"
+			, ...node.hostInput.fields.map(f => f.host ? `    internal OwnedCallback${table.get(f.type).index} ${f.rawName};` : field(f)), "}");
 	}
 	const callbackLayouts = (c.hostArgument ? c.callbacks : []).map(callback => ({
 		id: callback.id, name: `${table.get(callback.id).cName}_host`

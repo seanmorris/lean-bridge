@@ -15,7 +15,7 @@ export const ownedRubyCallBoundary = model => {
 	const { c } = model, p = c.prefix, nodes = new Map(model.types.map(node => [node.id, node]));
 	const callbacks = [], calls = [], sources = [];
 	const invalid = `${p.toUpperCase()}_INVALID_ARGUMENT`;
-	const names = new Set([...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? [], ...c.nodes].map(item => item.cName));
+	const names = new Set([...model.functions, ...c.callbacks, ...c.retains, ...c.copies ?? [], ...c.nodes].map(item => item.cName));
 	const claim = name => {
 		if(names.has(name)) throw new TypeError(`Owned Ruby forwarder collides with export: ${name}`);
 		names.add(name);
@@ -39,7 +39,7 @@ static inline ${p}_status ${forward}(void *context, ${p}_session *session, ${par
   return (${p}_status)host->call(host->context, session, ${parameters.map((parameter, i) => `${parameter.leaf ? "&" : ""}arg${i}`).concat("output", "owner").join(", ")});
 }`);
 	}
-	for(const [group, functions] of [["call", c.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies ?? []]]) for(const [index, fn] of functions.entries())
+	for(const [group, functions] of [["call", model.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies ?? []]]) for(const [index, fn] of functions.entries())
 	{
 		const name = `${group}${group === "call" ? index : nodes.get(fn.id).index}`, symbol = `${p}_ruby_${name}`;
 		claim(symbol);
@@ -50,9 +50,25 @@ static inline ${p}_status ${forward}(void *context, ${p}_session *session, ${par
 		for(const [i, node] of parameters.entries())
 		{
 			const host = hosts[i] ? callbacks.find(item => item.id === node.id) : null;
-			const type = host ? host.name : node.cName;
+			const slot = fn.hostRecordSlots?.find(s => s.index === i);
+			const type = slot?.inputType ?? host?.name ?? node.cName;
 			setup.push(`  if (!ov_pointer(arg${i}, sizeof(${type}), _Alignof(${type}))) return ${invalid};`);
-			if(host)
+			if(slot)
+			{
+				// Each argument gets its own mutable scratch view. Ruby pins the
+				// original Fiddle descriptors and closures until the enclosing call
+				// returns. Replace the scratch context with the typed C trampoline.
+				setup.push(`  ${type} *view${i} = arg${i};`);
+				for(const [j, field] of slot.fields.entries())
+				{
+					const cb = callbacks.find(item => item.id === field.type), h = `host${i}_${j}`;
+					setup.push(`  ${cb.name} const *${h} = view${i}->${field.name}.context;`
+						, `  if (!ov_pointer(${h}, sizeof(*${h}), _Alignof(${cb.name}))) return ${invalid};`
+						, `  view${i}->${field.name} = (${cb.node.cName}_host){${h}->call ? ${cb.forward} : NULL, ${h}->call ? (void *)${h} : ${h}->context, ${h}->closure, ${h}->recovery};`);
+				}
+				arguments_.push(`view${i}`);
+			}
+			else if(host)
 			{
 				setup.push(`  ${host.name} const *host${i} = arg${i};`
 					, `  ${node.cName}_host input${i} = {host${i}->call ? ${host.forward} : NULL, host${i}->call ? (void *)host${i} : host${i}->context, host${i}->closure, host${i}->recovery};`);
@@ -62,7 +78,7 @@ static inline ${p}_status ${forward}(void *context, ${p}_session *session, ${par
 			if(fn.transfers?.includes(i)) arguments_.push(`input_owner${i}`);
 			if(fn.anchor === i) arguments_.push(`anchor${i}`);
 		}
-		sources.push(`uint32_t ${symbol}(${p}_session *session, ${parameters.flatMap((_, i) => [`void const *arg${i}`
+		sources.push(`uint32_t ${symbol}(${p}_session *session, ${parameters.flatMap((_, i) => [`void${fn.hostRecordSlots?.some(s => s.index === i) ? "" : " const"} *arg${i}`
 			, ...fn.transfers?.includes(i) ? [`${p}_result **input_owner${i}`] : []
 			, ...fn.anchor === i ? [`${p}_result *anchor${i}`] : []]).concat("void *output", `${p}_result **owner`).join(", ")}) {
 ${setup.join("\n")}

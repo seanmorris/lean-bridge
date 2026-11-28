@@ -1,0 +1,101 @@
+{
+  "route": "reviewed",
+  "packageSetSha256": "c3ff8edb15f1e451de0b6b544f41e97745ef653d31b41c0bedeaf230763de4e4",
+  "typescript": {
+    "value": 7,
+    "yielded": 1,
+    "readsAtExhaustion": 1,
+    "canceled": true,
+    "drained": true,
+    "nested": [
+      "outer",
+      "inner-error",
+      "caught-original",
+      "inner-success",
+      "resumed"
+    ],
+    "terminal": {
+      "reason": "operation-cancelled",
+      "visits": 1,
+      "successes": 0,
+      "failures": 1,
+      "state": "closed",
+      "drained": true
+    },
+    "cleanup": {
+      "phase": "step",
+      "beforeReturn": {
+        "level": 0,
+        "writes": 1,
+        "reads": 1
+      },
+      "exhausted": true,
+      "afterReturns": {
+        "level": 0,
+        "writes": 1,
+        "reads": 1
+      }
+    }
+  },
+  "react": {
+    "text": "8:1:0",
+    "won": true,
+    "canceled": "operation-cancelled",
+    "lateCommits": 0,
+    "next": 3,
+    "empty": true,
+    "drained": true,
+    "nested": [
+      "outer",
+      "inner-error",
+      "caught-original",
+      "inner-success",
+      "resumed"
+    ],
+    "stream": {
+      "idleReads": 0,
+      "count": 1,
+      "exhausted": true,
+      "reads": 1,
+      "final": 0,
+      "cleanup": {
+        "phase": "step",
+        "beforeReturn": {
+          "level": 0,
+          "writes": 1,
+          "reads": 1
+        },
+        "exhausted": true,
+        "afterReturns": {
+          "level": 0,
+          "writes": 1,
+          "reads": 1
+        }
+      }
+    },
+    "terminal": {
+      "reason": "operation-cancelled",
+      "visits": 1,
+      "successes": 0,
+      "failures": 1,
+      "state": "closed",
+      "drained": true
+    }
+  },
+  "deployed": [
+    "3f7d4f230352262afefb4dba51bf526d39625fdff8a3a5a84a5ac7a2d8c271b0",
+    "85e4a698a88a64f0f6cc7b336aa6e421cbef7235cdd568146468c8b6dcbc96b3"
+  ],
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "node": "v22.23.5",
+  "reviewedSourceSha256": "9daba072d59cfd21da3731a0a34317373b74dffaffbc53a79c50aae558cd4d16",
+  "typescriptVersion": "5.9.3",
+  "frameworkVersions": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "scheduler": "0.27.0"
+  },
+  "terminalClientSha256": "d57c35dcdb7b92038236a4f1e67f65ab462be82355701debb0f8d91ba9079d37",
+  "typedClientSha256": "bdd56289dfa596c3426e0cf383939b77a545112ef502d07d8ec7c2d9e4597e1c",
+  "reactClientSha256": "6eab1de7edaacc00d395719126320fa6504e5f1b8b6c597bde872bc4e0e5261e"
+}

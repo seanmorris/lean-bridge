@@ -35,6 +35,246 @@ UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.mat
 
 Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. The Kotlin API has non-nullable signatures; foreign JVM calls also encounter runtime null checks. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
 
+### Bind an application-owned class
+
+The Kotlin API accepts a class reference. For the Workshop package, a Kotlin
+class can satisfy the host contract directly: its public `var` supplies the
+JVM getter and setter.
+
+```kotlin
+import org.leanbridge.workshop.kotlin.Api
+
+class Meter(var level: Long) {
+    fun read(): Long = level
+    fun identity(): Meter = this
+}
+
+fun example() {
+    Api.bindHosts(Meter::class).use { api ->
+        val meter: Meter = api.make(21)
+        api.update(meter, 34)
+        check(api.identity(meter) === meter && meter.level == 34L)
+    }
+}
+```
+
+`use` closes the binding even if the call throws. These calls are synchronous;
+no coroutine, JNI handle or separate runtime installation is needed.
+
+For a record that contains a host class, use the generated class from the
+package (for example, `org.leanbridge.workshop.Pair`, not `kotlin.Pair`).
+Its Java getters are Kotlin properties: `pair.lead === meter` tests identity;
+`pair.sample` gives you a fresh byte array. `use` releases the record's
+references. A separately returned function keeps its captures until it closes.
+
+If a package exports a Lean function factory such as
+`remember : Box → IO (Box → IO Box)`, use a second scope for the function:
+
+```kotlin
+Api.bindHosts(Meter::class).use { api ->
+    val captured = api.make(12)
+    api.remember(captured).use { remember ->
+        check(remember.invoke(api.make(19)) === captured)
+    }
+}
+```
+
+Closing the function releases its capture. Closing its binding revokes every
+function it returned, without closing your meter.
+
+If the package exports workers with application objects, its Kotlin
+binding exposes suspending functions and cold flows. In a suspending
+function, the Workshop worker package can be used like this:
+
+```kotlin
+import kotlinx.coroutines.flow.first
+
+suspend fun exampleWorker() {
+    Api.bindHosts(Meter::class).use { api ->
+        val meter = api.make(21)
+        check(api.echo(meter) === meter)
+        check(api.boxes(meter, false).first() === meter)
+    }
+}
+```
+
+Cancelling the coroutine cancels its task; `first()` stops the cursor after
+one item. Leaving `use` closes the binding, including work that is still
+pending. Close the binding outside its own retained callback and after any
+synchronous call returns. The meter remains yours.
+
+Ordinary exceptions can be handled in Lean or propagated back to Kotlin.
+A terminal JVM error, such as `OutOfMemoryError` or `LinkageError`, retires
+the shared Lean runtime even if a nested Kotlin method catches it.
+Cancellation settles the waiting coroutine; it does not suppress a fatal
+failure from an application callback that was already running. The
+[installed Kotlin example](../evidence/kotlin-callback-fault-20261126.md)
+shows when another component can still be called and when it must refuse.
+
+A returned `Except` is a `Result`. An `EIO` failure throws a separate
+generated error class. If the error carries your application object, pass
+its JVM class to recover the typed value:
+
+```kotlin
+try {
+    api.rejectBox(meter)
+} catch (e: org.leanbridge.workshop.RejectBoxError) {
+    val original: Meter = e.payload(Meter::class.java)
+    check(original === meter)
+}
+```
+
+This remains the same Kotlin object after the binding closes. No JNI
+reference or binding object is needed to read the exception.
+
+### Call synchronous IO
+
+Import the generated `.kotlin.Api` object and call it directly. Lean
+`BaseIO`, `IO` and `EIO` methods return when the operation finishes; no
+coroutine scope or dispatcher is required. In this
+[Journal example](../publish/maven.md#export-synchronous-io), pass a writable
+file path. The output is `ready` followed by `37`.
+
+```kotlin
+import org.leanbridge.journal.kotlin.Api
+import org.leanbridge.journal.ChooseError
+import org.leanbridge.journal.Result
+
+fun main(args: Array<String>) {
+    Api.store(args[0], "ready")
+    println(Api.read(args[0]))
+    try {
+        Api.choose(true, false, "unused")
+    } catch (e: ChooseError) {
+        val payload: Result<String, Long> = e.payload()
+        if (payload is Result.Err) println(payload.error())
+    }
+}
+```
+
+An ordinary `Except` result is data. A thrown `EIO` has a declaration-specific
+exception with the declared payload type. File I/O failures raise
+`LeanIOException`, not a failed result or an asynchronous exception.
+Validation and native runtime loading are shared with the
+[Java API](java.md#call-synchronous-io). See the
+[installed Kotlin checks](../evidence/jvm-sync-io-20261123.json).
+
+### Share a Lean resource between packages
+
+Desk and Counter can use the same Lean ticket through their installed Kotlin
+APIs. Counter updates the ticket in place and returns another lease on it.
+Both `use` blocks close their own lease. This prints `42`:
+
+```kotlin
+import org.leanbridge.desk.kotlin.Api as Desk
+import org.leanbridge.counter.kotlin.Api as Counter
+
+fun main() {
+    Desk.issue(41).use { ticket ->
+        Counter.bump(ticket).use { updated -> println(Desk.count(updated)) }
+    }
+}
+```
+
+Passing a ticket borrows it for that call. Use `retain()` to keep an independent
+lease, `sameResource` to compare the underlying objects, and `use` on a resource
+received as an exception's `payload()`. That payload can be the
+[last owner of the ticket](../evidence/jvm-error-owner-20261126.md), even
+after the original handle closes. A ticket of the same name from different
+Lean source is a different Kotlin type. See the
+[Maven author configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results).
+
+### Iterate without a scheduler
+
+A package with an immediate Lean iterator returns a closeable Kotlin
+`Sequence`. It needs neither a coroutine scope nor a dispatcher:
+
+```kotlin
+val firstTwo = org.leanbridge.dials.kotlin.Api.sequence(4).use { values ->
+    values.take(2).toList()
+}
+```
+
+The sequence is single-pass. Calling `iterator()` a second time does not
+start another Lean cursor. Use `use` around short-circuiting operations such
+as `first()` or `take(n)` so an early stop runs the Lean finalizer. A yielded
+resource has its own lease; use or close that value separately.
+
+### Await tasks and consume streams
+
+A selected Lean task is a `suspend fun`; a cursor is a cold `kotlinx.coroutines.flow.Flow<T>`. Use them in a coroutine as you would any other suspend function or flow. This example prints `42` and then `2`.
+
+```kotlin
+import java.math.BigInteger
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.runBlocking
+import org.leanbridge.timers.kotlin.Api
+
+fun main() = runBlocking {
+    println(Api.immediate(BigInteger.valueOf(41)))
+    println(Api.units(BigInteger.TWO).count())
+}
+```
+
+Cancelling the awaiting coroutine also cancels its underlying Lean task. A non-cooperative worker may finish later; its result is discarded. A collector requests one item at a time, after the previous emission returns. Operators such as `take(1)` close the cursor early. The generated POM supplies the coroutine library. Synchronous companions need no coroutine.
+
+Catch a declared exception around the suspend call or around collection.
+A returned `Result.Err` is data, not an exception.
+
+Cancelling a collector while it is waiting closes the Lean cursor and resumes
+the coroutine with cancellation, not normal completion. Even a worker that
+ignores cancellation cannot emit its late item. See the [installed collector check](../evidence/async-delivery-crosswalk-20261125.md#the-same-blocked-pull-in-java-and-kotlin).
+
+The suspend wrapper uses Kotlin’s [cancellable await](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.future/await.html). See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
+
+### Receive resources from tasks and streams
+
+Use `use` on each lease returned by a suspend function or emitted by a flow.
+This example takes one ticket. Ending collection closes the cursor without
+closing the ticket returned by `first()`:
+
+```kotlin
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.leanbridge.desk.kotlin.Api as Desk
+import org.leanbridge.depot.kotlin.Api as Depot
+
+fun main() = runBlocking {
+    Desk.issue(42).use { ticket ->
+        Depot.tickets(ticket, false).first().use { println(Desk.count(it)) }
+    }
+}
+```
+
+A cold flow borrows its input when collection starts. A task that has
+started keeps the Lean object alive independently of the input lease.
+If [cancellation wins before a coroutine resumes](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/suspend-cancellable-coroutine.html),
+the bridge releases a pending result or typed-error payload. Once your collector receives a lease,
+it owns it; close it even if you stop collecting. An exception rethrown
+from your own callback is still yours.
+
+### Pass a callback to a Lean task
+
+When a package marks a parameter single-use, a second invocation fails
+before it enters your lambda. If Lean propagates the refusal, catch the package's
+`CallbackAlreadyInvokedException` around the suspend call;
+`e.declaration()` gives the Lean operation. The first call spends that
+registration even if it throws. Reusing your lambda in a new task is fine.
+
+Pass a Kotlin function to the suspend API. The callback itself is synchronous; this call returns `42`:
+
+```kotlin
+import kotlinx.coroutines.runBlocking
+import org.leanbridge.feedback.kotlin.Api
+
+fun main() = runBlocking {
+    val answer: Long = Api.once(40L) { n -> n + 2 }
+    println(answer)
+}
+```
+
+The lambda runs on a JVM virtual thread, not on the calling coroutine’s dispatcher. Cancelling the coroutine releases the native task even if a callback is still blocked in application code. The bridge discards a late reply; it does not interrupt the callback. To revoke a callback across calls, use the generated `RetainedCallback.function` and pass `registration.callback()::apply`.
+
 ### Arrays and records
 
 New ordinary Maven packages include a Kotlin API in a `.kotlin` subpackage.
@@ -251,6 +491,33 @@ The [Java lifetime and conversion rules](java.md#callbacks-and-returned-lean-fun
 
 ### Structured callback values
 
+When Lean passes a function directly to your callback, call it inside the
+lambda: `Api.visitQuote(40, { quote, n -> quote.invoke(n) }, 2)` returns 42
+in the Tariff example. To call it later, keep the value returned by
+`quote.retain()` and close that lease when finished. In packages with
+canonical resource equality, `quote.sameIdentity(lease)` checks the live Lean
+identity; the original borrow expires even if the lease remains open.
+See the [Java and Kotlin checks](../evidence/jvm-function-fields-20261126.md#a-function-passed-into-a-callback).
+
+For an owned record with a leased function field, use
+`tariff.quote.retain().use { kept -> … }` when the function must outlive the
+original handle. The [installed Kotlin Tariff client](../evidence/jvm-function-fields-20261126.md)
+closes `tariff.quote` inside that block and still calls `kept.invoke(2)`.
+A borrowed Kotlin lambda is not a retained Lean function.
+
+When the package manifest lists `hostInputRecords`, pass a lambda in the
+generated input class:
+
+```kotlin
+val row = TariffInput(quote = { units -> units + 40 })
+val price = Api.applyTariffWithHostFields(row, 2)  // 42L
+```
+
+Use `TariffInput.fromLeased(tariff)` for an existing record, or
+`TariffInput.builder().quote(kept).build()` for a particular Lean lease.
+Returning a record does not extend a Kotlin lambda’s lifetime beyond the
+original call.
+
 Use the companion `.kotlin` API and its copied value types for structured
 callbacks. Arrays, Lists, options, results, binary products, records, variants
 and aliases can carry acyclic copied payloads. Lambdas retain their parameter
@@ -296,7 +563,7 @@ Kotlin's companion classes remain distinct, so import values from the same API
 as the function you call. Both adapters share the native loader and closure
 leases. Use `use` to close returned functions and keep invocation on the
 creating platform thread. Recursive callable payloads, resources inside copied
-aggregates, suspend functions and retained host callbacks remain unsupported.
+aggregates, suspend functions and retained host callbacks are not part of this callable profile.
 
 ### Recursive callback values
 
@@ -345,7 +612,7 @@ remain distinct; import the API and values from the same package.
 The [Java recursive callback limits and failure rules](java.md#recursive-callback-values)
 apply to both languages. Host exceptions retain their identity after native
 cleanup. Resources and callable identities inside copied aggregates, retained
-host callbacks and asynchronous delivery remain unsupported.
+host callbacks and asynchronous delivery are not part of this callable profile.
 
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths and compile this example against the original JAR.
@@ -878,6 +1145,8 @@ The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-pr
 Profiles: Kotlin. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows. Tasks can [call back into the JVM](#pass-a-callback-to-a-lean-task) using copied scalar arguments and replies.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Kotlin in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

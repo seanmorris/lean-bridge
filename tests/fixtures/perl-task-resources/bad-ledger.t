@@ -1,0 +1,10 @@
+use v5.36;
+use Test::More;
+use LeanBridge::Depot;
+my $owner=LeanBridge::Depot::make(7,'intact');
+my $ok=eval { require LeanBridge::Counter; 1 }; my $error=$@;
+ok(!$ok && $error=~/Owned native artifact checksum mismatch: [^\n]*liblb_task_resources_[a-f0-9]{64}\.so/,'changed sibling ledger is refused even when a good copy with the same SONAME is already loaded');
+is(LeanBridge::Depot::count($owner),7,'rejection did not invalidate the original package');
+$owner->close;
+is(LeanBridge::Runtime::_snapshot()->{live_identities},0,'rejected sibling created no owner');
+done_testing;

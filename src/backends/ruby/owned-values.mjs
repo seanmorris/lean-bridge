@@ -7,7 +7,7 @@ import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/
 import { cIdentifier } from "../c/generate.mjs";
 
 const constant = name => name.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (name.match(/_+$/u)?.[0] ?? "");
-const reservedConstants = new Set("Native Owned OwnedValues Unit UNIT LeanBridgeError Some Ok Err WithRecovery Object BasicObject String Array Integer Float Fiddle Gem File Digest Thread Mutex Ractor Encoding RangeError TypeError StandardError Exception Kernel Struct Data Module Class Scope Lease Monitor Process ObjectSpace ArgumentError LocalJumpError EncodingError NoMemoryError LoadError NativeCopiedRuntimeV1 RUBY_ENGINE RUBY_VERSION RUBY_PLATFORM".split(" "));
+const reservedConstants = new Set("Native Owned OwnedValues Unit UNIT LeanBridgeError Some Ok Err WithRecovery Object BasicObject String Array Integer Float Fiddle Gem File Digest Thread Mutex Ractor Encoding RangeError TypeError StandardError Exception Kernel Struct Data Module Class Scope Lease Monitor Process ObjectSpace ArgumentError LocalJumpError EncodingError NoMemoryError LoadError NativeCopiedRuntimeV1 NativeResourceLeaseV1 RUBY_ENGINE RUBY_VERSION RUBY_PLATFORM".split(" "));
 const reservedMembers = new Set("nil true false self super class module def end begin rescue ensure return yield alias and or not if unless while until case when then else elsif for in do break next redo retry undef defined initialize initialize_copy initialize_dup initialize_clone new send public_send method method_missing object_id freeze frozen hash eql equal dup clone tap inspect to_s respond_to const_get const_set module_function private_constant deconstruct deconstruct_keys raise require with_recovery".split(" "));
 const primitive = {
 	unit: "UNIT", bool: "true | false", char: "single-scalar String"
@@ -98,7 +98,18 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 			})
 		};
 	});
-	const functions = c.functions.map(fn => {
+	const table = new Map(types.map(node => [node.id, node]));
+	for(const fn of c.hostFieldCalls ?? []) for(const slot of fn.hostRecordSlots)
+	{
+		const node = table.get(slot.node.id);
+		if(node.hostInput) continue;
+		let name = node.publicType + "Input";
+		while(occupied.has(name)) name += "Input";
+		const selected = new Set(slot.fields.map(field => field.name));
+		node.hostInput = { publicType: claim(name), cName: slot.inputType
+			, fields: node.fields.map(field => ({ ...field, host: selected.has(field.name) })) };
+	}
+	const functions = [...c.functions, ...c.hostFieldCalls ?? []].map(fn => {
 		const publicName = fn.cName.slice(c.prefix.length + 1);
 		if(wholeOwners && publicName === "copy_value") throw new TypeError("Owned Ruby function name is reserved: copy_value");
 		if(reservedMembers.has(publicName) && !["next", "inspect"].includes(publicName))
@@ -109,7 +120,6 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 		return { ...fn, publicName
 			, ...fn.receiver === 0 ? { receiverKind: ir.declarations.find(item => item.id === fn.id).kind } : {} };
 	});
-	const table = new Map(types.map(node => [node.id, node]));
 	const aliases = c.native.aliases.map(alias => ({ ...alias
 		, name: definitions.get(alias.id).name
 		, contractType: contract(definitions.get(alias.id).target)
@@ -119,7 +129,7 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 	const nominal = types.filter(node => names.has(node.id));
 	const exports = ["UNIT", "LeanBridgeError", ...wrappers
 		, ...wholeOwners ? ["Value", "copy_value"] : []
-		, ...nominal.flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])
+		, ...nominal.flatMap(node => [node.publicType, ...node.hostInput ? [node.hostInput.publicType] : [], ...node.cases.map(branch => branch.publicName)])
 		, ...hostCallbacks && c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
 		, ...functions.map(fn => fn.publicName)];
 	const receiverMember = (fn, whole) => {
@@ -142,8 +152,14 @@ ${whole ? `        receiver = get
 			const args = callback?.parameters.slice(1).map((_, i) => `arg${i}`) ?? [];
 			return `    class ${node.publicType} < Owned::Resource
       def retain; Native.retain${node.index}(self); end
-${anchored ? `      def same_identity?(other); Native.same${node.index}(self, other); end
-      def ==(other); same_identity?(other); end
+${anchored || c.callbackArgumentViews ? `      def same_identity?(other); Native.same${node.index}(self, other); end
+      ${anchored ? "def ==(other); same_identity?(other); end" : `def ==(other)
+        return true if super
+        return false unless other.instance_of?(self.class) && !closed? && !other.closed?
+        same_identity?(other)
+      rescue Owned::Error
+        false
+      end`}
       alias eql? ==
 ` : ""}\
 ${callback ? `      def call(${args.join(", ")}); Native.invoke${node.index}(${["self", ...args].join(", ")}); end\n` : ""}\
@@ -151,8 +167,14 @@ ${functions.filter(fn => fn.receiver === 0 && fn.parameters[0] === node.id
 	&& fn.anchor !== 0 && !fn.transfers?.includes(0)).map(fn => receiverMember(fn, false) + "\n").join("")}\
     end`;
 		}
-		return node.kind === "record" ? valueClass(node.publicType, node.fields)
-			: `    class ${node.publicType}\n      private_class_method :new\n    end\n${node.cases.map(branch => valueClass(branch.publicName, branch.fields, node.publicType)).join("\n")}`;
+		if(node.kind === "record")
+		{
+			const record = valueClass(node.publicType, node.fields);
+			if(!node.hostInput) return record;
+			const fields = node.hostInput.fields.map(f => f.host ? { ...f, contractType: f.contractType + " or synchronous callable" } : f);
+			return record + "\n" + valueClass(node.hostInput.publicType, fields);
+		}
+		return `    class ${node.publicType}\n      private_class_method :new\n    end\n${node.cases.map(branch => valueClass(branch.publicName, branch.fields, node.publicType)).join("\n")}`;
 	});
 	const methods = functions.map((fn, index) => {
 		const args = fn.parameters.map((_, i) => `arg${i}`).join(", ");

@@ -92,6 +92,26 @@ export const nativeCType = type => {
 export const nativeObjectType = type => nativeCType(type) === "lean_object *";
 
 /**
+ * A resource has no synthetic default. For a failed or expired host callback,
+ * Lean can reuse a parameter of the exact same nominal type. Otherwise the
+ * registered closure must capture a prevalidated recovery lease.
+ *
+ * @param type - Compiler-owned native callable type.
+ * @returns {number | null} Matching argument index, -1 for a capture, or null for ordinary replies.
+ */
+export const nativeResourceReplyArgument = type => type.kind === "callback" && type.result.kind === "resource"
+	? type.parameters.findIndex(parameter => nativeTypeKey(parameter) === nativeTypeKey(type.result)) : null;
+
+/**
+ * Whether a host can supply code of this signature rather than only call a leased closure.
+ *
+ * @param model - Native export model.
+ * @param type - Native callable type.
+ */
+export const nativeAcceptsHostCallback = (model, type) => type.kind === "callback" && model.exports.some(item =>
+	item.parameters.some(parameter => parameter.type.kind === "callback" && nativeTypeKey(parameter.type) === type.key));
+
+/**
  * A valid copied value used only while a callback exception awaits cleanup.
  *
  * @param type - Checked native type and compiler representation.
@@ -637,6 +657,22 @@ export const generateNativeLeanAdapters = model => {
 			emit(`lb_t${type.key}_call`, [{ name: "closure", type }, ...parameters], answer, `closure ${arguments_}`);
 			// Only a leased closure is checked, and the host never supplies one, so it has no trampoline.
 			if(type.checked) continue;
+			const argument = nativeResourceReplyArgument(type);
+			if(argument !== null)
+			{
+				if(!nativeAcceptsHostCallback(model, type)) continue;
+				const option = { kind: "option", element: type.result };
+				const symbol = `lb_t${type.key}`, invoke = `invoke_${type.key}`;
+				emit(`${symbol}_some`, [{ name: "reply", type: type.result }], option, ".some reply");
+				emit(`${symbol}_none`, [], option, ".none");
+				const args = parameters.map(p => `(${p.name} : ${absoluteLeanType(p.type, mirrors)})`).join(" ");
+				const capture = argument < 0 ? ` (recovery : ${absoluteLeanType(type.result, mirrors)})` : "";
+				const fallback = argument < 0 ? "recovery" : parameters[argument].name;
+				lines.push(`@[extern "${symbol}_invoke"]`, `opaque ${invoke} (token : _root_.USize) ${args} : ${absoluteLeanType(option, mirrors)} := .none`, ""
+					, `@[export ${symbol}_wrap]`, `def wrap_${type.key} (token : _root_.USize)${capture} : ClosureCarry${type.key} := ⟨fun ${arguments_} => (${invoke} token ${arguments_}).getD ${fallback}⟩`, "");
+				prototypes.push(`lean_object * ${symbol}_wrap(size_t token${argument < 0 ? ", lean_object *recovery" : ""});`);
+				continue;
+			}
 			// No Perl symbol or Perl interpreter pointer enters the compiled component.
 			// A synchronous callback uses a private C trampoline installed by XS.
 			lines.push(`@[extern "lb_t${type.key}_invoke"]`, `opaque invoke_${type.key} (token : _root_.USize) ${parameters.map(p => `(${p.name} : ${absoluteLeanType(p.type, mirrors)})`).join(" ")} : ${absoluteLeanType(type.result, mirrors)} := ${callbackLeanDefault(type.result, mirrors)}`, "");

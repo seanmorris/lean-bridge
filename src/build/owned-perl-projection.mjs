@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { generateOwnedPerlXs } from "../backends/perl/owned-xs.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
 import { readVerifiedNativeRuntime, readVerifiedNativeComponent } from "./native-artifacts.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { privateGmpKit } from "./task-gmp.mjs";
 import { projectCpanPackages } from "./cpan-projection.mjs";
 
 /**
@@ -36,6 +36,6 @@ export const projectOwnedPerl = async options => {
 	const moduleName = ownedPerlNamespace(model.component, settings);
 	generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 	const ownedGmpRoot = join(working, "native/owned-perl-gmp");
-	await buildNativeGmp({ root: ownedGmpRoot, environment, signal, privateSoname: true });
+	await privateGmpKit({ root: ownedGmpRoot, environment, signal });
 	return projectCpanPackages({ ...options, ownedGmpRoot, ownedModuleName: moduleName });
 };

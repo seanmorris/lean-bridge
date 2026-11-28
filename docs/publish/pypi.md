@@ -21,7 +21,7 @@ Prepare the source and select exports using [shared export configuration](../lea
 }
 ```
 
-Use a lowercase hyphen-separated distribution name you own. Python imports follow the compiled component name, not the distribution name: component `iris` becomes `lean_iris`. Release versions such as `1.2.3`, `2.0.0rc1` and `1.2.3.post1` are accepted. The development default is `0.0.0+local`; choose a public version before uploading to PyPI.
+Use a lowercase hyphen-separated distribution name you own. For these copied-value and callable packages, Python imports follow the compiled component name, not the distribution name: component `iris` becomes `lean_iris`. Release versions such as `1.2.3`, `2.0.0rc1` and `1.2.3.post1` are accepted. The development default is `0.0.0+local`; choose a public version before uploading to PyPI.
 
 On Linux x86-64 with the pinned Lean toolchain, native C compiler and Python 3.11 or newer available, run:
 
@@ -44,6 +44,299 @@ Repeat `--target` to combine PyPI with npm, CPAN, C, C++, Cargo, NuGet, Maven, R
 Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
 
 Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
+
+## Call Python objects from Lean
+
+The [meter project](../../tests/fixtures/python-host-meter/lean-bridge.exports.json)
+shows the two sides of this interface. The application supplies a Python
+class with a `read()` method. A public Lean function accepts an instance and
+returns its reading:
+
+```lean
+import LeanBridge.Host.Python
+namespace Workshop
+open LeanBridge.Host.Python
+
+def readLevel (box : Box) : IO UInt32 := box.read
+end Workshop
+```
+
+In `lean-bridge.exports.json`, set `hostImports` to
+[`lean-bridge.hosts.json`](../../tests/fixtures/python-host-meter/lean-bridge.hosts.json).
+That file describes the **imports**: a nominal `Box` and its borrowed
+receiver and copied `UInt32` result. Select the application's own public
+functions with `modules` and `exports`. Lean Bridge generates the import
+module; don't add your own `LeanBridge/Host/Python.lean`.
+
+Choose `host.identity` per nominal kind. Use `weak-canonical` to share the
+same Python object without holding it for the whole binding. Use
+`strong-canonical` when a successful host-member result or a fully validated
+call should pin the instance until the last compatible binding closes.
+Neither mode uses the object's `__hash__` or `__eq__` to establish identity.
+
+Build the Lake package on Linux x86-64 with Lean 4.32.2, a C compiler, and CPython 3.11 or 3.12
+with its shared library and development headers. From the repository root:
+
+```sh
+lean-bridge build --project tests/fixtures/python-host-meter \
+  --target pypi --output build/meter-release
+lean-bridge verify --receipt build/meter-release/package-set-receipt.json
+```
+
+The CLI compiles the selected modules and inspects their fresh Lean interfaces.
+The release contains `binding-ir.json` (the **exports**), a compiler evidence
+file, and two wheels under `archives/`: the CPython-specific component and
+its exact shared-runtime dependency. This profile uses the distribution name
+with underscores for the Python import: `lean-meter` becomes `lean_meter`.
+Give consumers both wheels. See
+[binding a Python class](../consume/python.md#bind-a-python-object-that-lean-calls)
+for the offline installation and call.
+
+For a reviewed build, copy the emitted `binding-ir.json` into your source
+project as `api.binding-ir.json`. Keep `modules` and `hostImports`; the review
+can now supply the export list. The next build checks the review against
+fresh signatures, effects, ownership and the host-import identity. A mismatch
+stops the build before it exposes a release. Editing documentation alone does
+not change the API contract.
+
+The Lean signature controls what the Python caller receives:
+
+| Exported Lean result | Installed Python call |
+| --- | --- |
+| `IO α` | Returns the value. An unhandled exception from a Python method reaches its caller as the original exception. |
+| `IO (α → IO β)` | Returns a typed, closable `LeanClosure[α, β]` tied to the creating host binding. |
+| `EIO ε α` | Returns the value on success; raises the package's `LeanEIOError` with the original typed payload on failure. |
+| `Except ε α` or `IO (Except ε α)` | Returns `Ok(value)` or `Err(error)`. Returning `.error` does not raise. |
+
+These calls are synchronous. Export arguments may be copied scalars or
+declared host objects. Returned `Except` values and `EIO` error payloads may
+nest and contain either supported copied values or the Python classes named
+in your import contract. The generated contract records a lease when a
+result or error can carry a host object. For example,
+`EIO Nat (Except String UInt32)` has two distinct error channels: a thrown
+`Nat` and a returned `String`. See the [compiled example](../../tests/fixtures/host-object/Workshop.lean).
+For worker results and stream items, select the [async export](#let-a-lean-task-call-python) too.
+This profile builds one target at a time. Python host-member calls themselves
+are synchronous; compound member arguments and custom native objects are not supported.
+
+To keep an application object for a later call, return a function that
+captures it. For example:
+
+```lean
+def reader (captured : Box) : IO (UInt32 → IO UInt32) :=
+  pure fun extra => do
+    return (← captured.read) + extra
+```
+
+Select the factory as an ordinary export; it does not belong in `taskExports`.
+The returned function takes one explicit, nondependent argument. Its argument
+and reply may each be a copied scalar or an imported Python class. Lean
+Bridge checks host-member dependencies and native effects in the function
+body as well as the factory. For instance, a returned file reader needs
+`nativeEffects: ["filesystem"]` even if the factory itself reads nothing.
+See the [Lean fixture](../../tests/fixtures/python-host-closures/Closures.lean)
+and [Python usage](../consume/python.md#call-a-lean-function-that-remembers-your-python-object).
+
+## Export synchronous IO to Python
+
+Select the functions in `exports`, [declare native OS access](../lean/export-decisions.md#declare-native-os-access),
+and build with `--target pypi`. Use `nativeEffects: []` for an API that
+needs no OS access. The `native-python-io-v1` package exposes ordinary Python
+functions; the exact shared runtime wheel is a package dependency. No host
+binding or asyncio loop is required. See [how Python handles errors](../consume/python.md#call-synchronous-io).
+
+## Export a shared Lean resource
+
+Use `resources` for an opaque Lean-owned heap type. For example, Desk issues a
+`Shared.Ticket` that owns a mutable counter and a file descriptor:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"pypi": {"name": "lease-desk", "version": "1.0.0"}}
+}
+```
+
+The [Desk module](../../tests/fixtures/ruby-task-resources/Desk.lean) imports
+the [resource definition](../../tests/fixtures/resource-tasks/Shared.lean).
+Select the same definition in a second package's `resources` list to borrow
+or return tickets there. Its compiler and declaring module's transitive
+application imports must match; unrelated entry modules need not match.
+The two packages share the Python class and ownership ledger. No Python
+implementation of the resource or separate namespace package is required.
+
+Build each project normally with `--target pypi`. Select genuine task
+factories in `taskExports`, and pull protocols in `asyncIterators`. A direct
+resource can be an argument, result, declared failure, or stream item.
+Resource-containing copied sums are a different contract; `resources` by
+itself does not make their ownership unambiguous. See
+[how Python code uses the installed pair](../consume/python.md#share-a-lean-resource-across-packages)
+and the [wheel verification receipts and replay instructions](../evidence/python-resource-leases-20261123.json).
+
+## Export a Lean task to asyncio
+
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
+Use `taskExports` to select functions that should deliver an awaitable on Linux
+x86-64 CPython. The [Timers package](../../tests/fixtures/python-lean-tasks/Timers.lean)
+needs no host-import contract. Its delayed calculation runs on Lean's scheduler:
+
+```lean
+def later (n : Nat) : BaseIO (Task Nat) := BaseIO.asTask do
+  IO.sleep 15
+  return n * 3
+```
+
+List the Lean name in `taskExports` and select its module with `modules`.
+If the package also exports ordinary calls, include the complete public list
+in `exports`. For a reviewed build, keep `taskExports` and supply the emitted
+API as `api.binding-ir.json` instead of listing `exports`. Both routes check
+the actual Lean signatures. For the [full example](../../tests/fixtures/python-lean-tasks/lean-bridge.exports.json):
+
+```sh
+lean-bridge build --project tests/fixtures/python-lean-tasks --target pypi --output build/timers
+lean-bridge verify --receipt build/timers/package-set-receipt.json
+```
+
+An explicitly selected `Task α`, `BaseIO (Task α)`, `IO (Task α)`, or
+`EIO ε (Task α)` delivers `α`. A startup failure from `EIO` raises the typed
+exception when awaited. An `Except` **inside** the task stays a returned value
+unless you explicitly select terminal `IO.Error` delivery as described below.
+Ordinary `IO α` is not an async contract. A factory without retained callbacks
+starts on the calling thread: put long-running work *inside* its task.
+Task arguments may use copied scalars or opaque objects declared in
+`hostImports`; results may nest `Except` over these values. A worker can
+carry the object and pass it back. It cannot invoke a Python member directly:
+take a callback and let the generated adapter dispatch it on the Python loop.
+[Use the installed awaitable](../consume/python.md#await-a-lean-task).
+
+### Let a Lean task call Python
+
+Use an ordinary unary Lean function argument, `α → IO β`. Either side can
+be a copied scalar or a Python class from the package's import contract.
+For example:
+
+```lean
+def repeatCall (s : String) (f : String → IO String) :
+    BaseIO (Task (Except IO.Error String)) :=
+  IO.asTask do f (← f s)
+```
+
+In [the example package](../../tests/fixtures/python-retained-tasks/Retained.lean),
+this declaration lives in the `Retained` namespace. Select it in
+`lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "taskExports": ["Retained.repeatCall"],
+  "taskIOErrors": ["Retained.repeatCall"]
+}
+```
+
+`taskIOErrors` selects the **outer** `Except IO.Error` of a task result as
+its failure channel. Lean checks that exact signature. Without this selection,
+`IO.Error` is not a copied payload, so the build rejects that signature; it
+doesn't silently reinterpret it. A successful value can still contain its own
+`Except`. Keep the selection for reviewed builds, too.
+
+Each callback parameter allows repeated calls by default. To admit only one,
+add `"taskCallbackPolicies": [{"declaration": "Retained.repeatCall", "parameter": "f", "invocation": "once"}]`
+to the configuration. Use the binder name from the Lean declaration.
+In this example the second call to `f` fails, even if Lean caught an
+exception from the first one. A different parameter or a fresh invocation
+of `repeatCall` gets its own allowance. A reviewed interface cannot change
+the allowance selected by the source project.
+
+The package runs callback-capable factories on Lean's scheduler, including
+calls made before the factory returns a task. It dispatches each invocation
+to the owning Python event loop and resolves a Lean promise with the reply.
+To propagate the original Python exception, rethrow the caught `IO.Error`
+itself; `IO.ofExcept` turns it into text and constructs a different error.
+Cancellation revokes the callback even if Lean stored the function for later.
+Each export call can queue up to 256 unanswered requests and retain up to
+4,096 caught Python exceptions. Keep callbacks short so other event-loop
+work can run. [Call the installed package](../consume/python.md#pass-a-callback-to-a-lean-task).
+
+For a class-bearing signature such as `Box → (Box → IO Box) → BaseIO (Task (Except IO.Error Box))`,
+keep the package's `hostImports` and select the function in `taskExports` and
+`taskIOErrors`. The reviewed route uses the same selections. The [Lean fixture](../../tests/fixtures/python-host-tasks/Workers.lean)
+also returns a box as a typed failure and as a cursor item. The
+[Python caller](../consume/python.md#pass-your-objects-through-a-lean-task) gets
+the original instance. A wrong callback return type fails the call even if the
+Lean function catches `IO.Error`; a Python exception raised by the callback
+can be caught by Lean or propagated unchanged.
+
+## Export a synchronous iterator
+
+Select a factory, a pull operation and a finalizer under `iterators` in
+`lean-bridge.exports.json`. Only the factory belongs in the public export list:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Counting"],
+  "exports": ["Counting.numbers"],
+  "iterators": [{"open": "Counting.numbers", "next": "Counting.next", "close": "Counting.finish"}],
+  "nativeEffects": [],
+  "targets": {"pypi": {"name": "lean-counting", "version": "1.0.0"}}
+}
+```
+
+The [Lean example](../../tests/fixtures/python-sync-iterator/Counting.lean)
+keeps the concrete cursor type private to the component. Its factory can be
+pure or use `BaseIO`, `IO`, or `EIO`. The pull takes that cursor and
+returns an immediate `Option α` in `BaseIO`, `IO`, or `EIO ε`;
+the finalizer takes the same cursor and returns `BaseIO Unit`.
+The compiler checks all three functions, including native effects in the
+pull and finalizer. A reviewed interface must agree on the pull effect,
+error types, and protocol names. Use `asyncIterators` for a task-backed
+pull. The standalone PyPI cursor package does not mix the two delivery modes.
+
+## Export an async iterator
+
+Choose three public Lean definitions: a factory for your own cursor, a pull
+operation that returns a real task, and a close operation. Only the factory
+appears in the installed Python API. List the modules defining all three in
+`modules`. For example, the [Timers source](../../tests/fixtures/python-lean-tasks/Timers.lean)
+defines `units : Nat → BaseIO UnitCursor`, `nextUnit : UnitCursor → BaseIO (Task (Option Unit))`,
+and `closeUnits : UnitCursor → BaseIO Unit`. Select them in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Timers"],
+  "asyncIterators": [
+    {"open": "Timers.units", "next": "Timers.nextUnit", "close": "Timers.closeUnits"}
+  ]
+}
+```
+
+The factory can return the cursor directly or in `BaseIO`, `IO`, or `EIO ε`.
+Keep the factory, task creation, and close operation short: they run on the
+calling event loop. Put work for the next element inside the task. Each call
+to `next` produces one task; `some x` emits one item and `none` ends the stream.
+To report a typed pull failure, return `BaseIO (Task (Except ε (Option α)))`.
+An `Except` **inside** `Option` is an element, not a failed pull. Items and
+typed errors use the same copied scalars and nested `Except` as task results.
+
+Close may run while a cancelled task is still finishing. Synchronize any
+shared cursor state, and have workers check `IO.checkCanceled` when appropriate.
+On the owning live runtime, the bridge calls close once for every opened
+cursor, including after exhaustion and failure. An iterator closed before
+its first pull never opens. Neither a forked child nor a retired runtime
+runs the original cursor's Lean cleanup.
+Both build routes check the actual cursor and helper signatures; a reviewed
+API must name the same helpers. A factory, pull, or close operation that
+calls a Python host member is rejected even if the call is indirect.
+[Consume the stream in Python](../consume/python.md#read-a-lean-stream).
 
 ## Export arrays and records
 

@@ -1,0 +1,136 @@
+<?php
+declare(strict_types=1);
+namespace __LB_PUBLIC__;
+use LeanBridge\Internal\PhpWasmTasksV1\MemberStack;
+
+final class TaskCancelled extends \RuntimeException {}
+
+/** One owning PHP object. Repeated awaits return the same value or throw the same error. */
+abstract class Awaitable {
+    private bool $observed=false;
+    private bool $observing=false;
+    private mixed $value=null;
+    private ?\Throwable $failure=null;
+    private ?object $cleanup;
+    final protected function __construct(private ?object $owner, private readonly \Closure $decode, private ?Internal\CallbackScope $callbacks=null,
+            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null,private ?object $binding=null) {
+        $this->cleanup=$owner->cleanup(); $callbacks?->attach($owner);
+    }
+    private function __clone() {}
+    final public function __serialize(): array { throw new \LogicException('Cannot serialize an active Lean owner'); }
+    final public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean owner'); }
+    final public function cancel(): bool {
+        $stopped=$this->owner?->cancel() ?? false;
+        if ($stopped) $this->release(true);
+        return $stopped;
+    }
+    private function release(bool $suppress): void {
+        $first=null;
+        try {$this->callbacks?->close();} catch (\Throwable $e) {$first=$e;}
+        $this->callbacks=null;
+        try {$this->objects?->close($suppress || $first!==null);} catch (\Throwable $e) {$first??=$e;}
+        $this->binding=null;
+        if (!$suppress && $first!==null) throw $first;
+    }
+    final public function __destruct() { try { $this->owner?->abandon(); } finally { $this->release(true); } }
+    final public function awaitCleanup(): void {
+        if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Cannot wait for an active callback on this task');
+        if ($this->cleanup===null) return;
+        MemberStack::assertCanWait();
+        $drained=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->cleanup)==='["end"]';
+        if ($drained) $this->cleanup=null;
+        // Capture the terminal result and release Zend callables even when the
+        // application keeps this owner and calls await() much later.
+        if (!$this->observed) { try { $this->take(); } catch (\Throwable) { /* Cached for await(). */ } }
+        if (!$drained) throw new LeanBridgeError('Failed to drain Lean task owner');
+    }
+    final protected function take(): mixed {
+        if ($this->observing || $this->callbacks?->dispatching()) throw new \LogicException('Reentrant observation of the same Lean task');
+        if (!$this->observed) {
+            MemberStack::assertCanWait();
+            $this->observing=true;
+            try {
+                $packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner);
+                $this->value=$this->callbacks!==null ? $this->callbacks->decode($packet,$this->decode) : ($this->decode)($packet);
+            } catch (\Throwable $error) { $this->owner->cancel(); $this->failure=$error; }
+            finally {
+                $this->observed=true;$this->owner=null;
+                try {$this->release($this->failure!==null);} catch (\Throwable $e) {
+                    $this->failure??=$e;
+                    // await() will never deliver the previously decoded value.
+                    try {$this->value=null;} catch (\Throwable) { /* Preserve the first failure. */ }
+                }
+                finally {$this->observing=false;}
+            }
+        }
+        if ($this->failure!==null) throw $this->failure;
+        return $this->value;
+    }
+}
+
+/** A one-pass, demand-driven sequence. Breaking a foreach closes its Lean cursor. */
+final class PullStream implements \IteratorAggregate {
+    private bool $started=false;
+    private bool $pulling=false;
+    private ?object $draining=null;
+    private function __construct(private ?object $owner, private readonly \Closure $decode,
+            private readonly ?\LeanBridge\Internal\PhpWasmObjectsV1\Scope $objects=null,private ?object $binding=null) {}
+    private function __clone() {}
+    public function __serialize(): array { throw new \LogicException('Cannot serialize a Lean cursor'); }
+    public function __unserialize(array $data): void { throw new \LogicException('Cannot restore a Lean cursor'); }
+    /** Stop delivery without waiting for a noncooperative Lean worker. */
+    public function cancel(): bool {
+        if ($this->owner===null) return false;
+        $this->draining=$this->owner->drain();
+        $this->owner=null;
+        return true;
+    }
+    /** Wait for native worker cleanup after cancellation, or close an open cursor. */
+    public function close(): void {
+        if ($this->owner===null && $this->draining===null) return;
+        if ($this->pulling) throw new \LogicException('Cannot close a cursor during its own pull');
+        MemberStack::assertCanWait();
+        $this->cancel();
+        $drain=$this->draining; $this->draining=null;
+        $failed=true;
+        try {
+            if (\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($drain)!=='["end"]') throw new LeanBridgeError('Failed to close Lean cursor');
+            $failed=false;
+        } finally { try {$this->objects?->close($failed);} finally {$this->binding=null;} }
+    }
+    private function abandon(): void {
+        $owner=$this->owner;$this->owner=null;
+        try {$owner?->dispose();} finally {try {$this->objects?->close(true);} finally {$this->binding=null;}}
+    }
+    public function __destruct() {$this->abandon();}
+    public function getIterator(): \Traversable {
+        if ($this->started || $this->owner===null) throw new \LogicException('Lean cursor is closed or already in use');
+        MemberStack::assertCanWait();
+        $this->started=true;
+        try {
+            while ($this->owner!==null) {
+                MemberStack::assertCanWait();
+                $this->pulling=true;
+                try {$packet=\LeanBridge\Internal\PhpWasmTasksV1\Pump::read($this->owner->pull());}
+                finally {$this->pulling=false;}
+                if ($packet==='["end"]') break;
+                if ($this->owner===null) {
+                    // A terminal error keeps its original type. A value already
+                    // buffered during callback dispatch is released, never yielded.
+                    if (is_object($packet) && $packet->form()==='value') $packet->discard();
+                    else ($this->decode)($packet);
+                    throw new TaskCancelled('Lean cursor was cancelled');
+                }
+                yield ($this->decode)($packet);
+            }
+        } finally {
+            // A suspended generator may be resumed or destroyed by a PHP
+            // member. Leave the already-owned native close to the scheduler.
+            // An explicit cancellation already started the drain. Waiting on it
+            // here could deadlock the caller that still has to release the worker.
+            if ($this->owner!==null) {
+                if (MemberStack::active()) $this->abandon(); else $this->close();
+            }
+        }
+    }
+}

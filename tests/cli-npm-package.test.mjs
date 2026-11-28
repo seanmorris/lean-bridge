@@ -212,6 +212,27 @@ test("tarball installs work locally, globally, and through npm exec without the 
 		const executable = join(consumer, "node_modules/.bin/lean-bridge");
 		assert.equal((await execute(executable, ["--version"], npmOptions)).stdout.trim(), config.version);
 		assert.match((await execute(executable, ["--help"], npmOptions)).stdout, /analyze/);
+		const phpImports = JSON.parse(await readFile("tests/fixtures/ruby-host-meter/lean-bridge.hosts.json", "utf8"));
+		phpImports.types[0].host.targets = ["php"];
+		const phpProbe = [
+			"import {phpHostMembers} from './src/backends/php/host-members.mjs'"
+			, "import {wordHostFrame} from './src/backends/native/word-host-frame.mjs'"
+			, "import {createHash} from 'node:crypto'"
+			, "import './src/build/host-elaboration.mjs'"
+			, "import './src/build/php-host-component.mjs'"
+			, "const frameHash = createHash('sha256').update(await wordHostFrame('dotnet')).digest('hex')"
+			, "if (frameHash !== '1eea51858a3241f71422f30735ef198e479644c873668a700c0d76a92ceaddb6') throw new Error('Changed CLR registry identity')"
+			, "if (!(await wordHostFrame('php')).includes('PHP host member failed')) throw new Error('Missing PHP frame')"
+			, "const model = phpHostMembers(JSON.parse(process.argv[1]))"
+			, "console.log(model.members.find(m => m.op === 'constructor').symbol)"
+		].join("; ");
+		const dispatched = await execute(process.execPath, ["--input-type=module", "-e", phpProbe, JSON.stringify(phpImports)], { cwd: installed });
+		assert.equal(dispatched.stdout.trim(), "lean_bridge_host_php_box_create");
+		for(const file of ["host-members.php","host-frame.php","host-words.php","host-refs.php","io-codec.php"])
+		{
+			const phpAsset = "src/backends/php/" + file;
+			assert.deepEqual(await readFile(join(installed, phpAsset)), await readFile(phpAsset));
+		}
 		const globalPrefix = join(scratch, "global");
 		await execute("npm", ["install", "--global", "--prefix", globalPrefix, ...installOptions, candidate.archive], npmOptions);
 		assert.equal((await execute(join(globalPrefix, "bin/lean-bridge"), ["--version"], npmOptions)).stdout.trim(), config.version);

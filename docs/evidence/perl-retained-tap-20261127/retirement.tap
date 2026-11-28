@@ -1,0 +1,7 @@
+ok 1 - retained task is pending before retirement
+ok 2 - native request is waiting before retirement
+ok 3 - queued callback fails as runtime retirement, not an application exception
+ok 4 - retired native port did not invoke Perl
+ok 5 - cannot start new callback work on a retired runtime
+ok 6 - runtime stayed retired and all native identities drained
+1..6

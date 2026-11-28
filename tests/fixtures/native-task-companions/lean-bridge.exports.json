@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Companions"],
+  "exports": ["Companions.plain", "Companions.bump", "Companions.doubled", "Companions.finish"],
+  "taskExports": ["Companions.doubled"],
+  "nativeEffects": ["filesystem"],
+  "targets": {
+    "c": {"name": "companions", "version": "1.0.0"},
+    "cpp": {"name": "companions", "version": "1.0.0"},
+    "cargo": {"name": "companions", "version": "1.0.0"},
+    "pypi": {"name": "lean-companions", "version": "1.0.0"}
+  }
+}

@@ -13,6 +13,53 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Select a PHP target explicitly. `--target npm` alone produces JavaScript packages. Neither PHP target has a CLI registry-upload adapter.
 
+To call application-defined PHP classes from Lean, select `php-native`, set
+`hostImports` to the path of the host Binding IR, and include `"php"` in each
+imported class’s `host.targets`. Import `LeanBridge.Host.Php` in your Lean
+module. The [Workshop example](../../tests/fixtures/php-host-members/Workshop.lean)
+shows a constructor, mutable property, method, and typed error. Build and
+distribute the Composer ZIP as usual. The receipt identifies this synchronous
+profile as `native-php-host-v1`. The [PHP consumer example](../php.md#let-lean-call-an-application-object)
+shows how an application binds its classes; no consumer writes FFI code.
+
+To capture a PHP object in a returned Lean function, use a synchronous
+factory in the same host module. For example:
+
+```lean
+def remember (captured : Box) : IO (Box → IO Box) :=
+  pure fun supplied => do
+    let _ ← supplied.read
+    pure captured
+```
+
+Select the factory in `exports`, not in `taskExports`. The native package
+generates an [invokable PHP object](../php.md#call-a-returned-function-that-captures-a-php-object)
+owned by this binding. Declare any OS effects used by the returned function
+in `nativeEffects`, just as for code run by the factory itself.
+
+To carry an imported class through a task or cursor, keep the same
+`hostImports` and declare `taskExports`, `taskIOErrors` or `asyncIterators`
+as appropriate. See the [async Workshop configuration](../../tests/fixtures/php-host-tasks/lean-bridge.exports.json).
+The resulting Composer archive uses `native-php-host-task-v1` and requires
+Amp and Revolt. A worker can carry objects and call a retained PHP callback
+on the owner thread; it cannot invoke a PHP member directly. Synchronous
+methods on the same binding can still invoke imported members.
+
+Keep the PHP event loop available to deliver callbacks and cancellation. Return
+or compose a Lean `Task` rather than synchronously waiting for it. In this
+host-worker profile the compiler checks the native operations reachable from
+startup, exports, pulls and finalizers. It rejects an explicit blocking wait
+such as `IO.wait`, even if that task happens to be ready at runtime. A filesystem
+or environment grant does not grant permission to block the owner. This rule
+does not turn a standalone synchronous IO package into an async package.
+
+For a borrowed member result, name the object that must outlive it. Use
+`{"scope":"receiver","anchor":"receiver"}` for the receiving object, or
+`{"scope":"parameter","anchor":"parent"}` for a nominal argument named
+`parent`. The [peer example](../../tests/fixtures/php-host-members/Peer.lean)
+uses both contracts. See the [installed lifetime checks](../evidence/php-host-finalizers-20261124.md)
+for retention, finalization and failure behavior.
+
 Generated copied-value Composer packages declare `brick/math: 1.0.0`; the 32-bit Alpha package declares it too. Consumers receive `Brick\Math\BigInteger` directly. Publish the generated dependency declaration unchanged. Composer resolves Brick Math through the application's repositories and records it in the application lockfile. For an offline release, supply that dependency through the same local repository or a prepared cache.
 
 PHP-Wasm npm packages bundle the pinned Brick Math sources and MIT license for hosts without Composer. The CLI includes those sources, so authors need no network access to assemble them. The bundled version and the Composer dependency are identical. No GMP or BCMath extension is required.
@@ -48,7 +95,7 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). The [explicit ownership profile](#export-resource-containing-values) also accepts resources inside these values. FPM, ZTS and asynchronous delivery remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). The [explicit ownership profile](#export-resource-containing-values) also accepts resources inside these values. Native CLI tasks use the [task package profile](#export-tasks-and-pull-streams). FPM and ZTS remain unsupported. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
 
 Native PHP maps `Option` to `null` or a generated `Some`, `Except` to `Ok` or
 `Err`, and each `Prod` to exactly two consecutive array elements. Branch classes
@@ -72,6 +119,282 @@ and returned functions.
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
+
+### Export a record that holds PHP objects
+
+For a synchronous `php-native` package, import the application class through
+your host contract and use that imported type directly as a Lean structure
+field. Export the functions that take or return the structure. For example,
+the [Station source](../../tests/fixtures/php-host-record/Workshop.lean)
+declares `Panel.primaryMeter : Box` and `Panel.backupMeter : Box` alongside
+copied values. The bindings use the actual constructor and field order:
+the PHP application borrows a panel for a call and receives a separately
+closable panel on return. It never needs a PHP object registry of its own.
+
+The public interface uses schema 4 for these records. A reviewed interface
+may change a field description; changing the order or type must agree with
+the Lean source. This native host-import route is distinct from exporting a
+Lean-owned resource to PHP-Wasm. See the [Composer example](../php.md#let-lean-call-an-application-object).
+
+### Export synchronous IO
+
+Use `nativeEffects` to declare the operating-system capabilities your exported
+Lean functions use. For example, for a Lake package named `journal` using
+the [Journal module](https://github.com/seanmorris/lean-bridge/blob/237f95af8cea3eadb0c327cc175c6187d67c882e/tests/fixtures/native-sync-io/Journal.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.bump", "Journal.count", "Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"],
+  "targets": { "php-native": { "name": "lean-bridge/journal", "version": "1.0.0" } }
+}
+```
+
+Build with `lean-bridge build --project . --target php-native --output release`.
+For a [reviewed API](../lean/existing-package.md#compile-a-reviewed-contract),
+keep the modules and capabilities, omit `exports`, and supply
+`public.binding-ir.json`. The compiler checks both routes against the source.
+The receipt identifies this package as `native-php-io-v1`. Distribute the
+Composer ZIP; the consumer needs neither Lean nor a C compiler.
+
+This profile copies the scalar arguments and results, including strings,
+byte arrays and arbitrary-precision integers. A returned `Except` and a
+thrown `EIO` payload may each contain nested `Except` values. An undeclared
+filesystem effect prevents packaging. For direct nominal resources, name the
+declarations in `resources`, as below. Callbacks, tasks, and PHP-Wasm are
+separate from this synchronous profile. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
+and the [independently reproduced archive](../evidence/php-sync-io-20261123.json).
+
+The [installed PHP-Wasm IO packages](../evidence/php-wasm-installed-sync-io-20261123.md) provide synchronous calls with startup or lazy loading. A project that selects tasks instead uses the threaded package described below.
+
+For a synchronous native PHP cursor, declare its three functions in
+`iterators` instead of `asyncIterators`. For example, the
+[Dials fixture](../../tests/fixtures/native-immediate-cursor/Dials.lean) uses
+`{"open":"Dials.sequence","next":"Dials.next","close":"Dials.finish"}`.
+Its `BaseIO (Option UInt32)` pull executes immediately. The standalone
+Composer package exposes PHP's `IteratorAggregate`
+API; it needs neither Amp nor Revolt. See the [PHP consumer](../php.md#iterate-an-immediate-lean-cursor).
+
+For PHP-Wasm, use the same `iterators` declaration with `nativeEffects: []`
+and a `php-wasm` target. The [Pulls example](../../tests/fixtures/javascript-immediate/Pulls.lean)
+uses `Pulls.sequence`, `Pulls.next`, and `Pulls.finish`; all three operate
+in memory. The compiler checks the selected declarations again when building
+from a reviewed interface. The resulting Zend extension supports
+[ordinary PHP iteration](../php.md#call-synchronous-io-in-php-wasm), without
+the pthread SDK used by the task profile.
+
+### Export tasks and pull streams
+
+The PHP-Wasm worker only admits in-memory Lean IO. Do not request filesystem
+or environment grants for this target. The publisher checks initializers,
+sync exports, tasks, pulls and finalizers. Even when a promise is already
+resolved, a finalizer cannot synchronously wait on the PHP-Wasm owner.
+
+Select functions with a real Lean `Task` result in `taskExports`; do not mark
+an ordinary `IO α` function async. A pull stream names its open, next, and
+close functions. For example, using the `Pulse` module:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": ["Pulse.bytes", "Pulse.series"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"php-native": {"name": "lean-bridge/pulse", "version": "1.0.0"}}
+}
+```
+
+Build with `lean-bridge build --project . --target php-native --output release`.
+For a reviewed contract, omit `exports`, supply `public.binding-ir.json`, and
+keep the task and stream selections. Both routes produce a Composer ZIP with
+profile `native-php-task-v1`. Composer installs the scheduler dependencies;
+the consumer needs no build tools. A synchronous-only package does not
+depend on the scheduler.
+
+For a `Task (Except IO.Error α)`, additionally select the function in
+`taskIOErrors` if the error should reject the future. Otherwise a supported
+returned `Except` is data, not a thrown error. To invoke PHP during the
+factory or worker, [export a task that calls PHP](#export-a-task-that-calls-php).
+See the [installed consumer example](../php.md#await-a-lean-task-or-iterate-a-stream).
+
+#### Build tasks for PHP-Wasm
+
+Use the same `taskExports`, `taskIOErrors`, and `asyncIterators` selections for copied values. Set `targets.php-wasm.npm` and `targets.php-wasm.composer` to the host module and Composer coordinates. Use a CLI containing the verified JavaScript task SDK, or supply that SDK directory in `LEAN_BRIDGE_JS_TASK_INPUTS` on the build machine.
+
+```sh
+lean-bridge build --project ./jobs --target php-wasm --output ./release
+lean-bridge verify --receipt ./release/package-set-receipt.json
+```
+
+The `php-wasm-threaded-task-v1` receipt identifies three archives in `release/packages/php-wasm/`: the npm host component, its exact pthread runtime, and the matching Composer API. Distribute that set together. The installed application needs no compiler or author SDK. The [PHP consumer example](../php.md#await-a-task-in-php-wasm) shows awaiting, cancelling, and early iterator exit.
+
+For retained callbacks, give a selected task a parameter of type `α → IO β`, where both types are supported copied scalars. Use the callback-capable [pthread author SDK](npm.md#build-a-threaded-npm-handoff). A copied-task-only SDK lacks the callback entry points; the build rejects it before writing a handoff. Review the PHP interface, not the private JavaScript scheduler: a PHP callable returns a value, not a JavaScript promise. Independently built components must depend on the same runtime archive to share an executor. See [the PHP callback example](../php.md#pass-a-php-callback-to-a-lean-worker). Cross-heap resource leases are not supported by this profile.
+
+To call an application PHP class, set `hostImports` to the PHP host contract for the project. Import its generated Lean module and select the immediate exports, tasks, and cursors that use it. The [example source](../../tests/fixtures/php-wasm-task-owner/ZendMembers.lean) calls a constructor, a static factory, and instance members from immediate `IO`. Workers can carry those PHP objects and exchange them through callbacks; they cannot call a PHP method directly from a pthread. Build with a task SDK containing the member dispatcher. The same three archives then expose [`withHosts()` in PHP](../php.md#let-lean-call-methods-on-your-php-objects); no JavaScript class adapter is required.
+
+To allow only one invocation of a retained callback in a PHP-Wasm worker,
+select the original Lean parameter in `lean-bridge.exports.json`:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Budget.probe", "parameter": "f", "invocation": "once"}
+]
+```
+
+`Budget.probe` must also be in `taskExports`. A second call fails before
+the PHP function runs, even if the first call threw. Other slots and fresh
+tasks have their own allowances. Unselected callbacks allow repeated calls.
+This setting does not change native PHP or synchronous callbacks.
+
+### Publish immediate PHP-Wasm class bindings
+
+For a class-bound PHP-Wasm package that only exports immediate calls, select
+the Lean functions and the PHP class import contract in `hostImports`; omit
+`taskExports` and `asyncIterators`. Build with `--target php-wasm`. The
+`php-wasm-zend-host-io-v1` receipt lists the npm component, single-threaded
+runtime, and Composer API. This route needs the ordinary Wasm author toolchain,
+not the pthread SDK. Applications can use the package on pages without
+cross-origin isolation. See the [installed standalone example](../evidence/zend-host-closures-20261125.md#standalone-php-wasm).
+
+To export a record of application objects on this route, put the imported PHP
+class directly in a Lean structure alongside its scalar fields. Select the
+immediate `IO` functions that take or return the structure. The authoring
+tool checks its constructor and field order against the actual Lean
+declaration on both source routes; swapping two fields of the same class
+changes the interface. PHP callers use [generated classes and field
+accessors](../php.md#let-lean-call-methods-on-your-php-objects). This does
+not enable records in pthread task or stream signatures.
+
+### Share a resource between worker packages
+
+For a task that passes a Lean object between packages, list its qualified Lean type in `resources` in each package’s `lean-bridge.exports.json`. Compile both against the same pinned compiler and the same source for the declaring module and its imports. The packages can have different entry points: the compiled identity of the resource, not its PHP alias, determines whether they can exchange it. The generated Composer API supplies the class and lifecycle methods. See [the cross-package consumer example](../php.md#share-a-lean-object-between-php-wasm-packages).
+
+### Export a task that calls PHP
+
+An exported task can accept a function from a copied scalar to an IO result.
+For example, this worker asks PHP for two replies:
+
+```lean
+namespace Retained
+
+def repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String)) :=
+  IO.asTask do f (← f s)
+
+end Retained
+```
+
+In `lean-bridge.exports.json`, select the function as a task and select its
+terminal IO error. The ordinary-source configuration for this example is:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "exports": ["Retained.repeatCall"],
+  "taskExports": ["Retained.repeatCall"],
+  "taskIOErrors": ["Retained.repeatCall"],
+  "targets": { "php-native": { "name": "lean-bridge/retained", "version": "1.0.0" } }
+}
+```
+
+The reviewed-interface route checks the same signature against Lean source.
+No PHP callable address crosses into Lean. A worker sends a request to the
+owner event loop; PHP runs the callable there and replies with a copied value
+or exception. The same protocol works when the factory calls PHP before
+returning its task. See the [Composer consumer example](../php.md#pass-a-callback-to-a-lean-worker)
+and the [reproduced archive and installed results](../evidence/php-retained-tasks-20261123.json).
+
+For a standalone native task, you can limit one callback parameter to one
+invocation per task. For example, add this entry to the configuration above:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Retained.repeatCall", "parameter": "f", "invocation": "once"}
+]
+```
+
+This changes the example: the second `f` call is refused before PHP runs
+it. Concurrent workers share that parameter's allowance; other parameters
+and later task starts get their own. Use the original Lean binder name in
+the policy. Both author routes check it. Omit the entry to allow repeated
+calls. This native policy does not apply to packages with `hostImports`.
+
+### Export a directly owned IO result
+
+If `Depot` imports `Shared` and returns `Shared.Ticket`, select both the
+public functions and the resource type in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "exports": ["Depot.make", "Depot.count"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": { "php-native": { "name": "lean-bridge/depot", "version": "1.0.0" } }
+}
+```
+
+The ZIP includes a content-addressed lease library, loaded automatically.
+Two packages can exchange tickets when the Lean compiler, the declaring
+module and its application imports agree, and the packages use the same
+runtime and lease library. An unrelated application module does not change
+the ticket’s identity. See [share a resource between packages](../php.md#share-a-resource-between-native-php-packages).
+The [installation evidence](../evidence/php-heap-lease-20261123.json)
+identifies both the shared ledger and each package’s compiled resource types.
+The [offline CLI rebuild](../evidence/php-heap-lease-rebuild-20261123.json)
+reproduced the resource ZIP and the previous copied-only ZIP byte-for-byte.
+
+### Export a resource through a task or stream
+
+List the resource declaration alongside the task or pull selection. For a
+Depot package that imports `Shared.Ticket`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Depot.make", "Depot.pending", "Depot.release", "Depot.tickets"],
+  "taskExports": ["Depot.pending"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"php-native": {"name": "lean-bridge/depot", "version": "1.0.0"}}
+}
+```
+
+Use the normal `--target php-native` build. The generated package borrows
+ticket arguments without consuming the caller’s lease. A task result, stream
+item, or typed error that returns a ticket produces its own lease. An independent
+synchronous package can accept that ticket if it compiled the same resource
+definition and shares the runtime. See [the consumer example](../php.md#pass-a-resource-to-a-native-php-task).
+
+#### Let a worker borrow a resource and call PHP
+
+Select the borrowed resource and the worker in the same export configuration.
+In this example, `Exchange.revisit` accepts a `Shared.Ticket` and a
+`UInt32 → IO UInt32` callback, then returns a task with either an IO error or
+the ticket. PHP receives the counter value; the worker retains the ticket.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot", "Exchange"],
+  "exports": ["Depot.make", "Depot.count", "Exchange.revisit"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "taskExports": ["Exchange.revisit"],
+  "taskIOErrors": ["Exchange.revisit"],
+  "targets": {"php-native": {"name": "lean-bridge/depot", "version": "1.0.0"}}
+}
+```
+
+The filesystem effect here belongs to the ticket constructor. A peer package
+can supply the ticket when both packages use the same compiled definition and
+runtime. See [closing the caller's handle inside the callback](../php.md#close-a-resource-from-a-worker-callback).
 
 ### Export resource-containing values
 
@@ -135,6 +458,7 @@ lean-bridge build --project ./owned-aggregates --target php-native --output ./re
 
 The generated ZIP contains the PHP API, authenticated native libraries, private
 GMP 6.3.0, its corresponding source and license notices, and the package receipt.
+For repeated builds, the producer can [reuse the checked private GMP library](../publishing.md#reuse-checked-gmp-in-native-resource-packages).
 Composer installs `brick/math` 1.0.0. Consumers use ordinary autoloading and the
 [resource example](../php.md#resource-containing-values), without native
 declarations, runtime paths or a compilation step. Publish this ZIP using the
@@ -576,6 +900,36 @@ The Composer distribution and package-manager instructions below
 apply unchanged.
 
 ## Build an ordinary PHP-Wasm package
+
+For synchronous in-memory IO, select the Lean exports and set
+`"nativeEffects": []` in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Ledger"],
+  "exports": ["Ledger.add", "Ledger.readTotal"],
+  "nativeEffects": [],
+  "targets": {
+    "php-wasm": { "composer": { "name": "lean-bridge/ledger", "version": "1.0.0" } }
+  }
+}
+```
+
+Run `lean-bridge build --project . --target php-wasm --output release`,
+then `lean-bridge verify --receipt release/package-set-receipt.json`.
+The `php-wasm-sync-io-v1` receipt covers the npm component, its matching
+npm runtime dependency, and the Composer library. For a reviewed API, omit
+`exports` and supply one `.binding-ir.json` file alongside the configuration.
+The compiler checks its declarations and errors against the selected Lean
+source. This profile rejects filesystem and other OS grants; it does not
+turn synchronous IO into tasks. See the [consumer example](../php.md#ordinary-php-wasm-packages).
+
+If a synchronous callback in another package calls this one, ship both
+components with the same runtime dependency and load the IO extension
+before entering the callback. You do not need to wrap or translate declared
+exceptions. The [installed two-package check](../evidence/php-wasm-io-callback-failures-20261123.md)
+shows how to test nested failure propagation and cleanup.
 
 PHP-Wasm compiles concrete copied variants, Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records, including in synchronous callbacks and captured closures. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings.
 

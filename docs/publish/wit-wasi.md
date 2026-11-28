@@ -46,6 +46,222 @@ Repeat `--target` to add C, C++, Cargo, PyPI, CPAN, NuGet, Maven, RubyGems, nati
 
 Run `lean-bridge verify --receipt /absolute/path/to/cobalt-release/package-set-receipt.json`, then the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). The receipt checks unsigned local consistency, not publisher identity. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks.
 
+## Export synchronous IO
+
+### When the application owns the objects
+
+Declare the application’s constructors, methods, properties and ownership in the `hostImports` file. Set the resource’s host target to `wit-wasi` and import the generated `LeanBridge.Host.WitWasi` module in Lean. For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Workshop"],
+  "exports": ["Workshop.make", "Workshop.update"],
+  "hostImports": "lean-bridge.hosts.json",
+  "targets": {"wit-wasi": {"name": "workshop", "version": "1.0.0"}}
+}
+```
+
+Set `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the pinned Wasmtime **51.0.0** Linux x86-64 SDK and `LEAN_BRIDGE_WASM_TOOLS` to wasm-tools **1.245.1**. The SDK variable names the shared publisher toolchain; it does not change synchronous Lean IO into an asynchronous API. Run the usual `lean-bridge build --project . --target wit-wasi --output release` command. To publish a reviewed API, include the matching public `.binding-ir.json` file beside the export configuration.
+
+Distribute the archive and package-set receipt together. Synchronous selections use `native-wit-object-io-v1`; see [how the two guest components fit together](../consume/wit-wasi.md#call-synchronous-io).
+
+To return a function, select its factory in `exports`. A declaration such as
+`remember (captured : Box) : IO (Box → IO Box)` generates an owned WIT
+resource with `invoke` and `close` methods. Lean owns the function body; the
+object keeps its original guest identity. Do not declare the returned function
+as an imported callback or list the factory in `taskExports`.
+
+For a synchronous IO export that accepts or returns a structure containing
+guest-owned objects, include its defining Lean module in `modules`. The build
+reads the constructor and projections from Lean and emits a WIT resource with
+a constructor and one getter per field. The reviewed interface must preserve
+the original field order, even for two fields of the same box type. See the
+[Workshop and Gauge package test](../evidence/wit-host-record-fields-20261126.md).
+
+To let downstream applications [use two synchronous packages together](../consume/wit-wasi.md#share-a-guest-owned-object-between-synchronous-packages), publish each Lean project under distinct WIT package coordinates. Use the same defining host contract and compatible pinned runtime for all of them. The build includes the native adapter and peer runner in each archive. Consumers do not need to link the projects or rebuild either package.
+
+For guest-defined objects used by tasks, keep `hostImports`, include each public factory in `exports`, and select it with `taskExports` or `asyncIterators`. Set `taskIOErrors` for a selected task whose worker can fail with an IO error. This combination builds `native-wit-object-task-v1`: the application consumes canonical WIT futures and streams, while ordinary IO operations stay synchronous. You can explicitly set `targets.wit-wasi.asyncAbi` to `"canonical"`. If a registration is needed, the release also supplies the `registrations` world for the application’s callback provider. Check the selected signatures: this profile supports object-returning futures, a returned `Except` or immediate `EIO` failure carrying an object with a `UInt32` success, an object-to-object retained callback with IO failure, and cursors yielding objects with an optional object-valued step error. See [running the mixed application](../consume/wit-wasi.md#run-an-async-application-with-guest-owned-objects).
+
+You can select copied-value tasks and cursors alongside guest-object workers. For example, a packet factory taking two Lean `ByteArray` inputs can return `result<future<result<list<u8>, list<u8>>>, list<u8>>`. The outer error comes from the factory. The inner result arrives when the worker settles. The copied workers must not call guest members during the factory, pull, or close operation. Select them in the same `taskExports` or `asyncIterators` configuration as the object workers.
+
+You can publish a single object task without a synchronous companion or callback provider. For example, for an echo factory over an application-owned box, select `["Jobs.echo"]` in both `exports` and `taskExports`. In the reviewed route the public selection may come from the Binding IR; keep the task selection and host contract in the configuration.
+
+To [compose two worker releases](../consume/wit-wasi.md#use-two-worker-packages-in-one-application), give each Lean package distinct WIT coordinates and publish each archive independently. Both must use the same defining object contract and compatible native toolchain and runtime. Distribute the complete archive: the package-specific shared library, Wasm adapters, runner and public WIT are already included. The downstream application supplies its object provider and any required callback providers; publishers do not need each other’s Lean source trees.
+
+### Without application-owned objects
+
+Use ordinary `exports` for `BaseIO`, `IO` or `EIO`. Declare the native host
+capabilities the code actually needs. For example, the
+[Journal fixture](../../tests/fixtures/native-sync-io/Journal.lean)
+reads and writes files:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"]
+}
+```
+
+For in-memory effects use `"nativeEffects": []`. Build with `--target wit-wasi`
+and the tools listed above. The resulting `native-wit-io-v1` archive contains
+the component, native host, verified libraries, WIT, headers and `pkg-config`
+metadata. A reviewed project can supply its public `.binding-ir.json` instead
+of listing `exports`; the builder checks the review against compiled Lean.
+This profile takes one target per build. It also accepts synchronous iterators:
+list each factory in `exports` and name its checked `open`, `next` and `close`
+declarations in `iterators`. For example, [Dials](../../tests/fixtures/native-immediate-cursor/Dials.lean)
+uses `{"open":"Dials.sequence","next":"Dials.next","close":"Dials.finish"}`.
+The pull returns an immediate `Option`, not a `Task`. The finalizer's file
+write requires the filesystem grant even if the consumer exits the loop early.
+Do not mix immediate iterators with scheduled exports or application-owned
+objects. Select the task or object profile for those packages.
+
+The grant is an author-side admission check, not a WASI sandbox. For example,
+a permitted file write uses the host process's filesystem permissions. An
+undeclared native effect stops the build. Distribute the receipt and archive
+as above. See [calling synchronous IO](../consume/wit-wasi.md#call-synchronous-io)
+for results and traps, and the [installed archive checks](../evidence/wit-sync-io-packages-20261123.md)
+for the ordinary and reviewed builds.
+
+## Export asynchronous tasks
+
+For a Wasm guest that consumes Component Model futures or streams, select `targets.wit-wasi.asyncAbi: "canonical"`. Omit it for the native host’s typed task-resource profile, which also supports retained callbacks.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "exports": ["Meter.immediate"],
+  "taskExports": ["Meter.immediate"],
+  "targets": {
+    "wit-wasi": {"name": "meter", "version": "1.0.0", "asyncAbi": "canonical"}
+  }
+}
+```
+
+Use the normal native Lean author toolchain and wasm-tools 1.245.1. Set `LEAN_BRIDGE_ASYNC_WASMTIME_C_API` to the extracted [Wasmtime 51.0.0 Linux x86-64 C SDK](https://github.com/bytecodealliance/wasmtime/releases/tag/v51.0.0), then build with `lean-bridge build --project . --target wit-wasi --output release/wit`. The builder verifies the SDK headers, shared library and license before compiling the launcher. The default profile’s Wasmtime 42 SDK is unchanged.
+
+The canonical profile accepts `pure`, `BaseIO`, `IO` and `EIO` task factories and synchronous companion functions. Use `Bool`, `Char`, `String`, `ByteArray`, fixed-width integers and floats for inputs. Results and typed errors may also contain nested `Except` values. Use `ByteArray` for binary input, future results, stream items or typed errors: the WIT type is `list<u8>`, with no UTF-8 conversion. String and byte arguments share a 16 MiB limit per call.
+
+Select `taskIOErrors` for a task whose worker can fail with `IO.Error`; this adds a result **inside** the future, distinct from the factory’s result. Each factory admits 64 outstanding futures; a write keeps its slot until read or dropped. For copied values, distribute the original archive and receipt; consumers get [a WIT world and ready-to-run launcher](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application). Tasks that take retained callbacks use a separate pair of guest worlds.
+
+When a guest drops a future reader, the launcher requests cancellation of any pending Lean task. Check `IO.checkCanceled` inside the worker at a point where it can safely stop. Withdrawing only a read keeps the task available for a later read. The [Watch task](../../tests/fixtures/wit-canonical-cancel/Watch.lean) demonstrates both outcomes.
+
+### Publish tasks that call back into a Wasm guest
+
+For a standalone set of callback-bearing tasks, select `asyncAbi: "canonical"`.
+Put each task declaration in `taskExports`. For example, [Budget.single](../../tests/fixtures/javascript-once-callback/Budget.lean)
+takes a `UInt32 → IO UInt32`. To allow at most one call to its `f` parameter per
+task, add `{"declaration":"Budget.single","parameter":"f","invocation":"once"}`
+to `taskCallbackPolicies`. The first attempt spends that allowance even when
+the guest returns an error. An unlisted parameter can be invoked repeatedly.
+
+The archive's `wit/application.wit` defines both `callback-provider` and
+`application`. Its methods return a future whose error variant distinguishes
+factory, worker, guest and invocation-policy failures as applicable. Even a
+factory failure arrives through the future on this route. Do not mix unrelated
+exports, cursors or synchronous companion functions into this standalone
+callback package: the builder rejects a package it cannot represent in full.
+See [how to run both guest components](../consume/wit-wasi.md#use-a-guest-owned-callback-with-a-canonical-future).
+
+### Publish a canonical stream
+
+Select the cursor implementation with `asyncIterators`. You can publish a cursor without any `taskExports`, or include tasks in the same world. For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "exports": ["Meter.feed"],
+  "asyncIterators": [
+    {"open": "Meter.feed", "next": "Meter.advance", "close": "Meter.finish"}
+  ],
+  "targets": {"wit-wasi": {"name": "meter", "version": "1.0.0", "asyncAbi": "canonical"}}
+}
+```
+
+Only the factory is public. The [Lean source](../../tests/fixtures/wit-task-package/cursors.lean) supplies the pull and cleanup functions. A factory failure is outside the stream. A declared step failure is one final error element; normal exhaustion emits no element. An `Except` inside an item remains an ordinary value. Reviewed builds check the identities of all three functions, including cleanup.
+
+A pull can also return `BaseIO (Task (Except IO.Error (Option α)))`.
+For example, [Watch.pull](../../tests/fixtures/wit-cursor-io/Watch.lean)
+delivers an item and later throws `IO.userError "boom"`. The compiler
+records the pull's IO failure separately from a declared `Except String`.
+No `taskIOErrors` selection is needed for a cursor. In a canonical stream,
+the final element carries the UTF-8 error message; in a pollable package
+the corresponding observation is `io-failed(string)`.
+
+If a pull starts a worker, use `IO.checkCanceled` at a point where it is
+safe to stop. Closing a cursor releases the reader's claim on the result;
+it does not interrupt arbitrary Lean code. The [Watch cursor](../../tests/fixtures/wit-canonical-cancel/Watch.lean)
+lets its caller observe cursor cleanup separately from the worker's exit.
+
+### Typed task resources
+
+Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)` or `EIO ε (Task α)` with `taskExports`. Arguments can be `Bool`, `Char`, `String`, `ByteArray`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. Results and typed factory errors can also contain nested `Except` over those types. An `IO` or `EIO` factory has a fallible start operation: success yields an owned task, and failure yields the error without creating a task.
+
+`ByteArray` becomes WIT `list<u8>` in task and cursor results, typed errors, and retained callback arguments and replies. It is copied, not decoded as text. The pollable profile’s 16 MiB conversion budget counts Wasmtime’s tagged element storage as well as the packed bytes; it is not a 16 MiB payload allowance.
+
+For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives the message as text. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. External capabilities are not part of this profile.
+
+A task can also take a retained host function, such as the `UInt32 → IO UInt32` parameter in [Meter.through](../../tests/fixtures/wit-task-package/retained-phase.lean). Select the task in `taskExports` and, for this example, `taskIOErrors`. The generated start returns an owner immediately; factory errors arrive when the consumer observes that task. The checked WIT world gives each callback parameter its own request type. The installed C API dispatches those requests as [typed store-thread callbacks](../consume/wit-wasi.md#give-a-task-a-host-callback).
+
+For a pollable task, add an entry to `taskCallbackPolicies` to admit at
+most one invocation of a named parameter:
+
+```json
+"taskCallbackPolicies": [
+  { "declaration": "Budget.probe", "parameter": "f", "invocation": "once" }
+]
+```
+
+The first attempt consumes the allowance even if the callback throws. Other
+parameters keep their own policy. The public WIT observation for a second
+attempt is `callback-already-invoked`, distinct from a callback returning
+an error with that text. This option does not select canonical futures.
+
+To pass a Lean object rather than a copy, add its qualified declaration to `resources` in each package that uses it. For example, Peer selects `"resources": ["Shared.Ticket"]` and `"taskExports": ["Peer.bump"]`. The [Lean implementation](../../tests/fixtures/javascript-wasm-resource-tasks/Peer.lean) takes a Ticket, changes its count, and returns the same Ticket in a task. A task argument borrows the object. A direct task result, cursor item, typed factory error, or terminal pull error can return an owned object. This does not admit arbitrary objects nested inside copied aggregates.
+
+Build both packages against the same defining module and compiler. Lean Bridge derives the resource identity from these inputs; matching field layouts are not enough. The build packages the shared lease library automatically. See [how consumers pass the object between packages](../consume/wit-wasi.md#pass-a-lean-object-between-task-packages).
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "taskExports": ["Meter.immediate", "Meter.parked", "Meter.resume"],
+  "targets": { "wit-wasi": { "name": "meter", "version": "1.0.0" } }
+}
+```
+
+Run `lean-bridge build --project . --target wit-wasi --output build/release` with the pinned Lean compiler, wasm-tools and Wasmtime C SDK described above. Verify the handoff with `lean-bridge verify --receipt build/release/package-set-receipt.json`. Distribute that receipt and the archive listed inside it. The prepared release includes the typed header, component, native libraries and `meter-wit.pc`; consumers do not repeat the producer build. A reviewed project can also supply a public `.binding-ir.json`; the CLI still checks it against fresh compiler output. See the [consumer example](../consume/wit-wasi.md#await-a-lean-task).
+
+## Export a pull cursor
+
+Select the three Lean declarations that open, advance and close your cursor in `lean-bridge.exports.json`. A package containing only cursors needs neither `taskExports` nor an `exports` list.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "asyncIterators": [
+    { "open": "Meter.feed", "next": "Meter.advance", "close": "Meter.finish" }
+  ],
+  "targets": { "wit-wasi": { "name": "meter", "version": "1.0.0" } }
+}
+```
+
+The factory returns a concrete cursor type defined in your module, directly or in `BaseIO`, `IO` or `EIO`. For a cursor `C`, the other declarations have these signatures:
+
+| Declaration | Lean signature | Consumer behavior |
+| --- | --- | --- |
+| `next`, no declared pull failure | `C → BaseIO (Task (Option α))` | `some` delivers an item; `none` ends the sequence. |
+| `next`, typed pull failure | `C → BaseIO (Task (Except ε (Option α)))` | `Except.error` ends the sequence with a typed failure. |
+| `close` | `C → BaseIO Unit` | Releases the cursor on exhaustion, failure, cancellation or early drop. |
+
+The [Meter declarations](../../tests/fixtures/wit-task-package/cursors.lean) use `UInt32` for a factory failure and `UInt16` for a failed pull. An item of type `Except String Int64` still arrives as an item, including its text-error arm. The build checks the three selected declarations against Lean compiler output and any supplied review. Use the same build and verification commands as for tasks. The [consumer example](../consume/wit-wasi.md#pull-an-asynchronous-sequence) uses the generated header.
+
 ## Export resource-containing values
 
 Declare resource types and opt into aggregate ownership when records, variants,
@@ -71,11 +287,18 @@ containers or recursive values contain resource identities:
 
 Use the same `lean-bridge build --target wit-wasi` command. The builder compiles
 the selected Lean implementation, generates the owned Component Model and typed
-public C API, builds the pinned GMP source, and bundles GMP, Wasmtime and the
+public C API, and bundles GMP, Wasmtime and the
 shared Lean runtime. The archive includes pkg-config and CMake metadata,
 compiler receipts, generated sources, dependency licenses and GMP's corresponding
 source. Reassembling the archive from verified build artifacts requires no
 compiler and preserves its bytes.
+
+The default build compiles pinned GMP and runs its upstream tests. A producer
+can reuse that checked build by supplying `LEAN_BRIDGE_TASK_GMP_ROOT` and
+an independently trusted `LEAN_BRIDGE_TASK_GMP_SHA256` for its receipt.
+Both are required together. The builder verifies the header, shared library,
+notices and corresponding source before packaging; a bad pin fails the build.
+Consumers do not set either variable.
 
 Ordinary source extraction and independently reviewed version-4 binding IR use
 the same ownership-aware build path. Inputs borrow resource-containing values

@@ -1,0 +1,679 @@
+{
+  "guests": {
+    "cancel-registration-00.wasm": "1be394516c0754ec571451f0efa2dd33c23a2c53c0a48b579374ad45c3fcbf50",
+    "cancel-registration-01.wasm": "39a99103ba80a777a40f9c45433bcac947bb63be55d802b9873669edcdb9a0e0",
+    "cancel-registration-10.wasm": "a75edbf56584b6ea0cd35a42f512b147b10e141b7a5ee45254f211c42f283a22",
+    "cancel-registration-11.wasm": "1865ac586d4f99dec39b216017a3266fb1988a97813de3d5328ffd63d2733e83",
+    "count-errors.wasm": "2d1eab3442d30679a4542fd079e5b4aee6e093937444c849dede09966ac5362a",
+    "owner.wasm": "0fc459561d0c2eda2c84c2e0d308be51d2217762062b0261e64bb52749d31915",
+    "peer-failure.wasm": "8c841c01f365fc08f3a049a0f3f2de379e8a510c02e50025be17d8dfc4294bed",
+    "peer-provider.wasm": "be0f68372f82174ae36f50cb807fe8280d7a0f755fad87e157f9143f8635a9bf",
+    "peers.wasm": "782d6de49b76c4864b7e561cc0ea1cb4f5222c399440c261c63dd1107a9c24f5",
+    "private-scheduler.wasm": "01175b6cf21c7e7ab5ef094524fb83194fa5063631f723ff9f97e3a65e4a39f4",
+    "registration-provider.wasm": "595d452168cb37f1c1f69a4af7866330f1cbf9ecdd3df776691e56d9992760b6",
+    "trap.wasm": "a8ecd8f5d9d5777a618449821cfe624fa1b5c91ca35969aa5457b0966011b0c7"
+  },
+  "releases": {
+    "ordinary-gauge": {
+      "archiveSha256": "734aacab8690ac70f99746c9f7d3720dbb256753b8270dbef5b177acdbb87264",
+      "bindingIrSha256": "8b8299390a55326bd827b2463827020b8cb78232c8633dbb585d4d88a4cacd4e",
+      "name": "gauge",
+      "profile": "native-wit-object-task-v1",
+      "receiptSha256": "84bc7761051770baa7544f96a9a1ddbea211cbcbb62aac15948d4ce39c795279",
+      "reviewedSourceSha256": null,
+      "route": "ordinary"
+    },
+    "ordinary-workshop": {
+      "archiveSha256": "57643a8339f935b24bb40eb1e7f62567797b9c7e0acdf637469640e5e0107465",
+      "bindingIrSha256": "e668a6c8d63af6781f1264567d5fed20427b6328ea8b7db7541873914b871094",
+      "name": "workshop",
+      "profile": "native-wit-object-task-v1",
+      "receiptSha256": "bec53eee301f5d411238660c0cc0908f8b42683cda90b8976feac537c492449b",
+      "reviewedSourceSha256": null,
+      "route": "ordinary"
+    },
+    "reviewed-gauge": {
+      "archiveSha256": "94caf8c76571c8ea8c74603af96d598bfb25b19b8e018d7e6dc9bea6944cd34a",
+      "bindingIrSha256": "8b8299390a55326bd827b2463827020b8cb78232c8633dbb585d4d88a4cacd4e",
+      "name": "gauge",
+      "profile": "native-wit-object-task-v1",
+      "receiptSha256": "618a4d5d72f06e33e855859a385a443ea312a4b2205aaef251abbb16e1c4db0c",
+      "reviewedSourceSha256": "a4c2f60706bdc399b475ad82eab2f429d7a6aef958bd6a03378415ffb0bd3d1d",
+      "route": "reviewed"
+    },
+    "reviewed-workshop": {
+      "archiveSha256": "58178d4d494e428ba0153ff9c3dbbc156db9f5af1dddbe7ee2ed883b81e5cb06",
+      "bindingIrSha256": "e668a6c8d63af6781f1264567d5fed20427b6328ea8b7db7541873914b871094",
+      "name": "workshop",
+      "profile": "native-wit-object-task-v1",
+      "receiptSha256": "8228988f28bb93467caa6717a73381b701471e07c4d12f7e0c5bb0361d058129",
+      "reviewedSourceSha256": "90464f094f8d42ba7e53db0a72fde1623e5b49bf2359d45afba6a0683a97b2eb",
+      "route": "reviewed"
+    }
+  },
+  "runs": [
+    {
+      "exitCode": 1,
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "trap.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ]
+    },
+    {
+      "exitCode": 1,
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "private-scheduler.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ]
+    },
+    {
+      "exitCode": 2,
+      "guests": [
+        "owner.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ]
+    },
+    {
+      "exitCode": 1,
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-workshop"
+      ]
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "ordinary-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "ordinary-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "reviewed-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "reviewed-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "reviewed-workshop",
+        "ordinary-gauge"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "peer-provider.wasm",
+        "peers.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "73"
+    },
+    {
+      "guests": [
+        "count-errors.wasm",
+        "peer-provider.wasm",
+        "peer-failure.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "65537"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-00.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-01.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-10.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    },
+    {
+      "guests": [
+        "owner.wasm",
+        "registration-provider.wasm",
+        "cancel-registration-11.wasm"
+      ],
+      "order": [
+        "ordinary-gauge",
+        "reviewed-workshop"
+      ],
+      "stdout": "144117387149509376"
+    }
+  ]
+}

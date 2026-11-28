@@ -1,0 +1,21 @@
+{
+  "archive": {
+    "bytes": 53873696,
+    "path": "archives/tariff-quotes-1.0.0-c.tar.gz",
+    "sha256": "ad5bf26a9c751b8d71154ec280c8094af9cb70eb8cd01c7d84c3bc69d93844fe"
+  },
+  "bindingIrSha256": "1831ab48bd450b8c58f3ad5b7c4e84b1364efbb6e3d00d7742cff990c30c29fb",
+  "clientSha256": "0145d93a86b358a1fce419bd26447f978780c82f23926cd9b31f5d09ec085995",
+  "leanSourceSha256": "a758f8e7a4210d99fe965aa06c4b42006df3c087c70f2bde8d0e1403c30a98fb",
+  "output": "expired:1\nforward:1\nreply:1\nnested:1\nfailure:1\ncontrol:1\nexchange:42:43\nticket42:1\nexchange:71:72\nticket71:1\nafterShutdown:0",
+  "receiptSha256": "2d1766281c7b1807e60e719609f10edf5dca89e34f02156e06c5da84d79c6ff5",
+  "reviewedSourceSha256": null,
+  "route": "ordinary",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "sources": {
+    "tariff-application-function.c": "d2240c0516ed4f10e0422526dfc3dc3deb64b865bb246c66ff116217f881c4fe",
+    "tariff-application-observer.c": "68f030399c5f022c1846964c872e67927a17ee97f84307146d895f2b80d7cbb6",
+    "tariff-ticket-exchange.c": "80148c21e2a039d0fe36d35bb60f521cf6810e08eccc3409dc61de7ab938ace9"
+  },
+  "target": "c"
+}

@@ -1,0 +1,27 @@
+{
+  "exports": [
+    "Workshop.make",
+    "Workshop.read",
+    "Workshop.update",
+    "Workshop.identity",
+    "Workshop.mapped",
+    "Workshop.choose",
+    "Workshop.failWith",
+    "Workshop.readOnline",
+    "Workshop.text",
+    "Workshop.bytes",
+    "Workshop.shift",
+    "Workshop.natural"
+  ],
+  "hostImports": "lean-bridge.hosts.json",
+  "modules": [
+    "Workshop"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "cpp": {
+      "name": "workshop",
+      "version": "1.0.0"
+    }
+  }
+}

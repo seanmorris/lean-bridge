@@ -65,6 +65,328 @@ Python conversion and native input/output copying each have a 16 MiB budget. Arr
 
 Calls can run on separate threads. Do not mutate inputs during conversion. The loader rejects free-threaded interpreters and calls after `fork`; start a fresh interpreter in the child process. Subinterpreters and non-CPython implementations have not been accepted. See the [installed-wheel evidence](../evidence/native-python-20260915.md) for tested versions and cases.
 
+### Bind a Python object that Lean calls
+
+Some components call methods on your own objects. The meter example ships a
+component wheel for your CPython version and a shared runtime wheel. With both
+in the publisher's `archives/` directory, install without a registry:
+
+```sh
+./.venv/bin/python -m pip install --no-index --find-links ./archives lean-meter==2.0.1
+```
+
+Save this as `meter.py` and run it with `./.venv/bin/python meter.py`:
+
+```python
+import lean_meter
+
+class Meter:
+    def read(self) -> int:
+        return 47
+
+with lean_meter.bind_hosts(Box=Meter):
+    assert lean_meter.read_level(box=Meter()) == 47
+```
+
+`Box` is the name in the component's contract; your class doesn't have to
+inherit from a generated base class. The call into Lean returns the value
+from your Python method. pip installs the matching runtime automatically.
+
+The package declares whether a host-object kind is `weak-canonical` or
+`strong-canonical`. A weak import releases its reference when Lean no
+longer needs the object. A strong import keeps the exact Python instance
+until the last matching binding exits, including a binding in another
+component. A call rejected during argument validation does not start that
+retention. An exception raised after Lean has entered the call does not
+undo it. The [installed-wheel checks](../evidence/python-host-kinds-20261124.md)
+exercise both binding orders on CPython 3.11 and 3.12.
+
+For components that export a Lean `Except`, inspect the result as a value:
+`Ok.value` holds a success and `Err.error` holds a rejection. A function
+declared with Lean's `EIO` instead raises the component's `LeanEIOError`:
+`exc.payload` holds the typed error, and `exc.declaration` names the Lean
+function. If Lean simply propagates an exception from your Python method in
+`IO`, you can catch that original Python exception. None of these calls
+requires `await`. The [Workshop consumer](../../tests/fixtures/host-object/installed.py)
+exercises all three cases.
+
+An invalid tag in a synchronous `Except` or `EIO` result is different from
+a declared error. The bridge raises `RuntimeError` and retires the shared runtime.
+Catching it inside a host property does not let the enclosing call succeed
+or allow another host method to run. Start a fresh process to use the
+packages again.
+
+When a returned value or declared error contains an application-owned
+object, the active arm holds the original Python object, including inside
+nested `Ok`/`Err` values. You can inspect the value or `exc.payload` after
+`bind_hosts` exits. Holding it is an ordinary Python reference; you do not
+need to keep the binding open or call `close` on the object.
+
+### Pass your Python objects inside a record
+
+In the [Rack example](../../tests/fixtures/python-host-record/Workshop.lean),
+Lean accepts and returns a record containing two meters and a numeric offset.
+Use the component wheel that exports `Rack`. With the `Meter` class above:
+
+```python
+first, second = Meter(), Meter()
+with lean_meter.bind_hosts(Box=Meter):
+    with lean_meter.Rack(primary=first, offset=5, backup=second) as rack:
+        result = lean_meter.reorder(rack)
+    with result:
+        assert result.primary is second
+        assert result.backup is first
+        assert result.offset == 52  # 5 + first.read()
+```
+
+The fields are read-only. Lean returns the same Python objects, not copies.
+Closing a rack releases **its** references; it neither closes your meters nor
+invalidates another rack that holds them. You can also hold a returned rack
+past the binding and inspect its fields before closing it. Calling into Lean
+still requires an active binding. See the [installed consumer](../../tests/fixtures/python-host-record/consumer.py)
+for validation, exception, and lifetime examples.
+
+### Call a Lean function that remembers your Python object
+
+A component can return a function instead of an object. In the
+[closure example](../../tests/fixtures/python-host-closures/Closures.lean),
+`remember` captures your meter. The returned function calls both meters'
+`read` methods and gives you back the one you originally supplied:
+
+```python
+first, second = Meter(), Meter()
+with lean_meter.bind_hosts(Box=Meter):
+    with lean_meter.remember(first) as recall:
+        assert recall(second) is first
+    assert recall.closed
+```
+
+The returned `LeanClosure` belongs to the binding that created it. You can
+call it repeatedly on that binding's thread. Closing it or exiting the binding
+prevents new calls; reopening the binding does not revive it. Closing it from
+inside a method lets the current invocation finish. For an asyncio component,
+invoke it in the binding's active context as well. This differs from a returned
+meter: the meter is yours and remains usable after the binding closes.
+
+### Pass your objects through a Lean task
+
+A worker can carry a Python object while the callback that uses it runs on
+your asyncio loop. In the [worker example](../../tests/fixtures/python-host-tasks/Workers.lean),
+`relay` sends a box to your callback and returns its reply. With the `Meter`
+class above, use the component wheel that exports `relay`:
+
+```python
+async def exchange():
+    first, second = Meter(), Meter()
+    async with lean_meter.bind_hosts(Box=Meter):
+        answer = await lean_meter.relay(first, lambda box: second if box is first else box)
+        assert answer is second
+```
+
+Use `async with` when a task or iterator can outlive the call that created it.
+Leaving the binding cancels its pending calls, closes its cursors, and waits
+for the cancelled operations to finish. A coroutine created in that binding
+cannot start in a later binding, even if you bind the same class again.
+Already delivered objects are yours. A callback can call a synchronous Lean
+method, but it cannot close the binding while it is executing. The
+[installed-wheel results](../evidence/python-worker-wheels-20261124.md)
+also cover closing one binding while another package still uses the same class.
+
+### Call synchronous IO
+
+Call a `native-python-io-v1` function directly on the process main thread
+in the main interpreter, without `await` or `bind_hosts`. Start a fresh
+process instead of reusing an initialized runtime after `fork`.
+For example, `text = journal.read(path)` returns a string or raises
+`journal.LeanIOError` with the Lean declaration and a message.
+`journal.LeanEIOError.payload` carries the typed value thrown by an `EIO`
+function. By contrast, a returned `Except` is an ordinary `Ok` or `Err`
+value. A wrong Python type or out-of-range integer fails conversion before
+the exported function runs. See the [installed Python example](../../tests/fixtures/native-sync-io-clients/consumer.py).
+
+### Pull from a synchronous Lean iterator
+
+A package can export a normal Python iterator over a stateful Lean cursor.
+For the [Counting example](../../tests/fixtures/python-sync-iterator/Counting.lean):
+
+```python
+from lean_counting import numbers
+
+with numbers(99) as values:
+    for value in values:
+        print(value)
+        if value == 1:
+            break
+```
+
+The first `next()` opens the cursor. Each `next()` runs one Lean pull on
+the owning main thread; there is no prefetch, event loop or worker. A Lean
+`Option.some ()` yields Python `None`; only `Option.none` ends iteration.
+Exhaustion and pull errors close the cursor. Use `with` for deterministic
+cleanup on an early `break`: Python does not notify a retained iterator
+that its caller left a loop. Explicit `close()` is idempotent.
+
+The underlying Lean runtime can still have native threads. Start a fresh
+process if you need another owner; a forked child cannot use an inherited
+cursor or run its finalizer on the parent's behalf.
+
+### Await a Lean task
+
+Install the [Timers release](../publish/pypi.md#export-a-lean-task-to-asyncio)
+from its two wheels:
+
+```sh
+./.venv/bin/python -m pip install --no-index --find-links ./archives lean-timers==1.0.0
+```
+
+Save this as `timers.py`:
+
+```python
+import asyncio
+import lean_timers
+
+async def main():
+    print(await lean_timers.later(14))  # 42
+
+asyncio.run(main())
+```
+
+Calling `later` creates a coroutine; awaiting or scheduling it starts the
+call. Lean notifies the event loop when the result is ready. Use
+`asyncio.create_task`, `asyncio.gather`, and `cancel()` as usual. Cancellation
+stops delivery and asks Lean to cancel; a computation that doesn't check
+`IO.checkCanceled` can still finish, but can't deliver a second result.
+If the shared runtime retires, every pending wait wakes and raises
+`RuntimeError`; it does not need another completion or a Python callback
+to arrive first.
+No Python worker thread, polling loop or manual runtime setup is required.
+
+### Pass a callback to a Lean task
+
+Pass a normal Python function. The [Retained example](../publish/pypi.md#let-a-lean-task-call-python)
+calls it twice on the same asyncio loop that started the task:
+
+```python
+import asyncio
+import lean_retained
+
+async def main():
+    result = await lean_retained.repeat_call("start", lambda s: s + "!")
+    print(result)  # start!!
+
+asyncio.run(main())
+```
+
+The callable runs synchronously on your loop. It can call synchronous Lean
+APIs; it must return a value, not a coroutine. The package releases it when
+the exported task settles or is cancelled. To stop it sooner, wrap it in
+`lean_retained.RetainedCallback(fn)` and call `close()`. A call already
+executing can finish; later calls fail. An escaped Lean closure cannot call
+back into an expired Python scope.
+
+If the package declares a callback parameter as `once`, Lean can invoke that
+registration once. If it tries again, the package raises
+`CallbackAlreadyInvoked` when you await the task, unless Lean handled the
+failure itself. Passing the same function to a new task or a second parameter
+gives it a separate allowance. The limit does not affect your own Python
+calls to that function.
+
+If Lean propagates the callback's original error back to the await that owns
+it, Python receives the same exception object. Lean can also catch it and
+return a value, or throw a new error with the same message. A declared
+terminal Lean IO failure raises
+`LeanTaskError`; its `declaration` names the export. A typed factory rejection
+raises `LeanEIOError`. An ordinary returned `Except` remains `Ok` or `Err`.
+See the [installed CPython 3.11 and 3.12 results](../evidence/python-retained-tasks-20261122.json)
+for the exact four wheels and what was checked.
+
+### Read a Lean stream
+
+The same Timers wheels export async iterators. Save this as `stream.py`:
+
+```python
+import asyncio
+import lean_timers
+
+async def main():
+    async with lean_timers.units(10) as ticks:
+        async for tick in ticks:
+            print(tick)  # None is a Unit item, not the end of the stream.
+            break
+
+asyncio.run(main())
+```
+
+The first pull opens the Lean cursor. Each `anext` asks Lean for one item;
+there is no prefetch. Use plain `async for` when reading to exhaustion. Use
+`async with` (or `contextlib.aclosing`) when you may break early: a bare
+`break` does not close a retained Python iterator. You can also `await ticks.aclose()`
+on the owning event loop, even during a pull. It wakes the pending reader
+without emitting a late item. Cancelling the reader propagates
+`asyncio.CancelledError` and closes the stream. If you cancel an `anext`
+already waiting on Lean, its close action runs before the reader gets that
+exception. A worker that ignores cancellation can still finish computing
+the item, but the reader won't receive it. An explicit `aclose()` afterward
+doesn't run the close action again. See the [installed cancellation check](../evidence/async-delivery-crosswalk-20261125.md#cancelling-a-pull-already-waiting-on-lean).
+
+Use the same event loop for every pull and close on an open stream. A
+different loop cannot take it over, even on the same thread. If a pull must
+wait for Lean, the Linux wheel uses the loop's `add_reader`. If the loop
+refuses registration, the pull raises that error and the cursor closes;
+the binding is still usable.
+
+A typed startup failure raises `LeanEIOError`. A typed failure during a pull
+raises `LeanStreamError`, with `declaration` and `payload`. An `Ok` or `Err`
+yielded as an item is still a value. See the [working consumer](../../tests/fixtures/python-lean-tasks/streams.py).
+In an object-bearing stream, a pull that throws a Lean `IO.Error` instead
+raises `LeanStreamIOError` with the declaration and Lean's message.
+
+### Share a Lean resource across packages
+
+Two wheels built against the same Lean definition share the same Python
+class: `lease_desk.Ticket is lease_depot.Ticket`. Use a ticket from either
+package directly in the other. This example prints `42`:
+
+```python
+import asyncio
+import lease_desk as desk
+import lease_depot as depot
+
+
+async def main():
+    with desk.issue(40) as ticket:
+        with await depot.revisit(ticket, lambda n: n + 2) as returned:
+            assert returned.same_resource(ticket)
+            print(desk.count(returned))
+
+
+asyncio.run(main())
+```
+
+A returned ticket owns a lease. `with` releases it on exit; `close()` is
+idempotent. Assigning another variable does not acquire a lease. Call
+`ticket.retain()` for an independently closable owner, and
+`ticket.same_resource(other)` to compare the underlying Lean objects.
+Use the original process main thread and keep the argument open until the
+coroutine starts or the stream first pulls. A coroutine or stream sitting
+in a variable has not called Lean yet.
+
+A resource returned as a stream item or as `LeanEIOError.payload` or
+`LeanStreamError.payload` also owns a lease. You can close the original
+argument and keep using that result. The packages reject a closed lease,
+another kind of resource, or a same-named type built from different Lean
+source. No raw handles, callback registration, or runtime setup are needed.
+If a worker thread drops the last Python reference, the next resource
+call on the main thread drains the deferred release. Use `with` when the
+release must happen at a particular point.
+The installed type stubs also distinguish these definitions when you check
+calls across packages. If the package declares several error payload types,
+the exception's `payload` annotation lists their union; use `isinstance` to
+narrow it before using the value.
+See the [author configuration](../publish/pypi.md#export-a-shared-lean-resource),
+the [installed client](../../tests/fixtures/python-task-resources/installed.py),
+and the [CPython 3.11 and 3.12 verification receipts](../evidence/python-resource-leases-20261123.json).
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/pypi.md#export-arrays-and-records),
@@ -282,7 +604,7 @@ Returned functions have a typed `LeanClosure` API. Use `with`, or call `close()`
 
 Invoke a closure on its creating thread. Closing from another thread waits for an active call; closing during same-thread re-entry defers disposal until that call finishes. Independent calls and closures can run on different threads.
 
-If a callback raises, the caller receives the original Python exception after native cleanup. Later callback invocations in that call are suppressed. Nested synchronous calls are allowed, with a native re-entry limit of 64. Callback conversions share the exporting call's 16 MiB conversion budget. Async callbacks are rejected. Lean cannot retain a borrowed host callback beyond the exporting call; attempts to invoke an expired callback raise `LeanBridgeError`.
+If a callback raises, the caller receives the original Python exception after native cleanup. Later callback invocations in that call are suppressed. Nested synchronous calls are allowed, with a native re-entry limit of 64. Callback conversions share the exporting call's 16 MiB conversion budget. Async callbacks are rejected. Lean cannot retain a borrowed host callback beyond the exporting call; attempts to invoke an expired callback raise `LeanBridgeError`. An explicitly selected task can instead [retain an IO callback on its event loop](#pass-a-callback-to-a-lean-task).
 
 See the [Python callable acceptance record](../evidence/python-callables-20260918.md) for installed-wheel boundary and lifetime checks.
 
@@ -428,6 +750,53 @@ inputs, callbacks and result. Cycles and invalid values are rejected. These
 limits do not bound Lean's working memory or every Python allocation overhead.
 See [owned-wheel acceptance](../evidence/owned-python-packages-20260927.md) and
 the [author configuration](../publish/pypi.md#export-resource-containing-values).
+
+### Calling a function stored in a record
+
+In the [Tariff example](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean),
+`quote` is a Lean function that captures a base price. Calling `echo_tariff`
+returns a new record with its own lease on that function:
+
+```python
+from lean_tariff_quotes import echo_tariff, make_tariff
+
+tariff = make_tariff(40)
+with tariff.quote:
+    copy = echo_tariff(tariff)
+
+with copy.quote as quote:
+    assert quote(2) == 42
+```
+
+Use the context manager (or `close()`) on each returned function. Passing
+`Tariff(lambda units: ...)` to Lean raises `TypeError`: the field requires an
+existing typed Lean closure. A Python callable passed directly to a callback
+parameter is borrowed for that call, even if Lean puts it in a record.
+Calling it after the borrow ends raises `LeanBridgeError`.
+
+### Return a Lean function from a Python callback
+
+`staged_quote` calls your pricing callback with a base price. Return a Lean
+function from the installed package; Lean calls it with the number of units.
+
+```python
+from lean_tariff_quotes import make_tariff, staged_quote, with_recovery
+
+def choose(base):
+    return make_tariff(base + 80).quote
+
+with make_tariff(700).quote as recovery:
+    price = staged_quote(with_recovery(choose, recovery), 10, 3)
+    assert price == 93
+```
+
+`with_recovery` supplies a live function of the required type before Lean
+enters the callback. It does not swallow exceptions. If `choose` raises,
+the caller gets that same exception, not a price calculated by `recovery`.
+You can also return a Lean function you already own and keep using it after
+the call. Returning a plain Python lambda instead raises `TypeError`.
+The [complete example](../../tests/fixtures/structured-types/tariff-staged.py)
+checks both ownership cases.
 
 ### Transferred inputs
 
@@ -816,7 +1185,7 @@ selected `Subtype` leaf before their body runs. This includes the admitted
 copied containers, such as options, results and arrays. A rejected call leaves
 the closure open, so a later valid call can reuse it. Call `close()` when the
 closure is no longer needed. These directional callback checks are implemented for synchronous copied-value
-callbacks; retained or asynchronous host callbacks remain unsupported.
+callbacks. Retained callbacks with refined payloads and asynchronous Python replies remain unsupported.
 The [hosted owned-Subtype matrix](../evidence/owned-subtype-promotion-20261023.md) covers one selected `Nat` Subtype field in the tested acyclic `Bundle` owner on both source routes. Host input is validated before ownership transfer; rejection keeps ownership with the caller. Leased or retained results preserve the owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs and owned Subtype callback positions remain separate work. Owned checked-record fields have [separate acceptance](../evidence/owned-checked-record-promotion-20261025.md).
 
 ### Subtypes in copied records
@@ -860,6 +1229,8 @@ The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-202610
 Profiles: Python. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+For native Python wheels, the [IO](#call-synchronous-io) and [asyncio](#await-a-lean-task) profiles also support [shared Lean resources](#share-a-lean-resource-across-packages). The general audit rows below are separate from those installed profiles.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Python in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

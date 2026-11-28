@@ -1,0 +1,75 @@
+{
+  "component": {
+    "id": "tariff-quotes@1.0.0",
+    "name": "tariff-quotes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53860961,
+          "path": "archives/tariff-quotes-1.0.0.crate",
+          "sha256": "3a59710f6d943c80abf48be29e2fdd2ab0601e6454851b70a9449b259cf3bc47"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "tariff-quotes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cargo",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 53900591,
+          "path": "archives/tariff_quotes-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "2c4d6101f6daa4d3fc779147f138431dd4fa33dc256bc11fd84e1a5bca644899"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "tariff-quotes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "pypi",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 52648448,
+          "path": "archives/tariff-quotes-1.0.0-x86_64-linux.gem",
+          "sha256": "5463b1e5d49e39fa2ab88341fc0eb8dc037b0fadd331aa86ee9868f96a268dde"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "tariff-quotes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "feefbc1d634abf41261fb92e8c8337af2151cc71c5dbddca4bc9b78a5a7f3805",
+      "id": "native-library-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "993583b29ccb16924cf812acf8e690a9a9a97f0c508ac9e2f7b473d4c4472ecd"
+  }
+}

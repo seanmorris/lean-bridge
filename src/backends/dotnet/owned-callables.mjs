@@ -139,7 +139,7 @@ ${parameters.map((param, j) => `                var value${j} = OwnedConvert.Rea
         frame.Keep(thunk); OwnedRuntime.Checkpoint();
         return new OwnedCallback${i} { Call = global::System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(thunk), Recovery = fallback };
     }`);
-		if(borrowed) methods.push(`    private OwnedCallback${i} Host${i}(_V.${node.publicType} value, OwnedValueScope scope, OwnedCallFrame? frame = null)
+		if(borrowed || node.fieldSlot) methods.push(`    private OwnedCallback${i} Host${i}(_V.${node.publicType} value, OwnedValueScope scope, OwnedCallFrame? frame = null)
     {
         global::System.ArgumentNullException.ThrowIfNull(value);
         scope.Enter(null, 0, 32, true);

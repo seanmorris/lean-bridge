@@ -1,0 +1,35 @@
+{
+  "route": "reviewed",
+  "packageSetSha256": "c3ff8edb15f1e451de0b6b544f41e97745ef653d31b41c0bedeaf230763de4e4",
+  "typescript": {
+    "value": 7,
+    "yielded": 1,
+    "readsAtExhaustion": 1,
+    "canceled": true,
+    "drained": true
+  },
+  "react": {
+    "text": "8:1:0",
+    "won": true,
+    "canceled": "operation-cancelled",
+    "lateCommits": 0,
+    "next": 3,
+    "empty": true,
+    "drained": true
+  },
+  "deployed": [
+    "3f7d4f230352262afefb4dba51bf526d39625fdff8a3a5a84a5ac7a2d8c271b0",
+    "85e4a698a88a64f0f6cc7b336aa6e421cbef7235cdd568146468c8b6dcbc96b3"
+  ],
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "node": "v22.23.5",
+  "reviewedSourceSha256": "9daba072d59cfd21da3731a0a34317373b74dffaffbc53a79c50aae558cd4d16",
+  "typescriptVersion": "5.9.3",
+  "frameworkVersions": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "scheduler": "0.27.0"
+  },
+  "typedClientSha256": "cc112a4f31188d4adb8b71dfb69b8561d343c915668ffa4b70d5b21e9c5edb12",
+  "reactClientSha256": "e3ce4d69ad79a25b609889e44aee9e761fc01829363b911f6a49cfa59a3544e4"
+}

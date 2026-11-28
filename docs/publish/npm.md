@@ -6,6 +6,8 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build with locked Lake dependencies
 
+For a package that exports Lean tasks or on-demand iterators, see [Build a threaded npm handoff](#build-a-threaded-npm-handoff). That profile uses a pinned local author SDK.
+
 Keep the project's reviewed `lake-manifest.json` and exact `lean-toolchain` in source control. Populate its dependency cache during normal Lean development before invoking the bridge. Git entries must identify full commits, and cached checkouts must match those pins without modified or untracked source files. Local path dependencies must be relative and available when you start the build.
 
 Build the selected public API with the usual command:
@@ -33,6 +35,205 @@ To publish concrete versions of generic Lean functions, configure [finite specia
 Optional [export contracts](../lean/existing-package.md#declare-export-contracts) can declare copied primitives and containers, call-scoped borrowed callbacks and explicitly owned returned functions. Lean checks ownership and effects against the implemented synchronous boundary. Unsupported requirements stop the build before linking; package assembly and publication retain the captured configuration.
 
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
+
+## Export synchronous Lean IO
+
+Use this profile when a JavaScript or TypeScript caller needs an immediate
+answer from state held in Lean. An `IO.Ref` counter can change without
+turning the caller's result into a `Promise`. The package can export `IO`,
+`BaseIO`, `EIO`, and pure companion functions. Select the declarations and
+make the in-memory effect boundary explicit:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Ledger"],
+  "exports": ["Ledger.add", "Ledger.readTotal", "Ledger.choose"],
+  "nativeEffects": [],
+  "targets": { "npm": { "name": "@example/ledger-io", "version": "1.0.2" } }
+}
+```
+
+Alternatively, select the functions in one `.binding-ir.json` review and
+omit `exports`. The build checks the review against fresh Lean interfaces.
+Arguments may use the 19 copied scalar types; returns and declared `EIO`
+errors may also use nested `Except`. `USize` and `ISize` are 32-bit on this
+target. Filesystem access, host imports, tasks, and resource handles are not
+part of this profile.
+
+Use the [local author SDK](../contributing/author-toolchain.md#package-javascript-wasm-compiler-inputs)
+with Lean 4.32.2, Emscripten 6.0.6, and a prepared CLI containing the target
+headers and shared runtime. From the Lean project:
+
+```sh
+export LEAN_BRIDGE_BUILD_BACKEND=auto
+export LEAN_BRIDGE_LEAN_PREFIX=/absolute/path/to/lean-4.32.2
+export LEAN_BRIDGE_JS_EMSDK=/absolute/path/to/emsdk-6.0.6
+lean-bridge build --project . --target npm --output build/ledger-release
+lean-bridge verify --receipt build/ledger-release/package-set-receipt.json
+```
+
+The `packages/npm/` directory contains the component archive, its exact
+shared-runtime dependency, and their receipt. Install both archives for a
+local handoff. This profile currently builds npm separately with the local
+SDK; an explicit Nix or Docker request does not fall back to a host build.
+See [calling synchronous IO from JavaScript](../javascript-typescript.md#synchronous-lean-io).
+
+### Export an immediate iterator
+
+Use `iterators` for a pull that returns an `Option` in `BaseIO`, `IO`, or
+`EIO` without waiting on a task. Export the factory, not the private cursor
+or its methods. For example, the [Pulls fixture](../../tests/fixtures/javascript-immediate/Pulls.lean)
+has `sequence : UInt32 → BaseIO Cursor`, `next : Cursor → BaseIO (Option UInt32)`,
+and `finish : Cursor → BaseIO Unit`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulls"],
+  "exports": ["Pulls.sequence"],
+  "iterators": [
+    { "open": "Pulls.sequence", "next": "Pulls.next", "close": "Pulls.finish" }
+  ],
+  "nativeEffects": [],
+  "targets": { "npm": { "name": "@example/pulls", "version": "1.0.0" } }
+}
+```
+
+Use the same synchronous SDK and build command as above. The [consumer](../javascript-typescript.md#iterate-without-a-promise)
+gets an `IterableIterator` with a deterministic `return()`. This npm route
+supports copied items and declared failures, not host imports or OS effects.
+For pulls that actually wait for Lean work, use the [threaded profile](#build-a-threaded-npm-handoff).
+
+## Export functions that call JavaScript objects
+
+Use `hostImports` when your Lean code accepts an application-owned object,
+calls its members, or returns it to JavaScript. The Workshop project includes the
+[host contract](../../tests/fixtures/javascript-host-meter/lean-bridge.hosts.json),
+[export configuration](../../tests/fixtures/javascript-host-meter/lean-bridge.exports.json),
+and [Lean source](../../tests/fixtures/javascript-host-meter/Workshop.lean).
+The host contract declares `Box`; it does not implement the class.
+
+```lean
+import LeanBridge.Host.Javascript
+
+open LeanBridge.Host.Javascript
+
+def readBox (box : Box) : IO UInt32 := box.read
+```
+
+Select the qualified Lean functions in `exports`, or supply a reviewed
+`.binding-ir.json` public interface. Lean Bridge checks either selection
+against the compiled source. With the pinned local author SDK and prepared
+shared runtime used for synchronous IO, run:
+
+```sh
+lean-bridge build --project . --target npm --output build/workshop-release
+lean-bridge verify --receipt build/workshop-release/package-set-receipt.json
+```
+
+The `packages/npm/` handoff contains a component archive and its exact
+shared-runtime dependency. The component includes a checked identity broker
+so packages using the same host contract can preserve object identity on one
+heap. The application supplies its classes via [`withHosts`](../javascript-typescript.md#pass-application-objects-to-lean).
+This profile is for synchronous, in-memory calls. It does not grant filesystem
+access or move application objects onto a Lean task thread.
+
+### Include an application object in a record
+
+Use an ordinary Lean structure as the argument or result of a synchronous
+`IO` export. For example:
+
+```lean
+structure Pair where
+  lead : Box
+  sample : ByteArray
+  sequence : Nat
+  spare : Box
+
+def flip (pair : Pair) : IO Pair := do
+  let n ← pair.lead.read
+  return ⟨pair.spare, pair.sample.push n.toUInt8, pair.sequence + 1, pair.lead⟩
+```
+
+Select `flip` by its qualified name. The compiler reads the constructor and
+field projections; do not specify offsets or a JavaScript layout. The generated
+[record constructor](../javascript-typescript.md#pass-a-record-containing-application-objects)
+retains the original application objects and copies the scalar fields. A
+reviewed interface with a different field order does not match this source.
+This path covers flat record arguments and results, not record-shaped errors
+or queued task results.
+
+### Return a function that captures an application object
+
+Select the factory in `exports`. For example,
+`remember (captured : Box) : IO (Box → IO Box)` returns a reusable function
+whose lifetime is bounded by its creating `withHosts` binding. The argument
+and result of the inner function can each be a supported scalar or an imported
+JavaScript class. Do not add the returned function to `resources` or
+`taskExports`: it is neither a public resource class nor a task. The same
+factory can accompany a real task that accepts it as a callback. See the
+[Lean declarations](../../tests/fixtures/javascript-threaded-host-functions/Workshop.lean),
+[export selection](../../tests/fixtures/javascript-threaded-host-functions/lean-bridge.exports.json)
+and [JavaScript usage](../javascript-typescript.md#pass-application-objects-to-lean).
+
+## Build a threaded npm handoff
+
+Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures.
+
+For an object owned by **JavaScript**, use `hostImports` alongside the task
+or cursor [selection](../../tests/fixtures/javascript-threaded-host/lean-bridge.exports.json). Do not list its class in `resources`. The [threaded
+Workshop](../../tests/fixtures/javascript-threaded-host/Workshop.lean) calls
+a host method from a worker, returns a host object in a task or cursor,
+and uses that object as a typed error payload. The npm consumer supplies
+the class once with `withHosts`.
+
+Threaded npm packages support in-memory Lean IO. A `nativeEffects` grant
+cannot enable filesystem or environment access on this target. The publisher
+checks selected tasks, cursor pulls and finalizers, synchronous exports and
+module initialization before emitting a handoff.
+
+Return or compose the Lean task instead of synchronously waiting for it.
+The worker may need the JavaScript owner to run an application method.
+For this combination, the build rejects known blocking primitives such as
+`Task.get`, `IO.wait`, and blocking mutex acquisition wherever they appear
+in the compiled dependencies of a selected operation or initializer. The
+audit does not distinguish where a transitive function will run; it also
+does not establish that arbitrary application code terminates.
+
+For a task that uses an application-owned Lean object, list its fully qualified type in `resources`, as in the [Depot configuration](../../tests/fixtures/javascript-wasm-resource-tasks/lean-bridge.exports.json). The type must compile to a heap object. A worker may capture a borrowed argument; a returned object, yielded item, or typed error payload gives the caller an independent lease. Two components can exchange the type if they use the same runtime, compiler and defining Lean source, including its application imports.
+
+For a retained application callback, use a parameter of type `α → IO β` on a selected task. Each side can be a supported copied scalar or a JavaScript class declared in the package's host imports. These are two different contracts: a scalar is copied; a host object arrives as the original instance. The [Relay example](../../tests/fixtures/javascript-wasm-retained-tasks/Relay.lean) uses scalars. The [Workshop example](../../tests/fixtures/javascript-threaded-host-callbacks/Workshop.lean) passes a `Box` to JavaScript and accepts a different `Box` in reply. Listing a Lean-owned resource in `resources` does not itself admit that type as a host-class callback argument.
+
+Set `taskIOErrors` only when the task’s `Except IO.Error` represents failure rather than data. External system effects such as filesystem access remain outside this profile.
+
+By default, a task may invoke a retained callback repeatedly. To give a
+particular registration one invocation, name its **Lean parameter** in
+`lean-bridge.exports.json`:
+
+```json
+"taskCallbackPolicies": [
+  {"declaration": "Budget.probe", "parameter": "f", "invocation": "once"}
+]
+```
+
+`Budget.probe` must be in `taskExports`, and `f` must be one of its
+callback parameters. Entering the JavaScript function uses up the allowance,
+even if the function throws or returns a rejected promise. A second request
+fails through the callback’s existing error channel. A different parameter
+or a fresh task invocation has its own allowance, even for the same JavaScript
+function. See the complete [author configuration](../../tests/fixtures/javascript-once-callback/lean-bridge.exports.json)
+and [Lean code](../../tests/fixtures/javascript-once-callback/Budget.lean).
+This setting applies to the threaded npm task profile.
+
+Use an author CLI containing the threaded SDK, or set `LEAN_BRIDGE_JS_TASK_INPUTS` to the prepared SDK directory. Set `LEAN_BRIDGE_LEAN_PREFIX` to Lean 4.32.2 and `LEAN_BRIDGE_JS_EMSDK` to the matching pinned Emscripten 6.0.6 installation. A separately supplied `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` pins the SDK manifest to an identity from a trusted source. A single-threaded browser runtime cannot substitute for this kit.
+
+```sh
+lean-bridge build --project . --target npm --output build/tasks
+lean-bridge verify --receipt build/tasks/package-set-receipt.json
+```
+
+Distribute the two archives in `build/tasks/packages/npm` together. Different components compiled for the same threaded runtime depend on the same exact runtime package. This is a local handoff; it does not upload either package. [SDK preparation and checks](../evidence/threaded-task-probe.md#prepare-the-author-sdk) are maintainer steps, not consumer requirements.
 
 ## Build owned-value npm packages
 
@@ -246,7 +447,7 @@ Lean function types are curried. Set the outer arity of `makeAdder` to one so th
 
 Build and publish with the same commands as a scalar component. The package declares its exact shared-runtime dependency; consumers do not register callback dispatchers or configure Wasm imports. Older prepared runtimes are rejected during packaging with a rebuild diagnostic.
 
-Callbacks are borrowed until the enclosing call returns. Returned functions own an explicit lease and expose `dispose()`, `disposed` and `Symbol.dispose`. Read [values and cleanup](../javascript-typescript.md#values-and-cleanup) for consumer usage. Promise-returning callbacks and retained host callbacks are unsupported. A reviewed contract supplies the same arity through its parameter list and returned callable type; do not repeat export decisions in its configuration.
+Callbacks are borrowed until the enclosing call returns. Returned functions own an explicit lease and expose `dispose()`, `disposed` and `Symbol.dispose`. Read [values and cleanup](../javascript-typescript.md#values-and-cleanup) for consumer usage. For a callback that outlives the call or replies asynchronously, [export a threaded task](#build-a-threaded-npm-handoff) with a supported scalar or host-class signature. A reviewed contract supplies the same arity through its parameter list and returned callable type; do not repeat export decisions in its configuration.
 
 ### Export structured callbacks
 

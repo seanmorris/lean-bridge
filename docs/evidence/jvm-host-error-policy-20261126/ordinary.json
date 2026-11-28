@@ -1,0 +1,60 @@
+{
+  "observations": [
+    "ordinary-first: Java: last-owner nested error updated to 42 and collected; independent peers, repeated classloader, virtual-thread reentry, original and mapped errors, retirement",
+    "peer-first: Java: last-owner nested error updated to 42 and collected; independent peers, repeated classloader, virtual-thread reentry, original and mapped errors, retirement",
+    "ordinary-first: Kotlin: last-owner error updated to 42 and collected; validation, original and mapped errors, retirement",
+    "peer-first: Kotlin: last-owner error updated to 42 and collected; validation, original and mapped errors, retirement",
+    "Java and Kotlin: typed leased values and declared errors retain identity after close"
+  ],
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51393462,
+          "path": "archives/workshop-1.0.0.jar",
+          "sha256": "0b83fb41dbba16a9ec84ba1996de8f8dc73d634a881fa374b4d63b20dff5a1ef"
+        },
+        {
+          "bytes": 618,
+          "path": "archives/workshop-1.0.0.pom",
+          "sha256": "8228f87088f2850f3526e526bd3bfce592cac7d1d1c52d64a7a319743997e833"
+        }
+      ],
+      "componentIdentity": "24c7d70745299feacea9ca1cbf5628e112aee0044553ee1e12a7e2d65c3334ae",
+      "interface": "1b8fdd72b7abef8cb9cc56f3ccb8ba5911d1b8453df067319281fbcf690709be",
+      "name": "org.leanbridge:workshop",
+      "receiptSha256": "657d4bffae7bc9a0927fa3533a4c93860c12db68d4dbb34af86fc84bb7f1fec3",
+      "reviewedSourceSha256": null,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51394065,
+          "path": "archives/workshop-peer-1.0.0.jar",
+          "sha256": "d6ff76d70aa92339b90527b7e61a949f541de04048531ceab912226045930396"
+        },
+        {
+          "bytes": 623,
+          "path": "archives/workshop-peer-1.0.0.pom",
+          "sha256": "73d14c318945085d05ea3c57a21ab67c4ba8b92ba7cd5d44dac074fb82274035"
+        }
+      ],
+      "componentIdentity": "63767c679d5383e6429b8b4abb0a518085080d51528ec2a5d2d6f25d29dc0bc9",
+      "interface": "a5c1e08eede10a3fd987990faebdb1a877f341c98c29b4b19cc44983c99e5233",
+      "name": "org.leanbridge:workshop-peer",
+      "receiptSha256": "6f97fec8e7a5a8684ff6356f80d2403380c215c83d342c092c14786fead0ddd0",
+      "reviewedSourceSha256": null,
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "route": "ordinary",
+  "sources": {
+    "Consumer.java": "626b8d85183e3d86842d03dcaa66b9509e6b60721549d14ff7e4ce150dd9e7e9",
+    "ErrorOwner.java": "f6a408b84253b76444e42c8a9cfb22f1b73a3c4fe3f4a89db3fdce315a225423",
+    "KotlinConsumer.kt": "4b2e0ee7be3db853cb9b160d212ffc28dd0a5c813ebab89a6314f5c7adc96174",
+    "KotlinErrorOwner.kt": "752bd14963e51f2d90d4bb98b8f681f8e33f596ef67d6fb98a6772272b987a50",
+    "KotlinLeasePayloads.kt": "f2d7dc96b53fa636f6cd7ed81d9244fd30f99fac2a14b81577b4cdad0feb219d",
+    "LeasePayloads.java": "620d41eae385d8e59a1713671481e3093466fe846d3c5f01c9c31cea1db157ca"
+  }
+}

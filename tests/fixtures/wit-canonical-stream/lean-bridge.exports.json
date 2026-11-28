@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Meter","Observe"],
+  "exports": ["Meter.feed","Meter.gauge","Observe.counts"],
+  "asyncIterators": [
+    {"open": "Meter.feed","next": "Meter.advance","close": "Meter.finish"},
+    {"open": "Meter.gauge","next": "Meter.sample","close": "Meter.closeGauge"}
+  ],
+  "targets": {"wit-wasi": {"name": "meter","version": "1.0.0","asyncAbi": "canonical"}}
+}

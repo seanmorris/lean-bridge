@@ -1,0 +1,135 @@
+{
+  "peer": {
+    "artifacts": [
+      {
+        "bytes": 51371047,
+        "path": "archives/counter-1.0.0.jar",
+        "sha256": "59675ecc80affae622c5883a5fd8fb1a3e277d614637c65969f72e9830a4ef0d"
+      },
+      {
+        "bytes": 611,
+        "path": "archives/counter-1.0.0.pom",
+        "sha256": "ceb34d0a185e342866e9b1d2fb0b2ffbb45da27c48cff462633cbcc0af0e491e"
+      }
+    ],
+    "detail": {
+      "ir": "ddf2b390a997f105b0a488e0e5792d94c93b2483beb83563cbf3fd4111097256",
+      "issue": 1,
+      "ledger": {
+        "id": "0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b",
+        "library": "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so"
+      },
+      "libraries": {
+        "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+        "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so": "b8e382dede5cf7a02ce09ebbca05d8a5c782427d9a3291b2b94563711d35c299",
+        "liblbc_jvm_42872e3c9860e261144ad6ad27236c21e0c436dcad4bc2b1b335a353773bd24a.so": "9007b5a3aff578fc05f5d714f51a7316e250c9db0429091bf7ab2400b1e860c7",
+        "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "namespace": "org.leanbridge.counter",
+      "nominal": {
+        "Badge": {
+          "classSha256": "c3fbaf36c51efc385676a97387e501d9a35c97597d1bac705ffb8c301a9563c6",
+          "identity": "62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+          "sourceSha256": "333965c898edd2673858e8b8f99e7fddfaeac956a030b0e283aa06d01a3bfab9"
+        },
+        "Ticket": {
+          "classSha256": "61d5eb9b28356f7e298d820cf95dc70f71dd4eaceb865cf3d2ef7c91b503bc92",
+          "identity": "3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+          "sourceSha256": "970b9defe179cf51d41f6efc93650de4496e7f7616d04194e945ce467179373e"
+        }
+      },
+      "owner": {
+        "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+        "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+      },
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "name": "com.acme:counter",
+    "receiptSha256": "f3e4249a752f8f9fab9bdb7a5cf6a2f2d04dffbc194d6414260fc55a328be44a",
+    "reviewedSourceSha256": null,
+    "route": "peer",
+    "sourceTreeSha256": "aa26d0bad0d5d335b7c02746fa7f2307140503741a98090b020524e53338a484"
+  },
+  "result": {
+    "observations": [
+      {
+        "language": "Java",
+        "observed": "Java: only the declared error holds the live ticket, peer read 42, zero owners and descriptor delta",
+        "order": "desk-first"
+      },
+      {
+        "language": "Java",
+        "observed": "Java: only the declared error holds the live ticket, peer read 42, zero owners and descriptor delta",
+        "order": "peer-first"
+      },
+      {
+        "language": "Kotlin",
+        "observed": "Kotlin: only the declared error holds the live ticket, peer read 42, zero owners and descriptor delta",
+        "order": "desk-first"
+      },
+      {
+        "language": "Kotlin",
+        "observed": "Kotlin: only the declared error holds the live ticket, peer read 42, zero owners and descriptor delta",
+        "order": "peer-first"
+      }
+    ],
+    "sources": {
+      "ErrorOwner.java": "86785b53ae1357445d889d949aff6952252ba2c4763ce684cf2c45178e96156b",
+      "KotlinErrorOwner.kt": "95bb6c8eb7d83869395b766b9100b215fac8325d3af95d1a17c592638a55d120",
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75"
+    }
+  },
+  "source": {
+    "artifacts": [
+      {
+        "bytes": 51372847,
+        "path": "archives/desk-1.0.0.jar",
+        "sha256": "5c32491257ddaf77c3f47979f395474d7a6835f76bb3d144e470ffb0ee22eeca"
+      },
+      {
+        "bytes": 608,
+        "path": "archives/desk-1.0.0.pom",
+        "sha256": "94d8bd0391bef23843119d37b94cb0c784f63e1d11a26dd716c99ca68c2cfedc"
+      }
+    ],
+    "detail": {
+      "ir": "d61c295b59e9e27e656fff4cdbbb6ff83a6a3fe1ee6955280c5a18805eabf4da",
+      "issue": 3,
+      "ledger": {
+        "id": "0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b",
+        "library": "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so"
+      },
+      "libraries": {
+        "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+        "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so": "b8e382dede5cf7a02ce09ebbca05d8a5c782427d9a3291b2b94563711d35c299",
+        "liblbc_jvm_d1dd2c60b9561f7b4f04641e340f4644c7b7948e8d3d0a083c97dbdc9fc75e17.so": "f2bbff654d1b2300f3dc4008f75aa190c5c71db5f40727c26f37a5daff649d54",
+        "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "namespace": "org.leanbridge.desk",
+      "nominal": {
+        "Badge": {
+          "classSha256": "c3fbaf36c51efc385676a97387e501d9a35c97597d1bac705ffb8c301a9563c6",
+          "identity": "62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+          "sourceSha256": "333965c898edd2673858e8b8f99e7fddfaeac956a030b0e283aa06d01a3bfab9"
+        },
+        "Ticket": {
+          "classSha256": "61d5eb9b28356f7e298d820cf95dc70f71dd4eaceb865cf3d2ef7c91b503bc92",
+          "identity": "3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+          "sourceSha256": "970b9defe179cf51d41f6efc93650de4496e7f7616d04194e945ce467179373e"
+        }
+      },
+      "owner": {
+        "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+        "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+      },
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    },
+    "name": "com.acme:desk",
+    "receiptSha256": "eca14151ea2e5a37074945cf061a0adb9307d6f3faf044736c0fefc142fa2fd5",
+    "reviewedSourceSha256": null,
+    "route": "ordinary",
+    "sourceTreeSha256": "8850c0a32833dde49bbc6533418029672edae473269e5662945ea9d3c8d8964b"
+  }
+}

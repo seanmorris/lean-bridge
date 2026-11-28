@@ -52,6 +52,282 @@ Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# num
 
 Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Managed input copying has a 16 MiB accounting budget. Native copying shares a separate 16 MiB budget across inputs and outputs, including array slots and record storage. These budgets do not bound every managed allocation or Lean working memory. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
 
+### Call synchronous IO
+
+A NuGet release marked `native-dotnet-io-v1` exposes ordinary C# methods.
+Call them on the process main thread. They finish before returning; do not
+wrap them in `Task.Run`. For example, the Journal package writes a file and
+reads it back in that order:
+
+```csharp
+using System;
+using LeanBridge.Journal;
+
+Api.Store("state.txt", "ready");
+Console.WriteLine(Api.Read("state.txt")); // ready
+
+var result = Api.Choose(false, false, "detail"); // returned Result<string, uint>
+Console.WriteLine(result.Error);               // 37
+try { Api.Choose(true, false, "detail"); }
+catch (DeclaredError<Result<string, uint>> e)
+{
+    Console.WriteLine(e.Declaration);   // Journal.choose
+    Console.WriteLine(e.Payload.Error); // 37
+}
+```
+
+A file error throws `LeanIOException` (a `System.IO.IOException`) with the
+Lean declaration and message. Neither a declared error nor a file error
+stops later calls. Null inputs, invalid UTF-16, negative `Nat` and inputs
+over the copy budget are rejected before Lean runs. The package includes
+and loads the matching native runtime; no scheduler or interop setup is
+needed. See [how to export this API](../publish/nuget.md#export-synchronous-io)
+and the [installed results for both load orders](../evidence/dotnet-sync-io-20261122.json).
+
+### Pull items synchronously
+
+Use ordinary `foreach` for an immediate Lean iterator. For example, the Dials
+package opens a cursor on the process main thread and pulls one value each
+time the loop advances:
+
+```csharp
+using System;
+using LeanBridge.Dials;
+
+foreach (var n in Api.Sequence(4)) {
+    Console.WriteLine(n);
+    if (n == 1) break;
+}
+```
+
+`break`, exhaustion, and leaving the loop through an exception close the
+cursor. Use `using var cursor = Api.Sequence(4);` if you call `MoveNext()`
+yourself. The cursor is single-pass. If its item is an owned resource,
+reading `Current` transfers that lease to you; dispose the item separately.
+No `await` or event loop is involved. See the [installed C# checks](../evidence/native-sync-iterators-20261125.md#net).
+
+### Let Lean call your C# class
+
+Some packages import a class that your application implements. The package
+README names the required members. For the Workshop example, provide a
+public constructor, property, and two methods with these exact C# types:
+
+```csharp
+public sealed class Meter
+{
+    public Meter(uint level) => Level = level;
+    public uint Level { get; set; }
+    public uint Read() => Level;
+    public Meter Identity() => this;
+}
+```
+
+Open the generated binding on the process main thread. These are synchronous
+calls; no event loop, handle registration, or additional runtime install is
+needed.
+
+```csharp
+using var workshop = LeanBridge.Workshop.Api.BindHosts<Meter>();
+var meter = workshop.Make(7);      // Lean calls new Meter(7).
+workshop.Update(meter, 42);        // Lean sets the C# property.
+Console.WriteLine(meter.Level);   // 42
+```
+
+When Lean propagates a C# member exception unchanged, the caller receives
+the original exception object. If Lean handles it or maps it to a declared
+`EIO` error, the caller sees that outcome instead. `Dispose` closes this
+binding, not the C# object. If another package still binds the same nominal
+kind, it can keep using the object. After the last binding closes, Lean
+references retained under the old binding are stale.
+
+A package can also take or return a record containing your C# objects.
+The [Gauge example](../evidence/dotnet-host-record-fields-20261126.md)
+returns a `Pair<Meter>`. Its `Lead` and `Spare` properties are the
+application's meters; `ReferenceEquals` can compare them. Its `Sample`
+property is a copied `byte[]`, so modifying it does not alter the record.
+Use `using` on each returned record. Disposing the record releases its
+references without disposing the meters. A live record can still be read
+after the binding closes.
+
+If a package exports a function that returns another Lean function, keep the
+creating binding open while you use the result. For example, `Remember`
+captures one C# object and returns it when invoked with another:
+
+```csharp
+using var workshop = LeanBridge.Workshop.Api.BindHosts<Meter>();
+var first = workshop.Make(7);
+var second = workshop.Make(11);
+using var remember = workshop.Remember(first);
+Console.WriteLine(ReferenceEquals(first, remember.Invoke(second))); // True
+```
+
+`Invoke` runs synchronously on the process main thread. Dispose the function
+to release its capture, or dispose the binding to revoke all its functions.
+If a member disposes the function during its own call, that call can finish;
+later calls throw `ObjectDisposedException`. Prefer `using`. For an abandoned
+function, the finalizer queues cleanup; the next binding call or an explicit
+`LeanBridge.Workshop.Api.DrainHostCloses()` on the owner thread processes it.
+
+See [publishing a host contract](../publish/nuget.md#import-an-application-owned-c-class)
+for the Lean side of the example.
+
+A package can also carry your class through a Lean worker. Use the same
+binding inside the owner loop. For example, the Workshop worker package
+returns the original `Meter` to its callback:
+
+```csharp
+LeanBridge.Workshop.LeanRuntime.Run(async () =>
+{
+    using var workshop = LeanBridge.Workshop.Api.BindHosts<Meter>();
+    var meter = workshop.Make(7);
+    var returned = await workshop.Relay(meter, m => { m.Level++; return m; });
+    Console.WriteLine(ReferenceEquals(meter, returned)); // True
+    Console.WriteLine(meter.Level);                     // 8
+});
+```
+
+Use the binding for any task or stream whose signature carries your class.
+Workers with only copied values stay on `Api`. Closing a binding cancels its
+pending work and invalidates streams created with it, even ones you haven't
+started reading. It leaves other bindings and your C# object alone. See the
+[installed worker results and package receipts](../evidence/dotnet-worker-packages-20261124.md).
+
+### Await tasks and pull streams
+
+For a `native-dotnet-task-v1` package, start the application with
+`LeanRuntime.Run` on the process main thread. It supplies one event loop for
+all installed Lean task packages. Callers use ordinary `await` and
+`await foreach`; they don't need native handles, polling, or a Lean toolchain.
+For example, this is a complete `Program.cs` for the Pulse package:
+
+```csharp
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using LeanBridge.Pulse;
+
+using var stop = new CancellationTokenSource();
+LeanRuntime.Run(async () =>
+{
+    byte[] result = await Api.Bytes(new byte[] { 1, 2, 3 }, stop.Token);
+    Console.WriteLine(result.Length); // 3
+
+    await foreach (var item in Api.Series(false, false, "first").WithCancellation(stop.Token))
+        Console.WriteLine(item.IsError ? item.Error : item.Value.ToString()); // first, then 73
+});
+```
+
+A task can be awaited more than once. Cancelling its token cancels delivery
+and asks Lean to stop; a worker that ignores cancellation cannot deliver a
+late result. A stream opens on its first pull, never prefetches another item,
+and closes on exhaustion, `break`, cancellation or `DisposeAsync`.
+If you cancel while `MoveNextAsync()` is waiting, the reader wakes with your token.
+You don't have to dispose the cursor to trigger cleanup, and the worker can't deliver a late item.
+Leaving `Run` closes outstanding deliveries. A cancelled await raises
+`OperationCanceledException` with the supplied token.
+
+Start calls and pulls on the owner thread. Normal `await` inside `Run`
+returns there; don't start a Lean operation inside `Task.Run` or after
+opting out of the context with `ConfigureAwait(false)`. An OS error opening
+a task or stream raises `LeanIOException`; an explicitly selected terminal
+`IO.Error` raises `TaskIOException`. A typed `EIO` failure raises
+`DeclaredError<T>`, while a returned `Except` stays a `Result<T,E>`.
+See [exporting tasks and pull streams](../publish/nuget.md#export-tasks-and-pull-streams)
+and the [installed .NET results](../evidence/dotnet-tasks-20261122.json).
+
+### Let a Lean task call C#
+
+Some standalone task parameters permit one call per registration. If Lean
+tries again and propagates the refusal, `await` throws the generated
+`CallbackAlreadyInvokedException`; its `Declaration` identifies the Lean
+operation. The second attempt never
+enters your delegate, even if the first invocation threw. Passing the same
+delegate to another parameter or task gives it a new allowance.
+
+Pass a synchronous delegate to a task that requests a callback. The worker
+waits for its reply; your delegate runs on the same main thread as the rest
+of the Lean application. The Feedback package, for example, can call back
+into a synchronous Lean function:
+
+```csharp
+using System;
+using LeanBridge.Feedback;
+
+LeanRuntime.Run(async () =>
+{
+    uint value = await Api.Once(20, n => 2 * Api.Plain(n));
+    Console.WriteLine(value); // 42
+
+    using var suffix = RetainedCallback.Create<string, string>(s => s + "!");
+    Console.WriteLine(await Api.RepeatCall("ready", suffix.Callback)); // ready!!
+});
+```
+
+A task holds its delegates until it settles or is cancelled. Use a plain
+delegate for that lifetime. Use `RetainedCallback.Create` when you also want
+to revoke it yourself or share one registration across packages. Disposing a
+registration during a call lets that invocation finish; later invocations
+throw `ObjectDisposedException`. Cancelling one task doesn't revoke another
+task's use of the same delegate.
+
+A callback can call a second Lean task and return its result with
+`LeanRuntime.Await(otherTask)`. This runs the owner loop until the other task
+finishes. Don't block the owner on `.Result` or `.Wait()`, or pass an
+`async void` delegate. Waiting on the task that invoked the current callback
+is rejected. If mixing older archives with a callback-capable package, start
+`Run` from the latter so nested waits are available. Use ordinary `await`
+everywhere the caller is asynchronous.
+
+Lean may catch an exception from a delegate. If Lean propagates the original
+error, C# receives the same exception object and original stack. A replacement
+error is a Lean error even if its message matches. Cancelling the operation's
+token cancels the task; a callback throwing its own `OperationCanceledException`
+faults it. A catchable fatal CLR fault such as `OutOfMemoryException` retires
+the shared Lean runtime, including other components that use it. See the
+[installed callback checks and archive hashes](../evidence/dotnet-retained-tasks-20261122.json).
+
+### Share a Lean resource across packages
+
+If two packages export the same Lean resource, a value from one passes directly
+to the other. Here Desk issues a ticket and Depot uses it in a task.
+`Retain()` gives you an independently disposable lease on the same ticket;
+it does not copy the underlying object.
+
+```csharp
+using System;
+using Desk = LeanBridge.LeaseDesk.Api;
+using Depot = LeanBridge.LeaseDepot.Api;
+using LeanBridge.LeaseDepot;
+
+LeanRuntime.Run(async () =>
+{
+    using var ticket = Desk.Issue(40);
+    using var spare = ticket.Retain();
+    using var result = await Depot.Revisit(ticket, count => count + 2);
+    ticket.Dispose();
+    Console.WriteLine(Desk.Count(result));         // 42
+    Console.WriteLine(result.SameResource(spare)); // True
+});
+```
+
+Use `using` for each returned lease, including each stream item and each
+resource-valued `DeclaredError<T>.Payload`. Ending a stream closes the cursor,
+not items already handed to you. Another await of the same task returns the
+same wrapper, not a new lease. A stream borrows its input on the first pull,
+so keep it open until then. Once an operation has started, disposing the
+input does not revoke the worker's reference. Resource operations, including
+`Dispose`, run on the process main thread. Reusing a closed wrapper throws
+`ObjectDisposedException`.
+
+NuGet brings the matching CLR type along with the component. For example,
+import `LeanBridge.Resources.Shared` to name `Ticket`. Catch the declaring
+package's error type: `Depot.Checked` throws
+`LeanBridge.LeaseDepot.DeclaredError<Ticket>`. Even if a second resource definition has the same full name,
+it is a distinct CLR type. If you intentionally reference both incompatible
+definitions, use `var` or a C# assembly alias to distinguish them. See
+[exporting a shared resource](../publish/nuget.md#export-a-shared-lean-resource)
+and the [installed resource checks and archive hashes](../evidence/dotnet-resource-leases-20261122.json).
+
 ### Arrays and records
 
 Lean `Array T` uses a typed C# `T[]`, including nested arrays and arrays of
@@ -174,7 +450,8 @@ The package automatically loads its verified Lean libraries and private GMP.
 Compatible owned and copied packages share one runtime. Calls in a forked child
 reject, including a package first used in that child. Execute a fresh program
 before calling Lean there. Function results can borrow a declared input owner;
-see the whole-value API below. Asynchronous delivery requires separate support.
+see the whole-value API below. The [async package profile](#await-tasks-and-pull-streams)
+supports copied payloads and [direct resource leases](#share-a-lean-resource-across-packages), not these resource-containing aggregates.
 
 #### Consuming inputs
 
@@ -530,6 +807,43 @@ Returned functions use `LeanClosure<TDelegate>`. Call `Invoke` on the thread tha
 
 The runtime shares a capacity of 4,096 closure identities. Each call has a 16 MiB conversion budget; the limit does not bound Lean's own allocations. Calls in a forked child require starting a fresh process. Recursive callable payloads, resource-containing aggregates and asynchronous delivery remain separate work. The [installed callable checks](../evidence/dotnet-callables-20260919.md) record exact values, exceptions, ownership and source-free execution.
 
+If a record contains a leased Lean function, retain the function if it must
+outlive the record's original wrapper. For example, in the
+[Tariff package](../evidence/dotnet-function-fields-20261126.md):
+
+```csharp
+var tariff = Api.MakeTariff(40);
+using var quote = tariff.Quote.Retain();
+tariff.Quote.Dispose();
+Console.WriteLine(Api.ApplyTariff(new Tariff(quote), 2)); // 42
+```
+
+A package that declares `TariffInput` also accepts a function you write in
+C#. For example, the delegate below reads the current fee on each call:
+
+```csharp
+uint fee = 40;
+var input = new TariffInput(units => units + fee);
+Console.WriteLine(Api.ApplyTariffWithHostFields(input, 2)); // 42
+fee = 5;
+Console.WriteLine(Api.ApplyTariffWithHostFields(input, 2)); // 7
+```
+
+You can reuse the input, but each call only borrows the delegate until it
+returns. If Lean sends that function back, invoking it later throws without
+calling your delegate. Pass a leased Lean function instead when the returned
+record needs a callable that outlives the call. Passing a `Tariff` to the
+same method preserves that lease; the new input wrapper does not own it.
+
+When Lean passes a function directly to your callback, the function is
+borrowed until your callback returns or throws. Call `Retain()` **inside**
+the callback if you need to invoke it later. In the Tariff example,
+`quote.SameIdentity(lease)` compares the underlying Lean function while
+both wrappers are live. Keeping the lease does not extend the borrow:
+after return, invoking or comparing the borrowed wrapper throws, while
+the lease still works until you dispose it. See the
+[C# client](../../tests/fixtures/structured-types/tariff-incoming.cs).
+
 ### Structured callback values
 
 The prepared `Lean.Structured` NuGet package uses typed `Func` delegates for
@@ -858,6 +1172,8 @@ Profiles: C#. Installed checks apply only to the named positions and package pat
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
+
+For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [tasks and streams](#await-tasks-and-pull-streams), [retained C# callbacks](#let-a-lean-task-call-c), and [shared resources](#share-a-lean-resource-across-packages). These profiles are separate from the general audit rows below.
 
 [Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.
 

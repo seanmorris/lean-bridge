@@ -6,6 +6,11 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 
 ## Choose value and callable semantics
 
+If Lean calls a class supplied by Python, describe the class in a separate
+[host-import contract](../publish/pypi.md#call-python-objects-from-lean).
+The application's public functions remain exports; they don't double as
+declarations of the host methods they call.
+
 | Lean form | Author decision |
 | --- | --- |
 | `Unit`, `Bool`, fixed-width signed and unsigned integers | Preserve the unit value, Boolean meaning, and integer bounds. Reject invalid inputs before narrowing. |
@@ -18,12 +23,16 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 | Generics, implicit arguments, instances | Select finite build-time specializations and resolve the required dictionaries. |
 | `Fin`, `Subtype`, dependent signatures | Preserve runtime constraints through checked constructors or validation. An erased proof does not authorize an unchecked input. |
 | Theorems and direct proof arguments | Let Lean authenticate proof-only positions and erase their runtime slots. Retain theorem identities and assumptions in assurance metadata. Refuse proof-valued exports instead of fabricating host evidence. |
-| Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. Keep incompatible runtimes separate. |
-| Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. |
+| Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. See how [C#](../publish/nuget.md#export-a-shared-lean-resource), [Python](../publish/pypi.md#export-a-shared-lean-resource), and [Ruby](../publish/rubygems.md#export-a-shared-lean-resource) share resources between IO and task packages. Keep incompatible runtimes separate. |
+| Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. For a task that calls its host, see the scheduling and exception contracts for [C](../publish/c.md#export-a-callback-taking-task), [C++](../publish/cpp.md#export-a-callback-taking-task), [C#](../publish/nuget.md#export-a-callback-taking-task), [JVM](../publish/maven.md#export-a-retained-task-callback), [Perl](../publish/cpan.md#export-a-task-that-calls-perl), [native PHP](../publish/php.md#export-a-task-that-calls-php), [Python](../publish/pypi.md#let-a-lean-task-call-python), [Ruby](../publish/rubygems.md#export-a-callback-taking-task), and [Rust](../publish/cargo.md#export-a-callback-taking-task). |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
-| `Task`, cancellation, iterators, async iterators | Specify result delivery and cleanup after completion, cancellation, failure, or early termination. |
+| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream), Ruby exposes [fiber-aware tasks and Enumerable streams](../consume/ruby.md#await-a-task-or-read-a-stream), .NET exposes [tasks and async enumerables](../publish/nuget.md#export-tasks-and-pull-streams), Maven exposes [Java futures and publishers plus Kotlin suspend functions and flows](../publish/maven.md#export-tasks-and-streams), and Rust exposes [executor-driven futures and streams](../publish/cargo.md#export-a-task-or-pull-stream). See also the pull APIs for [Perl](../publish/cpan.md#export-tasks-and-streams), [native PHP](../publish/php.md#export-tasks-and-pull-streams) and [WIT / Wasmtime](../publish/wit-wasi.md#export-a-pull-cursor). |
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
+
+For WIT tasks, choose the API your caller uses. A native host can use the default [typed task-resource API](../consume/wit-wasi.md#await-a-lean-task). A Wasm guest can await [canonical futures](../consume/wit-wasi.md#await-a-canonical-future-from-a-wasm-application) or read a [canonical stream](../consume/wit-wasi.md#read-a-canonical-stream-from-a-wasm-application) when the author selects `targets.wit-wasi.asyncAbi: "canonical"`.
+
+Choose where an error belongs in the Lean signature. `EIO ε (Task α)` can fail before a task exists. `Task (Except ε α)` completes with an ordinary tagged value. To declare an `IO.Error` from inside the worker, select its export in `taskIOErrors`. The generated WIT preserves these layers; callers do not have to infer the failure phase from message text.
 
 ### Select an explicit host-null wrapper
 
@@ -78,7 +87,7 @@ consumer profiles. Owned or asynchronous values and generic or dependent
 HostNull combinations remain separate work; selecting a target never silently
 drops this distinction.
 
-Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. PHP-Wasm copied-graph packages also retain selected constructors and `Fin` bounds through [finite recursive copied values](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.
+Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. PHP-Wasm copied-graph packages also retain selected constructors and `Fin` bounds through [finite recursive copied values](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). That refinement evidence does not cover retained worker callbacks carrying refined values. For copied primitives, [Java and Kotlin tasks can invoke host callbacks](../publish/maven.md#export-a-retained-task-callback).
 
 For a reviewed `Subtype` API, select the checked constructor by public export
 name in the review. Two finite specializations of one generic can select
@@ -523,6 +532,141 @@ Alias-named generic records can contain arrays and appear as array elements. The
 
 Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
+## Declare native OS access
+
+A Lean `IO` result tells the caller how an operation can fail. It doesn't say
+whether that operation reads a file, checks an environment variable, or only
+updates an in-memory reference. Declare OS access separately for native synchronous
+IO, tasks and iterators in C, C++, Rust, Python, Ruby, .NET, JVM, Perl and native PHP
+packages on Linux x86-64. Python host-import packages use the same grants.
+The [standalone synchronous WIT profile](../publish/wit-wasi.md#without-application-owned-objects)
+executes declared OS effects in the native Wasmtime host. [Guest-owned WIT packages](../publish/wit-wasi.md#when-the-application-owns-the-objects)
+do not accept external OS grants.
+
+List grants in `lean-bridge.exports.json`. Here the module reads an environment
+variable at startup, and its worker reads a file:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Effects"],
+  "taskExports": ["Effects.worker"],
+  "nativeEffects": ["environment", "filesystem"]
+}
+```
+
+| Grant | What it permits |
+| --- | --- |
+| `filesystem` | Open, read, write, or change files, directories, and metadata. This is not a per-path or read-only grant. |
+| `environment` | Read environment variables. |
+| `stdio` | Use standard input, output, error, or the supported debug-output primitives. |
+| `clock` | Read a system or monotonic clock. |
+| `random` | Request random bytes from the OS. |
+| `process-info` | Read process information such as the working directory or PID. |
+
+On task, iterator and host-import packages, omitting `nativeEffects` grants
+no ambient access. In-memory references, task scheduling,
+waiting, cancellation, and mutexes do not need a grant. Formatting a
+`UInt32` into an error message doesn't need one either: the runtime builds
+the digits in memory and uses the target's word width. Reading a filename or
+an environment variable to compose that message still needs its own grant.
+The checker reports all denied operations in a complete compiler audit before
+packaging. Spawning processes,
+changing the process working directory, terminating the host, networking, and
+unclassified native operations are not grantable on this route. A reviewed API
+cannot override a refusal.
+
+For `--target npm`, [synchronous in-memory IO](../publish/npm.md#export-synchronous-lean-io)
+uses `"nativeEffects": []`. Generated JavaScript functions return immediately;
+thrown `EIO` payloads and returned `Except` values remain distinct.
+
+For `--target php-wasm`, the [synchronous IO package](../publish/php.md#build-an-ordinary-php-wasm-package)
+supports `"nativeEffects": []` only. Select it for state held in the PHP-Wasm
+instance, not for applications that need filesystem access.
+
+To publish synchronous `IO`, `BaseIO`, or `EIO` functions on their own, select
+them with `exports` and include `nativeEffects`. Use `[]` for an in-memory
+API. For example, `Journal.read : String → IO String` reads a file:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.read"],
+  "nativeEffects": ["filesystem"]
+}
+```
+
+Build one native target at a time: `c`, `cpp`, `cargo`, `pypi`, `rubygems`, `nuget`, `maven`,
+[`cpan`](../publish/cpan.md#export-synchronous-io) or [`php-native`](../publish/php.md#export-synchronous-io). No task, iterator or host import
+is required. Source discovery alone cannot check OS access; use the build's
+`binding-ir.json` to review the compiled interface. The functions finish
+before returning. A thrown `EIO` error
+retains its declared payload; an `Except` returned by the same function is
+ordinary data. Pure companions can share the package. Leave `nativeEffects`
+out of a pure-only package to use its usual projection. The [four-target
+install checks](../evidence/native-sync-cpp-rust-20261122.json) include exact
+archives, toolchains and replay commands, as well as a C++ and Rust example
+that passes one Lean resource between a synchronous package and a task package.
+The [original C11 and CPython receipts](../evidence/native-sync-io-20261122.json)
+remain available for those earlier packages.
+The [Ruby IO package](../publish/rubygems.md#export-synchronous-io) uses the
+same checked effects and exposes ordinary Ruby methods and exceptions. Its
+[installed-gem receipts](../evidence/ruby-sync-io-20261122.json) include the
+missing-grant and altered-library checks.
+The [NuGet IO package](../publish/nuget.md#export-synchronous-io) runs the
+same operations as synchronous C# methods. Returned `Result<T,E>` values and
+thrown `DeclaredError<T>` exceptions remain distinct.
+For genuine Lean tasks and pull streams, use the separate
+[NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams);
+it exposes C# `Task<T>` and `IAsyncEnumerable<T>`. A
+[callback-taking task](../publish/nuget.md#export-a-callback-taking-task)
+keeps its delegates until settlement. Propagating the original Lean callback
+error rethrows the C# exception; constructing a new error does not. Both profiles
+can [exchange resource leases](../publish/nuget.md#export-a-shared-lean-resource) across independently built packages.
+
+For synchronous Java and Kotlin IO, select a [shared Lean resource in the Maven
+configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results)
+to expose a closeable object in both languages. A parameter borrows the object;
+a result or typed failure gives the caller a new lease. The prepared JARs
+provide the shared native owner and ledger.
+For [resource-bearing Maven tasks and streams](../publish/maven.md#export-resource-bearing-tasks-and-streams),
+select the same resource declaration and the task or iterator protocol.
+A started worker keeps the object alive; a cold stream borrows it on first
+demand. A discarded result or step failure must not leak a lease.
+
+For [threaded npm packages](../publish/npm.md#build-a-threaded-npm-handoff), select the Lean type in `resources` alongside `taskExports` or `asyncIterators`. A parameter borrows the caller's handle, while a returned value, iterator item, or typed error payload gives the JavaScript caller a new lease. The defining Lean module and compiler determine whether another package can accept that type; matching JavaScript fields do not.
+
+A selected npm task can take a function `α → IO β` over copied scalars. Call it from the factory or the task body; JavaScript answers on its owning event loop. Catching the callback's `IO.Error` handles that failure inside Lean. Propagating the same error preserves the original JavaScript cause. Creating a new error with the same message does not. See [answer a callback from a Lean task](../javascript-typescript.md#answer-a-callback-from-a-lean-task).
+
+For Perl, [select synchronous IO explicitly](../publish/cpan.md#export-synchronous-io). A returned `Except` stays a Perl `Ok` or `Err` value; an `EIO` failure throws a declaration-specific exception with a typed payload. The prepared component depends on the ordinary shared CPAN runtime.
+
+The same distinction holds when a module also exports a task. In the
+[installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),
+an application reads a pure result, updates Lean state, awaits a task, and
+updates the same state again. Only the task needs an await or poll. The
+[Ruby callers](../evidence/ruby-fiber-tasks-20261122.json) exercise direct
+companions on both the ordinary-source and reviewed task-gem routes.
+
+The build follows compiled Lean code through library wrappers and task closures.
+It checks application startup and each selected entry, including an iterator's
+separate pull and close operations. The diagnostic names the declaration,
+native operation, and missing grant. The resulting `binding-ir.json` lists
+the capabilities the compiler found, not unused grants. Each declaration's
+`lean-bridge.dev/native-effects-v1` extension groups conservative requirements
+by startup, call (including work scheduled by the call), pull, and close.
+An entry with no native OS dependencies has no such extension.
+A call that reads an initialized global can inherit its startup requirement;
+this does not mean the call reads the environment a second time.
+
+These are pre-packaging checks, not runtime permissions: they don't sandbox
+the process, compiler, pinned toolchain's own startup, or a callback implemented by the host.
+Host-member requirements come from the host-import contract, not the Lean grants.
+They do not change how a returned `Except`, a thrown IO error, or cancellation
+arrives in the consumer language. Other build profiles do not inherit these grants.
+The [installed examples and receipt hashes](../evidence/native-host-effects-20261122.json)
+cover both ordinary and reviewed releases on all four native targets.
+
 ## Native C and C++ exports
 
 Ordinary `c` and `cpp` builds accept all 19 pure primitive parameter/result types above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars, copied buffers and GMP `mpz_t` for Nat/Int; C++ supplies owned standard-library values and Boost.Multiprecision cpp_int. Packages include and configure the exact-integer dependency. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
@@ -570,7 +714,7 @@ anchors and asynchronous delivery remain unfinished.
 
 The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records, arrays, Lists, options, results, binary products, configured identity resources, synchronous host callbacks, and returned Lean closures. [Lists](../evidence/perl-lists-20260921.md) use plain array references for inputs, results and fields on both source paths. [Copied aliases](../publish/cpan.md#export-named-copied-aliases) retain target values and preserve names and original targets in archive metadata and installed POD. Options use `undef` or `Some`, results use `Ok` or `Err`, and products use two-element array references. Unit uses `undef`; `Some(undef)` retains presence. [Structured callbacks](../publish/cpan.md#export-structured-callbacks) also accept arrays, Lists, options, results, products, acyclic records, variants and transparent aliases. [Recursive callbacks](../publish/cpan.md#export-recursive-callbacks-and-closures) also accept finite recursive records and variants, including aliases nested only in callback signatures. CODE references receive independent copies; returned Lean closures keep captured copies and support explicit `close()`. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.
 
-Shared export configuration selects modules, optional exact exports, resources, closure arities and checked export contracts. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures outside the supported direct earlier-Nat `Fin` parameter form, asynchronous operations and retained host callbacks require further work. Unsupported native shapes fail before packaging.
+Shared export configuration selects modules, optional exact exports, resources, closure arities and checked export contracts. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. For [copied tasks and streams](../publish/cpan.md#export-tasks-and-streams), select real task results or a Lean open/next/close protocol. Synchronous companions remain ordinary calls. [Tasks that call Perl](../publish/cpan.md#export-a-task-that-calls-perl) can retain a Perl callback until the task settles. Open generics and dependent signatures outside the supported direct earlier-Nat `Fin` parameter form are not admitted by these profiles.
 
 Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. The compiler supplies native types and declaration selection; npm's primitive frame is a separate ABI.
 
@@ -584,7 +728,7 @@ Both prebuilt and XS-only installation work without Lean sources. Explicit
 [parameter-anchored results](../consume/perl.md#borrowed-results) preserve their
 declared owner lifetimes. [Methods and properties](../consume/perl.md#methods-and-properties)
 use nominal owners and preserve the original receiver or argument anchor.
-Asynchronous delivery remains unsupported.
+This Perl ownership profile does not provide asynchronous delivery.
 
 ## Types understood by source analysis
 
@@ -617,6 +761,85 @@ generated C API; the bundled host validates it before and after the Component
 Model call.
 
 Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews are checked against freshly compiled Lean types, including resource identity, field order, callbacks and lifetimes. Builds [reconcile reviewed APIs](existing-package.md#compile-a-reviewed-contract) before compiling adapters. Combined builds require every selected profile to admit the same API; analysis alone does not establish target or installed-package support. The [consumer support contract](../consumer-support.v1.json) records those runtime checks.
+
+### Store application-owned objects in a record
+
+In a synchronous PyPI component with declared Python host imports, refer to
+the imported class directly. For example, the [Workshop source](../../tests/fixtures/python-host-record/Workshop.lean)
+defines:
+
+```lean
+structure Rack where
+  primary : Box
+  offset : UInt32
+  backup : Box
+
+def shared (box : Box) : IO Rack := pure ⟨box, 0, box⟩
+```
+
+Select the public functions as usual. The compiler reads the structure's
+constructor and field projections; you do not list their offsets or write
+a conversion. The generated Python API borrows an input rack for the call
+and returns an independently closable rack. A reviewed interface can change
+the field descriptions but cannot change their order or types.
+
+This path accepts flat public structures in the selected modules, containing
+declared host objects and copied scalars, directly as `IO` arguments or
+results. It does not select nested records, asynchronous calls, or Lean
+resource fields. See [the Python consumer](../consume/python.md#pass-your-python-objects-inside-a-record).
+
+The synchronous RubyGems host package accepts the same record shape with
+`LeanBridge.Host.Ruby` imports. The [station project](../../tests/fixtures/ruby-host-record/Workshop.lean)
+names its type `Station.Panel` and passes two panels to one function. The
+[Ruby consumer](../../tests/fixtures/ruby-host-record/consumer.rb) reads its
+original application instances via `active_meter` and `spare_meter` and uses
+`with` or `close` to release the panel's references.
+
+### Store a Lean function in a record
+
+Name the projection in `ownedAggregates.closureFields` when a direct record
+field must hold a Lean closure. For example, the record
+`Owned.Tariff` has a field `quote : UInt32 → UInt32`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.makeTariff", "Owned.echoTariff"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject",
+    "closureFields": ["Owned.Tariff.quote"]
+  }
+}
+```
+
+Lean checks the field and its argument and result types. The consumer receives
+a lease, so a function capturing a base price still works after the original
+wrapper closes. This selection does not authorize a host callback to escape
+its call, or apply to another field, a variant case, or an array of functions.
+For a consumer example, see [Python's callable wrapper](../consume/python.md#calling-a-function-stored-in-a-record)
+or [C's record and result owner](../consume/c.md#keep-a-function-stored-in-a-record).
+
+### Return a function from a callback
+
+For a host callback of type `UInt32 → UInt32 → UInt32`, decide when the host
+should run. By default it receives both numbers in one call and returns a
+number. If the host should receive the first number and return a Lean
+function to apply to the second, give its outer `callable.parameters` one
+entry and describe the returned function in `callable.result.callable`.
+The [complete export contract](../../tests/fixtures/structured-types/tariff-staged-contract.json)
+declares the outer callback borrowed for the call and its function reply
+leased. The [two Lean exports](../../tests/fixtures/onboarding/leased-closure-fields/Owned.lean)
+have the same Lean type and body; only `stagedQuote` selects that split.
+
+The ordered outer parameter list specifies where the next function starts.
+A parameter list alone does not split the call, and adding a nested signature
+cannot turn a non-function result into a function. The installed
+[C example](../consume/c.md#return-a-lean-function-directly-from-a-callback)
+shows the difference in the generated API.
 
 ## Declarations the analyzer skips
 

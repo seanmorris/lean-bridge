@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "inspector@1.0.0",
+    "name": "inspector",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 119953,
+          "path": "archives/LeanBridge-Inspector-0.001.tar.gz",
+          "sha256": "2271541503295d2888cb6e323b4c31f383b5f7de9050d52edd2cdff7a8976ec8"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Inspector",
+      "profile": "native-perl-host-v1",
+      "requires": [
+        {
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cpan",
+      "version": "0.001"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51422277,
+          "path": "archives/LeanBridge-Runtime-0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471.tar.gz",
+          "sha256": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Runtime",
+      "profile": "native-perl-host-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "target": "cpan",
+      "version": "0.0020566404367621172595855154158636506649469931493174237743055387382607842578150471"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "d5534b2ec93f126a039418d5ff367e8e2b5d6a31c6b26d787113a4cebd3bae3a",
+      "id": "native-perl-host-v1",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "4dc9e02e9c35a400656517594b2ac5a110661f6db75076e8bd10e8ca1d6dbf7e"
+  }
+}

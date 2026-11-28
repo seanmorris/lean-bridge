@@ -25,8 +25,9 @@ The enabled gate is `npm run test:owned-javascript-transfers`. It covers:
 - An installed author CLI and offline component/runtime installations after
   deleting producer sources and outputs.
 - Byte-identical package reassembly and rejected capability/source mutations.
-- Strict TypeScript, the exact consumer documentation example, and 130 checks
-  per run in Node and Chromium, Firefox and WebKit pages, React and workers.
+- A strict TypeScript declaration check (`tsc --noEmit`), the exact consumer
+  documentation example, and 130 JavaScript checks per run in Node and in
+  Chromium, Firefox and WebKit pages, React and workers.
   Each browser context repeats the checks twice using the same Wasm assets.
 - A combined reviewed C and JavaScript build with matching ownership contracts.
 
@@ -35,3 +36,6 @@ The prior PHP-Wasm receipt remains unchanged. The support inventory refreshes
 source hashes without promoting unrelated cells. This receipt does not claim
 an independent clean rebuild, Docker acceptance, WIT/WASI transfers or
 owner-anchored borrowed results.
+
+Later TypeScript programs ran a [rejected and successful Ticket transfer](typescript-ticket-positions-20261126.md#a-ticket-inside-a-claim)
+and a [consuming method with live aliases](host-lifetime-acceptance-20261127.md#running-the-typescript-receiver-client).

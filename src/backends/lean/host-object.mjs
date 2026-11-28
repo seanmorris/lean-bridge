@@ -6,6 +6,8 @@
 
 import { canonicalizeJsonValue, hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { hostPascalName as pascal, hostDeclarationName, hostMemberSymbol } from "../../abi/host-member-names.mjs";
+export { hostDeclarationName, hostMemberSymbol };
 
 /**
  * Reports Lean host object generation failures with stable machine-readable codes and structured diagnostic context.
@@ -32,42 +34,42 @@ const fail = (code, message, details = {}) => {
 	throw new LeanHostObjectGenerationError(code, message, details);
 };
 
-const namedType = (ir, id) => ir.types.find(type => type.id === id);
-const pascal = value => value.replace(/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/g, (_, __, letter) => letter.toUpperCase());
-const snake = value => value
-  .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
-  .replace(/[^A-Za-z0-9]+/g, "_")
-  .replace(/^_+|_+$/g, "")
-  .toLowerCase();
+/** Generated modules accepted by the native host-object compiler (not a package support list). */
+export const compiledHostModules = Object.freeze({ c: "LeanBridge.Host.C"
+	, cpp: "LeanBridge.Host.Cpp"
+	, rust: "LeanBridge.Host.Rust", "wit-wasi": "LeanBridge.Host.WitWasi"
+	, python: "LeanBridge.Host.Python"
+	, ruby: "LeanBridge.Host.Ruby", jvm: "LeanBridge.Host.Jvm"
+	, dotnet: "LeanBridge.Host.Dotnet", perl: "LeanBridge.Host.Perl"
+	, javascript: "LeanBridge.Host.Javascript", php: "LeanBridge.Host.Php" });
+/** Package coordinates select their own checked host namespace. */
+export const compiledHostTargets = Object.freeze({ c: "c", cpp: "cpp", cargo: "rust", pypi: "python", rubygems: "ruby", maven: "jvm", nuget: "dotnet", cpan: "perl", npm: "javascript", "php-native": "php", "php-wasm": "php", "wit-wasi": "wit-wasi" });
 
-const leanType = (ir, ref) => {
-	if(ref.kind === "primitive")
+const primitive = Object.freeze({
+	unit: "Unit", bool: "Bool", char: "Char", bytes: "ByteArray", string: "String"
+	, nat: "Nat", int: "Int", usize: "USize", isize: "ISize"
+	, float32: "Float32", float64: "Float"
+	, uint8: "UInt8", uint16: "UInt16", uint32: "UInt32", uint64: "UInt64"
+	, int8: "Int8", int16: "Int16", int32: "Int32", int64: "Int64"
+});
+const leanType = (types, ref) => {
+	if(ref.kind === "primitive" && Object.hasOwn(primitive, ref.name)) return `_root_.${primitive[ref.name]}`;
+	if(ref.kind === "named" && types.has(ref.id)) return types.get(ref.id);
+	if(ref.kind === "apply")
 	{
-		if(ref.name === "unit") return "Unit";
-		if(ref.name === "bool") return "Bool";
-		if(ref.name === "string") return "String";
-		if(ref.name === "bytes") return "ByteArray";
-		if(ref.name === "nat") return "Nat";
-		if(ref.name === "int") return "Int";
-		if(ref.name === "float32" || ref.name === "float64") return "Float";
-		const fixed = {
-			uint8: "UInt8", uint16: "UInt16", uint32: "UInt32", uint64: "UInt64"
-			, int8: "Int8", int16: "Int16", int32: "Int32", int64: "Int64"
-		};
-		return fixed[ref.name];
+		const args = ref.arguments.map(argument => leanType(types, argument));
+		const constructor = { array: "Array", list: "List", option: "Option", result: "Except" }[ref.constructor];
+		if(constructor) return `(_root_.${constructor} ${(ref.constructor === "result" ? args.reverse() : args).join(" ")})`;
+		if(ref.constructor === "tuple" && args.length >= 2) return `(${args.join(" × ")})`;
 	}
-	if(ref.kind === "named") return namedType(ir, ref.id)?.name ?? "Unit";
-	if(ref.kind === "parameter") return ref.id;
-	const args = ref.arguments.map(argument => leanType(ir, argument));
-	if(ref.constructor === "array") return `Array ${args[0]}`;
-	if(ref.constructor === "option") return `Option ${args[0]}`;
-	if(ref.constructor === "result") return `Except ${args[1]} ${args[0]}`;
-	return `(${args.join(" × ")})`;
+	// An unknown nominal or an unauthenticated HostNull must not become Unit,
+	// a product, or an implicit type variable in an external declaration.
+	return fail("unsupported-host-member-type", "Host member requires a concrete type declared on this target", { ref });
 };
 
-const deliveredType = (ir, declaration) => {
-	const value = leanType(ir, declaration.result.type);
-	if(declaration.resultMode === "promise") return `Task ${value}`;
+const deliveredType = (types, declaration) => {
+	const value = leanType(types, declaration.result.type);
+	if(declaration.resultMode === "promise") return `_root_.Task ${value}`;
 	if(declaration.resultMode === "iterator") return `HostIterator ${value}`;
 	if(declaration.resultMode === "async-iterator") return `HostAsyncIterator ${value}`;
 	return value;
@@ -80,14 +82,15 @@ const ownershipNote = site => {
 	return `${site.ownership}, lifetime ${lifetime}`;
 };
 
-const declarationName = declaration => declaration.kind === "property"
-	? `${declaration.parameters.length === 0 ? "get" : "set"}${pascal(declaration.name)}`
-	: declaration.name;
-
-const emitTarget = (ir, target, resources) => {
+const emitTarget = (ir, target, resources,options) => {
 	const namespace = `LeanBridge.Host.${pascal(target)}`;
+	const types = new Map(resources.map(resource => [resource.id, resource.name]));
+	const names = new Set(["HostIterator", "HostAsyncIterator"]), symbols = new Set();
+	const doc = text => text.replaceAll("/-", "/ -").replaceAll("-/", "- /");
 	const lines = [
 		`/- Generated from Binding IR SHA-256 ${hashBindingIr(ir)}. -/`
+		, ...((options.threadedJavaScript && target==="javascript" || options.phpWasmTaskObjects && target==="php")?["prelude","import Init.System.Promise","import Init.Data.SInt.Basic"]:[])
+		, "set_option autoImplicit false"
 		, `namespace ${namespace}`
 		, ""
 		, "opaque HostIterator (α : Type) : Type"
@@ -96,21 +99,27 @@ const emitTarget = (ir, target, resources) => {
 	];
 	for(const type of resources)
 	{
-		lines.push(
-			`/-- ${type.documentation.summary} Identity uses ${type.host.identity}. -/`,
-			`opaque ${type.name} : Type`,
-			`namespace ${type.name}`,
-			"",
-		);
+		if(names.has(type.name) || type.typeParameters.length)
+			fail("unsupported-host-resource", "Host resource names must be distinct and concrete", { resource: type.id });
+		names.add(type.name);
+		lines.push(`/-- ${doc(type.documentation.summary)} Identity uses ${type.host.identity}. -/`, `opaque ${type.name} : Type`, "");
+	}
+	// Nominal types must all exist before any member can return or borrow a peer.
+	for(const type of resources)
+	{
+		lines.push(`namespace ${type.name}`, "");
 		const declarations = ir.declarations.filter(declaration => declaration.owner === type.id);
 		for(const declaration of declarations)
 		{
+			if(declaration.typeParameters.length) fail("unsupported-host-member-type", "Specialize host members before generation", { declaration: declaration.id });
 			const parameters = declaration.parameters.map(parameter =>
-				`(${parameter.name} : ${leanType(ir, parameter.type)})`,
+				`(${parameter.name} : ${parameter.ownership === "borrow" ? "@& " : ""}${leanType(types, parameter.type)})`,
 			);
-			if(declaration.receiver !== null) parameters.unshift(`(self : @& ${type.name})`);
-			const name = declarationName(declaration);
-			const symbol = `lean_bridge_host_${snake(target)}_${snake(type.name)}_${snake(name)}`;
+			if(declaration.receiver !== null) parameters.unshift(`(self : ${declaration.receiver.ownership === "borrow" ? "@& " : ""}${type.name})`);
+			const name = hostDeclarationName(declaration);
+			const symbol = hostMemberSymbol(target, type, declaration);
+			if(symbols.has(symbol)) fail("host-member-collision", "Host members resolve to the same external symbol", { symbol });
+			symbols.add(symbol);
 			const sites = [
 				...(declaration.receiver === null
 					? []
@@ -121,8 +130,8 @@ const emitTarget = (ir, target, resources) => {
 				, `result ${ownershipNote(declaration.result)}`
 			];
 			lines.push(
-				`/-- ${declaration.documentation.summary} ${sites.join("; ")}. -/`,
-				`@[extern ${JSON.stringify(symbol)}] opaque ${name} ${parameters.join(" ")} : IO (${deliveredType(ir, declaration)})`,
+				`/-- ${doc(declaration.documentation.summary)} ${sites.join("; ")}. -/`,
+				`@[extern ${JSON.stringify(symbol)}] opaque ${name} ${parameters.join(" ")} : _root_.IO (${deliveredType(types, declaration)})`,
 				"",
 			);
 		}
@@ -136,8 +145,9 @@ const emitTarget = (ir, target, resources) => {
  * Generates lean host object adapters from validated semantic input without introducing behavior outside the generated native-language binding pipeline.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Use the pthread SDK's explicit JS initialization root when compiling task imports.
  */
-export const generateLeanHostObjectAdapters = ir => {
+export const generateLeanHostObjectAdapters = (ir,options={}) => {
 	validateBindingIr(ir);
 	const resources = ir.types.filter(type => type.kind === "resource" && type.host !== null);
 	for(const resource of resources)
@@ -159,7 +169,7 @@ export const generateLeanHostObjectAdapters = ir => {
 	for(const target of targets)
 	{
 		const selected = resources.filter(resource => resource.host.targets.includes(target));
-		files[`LeanBridge/Host/${pascal(target)}.lean`] = emitTarget(ir, target, selected);
+		files[`LeanBridge/Host/${pascal(target)}.lean`] = emitTarget(ir, target, selected,options);
 	}
 	const manifest = {
 		schemaVersion: 1

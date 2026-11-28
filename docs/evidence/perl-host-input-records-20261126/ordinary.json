@@ -1,0 +1,130 @@
+{
+  "archives": {
+    "LeanBridge-Runtime": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9",
+    "LeanBridge-TariffQuotes": "567a91d07849344b6114662f5359341caed6acc81d4b13f9fb7cf0f9aa6a23a7"
+  },
+  "bindingIrSha256": "7f8bffccefde396ea6333dfc2b4d3422ab9e71dd9ba23611387b781abb5e4562",
+  "clientSha256": "590c3d40923a79ebc9e64a89c8084ed8826f7c2f679f43a3e89312f2aaebcbad",
+  "hostClientSha256": "cd19b3b06a412a0d79d3044a320a3a09682635c32ac197cceb5a916f9e50b7fc",
+  "observations": [
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "abf839e209b96c172832ba9f1801b414beb89000ead0b026767b3bb3e1374705",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "e41dd41184d417bee92a19e441fa433d5ea7d7a9dfcdd267d22f9febbee93ff6",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "e8a9f526cee6abb5222e68fb6419918e9739128bf05f12ce93e9f49bfacfa7ab",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.38.2"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "447b74704b3a81aea6a4011950b4f4e9f84bde2ecce89f8575c1433c56b82d0f",
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.38.2"
+    }
+  ],
+  "receiptSha256": "10fa40319720c5d8b7d608342a455cd4e80bc9eb1b0b0d6c0d1ccad7ae78f24d",
+  "reviewedSourceSha256": null,
+  "route": "ordinary"
+}

@@ -20,6 +20,24 @@ Stages can finish independently. Plan 1208 stays open until every required cell 
 | Packages and verification | 1240, 1224 | Produce native ecosystem packages and generic local receipts, verify exact installed archives, and retain signed-receipt compatibility. |
 | Documentation and acceptance | 1227, 1225, 1226 | Execute documentation examples, pass the complete matrix and latency/throughput thresholds, and reconcile every remaining gap. |
 
+For identity, effects and async, use the installed consumer records:
+
+- [Resources, objects and functions](../evidence/host-worker-qualification-20261125.md#installed-coverage-after-the-november-26-replays):
+  680 positions across the 17 profiles on both authoring routes. The
+  [ownership review](../evidence/host-lifetime-acceptance-20261127.md)
+  distinguishes moves, shared owners, independent retains and borrowed results.
+- [Effects and failures](../evidence/effect-failure-crosswalk-20261126.md):
+  102 signatures. Synchronous IO returns directly, not through a future. A returned error value,
+  a declared failure, an exception from a callback and a terminal fault have
+  different observable outcomes.
+- [Tasks, cancellation and iteration](../evidence/async-delivery-crosswalk-20261125.md):
+  136 signatures. The records identify the event loop or polling interface,
+  how demand starts a read, who finalizes a cancelled cursor and what happens
+  to a late result.
+
+These results come from the packages named in each record. Task 1224 checks
+the complete matrix against the exact archives selected for a release.
+
 Task 1219 has installed arrays, Lists, products, Option, Except, copied records,
 aliases and variants across all seventeen consumer profiles. The
 [structured-types record](../evidence/structured-types-20260921.md) links the
@@ -41,6 +59,22 @@ every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md),
 [WIT/WASI](../evidence/wit-recursive-callables-20260926.md) also accept
 recursive callback payloads, completing all seventeen consumer profiles.
 Aggregates with explicit resource ownership remain part of the same task.
+
+Host objects travel in the opposite direction from Lean-owned resources: Lean
+calls methods implemented by a consumer's class. [Python host imports](../publish/pypi.md#call-python-objects-from-lean)
+run in installed wheels. [Ruby host imports](../publish/rubygems.md#call-ruby-objects-from-lean)
+run in installed gems: two independent Lean components can call methods on the
+same Ruby instance without exposing a native handle. The [compiler check](../evidence/ruby-host-imports-20261124.md)
+checks which constructor, property and method each Lean function actually reaches.
+For an application-owned class in another runtime, see the
+[Maven](../publish/maven.md#import-an-application-owned-jvm-class),
+[NuGet](../publish/nuget.md#import-an-application-owned-c-class) and
+[CPAN](../publish/cpan.md#call-a-perl-object-from-lean) examples.
+The [JavaScript host-object integration check](../evidence/javascript-host-imports-20261124.md)
+runs two separately compiled Lean components against the same JavaScript object
+and verifies that they receive the same native wrapper in WebAssembly.
+The separate installed npm check runs the generated adapter in Node and
+Chromium with Workshop and Peer sharing one runtime.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),
@@ -102,7 +136,7 @@ coverage; compiler adapters and per-profile package checks must follow.
 
 The shared configuration supplies `modules`, `exports`, `specializations`, `contracts`, `resources`, `arities`, and target metadata validation. Source analysis and builds hash the configuration. npm and CPAN implement finite specialization within their existing type profiles; npm and native builds implement closure arities; CPAN also implements resources and its module/version settings. npm packaging and publication use the sealed settings while preserving the compiled Lean identity. Other configured target settings fail when their projection does not implement them.
 
-[Export contracts](../lean/existing-package.md#declare-export-contracts) now express ownership, lifetime, refinement and boundary-effect requirements for exact exports. Lean checks those constraints against compiled signatures; the request identity, metadata validators, target re-extraction and package model retain them. Current adapters enforce copied values, native call-scoped borrowing, returned leases and synchronous callback effects. Unsupported transfers, anchored lifetimes, checked constructors and async choices fail. Their runtime implementations remain in tasks 1220, 1221, 1222 and 1223; configuration does not complete those tasks.
+[Export contracts](../lean/existing-package.md#declare-export-contracts) express ownership, lifetime, refinement and boundary-effect requirements for specific exports. Lean checks those constraints against compiled signatures; the request identity, metadata validators, target re-extraction and package model retain them. The selected profile must implement the declared contract. For example, a result borrowed from a parameter must expire with that parameter's owner. Declaring the borrow in configuration does not establish that behavior; the installed caller must exercise it.
 
 The [contract acceptance record](../evidence/export-contracts-20260914.md) covers installed npm/CPAN packages, relocated builds, contract tampering, pre-link rejection and unchanged source inputs.
 
@@ -181,3 +215,31 @@ Compare isolated relocated builds, reject stale interfaces and corrupted artifac
 Keep the two documentation workflows: build and publish a Lean package; install and use a published package. Cover every target, keep PHP consolidated, retain package-manager guidance and bookmarks, and execute named example files against candidate archives. Site/toolchain maintenance belongs under Contributing.
 
 Record commands, artifact hashes, covered cells, failures, and remaining work on the owning VO tasks. Completed milestones may be committed locally. Pushes, registry uploads, and deployment require separate approval. Existing platform profiles and release approval requirements remain unchanged.
+
+For the standalone Perl resource and callback checks, dispatch **Perl native packages**
+with `suite=standalone-resources` on the branch under review:
+
+```sh
+gh workflow run perl-consumer.yml --ref BRANCH -f suite=standalone-resources
+```
+
+One runner builds the shared runtime and three components, then installs the same archives
+on threaded and unthreaded Perl 5.36.3 and 5.38.2. The probes call the ordinary-source and
+reviewed components from relocated installs with no compiler on the consumer path. The
+artifact includes the original archives, package receipts, probe sources and all 24 TAP
+transcripts. These 400 assertions cover standalone resource identity, callback borrows,
+leases and returned closures; they do not establish host-object or async support.
+The [four-ABI Perl evidence](../evidence/standalone-perl-resources-20261122.md)
+includes the original hosted ZIP and the verified result.
+
+To retain a successful run, use its run ID, the exact producer commit and a new
+directory. Keep that commit in the local checkout. The first command checks the
+GitHub run and job, downloads the original ZIP and checks its GitHub SHA-256. The
+second rechecks the saved evidence without contacting GitHub. Both compare all
+probes with the producer's tracked sources, validate the package receipts and
+check every TAP transcript.
+
+```sh
+node scripts/verify-perl-resource-run.mjs RUN_ID PRODUCER_SHA /absolute/evidence
+node scripts/verify-perl-resource-run.mjs --offline RUN_ID PRODUCER_SHA /absolute/evidence
+```

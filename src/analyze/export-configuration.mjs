@@ -10,10 +10,12 @@ import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 import { validatePackageMetadata } from "./package-metadata.mjs";
+import { nativeEffects } from "./native-host-effects.mjs";
 import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
 import { projectionCheckedSelection, validateCheckedRefinementSelection } from "./checked-refinement-selection.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
+export const hostImportsFile = "lean-bridge.hosts.json";
 const legacyFile = "lean-bridge.native.json";
 const leanName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const specializationName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/;
@@ -61,8 +63,65 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "taskCallbackPolicies", "iterators", "asyncIterators", "nativeEffects", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
+	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
+		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
+	if(configuration.taskExports !== undefined)
+	{
+		const ts = configuration.taskExports;
+		if(!Array.isArray(configuration.modules) || !configuration.modules.length || !Array.isArray(ts)
+			|| !ts.length || ts.length > 128 || new Set(ts).size !== ts.length
+			|| ts.some(n => typeof n !== "string" || !specializationName.test(n) || (configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(n)))))
+			fail("invalid-export-configuration", "taskExports requires distinct selected Lean names and application modules");
+	}
+	if(configuration.taskIOErrors !== undefined)
+	{
+		const names = configuration.taskIOErrors;
+		if(!Array.isArray(names) || !names.length || new Set(names).size !== names.length || names.some(n => !configuration.taskExports?.includes(n)))
+			fail("invalid-export-configuration", "taskIOErrors must select distinct names from taskExports");
+	}
+	if(configuration.taskCallbackPolicies !== undefined)
+	{
+		const rows = configuration.taskCallbackPolicies, seen = new Set();
+		if(!Array.isArray(rows) || !rows.length || rows.length > 128)
+			fail("invalid-export-configuration", "taskCallbackPolicies requires 1–128 named callback parameters");
+		for(const row of rows)
+		{
+			closed(row, ["declaration", "parameter", "invocation"], "taskCallbackPolicies");
+			const {declaration, parameter, invocation} = row;
+			if(!configuration.taskExports?.includes(declaration) || typeof parameter !== "string"
+				|| !parameter.length || parameter.length > 256 || !["once", "many"].includes(invocation)
+				|| seen.has(declaration + ":" + parameter))
+				fail("invalid-export-configuration", "Select each task callback parameter once with invocation once or many");
+			seen.add(declaration + ":" + parameter);
+		}
+	}
+	if(configuration.nativeEffects !== undefined)
+	{
+		const allowed = configuration.nativeEffects;
+		if(!Array.isArray(configuration.modules) || !configuration.modules.length
+			|| !Array.isArray(allowed) || new Set(allowed).size !== allowed.length || allowed.some(c => !nativeEffects.includes(c)))
+			fail("invalid-export-configuration", "nativeEffects requires selected modules and distinct supported capabilities: " + nativeEffects.join(", "));
+	}
+	const opens = new Set();
+	for(const field of ["iterators", "asyncIterators"])
+	{
+		const rows = configuration[field];
+		if(rows === undefined) continue;
+		if(!Array.isArray(rows) || !rows.length || rows.length > 128 || !Array.isArray(configuration.modules) || !configuration.modules.length)
+			fail("invalid-export-configuration", field + " requires selected modules and one or more pull protocols");
+		for(const row of rows)
+		{
+			closed(row, ["open", "next", "close"], field);
+			if([row.open, row.next, row.close].some(n => typeof n !== "string" || !specializationName.test(n))
+				|| new Set([row.open, row.next, row.close]).size !== 3 || opens.has(row.open)
+				|| configuration.taskExports?.includes(row.open)
+				|| (configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(row.open))))
+				fail("invalid-export-configuration", field + " requires distinct open, next and close names and an unambiguous selected factory");
+			opens.add(row.open);
+		}
+	}
 	if(configuration.ownedAggregates !== undefined)
 	{
 		try
@@ -134,6 +193,8 @@ export const validateExportConfiguration = configuration => {
 					const { parameters, result } = site.callable;
 					if(parameters !== undefined && (!Array.isArray(parameters) || parameters.length > 16))
 						fail("invalid-export-configuration", `Contract ${name} callable requires at most 16 ordered parameter sites`);
+					if(result?.callable && !parameters?.length)
+						fail("invalid-export-configuration", `Contract ${name}: a staged callback result requires its nonempty outer parameter list`);
 					for(const site of parameters ?? []) sites.push({ site, parameters, depth: depth + 1 });
 					if(result !== undefined) sites.push({ site: result, parameters, depth: depth + 1 });
 				}
@@ -228,7 +289,7 @@ export const validateExportConfiguration = configuration => {
 				continue;
 			}
 			closed(settings, target === "cpan" ? ["module", "version"]
-				: target === "wit-wasi" ? ["name", "version", "hostCallbacks"]
+				: target === "wit-wasi" ? ["name", "version", "hostCallbacks", "asyncAbi"]
 					: ["name", "version"], `targets.${target}`);
 			if(target === "npm")
 			{
@@ -245,6 +306,11 @@ export const validateExportConfiguration = configuration => {
 			}
 			for(const [field, value] of Object.entries(settings))
 			{
+				if(target === "wit-wasi" && field === "asyncAbi")
+				{
+					if(value !== "canonical") fail("invalid-export-configuration", "targets.wit-wasi.asyncAbi must be canonical");
+					continue;
+				}
 				if(target === "wit-wasi" && field === "hostCallbacks")
 				{
 					if(typeof value !== "boolean")
@@ -305,8 +371,9 @@ export const exportContractFor = (contracts, name) => contracts && Object.hasOwn
  *
  * @param type - Compiler-owned structural runtime type.
  * @param result - Whether this is a returned value instead of a call argument.
+ * @param retained - Whether an inline signature edge reaches an owned graph through its nominal table.
  */
-export const exportContractOwnership = (type, result = false) => ["resource", "callback", "owned-graph"].includes(type.kind)
+export const exportContractOwnership = (type, result = false, retained = false) => retained || ["resource", "callback", "owned-graph"].includes(type.kind)
 	? { ownership: result ? "lease" : "borrow", lifetime: { scope: result ? "explicit" : "call", anchor: null } }
 	: { ownership: "copy", lifetime: null };
 
@@ -317,7 +384,9 @@ export const exportContractOwnership = (type, result = false) => ["resource", "c
  * @param ownedAggregates - Include ownership-aware boundary acquisition and handle reads.
  */
 export const exportContractEffects = (projection, ownedAggregates = false) => {
-	const effects = projection.parameters.some(parameter => parameter.type.kind === "callback") ? ["fails", "host-call"] : [];
+	const effects = projection.parameters.some(({ type }) => type.kind === "callback"
+		|| (type.kind === "owned-graph" && type.types.some(def => def.kind === "record" && def.fields.some(field => field.type.kind === "callback"))))
+		? ["fails", "host-call"] : [];
 	if(ownedAggregates)
 	{
 		if(projection.parameters.some(parameter => exportContractOwnership(parameter.type).ownership !== "copy")) effects.push("reads-resource");

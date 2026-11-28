@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-native-sync-io-and-task-interoperation",
+  "nodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "platform": "Linux x86-64, glibc 2.36",
+  "toolchains": {
+    "lean": "4.32.2",
+    "c": "GCC 12.2.0",
+    "python": "CPython 3.11.16",
+    "sharedRuntimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+    "cpp": "G++ 12.2.0 (C++20)",
+    "rust": "rustc and Cargo 1.90.0"
+  },
+  "sourceFixture": "tests/fixtures/native-sync-io",
+  "consumers": "tests/fixtures/native-sync-io-clients",
+  "peerFixture": "tests/fixtures/native-sync-resource",
+  "checks": [
+    "C11, C++20, CPython and Rust each install an ordinary and a reviewed standalone IO / EIO / BaseIO package. Effects are checked against the filesystem grant. No Task, iterator, or host import is needed.",
+    "The installed clients distinguish an actual filesystem IO failure, a thrown EIO error carrying either arm of an owned string/integer result, the same value returned normally (the C++ and Rust clients include an embedded NUL), and a refused host call. Successful calls show ordered state changes and leave no owned identities.",
+    "C++ copied-only calls have no dispatcher or task headers in their package. Rust's resolved standalone provider has neither enabled features nor dependencies; async-io, polling and futures-core are absent.",
+    "In each mixed-resource client a synchronous component borrows or returns a live Lean Badge, and a real task in an independently installed component mutates and returns the same Badge. Throwing that Badge as a typed error preserves its identity; the error lease remains usable and cloneable. Stale access fails and all leases are released.",
+    "The two Rust peers depend on the exact same provider archive. Only the actual task component enables async. The C++ client also checks that invalid cold input opens no dispatcher and that worker-thread disposal is drained on the owner thread."
+  ],
+  "reproduce": {
+    "build": "LEAN_BRIDGE_NATIVE_SYNC_TEST=1 LEAN_BRIDGE_NATIVE_SYNC_EVIDENCE=/absolute/path/to/new-releases node --test --test-concurrency=1 tests/helpers/native-sync-io.mjs",
+    "replay": "LEAN_BRIDGE_NATIVE_SYNC_REPLAY=/absolute/path/to/original-releases LEAN_BRIDGE_NATIVE_SYNC_EXPECTED=docs/evidence/native-sync-cpp-rust-20261122.json node --test --test-concurrency=1 tests/helpers/native-sync-io.mjs",
+    "buildPeers": "LEAN_BRIDGE_NATIVE_SYNC_MIXED_TEST=1 LEAN_BRIDGE_NATIVE_SYNC_MIXED_EVIDENCE=/absolute/path/to/new-peers node --test --test-concurrency=1 tests/helpers/native-sync-peer.mjs",
+    "replayPeers": "LEAN_BRIDGE_NATIVE_SYNC_MIXED_REPLAY=/absolute/path/to/original-peers LEAN_BRIDGE_NATIVE_SYNC_MIXED_EXPECTED=docs/evidence/native-sync-cpp-rust-20261122.json node --test --test-concurrency=1 tests/helpers/native-sync-peer.mjs",
+    "tools": "Building requires the pinned Lean installation (LEAN_BRIDGE_LEAN_PREFIX), C/C++ compilers, CMake, pkg-config, CPython headers, and Cargo with an offline crate cache for the pinned lockfiles. Replaying requires the original package sets, consumer toolchains and the offline cache, but no Lean compiler."
+  },
+  "scope": "Local Linux installed consumers. The archives are not registry publications. Other languages, hosts, callback payload families and async protocols require their own evidence; these results do not close any of the three VO nodes.",
+  "acceptanceSha256": "1777dc83c9c4a0109f8b22dbb746c1602d5655d8056f0a233a298e1e9a374ebe",
+  "mixedAcceptanceSha256": "c743d7837c62da021932cc4319a76bb40c81296242eaae53baa3add2c261d7d5",
+  "routes": [
+    {
+      "archives": [
+        {
+          "bytes": 51316121,
+          "path": "archives/journal-1.0.0-c.tar.gz",
+          "sha256": "c986d1328f7c22cc57056818dcf38d046d45ddca8ec3cfdf4a82d17a8a9ad4a2"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "15bbb0c9f1a7a7a1b1d407f3eb3e691a3acb794e53fdf736efc39859645b2969",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-c-io-v1",
+      "receiptSha256": "84c343381d9704d0a12bee03c87246b1e9ebe64ec7e14f5687995254bd1cf893",
+      "route": "ordinary",
+      "sourceTreeSha256": "5622e17de5d82ffc1f473141f213b202ae99839cc04b5d511abfe141be990c62",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51316159,
+          "path": "archives/journal-1.0.0-c.tar.gz",
+          "sha256": "a70217c4c581f8bc81404f46b30c3785126d377f77a7c53baa2cbc955eb48c3b"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "15bbb0c9f1a7a7a1b1d407f3eb3e691a3acb794e53fdf736efc39859645b2969",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-c-io-v1",
+      "receiptSha256": "c1f04294f07d7fc4c771ede91257bc94c95ff87717cf0bdb9b9bb59f5b9a8858",
+      "route": "reviewed",
+      "sourceTreeSha256": "4b4814aa352c9e9247241512e918d41d6aa86d402d04218523217cce442021c0",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 19714,
+          "path": "archives/lean_journal-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "a5616acf978be28e8ba8903961c98e9befb54e913abb0d6531e890b91d2583dc"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "24e2400c59d7f1f9f0b1f22f74a087a75369796f6aab57c8f7f005a4b81a9d0b",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-python-io-v1",
+      "receiptSha256": "1f0bd32c4998386e8750cdbd2d2f08582a4b7a81b47fe9b7e12c35ca66c8488a",
+      "route": "ordinary",
+      "sourceTreeSha256": "5622e17de5d82ffc1f473141f213b202ae99839cc04b5d511abfe141be990c62",
+      "target": "pypi"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 19751,
+          "path": "archives/lean_journal-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "f2cea6eba35e6acd24ff9a89fac0f8415855f0743e5367b1165fec2baac10670"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "24e2400c59d7f1f9f0b1f22f74a087a75369796f6aab57c8f7f005a4b81a9d0b",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "profile": "native-python-io-v1",
+      "receiptSha256": "cdcce1147531a978f61be853b8caac9fc84b78e0f51816cd0b05d4bd87cfb795",
+      "route": "reviewed",
+      "sourceTreeSha256": "4b4814aa352c9e9247241512e918d41d6aa86d402d04218523217cce442021c0",
+      "target": "pypi"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51317227,
+          "path": "archives/journal-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "75b74da332f038951c4e391dbc60f1774b5702a970024f09a51f574127024d7f"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "7bdd844574dc356d0642c39393a7c0d49bed72d6c8cd4c448fcc84b910810998",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "installed": {
+        "dispatcher": false,
+        "publicSupport": "sync_v1",
+        "taskHeaders": false
+      },
+      "profile": "native-cpp-io-v1",
+      "receiptSha256": "e8de1b9fc5806b372892ed589d9c92ad9a1b441d11ee8415d042699b31f6a188",
+      "route": "ordinary",
+      "sourceTreeSha256": "5622e17de5d82ffc1f473141f213b202ae99839cc04b5d511abfe141be990c62",
+      "target": "cpp"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51317290,
+          "path": "archives/journal-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "8addada9b5284e867b49b8aacb69762bcc9fa86d1e28a22d55fa7b777d8db0c2"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "7bdd844574dc356d0642c39393a7c0d49bed72d6c8cd4c448fcc84b910810998",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "installed": {
+        "dispatcher": false,
+        "publicSupport": "sync_v1",
+        "taskHeaders": false
+      },
+      "profile": "native-cpp-io-v1",
+      "receiptSha256": "a8f0ff9f02c281be8af893857a1485bc1972a9a96e0829067fa0bc34f0ca8c21",
+      "route": "reviewed",
+      "sourceTreeSha256": "4b4814aa352c9e9247241512e918d41d6aa86d402d04218523217cce442021c0",
+      "target": "cpp"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 21411,
+          "path": "archives/journal-rs-1.0.0.crate",
+          "sha256": "0545bc8118c3a3dcd512031fe2b36fcfc2d18e1523f07b6451a21d2d0d7f46d9"
+        },
+        {
+          "bytes": 51312225,
+          "path": "archives/lean-bridge-task-runtime-1.0.0-rfc0e4783649c5e34788c1fabf424245172e72b9043b161e6843c9f388b1c4b95.crate",
+          "sha256": "2c3936f519b6d4f8101c34ffabded95f833bc2688b0717727aecdf52f1c148a5"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "4cd067ea2b0a387b7a5e114bef05398c152d72b8965b4ebd64bf57acc2cc5330",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "installed": {
+        "asyncReactor": false,
+        "callType": "CallError",
+        "channelDriver": false,
+        "runtimeDependencies": [],
+        "runtimeFeatures": []
+      },
+      "profile": "native-rust-io-v1",
+      "receiptSha256": "dafedd7a981f0227762603b0b5afc941a9965a897ddb34c6241e1c9951ba0b94",
+      "route": "ordinary",
+      "sourceTreeSha256": "5622e17de5d82ffc1f473141f213b202ae99839cc04b5d511abfe141be990c62",
+      "target": "cargo"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 21412,
+          "path": "archives/journal-rs-1.0.0.crate",
+          "sha256": "0b9129321a199703a679b75d4ab86d6d32994e3274f792b07f584c0a60e53ecf"
+        },
+        {
+          "bytes": 51312225,
+          "path": "archives/lean-bridge-task-runtime-1.0.0-rfc0e4783649c5e34788c1fabf424245172e72b9043b161e6843c9f388b1c4b95.crate",
+          "sha256": "2c3936f519b6d4f8101c34ffabded95f833bc2688b0717727aecdf52f1c148a5"
+        }
+      ],
+      "bindingIrSha256": "a1184ea68d030deb3e6d9adc8293c6551cabbb557724ddf22684345f92a1cb5a",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "4cd067ea2b0a387b7a5e114bef05398c152d72b8965b4ebd64bf57acc2cc5330",
+      "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+      "installed": {
+        "asyncReactor": false,
+        "callType": "CallError",
+        "channelDriver": false,
+        "runtimeDependencies": [],
+        "runtimeFeatures": []
+      },
+      "profile": "native-rust-io-v1",
+      "receiptSha256": "1815c273de16f918947de4c8f15bf3256ef2baa4e0e49acc3b752f684890785f",
+      "route": "reviewed",
+      "sourceTreeSha256": "4b4814aa352c9e9247241512e918d41d6aa86d402d04218523217cce442021c0",
+      "target": "cargo"
+    }
+  ],
+  "peers": [
+    {
+      "consumerSha256": "1723c6105c132919c7a6387443e071b7b74bbc1a98cc1bd20e5d18bebe6be146",
+      "nominal": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sync": {
+        "archives": [
+          {
+            "bytes": 51326920,
+            "path": "archives/lease-sync-1.0.0-cpp.tar.gz",
+            "sha256": "7158a1a0094f962e743996e390bb4dde4118a63e6279ec2884a8e9864df3f683"
+          }
+        ],
+        "bindingIrSha256": "0dde9c75f9f50d9d7d22bb9b4df2d1c6e001a1706a4466658794bcef186d5c42",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+        "profile": "native-cpp-io-v1",
+        "receiptSha256": "4739e454e1633a75a5aaf8b6f4ac050be71af5bc7ee330618dfe415d71522cc1",
+        "reviewedSourceSha256": null,
+        "sourceTreeSha256": "f7d9f219655deadd9beb8074c49c5d2939c2e122cf5d2696f2e01531adbd4e51"
+      },
+      "target": "cpp",
+      "task": {
+        "archives": [
+          {
+            "bytes": 51330296,
+            "path": "archives/lease-task-1.0.0-cpp.tar.gz",
+            "sha256": "c01a76712cdc920ae83968b51a730289ecde2e62dbcf63df1e502a423e696137"
+          }
+        ],
+        "bindingIrSha256": "b2227b4b0a97a9b1132028f48a366a211911955736d5cbacf7e89887157a5843",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+        "profile": "native-cpp-task-v1",
+        "receiptSha256": "82d6ae1d876184f446200921b364d934427f31399fdd92c6b5b0c958cb46e0d4",
+        "reviewedSourceSha256": null,
+        "sourceTreeSha256": "5be749ee57d1479d6fa12f37e8dc38cdb74aa3007d5af7e1f53a13f212fd56d6"
+      }
+    },
+    {
+      "consumerSha256": "b7680da025d2fe0cff882f60a97cf7fedf006a22cd5ed0320c2b4dbdc1c9c05f",
+      "nominal": "resource:Shared.Badge/62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+      "route": "reviewed",
+      "runtimeFeatures": [
+        "async",
+        "default"
+      ],
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sync": {
+        "archives": [
+          {
+            "bytes": 51312225,
+            "path": "archives/lean-bridge-task-runtime-1.0.0-rfc0e4783649c5e34788c1fabf424245172e72b9043b161e6843c9f388b1c4b95.crate",
+            "sha256": "2c3936f519b6d4f8101c34ffabded95f833bc2688b0717727aecdf52f1c148a5"
+          },
+          {
+            "bytes": 24653,
+            "path": "archives/lease-sync-1.0.0.crate",
+            "sha256": "e430c020698a691dbfbc899bf97401bf0e8b88152831b740304754ab156c8e23"
+          }
+        ],
+        "bindingIrSha256": "0dde9c75f9f50d9d7d22bb9b4df2d1c6e001a1706a4466658794bcef186d5c42",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+        "profile": "native-rust-io-v1",
+        "receiptSha256": "9cd57814775ee7887277dd186688e0bf78b7c868e52c6e8228e957743eb9bdc3",
+        "reviewedSourceSha256": "d7af0b0de42c19c2f0fdc524134817d250d94571c5a5f1d4622aa4635477e801",
+        "sourceTreeSha256": "dc8f5980a86ed57d391ed4b83efac32396b2a32cf71c6c677179a89c9e008778"
+      },
+      "target": "cargo",
+      "task": {
+        "archives": [
+          {
+            "bytes": 51312225,
+            "path": "archives/lean-bridge-task-runtime-1.0.0-rfc0e4783649c5e34788c1fabf424245172e72b9043b161e6843c9f388b1c4b95.crate",
+            "sha256": "2c3936f519b6d4f8101c34ffabded95f833bc2688b0717727aecdf52f1c148a5"
+          },
+          {
+            "bytes": 26258,
+            "path": "archives/lease-task-1.0.0.crate",
+            "sha256": "37313d4323e4556b1012fe21acdf5cec55473d4d61fc94eb95ad9abcba4b2617"
+          }
+        ],
+        "bindingIrSha256": "b2227b4b0a97a9b1132028f48a366a211911955736d5cbacf7e89887157a5843",
+        "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "extractorSha256": "3afba0931ad13be64ca2b7b060b8c9ba8dcb201a90091bf33332f3eeae07d92d",
+        "profile": "native-rust-task-v1",
+        "receiptSha256": "31662f82fc852ea988af80c8b67c5587e1c3c64d6d1c57e459ee5cf4ddc673d0",
+        "reviewedSourceSha256": "46f304a138ac96d9d84f5af1c1c050ef5b1ab5ba8200f5f2d19ba6f512b4ac19",
+        "sourceTreeSha256": "eb6ee10d77f100758b71eddbb86d65a7c15e0c03b3052bf024503bad27399a26"
+      }
+    }
+  ]
+}

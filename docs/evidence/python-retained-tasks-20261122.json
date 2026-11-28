@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "profile": "native-python-task-v1",
+  "platform": "Linux x86-64, glibc 2.36; Lean 4.32.2; CPython 3.11.16 and 3.12.14.",
+  "fixture": "tests/fixtures/python-retained-tasks",
+  "validation": "tests/helpers/python-retained-task-installed.mjs",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "extractorSha256": "665116b54443662a0b4a9d6c708b4fb805f092cea80e970cef8223f52a41fe8e",
+  "bindingIrSha256": "ccc6e924a5a284bfcd28b802231b876c0bcaeb265755305ab5f2739ccb69483e",
+  "consumerSha256": "a7e58ac80db9d0abb0cb308a4b2480c5577d58168b7ede764b034c79c5e52def",
+  "lifecycleObserverSha256": "febdccfb42c24b323529ad5606c2813f70e29f4d29aa0244ce7a8dd39e170e6e",
+  "sourceTrees": {
+    "ordinary": "ae6e326a07296a749f448027c562f585b885ee695d4a5d2f69198253b819afba",
+    "reviewed": "b41ce58f4f10359a50fd2fc289027cc8ff875315207c2bd26be71c4f90a1b3ee"
+  },
+  "sharedRuntime": {
+    "bytes": 51310274,
+    "path": "archives/lean_bridge_host_runtime-1+137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+    "sha256": "a3a2cf70d7b200c731c9f9a128a524a5efd5797da48bf342bf4e9e8ac3267a00"
+  },
+  "wheels": [
+    {
+      "interpreter": "cpython-311",
+      "route": "ordinary",
+      "receiptSha256": "1285d80d91febe07c7014651141b4cd08dcd435afb7051beb30887877ad04edc",
+      "componentIdentity": "adb95cee2e65b0d07f22af423d2e28de9b056f5b433383ee7368411fcd79b1da",
+      "bytes": 61143,
+      "path": "archives/lean_retained-1.0.0-cp311-cp311-linux_x86_64.whl",
+      "sha256": "397069d7d8d3f3f3ee6c680c316c9300f461da5635a80ea1a03bb15613bda476"
+    },
+    {
+      "interpreter": "cpython-311",
+      "route": "reviewed",
+      "receiptSha256": "8edcb88044e2b27a58d0afd1cc936f5f2e05a6de879e09b83ac5d2d6886f358d",
+      "componentIdentity": "efb0ae98a2ad98f74633ff12a87e459599a0e88c9b256de9b03e683e58a6a73b",
+      "bytes": 61183,
+      "path": "archives/lean_retained-1.0.0-cp311-cp311-linux_x86_64.whl",
+      "sha256": "838e472a02c392ce3ec38a412ce15b70d5020a4f4c944494f265a7c6b5b48baf"
+    },
+    {
+      "interpreter": "cpython-312",
+      "route": "ordinary",
+      "receiptSha256": "4baaab5f42d97929e782707df0bdba160641fa0c2c2f819864b046c1242013be",
+      "componentIdentity": "22a6f6ea04fe8b51e5b78c1ca632dd72f9c1c02308ac18009fd65bd0a78048a4",
+      "bytes": 62003,
+      "path": "archives/lean_retained-1.0.0-cp312-cp312-linux_x86_64.whl",
+      "sha256": "0ee7048ea2b39ead4951d3e8a0617f7a8b419c97460f167e612fd91861422575"
+    },
+    {
+      "interpreter": "cpython-312",
+      "route": "reviewed",
+      "receiptSha256": "f411beb33bb6faca5d118295514548be8dcdcfaa71257cb001c785bd1bedfb87",
+      "componentIdentity": "18e9fc78c17fe894968c93dff8f57ffcd810ea9f34b830220985154b9e3d1a05",
+      "bytes": 62048,
+      "path": "archives/lean_retained-1.0.0-cp312-cp312-linux_x86_64.whl",
+      "sha256": "110b08af86deb67cf5a3923ebeaa40b9a2f0c8fc2ca20417f8ded716f0b0c377"
+    }
+  ],
+  "observations": [
+    "A separate producer-free replay for each Python ABI verified both original receipts and source snapshots, reinstalled all four component/runtime pairs offline, and reran their retained consumers and broker observers. The example extracted from the consumer documentation printed start!! on all four installs. Neither replay invoked Lean.",
+    "The public CLI built each ordinary source project and independently built each reviewed API. Exact package-set verification, source inventories, review digests and offline pip installs passed. A relocated consumer ran without Lean, pip, or the release directories on PATH.",
+    "A real Lean factory called Python, waited for a second Lean worker that called Python, then called back from the delivered task. All three callbacks ran on the original asyncio thread. Synchronous reentry, twelve simultaneous owner scopes and one task exchanging all nineteen copied scalar types in both directions passed.",
+    "Rethrowing the original Lean IO.Error restored the identical Python exception, including when thrown during startup. An independently constructed IO.Error with the same text raised LeanTaskError instead. A caught callback, returned Except, typed EIO startup failure, terminal IO failure and host type rejection remained distinct.",
+    "Closing a RetainedCallback during its first invocation let that invocation finish and rejected the second. A closure saved in Lean could not call Python after settlement; its Python callable was collected. The forked child rejected use of the inherited runtime without disturbing its parent.",
+    "A readable callback eventfd established that a real worker was waiting before cancellation. Cancellation prevented user-code execution and a factory that produced its inner task after cancellation still cancelled it. The entire warmed /proc/self/fd map returned to baseline.",
+    "Separate consumer processes observed zero broker leases after asyncio.run shutdown and after deliberate native runtime retirement with a queued request. The pre-guard wheel did invoke a callback after retirement; the corrected packages did not.",
+    "Fresh Lean interfaces rejected a pure or multi-argument callback, a non-scalar callback, a scheduler not admitted by the target, and a false terminal IO.Error declaration. A non-Python Task carrying Except String Nat without the new capability fields still compiled and returned its result as data.",
+    "An independent audit recomputed all four embedded component identities from the generated sources, exact compiler provenance and runtime version. Installed Python loaders, stubs, and native binary hashes matched. For existing Timers task/stream and Workshop host-object contracts, generated output was byte-identical to the preceding generator."
+  ],
+  "replay": "Set LEAN_BRIDGE_HOST_PYTHON to the matching CPython interpreter and LEAN_BRIDGE_PY_CALLBACK_REPLAY to its retained cpython-311/ or cpython-312/ directory. Run node --test --test-concurrency=1 --test-name-pattern 'offline ordinary' tests/helpers/python-retained-task-installed.mjs. The original sources, wheels, receipts, consumer, lifecycle observer and acceptance.json are required; no Lean build runs.",
+  "scope": "Local installed evidence for unary, synchronous Python callbacks with copied scalar inputs and replies, retained by a selected Lean task until its owner settles or cancels. Arbitrary bound host objects on workers, async Python replies, callbacks inside streams or copied containers, and other host languages are not covered. This is not hosted CI or registry publication."
+}

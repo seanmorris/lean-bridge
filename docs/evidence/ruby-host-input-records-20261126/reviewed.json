@@ -1,0 +1,34 @@
+{
+  "archives": [
+    {
+      "bytes": 52637184,
+      "path": "archives/tariff-quotes-1.0.0-x86_64-linux.gem",
+      "sha256": "44253e569fa80c4c6246089b02fe98bb393316b2ab1ce642001be43626fd6624"
+    }
+  ],
+  "bindingIrSha256": "4dc29c72c4191e9e40d91dc8f19e5b22959c9cb7082dc3364e8cd00f0e454d21",
+  "clientSha256": "9b7738d7804cb043b6c5440bd745f9e7dbe235eb25299d36c4d00ab2ca4ee075",
+  "hostClientSha256": "2d589ede6e6f69aeb88353983db0817f4581e7c9bef4d6c782033a0c58a11a24",
+  "observed": {
+    "after": 1,
+    "baseline": 1,
+    "held": 9,
+    "hostInput": {
+      "direct": 1,
+      "expired": 1,
+      "leased": 1,
+      "recovered": 1,
+      "reentrant": 1,
+      "validation": 1
+    },
+    "kept": 42,
+    "recovered": 42,
+    "stageCalls": 1,
+    "staged": 44,
+    "staleVisits": 0
+  },
+  "receiptSha256": "9441734faf77bcf0eb6833528b824d17229cb09b8f28f8a9e1ab6d44b545a6aa",
+  "reviewedSourceSha256": "06e3bca440b81160b0c06e47c953e2e26cd438766e1ce1b50e8273bac4226aae",
+  "route": "reviewed",
+  "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+}

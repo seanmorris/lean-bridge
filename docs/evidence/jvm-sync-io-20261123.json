@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-jvm-synchronous-lean-io",
+  "date": "2026-11-23",
+  "planNode": 1222,
+  "scope": "Locally installed Linux x86-64 Java and Kotlin Maven packages on Lean 4.32.2, JDK 22.0.2, Kotlin 2.2.0, Maven 3.9.11, GCC 12.2.0 and glibc 2.36. The release default glibc floor is 2.38. This records the synchronous copied-value delivery profile; not registry publication, full CI, resource exchange or asynchronous delivery.",
+  "checks": [
+    "Separate ordinary-source and reviewed Journal JAR/POM pairs plus an independent Clock peer. Verified the archives, every JAR payload, coordinate repository sidecars, compiler evidence and compiled Kotlin metadata. Offline Maven installed and resolved both packages from a private cache containing only third-party prerequisites. Both Java and Kotlin were compiled independently and executed from relocated installed files without Lean or Maven on PATH.",
+    "Java covers all nineteen scalar types, exact wide integers, UTF-8 including NUL and supplementary characters, malformed input before runtime initialization, byte-array copies, nested results and typed errors, real file writes and recoverable IO failure. Kotlin checked non-null signatures, typed result/exception payloads and two negative compiler diagnostics. Both documentation examples ran.",
+    "Ordinary synchronous methods work from Java platform and virtual threads without a scheduler API. Comparing Linux thread IDs from inside both separately packaged Lean modules identifies the same dedicated owner. Across two import orders, 24 concurrent increments did not lose writes. A fresh classloader reused the component. The broker reported one runtime, two attached and initialized components, and zero live identities.",
+    "Direct retirement and a deliberately injected invalid native result discriminant both prevent further calls. Two separate integrity checks distinguish changed bytes from an independently authenticated but different build of the required process-wide owner, even after a compatible peer has initialized.",
+    "The producer rejected a missing filesystem grant, an unsupported task selection and a changed reviewed signature without a handoff. An independently packed and offline-installed npm CLI recreated the original Journal JAR and POM at different paths, with byte-identical package set, native manifest, binding IR and elaboration evidence."
+  ],
+  "reproduce": [
+    "Use a clean directory per run. Point LEAN_BRIDGE_LEAN_PREFIX, JAVA_HOME, LEAN_BRIDGE_JAVA, LEAN_BRIDGE_JAVAC, LEAN_BRIDGE_KOTLIN_HOME, LEAN_BRIDGE_KOTLINC and LEAN_BRIDGE_MAVEN at the pinned tools. On this glibc 2.36 test host set LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36. Set TMPDIR to a filesystem with room for native JARs and their extracted runtime.",
+    "Warm an isolated Maven cache containing only third-party tools. With a fresh LEAN_BRIDGE_JVM_IO_M2_SEED run mvn -B -s tests/fixtures/jvm-sync-io/settings.xml -f tests/fixtures/jvm-sync-io/prerequisites.xml -Dmaven.repo.local=$LEAN_BRIDGE_JVM_IO_M2_SEED org.apache.maven.plugins:maven-install-plugin:3.1.4:help org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath. The actual package install and classpath resolution use Maven offline.",
+    "LEAN_BRIDGE_JVM_IO_BUILD=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-io-installed.mjs",
+    "LEAN_BRIDGE_JVM_IO_POLICY=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-io-installed.mjs",
+    "LEAN_BRIDGE_JVM_IO_CAPTURE=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-io-acceptance.mjs",
+    "LEAN_BRIDGE_JVM_IO_ORIGINAL=$EVIDENCE LEAN_BRIDGE_JVM_IO_REPRO=$SECOND node --test --test-concurrency=1 tests/helpers/jvm-io-installed.mjs",
+    "LEAN_BRIDGE_JVM_IO_REPLAY=$EVIDENCE LEAN_BRIDGE_JVM_IO_EXPECTED=docs/evidence/jvm-sync-io-20261123.json node --test --test-concurrency=1 tests/helpers/jvm-io-acceptance.mjs"
+  ],
+  "acceptanceSha256": "227a68db405fbd8eb1fac4ca2b47278a52c244834599886766f10494c52d366a",
+  "independentProducer": {
+    "artifacts": [
+      {
+        "bytes": 51377770,
+        "path": "archives/journal-io-1.2.0-rc.1.jar",
+        "sha256": "ca6e7472f88b80d9d16d45521e29ac9267186ffa8a4fe357a3af89eeb1333b8f"
+      },
+      {
+        "bytes": 619,
+        "path": "archives/journal-io-1.2.0-rc.1.pom",
+        "sha256": "1697308484b1bf1aaab0ff770f80e41d37561b7bd6085d309164df618cecd188"
+      }
+    ],
+    "cliArchiveSha256": "1341c5c7ed9d7e9e421de01c4d7c0391710688e9d020b4553499baf9427bc8e8",
+    "receiptSha256": "713283d67d5bd23648b461a38d858a83f2f0a3c0ecaedc6de6ca5ca316db7967"
+  },
+  "installed": {
+    "clients": {
+      "Bad.kt": "351a76ab9fc11a9c90946c07af0b4ba2d6379f2922052f4c53d482f3d0eb7b28",
+      "Example.java": "c9f6b618bc373ac249d1d3a7bf200b452b50aebe0fe31bc8b82602e4b6a5dfe1",
+      "Example.kt": "f8d0327ae34823db685313bc4b13766ba6dd54e86298cd10070390515cf1431e",
+      "Installed.java": "659142ca2fa7ba621266df15cab0c7ccba4aa00bda5561985621342cb09df717",
+      "Installed.kt": "9854fbe9869e26763cba03f6d72ac714523afd795642e1ae289c515427efa4d3",
+      "Observer.java": "31dec55fc07de3316c915cf4c477c8d4521556d2f87115db7a2389d0e5f4812d",
+      "RejectTamper.java": "0f684c64556ca2cd5a2c2438602d7aa0efd72e670569dbbde2f29b09e8228e30",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439",
+      "verify_jar.py": "7de88d6aee7465d84f1b567b686d603c13e0ee4c4b335e1de880272e2d6fe1d0"
+    },
+    "packages": [
+      {
+        "info": {
+          "bindingIrSha256": "d411d02b386357111bbd30c2973bac33ce5a517d265329d288d0bd1d45d5ebab",
+          "compiler": "javac 22.0.2",
+          "componentId": "journal@1.0.0",
+          "componentIdentity": "ef2695aa8150812da9cdcb8aa52e871e4ce015f57263c0c3149dc71a413f32df",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_7ad40b4d4a543383d842c8c705ca3d25423ac9c229781ddd330a8c63e07d8449.so": "de81d64cbd8e4ea9ae86b7576850234af512080d35341c49038c7fd75babcabc",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "name": "com.acme:journal-io",
+          "namespace": "org.leanbridge.journal",
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 40,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "jar": {
+          "bytes": 51377770,
+          "path": "archives/journal-io-1.2.0-rc.1.jar",
+          "sha256": "ca6e7472f88b80d9d16d45521e29ac9267186ffa8a4fe357a3af89eeb1333b8f"
+        },
+        "name": "com.acme:journal-io",
+        "pom": {
+          "bytes": 619,
+          "path": "archives/journal-io-1.2.0-rc.1.pom",
+          "sha256": "1697308484b1bf1aaab0ff770f80e41d37561b7bd6085d309164df618cecd188"
+        },
+        "receiptSha256": "713283d67d5bd23648b461a38d858a83f2f0a3c0ecaedc6de6ca5ca316db7967",
+        "reviewedSourceSha256": null,
+        "route": "ordinary",
+        "sourceTreeSha256": "b3b6bc26b3cd777785c60e92e9e20a5875ec27922b33cc7afe2b4568e83d62f4"
+      },
+      {
+        "info": {
+          "bindingIrSha256": "d411d02b386357111bbd30c2973bac33ce5a517d265329d288d0bd1d45d5ebab",
+          "compiler": "javac 22.0.2",
+          "componentId": "journal@1.0.0",
+          "componentIdentity": "f077951a80a6e0f07a857ed8fb6bc0e4a8a498ead6dfa1bfdc107c2029f7bb7c",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_7ad40b4d4a543383d842c8c705ca3d25423ac9c229781ddd330a8c63e07d8449.so": "cbf7b76909ecac6eb4545e5f86e897a89c64f6c8df5ea7ae9d3b587a660ed071",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "name": "com.acme:journal-io",
+          "namespace": "org.leanbridge.journal",
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 40,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "jar": {
+          "bytes": 51377818,
+          "path": "archives/journal-io-1.2.0-rc.1.jar",
+          "sha256": "9e1bde05b41d33d9a49be055354b2433c18294299ebfc42822667991dc496d85"
+        },
+        "name": "com.acme:journal-io",
+        "pom": {
+          "bytes": 619,
+          "path": "archives/journal-io-1.2.0-rc.1.pom",
+          "sha256": "1697308484b1bf1aaab0ff770f80e41d37561b7bd6085d309164df618cecd188"
+        },
+        "receiptSha256": "16a79532cd11e8bdef3f01812062966456586c69e321dfbebb9ac287e9528aea",
+        "reviewedSourceSha256": "1a9031cddcc4a2c91d2d7f1a2dfb96add3bafbb01ecb0b453bbd25bc82544f42",
+        "route": "reviewed",
+        "sourceTreeSha256": "0625561d52d7e838a3d6012f9a7a0a52195aab1fe61f8f68a563dbd80ab68899"
+      },
+      {
+        "info": {
+          "bindingIrSha256": "9863904313d416d54074207ac8b80c91948fc565ed380a5ecfb35e54932b772b",
+          "compiler": "javac 22.0.2",
+          "componentId": "clock@1.0.0",
+          "componentIdentity": "03fb77408d3cda9e9b398fc8fd7889e04abdc9417f077b0f648e9f9b6de5d2c8",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_a1020630145799b222d3ca807338f49a0f681628dd6475d1626f2552b27de6a8.so": "3dd166b9e130b9ab7bb2bdc8d5ddf5f2703e8ee31877aaabc505d3b2ad2585ec",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "name": "com.acme:clock-io",
+          "namespace": "org.leanbridge.clock",
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 36,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "jar": {
+          "bytes": 51350939,
+          "path": "archives/clock-io-1.2.0-rc.1.jar",
+          "sha256": "8b04419ca096c17ac7529db32463beec12b29f88d25d7655e3473bc05aaa1d50"
+        },
+        "name": "com.acme:clock-io",
+        "pom": {
+          "bytes": 617,
+          "path": "archives/clock-io-1.2.0-rc.1.pom",
+          "sha256": "5ec2229682563e0f4951ae18e2c1006421be6f294feae2584eaec5c3d1818338"
+        },
+        "receiptSha256": "126fc9ceb6c7c9ad9329fb9cf4ef33287e00f6708a168917a92e79bea54bf15c",
+        "reviewedSourceSha256": null,
+        "route": "peer",
+        "sourceTreeSha256": "a12f6f00b5ac4ee7ea7dcc0a77a3242a16dabc36500d38bd541c72f975b8fc02"
+      }
+    ],
+    "rows": [
+      {
+        "classpath": [
+          "com/acme/journal-io/1.2.0-rc.1/journal-io-1.2.0-rc.1.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "com/acme/clock-io/1.2.0-rc.1/clock-io-1.2.0-rc.1.jar"
+        ],
+        "incompatible": "independently verified but incompatible owner refused",
+        "observed": {
+          "Example": "ready\n37",
+          "ExampleKt": "ready\n37",
+          "Installed/journal-first": "Java: 19 scalars, typed returns and failures, file IO, one owner, 24 concurrent calls, zero native identities, retirement",
+          "Installed/peer-first": "Java: 19 scalars, typed returns and failures, file IO, one owner, 24 concurrent calls, zero native identities, retirement",
+          "InstalledKt/journal-first": "Kotlin: non-null scalar and result types, typed EIO payload, direct file IO, shared owner",
+          "InstalledKt/peer-first": "Kotlin: non-null scalar and result types, typed EIO payload, direct file IO, shared owner"
+        },
+        "route": "ordinary",
+        "tamper": "changed owner rejected after a compatible peer loaded"
+      },
+      {
+        "classpath": [
+          "com/acme/journal-io/1.2.0-rc.1/journal-io-1.2.0-rc.1.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "com/acme/clock-io/1.2.0-rc.1/clock-io-1.2.0-rc.1.jar"
+        ],
+        "incompatible": "independently verified but incompatible owner refused",
+        "observed": {
+          "Example": "ready\n37",
+          "ExampleKt": "ready\n37",
+          "Installed/journal-first": "Java: 19 scalars, typed returns and failures, file IO, one owner, 24 concurrent calls, zero native identities, retirement",
+          "Installed/peer-first": "Java: 19 scalars, typed returns and failures, file IO, one owner, 24 concurrent calls, zero native identities, retirement",
+          "InstalledKt/journal-first": "Kotlin: non-null scalar and result types, typed EIO payload, direct file IO, shared owner",
+          "InstalledKt/peer-first": "Kotlin: non-null scalar and result types, typed EIO payload, direct file IO, shared owner"
+        },
+        "route": "reviewed",
+        "tamper": "changed owner rejected after a compatible peer loaded"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

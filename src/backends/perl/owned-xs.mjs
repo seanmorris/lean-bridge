@@ -6,6 +6,7 @@
 import { generateOwnedPerlConversions } from "./owned-conversions.mjs";
 import { ownedPerlAnchoredCall, ownedPerlBorrowXs } from "./owned-borrows.mjs";
 import { ownedPerlCallbackArguments } from "./owned-callback-arguments.mjs";
+import { perlInputArgument, perlInputRecord } from "./owned-host-records.mjs";
 
 const callbackRuntime = prefix => `
 typedef struct {
@@ -13,7 +14,6 @@ typedef struct {
   SV *error, *replacement;
 } lpo_frame;
 typedef struct {
-  lpo_frame *frame;
   SV *code;
   CV *invoker;
 } lpo_callback;
@@ -25,6 +25,9 @@ typedef struct {
   int returned;
 } lpo_invocation;
 static lpo_invocation *lpo_active;
+/* A forwarded coderef can be invoked through a newer XS call than the
+   one that registered it. The immediate caller owns its exception. */
+static lpo_frame *lpo_call_frame;
 static void lpo_frame_end(pTHX_ void *value) {
   lpo_frame *frame = value;
   SvREFCNT_dec(frame->error); SvREFCNT_dec(frame->replacement);
@@ -35,6 +38,7 @@ static lpo_frame *lpo_begin_frame(pTHX_ lpg_scope *scope) {
   frame->scope = scope;
   save_scalar(PL_errgv);
   LB_PERL_GRAPH_CHECKPOINT(); frame->replacement = newSVpvs("");
+  SAVEVPTR(lpo_call_frame); lpo_call_frame = frame;
   return frame;
 }
 static lpo_callback *lpo_new_callback(pTHX_ lpo_frame *frame, SV *code, const char *name) {
@@ -44,7 +48,6 @@ static lpo_callback *lpo_new_callback(pTHX_ lpo_frame *frame, SV *code, const ch
   CV *invoker = get_cv(name, 0);
   if (!invoker) croak("Missing generated owned callback converter");
   lpo_callback *callback = lpg_allocate(aTHX_ frame->scope, 1, sizeof(*callback));
-  callback->frame = frame;
   callback->code = lpg_pin(aTHX_ SvRV(code));
   callback->invoker = (CV *)lpg_pin(aTHX_ (SV *)invoker);
   return callback;
@@ -53,14 +56,14 @@ static uint32_t lpo_invoke(lpo_callback *callback, ${prefix}_session *session,
     const void **arguments, void *output, ${prefix}_result **owner) {
   dTHX; dSP;
   if (!lpo_origin(aTHX) || lpo_state.closed || session != lpo_state.session) return 10;
-  lpo_frame *frame = callback->frame;
-  if (frame->error) return 10;
+  lpo_frame *frame = lpo_call_frame;
+  if (!frame || frame->error) return 10;
   lpo_invocation invocation = { callback, arguments, output, owner, 0 }, *previous = lpo_active;
   lpo_active = &invocation;
   PUSHMARK(SP); PUTBACK;
   int count = call_sv((SV *)callback->invoker, G_VOID | G_EVAL);
   SPAGAIN; SP -= count;
-  if (SvROK(ERRSV) || SvTRUE(ERRSV)) {
+  if (!frame->error && (SvROK(ERRSV) || SvTRUE(ERRSV))) {
     frame->error = GvSV(PL_errgv);
     GvSV(PL_errgv) = frame->replacement; frame->replacement = NULL;
   }
@@ -174,6 +177,7 @@ ${invoker}(...)
     XSRETURN_EMPTY;
 `);
 	}
+	for(const node of model.types.filter(n => n.hostInput)) declarations.push(perlInputRecord(node,nodes));
 	const render = (name, fn) => {
 		if(model.wholeOwners) return ownedPerlAnchoredCall(name, fn, model);
 		const inputs = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
@@ -196,9 +200,7 @@ ${name}(...)
     lpo_frame *frame = lpo_begin_frame(aTHX_ scope);
     lpo_owner *owner = lpo_begin_owner(aTHX_ 0);
     ${inputs.map((_, index) => `SV *argument${index} = lpg_pin(aTHX_ ST(${index}));`).join("\n    ")}
-    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + (model.c.hostArgument?.(fn, index)
-		? `${node.cName}_host input${index} = lpo_host${node.index}(aTHX_ frame, argument${index});`
-		: `${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`)).join("\n    ")}
+    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + perlInputArgument(model,fn,node,index)).join("\n    ")}
     lpo_context(aTHX);
     if (lpo_state.closed) croak("Lean ownership session is closed");
     ${result.cName} returned = {0};
@@ -231,7 +233,7 @@ closed(value)
     RETVAL
 `, render("retain", model.c.retains.find(fn => fn.id === node.id)));
 		if(node.kind === "callback") xs.push(render("call", model.c.callbacks.find(fn => fn.id === node.id)));
-		if(model.c.anchoredResults) xs.push(`int
+		if(model.c.anchoredResults || model.c.callbackArgumentViews) xs.push(`int
 same_identity(value, other)
     SV *value
     SV *other

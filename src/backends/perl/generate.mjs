@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault } from "../../build/native-model.mjs";
+import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault, nativeResourceReplyArgument, nativeAcceptsHostCallback } from "../../build/native-model.mjs";
 import { validateNativeRepresentation } from "../../analyze/native-types.mjs";
 import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 import { perlCopiedAliases, perlAliasApiDocs, perlAliasPod } from "./copied-aliases.mjs";
@@ -23,7 +23,7 @@ const callbackHostClass = model => `${model.moduleName}::Runtime::Callback`;
 const typeClass = (model, type) => type.kind === "callback"
 	? `${model.moduleName}::Closure${nativeTypeKey(type)}`
 	: `${model.moduleName}::${type.name.split(".").at(-1)}`;
-const callbackNeedsRecovery = (model, type) => type.kind === "callback" && model.exports.some(item =>
+const callbackNeedsRecovery = (model, type) => type.kind === "callback" && nativeResourceReplyArgument(type) === null && model.exports.some(item =>
 	item.parameters.some((parameter, index) => parameter.type.kind === "callback"
 		&& nativeTypeKey(parameter.type) === type.key
 		&& item.refinements?.parameters[index]?.kind === "callback"));
@@ -293,13 +293,12 @@ const conversion = (model, type) => {
 		// The native component exports `wrap` only for callback types accepted from
 		// the host. Returned-closure-only types export `call` but no `wrap`; their
 		// converter must therefore accept generated resource objects only.
-		const acceptsHostCode = type.kind === "callback" && model.exports.some(item =>
-			item.parameters.some(parameter => parameter.type.kind === "callback"
-				&& nativeTypeKey(parameter.type) === type.key));
+		const acceptsHostCode = nativeAcceptsHostCallback(model, type);
 		const recovered = callbackNeedsRecovery(model, type);
+		const capture = nativeResourceReplyArgument(type) === -1;
 		if(acceptsHostCode) from = `
 	      SvGETMAGIC(value);
-	      ${recovered ? `if (lbp_is_branch(value, ${q(callbackHostClass(model))})) {
+	      ${recovered || capture ? `if (lbp_is_branch(value, ${q(callbackHostClass(model))})) {
 	        HV *descriptor = (HV *)sv_2mortal(SvREFCNT_inc(SvRV(value)));
 	        if (HvUSEDKEYS(descriptor) != 2) croak("callback descriptor requires exactly code and recovery fields");
 	        /* Pin both fields before recovery conversion can invoke Perl code. */
@@ -308,12 +307,12 @@ const conversion = (model, type) => {
 	        if (!SvROK(code) || SvTYPE(SvRV(code)) != SVt_PVCV || SvOBJECT(SvRV(code))) croak("callback descriptor code requires an unblessed CODE reference");
 	        ${nativeCType(type.result)} recovery = ${read(type.result)}(aTHX_ scope, recovery_value);
 	        uint64_t token = lbp_callback_new(aTHX_ scope, code, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
-	        lb_callback_recovery_${type.key}_install(aTHX_ token, recovery);
-	        return ${keep(`lb_t${type.key}_wrap(token)`)};
+	        ${capture ? "lean_inc(recovery);" : `lb_callback_recovery_${type.key}_install(aTHX_ token, recovery);`}
+	        return ${keep(`lb_t${type.key}_wrap(token${capture ? ", recovery" : ""})`)};
 	      }` : ""}
 	      if (SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVCV) {
-	        uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
-	        return ${keep(`lb_t${type.key}_wrap(token)`)};
+	        ${capture ? `croak("resource-returning callback requires ${callbackHostClass(model)}->new(code => ..., recovery => ...)");` : `uint64_t token = lbp_callback_new(aTHX_ scope, value, get_cv(${q(`${model.moduleName}::_callback_${type.key}`)}, 0), (void (*)(void))lb_callback_${type.key});
+	        return ${keep(`lb_t${type.key}_wrap(token)`)};`}
 	      }
 	      ${from}`;
 		to = `return lbp_resource(aTHX_ value, ${q(kind(model, type))}, ${q(typeClass(model, type))});`;
@@ -595,7 +594,7 @@ ${name}(...)
     lbp_check_interpreter(aTHX);
     lbp_component_ready(aTHX);
     LBP_ENTER();
-    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === "callback" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
+    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === "callback" && nativeResourceReplyArgument(type) === null ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
     ${parameters.map((type, i) => retain(type, `a${i}`)).join(" ")}
     ${call}
     ${nativeObjectType(result) ? "lbp_keep(scope, result);" : ""}
@@ -664,6 +663,9 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	const branches = validatePerlModel(model);
 	const aliases = perlCopiedAliases(model);
 	const recoveredCallbacks = model.types.some(type => callbackNeedsRecovery(model, type));
+	const hostTrampolines = model.types.filter(type => type.kind === "callback"
+		&& (nativeResourceReplyArgument(type) === null || nativeAcceptsHostCallback(model, type)));
+	const resourceDescriptors = hostTrampolines.some(type => nativeResourceReplyArgument(type) === -1);
 	const structuredCallables = model.types.some(type => type.kind === "callback"
 		&& [...type.parameters, type.result].some(value =>
 			["array", "host-null", "list", "option", "result", "tuple", "record", "variant"].includes(value.kind)));
@@ -672,7 +674,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
   if (!lean_bridge_native_component_ready(${q(`${model.component.id}:${receipt.nativeLibrary.sha256}`)})) croak("Lean runtime is not ready or has been retired");
 }`
 		, ""];
-	for(const type of model.types.filter(t => t.kind === "callback"))
+	for(const type of hostTrampolines)
 	{
 		lines.push(`typedef struct { ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i};`).join(" ")} ${nativeCType(type.result)} result; int returned; } lb_callback_frame_${type.key};`);
 		lines.push(`static ${nativeCType(type.result)} lb_callback_${type.key}(void *context, ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i}`).join(", ")});`);
@@ -680,11 +682,11 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	for(const type of model.types.filter(type => callbackNeedsRecovery(model, type)))
 		lines.push(callbackRecovery(type));
 	for(const type of model.types) lines.push(conversion(model, type));
-	for(const type of model.types.filter(t => t.kind === "callback"))
+	for(const type of hostTrampolines)
 	{
 		// Default return values are created by Lean's generated representation-safe helpers.
 		// Failure remains pending until the initiating exported call returns.
-		const fallback = callbackNeedsRecovery(model, type)
+		const fallback = nativeResourceReplyArgument(type) !== null ? "NULL" : callbackNeedsRecovery(model, type)
 			? `lb_callback_recovery_${type.key}_get((lbp_callback *)context)`
 			: nativeCallbackDefault(type.result);
 		lines.push(`static ${nativeCType(type.result)} lb_callback_${type.key}(void *context, ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i}`).join(", ")}) {
@@ -697,7 +699,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	}
 	lines.push(`MODULE = ${model.moduleName}    PACKAGE = ${model.moduleName}`, "PROTOTYPES: DISABLE", "");
 	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, perlParameterNames(model, item)));
-	for(const type of model.types.filter(t => t.kind === "callback"))
+	for(const type of hostTrampolines)
 	{
 		lines.push(`
 void
@@ -708,7 +710,9 @@ _callback_${type.key}(...)
     if (invocation->callback->invoker != cv) croak("wrong generated callback converter");
     lb_callback_frame_${type.key} *frame = invocation->frame;
     LBP_ENTER();
-    ${type.parameters.map((p, i) => `SV *argument${i} = ${write(p)}(aTHX_ scope, frame->argument${i});`).join("\n    ")}
+    ${type.parameters.map((p, i) => p.kind === "resource"
+		? `SV *argument${i} = lbp_borrowed_resource(aTHX_ frame->argument${i}, ${q(kind(model, p))}, ${q(typeClass(model, p))});`
+		: `SV *argument${i} = ${write(p)}(aTHX_ scope, frame->argument${i});`).join("\n    ")}
     SPAGAIN;
     PUSHMARK(SP); ${type.parameters.map((_, i) => `XPUSHs(argument${i});`).join(" ")} PUTBACK;
     int count = call_sv(invocation->callback->code, G_SCALAR);
@@ -751,7 +755,7 @@ _callback_${type.key}(...)
 		, "sub false () { !!0 }"
 		, "sub CLONE_SKIP { 1 }"
 		, ""];
-	if(recoveredCallbacks) pm.push(...callbackClass(model));
+	if(recoveredCallbacks || resourceDescriptors) pm.push(...callbackClass(model));
 	for(const branch of branches)
 	{
 		const name = `${model.moduleName}::${branch}`;
@@ -782,7 +786,7 @@ _callback_${type.key}(...)
 				'  die "record fields do not match the generated schema\\n" if keys(%fields) != @required || grep { !exists $fields{$_} } @required;',
 				`  return bless \\%fields, '${name}';`, "}");
 			for(const field of type.fields) pm.push(`sub ${field.name} { $_[0]->{${field.name}} }`);
-		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 1 }");
+		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 0 }");
 	}
 	pm.push(...perlVariantClasses(model));
 	pm.push("1;", "", "__END__", "=head1 NAME", "", `${model.moduleName} - Generated functions from ${model.component.name}`, "", "=head1 API", "");
@@ -803,6 +807,8 @@ _callback_${type.key}(...)
 	if(model.types.some(type => type.kind === "array" || type.kind === "record")) pm.push("=head1 ARRAYS AND RECORDS", ""
 		, "Lean Array values use plain dense array references. Calls reject blessed, tied and sparse arrays. Copied records use generated classes with named fields and accessors. Record keyword arguments keep Perl's last-value-wins hash semantics, including new(%old_fields, field => $replacement). Constructors reject missing, extra or unnamed fields; calls require the exact generated class and reject tied hashes and subclasses. Empty records and one-field records retain their named types."
 		, "", "Array slots and record fields are pinned before conversion can invoke Perl code. Returned arrays, records, octet strings and Math::BigInt payloads own independent copied storage. Reference equality is not deep value equality. Nested copied values share a 16 MiB conversion budget and a 32-level schema limit; these are not limits on all Perl allocations or Lean working memory. Recursive copied types remain unsupported.", "");
+	if(resourceDescriptors) pm.push("=head1 RESOURCE CALLBACKS", ""
+		, `A callback returning a resource with no argument of that type takes ${callbackHostClass(model)}->new(code => sub { ... }, recovery => $resource). Lean retains the checked recovery object while the closure exists. A failed call still raises its original exception after cleanup.`, "");
 	if(structuredCallables) pm.push("=head1 STRUCTURED CALLBACKS", ""
 		, "Synchronous callbacks accept and return acyclic copied arrays, Lists, options, results, products, records, variants and aliases. Use the same generated classes and plain containers as ordinary arguments and results. Callback arguments, results and returned Lean closure captures own independent copied storage."
 		, "", (recoveredCallbacks ? `Pass unrefined host callbacks as CODE references. A checked host callback requires ${callbackHostClass(model)}->new(code => $callback, recovery => $value); the generated adapter validates and copies the typed recovery before Lean or the callback runs. ` : "Pass host callbacks as CODE references. ") + "Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."

@@ -52,6 +52,10 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 	const cleanup = ownedJvmThreadExit(prefix);
 	const schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;
 	const contract = { schemaVersion
+		, ...model.hostRecords.views.size ? {hostInputRecords: [...model.hostRecords.views.values()].map(v=>({
+			type: v.id,input: v.publicName,lifetime: "call"
+			, fields: v.fields.filter(f=>f.descriptor).map(f=>f.publicName)
+		}))} : {}
 		, backend: callbackAnchors.length ? "owned-jvm-v5" : receivers.length ? "owned-jvm-v4" : anchors ? "owned-jvm-v3" : transfers ? "owned-jvm-v2" : "owned-jvm-v1"
 		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
 			, values: "checked-whole-result", anchor: "original-argument-owner"
@@ -103,7 +107,7 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 	};
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const unit = id => nodes.get(id).name === "unit";
-	const javaType = (fn, id, i) => wholeOwners ? model.parameterType(fn, i, false) : model.c.hostArgument?.(fn, i)
+	const javaType = (fn, id, i) => wholeOwners || model.hostRecords.slot(fn,i) ? model.parameterType(fn, i, false) : model.c.hostArgument?.(fn, i)
 		? nodes.get(id).delegateType : model.type(id, false);
 	const kotlinType = (fn, id, i) => ownedJvmKotlinParameterType(model, fn, i);
 	const kotlinResult = fn => ownedJvmKotlinReturnType(model, fn);
@@ -203,14 +207,14 @@ when Thread objects and wrappers remain reachable. Virtual threads cannot own
 Lean sessions.` : receivers.length ? `Resource-bearing results use checked Value<T> owners. Use get() for borrowed raw
 views, share() for another guard on the same owner, and retain() for independent
 ownership. Keep the whole owner alive while using its raw views. Raw resource
-leaves compare wrapper identity; whole owners reject hashing. Whole values and
+leaves compare ${model.canonicalEquality ? "live native identity" : "wrapper identity"}; whole owners reject hashing. Whole values and
 resources implement AutoCloseable. Use try-with-resources in Java or use in
 Kotlin. Calls and retention require the creating platform thread. Cross-thread
 close and Cleaner cleanup queue releases for that thread or its exit. Virtual
 threads cannot own Lean sessions.` : `Resources and returned closures implement AutoCloseable. Use try-with-resources
 in Java or use in Kotlin. Retain creates an independent owner. Copying a record
 or array shares its existing wrappers and does not retain them. Resource leaves
-compare wrapper identity. Calls, closure invocation and retain require their
+compare ${model.canonicalEquality ? "live native identity; expired comparisons throw" : "wrapper identity"}. Calls, closure invocation and retain require their
 creating platform thread. Cross-thread close and Cleaner cleanup queue releases;
 native cleanup runs on the creating thread or at its exit, even when Thread
 objects and wrappers remain reachable. Virtual threads cannot own Lean sessions.`}
@@ -276,7 +280,7 @@ lifetime support.
 		, publicFiles, internalFiles, packageFiles: [], aliases: model.aliases
 		, ownedValues: contract
 		, kotlin: { namespace: model.kotlin.namespace, metadataVersion: "2.2.0" }
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", ...hostCallbacks ? ["callbacks"] : [], "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["parameter-anchored-results", "whole-value-owners", "canonical-resource-equality"] : [], ...receivers.length ? ["receiver-methods", "receiver-properties", ...anchors ? [] : ["whole-value-owners"]] : [], ...callbackAnchors.length ? ["callback-result-anchors", ...anchors || receivers.length ? [] : ["whole-value-owners", "canonical-resource-equality"]] : []]
+		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", ...hostCallbacks ? ["callbacks"] : [], "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["parameter-anchored-results", "whole-value-owners", "canonical-resource-equality"] : [], ...model.c.callbackArgumentViews && !anchors && !callbackAnchors.length ? ["canonical-resource-equality"] : [], ...receivers.length ? ["receiver-methods", "receiver-properties", ...anchors ? [] : ["whole-value-owners"]] : [], ...callbackAnchors.length ? ["callback-result-anchors", ...anchors || receivers.length ? [] : ["whole-value-owners", "canonical-resource-equality"]] : []]
 		, capabilityGaps: [callbackAnchors.length ? { feature: "retained-host-callbacks-and-callback-input-transfers", reason: "This projection admits call-scoped host callbacks and callback-result anchors." } : receivers.length ? { feature: "callback-result-anchors", reason: "Callback results require separate lifetime contracts." } : anchors ? { feature: "receiver-and-callback-result-anchors", reason: "These anchors require separate lifetime contracts." } : transfers
 			? { feature: "anchored-ownership", reason: "Anchored results require their own lifetime projection." }
 			: { feature: "transferred-and-anchored-ownership", reason: "Transferred inputs and anchored results require their own lifetime projection." }

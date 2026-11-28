@@ -39,6 +39,8 @@ A copied value has no cross-boundary lifetime. The receiver can retain its own c
 
 An identity value uses an opaque runtime token internally. Host code receives a canonical object, class, resource, or equivalent native projection. The token, runtime identity, generation, and nominal kind remain private.
 
+For application-owned resources, `host.targets` names the host, not its package manager. Use `c`, `cpp`, `rust`, or `wit-wasi` for their respective Lean import namespaces (`LeanBridge.Host.C`, `.Cpp`, `.Rust`, and `.WitWasi`). Declaring a target generates the typed Lean imports; it does not supply a runtime implementation or qualify a release for that target. A Lean-owned resource exported *to* C or WIT does not establish support for an application-owned object passed *into* Lean.
+
 A borrow does not create ownership. Its lifetime ends with the call or remains anchored to a named receiver or parameter. A lease retains a resource until explicit disposal or runtime shutdown. A transfer moves ownership through the call boundary. Backend tests must exercise the same transitions even when their surface syntax differs.
 
 Copied records cannot contain identity-bearing fields. Identity values cannot declare copy ownership. Non-copy ownership requires a lifetime. The semantic validator rejects each violation before generation.

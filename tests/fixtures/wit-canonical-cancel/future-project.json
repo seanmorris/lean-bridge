@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Watch"],
+  "exports": ["Watch.ack", "Watch.event", "Watch.release", "Watch.watchTask"],
+  "taskExports": ["Watch.ack", "Watch.event", "Watch.watchTask"],
+  "targets": {"wit-wasi": {"name": "futurewatch", "version": "1.0.0", "asyncAbi": "canonical"}}
+}

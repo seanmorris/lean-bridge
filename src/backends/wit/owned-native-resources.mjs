@@ -89,7 +89,7 @@ static inline bool ow_native_host_init(ow_native_host *host, lb_owned_context *n
   for (size_t i = 0; i < OW_TYPES; ++i) if (ow_native_kinds[i]) {
     uint32_t previous = atomic_load(&ow_native_next_tag);
     do {
-      if (previous == UINT32_MAX) { LB_OWNED_FREE(entries); *host = (ow_native_host){.status = LB_OWNED_LIMIT}; return false; }
+      if (previous >= INT32_MAX) { LB_OWNED_FREE(entries); *host = (ow_native_host){.status = LB_OWNED_LIMIT}; return false; }
     } while (!atomic_compare_exchange_weak(&ow_native_next_tag, &previous, previous + 1));
     host->tags[i] = previous + 1;
   }

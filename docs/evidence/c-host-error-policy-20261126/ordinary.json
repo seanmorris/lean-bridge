@@ -1,0 +1,54 @@
+{
+  "consumerSha256": "14a558ee2c82fafcdab0d0899563334e80a69d6bf723ac6a0858a43d68bf1c13",
+  "executions": [
+    {
+      "linkOrder": [
+        "workshop",
+        "peer"
+      ],
+      "linker": "pkg-config",
+      "observation": "error policy: sole owner 23->42; nested calls 1,1; destructions 3"
+    },
+    {
+      "linkOrder": [
+        "workshop",
+        "peer"
+      ],
+      "linker": "CMake",
+      "observation": "error policy: sole owner 23->42; nested calls 1,1; destructions 3"
+    },
+    {
+      "linkOrder": [
+        "peer",
+        "workshop"
+      ],
+      "linker": "pkg-config",
+      "observation": "error policy: sole owner 23->42; nested calls 1,1; destructions 3"
+    },
+    {
+      "linkOrder": [
+        "peer",
+        "workshop"
+      ],
+      "linker": "CMake",
+      "observation": "error policy: sole owner 23->42; nested calls 1,1; destructions 3"
+    }
+  ],
+  "releases": [
+    {
+      "archive": "358c806bb061ff18bbe36534ce4aa23c90f64e289874275aa73e4661ef81bb95",
+      "interface": "a4baf53277f0f46d920819a87606c468aebd59efd061daa3cd59f52e8829c029",
+      "receipt": "97bfb9fd9250474389bd933e617a3e743a721b991d3d5ffbaa98b1a557d68428",
+      "reviewedSourceSha256": null,
+      "route": "ordinary"
+    },
+    {
+      "archive": "35efd48b34c8f0a3698e93aaa78c476677b83061f7c983fd5674df1e8d550dac",
+      "interface": "9638f9795476751508e9e7b12efd5caae260ccd01230271c242e0ef0da5d5e98",
+      "receipt": "a3bab664641a9ab17d11f10b062de255b037faa455ae7b7175e890e51451ebf2",
+      "reviewedSourceSha256": null,
+      "route": "peer"
+    }
+  ],
+  "route": "ordinary"
+}

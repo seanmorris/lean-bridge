@@ -121,7 +121,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 			if(exports.length || resources.length || Object.keys(arities).length || canonicalJson(modules) !== canonicalJson(config.modules))
 				throw Object.assign(new Error("Reviewed builds cannot override the authorized modules or export decisions"), { code: "export-configuration-reviewed-ir" });
 			const selection = JSON.parse(reviewedBindingIr.source).schemaVersion === 4
-				? reviewedOwnedSourceSelection(reviewedBindingIr) : reviewedSourceSelection(reviewedBindingIr);
+				? reviewedOwnedSourceSelection(reviewedBindingIr) : reviewedSourceSelection(reviewedBindingIr, { nativeResources: true });
 			reviewedSelection = selection;
 			exports = selection.exports;
 			resources = selection.resources ?? [];

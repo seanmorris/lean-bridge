@@ -50,8 +50,11 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  * @param options - Explicit projection capabilities.
  * @param options.callables - Admit synchronous copied-value callable resources.
  * @param options.callableResourceNames - Optional exact resource names keyed by callback identity.
+ * @param options.publicSites - Optional WIT labels independent of private C function/argument identifiers.
+ * @param options.cursorSites - Private factory and next signature pairs from a reconciled immediate pull.
+ * @param options.exportTypes - Re-export every named value type used by the public WIT interface.
  */
-export const compileCopiedWitModel = (ir, settings = {}, { callables = false, callableResourceNames } = {}) => {
+export const compileCopiedWitModel = (ir, settings = {}, { callables = false, callableResourceNames, publicSites, exportTypes = false, cursorSites = [] } = {}) => {
 	const surface = compilePrimitiveCSurface(ir, { callables, structuredCallables: callables, compounds: true, lists: true, variants: true });
 	const name = settings.name ?? kebab(surface.prefix), version = settings.version ?? ir.component.version;
 	validateOrdinaryWasiSettings({ name, version });
@@ -90,7 +93,8 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 			}
 		}
 	}
-	const functionNames = new Set(surface.functions.flatMap(fn => [kebab(fn.field)
+	const labelOf = fn => publicSites?.get(fn.declaration.id)?.name ?? fn.field;
+	const functionNames = new Set(surface.functions.flatMap(fn => [kebab(labelOf(fn))
 		, ...defaultFunctionNames(fn).map(item => item.label)]));
 	const admitAlias = (name, declaration) => {
 		let label = kebab(name);
@@ -124,10 +128,13 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 	const value = (ref, returned = false) => resources.find(resource => resource.type.id === ref.id)?.[returned ? "own" : "borrow"] ?? copied(ref);
 	for(const fn of surface.functions)
 	{
-		fn.witName = admit(fn.field, fn.declaration);
+		fn.witName = admit(labelOf(fn), fn.declaration);
 		const parameters = new Set();
 		for(const [index, parameter] of fn.parameters.entries())
-		{ parameter.witName = admit(parameter.name, fn.declaration, parameters); parameter.copy = value(fn.declaration.parameters[index].type); }
+		{
+			const label = publicSites?.get(fn.declaration.id)?.parameters[index] ?? parameter.name;
+			parameter.witName = admit(label, fn.declaration, parameters); parameter.copy = value(fn.declaration.parameters[index].type);
+		}
 		fn.resultCopy = value(fn.declaration.result.type, true);
 	}
 	const defaultFunctions = surface.functions.flatMap(fn => defaultFunctionNames(fn).map(item => ({
@@ -147,6 +154,26 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 			, parameters: [{ witName: "self", copy: resource.borrow }, ...resource.type.callable.parameters.map((site, index) => ({ witName: `arg${index}`, copy: copied(site.type) }))]
 			, resultCopy: copied(resource.type.callable.result.type)}))
 	];
+	for(const row of cursorSites)
+	{
+		const factory=functions.find(f=>f.declaration?.id===row.open), pull=functions.find(f=>f.declaration?.id===row.next);
+		if(callables || !factory || !pull || pull.parameters.length || typeof row.fallible!=="boolean")
+			throw new TypeError("Expected checked, standalone WIT cursor signatures");
+		let label=factory.witName+"-cursor";
+		while(names.has(label)) label="lean-"+label;
+		const index=nextIndex+resources.length, witName=admit(label,factory.declaration);
+		const handle=borrowed=>({resource: true,resourceIndex: index,borrowed
+			, wit: (borrowed?"borrow":"own")+"<"+witName+">"
+			, wat: (borrowed?"$borrow":"$own")+index});
+		const own=handle(false), error=factory.resultCopy;
+		factory.resultCopy=row.fallible ? {compound: "result"
+			, fields: [{type: own},{type: error}]
+			, wit: `result<${own.wit}, ${error.wit}>`
+			, wat: `(result ${own.wat} (error ${error.wat}))`
+			, publicWat: `(result $publicOwn${index} (error ${error.witName?"$public"+(error.witIndex??error.index):error.wat}))`} : own;
+		pull.parameters=[{witName: "cursor",copy: handle(true)}];
+		resources.push({index,witName});
+	}
 	const witType = copy => {
 		if(copy.aliasTarget) return `type ${copy.witName} = ${copy.aliasTarget.wit};`;
 		if(copy.variant) return `variant ${copy.witName} { ${copy.cases.map(branch => `${identifier(branch.witName)}${branch.payload ? `(${branch.payload.wit})` : ""}`).join(", ")} }`;
@@ -184,7 +211,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 		return `    (type $base${index} ${copy.aliasTarget?.wat ?? watType(copy)})\n    (export "${copy.witName}" (type $t${index} (eq $base${index})))`;
 	}).join("\n")}\n${resourceWat}${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${parameter.copy.wat})`).join(" ")} (result ${fn.resultCopy.wat})))`).join("\n")}`;
 	const variants = types.filter(copy => copy.variant && !copy.aliasTarget);
-	const wat = renderCopiedWitComponent({ surface, functions, types, resources, typeBody, importName, exportName, preserveTypes: !!aliasModel || variants.length > 0 });
+	const wat = renderCopiedWitComponent({ surface, functions, types, resources, typeBody, importName, exportName, preserveTypes: exportTypes || !!aliasModel || variants.length > 0 });
 	const defaultManifest = fn => defaultFunctions.filter(item => item.defaultOf === fn.declaration.id).map(item => ({ witName: item.witName
 		, suppliedParameters: item.supplied, omittedParameters: item.omitted }));
 	const manifest = {
@@ -232,7 +259,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 					, witName: copy.cases[index].fields[position].witName
 					, witType: copy.cases[index].fields[position].type.wit })) })) }));
 	}
-	if(resources.length)
+	if(callbacks.length)
 	{
 		manifest.backend = "ordinary-wit-native-callable-v1";
 		manifest.callables = resources.map(resource => ({ id: resource.type.id, witName: resource.witName, invoke: `invoke-${resource.witName}`, parameter: "borrow", result: "own" }));

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Budget"],
+  "taskExports": ["Budget.pair","Budget.probe","Budget.retry","Budget.single"],
+  "taskIOErrors": ["Budget.pair","Budget.probe","Budget.retry","Budget.single"],
+  "taskCallbackPolicies": [
+    {"declaration":"Budget.pair","parameter":"f","invocation":"once"},
+    {"declaration":"Budget.pair","parameter":"g","invocation":"once"},
+    {"declaration":"Budget.probe","parameter":"f","invocation":"once"},
+    {"declaration":"Budget.retry","parameter":"f","invocation":"once"},
+    {"declaration":"Budget.single","parameter":"f","invocation":"once"}
+  ],
+  "targets": {"npm":{"name":"@example/callback-budget","version":"1.0.0"}}
+}

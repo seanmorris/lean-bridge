@@ -1,0 +1,82 @@
+/** @file Exercise WIT member ownership and copied carriers in an actual Lake application. */
+import { appendFile, readFile, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
+import { canonicalJson } from "../../src/capsule/node.mjs";
+
+/**
+ * Add actual Lean factories, including one with copied arguments, to an installed package.
+ *
+ * @param project - Ordinary or reviewed Lake source tree.
+ */
+export const extendWitFunctions = async project => {
+	const configFile = join(project, "lean-bridge.exports.json");
+	const config = JSON.parse(await readFile(configFile, "utf8"));
+	const source = await readFile("tests/fixtures/c-host-closures/Closures.lean", "utf8");
+	await writeFile(join(project, "Closures.lean"), source.replaceAll("LeanBridge.Host.C", "LeanBridge.Host.WitWasi"));
+	await appendFile(join(project, "lakefile.toml"), '\n[[lean_lib]]\nname = "Closures"\n');
+	config.modules.push("Closures");
+	config.exports.push("Closures.remember", "Closures.reader", "Closures.identityReader");
+	await writeFile(configFile, canonicalJson(config));
+};
+
+/**
+ * Install the independent public-API exercise in the guest; leave other suites unchanged.
+ *
+ * @param guest - Unexpanded core guest module.
+ */
+export const addWitFunctionClient = async guest => {
+	const probe = await readFile("tests/fixtures/static-host-workers/installed-functions.wat.in", "utf8");
+	const [imports, code] = probe.split(";; @functions@");
+	if(!code || !guest.includes(";; @worker-observers@") || !guest.includes(";; @installed-drop-checks@"))
+		throw new Error("Missing WIT guest injection site");
+	return guest.replace(";; @worker-observers@", () => imports + "\n  ;; @worker-observers@")
+		.replace(";; @installed-drop-checks@", "(call $check-functions)\n    ;; @installed-drop-checks@")
+		.replace("  (func $suite ", () => code + "\n  (func $suite ");
+};
+
+/**
+ * Reuse the scalar source corpus, then add a consumed parameter, an anchored
+ * result, and a Lean function that selects the first of two guest errors.
+ *
+ * @param project - Staged WIT worker project.
+ */
+export const extendWitMembers = async project => {
+	const corpus=resolve("tests/fixtures/cpp-host-workshop");
+	const imports=JSON.parse(await readFile(join(corpus,"lean-bridge.hosts.json"),"utf8"));
+	imports.types[0].host.targets=["wit-wasi"];
+	const make=imports.declarations.find(m=>m.kind==="constructor");
+	const echo=imports.declarations.find(m=>m.name==="identity");
+	for(const name of ["keepOther","takeOther","anchored"])
+	{
+		const m=structuredClone(echo);
+		m.name=name; m.id="host:meter.Box."+name; m.overloadKey=m.source.declaration="Box."+name;
+		if(name==="anchored") m.result={...m.result,ownership: "borrow",lifetime: {scope: "receiver",anchor: "receiver"}};
+		else m.parameters=[{...make.parameters[0],type: m.result.type,ownership: name==="takeOther"?"transfer":"lease",lifetime: {scope: "explicit",anchor: null}}];
+		imports.declarations.push(m);
+	}
+	await writeFile(join(project,"lean-bridge.hosts.json"),canonicalJson(imports));
+	const source=(await readFile(join(corpus,"Workshop.lean"),"utf8")).replaceAll("LeanBridge.Host.Cpp","LeanBridge.Host.WitWasi");
+	const extra=await readFile("tests/fixtures/static-host-workers/wit-members.lean.in","utf8");
+	await writeFile(join(project,"Workshop.lean"),source+"\n"+extra);
+	const path=join(project,"lean-bridge.exports.json"),config=JSON.parse(await readFile(path,"utf8"));
+	config.exports.push(...["readOnline","text","bytes","shift","natural","keepOther","takeOther","anchored","firstError","pickWide"].map(n=>"Workshop."+n));
+	await writeFile(path,canonicalJson(config));
+};
+
+/**
+ * Add canonical futures and streams to the same synchronous member corpus.
+ *
+ * @param project - WIT worker project with its own Jobs module.
+ */
+export const extendWitApplication=async project=>{
+	await extendWitMembers(project);
+	const path=join(project,"lean-bridge.exports.json"),config=JSON.parse(await readFile(path,"utf8"));
+	const jobs=join(project,"Jobs.lean");
+	await writeFile(jobs,(await readFile(jobs,"utf8"))+"\n"+await readFile("tests/fixtures/static-host-workers/wit-success.lean.in","utf8"));
+	const success=["Jobs.accept","Jobs.completed","Jobs.relayLate"];
+	config.taskIOErrors.push("Jobs.relayLate");
+	config.taskExports.push(...success);config.exports.push(...success);
+	config.asyncIterators.push({open: "Jobs.finite",next: "Jobs.nextFinite",close: "Jobs.closeFinite"});
+	config.exports.push("Jobs.finite","Jobs.cursorCounts","Jobs.cursorGate");
+	await writeFile(path,canonicalJson(config));
+};

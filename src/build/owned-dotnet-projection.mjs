@@ -10,7 +10,7 @@ import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
 import { generateOwnedDotnetPackage } from "../backends/dotnet/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { ownedDotnetAdapterSources, ownedDotnetEvidence } from "./owned-dotnet-artifacts.mjs";
-import { buildNativeGmp } from "./native-gmp.mjs";
+import { privateGmpKit } from "./task-gmp.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOwnedNuget } from "../release/owned-nuget.mjs";
 
@@ -44,7 +44,7 @@ export const projectOwnedDotnet = async options => {
 		await mkdir(dirname(join(adapterRoot, path)), { recursive: true });
 		await writeFile(join(adapterRoot, path), source, { flag: "wx" });
 	}
-	await buildNativeGmp({ root: gmpRoot, environment, signal, privateSoname: true });
+	await privateGmpKit({ root: gmpRoot, environment, signal });
 	await mkdir(join(adapterRoot, "lib"));
 	const library = `lib${prefix}_dotnet.so`, gmpLibrary = "libgmp-lean-bridge.so.10";
 	const nativeScratch = join(working, "dotnet-native-compiler"); await mkdir(nativeScratch);

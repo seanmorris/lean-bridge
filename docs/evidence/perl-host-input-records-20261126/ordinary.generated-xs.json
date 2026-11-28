@@ -1,0 +1,158 @@
+{
+  "archives": {
+    "LeanBridge-Runtime": "44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9",
+    "LeanBridge-TariffQuotes": "567a91d07849344b6114662f5359341caed6acc81d4b13f9fb7cf0f9aa6a23a7"
+  },
+  "bindingIrSha256": "7f8bffccefde396ea6333dfc2b4d3422ab9e71dd9ba23611387b781abb5e4562",
+  "clientSha256": "590c3d40923a79ebc9e64a89c8084ed8826f7c2f679f43a3e89312f2aaebcbad",
+  "hostClientSha256": "cd19b3b06a412a0d79d3044a320a3a09682635c32ac197cceb5a916f9e50b7fc",
+  "observations": [
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "38604b8f78d2b90d667aba275175033f216652f2e453308c92d3997e64642721",
+      "installXs": {
+        "generatedCSha256": "330fa6cd3145fa2b5084c5428c9b207fc3733ad7cfcd9d65a743a32b0dce3907",
+        "mode": "build-xs",
+        "operation": "generated-xs-only",
+        "outputSha256": "3e57f4a5da199bcfa220ae53945c6ca8d50676bbad37a9682280d16963a5d727",
+        "sourceSha256": "9c72237777e4449d615fff1d7b8a1115d6bcd75cc672663a6bc9a558d4784b54"
+      },
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "f4b555ace667690a1564aa6a85acbc45423373e9aa0f4702bef07eeb47c2f9c6",
+      "installXs": {
+        "generatedCSha256": "330fa6cd3145fa2b5084c5428c9b207fc3733ad7cfcd9d65a743a32b0dce3907",
+        "mode": "build-xs",
+        "operation": "generated-xs-only",
+        "outputSha256": "a32d68bdf6ba85ba8bca94668dff5e2364a8189102a0bbe1d30b5465ad723942",
+        "sourceSha256": "9c72237777e4449d615fff1d7b8a1115d6bcd75cc672663a6bc9a558d4784b54"
+      },
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.36.3"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux-thread-multi",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "b8696ebe05d524d7c286e5d3cc7aea956aac5b2d3243b710961415cd73e54c90",
+      "installXs": {
+        "generatedCSha256": "3747e174c408b35e2c05d37bc4db5d78ad4e88ccbf3c4bb98c7629fb6cf936bd",
+        "mode": "build-xs",
+        "operation": "generated-xs-only",
+        "outputSha256": "27517da546839f509334df9cd100f93daeeb73e6ecfc0bd6a8bc73e0111d2e84",
+        "sourceSha256": "9c72237777e4449d615fff1d7b8a1115d6bcd75cc672663a6bc9a558d4784b54"
+      },
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "threaded",
+      "version": "5.38.2"
+    },
+    {
+      "after": 1,
+      "arch": "x86_64-linux",
+      "baseline": 1,
+      "held": 9,
+      "hostInputs": {
+        "afterShutdown": 0,
+        "baseline": 1,
+        "held": 4,
+        "hostCalls": 3,
+        "reentries": 1,
+        "settled": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "installReceiptSha256": "b334815f832495951144c0cb13493956ee88e0474d51b91bfed1d09c0f382abd",
+      "installXs": {
+        "generatedCSha256": "3747e174c408b35e2c05d37bc4db5d78ad4e88ccbf3c4bb98c7629fb6cf936bd",
+        "mode": "build-xs",
+        "operation": "generated-xs-only",
+        "outputSha256": "ebefce362e76cc6fcaabf55ff20711faff70c9345e516661e9b2e459cf35f2fb",
+        "sourceSha256": "9c72237777e4449d615fff1d7b8a1115d6bcd75cc672663a6bc9a558d4784b54"
+      },
+      "recovered": 42,
+      "shutdown": 0,
+      "stageCalls": 1,
+      "staged": 44,
+      "staleVisits": 0,
+      "threads": "unthreaded",
+      "version": "5.38.2"
+    }
+  ],
+  "receiptSha256": "10fa40319720c5d8b7d608342a455cd4e80bc9eb1b0b0d6c0d1ccad7ae78f24d",
+  "reviewedSourceSha256": null,
+  "route": "ordinary"
+}

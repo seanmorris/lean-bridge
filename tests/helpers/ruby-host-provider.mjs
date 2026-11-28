@@ -1,0 +1,71 @@
+/**
+ * Refuse host contracts which do not have an unambiguous Ruby projection.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import { generateRubyHostProvider } from "../../src/backends/ruby/host-provider.mjs";
+
+const source = new URL("../fixtures/ruby-host-meter/lean-bridge.hosts.json", import.meta.url);
+const contract = async () => JSON.parse(await readFile(source, "utf8"));
+const generate = (ir, entries = []) => generateRubyHostProvider({
+	ir, entries, modules: ["Workshop"]
+	, namespace: "Workshop", extension: "libworkshop", identity: "a".repeat(64)
+});
+
+test("MRI validates the flattened record arity and public names before packaging", async () => {
+	const ir = await contract(), box = {kind: "named", id: ir.types[0].id};
+	const type = {kind: "host-record", declaration: "Station.Panel"
+		, constructor: "Station.Panel.mk"
+		, fields: ["first", "second", "third"].map(name => ({name, projection: "Station.Panel." + name, type: box}))};
+	const build = (record, count = 1) => generate(ir, [{name: "round_trip"
+		, declaration: "Station.roundTrip", effect: "IO"
+		, parameters: Array.from({length: count}, (_, i) => ({name: "p" + i, type: record}))
+		, result: record}]);
+	const ok = build(type, 2);
+	assert.match(ok.entryLean, /Station\.Panel\.mk v0 v1 v2/u);
+	assert.match(ok.entryLean, /Station\.Panel\.mk v3 v4 v5/u);
+	assert.match(ok.source, /rb_check_arity\(argc,2,2\); VALUE flat\[6\]/u);
+	assert.throws(() => build(type, 22), /too many arguments/u);
+	assert.throws(() => build({...type, declaration: "Station.ArgumentError", constructor: "Station.ArgumentError.mk"}), /reserved name/u);
+	const field = {...type.fields[0], name: "close", projection: "Station.Panel.close"};
+	assert.throws(() => build({...type, fields: [field]}), /reserved or invalid field/u);
+	assert.throws(() => build({...type, fields: [type.fields[0], type.fields[0]]}), /ambiguous fields/u);
+});
+
+test("Ruby binder keywords, operations and member dispatch cannot silently collide", async () => {
+	const ir = await contract(), box = ir.types[0];
+	ir.types.push({ ...box, id: "host:second.BOX", name: "BOX", resource: { ...box.resource, kindId: "resource:second.BOX" } });
+	assert.throws(() => generate(ir), /duplicate Ruby binder keyword/u);
+	ir.types.pop();
+	assert.throws(() => generate(ir, [{ name: "wait_for" }, { name: "wait_for" }]), /duplicate Ruby public operation/u);
+	assert.throws(() => generate(ir, [{ name: "bind_hosts" }]), /reserved public operation/u);
+	const ctor = ir.declarations.find(d => d.kind === "constructor");
+	ir.declarations.push({ ...ctor, name: "new", id: "host:meter.Box.new", kind: "static-method" });
+	assert.throws(() => generate(ir), /ambiguous Ruby member new/u);
+});
+
+test("Ruby borrowers need a real nominal anchor; dynamic or worker imports cannot use the synchronous provider", async () => {
+	const ir = await contract(), identity = ir.declarations.find(d => d.name === "identity");
+	identity.result = { ...identity.result, ownership: "borrow", lifetime: { scope: "parameter", anchor: "missing" } };
+	assert.throws(() => generate(ir), /unanchored borrowed result/u);
+	identity.result.lifetime = { scope: "receiver", anchor: "receiver" };
+	assert.doesNotThrow(() => generate(ir));
+	identity.resultMode = "promise";
+	assert.throws(() => generate(ir), /synchronous member/u);
+	identity.resultMode = "value";
+	ir.types[0].host.dynamic = true;
+	assert.throws(() => generate(ir), /statically declared host classes/u);
+});
+
+test("only typed, binding-owned synchronous IO factories produce MRI callables",async()=>{
+	const ir=await contract(),box={kind: "named",id: ir.types[0].id},value={kind: "primitive",name: "uint32"};
+	const fn={kind: "io-closure",argument: value,reply: box},factory={name: "remember",declaration: "Workshop.remember",effect: "IO",parameters: [{name: "box",type: box}],result: fn};
+	const build=over=>generate(ir,[{...factory,...over}]);
+	assert.match(build({}).entryLean,/UInt32 → _root_\.IO _root_\.LeanBridge\.Host\.Ruby\.Box/u);
+	assert.doesNotMatch(generate(ir).source,/lb_ticket|LeanClosure/u);
+	for(const fields of [{effect: "pure"},{delivery: "task"}])assert.throws(()=>build(fields),/synchronous IO factory/u);
+	assert.throws(()=>build({result: {...fn,argument: {kind: "named",id: "unknown:Box"}}}),/unknown host resource/u);
+});

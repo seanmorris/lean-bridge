@@ -1,0 +1,91 @@
+# CPAN worker package handoffs
+
+An offline-installed publishing CLI built these local Linux x86-64 CPAN
+distributions. Each component includes generated XS for threaded and
+unthreaded Perl 5.36.3 and 5.38.2. All three pin the **same** 51,422,277-byte
+`LeanBridge-Runtime` archive (SHA-256
+`44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9`).
+
+| Source / component | Component archive bytes | Component SHA-256 | Package-set receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary Workshop | 231,971 | `628b3f40ee3ae545aa733728dd349c88497ee098ea4f53e1312fb0d383233443` | `e447e94298925667f2c66b8b804b2dbd90a48a60c8d1c38dcc556799d56397f1` |
+| Independent Peer | 231,941 | `a9c53e313a0e6b083e4f1071e0373334a8c8c43497bd139170d90e279518a071` | `e0594ade6c5127b0ef609a756ed3940cc9a8a49d984f3a7680a6955a0184f023` |
+| Reviewed Workshop | 234,790 | `9c9820944776a96aa229027b3eb431308c87d5c1fbe565ffb4c58b5952d0adb9` | `4746e5c4fa2712fe472620750b44d1d449ab7ba9b800d826d02cb56895375181` |
+
+The [error-policy replay](../../tests/fixtures/perl-host-workers/error-policy.pl) uses the real worker and changes one acknowledgement in the test process: native failure 1 is presented as 2. It does not invoke the retirement operation. It checks that an ordinary Perl exception is recoverable, a declared error can be the last owner of a meter, and a caught ledger mismatch cannot publish a successful outer result or dispatch new work. On November 26 the original ordinary Workshop and Peer archives passed both load orders in a relocated prebuilt install on threaded Perl 5.36.3. To repeat across the installed matrix, run `npm run test:perl-worker-replay` with the original handoff, interpreters and worker dependencies. Set `LEAN_BRIDGE_PERL_WORKER_POLICY_OUTPUT` to keep the two route reports.
+
+Ordinary and reviewed Workshop have the same semantic Binding IR digest:
+`8d5bbe440ab017aac7e538da643d198edfbe2a841926ca0d0d913fb083f358fb`.
+Removing the error-payload site from the review of `Jobs.refuse` stopped
+the build before it wrote a receipt. The package verifier rejected modified
+XS, worker headers, ledger bytes, an absent compiler selection, and a
+provider copied from another handoff. The peer's scalar worker adds 37;
+Workshop's adds one, so a swapped implementation is visible to callers.
+
+The installed-consumer run passed all **16 fresh, relocated installations**:
+ordinary and reviewed Workshop × Perl 5.36.3 and 5.38.2 (threaded and
+unthreaded) × prebuilt-only and locally compiled generated XS. Each prefix
+contained Workshop, Peer and the common prebuilt runtime. All three installed
+XS files matched the digest in their individual install receipts. Building XS
+required a C compiler but not Lean; the prebuilt-only installs required neither.
+
+Each prefix ran three independent Perl applications with no tools on their
+execution path: Workshop then Peer, Peer then Workshop, and the public
+Future/cursor consumer. All **48 application runs** passed. The two components
+observed the same mutable Perl object; closing one component's scope did not
+cancel its sibling's outstanding task. The public consumer exercised returned
+versus raised failures, callback re-entry, pull demand and cancellation.
+The full publishing-and-install test took 27 minutes 2 seconds at a local
+limit of 25% of one logical CPU. No registry or hosted CI run was involved.
+
+Run `npm run test:perl-worker-packages` with the interpreter and dependency
+settings in the [transport check](perl-worker-transport-20261124.md).
+Set `LEAN_BRIDGE_PERL_WORKER_HANDOFFS` to an existing private directory
+to retain all three receipts and their named archives. To run downstream
+checks on those exact archives without rebuilding Lean, set
+`LEAN_BRIDGE_PERL_WORKER_REPLAY` to the resulting handoff root and run
+`npm run test:perl-worker-replay`. Nothing in this test uploads to CPAN.
+
+## Which calls preserve the original Perl reference?
+
+The [installed worker client](../../tests/fixtures/perl-host-workers/public.pl)
+allocates two blessed objects with the same value. It passes the first to
+`relay`, compares the callback argument using `refaddr`, returns the second,
+and checks that `get` yields the second reference. These are three distinct
+positions: the export argument, callback argument and callback result.
+The ordinary, reviewed and peer worker archives above contain the declared
+box-to-box callback, and all three matched their original receipts.
+
+For an **immediate** export result, see the separately
+[installed synchronous CPAN packages](perl-host-imports-20261124.md#cpan-host-packages).
+Their [application](../../tests/fixtures/perl-host-meter/installed-pair.pl)
+passes the object between components and checks that `identity` returns
+the original reference, in both load orders. The [record packages](perl-host-record-fields-20261126.md)
+cover object fields. Together these installs cover all five positions on
+both authoring routes. This audit checked the clients against the revisions
+that recorded these installations; it did not rerun the four-ABI matrix.
+
+## Filtered publisher source
+
+The Nix Perl engine reads only files in [its source filter](../../nix/perl-engine-source-boundary.json). The uncorrected filter omitted transitive imports and Perl worker templates and still named a deleted C frame source. Unlike an unfiltered checkout, the filtered tree could not load the publisher.
+
+The [filtered-engine checks](../../tests/perl-contract.test.mjs) passed after restoring the required files. They copy just the filter's contents to a temporary directory, import the native publisher there with no tools on its search path, load the Perl scheduler and build the mixed-worker XS headers. Removing a required module fails the import; putting it back restores it. This checks the source filter locally, not a complete Nix derivation or a new CPAN installation.
+
+The [full-build comparison](../../tests/helpers/perl-filtered-worker-package.mjs) goes one step further. Run `npm run test:perl-worker-filtered-engine` with the same four Perl interpreters. It builds the worker from the filtered tree, builds it again from a separate project using the full checkout CLI, verifies both receipts and compares every archive digest.
+
+On November 25 both publishers produced component `a9a5a6a822a0643c2c87693759386c6517fecaa6c6e060db08f0ed8ef7842c0b`, runtime `44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9`, and package-set receipt `526dc07e9b371e4d0b88188b43b5cf575fa8d20f695f7375c101d64289c8e25b`. The test verified all four selected Perl ABIs and compared the entire receipt. Elapsed: 7 minutes 57 seconds at the local CPU limit. This is a filtered-source build, not an evaluation of a Nix derivation.
+
+Use the **same publisher revision** when supplying a saved reference through `LEAN_BRIDGE_PERL_FILTERED_REFERENCE`. The filtered build reproduced the runtime from the November 24 receipt exactly (`44164075…`), but two later filtered runs produced component `a9a5a6a8…` instead of the earlier `628b3f40…`. The source-project and binding IR digests match. The older component records the November 24 `HostExports.lean` and `ResolveLakeWorkspace.lean` digests; the newer one records the changed sources' digests. The verifier must not ignore that difference.
+
+## Granted effects through a worker and cursor
+
+The [installed Perl application](../../tests/fixtures/perl-host-workers/effects.pl) runs inside the package's normal `with_hosts` scope. An environment read during Lean initialization sees the deployment value, not a later change. An ordinary IO call reads a real file synchronously. A Perl `Future` reads it from a Lean worker. Two successive cursor pulls see different contents after the application edits the file between them. Closing the cursor early writes `closed`. After the client overwrites that marker, a further pull, a second close and destruction leave it untouched. This observes finalization through its public effect, not an internal destructor counter.
+
+The [package test](../../tests/helpers/perl-host-worker-effects.mjs) also removes the filesystem grant. The producer names the worker, pull and close roots and emits no release. With both grants, the compiler records environment access at startup and filesystem access on the worker call, pull and close. Both source routes have Binding IR digest `9bd1039a1ca52787551a98218e04b79aa43c6df74bd138101ecea3206da55672`. All eight relocated, prebuilt-only installations passed: ordinary and reviewed packages × Perl 5.36.3 and 5.38.2 × threaded and unthreaded. The runtime archive remained `44164075aa223e5d7126803c501f53e9c0154028ee606998d70b3657de44b4a9`.
+
+| CPAN worker | Component bytes | Component SHA-256 | Package-set receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary | 251,626 | `74f5648da6e4ff7785108bdba94ecedb1194fbe5949efc9e9c8377c40a87d0c1` | `e2e312269dc6cb8bcc87cc845e43d12f0467f41a3f22c290a9df81882f5ffc24` |
+| Reviewed | 254,859 | `6a582bd1cbed415282f1396b216c964ea0c08e8de812c08d26b727e401bfc361` | `c5c921c14ddd9754a1a70d9eef856d61d2c8aec5bb9ffe32e960060344f19f05` |
+
+With the same Perl toolchains and offline Perl modules, run `npm run test:perl-worker-effects`. Set `LEAN_BRIDGE_HOST_EFFECT_HANDOFFS` to an existing directory to keep the archives, receipts and compiler evidence. Set `LEAN_BRIDGE_HOST_EFFECT_REPLAY` to the resulting handoff directory to re-run the installed clients without building. Replay does not repeat the producer's missing-grant test.

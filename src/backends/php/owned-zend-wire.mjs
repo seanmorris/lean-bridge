@@ -15,8 +15,9 @@ const replace = (source, before, after) => {
  * and the private owned ABI's canonical error-bit result tag.
  *
  * @param namespace - Exact generated PHP namespace.
+ * @param recordInputs - Account for the root record above independently encoded fields.
  */
-export const ownedZendPhpWire = namespace => {
+export const ownedZendPhpWire = (namespace,recordInputs = false) => {
 	let source = phpGraphWire;
 	source = replace(source, "$frame->branch = $wire[0] ? 0 : 1;", "$frame->branch = $wire[0] ? 1 : 0;");
 	source = replace(source, "$frame->branch === 0, $frame->values[0]", "$frame->branch === 1, $frame->values[0]");
@@ -42,5 +43,13 @@ export const ownedZendPhpWire = namespace => {
         if (!$binding instanceof ZendBinding) throw new \TypeError('Owned identity belongs to another transport');
         return $binding->wire($type);
     }`);
+	if(recordInputs)
+	{
+		for(const method of ["public static function transfer","private static function walk"])
+			source = replace(source,method+"(int $type, mixed $value, bool $reading, GraphBudget $budget)",
+				method+"(int $type, mixed $value, bool $reading, GraphBudget $budget, int $depth = 0)");
+		source = replace(source,"$result = self::walk($type, $value, $reading, $budget);","$result = self::walk($type, $value, $reading, $budget, $depth);");
+		source = replace(source,"new GraphWireFrame($type, $value, 0)","new GraphWireFrame($type, $value, $depth)");
+	}
 	return source.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied", "Owned").replaceAll("copied", "owned");
 };

@@ -62,6 +62,440 @@ Parameters use `mixed` with precise PHPDoc so generated checks can reject numeri
 
 Validation, PHP conversion and native copying each have a 16 MiB accounting limit. PHP lists count at least 32 bytes per element. These limits do not bound Lean working memory. `finally` releases native outputs after conversion errors. Compatible packages share one process runtime; post-fork calls and already loaded foreign Lean runtimes are rejected. Loading needs readable `/proc/self/maps` to detect foreign runtime mappings. See [installed PHP evidence](evidence/native-php-copied-20260915.md).
 
+### Let Lean call an application object
+
+A native Composer package that imports PHP classes exposes `withHosts()`.
+Pass the classes named in the publisher’s contract. Calls on the returned
+binding use your actual objects, including subclasses. For example, the
+Workshop package imports a `Box` with a mutable `level` property:
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+class Meter {
+    public function __construct(public int $level) {}
+    public function read(): int { return $this->level; }
+    public function identity(): static { return $this; }
+}
+
+$workshop = LeanWorkshop\withHosts(['Box' => Meter::class]);
+try {
+    $meter = new Meter(7);
+    $workshop->update($meter, 42);
+    echo $meter->level;                       // 42
+    assert($workshop->identity($meter) === $meter);
+} finally {
+    $workshop->close();
+}
+```
+
+If Lean propagates a PHP method’s exception unchanged, the PHP caller catches
+the same `Throwable`. If Lean maps it to a typed `EIO` failure, the caller
+catches the generated exception and reads its `payload`. A returned `Except`
+is an `Ok` or `Err` value, not a thrown exception. This synchronous host-class
+profile is native PHP CLI only; it does not run PHP methods on a Lean worker.
+
+A synchronous native package can also pass your objects inside a record. In
+the [Panel example](evidence/php-host-record-fields-20261126.md), `mirror`
+returns a panel whose `primary_meter` and `backup_meter` are the same PHP
+object you passed in (`===`). Read them as properties. The panel keeps those
+objects alive, even after the binding closes. Close the panel in `finally` to
+release its references. Cloning a panel gives you a separately closable
+record; it does not clone either meter.
+
+A declared Lean error can also carry your PHP object. Its `$payload` is the
+same object, not a copy. You can close the binding that threw and still use
+the payload with a compatible package. The [installed Composer example](evidence/effect-failure-crosswalk-20261126.md#when-the-declared-error-owns-an-application-object)
+shows when its last reference is released.
+
+If a PHP member suspends its Fiber while Lean is calling it, resume that
+Fiber before using or closing a binding from another Fiber. The second
+caller gets a `LogicException`; it does not cancel the first call. A
+forked child cannot use or close an inherited binding. Start a fresh PHP
+process if the child needs to call Lean.
+
+A borrowed object can keep its receiver or a named argument alive; the
+publisher's contract selects which one. A strong-canonical object stays
+alive until the last compatible binding for its kind closes. A weak-canonical
+object does not stay alive solely because it once crossed the boundary.
+
+If releasing a bridge reference would run a PHP destructor, the bridge
+waits until the outermost native call returns. The destructor can then use
+another open binding. During `close()`, it sees the closing binding as
+already closed. If the call otherwise succeeded, the caller receives the
+first exception thrown by cleanup; the bridge still drains the remaining
+references. If the call itself failed, its original error takes precedence.
+See the [two-package lifetime and error checks](evidence/php-host-finalizers-20261124.md).
+
+#### Call a returned function that captures a PHP object
+
+For a native package exporting `remember : Box → IO (Box → IO Box)`, call
+the result like a PHP function. The captured object stays the same object:
+
+```php
+$workshop = LeanWorkshop\withHosts(['Box' => Meter::class]);
+try {
+    $first = $workshop->make(7);
+    $remember = $workshop->remember($first);
+    try {
+        $second = $workshop->make(11);
+        assert($remember($second) === $first);
+    } finally {
+        $remember->close();
+    }
+} finally {
+    $workshop->close();
+}
+```
+
+Closing the function releases its capture. Closing the binding revokes
+all of its functions, even if PHP still holds them. If a member closes
+the currently executing function, that call can finish; a later call
+throws `LogicException`. The same Fiber and fork rules apply as for a
+bound member. Calling a returned function is synchronous even if the
+same package also exports an Amp future.
+
+#### Await a task that uses your objects
+
+A Composer package with the `native-php-host-task-v1` profile also exposes
+tasks and cursors on the binding. Pass your object and an ordinary PHP
+callable. Lean runs the task on a worker; PHP invokes your callable on the
+event-loop thread. For example, the [async Workshop](../tests/fixtures/php-host-tasks/Workshop.lean)
+exports `relay`, which sends one callback’s result to the next:
+
+```php
+$workshop = LeanWorkshop\withHosts(['Box' => Meter::class]);
+try {
+    $meter = new Meter(7);
+    $replacement = new Meter(42);
+    $result = $workshop->relay(
+        $meter,
+        fn(Meter $input) => $replacement,
+        fn(Meter $input) => $input
+    )->await();
+    assert($result === $replacement);
+} finally {
+    $workshop->close();
+}
+```
+
+Use `foreach` on a cursor. Each iteration requests one item. To cancel work,
+pass an Amp cancellation token as the last argument to the binding method;
+passing it to `await()` cancels only that wait. Closing a binding cancels
+its outstanding deliveries without closing another binding. An immediate
+method such as `read()` remains synchronous.
+
+### Call synchronous IO and handle errors
+
+Install the publisher’s native Composer package and require its autoloader.
+An exported Lean `BaseIO`, `IO`, or `EIO` call finishes before the next PHP
+statement runs. There is no promise to await and no separate runtime to start.
+
+A returned Lean `Except` is a value: inspect its `Ok` or `Err` wrapper.
+A thrown `EIO` error raises a declaration-specific PHP exception with the
+original typed payload. Both can carry an `Err` without meaning the same
+thing. For example, in the Journal package:
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__ . '/vendor/autoload.php';
+
+use LeanJournal\{ChooseError, Err};
+use function LeanJournal\choose;
+
+$result = choose(false, false, 'unused');
+if (!$result instanceof Err || $result->value !== 37) {
+    throw new RuntimeException('Expected a returned Err(37)');
+}
+try {
+    choose(true, false, 'unused');
+    throw new RuntimeException('Expected a declared failure');
+} catch (ChooseError $failure) {
+    if (!$failure->payload instanceof Err || $failure->payload->value !== 37) {
+        throw $failure;
+    }
+}
+```
+
+A failed Lean `IO` call such as `LeanJournal\read($path)` throws
+`LeanJournal\IOError`; its message comes from Lean and its `$declaration`
+identifies the function. Invalid argument types and ranges fail before Lean
+performs the effect. This profile targets native PHP CLI, not PHP-Wasm.
+See [export synchronous IO](publish/php.md#export-synchronous-io) and the
+[installed PHP 8.2 and 8.5 results](evidence/php-sync-io-20261123.json).
+
+### Iterate an immediate Lean cursor
+
+A native Composer package may expose a synchronous iterator. Use `foreach`:
+each demand runs one Lean pull on the calling thread, without Amp or an
+event loop. Stopping a normal `foreach` early runs the Lean finalizer.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+foreach (\LeanDials\sequence(10) as $n) {
+    echo $n, PHP_EOL;
+    if ($n === 2) break;
+}
+```
+
+If you keep the underlying generator after stopping, call `$cursor->close()`
+in `finally`. A yielded `null` represents Lean unit; it is not the end of
+the sequence. See the [installed PHP example](../tests/fixtures/native-immediate-cursor/consumer.php).
+
+### Await a Lean task or iterate a stream
+
+A native Composer task package installs Amp and Revolt alongside the Lean
+runtime. A task returns an `Amp\Future`: call `await()` to get its value.
+A stream works with `foreach`, requesting one item at a time. In the Pulse
+example, the output is `hello` followed by `first item`.
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use Amp\TimeoutCancellation;
+use LeanPulse\Bytes;
+use function LeanPulse\{bytes, series};
+
+$deadline = new TimeoutCancellation(5);
+$result = bytes(Bytes::fromString("hello"), cancellation: $deadline)->await();
+echo $result->toString(), PHP_EOL;
+
+foreach (series(false, false, 'first item') as $item) {
+    echo $item->value, PHP_EOL;
+    break; // No second pull; the loop releases the cursor.
+}
+```
+
+Pass a cancellation token to the **generated function** to cancel the Lean
+operation. Passing one only to `$future->await($token)` cancels that wait;
+other callers can still await the same future. An already-running Lean task
+must cooperate to stop its computation. Late results never replace cancellation.
+
+To stop an entire stream, cancel the token you passed to its factory, or
+call `$cursor->close()`. If a `foreach` is already waiting on a pull, the
+token delivers its original `Amp\CancelledException`; an explicit close
+interrupts that read with a package `LeanBridgeError`. Neither waits for an
+uncooperative worker to finish. See the [two-package cancellation example](evidence/async-delivery-crosswalk-20261125.md#stopping-a-parked-native-php-reader).
+
+A failure to *start* (for example, an `EIO` refusal) throws from the function
+unless the factory takes a [retained PHP callback](#pass-a-callback-to-a-lean-worker).
+A selected terminal IO failure throws `TaskIOError` from `await()`. A typed
+stream failure is thrown while iterating. A returned `Except` remains an
+`Ok` or `Err` value in all three cases.
+
+Breaking out of a normal `foreach` closes the cursor. If you retain the iterator
+itself, call `$stream->close()` in a `finally` block when you stop consuming it.
+This path is for native PHP CLI, not PHP-Wasm. See [how to export tasks](publish/php.md#export-tasks-and-pull-streams)
+and the [installed results and archive hashes](evidence/php-task-delivery-20261123.json).
+
+### Pass a callback to a Lean worker
+
+Pass a PHP callable to the generated function. By default Lean can invoke it more
+than once; each invocation runs on the PHP event loop, not on a Lean worker thread.
+Here Lean calls the same function twice:
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use function LeanRetained\repeat_call;
+
+$result = repeat_call('hello', static fn(string $text): string => $text.'!');
+echo $result->await(), "\n"; // hello!!
+```
+
+The future owns the callable until the operation settles or is cancelled. To
+revoke it sooner, wrap it in the package's `RetainedCallback` and call `close()`.
+A call already executing may finish; a later invocation throws `CallbackClosed`.
+A callback may call another export or await a different task. Do not await the
+callback's own unfinished task: that task needs your reply before it can finish.
+
+If the package author allows only one invocation, a second attempt never
+enters PHP. If Lean propagates that refusal, `await()` throws the package's
+`CallbackAlreadyInvoked`; its `$declaration` names the Lean export. The
+first attempt spends the allowance even if your callable throws. You can
+still pass the same callable to another parameter or start a new task with it.
+
+If your callback throws a PHP `Exception`, Lean can catch it. If Lean propagates
+it, `await()` throws the **same PHP object**. If Lean instead throws a new IO
+error, even with identical text, you receive the generated Lean exception.
+For exports with retained callbacks, both factory and worker failures arrive
+through the future: the exception type still identifies which failed. Returning
+a value of the wrong type rejects only that call. An unexpected PHP `Error`
+thrown by the callable retires the shared native runtime.
+
+See [how to export a task with callbacks](publish/php.md#export-a-task-that-calls-php)
+and the [installed PHP results](evidence/php-retained-tasks-20261123.json).
+This applies to native Composer packages, not PHP-Wasm.
+
+### Share a resource between native PHP packages
+
+An exported Lean heap resource is an object, not an integer handle. When a
+call returns a ticket, you own one lease. Passing the ticket to a synchronous
+call borrows it for that call. A returned alias, a `retain()` result, or a
+resource carried by a declared error owns a separate lease. Closing one does
+not close the others. Use `sameResource()` to compare the underlying Lean
+objects; PHP’s `===` compares the wrapper objects.
+
+The Depot and Counter examples import the same Lean definition. After
+installing both Composer packages, save this as `example.php`:
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+$original = LeanDepot\make(10, 'order');
+$alias = LeanCounter\bump($original);
+try {
+    if (!$original->sameResource($alias)) throw new LogicException('Expected the same ticket');
+    $original->close();
+    if (LeanDepot\count($alias) !== 11) throw new LogicException('Expected the updated counter');
+} finally {
+    $original->close();
+    $alias->close();
+}
+```
+
+Close a lease in `finally` when release timing matters. Otherwise the wrapper
+releases it on destruction. Do not clone or serialize a ticket, or use an
+inherited ticket after `fork()`. A resource with the same Lean name but
+a different compiled definition does not match. These direct resources
+are distinct from the [session-owned aggregate API](#resource-containing-values).
+The [installed resource checks](evidence/php-heap-lease-20261123.json)
+record the packages, runtime versions, and broker counts after shutdown.
+
+### Keep a Lean function from a PHP record
+
+A generated record can contain a callable Lean function. Keep your own
+reference with `retain()` if the record's original reference will close.
+This example uses the [Tariff Composer package](evidence/php-function-fields-20261126.md):
+
+```php
+$quote = \LeanTariffQuotes\make_tariff(40)->quote;
+$mine = $quote->retain();
+try {
+    $quote->close();
+    echo $mine(2), PHP_EOL;  // 42
+} finally {
+    $mine->close();
+}
+```
+
+### Pass a PHP callback inside a record
+
+In a native package whose binding manifest lists `hostInputRecords`, use
+the generated input class to pass a PHP callable instead of a Lean function:
+
+```php
+$row = new \LeanTariffQuotes\TariffInput(quote: fn(int $units): int => 40 + $units);
+echo \LeanTariffQuotes\apply_tariff_with_host_fields($row, 2); // 42
+```
+
+Lean can call this PHP function, even reentrantly, until the outer call
+returns. Returning a record containing the function does not extend that
+borrow. An existing Lean function lease can also fill the field; a returned
+lease has its own lifetime. Close it when you are done. The ordinary
+`Tariff` result class and its leased fields are unchanged.
+
+Lean can also pass a function directly to your PHP callback. To use it after
+the callback returns or throws, call `$quote->retain()` inside the callback.
+The borrowed wrapper and its lease compare equal with `sameIdentity()` while
+both are live. Keeping the lease does not extend the borrow. The
+[Tariff client](../tests/fixtures/structured-types/tariff-incoming.php)
+shows the difference, including a nested call that fails.
+
+For native FFI callbacks, exception traces keep their stack locations but
+omit argument values while Lean can call into PHP. This keeps saved exceptions
+printable after temporary native arguments expire. The bridge restores the
+previous `zend.exception_ignore_args` setting when the call ends. If your
+host disables `ini_set`, configure `zend.exception_ignore_args=1` to use
+callbacks. Calls without a PHP callback do not need that setting.
+
+### Pass a resource to a native PHP task
+
+The caller owns its ticket; the Lean worker holds its own reference as soon
+as the task starts. You can close the caller’s ticket before awaiting the
+result. This example prints `42`: the worker and the peer package each
+increment the counter that started at `40`.
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use LeanCounter as Counter;
+use LeanDepot as Depot;
+use Revolt\EventLoop;
+
+Depot\reset();
+$original = Counter\issue(40);
+try {
+    $work = Depot\pending($original, true);
+} finally {
+    $original->close(); // The worker now holds its own Lean reference.
+}
+EventLoop::delay(0.01, static function (): void { Depot\release(); });
+$result = $work->await();
+try {
+    $peer = Counter\bump($result);
+    try {
+        echo Depot\count($peer), PHP_EOL; // 42, on the same ticket.
+    } finally {
+        $peer->close();
+    }
+} finally {
+    $result->close();
+}
+```
+
+Awaiting the **same future** twice gives you the **same PHP wrapper**. Call
+`retain()` if two consumers need independently disposable leases. In contrast,
+each yielded resource and each typed failure payload has its own lease.
+Closing the cursor does not close an item you already received.
+
+Once the future reports cancellation, it will not deliver a ticket. A worker
+that ignores cancellation can still hold the underlying Lean object until it
+finishes. Do not infer that a file has closed from cancellation alone. See the
+[installed cross-package checks](evidence/php-task-leases-20261123.json).
+
+#### Close a resource from a worker callback
+
+Closing your PHP handle inside a callback does not invalidate the worker's
+borrow. Here `issue` creates a ticket in one Composer package. A worker in
+another package reads the counter, asks PHP for the new value, and returns
+the same underlying ticket with a new PHP handle.
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use function LeanCounter\issue;
+use function LeanDepot\{count, revisit};
+
+$ticket = issue(40);
+$updated = revisit($ticket, static function (int $before) use ($ticket): int {
+    $ticket->close();
+    return $before + 2;
+})->await();
+try {
+    echo count($updated), PHP_EOL; // 42
+} finally {
+    $updated->close();
+}
+```
+
+If a factory throws a typed error carrying a ticket, `$error->payload` owns a
+handle too. Close that handle when you finish inspecting it. Cancelling the
+operation while its callback is suspended discards a late reply; it does not
+deliver a ticket. See the [installed cross-package checks](evidence/php-retained-resource-loans-20261123.json).
+
 ### Arrays and records
 
 Native Composer packages expose nested `Array` values as consecutive-key PHP
@@ -1096,6 +1530,193 @@ recursive result. Refined callbacks and owned graph values remain unsupported.
 
 ### Ordinary PHP-Wasm packages
 
+#### Await a task in PHP-Wasm
+
+A release with profile `php-wasm-threaded-task-v1` provides an npm host module and an optional Composer library. Install the npm component and its matching runtime from the release. Pass the component's default export to `sharedLibs` when constructing `PhpNode` or `PhpWeb`. Require the path in its `autoload` property from PHP. If your application mounts a Composer vendor directory, install the matching Composer ZIP, pass the host module's `extensions` descriptor instead, and require `/vendor/autoload.php`.
+
+The [Jobs example](../tests/fixtures/javascript-wasm-generated-tasks/Jobs.lean) parks a worker until another call releases it:
+
+```php
+use Brick\Math\BigInteger;
+use function LeanJobs\{hold, release, series};
+
+$pending = hold();
+release(BigInteger::of('4294967295'));
+echo $pending->await(); // 4294967295 on 32-bit PHP
+
+foreach (series(BigInteger::of(12)) as $number) {
+    if ($number->isEqualTo(3)) break; // closes the cursor
+}
+```
+
+`cancel()` returns true once if cancellation wins. A later `await()` then throws `TaskCancelled`. Cancellation stops delivery to PHP; a Lean worker waiting on application input may still need that input before it can exit. Call `awaitCleanup()` when you need this task’s native slot back. It does not wait for unrelated workers. A copied-value factory failure throws from the function call, a worker failure throws from `await()`, and a returned Lean `Except` remains an `Ok` or `Err` value.
+
+The Lean workers run in a separate, shared Wasm heap. In a browser, serve the app in a cross-origin-isolated context. This profile does not pass object leases to an in-process Zend extension. [Installed task package checks](evidence/php-wasm-task-packages-20261124.md).
+
+#### Let Lean call methods on your PHP objects
+
+If the package imports a PHP class, its namespace exposes `withHosts()` instead of free functions. Pass the application class that implements each imported name. The generated binding checks its constructors, methods and properties when you open it. Use the same npm descriptor and optional Composer autoloader as for a task package.
+
+```php
+use Brick\Math\BigInteger;
+use function LeanWorkshop\withHosts;
+
+class AppBox {
+    public function __construct(public BigInteger $level) {}
+    public static function fromValue(BigInteger $value): self { return new self($value); }
+    public function identity(): self { return $this; }
+    public function read(): BigInteger { return $this->level; }
+}
+
+$api = withHosts(['Box' => AppBox::class]);
+try {
+    $box = $api->make_box(BigInteger::of(7));
+    var_dump($api->same_box($box) === $box); // true
+    echo $api->project($box, fn (AppBox $b) => $b->level)->await(); // 7
+} finally {
+    $api->close();
+}
+```
+
+The constructor returns your PHP instance; Lean does not copy it into a record. Two packages in the same interpreter that import the same nominal type can use that instance. Bind the same application class in both. Closing one binding cancels and drains its outstanding deliveries without closing the other. A PHP method called synchronously by Lean can call another immediate export, but it cannot wait for a worker. Use an exported task callback for work that needs to suspend. See the [installed examples and checks](evidence/php-wasm-zend-packages-20261124.md).
+
+A Lean factory can also return a PHP invokable. For example, a package
+exporting `remember : Box → IO (Box → IO Box)` lets you keep the original
+application object without passing it on every call:
+
+```php
+$remember = $api->remember($box);
+try {
+    var_dump($remember($otherBox) === $box); // same PHP instance
+} finally {
+    $remember->close();
+}
+```
+
+Call the function while its binding is open. Closing it during one of its own
+calls lets that call finish and rejects later calls. Closing the binding also
+releases its functions. See the [installed Zend checks](evidence/zend-host-closures-20261125.md).
+
+For a standalone package that exports a Lean structure holding PHP objects,
+construct its generated record in PHP. In the example below, `$left` and
+`$right` are instances of the `AppBox` class bound above:
+
+```php
+$pair = new LeanWorkshop\Pair($left, LeanWorkshop\Bytes::fromString('ab'),
+    BigInteger::of(7), $right);
+try {
+    $flipped = $api->flip($pair);
+    try {
+        var_dump($flipped->lead === $right); // true
+    } finally {
+        $flipped->close();
+    }
+} finally {
+    $pair->close();
+}
+```
+
+The call borrows the input. The returned record owns references to the
+original PHP objects, not copies of them. A field read before closing the
+record remains an ordinary PHP reference; another package in the same
+interpreter can use it. Reading a field after closing the record fails.
+
+#### Share a Lean object between PHP-Wasm packages
+
+When two packages use the same Lean heap and the same resource type, you can pass the PHP object directly between them. In this example, both packages import `Shared.Ticket`. A second handle sees the same mutation, even after the original handle closes.
+
+```php
+use Brick\Math\BigInteger;
+
+$ticket = LeanDepot\make(BigInteger::of(10));
+$keep = $ticket->retain();
+try {
+    $task = LeanPeer\bump($ticket, BigInteger::of(4));
+    $ticket->close();
+    $updated = $task->await();
+    try {
+        echo LeanDepot\read($keep);          // 14
+        var_dump($updated->sameResource($keep)); // true
+    } finally { $updated->close(); }
+} finally { $ticket->close(); $keep->close(); }
+```
+
+`retain()` creates another independently closeable handle, not a copy of the object. A task result, an iterator element, or a declared exception’s resource payload also owns its handle. Repeatedly awaiting the *same* task returns the same PHP object. Closing a handle twice is harmless; using a closed handle fails. A native PHP extension or a different PHP-Wasm interpreter cannot borrow these resources. See the [installed lease checks](evidence/php-wasm-task-leases-20261124.md).
+
+#### Pass a PHP callback to a Lean worker
+
+Pass an ordinary unary callable. PHP runs it on its own interpreter stack while waiting for a Lean task, stream pull, or cleanup. A worker cannot interrupt arbitrary PHP code to invoke a callback. An await in one installed package can run a callback from another; the callback may itself await a different task.
+
+```php
+use Brick\Math\BigInteger;
+use function LeanRelay\twice;
+
+$result = twice(
+    BigInteger::of(6),
+    fn (BigInteger $n) => $n->plus(1),
+    fn (BigInteger $n) => $n->multipliedBy(3),
+)->await();
+echo $result; // 21
+```
+
+If the callable throws an `Exception`, Lean can handle it. If Lean propagates that same failure, `await()` throws the original PHP object. A callback invoked inside a Lean factory can suspend, so its failure also arrives through `await()`. An invalid return value fails the task; a PHP engine `Error` thrown by the callback retires the shared runtime. Use the package’s `RetainedCallback` wrapper only if you want to close a registration yourself. Closing it inside a callback permits that invocation to return but rejects subsequent calls.
+
+The shared executor permits two workers to wait for PHP callbacks at once. After a cancellation, `awaitCleanup()` is the point at which the worker has drained. Do not await a task or its cleanup from inside its own callback. See the [installed callback checks](evidence/php-wasm-retained-callback-packages-20261124.md).
+
+#### Call synchronous IO in PHP-Wasm
+
+A package whose receipt names `php-wasm-sync-io-v1` exposes synchronous
+Lean effects. Install its npm descriptor (and its Composer ZIP if you use
+Composer) the same way as a copied-value package. Once the PHP autoloader
+is loaded, call the functions directly; they do not return promises.
+
+For example, the Ledger package keeps a running total in its PHP-Wasm
+instance:
+
+```php
+use Brick\Math\BigInteger;
+use function LeanLedger\{add, read_total};
+
+add(BigInteger::of('4000000000'));
+echo read_total(); // 4000000000
+```
+
+A returned `Err` is a value. A thrown `EIO` raises a declaration-specific
+exception with its typed `payload`; an `IO.Error` raises the package's
+`IOError`. Invalid arguments do not change state or trigger lazy loading.
+This profile admits in-memory effects only.
+
+For an immediate iterator, use PHP's own `foreach`. The open call runs
+before the loop; each advance pulls one item from Lean. In the Ledger
+example, `UInt32` is a `BigInteger` on this 32-bit PHP host:
+
+```php
+foreach (\LeanLedger\sequence(\Brick\Math\BigInteger::of(4)) as $n) {
+    echo $n, PHP_EOL;
+    if ($n->isEqualTo(1)) break;
+}
+```
+
+An ordinary `break` closes the cursor. If you keep the generator yourself,
+call `$cursor->close()` in `finally`. A yielded `null` is a Lean unit item,
+not exhaustion. Multiple `php.run()` calls can share the same cursor: they
+evaluate code in the same interpreter. Refreshing that interpreter ends
+the request and releases remaining cursors. No JavaScript iterator or
+worker scheduler is involved.
+
+A callback may call an IO function in another package on the same PHP
+instance. If that package loads on first use, call it once **before**
+entering the callback: PHP cannot load an extension inside a synchronous
+Lean callback. A PHP exception or typed Lean failure crossing nested callbacks
+comes back as the same exception object. Neither retires the runtime.
+
+If a compiled IO package returns a malformed reply, its `LeanBridgeError`
+names the declaration and says the shared runtime was retired. Stop using
+that instance for Lean calls, including calls through other packages or saved
+closures. You can still close those closures and read ordinary PHP values
+copied out earlier. To resume, create a fresh PHP-Wasm instance. See the
+[two-package failure and cleanup checks](evidence/php-wasm-io-callback-failures-20261123.md).
+
 Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Obtain the publisher's archives, `package-set-receipt.json`, and its `.json.sha256` sidecar through your trusted release channel. [Verify the package set](consume/receive-package.md#verify-a-local-package-set) before installation. It contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
 
 The npm descriptor includes Brick Math 1.0.0 and loads its classes automatically. No Composer installation or GMP/BCMath extension is required. A Composer application uses the generated package's exact `brick/math` dependency instead. Include dependencies in your application lockfile; offline Composer installs need that locked dependency in their repository or cache.
@@ -1608,11 +2229,48 @@ The host copies `main.php` into PHP's virtual filesystem and requires it as a fi
 
 ### PHP-Wasm ownership and errors
 
+When a visitor receives a Lean function directly, the argument is borrowed
+until the visitor returns or throws. Save an independent lease with
+`$keep = $quote->retain()`. Packages that declare
+`callbackArgumentIdentity: canonical-while-live` let you compare the live
+views with `$quote->sameIdentity($keep)`. After the visitor exits, use
+`$keep`, not `$quote`, and close it when finished. This requires neither
+FFI nor a whole-result owner.
+
+If a record contains a Lean function, call `$record->quote->retain()` to
+keep a separate lease, then `close()` that lease when done. In wasm32 PHP,
+pass `Brick\Math\BigInteger::of(2)` to a `UInt32` function. A PHP closure
+registered for one call does not gain a longer lifetime by being returned
+inside a record. The [installed Node and Chromium example](evidence/php-wasm-function-fields-20261126.md)
+exercises both cases.
+
+For a PHP-Wasm component whose manifest lists `hostInputRecords`, use the
+generated input class to pass a PHP closure for the duration of one call:
+
+```php
+use Brick\Math\BigInteger;
+use LeanTariffQuotes\TariffInput;
+use function LeanTariffQuotes\apply_tariff_with_host_fields;
+
+$row = new TariffInput(quote: fn(BigInteger $units): BigInteger => $units->plus(40));
+echo apply_tariff_with_host_fields($row, BigInteger::of(2)); // 42
+```
+
+The same field can take a leased Lean function. A PHP closure expires when
+the call returns, even if Lean sends it back to PHP inside another record.
+
 PHP-Wasm exposes the same copied `Payload`, binary `Bytes`, canonical `Box` identity, PHP callbacks, and invokable Lean closures as [native PHP](#native-php-ownership-and-errors). Alpha changes the record's Boolean and count; the callback and returned callable each produce `42` in this example.
 
 The `finally` blocks close the returned callable and the box even when a call fails. Closing a resource twice is allowed; using a closed wrapper raises `LeanAlpha\DisposedResource`. Keep each resource in the PHP-Wasm instance that created it. A second instance owns a separate Lean heap and identity domain.
 
 Handle both JavaScript initialization failures and PHP failures. The host example throws on a nonzero PHP exit status or PHP error output. Explicit PHP comparisons keep the example's checks active when assertions are disabled.
+
+A worker package can restrict a callback to one invocation. For example,
+if Lean requests the same one-call registration a second time, awaiting
+the Budget task throws `LeanBudget\CallbackAlreadyInvoked`. A PHP exception
+thrown by your callback is still the original exception object. You may
+pass the same callable to a new task, which gets a fresh allowance.
+See the [complete PHP consumer](../tests/fixtures/php-wasm-task-owner/budget.php).
 
 ### PHP-Wasm troubleshooting
 
@@ -1729,6 +2387,24 @@ constructor/source entry counts or dispatch.
 
 The [hosted generic-Subtype matrix](evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence. Native PHP is
 one of those profiles.
+
+### Native CLI effects and delivery
+
+Use these mappings for native Composer host, IO and task packages. Their
+receipts identify the profile; the cross-profile inventory below describes
+the older package paths.
+
+| Export | Native PHP result | Failure or cleanup |
+| --- | --- | --- |
+| Synchronous `IO α` or `EIO ε α` | `α` before the call returns | `IOError` or a declaration-specific exception carrying `ε` |
+| Declared PHP class in a synchronous host package | The application instance supplied to or returned by a binding method | Close the binding; an unchanged application exception retains its identity |
+| Selected `Task α` | `Amp\Future` resolving to `α` | An operation token cancels the worker; an await token cancels only that waiter |
+| Selected worker callback `α → IO β` | A unary PHP callable returning a copied value | Retained through settlement; a propagated PHP exception keeps its identity |
+| Selected pull protocol | `PullStream` consumed with `foreach` | One outstanding pull; exhaustion, early exit or explicit close releases the cursor |
+
+See the [host-class install checks](evidence/php-host-imports-20261124.md#installed-composer-checks),
+[synchronous IO receipts](evidence/php-sync-io-20261123.json) and
+[native task receipts](evidence/php-task-delivery-20261123.json). These native profiles do not change PHP-Wasm's coverage.
 
 ### Type conversions
 
