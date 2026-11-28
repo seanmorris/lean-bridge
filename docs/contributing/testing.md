@@ -146,6 +146,31 @@ inside its retained npm archive. It binds the compiled IR, component receipt,
 package coordinates, shared runtime and browser Wasm assets to that package set.
 It reads archive contents without executing them.
 
+To qualify those packages on a release candidate, use the **full candidate
+commit** and the successful scoped workflow's **run ID**. From the repository
+root with its npm dependencies installed, authenticate `gh` for read access to
+the repository's Actions artifacts. Choose a new directory on a volume with
+space for the original artifact:
+
+```sh
+npm run check:candidate:npm -- "$CANDIDATE_SHA" "$ACTIONS_RUN_ID" "$NEW_OUTPUT_DIR"
+```
+
+The command checks the producing commit, workflow, job attempt and artifact
+digest. It replays the independent-build and browser evidence, then installs
+the exact runtime and component archives offline for each of the four package
+sets (ordinary/reviewed × full/result-only). The consumer declares only the
+component: an offline `npm ci` must install its exact runtime transitively,
+without a lifecycle script. It compiles two strict TypeScript
+clients per package and **runs the emitted JavaScript** after relocation, with
+the package feed removed. This complements the producer's compile-only
+TypeScript check. Only run this on code you trust: it executes the candidate.
+
+`acceptance.json` is written only after all eight client executions pass.
+Keep it with the original ZIP and GitHub metadata. A passing result qualifies
+this owned checked-record npm shard, not the whole type matrix; it neither
+rebuilds Lean nor publishes a package.
+
 The same job also retains the owned-Subtype npm packages under
 `build/owned-subtype-javascript-packaging/`. Each ordinary/reviewed author route
 builds in two independent directories, compares the compiled model, Wasm and

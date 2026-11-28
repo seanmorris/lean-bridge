@@ -1480,6 +1480,8 @@
     "test:wit-host-object-packages": "node --test --test-concurrency=1 tests/helpers/wit-installed-object-packages.mjs tests/helpers/wit-installed-mixed-packages.mjs tests/helpers/wit-installed-object-task-only.mjs tests/helpers/wit-installed-peers.mjs",
     "test:wit-host-object-positions": "node --test --test-concurrency=1 tests/helpers/wit-object-positions-installed.mjs",
     "test:typescript-ticket-positions": "node --test --test-concurrency=1 tests/helpers/typescript-ticket-positions-installed.mjs",
+    "check:candidate:npm": "node scripts/check-npm-candidate.mjs",
+    "test:candidate:npm": "node --test tests/helpers/npm-candidate-origin-checks.mjs",
     "test:typescript-receiver-lifetime": "node --test --test-concurrency=1 tests/helpers/typescript-receiver-lifetime-installed.mjs",
     "test:resource-ticket-positions": "node --test --test-concurrency=1 tests/helpers/resource-ticket-positions-audit.mjs",
     "test:resource-callback-positions": "node --test --test-concurrency=1 tests/helpers/resource-callback-positions-audit.mjs",
